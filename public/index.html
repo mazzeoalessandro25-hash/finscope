@@ -38,9 +38,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:54px;background:var(-
 
 /* HOURS BAR — BIANCA */
 .hours-bar{position:fixed;top:54px;left:0;right:0;z-index:290;height:38px;background:#fff;
-  border-bottom:1px solid var(--bd);display:flex;align-items:center;padding:0 28px;gap:0;
+  border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:center;padding:0 28px;gap:0;
   box-shadow:0 1px 6px rgba(26,86,196,.06)}
-.hb-ex{display:flex;align-items:center;gap:8px;padding-right:22px;margin-right:22px;border-right:1px solid var(--bd)}
+.hb-ex{display:flex;align-items:center;gap:8px;padding:0 28px;border-right:1px solid var(--bd)}
 .hb-ex:last-of-type{border-right:none}
 .hb-flag{font-size:13px}
 .hb-name{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase}
@@ -49,20 +49,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:54px;background:var(-
 .hb-st{font-family:var(--fm);font-size:11px;font-weight:600}
 .hb-st.open{color:var(--g)}.hb-st.closed{color:var(--r)}.hb-st.prepost{color:var(--o)}
 .hb-time{font-family:var(--fm);font-size:10px;color:var(--t3)}
-.hb-upd{margin-left:auto;font-family:var(--fm);font-size:10px;color:var(--t3)}
+.hb-upd{position:absolute;right:28px;font-family:var(--fm);font-size:10px;color:var(--t3)}
 
-/* TICKER TAPE — BIANCA */
-.tape{position:fixed;top:92px;left:0;right:0;z-index:280;height:32px;background:#fff;
-  border-bottom:1px solid var(--bd);overflow:hidden;display:flex;align-items:center;
-  box-shadow:0 1px 4px rgba(0,0,0,.03)}
-.tape-inner{display:flex;animation:scroll 55s linear infinite;white-space:nowrap}
+/* TICKER TAPE — BLU CHIARO */
+.tape{position:fixed;top:92px;left:0;right:0;z-index:280;height:34px;background:#D6E4F7;
+  border-bottom:1px solid #B8D0EC;overflow:hidden;display:flex;align-items:center}
+.tape-inner{display:flex;animation:scroll 38s linear infinite;white-space:nowrap}
 .tape-inner:hover{animation-play-state:paused}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.ti{display:inline-flex;align-items:center;gap:7px;padding:0 18px;border-right:1px solid var(--bd);height:32px;flex-shrink:0}
-.ti-sym{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:.3px;font-weight:500}
-.ti-p{font-family:var(--fm);font-size:11px;font-weight:500;color:var(--t)}
-.ti-c{font-family:var(--fm);font-size:10px;font-weight:500}
-.up{color:var(--g)}.down{color:var(--r)}
+.ti{display:inline-flex;align-items:center;gap:8px;padding:0 24px;border-right:1px solid #B8D0EC;height:34px;flex-shrink:0}
+.ti-sym{font-family:var(--fm);font-size:10px;color:#3A5F8A;letter-spacing:.4px;font-weight:600;text-transform:uppercase}
+.ti-p{font-family:var(--fm);font-size:12px;font-weight:600;color:#0F1C2E}
+.ti-c{font-family:var(--fm);font-size:10px;font-weight:600}
+.up{color:#059669}.down{color:#DC2626}
 
 /* PAGES */
 .page{display:none;padding:18px 28px 48px;margin-top:124px}
@@ -248,7 +247,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);
 </nav>
 
 <!-- ORARI BORSE — BIANCA -->
-<div class="hours-bar">
+<div class="hours-bar" style="position:relative">
   <div class="hb-ex"><span class="hb-flag">🇺🇸</span><span class="hb-name">NYSE / NASDAQ</span><div class="hb-dot" id="d0"></div><span class="hb-st" id="s0">—</span><span class="hb-time" id="t0"></span></div>
   <div class="hb-ex"><span class="hb-flag">🇬🇧</span><span class="hb-name">LONDRA — LSE</span><div class="hb-dot" id="d1"></div><span class="hb-st" id="s1">—</span><span class="hb-time" id="t1"></span></div>
   <div class="hb-ex"><span class="hb-flag">🇮🇹</span><span class="hb-name">MILANO — BORSA IT</span><div class="hb-dot" id="d2"></div><span class="hb-st" id="s2">—</span><span class="hb-time" id="t2"></span></div>
@@ -548,14 +547,21 @@ function updateHours(){
 }
 updateHours();setInterval(updateHours,30000);
 
-/* TICKER TAPE */
+/* TICKER TAPE — 6 simboli fissi */
+const TAPE_ITEMS=[
+  {s:'EURUSD=X', l:'EUR/USD',   dec:4},
+  {s:'^GSPC',    l:'S&P 500',   dec:0},
+  {s:'^NDX',     l:'NASDAQ',    dec:0},
+  {s:'^DJI',     l:'DOW JONES', dec:0},
+  {s:'GC=F',     l:'ORO',       dec:2},
+  {s:'^FTSEMIB', l:'FTSE MIB',  dec:0},
+];
 async function loadTape(){
   const items=[];
-  for(const s of TAPE_S){
-    const d=await api(s);if(!d)continue;
+  for(const item of TAPE_ITEMS){
+    const d=await api(item.s);if(!d)continue;
     const c=chgPct(d.price,d.prev);const up=c==null||c>=0;
-    const lbl=s.replace(/\^/,'').replace(/=X/,'').replace(/-USD$/,'').replace(/\.(MI|PA|DE|SW)$/,'');
-    items.push(`<div class="ti"><span class="ti-sym">${lbl}</span><span class="ti-p">${fmt(d.price,d.price<10?4:d.price<500?2:0)}</span><span class="ti-c ${up?'up':'down'}">${chgStr(c)}</span></div>`);
+    items.push(`<div class="ti"><span class="ti-sym">${item.l}</span><span class="ti-p">${fmt(d.price,item.dec)}</span><span class="ti-c ${up?'up':'down'}">${chgStr(c)}</span></div>`);
   }
   const html=items.join('');
   document.getElementById('tape1').innerHTML=html;
