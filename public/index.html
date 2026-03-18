@@ -22,9 +22,12 @@ body{background:var(--bg);color:var(--t);font-family:var(--ff);overflow-x:hidden
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:3px}
 
+/* HEADER FISSO UNIFICATO */
+.site-header{position:fixed;top:0;left:0;right:0;z-index:400;display:flex;flex-direction:column}
+
 /* NAV BLU */
-nav{position:fixed;top:0;left:0;right:0;z-index:300;height:54px;background:var(--b2);
-  display:flex;align-items:center;justify-content:space-between;padding:0 28px}
+nav{height:54px;background:var(--b2);
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0}
 .logo{font-size:18px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:9px;color:#fff}
 .logo-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:blink 2s infinite}
 @keyframes blink{0%,100%{opacity:.9}50%{opacity:.3}}
@@ -37,9 +40,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:54px;background:var(-
 .nav-time{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.5)}
 
 /* HOURS BAR BIANCA CENTRATA */
-.hours-bar{position:fixed;top:54px;left:0;right:0;z-index:290;height:38px;background:#fff;
+.hours-bar{height:38px;background:#fff;
   border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:center;
-  padding:0 28px;box-shadow:0 1px 6px rgba(26,86,196,.06)}
+  padding:0 28px;flex-shrink:0}
 .hb-ex{display:flex;align-items:center;gap:8px;padding:0 28px;border-right:1px solid var(--bd)}
 .hb-ex:last-of-type{border-right:none}
 .hb-flag{font-size:13px}
@@ -52,8 +55,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:300;height:54px;background:var(-
 .hb-upd{position:absolute;right:28px;font-family:var(--fm);font-size:10px;color:var(--t3)}
 
 /* TICKER TAPE BLU CHIARO */
-.tape{position:fixed;top:92px;left:0;right:0;z-index:280;height:34px;background:#D6E4F7;
-  border-bottom:1px solid #B8D0EC;overflow:hidden;display:flex;align-items:center}
+.tape{height:34px;background:#D6E4F7;
+  border-bottom:2px solid #A8C4E0;overflow:hidden;display:flex;align-items:center;flex-shrink:0}
 .tape-inner{display:flex;animation:scroll 38s linear infinite;white-space:nowrap}
 .tape-inner:hover{animation-play-state:paused}
 @keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
@@ -258,6 +261,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   </div>
 </div>
 
+<div class="site-header">
 <!-- NAV BLU -->
 <nav>
   <div class="logo"><div class="logo-dot"></div>Fin<span>Scope</span></div>
@@ -282,6 +286,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 <div class="tape">
   <div class="tape-inner" id="tape1"></div>
   <div class="tape-inner" id="tape2"></div>
+</div>
 </div>
 
 <!-- ═══ DASHBOARD ═══ -->
