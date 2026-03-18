@@ -249,11 +249,10 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);
 
 <!-- ORARI BORSE — BIANCA -->
 <div class="hours-bar">
-  <div class="hb-ex"><span class="hb-flag">🇺🇸</span><span class="hb-name">NYSE</span><div class="hb-dot" id="d0"></div><span class="hb-st" id="s0">—</span><span class="hb-time" id="t0"></span></div>
-  <div class="hb-ex"><span class="hb-flag">🇬🇧</span><span class="hb-name">LSE</span><div class="hb-dot" id="d1"></div><span class="hb-st" id="s1">—</span><span class="hb-time" id="t1"></span></div>
-  <div class="hb-ex"><span class="hb-flag">🇮🇹</span><span class="hb-name">BORSA IT</span><div class="hb-dot" id="d2"></div><span class="hb-st" id="s2">—</span><span class="hb-time" id="t2"></span></div>
-  <div class="hb-ex"><span class="hb-flag">🇩🇪</span><span class="hb-name">XETRA</span><div class="hb-dot" id="d3"></div><span class="hb-st" id="s3">—</span><span class="hb-time" id="t3"></span></div>
-  <div class="hb-ex"><span class="hb-flag">🇯🇵</span><span class="hb-name">TSE</span><div class="hb-dot" id="d4"></div><span class="hb-st" id="s4">—</span><span class="hb-time" id="t4"></span></div>
+  <div class="hb-ex"><span class="hb-flag">🇺🇸</span><span class="hb-name">NYSE / NASDAQ</span><div class="hb-dot" id="d0"></div><span class="hb-st" id="s0">—</span><span class="hb-time" id="t0"></span></div>
+  <div class="hb-ex"><span class="hb-flag">🇬🇧</span><span class="hb-name">LONDRA — LSE</span><div class="hb-dot" id="d1"></div><span class="hb-st" id="s1">—</span><span class="hb-time" id="t1"></span></div>
+  <div class="hb-ex"><span class="hb-flag">🇮🇹</span><span class="hb-name">MILANO — BORSA IT</span><div class="hb-dot" id="d2"></div><span class="hb-st" id="s2">—</span><span class="hb-time" id="t2"></span></div>
+
   <div class="hb-upd" id="dash-ts">Aggiornamento...</div>
 </div>
 
@@ -500,8 +499,6 @@ const EXCHANGES=[
   {tz:'America/New_York',open:[9,30],close:[16,0]},
   {tz:'Europe/London',open:[8,0],close:[16,30]},
   {tz:'Europe/Rome',open:[9,0],close:[17,30]},
-  {tz:'Europe/Berlin',open:[9,0],close:[17,30]},
-  {tz:'Asia/Tokyo',open:[9,0],close:[15,30]},
 ];
 
 let kpiSyms=JSON.parse(localStorage.getItem('fs_kpi')||'null')||['^GSPC','^FTSEMIB','EURUSD=X','^NDX'];
