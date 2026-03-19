@@ -11,14 +11,17 @@ export default async function handler(req, res) {
   // ── REGISTER ──
   if (action === 'register' && req.method === 'POST') {
     try {
-      const { email, password } = req.body;
+      const { email, password, name } = req.body;
       if (!email || !password) return res.status(400).json({ error: 'Email e password richiesti' });
       if (password.length < 8) return res.status(400).json({ error: 'Password minimo 8 caratteri' });
+
+      const body = { email_address: [email], password };
+      if (name) body.first_name = name;
 
       const r = await fetch('https://api.clerk.com/v1/users', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${SECRET}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email_address: [email], password }),
+        body: JSON.stringify(body),
       });
       const data = await r.json();
       if (!r.ok) {
@@ -26,17 +29,10 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: msg });
       }
 
-      const tr = await fetch('https://api.clerk.com/v1/sign_in_tokens', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${SECRET}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: data.id, expires_in_seconds: 2592000 }),
-      });
-      const tokenData = await tr.json();
-
       return res.json({
         ok: true,
-        token: tokenData.token,
-        user: { id: data.id, email: data.email_addresses?.[0]?.email_address }
+        token: data.id,
+        user: { id: data.id, email: data.email_addresses?.[0]?.email_address, name: data.first_name || null }
       });
     } catch (e) {
       return res.status(500).json({ error: 'Errore del server: ' + e.message });
@@ -71,18 +67,10 @@ export default async function handler(req, res) {
         return res.status(401).json({ error: 'Password non corretta' });
       }
 
-      // Crea token sessione (30 giorni)
-      const tr = await fetch('https://api.clerk.com/v1/sign_in_tokens', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${SECRET}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: user.id, expires_in_seconds: 2592000 }),
-      });
-      const tokenData = await tr.json();
-
       return res.json({
         ok: true,
-        token: tokenData.token,
-        user: { id: user.id, email: user.email_addresses?.[0]?.email_address }
+        token: user.id,
+        user: { id: user.id, email: user.email_addresses?.[0]?.email_address, name: user.first_name || null }
       });
     } catch (e) {
       return res.status(500).json({ error: 'Errore del server: ' + e.message });

@@ -402,6 +402,10 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
     </div>
     <div class="auth-err" id="auth-err"></div>
     <div class="auth-ok" id="auth-ok"></div>
+    <div class="auth-field" id="name-field" style="display:none">
+      <label>Nome</label>
+      <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+    </div>
     <div class="auth-field">
       <label>Email</label>
       <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
@@ -1668,22 +1672,26 @@ function switchTab(tab,btn){
   document.getElementById('auth-err').classList.remove('show');
   document.getElementById('auth-ok').classList.remove('show');
   document.getElementById('auth-pwd').placeholder=tab==='login'?'La tua password':'Minimo 8 caratteri';
+  document.getElementById('name-field').style.display=tab==='register'?'block':'none';
+  if(tab==='register') setTimeout(()=>document.getElementById('auth-name').focus(),50);
 }
 
 async function submitAuth(){
   const email=document.getElementById('auth-email').value.trim();
   const pwd=document.getElementById('auth-pwd').value;
+  const name=document.getElementById('auth-name')?.value.trim()||'';
   const errEl=document.getElementById('auth-err');
   const okEl=document.getElementById('auth-ok');
   const btn=document.getElementById('auth-submit');
   errEl.classList.remove('show');okEl.classList.remove('show');
   if(!email||!pwd){errEl.textContent='Inserisci email e password';errEl.classList.add('show');return;}
+  if(authTab==='register'&&!name){errEl.textContent='Inserisci il tuo nome';errEl.classList.add('show');return;}
   btn.disabled=true;btn.textContent='Caricamento...';
   try{
     const r=await fetch('/api/auth?action='+authTab,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email,password:pwd})
+      body:JSON.stringify({email,password:pwd,name})
     });
     const d=await r.json();
     if(!r.ok||!d.ok){
@@ -1696,7 +1704,8 @@ async function submitAuth(){
       localStorage.setItem('fs_login_at', Date.now().toString());
       currentToken=d.user.id; currentUser=d.user;
       updateNavUser();
-      okEl.textContent=authTab==='login'?'Accesso effettuato!':'Account creato con successo!';
+      const displayName=d.user.name||d.user.email;
+      okEl.textContent=authTab==='login'?`Ciao, ${displayName}! Bentornato.`:`Benvenuto in FinScope, ${displayName}!`;
       okEl.classList.add('show');
       setTimeout(()=>{closeAuthModal();loadUserData();},1000);
     }
@@ -1711,7 +1720,8 @@ async function submitAuth(){
 function updateNavUser(){
   const area=document.getElementById('nav-user-area');
   if(currentUser){
-    area.innerHTML=`<span class="nav-user-email">${currentUser.email}</span>
+    const display=currentUser.name||currentUser.email;
+    area.innerHTML=`<span class="nav-user-email">Ciao, ${display}</span>
       <button class="nav-logout-btn" onclick="logout()">Esci</button>`;
   } else {
     area.innerHTML=`<button class="nav-login-btn" onclick="openAuthModal()">Accedi</button>`;
@@ -1791,7 +1801,7 @@ function showPortfolioState(){
   const sub=document.getElementById('port-sub');
   if(currentUser){
     logMsg.style.display='none';content.style.display='block';
-    sub.textContent=`${currentUser.email} · ${portfolio.length} titoli`;
+    sub.textContent=`${currentUser.name||currentUser.email} · ${portfolio.length} titoli`;
     renderPortfolio();
     renderWatchlistPort();
   } else {
