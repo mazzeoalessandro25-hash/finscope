@@ -126,9 +126,11 @@ nav{height:54px;background:var(--b2);
 .vs-val{font-family:var(--fm);font-size:13px;font-weight:500;color:var(--t)}
 .vs-lbl{font-size:9px;color:var(--t3);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
 
-/* COMMODITIES & CRYPTO — CLICCABILI */
+/* SPARKLINE */
+.spark{display:block;flex-shrink:0}
 .com-item{background:var(--card);border:1px solid var(--bd);border-radius:11px;padding:14px;
-  box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;transition:all .15s}
+  box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;transition:all .15s;
+  display:flex;justify-content:space-between;align-items:center;gap:8px}
 .com-item:hover{border-color:rgba(26,86,196,.4);box-shadow:0 3px 12px rgba(26,86,196,.1);transform:translateY(-1px)}
 .com-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:6px;text-transform:uppercase}
 .com-p{font-family:var(--fm);font-size:18px;font-weight:500;margin-bottom:3px;color:var(--t)}
@@ -407,23 +409,23 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   <!-- COMMODITIES -->
   <div class="sdiv"><div class="sdiv-t">Commodities</div><div class="sdiv-l"></div></div>
   <div class="grid3">
-    <div class="com-item" onclick="openModal('GC=F','Oro · XAU/USD')"><div class="com-lbl">Oro · XAU/USD</div><div class="com-p" id="c0p">—</div><div class="com-c" id="c0c">—</div></div>
-    <div class="com-item" onclick="openModal('BZ=F','Petrolio Brent')"><div class="com-lbl">Petrolio Brent</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div></div>
-    <div class="com-item" onclick="openModal('PL=F','Platino')"><div class="com-lbl">Platino · XPT/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div></div>
-    <div class="com-item" onclick="openModal('SI=F','Argento · XAG/USD')"><div class="com-lbl">Argento · XAG/USD</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div></div>
-    <div class="com-item" onclick="openModal('NG=F','Gas naturale')"><div class="com-lbl">Gas naturale</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div></div>
-    <div class="com-item" onclick="openModal('CC=F','Cacao')"><div class="com-lbl">Cacao · CC=F</div><div class="com-p" id="c5p">—</div><div class="com-c" id="c5c">—</div></div>
+    <div class="com-item" onclick="openModal('GC=F','Oro · XAU/USD')"><div><div class="com-lbl">Oro · XAU/USD</div><div class="com-p" id="c0p">—</div><div class="com-c" id="c0c">—</div></div><svg class="spark" id="sp-c0" width="64" height="32"></svg></div>
+    <div class="com-item" onclick="openModal('BZ=F','Petrolio Brent')"><div><div class="com-lbl">Petrolio Brent</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div></div><svg class="spark" id="sp-c1" width="64" height="32"></svg></div>
+    <div class="com-item" onclick="openModal('PL=F','Platino')"><div><div class="com-lbl">Platino · XPT/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div></div><svg class="spark" id="sp-c2" width="64" height="32"></svg></div>
+    <div class="com-item" onclick="openModal('SI=F','Argento · XAG/USD')"><div><div class="com-lbl">Argento · XAG/USD</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div></div><svg class="spark" id="sp-c3" width="64" height="32"></svg></div>
+    <div class="com-item" onclick="openModal('NG=F','Gas naturale')"><div><div class="com-lbl">Gas naturale</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div></div><svg class="spark" id="sp-c4" width="64" height="32"></svg></div>
+    <div class="com-item" onclick="openModal('CC=F','Cacao')"><div><div class="com-lbl">Cacao · CC=F</div><div class="com-p" id="c5p">—</div><div class="com-c" id="c5c">—</div></div><svg class="spark" id="sp-c5" width="64" height="32"></svg></div>
   </div>
 
   <!-- CRYPTO -->
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Criptovalute</div><div class="sdiv-l"></div></div>
   <div class="grid3">
-    <div class="crypto-item" onclick="openModal('BTC-USD','Bitcoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706">₿</div><div><div class="cry-name">Bitcoin</div><div class="cry-sym">BTC/USD</div></div></div><div class="cry-r"><div class="cry-p" id="k0p">—</div><div class="cry-c" id="k0c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('ETH-USD','Ethereum')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4">Ξ</div><div><div class="cry-name">Ethereum</div><div class="cry-sym">ETH/USD</div></div></div><div class="cry-r"><div class="cry-p" id="k1p">—</div><div class="cry-c" id="k1c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('SOL-USD','Solana')"><div class="cry-l"><div class="cry-ico" style="background:#F0FDF4;color:#059669">◎</div><div><div class="cry-name">Solana</div><div class="cry-sym">SOL/USD</div></div></div><div class="cry-r"><div class="cry-p" id="k2p">—</div><div class="cry-c" id="k2c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('BNB-USD','BNB')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:11px">BNB</div><div><div class="cry-name">BNB</div><div class="cry-sym">BNB/USD</div></div></div><div class="cry-r"><div class="cry-p" id="k3p">—</div><div class="cry-c" id="k3c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('XRP-USD','XRP')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4;font-size:11px">XRP</div><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div>
+    <div class="crypto-item" onclick="openModal('BTC-USD','Bitcoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706">₿</div><div><div class="cry-name">Bitcoin</div><div class="cry-sym">BTC/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k0" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k0p">—</div><div class="cry-c" id="k0c">—</div></div></div></div>
+    <div class="crypto-item" onclick="openModal('ETH-USD','Ethereum')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4">Ξ</div><div><div class="cry-name">Ethereum</div><div class="cry-sym">ETH/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k1" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k1p">—</div><div class="cry-c" id="k1c">—</div></div></div></div>
+    <div class="crypto-item" onclick="openModal('SOL-USD','Solana')"><div class="cry-l"><div class="cry-ico" style="background:#F0FDF4;color:#059669">◎</div><div><div class="cry-name">Solana</div><div class="cry-sym">SOL/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k2" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k2p">—</div><div class="cry-c" id="k2c">—</div></div></div></div>
+    <div class="crypto-item" onclick="openModal('BNB-USD','BNB')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:11px">BNB</div><div><div class="cry-name">BNB</div><div class="cry-sym">BNB/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k3" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k3p">—</div><div class="cry-c" id="k3c">—</div></div></div></div>
+    <div class="crypto-item" onclick="openModal('XRP-USD','XRP')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4;font-size:11px">XRP</div><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k4" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div></div>
+    <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k5" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div></div>
   </div>
 </div>
 
@@ -802,12 +804,17 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal({target:d
 async function loadIndices(){
   const el=document.getElementById('idx-list');el.innerHTML='';
   for(const ix of ALL_IDX){
-    const d=await api(ix.s);const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+    const [d,sparkData]=await Promise.all([api(ix.s),fetchSparkData(ix.s)]);
+    const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+    const spId='sp-idx-'+ix.s.replace(/[^a-z0-9]/gi,'');
     const r=document.createElement('div');r.className='mi';
     r.onclick=()=>openModal(ix.s,ix.l);
-    r.innerHTML=`<div class="mi-l"><div class="mi-sym">${ix.g} ${ix.l}</div><div class="mi-name">${ix.s}</div></div>
+    r.innerHTML=`
+      <div class="mi-l"><div class="mi-sym">${ix.g} ${ix.l}</div><div class="mi-name">${ix.s}</div></div>
+      <svg class="spark" id="${spId}" width="56" height="28" style="flex-shrink:0"></svg>
       <div class="mi-r"><div class="mi-p">${d?fmt(d.price,0):'N/D'}</div><span class="mi-c ${up?'up':'down'}">${chgStr(c)}</span></div>`;
     el.appendChild(r);
+    drawSparkline(spId,sparkData,up);
   }
 }
 
@@ -860,22 +867,60 @@ async function loadMovers(){
   renderMovers(bot5,document.getElementById('movers-bot'));
 }
 
+/* ── SPARKLINE ── */
+function drawSparkline(svgId, pts, up){
+  const el=document.getElementById(svgId);
+  if(!el||!pts||pts.length<2)return;
+  const W=64,H=32,pad=2;
+  const vals=pts.map(p=>p.close).filter(v=>v!=null&&!isNaN(v));
+  if(vals.length<2)return;
+  const mn=Math.min(...vals),mx=Math.max(...vals);
+  const range=mx-mn||1;
+  const xStep=(W-pad*2)/(vals.length-1);
+  const points=vals.map((v,i)=>{
+    const x=pad+i*xStep;
+    const y=H-pad-(v-mn)/range*(H-pad*2);
+    return`${x},${y}`;
+  }).join(' ');
+  const color=up?'#059669':'#DC2626';
+  const fillColor=up?'rgba(5,150,105,.12)':'rgba(220,38,38,.12)';
+  const first=points.split(' ')[0];
+  const last=points.split(' ').slice(-1)[0];
+  el.innerHTML=`
+    <defs><linearGradient id="sg-${svgId}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity=".25"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <polygon points="${first} ${points} ${last.split(',')[0]},${H}" fill="url(#sg-${svgId})"/>
+    <polyline points="${points}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${last.split(',')[0]}" cy="${last.split(',')[1]}" r="2" fill="${color}"/>`;
+}
+
+async function fetchSparkData(sym){
+  const data=await api(sym,'history&range=5d');
+  return data?.points||[];
+}
+
 /* ── COMMODITIES ── */
 async function loadComs(){
+  const sparks=await Promise.all(COM_S.map(s=>fetchSparkData(s)));
   for(let i=0;i<COM_S.length;i++){
     const d=await api(COM_S[i]);const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
     document.getElementById('c'+i+'p').textContent=d?'$'+fmt(d.price,2):'N/D';
     const ce=document.getElementById('c'+i+'c');ce.textContent=chgStr(c);ce.className='com-c '+(up?'up':'down');
+    drawSparkline('sp-c'+i,sparks[i],up);
   }
 }
 
 /* ── CRYPTO ── */
 async function loadCrypto(){
+  const sparks=await Promise.all(CRYPTO_S.map(s=>fetchSparkData(s)));
   for(let i=0;i<CRYPTO_S.length;i++){
     const d=await api(CRYPTO_S[i]);const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
     const dec=CRYPTO_S[i].includes('XRP')||CRYPTO_S[i].includes('ADA')||CRYPTO_S[i].includes('DOGE')?4:CRYPTO_S[i].includes('SOL')||CRYPTO_S[i].includes('BNB')?2:0;
     document.getElementById('k'+i+'p').textContent=d?'$'+fmt(d.price,dec):'N/D';
     const ce=document.getElementById('k'+i+'c');ce.textContent=chgStr(c);ce.className='cry-c '+(up?'up':'down');
+    drawSparkline('sp-k'+i,sparks[i],up);
   }
 }
 
