@@ -59,7 +59,9 @@ nav{height:54px;background:var(--b2);
   overflow:hidden;display:flex;align-items:center;flex-shrink:0;position:relative}
 .tape-track{display:flex;align-items:center;white-space:nowrap;will-change:transform}
 .ti{display:inline-flex;align-items:center;gap:8px;padding:0 28px;
-  border-right:1px solid #B8D0EC;height:34px;flex-shrink:0}
+  border-right:1px solid #B8D0EC;height:34px;flex-shrink:0;transition:background .15s}
+.ti:hover{background:rgba(26,86,196,.12)}
+.ti-news:hover{background:rgba(26,86,196,.12)}
 .ti-sym{font-family:var(--fm);font-size:10px;color:#3A5F8A;letter-spacing:.5px;font-weight:700;text-transform:uppercase}
 .ti-p{font-family:var(--fm);font-size:12px;font-weight:600;color:#0F1C2E}
 .ti-c{font-family:var(--fm);font-size:10px;font-weight:600}
@@ -638,35 +640,31 @@ updateHours();setInterval(updateHours,30000);
 let tapeRAF=null, tapeX=0, tapeSpeed=0.5, tapeHalfW=0;
 
 async function loadTape(){
-  // Fetch prezzi e news in parallelo
   const [priceResults, newsData] = await Promise.all([
     Promise.all(TAPE_ITEMS.map(item=>api(item.s).then(d=>({item,d})))),
     api('tapenews','tapenews')
   ]);
 
-  // HTML prezzi
   const priceHtml = priceResults.map(({item,d})=>{
     if(!d)return'';
     const c=chgPct(d.price,d.prev);const up=c==null||c>=0;
-    return`<div class="ti"><span class="ti-sym">${item.l}</span><span class="ti-p">${fmt(d.price,item.dec)}</span><span class="ti-c ${up?'up':'down'}">${chgStr(c)}</span></div>`;
+    return`<div class="ti" style="cursor:pointer" onclick="openModal('${item.s}','${item.l}')"><span class="ti-sym">${item.l}</span><span class="ti-p">${fmt(d.price,item.dec)}</span><span class="ti-c ${up?'up':'down'}">${chgStr(c)}</span></div>`;
   }).filter(Boolean).join('');
 
-  // HTML news — max 2 titoli con tag apertura/chiusura
-  let newsHtml = '';
+  let newsHtml='';
   if(newsData?.news?.length){
-    const isOpen = newsData.isOpen;
-    const tag = isOpen ? 'APERTURA' : 'CHIUSURA';
-    const tagCls = isOpen ? 'open' : 'close';
-    // separatore visivo prima delle news
-    newsHtml = `<div class="ti" style="padding:0 20px;opacity:.4"><span style="font-size:16px;color:#3A5F8A">|</span></div>`;
+    const isOpen=newsData.isOpen;
+    const tag=isOpen?'APERTURA':'CHIUSURA';
+    const tagCls=isOpen?'open':'close';
+    newsHtml=`<div class="ti" style="padding:0 20px;opacity:.4"><span style="font-size:16px;color:#3A5F8A">|</span></div>`;
     newsData.news.forEach(n=>{
-      // Tronca titolo a max 80 caratteri
-      const title = n.title.length > 80 ? n.title.slice(0,77)+'...' : n.title;
-      newsHtml += `<div class="ti-news"><span class="ti-news-tag ${tagCls}">${tag}</span><span class="ti-news-txt">${title}</span></div>`;
+      const title=n.title.length>80?n.title.slice(0,77)+'...':n.title;
+      const link=n.link||'#';
+      newsHtml+=`<div class="ti-news" style="cursor:pointer" onclick="window.open('${link}','_blank')"><span class="ti-news-tag ${tagCls}">${tag}</span><span class="ti-news-txt" title="${n.title}">${title}</span></div>`;
     });
   }
 
-  const html = priceHtml + newsHtml;
+  const html=priceHtml+newsHtml;
   if(!html)return;
 
   const track=document.getElementById('tape-track');
@@ -688,7 +686,7 @@ function runTape(){
   tapeRAF=requestAnimationFrame(runTape);
 }
 
-// Pausa al hover
+// Pausa al hover — usa pointer-events per non bloccare i click
 document.addEventListener('DOMContentLoaded',()=>{
   const tc=document.getElementById('tape-container');
   if(tc){
