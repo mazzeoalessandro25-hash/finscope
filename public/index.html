@@ -252,11 +252,94 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 .flogo{font-size:15px;font-weight:800;color:var(--t)}.flogo span{color:var(--b)}
 .fnote{font-size:11px;color:var(--t3);max-width:520px;line-height:1.5}
 
-@media(max-width:1024px){.dash-mid,.sim-l{grid-template-columns:1fr}.dash-bot,.grid2{grid-template-columns:1fr}}
-@media(max-width:640px){nav{padding:0 14px}.page{padding:14px 16px 40px}.grid3{grid-template-columns:1fr 1fr}.hours-bar{overflow-x:auto}}
+/* AUTH MODAL */
+.auth-overlay{display:none;position:fixed;inset:0;background:rgba(15,28,46,.6);z-index:600;
+  align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.auth-overlay.open{display:flex}
+.auth-box{background:#fff;border-radius:16px;padding:32px;width:min(420px,95vw);
+  box-shadow:0 24px 64px rgba(0,0,0,.18)}
+.auth-logo{font-size:20px;font-weight:800;color:var(--t);text-align:center;margin-bottom:6px}
+.auth-logo span{color:var(--b)}
+.auth-sub{font-size:13px;color:var(--t3);text-align:center;margin-bottom:28px}
+.auth-tabs{display:flex;background:var(--s2);border-radius:9px;padding:3px;margin-bottom:24px;gap:3px}
+.auth-tab{flex:1;padding:8px;border:none;background:none;border-radius:7px;font-family:var(--ff);
+  font-size:13px;font-weight:500;cursor:pointer;color:var(--t2);transition:all .15s}
+.auth-tab.active{background:#fff;color:var(--t);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.auth-field{margin-bottom:16px}
+.auth-field label{display:block;font-size:11px;color:var(--t3);font-family:var(--fm);
+  letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
+.auth-field input{width:100%;background:var(--s2);border:1px solid var(--bd);color:var(--t);
+  padding:11px 14px;border-radius:9px;font-family:var(--ff);font-size:14px;outline:none;transition:all .15s}
+.auth-field input:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(26,86,196,.1)}
+.auth-submit{width:100%;background:var(--b);color:#fff;border:none;padding:13px;
+  border-radius:9px;font-family:var(--ff);font-weight:600;font-size:15px;cursor:pointer;
+  transition:all .15s;margin-top:4px}
+.auth-submit:hover{background:var(--b2)}
+.auth-submit:disabled{opacity:.6;cursor:not-allowed}
+.auth-err{background:var(--r2);color:#B91C1C;font-size:12px;padding:10px 14px;
+  border-radius:8px;margin-bottom:16px;display:none;font-family:var(--fm)}
+.auth-err.show{display:block}
+.auth-ok{background:var(--g2);color:#065F46;font-size:12px;padding:10px 14px;
+  border-radius:8px;margin-bottom:16px;display:none;font-family:var(--fm)}
+.auth-ok.show{display:block}
+/* NAV user pill */
+.nav-user{display:flex;align-items:center;gap:8px}
+.nav-user-email{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.7);
+  max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nav-login-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);
+  color:#fff;font-family:var(--ff);font-size:12px;font-weight:500;padding:5px 14px;
+  border-radius:6px;cursor:pointer;transition:all .15s}
+.nav-login-btn:hover{background:rgba(255,255,255,.25)}
+.nav-logout-btn{background:none;border:none;color:rgba(255,255,255,.5);font-size:11px;
+  cursor:pointer;font-family:var(--fm);padding:4px 8px;border-radius:5px;transition:all .15s}
+.nav-logout-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
+/* Portfolio section */
+.port-empty{text-align:center;padding:32px 20px;color:var(--t3);font-size:13px}
+.port-add-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.port-inp{background:var(--s2);border:1px solid var(--bd);color:var(--t);padding:8px 11px;
+  border-radius:8px;font-family:var(--fm);font-size:13px;outline:none;transition:all .15s}
+.port-inp:focus{border-color:rgba(26,86,196,.5)}
+.port-inp::placeholder{color:var(--t3)}
+.port-btn{background:var(--b);color:#fff;border:none;padding:8px 16px;border-radius:8px;
+  font-weight:600;font-size:13px;cursor:pointer}
+.port-item{display:flex;justify-content:space-between;align-items:center;
+  padding:10px 14px;border-radius:8px;background:var(--s2);border:1px solid var(--bd);margin-bottom:8px}
+.port-sym{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--t)}
+.port-info{font-size:11px;color:var(--t3);font-family:var(--fm)}
+.port-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px}
+.port-del:hover{color:var(--r)}
+.port-pnl{font-family:var(--fm);font-size:13px;font-weight:600}
 </style>
 </head>
 <body>
+
+<!-- AUTH MODAL -->
+<div class="auth-overlay" id="auth-modal">
+  <div class="auth-box">
+    <div class="auth-logo">Fin<span>Scope</span></div>
+    <div class="auth-sub">Accedi per salvare watchlist, portafoglio e preferenze</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchTab('login',this)">Accedi</button>
+      <button class="auth-tab" onclick="switchTab('register',this)">Registrati</button>
+    </div>
+    <div class="auth-err" id="auth-err"></div>
+    <div class="auth-ok" id="auth-ok"></div>
+    <div class="auth-field">
+      <label>Email</label>
+      <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
+    </div>
+    <div class="auth-field">
+      <label>Password</label>
+      <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
+        onkeydown="if(event.key==='Enter')submitAuth()"/>
+    </div>
+    <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Accedi</button>
+    <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:16px;line-height:1.5">
+      Continuando accetti la nostra <a href="#" style="color:var(--b)">Privacy Policy</a>.<br>
+      I tuoi dati sono trattati secondo il GDPR.
+    </p>
+  </div>
+</div>
 
 <!-- MODAL GRAFICO -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
@@ -286,10 +369,16 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   <div class="nav-items">
     <button class="nav-btn active" onclick="showPage('dashboard',this)">Dashboard</button>
     <button class="nav-btn" onclick="showPage('screener',this)">Screener</button>
+    <button class="nav-btn" onclick="showPage('portafoglio',this)">Portafoglio</button>
     <button class="nav-btn" onclick="showPage('simulatore',this)">Simulatore</button>
     <button class="nav-btn" onclick="showPage('news',this)">News</button>
   </div>
-  <div class="nav-right"><div class="nav-time" id="clock">--:--:--</div></div>
+  <div class="nav-right">
+    <div class="nav-time" id="clock">--:--:--</div>
+    <div class="nav-user" id="nav-user-area">
+      <button class="nav-login-btn" onclick="openAuthModal()">Accedi</button>
+    </div>
+  </div>
 </nav>
 
 <!-- ORARI BORSE CENTRATI -->
@@ -463,6 +552,56 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
       <thead><tr><th></th><th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th><th>MKT</th><th>SETTORE</th><th>TIPO</th><th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th><th>5 GIORNI</th><th onclick="sortTbl('score')">SCORE ↕</th></tr></thead>
       <tbody id="sc-body"><tr><td colspan="9" class="ld">Caricamento...</td></tr></tbody>
     </table>
+  </div>
+</div>
+
+<!-- ═══ PORTAFOGLIO ═══ -->
+<div class="page" id="page-portafoglio">
+  <div class="pg-title">Il mio portafoglio</div>
+  <div class="pg-sub" id="port-sub">Accedi per salvare e monitorare i tuoi titoli</div>
+
+  <div id="port-login-msg" style="display:none;text-align:center;padding:48px 20px">
+    <div style="font-size:40px;margin-bottom:16px">🔒</div>
+    <div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:8px">Accesso richiesto</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:24px">Crea un account gratuito per salvare il tuo portafoglio</div>
+    <button class="auth-submit" style="width:auto;padding:12px 32px" onclick="openAuthModal()">Accedi o registrati</button>
+  </div>
+
+  <div id="port-content" style="display:none">
+    <!-- Aggiungi titolo -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="ch"><div><div class="ct">Aggiungi titolo</div><div class="cs">Inserisci ticker, quantità e prezzo di acquisto</div></div></div>
+      <div class="port-add-row">
+        <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:120px;text-transform:uppercase"/>
+        <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any" style="width:100px"/>
+        <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acquisto $" min="0" step="any" style="width:150px"/>
+        <button class="port-btn" onclick="addPortfolioItem()">+ Aggiungi</button>
+      </div>
+    </div>
+
+    <!-- Lista titoli + riepilogo -->
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
+      <div class="card">
+        <div class="ch"><div><div class="ct">Titoli in portafoglio</div><div class="cs">Prezzi live · clicca per grafico</div></div></div>
+        <div id="port-list"><div class="ld">Nessun titolo aggiunto</div></div>
+      </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Riepilogo</div></div></div>
+        <div id="port-summary">
+          <div class="vix-stats" style="grid-template-columns:1fr 1fr;gap:12px">
+            <div class="vs-item"><div class="vs-val" id="ps-invested">—</div><div class="vs-lbl">Investito</div></div>
+            <div class="vs-item"><div class="vs-val" id="ps-value">—</div><div class="vs-lbl">Valore attuale</div></div>
+            <div class="vs-item"><div class="vs-val" id="ps-pnl">—</div><div class="vs-lbl">P&L totale</div></div>
+            <div class="vs-item"><div class="vs-val" id="ps-pnlpct">—</div><div class="vs-lbl">Rendimento %</div></div>
+          </div>
+        </div>
+        <!-- Watchlist -->
+        <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
+          <div class="ct" style="margin-bottom:12px">Watchlist</div>
+          <div id="wl-list-port"><div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Nessun titolo in watchlist</div></div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1083,6 +1222,280 @@ async function boot(){
 boot();
 calcSim();
 setInterval(()=>{loadIndices();loadComs();loadCrypto();loadVIX();document.getElementById('dash-ts').textContent='Aggiornato: '+now();},60000);
+
+/* ══════════════════════════════════════════
+   AUTH — login / register / session
+══════════════════════════════════════════ */
+const TOKEN_KEY='fs_token';
+const USER_KEY='fs_user';
+let currentUser=null;
+let currentToken=null;
+let authTab='login';
+let portfolio=[];
+
+function openAuthModal(){
+  document.getElementById('auth-modal').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('auth-err').classList.remove('show');
+  document.getElementById('auth-ok').classList.remove('show');
+  document.getElementById('auth-email').value='';
+  document.getElementById('auth-pwd').value='';
+  setTimeout(()=>document.getElementById('auth-email').focus(),100);
+}
+function closeAuthModal(){
+  document.getElementById('auth-modal').classList.remove('open');
+  document.body.style.overflow='';
+}
+document.getElementById('auth-modal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('auth-modal'))closeAuthModal();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeAuthModal();
+});
+
+function switchTab(tab,btn){
+  authTab=tab;
+  document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('auth-submit').textContent=tab==='login'?'Accedi':'Crea account';
+  document.getElementById('auth-err').classList.remove('show');
+  document.getElementById('auth-ok').classList.remove('show');
+  document.getElementById('auth-pwd').placeholder=tab==='login'?'La tua password':'Minimo 8 caratteri';
+}
+
+async function submitAuth(){
+  const email=document.getElementById('auth-email').value.trim();
+  const pwd=document.getElementById('auth-pwd').value;
+  const errEl=document.getElementById('auth-err');
+  const okEl=document.getElementById('auth-ok');
+  const btn=document.getElementById('auth-submit');
+  errEl.classList.remove('show');okEl.classList.remove('show');
+  if(!email||!pwd){errEl.textContent='Inserisci email e password';errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Caricamento...';
+  try{
+    const r=await fetch('/api/auth?action='+authTab,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pwd})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.ok){
+      errEl.textContent=d.error||'Errore sconosciuto';
+      errEl.classList.add('show');
+    } else {
+      // Salva token e utente
+      localStorage.setItem(TOKEN_KEY,d.token);
+      localStorage.setItem(USER_KEY,JSON.stringify(d.user));
+      currentToken=d.token;currentUser=d.user;
+      updateNavUser();
+      okEl.textContent=authTab==='login'?'Accesso effettuato!':'Account creato con successo!';
+      okEl.classList.add('show');
+      setTimeout(()=>{closeAuthModal();loadUserData();},1000);
+    }
+  }catch(e){
+    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.classList.add('show');
+  }
+  btn.disabled=false;
+  btn.textContent=authTab==='login'?'Accedi':'Crea account';
+}
+
+function updateNavUser(){
+  const area=document.getElementById('nav-user-area');
+  if(currentUser){
+    area.innerHTML=`<span class="nav-user-email">${currentUser.email}</span>
+      <button class="nav-logout-btn" onclick="logout()">Esci</button>`;
+  } else {
+    area.innerHTML=`<button class="nav-login-btn" onclick="openAuthModal()">Accedi</button>`;
+  }
+}
+
+function logout(){
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  currentUser=null;currentToken=null;
+  portfolio=[];watchlist=[];
+  updateNavUser();
+  showPortfolioState();
+}
+
+async function verifySession(){
+  const token=localStorage.getItem(TOKEN_KEY);
+  const user=localStorage.getItem(USER_KEY);
+  if(!token||!user)return;
+  try{
+    const r=await fetch('/api/auth?action=verify',{
+      headers:{Authorization:'Bearer '+token}
+    });
+    const d=await r.json();
+    if(d.ok){
+      currentToken=token;
+      currentUser=JSON.parse(user);
+      updateNavUser();
+      await loadUserData();
+    } else {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.removeItem(USER_KEY);
+    }
+  }catch{
+    // usa dati locali se offline
+    currentToken=token;
+    currentUser=JSON.parse(user);
+    updateNavUser();
+  }
+}
+
+async function loadUserData(){
+  if(!currentToken)return;
+  try{
+    const r=await fetch('/api/user?type=all',{
+      headers:{Authorization:'Bearer '+currentToken}
+    });
+    const d=await r.json();
+    if(d.watchlist)watchlist=d.watchlist;
+    if(d.portfolio)portfolio=d.portfolio;
+    showPortfolioState();
+    renderPortfolio();
+  }catch{}
+}
+
+async function saveWatchlist(){
+  if(!currentToken)return;
+  try{await fetch('/api/user?type=watchlist',{
+    method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
+    body:JSON.stringify({watchlist})
+  });}catch{}
+}
+
+async function savePortfolio(){
+  if(!currentToken)return;
+  try{await fetch('/api/user?type=portfolio',{
+    method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
+    body:JSON.stringify({portfolio})
+  });}catch{}
+}
+
+/* ── PORTFOLIO PAGE ── */
+function showPortfolioState(){
+  const logMsg=document.getElementById('port-login-msg');
+  const content=document.getElementById('port-content');
+  const sub=document.getElementById('port-sub');
+  if(currentUser){
+    logMsg.style.display='none';content.style.display='block';
+    sub.textContent=`Benvenuto ${currentUser.email} · ${portfolio.length} titoli`;
+    renderPortfolio();
+    renderWatchlistPort();
+  } else {
+    logMsg.style.display='block';content.style.display='none';
+    sub.textContent='Accedi per salvare e monitorare i tuoi titoli';
+  }
+}
+
+async function addPortfolioItem(){
+  if(!currentUser){openAuthModal();return;}
+  const sym=(document.getElementById('port-sym').value||'').toUpperCase().trim();
+  const qty=parseFloat(document.getElementById('port-qty').value);
+  const price=parseFloat(document.getElementById('port-price').value);
+  if(!sym||!qty||!price||qty<=0||price<=0)return;
+  portfolio.push({sym,qty,buyPrice:price,addedAt:Date.now()});
+  document.getElementById('port-sym').value='';
+  document.getElementById('port-qty').value='';
+  document.getElementById('port-price').value='';
+  await savePortfolio();
+  renderPortfolio();
+}
+
+async function removePortfolioItem(idx){
+  portfolio.splice(idx,1);
+  await savePortfolio();
+  renderPortfolio();
+}
+
+async function renderPortfolio(){
+  const el=document.getElementById('port-list');
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld">Nessun titolo aggiunto · Usa il form sopra per aggiungere</div>';
+    document.getElementById('ps-invested').textContent='—';
+    document.getElementById('ps-value').textContent='—';
+    document.getElementById('ps-pnl').textContent='—';
+    document.getElementById('ps-pnlpct').textContent='—';
+    return;
+  }
+  let totalInvested=0,totalValue=0;
+  const rows=await Promise.all(portfolio.map(async(item,i)=>{
+    const d=await api(item.sym);
+    const curPrice=d?.price||null;
+    const invested=item.qty*item.buyPrice;
+    const curVal=curPrice?item.qty*curPrice:null;
+    const pnl=curVal?curVal-invested:null;
+    const pnlPct=pnl?((pnl/invested)*100):null;
+    if(curVal)totalValue+=curVal;
+    totalInvested+=invested;
+    const up=pnl==null||pnl>=0;
+    return`<div class="port-item" onclick="openModal('${item.sym}','${item.sym}')">
+      <div>
+        <div class="port-sym">${item.sym} <span style="font-weight:400;color:var(--t3)">${item.qty} pz</span></div>
+        <div class="port-info">Acquisto: $${fmt(item.buyPrice,2)} · Investito: $${fmt(invested,2)}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:var(--fm);font-size:13px;color:var(--t)">${curPrice?'$'+fmt(curPrice,2):'N/D'}</div>
+        <div class="port-pnl ${up?'up':'down'}">${pnl!=null?(up?'+':'')+fmt(pnl,2)+' ('+fmt(pnlPct,2)+'%)':'—'}</div>
+      </div>
+      <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
+    </div>`;
+  }));
+  el.innerHTML=rows.join('');
+  const totalPnl=totalValue-totalInvested;
+  const totalPct=totalInvested?((totalPnl/totalInvested)*100):0;
+  const up=totalPnl>=0;
+  document.getElementById('ps-invested').textContent='$'+fmt(totalInvested,2);
+  document.getElementById('ps-value').textContent=totalValue?'$'+fmt(totalValue,2):'—';
+  const pnlEl=document.getElementById('ps-pnl');
+  pnlEl.textContent=totalValue?(up?'+':'')+fmt(totalPnl,2):'—';
+  pnlEl.className=up?'up':'down';
+  const pctEl=document.getElementById('ps-pnlpct');
+  pctEl.textContent=totalValue?(up?'+':'')+fmt(totalPct,2)+'%':'—';
+  pctEl.className=up?'up':'down';
+}
+
+function renderWatchlistPort(){
+  const el=document.getElementById('wl-list-port');
+  if(!watchlist.length){
+    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Aggiungi titoli allo screener con ★</div>';
+    return;
+  }
+  el.innerHTML=watchlist.map(sym=>`
+    <div class="port-item" style="margin-bottom:6px" onclick="openModal('${sym}','${sym}')">
+      <div class="port-sym">${sym}</div>
+      <button class="port-del" onclick="event.stopPropagation();removeFromWatchlist('${sym}')" title="Rimuovi">✕</button>
+    </div>`).join('');
+}
+
+async function removeFromWatchlist(sym){
+  watchlist=watchlist.filter(s=>s!==sym);
+  await saveWatchlist();
+  renderWatchlistPort();
+}
+
+// Override toggleWl per sync con server
+const _origToggleWl=toggleWl;
+function toggleWl(sym,el){
+  const i=watchlist.indexOf(sym);
+  if(i===-1)watchlist.push(sym);else watchlist.splice(i,1);
+  localStorage.setItem('fs_wl',JSON.stringify(watchlist));
+  el.querySelector('.star-btn').classList.toggle('active',watchlist.includes(sym));
+  saveWatchlist();
+}
+
+// showPage override per portafoglio
+const _origShowPage=showPage;
+function showPage(id,btn){
+  _origShowPage(id,btn);
+  if(id==='portafoglio')showPortfolioState();
+}
+
+// Avvia verifica sessione
+verifySession();
 </script>
 </body>
 </html>
