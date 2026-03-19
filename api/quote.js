@@ -5,6 +5,32 @@ export default async function handler(req, res) {
 
   const { symbol, type } = req.query;
 
+  // TAPE NEWS — 2 titoli rapidi per la ticker tape
+  if (type === 'tapenews') {
+    try {
+      const now = new Date();
+      const hour = now.getUTCHours();
+      // Orario NY: UTC-4 (EST) o UTC-5 (EDT)
+      // Apertura = ~13:30 UTC, Chiusura = ~20:00 UTC
+      const isOpen = hour >= 13 && hour < 20;
+      const query = isOpen ? 'stock market opening today' : 'stock market close today';
+      const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&newsCount=4&quotesCount=0`;
+      const r = await fetch(url, {
+        headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }
+      });
+      const data = await r.json();
+      const news = (data?.news || []).slice(0, 2).map(n => ({
+        title: n.title,
+        publisher: n.publisher,
+        link: n.link,
+        isOpen,
+      }));
+      return res.json({ news, isOpen });
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  }
+
   // NEWS endpoint — no symbol needed
   if (type === 'news') {
     try {

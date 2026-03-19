@@ -63,6 +63,15 @@ nav{height:54px;background:var(--b2);
 .ti-sym{font-family:var(--fm);font-size:10px;color:#3A5F8A;letter-spacing:.5px;font-weight:700;text-transform:uppercase}
 .ti-p{font-family:var(--fm);font-size:12px;font-weight:600;color:#0F1C2E}
 .ti-c{font-family:var(--fm);font-size:10px;font-weight:600}
+/* news nella tape */
+.ti-news{display:inline-flex;align-items:center;gap:10px;padding:0 28px;
+  border-right:1px solid #B8D0EC;height:34px;flex-shrink:0;max-width:480px}
+.ti-news-tag{font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.6px;
+  text-transform:uppercase;padding:2px 7px;border-radius:3px;white-space:nowrap;flex-shrink:0}
+.ti-news-tag.open{background:#1A56C4;color:#fff}
+.ti-news-tag.close{background:#4A6080;color:#fff}
+.ti-news-txt{font-size:11px;font-weight:500;color:#0F1C2E;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
 .up{color:#059669}.down{color:#DC2626}
 
 /* PAGES */
@@ -629,23 +638,41 @@ updateHours();setInterval(updateHours,30000);
 let tapeRAF=null, tapeX=0, tapeSpeed=0.5, tapeHalfW=0;
 
 async function loadTape(){
-  // Fetch tutti i dati in parallelo
-  const results=await Promise.all(TAPE_ITEMS.map(item=>api(item.s).then(d=>({item,d}))));
+  // Fetch prezzi e news in parallelo
+  const [priceResults, newsData] = await Promise.all([
+    Promise.all(TAPE_ITEMS.map(item=>api(item.s).then(d=>({item,d})))),
+    api('tapenews','tapenews')
+  ]);
 
-  const html=results.map(({item,d})=>{
+  // HTML prezzi
+  const priceHtml = priceResults.map(({item,d})=>{
     if(!d)return'';
     const c=chgPct(d.price,d.prev);const up=c==null||c>=0;
     return`<div class="ti"><span class="ti-sym">${item.l}</span><span class="ti-p">${fmt(d.price,item.dec)}</span><span class="ti-c ${up?'up':'down'}">${chgStr(c)}</span></div>`;
   }).filter(Boolean).join('');
 
+  // HTML news — max 2 titoli con tag apertura/chiusura
+  let newsHtml = '';
+  if(newsData?.news?.length){
+    const isOpen = newsData.isOpen;
+    const tag = isOpen ? 'APERTURA' : 'CHIUSURA';
+    const tagCls = isOpen ? 'open' : 'close';
+    // separatore visivo prima delle news
+    newsHtml = `<div class="ti" style="padding:0 20px;opacity:.4"><span style="font-size:16px;color:#3A5F8A">|</span></div>`;
+    newsData.news.forEach(n=>{
+      // Tronca titolo a max 80 caratteri
+      const title = n.title.length > 80 ? n.title.slice(0,77)+'...' : n.title;
+      newsHtml += `<div class="ti-news"><span class="ti-news-tag ${tagCls}">${tag}</span><span class="ti-news-txt">${title}</span></div>`;
+    });
+  }
+
+  const html = priceHtml + newsHtml;
   if(!html)return;
 
   const track=document.getElementById('tape-track');
-  // Inserisci il contenuto duplicato per il loop seamless
   track.innerHTML=html+html;
   track.style.transform='translateX(0px)';
 
-  // Aspetta un frame per misurare la larghezza reale
   requestAnimationFrame(()=>{
     tapeHalfW=track.scrollWidth/2;
     tapeX=0;
