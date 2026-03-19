@@ -376,7 +376,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   <div class="nav-right">
     <div class="nav-time" id="clock">--:--:--</div>
     <div class="nav-user" id="nav-user-area">
-      <button class="nav-login-btn" onclick="openAuthModal()">Accedi</button>
+      <button class="nav-login-btn" onclick="window.location.href='./about.html'">Accedi</button>
     </div>
   </div>
 </nav>
@@ -588,12 +588,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
       <div class="card">
         <div class="ch"><div><div class="ct">Riepilogo</div></div></div>
         <div id="port-summary">
-          <div class="vix-stats" style="grid-template-columns:1fr 1fr;gap:12px">
-            <div class="vs-item"><div class="vs-val" id="ps-invested">—</div><div class="vs-lbl">Investito</div></div>
-            <div class="vs-item"><div class="vs-val" id="ps-value">—</div><div class="vs-lbl">Valore attuale</div></div>
-            <div class="vs-item"><div class="vs-val" id="ps-pnl">—</div><div class="vs-lbl">P&L totale</div></div>
-            <div class="vs-item"><div class="vs-val" id="ps-pnlpct">—</div><div class="vs-lbl">Rendimento %</div></div>
-          </div>
+          <div class="ld" style="padding:10px">Caricamento...</div>
         </div>
         <!-- Watchlist -->
         <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
@@ -753,7 +748,15 @@ async function api(sym,type=''){
 }
 
 /* ── NAV ── */
+/* Pagine protette — solo dashboard è accessibile senza login */
+const PROTECTED_PAGES=['screener','portafoglio','simulatore','news'];
+
 function showPage(id,btn){
+  // Proteggi le pagine per utenti non loggati
+  if(PROTECTED_PAGES.includes(id)&&!currentUser){
+    openAuthModal();
+    return;
+  }
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');
@@ -1384,7 +1387,7 @@ function showPortfolioState(){
   const sub=document.getElementById('port-sub');
   if(currentUser){
     logMsg.style.display='none';content.style.display='block';
-    sub.textContent=`Benvenuto ${currentUser.email} · ${portfolio.length} titoli`;
+    sub.textContent=`${currentUser.email} · ${portfolio.length} titoli`;
     renderPortfolio();
     renderWatchlistPort();
   } else {
@@ -1399,7 +1402,15 @@ async function addPortfolioItem(){
   const qty=parseFloat(document.getElementById('port-qty').value);
   const price=parseFloat(document.getElementById('port-price').value);
   if(!sym||!qty||!price||qty<=0||price<=0)return;
-  portfolio.push({sym,qty,buyPrice:price,addedAt:Date.now()});
+
+  // Rileva valuta dal ticker
+  const isEU=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||
+              sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||
+              sym.endsWith('.BR')||sym.endsWith('.VI');
+  const currency=isEU?'EUR':'USD';
+  const symbol=isEU?'€':'$';
+
+  portfolio.push({sym,qty,buyPrice:price,currency,symbol,addedAt:Date.now()});
   document.getElementById('port-sym').value='';
   document.getElementById('port-qty').value='';
   document.getElementById('port-price').value='';
@@ -1423,41 +1434,74 @@ async function renderPortfolio(){
     document.getElementById('ps-pnlpct').textContent='—';
     return;
   }
-  let totalInvested=0,totalValue=0;
-  const rows=await Promise.all(portfolio.map(async(item,i)=>{
-    const d=await api(item.sym);
+
+  // Fetch prezzi in parallelo
+  const quotes=await Promise.all(portfolio.map(item=>api(item.sym)));
+
+  // Calcola P&L separato per valuta
+  let totalUSD_inv=0, totalUSD_val=0;
+  let totalEUR_inv=0, totalEUR_val=0;
+
+  const rows=portfolio.map((item,i)=>{
+    const d=quotes[i];
+    const sym=item.symbol||'$'; // retrocompatibilità
+    const cur=item.currency||'USD';
     const curPrice=d?.price||null;
     const invested=item.qty*item.buyPrice;
     const curVal=curPrice?item.qty*curPrice:null;
     const pnl=curVal?curVal-invested:null;
-    const pnlPct=pnl?((pnl/invested)*100):null;
-    if(curVal)totalValue+=curVal;
-    totalInvested+=invested;
+    const pnlPct=pnl!=null?((pnl/invested)*100):null;
     const up=pnl==null||pnl>=0;
+
+    if(cur==='EUR'){totalEUR_inv+=invested;if(curVal)totalEUR_val+=curVal;}
+    else{totalUSD_inv+=invested;if(curVal)totalUSD_val+=curVal;}
+
     return`<div class="port-item" onclick="openModal('${item.sym}','${item.sym}')">
       <div>
-        <div class="port-sym">${item.sym} <span style="font-weight:400;color:var(--t3)">${item.qty} pz</span></div>
-        <div class="port-info">Acquisto: $${fmt(item.buyPrice,2)} · Investito: $${fmt(invested,2)}</div>
+        <div class="port-sym">${item.sym} <span style="font-size:10px;font-weight:400;color:var(--t3);background:var(--b3);padding:1px 6px;border-radius:3px">${cur}</span> <span style="font-weight:400;color:var(--t3)">${item.qty} pz</span></div>
+        <div class="port-info">Acquisto: ${sym}${fmt(item.buyPrice,2)} · Investito: ${sym}${fmt(invested,2)}</div>
       </div>
       <div style="text-align:right">
-        <div style="font-family:var(--fm);font-size:13px;color:var(--t)">${curPrice?'$'+fmt(curPrice,2):'N/D'}</div>
-        <div class="port-pnl ${up?'up':'down'}">${pnl!=null?(up?'+':'')+fmt(pnl,2)+' ('+fmt(pnlPct,2)+'%)':'—'}</div>
+        <div style="font-family:var(--fm);font-size:13px;color:var(--t)">${curPrice?sym+fmt(curPrice,2):'N/D'}</div>
+        <div class="port-pnl ${up?'up':'down'}">${pnl!=null?(up?'+':'')+sym+fmt(pnl,2)+' ('+fmt(pnlPct,2)+'%)':'—'}</div>
       </div>
       <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
     </div>`;
-  }));
+  });
+
   el.innerHTML=rows.join('');
-  const totalPnl=totalValue-totalInvested;
-  const totalPct=totalInvested?((totalPnl/totalInvested)*100):0;
-  const up=totalPnl>=0;
-  document.getElementById('ps-invested').textContent='$'+fmt(totalInvested,2);
-  document.getElementById('ps-value').textContent=totalValue?'$'+fmt(totalValue,2):'—';
-  const pnlEl=document.getElementById('ps-pnl');
-  pnlEl.textContent=totalValue?(up?'+':'')+fmt(totalPnl,2):'—';
-  pnlEl.className=up?'up':'down';
-  const pctEl=document.getElementById('ps-pnlpct');
-  pctEl.textContent=totalValue?(up?'+':'')+fmt(totalPct,2)+'%':'—';
-  pctEl.className=up?'up':'down';
+
+  // Riepilogo separato per valuta
+  let summaryHtml='';
+  if(totalUSD_inv>0){
+    const pnl=totalUSD_val-totalUSD_inv;
+    const pct=totalUSD_inv?((pnl/totalUSD_inv)*100):0;
+    const up=pnl>=0;
+    summaryHtml+=`<div style="margin-bottom:10px;padding:10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:6px">PORTAFOGLIO USD 🇺🇸</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">$${fmt(totalUSD_inv,2)}</div><div style="font-size:10px;color:var(--t3)">Investito</div></div>
+        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">${totalUSD_val?'$'+fmt(totalUSD_val,2):'—'}</div><div style="font-size:10px;color:var(--t3)">Valore attuale</div></div>
+        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalUSD_val?(up?'+':'')+'$'+fmt(pnl,2):'—'}</div><div style="font-size:10px;color:var(--t3)">P&L</div></div>
+        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalUSD_val?(up?'+':'')+fmt(pct,2)+'%':'—'}</div><div style="font-size:10px;color:var(--t3)">Rendimento</div></div>
+      </div>
+    </div>`;
+  }
+  if(totalEUR_inv>0){
+    const pnl=totalEUR_val-totalEUR_inv;
+    const pct=totalEUR_inv?((pnl/totalEUR_inv)*100):0;
+    const up=pnl>=0;
+    summaryHtml+=`<div style="padding:10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:6px">PORTAFOGLIO EUR 🇪🇺</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">€${fmt(totalEUR_inv,2)}</div><div style="font-size:10px;color:var(--t3)">Investito</div></div>
+        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">${totalEUR_val?'€'+fmt(totalEUR_val,2):'—'}</div><div style="font-size:10px;color:var(--t3)">Valore attuale</div></div>
+        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalEUR_val?(up?'+':'')+'€'+fmt(pnl,2):'—'}</div><div style="font-size:10px;color:var(--t3)">P&L</div></div>
+        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalEUR_val?(up?'+':'')+fmt(pct,2)+'%':'—'}</div><div style="font-size:10px;color:var(--t3)">Rendimento</div></div>
+      </div>
+    </div>`;
+  }
+  document.getElementById('port-summary').innerHTML=summaryHtml||'<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
 }
 
 function renderWatchlistPort(){

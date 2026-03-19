@@ -105,48 +105,91 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:58px;background:var(-
 .privacy-section li{margin-bottom:4px}
 .privacy-section .updated{font-family:var(--fm);font-size:11px;color:var(--t3);margin-top:20px}
 
-/* DIVIDER */
-.divider{height:1px;background:var(--bd);margin:0}
+/* AUTH FORM nel hero */
+.hero-layout{display:grid;grid-template-columns:1fr 360px;gap:60px;align-items:center;max-width:1000px;margin:0 auto;text-align:left}
+.hero-text .hero-badge{display:inline-flex}
+.auth-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:28px;backdrop-filter:blur(10px)}
+.auth-card-title{font-size:17px;font-weight:700;color:#fff;margin-bottom:4px}
+.auth-card-sub{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:20px;font-family:var(--fm)}
+.auth-tabs{display:flex;background:rgba(255,255,255,.1);border-radius:8px;padding:3px;margin-bottom:18px;gap:3px}
+.auth-tab{flex:1;padding:7px;border:none;background:none;border-radius:6px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;color:rgba(255,255,255,.6);transition:all .15s}
+.auth-tab.active{background:rgba(255,255,255,.2);color:#fff}
+.auth-field label{display:block;font-size:10px;color:rgba(255,255,255,.6);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
+.auth-field input{width:100%;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:10px 13px;border-radius:8px;font-family:var(--ff);font-size:14px;outline:none;transition:all .15s;margin-bottom:12px}
+.auth-field input::placeholder{color:rgba(255,255,255,.4)}
+.auth-field input:focus{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.18)}
+.auth-submit{width:100%;background:#fff;color:var(--b2);border:none;padding:12px;border-radius:8px;font-family:var(--ff);font-weight:700;font-size:14px;cursor:pointer;transition:all .15s;margin-top:4px}
+.auth-submit:hover{background:rgba(255,255,255,.9);transform:translateY(-1px)}
+.auth-submit:disabled{opacity:.6;cursor:not-allowed}
+.auth-err{background:rgba(239,68,68,.2);color:#FCA5A5;font-size:12px;padding:8px 12px;border-radius:6px;margin-bottom:12px;display:none;font-family:var(--fm)}
+.auth-err.show{display:block}
+.auth-ok{background:rgba(5,150,105,.2);color:#6EE7B7;font-size:12px;padding:8px 12px;border-radius:6px;margin-bottom:12px;display:none;font-family:var(--fm)}
+.auth-ok.show{display:block}
+.already-logged{text-align:center;padding:20px 0}
+.already-logged p{color:rgba(255,255,255,.8);font-size:14px;margin-bottom:16px}
 
-/* FOOTER */
-footer{background:var(--b2);padding:28px 32px;text-align:center}
-.footer-logo{font-size:18px;font-weight:800;color:#fff;margin-bottom:8px}
-.footer-logo span{color:rgba(255,255,255,.6)}
-.footer-note{font-size:11px;color:rgba(255,255,255,.4);line-height:1.6;max-width:600px;margin:0 auto}
-
-@media(max-width:768px){
-  nav{padding:0 20px}
-  .hero{padding:100px 20px 60px}
-  .hero-stats{gap:28px}
-  .cards-grid{grid-template-columns:1fr}
-  .section,.story{padding:48px 20px}
-  footer{padding:24px 20px}
-}
+@media(max-width:900px){.hero-layout{grid-template-columns:1fr;text-align:center}.hero-text .hero-badge{display:inline-flex}}
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="./index.html" class="logo">Fin<span>Scope</span></a>
+  <a href="./about.html" class="logo">Fin<span>Scope</span></a>
   <div class="nav-right">
     <a href="#about" class="nav-link">Chi siamo</a>
     <a href="#privacy" class="nav-link">Privacy</a>
     <a href="#disclaimer" class="nav-link">Disclaimer</a>
-    <a href="./index.html" class="nav-cta">Apri la Dashboard →</a>
+    <span id="nav-user-info" style="font-size:12px;color:rgba(255,255,255,.6);font-family:var(--fm)"></span>
+    <a href="./index.html" class="nav-cta" id="nav-dashboard-btn">Apri la Dashboard →</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge"><div class="hero-dot"></div>Dati da Yahoo Finance · Aggiornati in tempo reale</div>
-  <h1>Il tuo centro di<br><em>analisi finanziaria</em></h1>
-  <p class="hero-sub">Dashboard professionale per monitorare mercati, indici, commodities e crypto. Costruita da un investitore, per investitori.</p>
-  <a href="./index.html" class="hero-btn">Accedi alla Dashboard →</a>
-  <div class="hero-stats">
-    <div class="stat"><div class="stat-n">50+</div><div class="stat-l">Titoli monitorati</div></div>
-    <div class="stat"><div class="stat-n">12</div><div class="stat-l">Indici globali</div></div>
-    <div class="stat"><div class="stat-n">6</div><div class="stat-l">Commodities</div></div>
-    <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">Dati aggiornati</div></div>
+  <div class="hero-layout">
+    <!-- Testo sinistra -->
+    <div class="hero-text">
+      <div class="hero-badge"><div class="hero-dot"></div>Dati da Yahoo Finance · Aggiornati in tempo reale</div>
+      <h1 style="text-align:left">Il tuo centro di<br><em>analisi finanziaria</em></h1>
+      <p class="hero-sub" style="text-align:left;margin:0 0 0 0">Dashboard professionale per monitorare mercati, indici, commodities e crypto. Costruita da un investitore, per investitori.</p>
+      <div class="hero-stats" style="justify-content:flex-start;margin-top:36px;padding-top:28px">
+        <div class="stat"><div class="stat-n">50+</div><div class="stat-l">Titoli monitorati</div></div>
+        <div class="stat"><div class="stat-n">12</div><div class="stat-l">Indici globali</div></div>
+        <div class="stat"><div class="stat-n">6</div><div class="stat-l">Commodities</div></div>
+        <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">Aggiornato</div></div>
+      </div>
+    </div>
+
+    <!-- Form destra -->
+    <div class="auth-card" id="auth-card">
+      <div class="auth-card-title">Accedi a FinScope</div>
+      <div class="auth-card-sub">Gratuito · Nessuna carta richiesta</div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login',this)">Accedi</button>
+        <button class="auth-tab" onclick="switchTab('register',this)">Registrati</button>
+      </div>
+      <div class="auth-err" id="auth-err"></div>
+      <div class="auth-ok" id="auth-ok"></div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
+        <label>Password</label>
+        <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')submitAuth()"/>
+      </div>
+      <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Accedi</button>
+      <p style="font-size:10px;color:rgba(255,255,255,.4);text-align:center;margin-top:12px;line-height:1.5">
+        Continuando accetti la <a href="#privacy" style="color:rgba(255,255,255,.6)">Privacy Policy</a>.<br>Trattamento dati conforme al GDPR.
+      </p>
+    </div>
+
+    <!-- Già loggato -->
+    <div class="auth-card already-logged" id="logged-card" style="display:none">
+      <div style="font-size:32px;margin-bottom:12px">👋</div>
+      <p id="logged-msg">Bentornato!</p>
+      <a href="./index.html" class="auth-submit" style="display:block;text-decoration:none;text-align:center">Apri la Dashboard →</a>
+      <button onclick="logout()" style="background:none;border:none;color:rgba(255,255,255,.5);font-size:12px;cursor:pointer;margin-top:12px;width:100%">Esci dall'account</button>
+    </div>
   </div>
 </div>
 
@@ -215,9 +258,9 @@ footer{background:var(--b2);padding:28px 32px;text-align:center}
     </p>
 
     <div class="author-row">
-      <div class="author-avatar">F</div>
+      <div class="author-avatar">AM</div>
       <div>
-        <div class="author-name">Fondatore di FinScope</div>
+        <div class="author-name">Alessandro Mazzeo</div>
         <div class="author-role">Investitore indipendente · 3 anni di esperienza · Milano, Italia</div>
       </div>
     </div>
@@ -318,7 +361,7 @@ footer{background:var(--b2);padding:28px 32px;text-align:center}
   <p class="footer-note" style="margin-top:8px">
     FinScope è uno strumento di informazione finanziaria. Non costituisce consulenza di investimento.<br>
     Dati forniti da Yahoo Finance · I dati possono presentare ritardi fino a 15 minuti.<br>
-    © 2026 FinScope · Tutti i diritti riservati
+    © 2026 Alessandro Mazzeo / FinScope · Tutti i diritti riservati
   </p>
   <div style="display:flex;gap:24px;justify-content:center;margin-top:16px">
     <a href="#about" style="color:rgba(255,255,255,.5);font-size:12px;text-decoration:none">Chi siamo</a>
@@ -328,5 +371,72 @@ footer{background:var(--b2);padding:28px 32px;text-align:center}
   </div>
 </footer>
 
+<script>
+const TOKEN_KEY='fs_token', USER_KEY='fs_user';
+let authTab='login';
+
+function switchTab(tab,btn){
+  authTab=tab;
+  document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('auth-submit').textContent=tab==='login'?'Accedi':'Crea account';
+  document.getElementById('auth-err').classList.remove('show');
+  document.getElementById('auth-ok').classList.remove('show');
+}
+
+async function submitAuth(){
+  const email=document.getElementById('auth-email').value.trim();
+  const pwd=document.getElementById('auth-pwd').value;
+  const errEl=document.getElementById('auth-err');
+  const okEl=document.getElementById('auth-ok');
+  const btn=document.getElementById('auth-submit');
+  errEl.classList.remove('show');okEl.classList.remove('show');
+  if(!email||!pwd){errEl.textContent='Inserisci email e password';errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Caricamento...';
+  try{
+    const r=await fetch('/api/auth?action='+authTab,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pwd})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.ok){
+      errEl.textContent=d.error||'Errore sconosciuto';
+      errEl.classList.add('show');
+    } else {
+      localStorage.setItem(TOKEN_KEY,d.token);
+      localStorage.setItem(USER_KEY,JSON.stringify(d.user));
+      okEl.textContent=authTab==='login'?'Accesso effettuato! Reindirizzamento...':'Account creato! Reindirizzamento...';
+      okEl.classList.add('show');
+      setTimeout(()=>{ window.location.href='./index.html'; },1200);
+    }
+  }catch(e){
+    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.classList.add('show');
+  }
+  btn.disabled=false;
+  btn.textContent=authTab==='login'?'Accedi':'Crea account';
+}
+
+function logout(){
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  document.getElementById('auth-card').style.display='block';
+  document.getElementById('logged-card').style.display='none';
+  document.getElementById('nav-user-info').textContent='';
+}
+
+// Controlla se già loggato
+const savedUser=localStorage.getItem(USER_KEY);
+if(savedUser){
+  try{
+    const user=JSON.parse(savedUser);
+    document.getElementById('auth-card').style.display='none';
+    document.getElementById('logged-card').style.display='block';
+    document.getElementById('logged-msg').textContent=`Bentornato, ${user.email}!`;
+    document.getElementById('nav-user-info').textContent=user.email;
+  }catch{}
+}
+</script>
 </body>
 </html>
