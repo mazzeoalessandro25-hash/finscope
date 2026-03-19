@@ -324,7 +324,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
             <option value="^IBEX">IBEX 35</option>
             <option value="^N225">Nikkei 225</option>
             <option value="GC=F">Oro</option>
-            <option value="CL=F">Petrolio WTI</option>
+            <option value="BZ=F">Petrolio Brent</option>
             <option value="BTC-USD">Bitcoin</option>
             <option value="ETH-USD">Ethereum</option>
           </select>
@@ -408,10 +408,10 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   <div class="sdiv"><div class="sdiv-t">Commodities</div><div class="sdiv-l"></div></div>
   <div class="grid3">
     <div class="com-item" onclick="openModal('GC=F','Oro · XAU/USD')"><div class="com-lbl">Oro · XAU/USD</div><div class="com-p" id="c0p">—</div><div class="com-c" id="c0c">—</div></div>
-    <div class="com-item" onclick="openModal('CL=F','Petrolio WTI')"><div class="com-lbl">Petrolio WTI</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div></div>
-    <div class="com-item" onclick="openModal('SI=F','Argento · XAG/USD')"><div class="com-lbl">Argento · XAG/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div></div>
-    <div class="com-item" onclick="openModal('NG=F','Gas naturale')"><div class="com-lbl">Gas naturale</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div></div>
-    <div class="com-item" onclick="openModal('PL=F','Platino')"><div class="com-lbl">Platino · XPT/USD</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div></div>
+    <div class="com-item" onclick="openModal('BZ=F','Petrolio Brent')"><div class="com-lbl">Petrolio Brent</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div></div>
+    <div class="com-item" onclick="openModal('PL=F','Platino')"><div class="com-lbl">Platino · XPT/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div></div>
+    <div class="com-item" onclick="openModal('SI=F','Argento · XAG/USD')"><div class="com-lbl">Argento · XAG/USD</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div></div>
+    <div class="com-item" onclick="openModal('NG=F','Gas naturale')"><div class="com-lbl">Gas naturale</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div></div>
     <div class="com-item" onclick="openModal('CC=F','Cacao')"><div class="com-lbl">Cacao · CC=F</div><div class="com-p" id="c5p">—</div><div class="com-c" id="c5c">—</div></div>
   </div>
 
@@ -561,7 +561,7 @@ const ALL_IDX=[
   {s:'^N225',l:'Nikkei 225',g:'🇯🇵'},{s:'^HSI',l:'Hang Seng',g:'🇭🇰'},
 ];
 
-const COM_S=['GC=F','CL=F','SI=F','NG=F','PL=F','CC=F'];
+const COM_S=['GC=F','BZ=F','PL=F','SI=F','NG=F','CC=F'];
 const CRYPTO_S=['BTC-USD','ETH-USD','SOL-USD','BNB-USD','XRP-USD','DOGE-USD'];
 
 /* Titoli per movers (S&P 500 noti) */
