@@ -127,25 +127,31 @@ nav{height:54px;background:var(--b2);
 .vs-lbl{font-size:9px;color:var(--t3);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
 
 /* SPARKLINE */
-.spark{display:block;flex-shrink:0}
-.com-item{background:var(--card);border:1px solid var(--bd);border-radius:11px;padding:14px;
+.spark{display:block;flex-shrink:0;overflow:visible}
+
+/* COMMODITY CARD — layout compatto 3 zone */
+.com-item{background:var(--card);border:1px solid var(--bd);border-radius:11px;padding:12px 14px;
   box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;transition:all .15s;
-  display:flex;justify-content:space-between;align-items:center;gap:8px}
+  display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:0;align-items:center}
 .com-item:hover{border-color:rgba(26,86,196,.4);box-shadow:0 3px 12px rgba(26,86,196,.1);transform:translateY(-1px)}
-.com-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:6px;text-transform:uppercase}
-.com-p{font-family:var(--fm);font-size:18px;font-weight:500;margin-bottom:3px;color:var(--t)}
-.com-c{font-family:var(--fm);font-size:11px;font-weight:500}
-.crypto-item{background:var(--card);border:1px solid var(--bd);border-radius:11px;padding:14px;
-  box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;justify-content:space-between;align-items:center;
+.com-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:4px;text-transform:uppercase;grid-column:1;grid-row:1}
+.com-p{font-family:var(--fm);font-size:17px;font-weight:600;color:var(--t);grid-column:1;grid-row:2;line-height:1}
+.com-c{font-family:var(--fm);font-size:11px;font-weight:500;grid-column:1;grid-row:3;margin-top:3px}
+.com-spark{grid-column:2;grid-row:1/4;align-self:center;padding-left:8px}
+
+/* CRYPTO CARD — layout compatto */
+.crypto-item{background:var(--card);border:1px solid var(--bd);border-radius:11px;padding:12px 14px;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;align-items:center;gap:10px;
   cursor:pointer;transition:all .15s}
 .crypto-item:hover{border-color:rgba(26,86,196,.4);box-shadow:0 3px 12px rgba(26,86,196,.1);transform:translateY(-1px)}
-.cry-l{display:flex;align-items:center;gap:9px}
-.cry-ico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
-.cry-name{font-size:13px;font-weight:600;color:var(--t)}
-.cry-sym{font-size:10px;color:var(--t3);font-family:var(--fm)}
-.cry-r{text-align:right}
-.cry-p{font-family:var(--fm);font-size:15px;font-weight:500;color:var(--t)}
-.cry-c{font-family:var(--fm);font-size:11px;font-weight:500;margin-top:2px}
+.cry-l{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.cry-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.cry-name{font-size:12px;font-weight:600;color:var(--t);white-space:nowrap}
+.cry-sym{font-size:9px;color:var(--t3);font-family:var(--fm)}
+.cry-mid{flex-shrink:0}
+.cry-r{text-align:right;flex-shrink:0;min-width:60px}
+.cry-p{font-family:var(--fm);font-size:14px;font-weight:600;color:var(--t)}
+.cry-c{font-family:var(--fm);font-size:10px;font-weight:500;margin-top:2px}
 
 /* MOVERS */
 .mover-item{display:flex;justify-content:space-between;align-items:center;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:3px}
@@ -409,23 +415,23 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   <!-- COMMODITIES -->
   <div class="sdiv"><div class="sdiv-t">Commodities</div><div class="sdiv-l"></div></div>
   <div class="grid3">
-    <div class="com-item" onclick="openModal('GC=F','Oro · XAU/USD')"><div><div class="com-lbl">Oro · XAU/USD</div><div class="com-p" id="c0p">—</div><div class="com-c" id="c0c">—</div></div><svg class="spark" id="sp-c0" width="64" height="32"></svg></div>
-    <div class="com-item" onclick="openModal('BZ=F','Petrolio Brent')"><div><div class="com-lbl">Petrolio Brent</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div></div><svg class="spark" id="sp-c1" width="64" height="32"></svg></div>
-    <div class="com-item" onclick="openModal('PL=F','Platino')"><div><div class="com-lbl">Platino · XPT/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div></div><svg class="spark" id="sp-c2" width="64" height="32"></svg></div>
-    <div class="com-item" onclick="openModal('SI=F','Argento · XAG/USD')"><div><div class="com-lbl">Argento · XAG/USD</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div></div><svg class="spark" id="sp-c3" width="64" height="32"></svg></div>
-    <div class="com-item" onclick="openModal('NG=F','Gas naturale')"><div><div class="com-lbl">Gas naturale</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div></div><svg class="spark" id="sp-c4" width="64" height="32"></svg></div>
-    <div class="com-item" onclick="openModal('CC=F','Cacao')"><div><div class="com-lbl">Cacao · CC=F</div><div class="com-p" id="c5p">—</div><div class="com-c" id="c5c">—</div></div><svg class="spark" id="sp-c5" width="64" height="32"></svg></div>
+    <div class="com-item" onclick="openModal('GC=F','Oro · XAU/USD')"><div class="com-lbl">Oro · XAU/USD</div><div class="com-p" id="c0p">—</div><div class="com-c" id="c0c">—</div><div class="com-spark"><svg class="spark" id="sp-c0" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('BZ=F','Petrolio Brent')"><div class="com-lbl">Petrolio Brent</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div><div class="com-spark"><svg class="spark" id="sp-c1" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('PL=F','Platino')"><div class="com-lbl">Platino · XPT/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div><div class="com-spark"><svg class="spark" id="sp-c2" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('SI=F','Argento · XAG/USD')"><div class="com-lbl">Argento · XAG/USD</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div><div class="com-spark"><svg class="spark" id="sp-c3" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('NG=F','Gas naturale')"><div class="com-lbl">Gas naturale</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div><div class="com-spark"><svg class="spark" id="sp-c4" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('CC=F','Cacao')"><div class="com-lbl">Cacao · CC=F</div><div class="com-p" id="c5p">—</div><div class="com-c" id="c5c">—</div><div class="com-spark"><svg class="spark" id="sp-c5" width="72" height="40"></svg></div></div>
   </div>
 
   <!-- CRYPTO -->
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Criptovalute</div><div class="sdiv-l"></div></div>
   <div class="grid3">
-    <div class="crypto-item" onclick="openModal('BTC-USD','Bitcoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706">₿</div><div><div class="cry-name">Bitcoin</div><div class="cry-sym">BTC/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k0" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k0p">—</div><div class="cry-c" id="k0c">—</div></div></div></div>
-    <div class="crypto-item" onclick="openModal('ETH-USD','Ethereum')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4">Ξ</div><div><div class="cry-name">Ethereum</div><div class="cry-sym">ETH/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k1" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k1p">—</div><div class="cry-c" id="k1c">—</div></div></div></div>
-    <div class="crypto-item" onclick="openModal('SOL-USD','Solana')"><div class="cry-l"><div class="cry-ico" style="background:#F0FDF4;color:#059669">◎</div><div><div class="cry-name">Solana</div><div class="cry-sym">SOL/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k2" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k2p">—</div><div class="cry-c" id="k2c">—</div></div></div></div>
-    <div class="crypto-item" onclick="openModal('BNB-USD','BNB')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:11px">BNB</div><div><div class="cry-name">BNB</div><div class="cry-sym">BNB/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k3" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k3p">—</div><div class="cry-c" id="k3c">—</div></div></div></div>
-    <div class="crypto-item" onclick="openModal('XRP-USD','XRP')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4;font-size:11px">XRP</div><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k4" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div></div>
-    <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div style="display:flex;align-items:center;gap:10px"><svg class="spark" id="sp-k5" width="64" height="32"></svg><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div></div>
+    <div class="crypto-item" onclick="openModal('BTC-USD','Bitcoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706">₿</div><div><div class="cry-name">Bitcoin</div><div class="cry-sym">BTC/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k0" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k0p">—</div><div class="cry-c" id="k0c">—</div></div></div>
+    <div class="crypto-item" onclick="openModal('ETH-USD','Ethereum')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4">Ξ</div><div><div class="cry-name">Ethereum</div><div class="cry-sym">ETH/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k1" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k1p">—</div><div class="cry-c" id="k1c">—</div></div></div>
+    <div class="crypto-item" onclick="openModal('SOL-USD','Solana')"><div class="cry-l"><div class="cry-ico" style="background:#F0FDF4;color:#059669">◎</div><div><div class="cry-name">Solana</div><div class="cry-sym">SOL/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k2" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k2p">—</div><div class="cry-c" id="k2c">—</div></div></div>
+    <div class="crypto-item" onclick="openModal('BNB-USD','BNB')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:11px">BNB</div><div><div class="cry-name">BNB</div><div class="cry-sym">BNB/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k3" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k3p">—</div><div class="cry-c" id="k3c">—</div></div></div>
+    <div class="crypto-item" onclick="openModal('XRP-USD','XRP')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4;font-size:11px">XRP</div><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k4" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div>
+    <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k5" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div>
   </div>
 </div>
 
@@ -454,7 +460,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   </div>
   <div class="tbl-wrap">
     <table class="tbl">
-      <thead><tr><th></th><th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th><th>MKT</th><th>SETTORE</th><th>TIPO</th><th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th><th onclick="sortTbl('score')">SCORE ↕</th></tr></thead>
+      <thead><tr><th></th><th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th><th>MKT</th><th>SETTORE</th><th>TIPO</th><th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th><th>5 GIORNI</th><th onclick="sortTbl('score')">SCORE ↕</th></tr></thead>
       <tbody id="sc-body"><tr><td colspan="9" class="ld">Caricamento...</td></tr></tbody>
     </table>
   </div>
@@ -871,7 +877,9 @@ async function loadMovers(){
 function drawSparkline(svgId, pts, up){
   const el=document.getElementById(svgId);
   if(!el||!pts||pts.length<2)return;
-  const W=64,H=32,pad=2;
+  const W=parseInt(el.getAttribute('width'))||72;
+  const H=parseInt(el.getAttribute('height'))||36;
+  const pad=2;
   const vals=pts.map(p=>p.close).filter(v=>v!=null&&!isNaN(v));
   if(vals.length<2)return;
   const mn=Math.min(...vals),mx=Math.max(...vals);
@@ -925,9 +933,14 @@ async function loadCrypto(){
 }
 
 /* ── SCREENER ── */
+let scSparkData={};
 async function loadScreener(){
-  document.getElementById('sc-body').innerHTML='<tr><td colspan="9" class="ld">Caricamento prezzi reali...</td></tr>';
-  for(const s of STOCKS){const d=await api(s.s);if(d)scData[s.s]=d;}
+  document.getElementById('sc-body').innerHTML='<tr><td colspan="10" class="ld">Caricamento prezzi reali...</td></tr>';
+  await Promise.all(STOCKS.map(async s=>{
+    const [d,spark]=await Promise.all([api(s.s),fetchSparkData(s.s)]);
+    if(d)scData[s.s]=d;
+    if(spark.length)scSparkData[s.s]=spark;
+  }));
   applyF();
 }
 function applyF(){
@@ -945,10 +958,11 @@ function applyF(){
   });
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
-  if(!list.length){body.innerHTML='<tr><td colspan="9" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
+  if(!list.length){body.innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
   const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺'};
   body.innerHTML=list.map(s=>{
     const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+    const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
     return`<tr onclick="openFA('${s.s}')">
       <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${watchlist.includes(s.s)?'active':''}">★</button></td>
       <td style="font-weight:600">${s.s}</td><td style="color:var(--t2)">${s.n}</td>
@@ -956,9 +970,18 @@ function applyF(){
       <td><span class="tag ${s.t}">${s.t}</span></td>
       <td>${d?'$'+fmt(d.price,2):'—'}</td>
       <td class="${up?'up':'down'}">${chgStr(c)}</td>
+      <td><svg id="${spId}" width="72" height="30"></svg></td>
       <td><div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round(s.score*.44)}px"></div></div><span style="font-size:11px;color:var(--t2)">${s.score}</span></div></td>
     </tr>`;
   }).join('');
+  // Disegna sparkline dopo il render del DOM
+  requestAnimationFrame(()=>{
+    list.forEach(s=>{
+      const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
+      const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+      if(scSparkData[s.s])drawSparkline(spId,scSparkData[s.s],up);
+    });
+  });
 }
 function sortTbl(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}applyF();}
 function toggleWl(sym,el){
