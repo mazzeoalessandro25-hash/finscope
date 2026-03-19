@@ -314,7 +314,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
           <div style="width:1px;height:14px;background:var(--bd);margin:0 4px"></div>
           <select class="sym-sel" id="ch-sym" onchange="onSymChange()">
             <option value="^GSPC">S&P 500</option>
-            <option value="^FTSEMIB">FTSE MIB</option>
+            <option value="FTSEMIB.MI">FTSE MIB</option>
             <option value="^NDX">Nasdaq 100</option>
             <option value="^DJI">Dow Jones</option>
             <option value="^STOXX50E">Euro Stoxx 50</option>
@@ -554,7 +554,7 @@ const STOCKS=[
 /* Tutti gli indici unificati */
 const ALL_IDX=[
   {s:'^GSPC',l:'S&P 500',g:'🇺🇸'},{s:'^NDX',l:'Nasdaq 100',g:'🇺🇸'},{s:'^DJI',l:'Dow Jones',g:'🇺🇸'},
-  {s:'^FTSEMIB',l:'FTSE MIB',g:'🇮🇹'},{s:'^STOXX50E',l:'Euro Stoxx 50',g:'🇪🇺'},
+  {s:'FTSEMIB.MI',l:'FTSE MIB',g:'🇮🇹'},{s:'^STOXX50E',l:'Euro Stoxx 50',g:'🇪🇺'},
   {s:'^STOXX',l:'Stoxx 600',g:'🇪🇺'},
   {s:'^FTSE',l:'FTSE 100',g:'🇬🇧'},{s:'^GDAXI',l:'DAX',g:'🇩🇪'},
   {s:'^FCHI',l:'CAC 40',g:'🇫🇷'},{s:'^IBEX',l:'IBEX 35',g:'🇪🇸'},
@@ -570,7 +570,7 @@ const MOVERS_S=['AAPL','NVDA','MSFT','AMZN','GOOGL','META','TSLA','JPM','UNH','X
 const TAPE_ITEMS=[
   {s:'EURUSD=X',l:'EUR/USD',dec:4},{s:'^GSPC',l:'S&P 500',dec:0},
   {s:'^NDX',l:'NASDAQ',dec:0},{s:'^DJI',l:'DOW JONES',dec:0},
-  {s:'GC=F',l:'ORO',dec:2},{s:'^FTSEMIB',l:'FTSE MIB',dec:0},
+  {s:'GC=F',l:'ORO',dec:2},{s:'FTSEMIB.MI',l:'FTSE MIB',dec:0},
 ];
 
 const EXCHANGES=[
