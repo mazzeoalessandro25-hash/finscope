@@ -3,7 +3,19 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>FinScope — Mercati Finanziari</title>
+<title>FinScope — Analisi Mercati Finanziari | Azioni, Indici, Crypto</title>
+<meta name="description" content="FinScope — Dashboard professionale per l'analisi di azioni, indici globali, commodities e crypto. Screener, portafoglio, simulatore e analisi fondamentale con AI."/>
+<meta name="keywords" content="analisi azioni, mercati finanziari, screener azioni, borsa italiana, portafoglio investimenti, analisi fondamentale, FTSE MIB, S&P 500, crypto"/>
+<meta name="author" content="Alessandro Mazzeo"/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:title" content="FinScope — Analisi Mercati Finanziari"/>
+<meta property="og:description" content="Dashboard professionale per analisi azioni, indici, commodities e crypto in tempo reale. FinScope Score proprietario + AI Analysis."/>
+<meta property="og:type" content="website"/>
+<meta property="og:locale" content="it_IT"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="theme-color" content="#1448A8"/>
+<link rel="manifest" href="/manifest.json"/>
+<link rel="apple-touch-icon" href="/icon-192.png"/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -309,6 +321,72 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 .port-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px}
 .port-del:hover{color:var(--r)}
 .port-pnl{font-family:var(--fm);font-size:13px;font-weight:600}
+
+/* ═══ DARK MODE ═══ */
+body.dark{
+  --bg:#0D1A2B;--s1:#111E30;--s2:#172234;--s3:#1C2A3E;
+  --bd:#233247;--bd2:#2C3F58;--card:#111E30;
+  --t:#E4EDF8;--t2:#8FAFC8;--t3:#5D7A96;
+}
+body.dark nav{background:#0D1525}
+body.dark .tape{background:#0A1520;border-bottom-color:#1A2E45}
+body.dark .hours-bar{background:#111E30;border-bottom-color:#233247}
+body.dark footer{background:#111E30}
+body.dark .tbl thead tr{background:#172234}
+body.dark .modal-box,body.dark .auth-box{background:#111E30}
+body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
+
+/* ═══ DARK MODE TOGGLE ═══ */
+.dm-toggle{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;
+  width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
+.dm-toggle:hover{background:rgba(255,255,255,.22)}
+
+/* ═══ FINSCOPE SCORE ═══ */
+.fs-score-wrap{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:10px}
+.fs-score-bar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-top:6px;width:160px}
+.fs-score-fill{height:6px;border-radius:3px;transition:width .6s ease}
+.fs-dims{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:12px}
+.fs-dim-cell{text-align:center;padding:5px 3px;background:var(--card);border-radius:7px;border:1px solid var(--bd)}
+.fs-dim-val{font-family:var(--fm);font-size:13px;font-weight:700}
+.fs-dim-lbl{font-size:8px;color:var(--t3);margin-top:2px;line-height:1.2}
+.fs-pt-methods{font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:5px;letter-spacing:.3px}
+
+/* ═══ AI ANALYSIS ═══ */
+.ai-btn{background:linear-gradient(135deg,#1A56C4,#0EA5E9);color:#fff;border:none;
+  padding:8px 15px;border-radius:8px;font-weight:600;font-size:12px;cursor:pointer;
+  display:none;align-items:center;gap:6px;transition:opacity .15s;font-family:var(--ff)}
+.ai-btn:hover{opacity:.88}
+.ai-btn:disabled{opacity:.6;cursor:not-allowed}
+.ai-badge{background:rgba(255,255,255,.25);font-size:9px;font-weight:700;
+  padding:2px 5px;border-radius:3px;letter-spacing:.6px}
+.ai-result-box{background:var(--s2);border:1px solid var(--bd);border-left:3px solid var(--b);
+  border-radius:8px;padding:14px 16px;margin-top:12px;font-size:12.5px;line-height:1.7;
+  color:var(--t2);font-family:var(--ff)}
+.ai-result-box strong,.ai-result-box b{color:var(--t);font-weight:700}
+.ai-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.ai-tag{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#1A56C4,#0EA5E9);
+  color:#fff;font-size:10px;font-weight:700;padding:3px 9px;border-radius:100px;letter-spacing:.4px}
+
+/* ═══ CONFRONTA TITOLI ═══ */
+.cmp-cb{width:14px;height:14px;cursor:pointer;accent-color:var(--b);flex-shrink:0}
+.cmp-float{position:fixed;bottom:24px;right:24px;background:var(--b);color:#fff;
+  border:none;padding:10px 22px;border-radius:100px;font-weight:700;font-size:13px;
+  cursor:pointer;box-shadow:0 4px 20px rgba(26,86,196,.45);
+  display:none;align-items:center;gap:8px;z-index:300;transition:all .2s;font-family:var(--ff)}
+.cmp-float:hover{background:var(--b2);transform:translateY(-2px)}
+.cmp-float.show{display:flex}
+.cmp-count-badge{background:rgba(255,255,255,.25);font-size:11px;font-weight:800;
+  width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.cmp-tbl{width:100%;border-collapse:collapse;font-size:12px}
+.cmp-tbl th{text-align:left;padding:9px 12px;color:var(--t3);font-family:var(--fm);
+  font-size:9px;letter-spacing:.8px;text-transform:uppercase;
+  border-bottom:2px solid var(--b);background:var(--s2)}
+.cmp-tbl th:first-child{color:var(--t2);font-size:10px}
+.cmp-tbl td{padding:8px 12px;border-bottom:1px solid var(--bd);font-family:var(--fm);color:var(--t);vertical-align:middle}
+.cmp-tbl tr:hover td{background:var(--b3)}
+.cmp-tbl .metric-lbl{font-size:10px;color:var(--t3);font-family:var(--ff);font-weight:500}
+.cmp-winner{background:rgba(5,150,105,.08);font-weight:700}
 </style>
 </head>
 <body>
@@ -372,8 +450,10 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
     <button class="nav-btn" onclick="showPage('portafoglio',this)">Portafoglio</button>
     <button class="nav-btn" onclick="showPage('simulatore',this)">Simulatore</button>
     <button class="nav-btn" onclick="showPage('news',this)">News</button>
+    <button class="nav-btn" onclick="showPage('confronta',this)">⚖ Confronta</button>
   </div>
   <div class="nav-right">
+    <button class="dm-toggle" id="dm-btn" onclick="toggleDark()" title="Tema scuro/chiaro">🌙</button>
     <div class="nav-time" id="clock">--:--:--</div>
     <div class="nav-user" id="nav-user-area">
       <button class="nav-login-btn" onclick="window.location.href='./about.html'">Accedi</button>
@@ -549,7 +629,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   </div>
   <div class="tbl-wrap">
     <table class="tbl">
-      <thead><tr><th></th><th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th><th>MKT</th><th>SETTORE</th><th>TIPO</th><th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th><th>5 GIORNI</th><th onclick="sortTbl('score')">SCORE ↕</th></tr></thead>
+      <thead><tr><th title="Seleziona per confronto">⚖</th><th></th><th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th><th>MKT</th><th>SETTORE</th><th>TIPO</th><th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th><th>5 GIORNI</th><th onclick="sortTbl('score')">SCORE ↕</th></tr></thead>
       <tbody id="sc-body"><tr><td colspan="9" class="ld">Caricamento...</td></tr></tbody>
     </table>
   </div>
@@ -629,7 +709,7 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
       </div>
       <div class="card">
         <div class="ch"><div><div class="ct">Analisi fondamentale live</div><div class="cs">Dati reali da Yahoo Finance</div></div></div>
-        <div class="fa-row"><input class="fa-inp" id="fat" type="text" placeholder="AAPL · ENI.MI · MSFT · NVDA · ASML" maxlength="12"/><button class="fa-btn" onclick="runFA()">Analizza</button></div>
+        <div class="fa-row"><input class="fa-inp" id="fat" type="text" placeholder="AAPL · ENI.MI · MSFT · NVDA · ASML" maxlength="12"/><button class="fa-btn" onclick="runFA()">Analizza</button><button class="ai-btn" id="ai-btn" onclick="runAI()"><span class="ai-badge">AI</span>Analisi</button></div>
         <div id="fa-res"><p style="color:var(--t3);font-size:12px;font-family:var(--fm)">Inserisci un ticker per i dati fondamentali</p></div>
       </div>
     </div>
@@ -651,6 +731,28 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   </div>
   <div class="news-grid" id="news-grid"><div class="ld">Caricamento notizie...</div></div>
 </div>
+
+<!-- ═══ CONFRONTA ═══ -->
+<div class="page" id="page-confronta">
+  <div class="pg-title">Confronto Titoli</div>
+  <div class="pg-sub">Seleziona 2–3 titoli dallo Screener oppure inseriscili qui sotto</div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="ch"><div><div class="ct">Inserisci ticker da confrontare</div><div class="cs">Massimo 3 titoli · Premi Confronta per caricare i dati</div></div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <input class="fa-inp" id="cmp-t1" type="text" placeholder="Es. AAPL" maxlength="12" style="width:110px;text-transform:uppercase"/>
+      <input class="fa-inp" id="cmp-t2" type="text" placeholder="Es. MSFT" maxlength="12" style="width:110px;text-transform:uppercase"/>
+      <input class="fa-inp" id="cmp-t3" type="text" placeholder="Es. NVDA (opz.)" maxlength="12" style="width:130px;text-transform:uppercase"/>
+      <button class="fa-btn" onclick="runCompare()">⚖ Confronta</button>
+      <button style="background:none;border:1px solid var(--bd);color:var(--t2);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:12px" onclick="clearCompare()">Svuota</button>
+    </div>
+  </div>
+  <div id="cmp-result"><p style="color:var(--t3);font-size:13px;font-family:var(--fm)">Inserisci almeno 2 ticker e premi Confronta.</p></div>
+</div>
+
+<!-- FLOATING COMPARE BTN (attivato dallo screener) -->
+<button class="cmp-float" id="cmp-float-btn" onclick="goToCompareFromScreener()">
+  ⚖ Confronta <span class="cmp-count-badge" id="cmp-count">0</span>
+</button>
 
 <footer>
   <div class="flogo">Fin<span>Scope</span></div>
@@ -749,7 +851,7 @@ async function api(sym,type=''){
 
 /* ── NAV ── */
 /* Pagine protette — solo dashboard è accessibile senza login */
-const PROTECTED_PAGES=['screener','portafoglio','simulatore','news'];
+const PROTECTED_PAGES=['portafoglio'];
 
 function showPage(id,btn){
   // Proteggi le pagine per utenti non loggati
@@ -763,6 +865,8 @@ function showPage(id,btn){
   if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati finanziari');
   if(id==='screener'&&Object.keys(scData).length===0)loadScreener();
   if(id==='portafoglio')showPortfolioState();
+  if(id==='screener')document.getElementById('cmp-float-btn').classList.toggle('show',cmpList.length>=2);
+  if(id!=='screener')document.getElementById('cmp-float-btn').classList.remove('show');
 }
 
 /* ── ORARI ── */
@@ -1107,6 +1211,7 @@ function applyF(){
     const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
     const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
     return`<tr onclick="openFA('${s.s}')">
+      <td onclick="event.stopPropagation()"><input type="checkbox" class="cmp-cb" ${cmpList.includes(s.s)?'checked':''} onchange="toggleCmp('${s.s}',this)"/></td>
       <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${watchlist.includes(s.s)?'active':''}">★</button></td>
       <td style="font-weight:600">${s.s}</td><td style="color:var(--t2)">${s.n}</td>
       <td>${flags[s.mkt]||''}</td><td style="color:var(--t3);font-size:11px">${s.sec}</td>
@@ -1172,30 +1277,80 @@ function calcSim(){
 async function runFA(){
   const ticker=(document.getElementById('fat').value||'').toUpperCase().trim();
   const el=document.getElementById('fa-res');
+  const aiBtn=document.getElementById('ai-btn');
+  const oldBox=document.getElementById('ai-result-box');
+  if(oldBox)oldBox.remove();
+  if(aiBtn)aiBtn.style.display='none';
   if(!ticker){el.innerHTML='<p style="color:var(--t3);font-size:12px;font-family:var(--fm)">Inserisci un ticker</p>';return;}
   el.innerHTML='<p class="ld">Caricamento da Yahoo Finance...</p>';
   const [qd,sd]=await Promise.all([api(ticker),api(ticker,'summary')]);
   if(!qd&&!sd){el.innerHTML='<div class="err-box">Ticker non trovato · Prova: AAPL · ENI.MI · MSFT · ASML</div>';return;}
+
+  // Memorizza per AI
+  _lastFA={qd,sd,ticker};
+  if(aiBtn)aiBtn.style.display='flex';
+
   const c=qd?chgPct(qd.price,qd.prev):null;const up=c==null||c>=0;
   const recMap={strongbuy:'Forte acquisto',buy:'Acquisto',hold:'Mantieni',sell:'Vendita',strongsell:'Forte vendita'};
   const recCol={strongbuy:'var(--g)',buy:'var(--g)',hold:'var(--o)',sell:'var(--r)',strongsell:'var(--r)'};
   const rec=sd?.rec||'hold';
-  el.innerHTML=`<div class="fa-grid">
+
+  // FinScope Score 5D
+  const fss=calcFinScopeScore(sd,qd);
+  const pt=calcPriceTarget(sd,qd);
+  const rating=fss.total!=null?getRating(fss.total):null;
+  const sc=fss.total;
+  const scCol=sc!=null?getScoreColor(sc):'var(--t3)';
+
+  const dimLabels={valutazione:'Valutazione',redditivita:'Redditività',momentum:'Momentum',consensus:'Consensus',stabilita:'Stabilità'};
+  const dimMax={valutazione:25,redditivita:25,momentum:20,consensus:20,stabilita:10};
+
+  const scoreBlock=sc!=null?`
+  <div class="fs-score-wrap">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINSCOPE SCORE ✦ Metrica proprietaria</div>
+        <div style="display:flex;align-items:baseline;gap:7px">
+          <span style="font-family:var(--fm);font-size:32px;font-weight:800;color:${scCol};line-height:1">${sc}</span>
+          <span style="font-family:var(--fm);font-size:12px;color:var(--t3)">/100</span>
+          ${rating?`<span style="padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;background:${rating.bg};color:${rating.color};font-family:var(--fm)">${rating.label}</span>`:''}
+        </div>
+        <div class="fs-score-bar"><div class="fs-score-fill" style="width:${sc}%;background:${scCol}"></div></div>
+      </div>
+      ${pt?`<div style="text-align:right">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINSCOPE TARGET PRICE</div>
+        <div style="font-family:var(--fm);font-size:22px;font-weight:700;color:var(--b);line-height:1">$${fmt(pt.value,2)}</div>
+        <div style="font-family:var(--fm);font-size:11px;margin-top:3px" class="${pt.upside>=0?'up':'down'}">${pt.upside>=0?'▲':'▼'} ${fmt(Math.abs(pt.upside),1)}% upside vs oggi</div>
+        <div class="fs-pt-methods">${pt.methods.map(m=>m.m+': $'+fmt(m.v,2)).join(' · ')}</div>
+      </div>`:''}
+    </div>
+    <div class="fs-dims">
+      ${Object.entries(fss.details).map(([k,v])=>`
+        <div class="fs-dim-cell">
+          <div class="fs-dim-val" style="color:${getScoreColor(v/(dimMax[k]||10)*100)}">${v}<span style="font-size:9px;color:var(--t3)">/${dimMax[k]||10}</span></div>
+          <div class="fs-dim-lbl">${dimLabels[k]||k}</div>
+        </div>`).join('')}
+    </div>
+  </div>`:'';
+
+  el.innerHTML=`${scoreBlock}<div class="fa-grid">
     <div class="rb"><div class="rl">PREZZO</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${qd?'$'+fmt(qd.price,2):'—'}</div></div>
     <div class="rb"><div class="rl">VAR OGGI</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${chgStr(c)}</div></div>
     <div class="rb"><div class="rl">P/E</div><div class="rv2" style="font-size:17px">${sd?.pe?fmt(sd.pe,1):'—'}</div></div>
     <div class="rb"><div class="rl">P/B</div><div class="rv2" style="font-size:17px">${sd?.pb?fmt(sd.pb,1):'—'}</div></div>
     <div class="rb"><div class="rl">ROE</div><div class="rv2 g" style="font-size:17px">${sd?.roe?fmt(sd.roe*100,1)+'%':'—'}</div></div>
     <div class="rb"><div class="rl">DIVIDENDO</div><div class="rv2 a" style="font-size:17px">${sd?.dividend?fmt(sd.dividend*100,2)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">52W MAX</div><div class="rv2" style="font-size:15px">${sd?.week52High?'$'+fmt(sd.week52High,2):'—'}</div></div>
-    <div class="rb"><div class="rl">52W MIN</div><div class="rv2" style="font-size:15px">${sd?.week52Low?'$'+fmt(sd.week52Low,2):'—'}</div></div>
+    <div class="rb"><div class="rl">MG. OPERATIVO</div><div class="rv2" style="font-size:15px">${sd?.operatingMargins?fmt(sd.operatingMargins*100,1)+'%':'—'}</div></div>
+    <div class="rb"><div class="rl">CRESCITA RIC.</div><div class="rv2 ${sd?.revenueGrowth>=0?'g':'down'}" style="font-size:15px">${sd?.revenueGrowth!=null?(sd.revenueGrowth>=0?'+':'')+fmt(sd.revenueGrowth*100,1)+'%':'—'}</div></div>
+    <div class="rb"><div class="rl">52W MAX</div><div class="rv2" style="font-size:14px">${sd?.week52High?'$'+fmt(sd.week52High,2):'—'}</div></div>
+    <div class="rb"><div class="rl">52W MIN</div><div class="rv2" style="font-size:14px">${sd?.week52Low?'$'+fmt(sd.week52Low,2):'—'}</div></div>
   </div>
   <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-top:2px">
-    <div><div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:3px">CONSENSUS ANALISTI</div>
-    <div style="font-family:var(--fm);font-size:14px;font-weight:500;color:${recCol[rec]||'var(--o)'}">${recMap[rec]||'—'}</div></div>
-    ${sd?.targetPrice?`<div style="text-align:right"><div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:3px">TARGET PRICE</div><div style="font-family:var(--fm);font-size:14px;color:var(--b)">$${fmt(sd.targetPrice,2)}</div></div>`:''}
+    <div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">CONSENSUS ANALISTI</div>
+    <div style="font-family:var(--fm);font-size:14px;font-weight:600;color:${recCol[rec]||'var(--o)'}">${recMap[rec]||'—'}</div></div>
+    ${sd?.targetPrice?`<div style="text-align:right"><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">TARGET ANALISTI</div><div style="font-family:var(--fm);font-size:14px;font-weight:600;color:var(--b)">$${fmt(sd.targetPrice,2)}</div></div>`:''}
   </div>
-  ${sd?.marketCap?`<div style="margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--t3)">Market Cap: ${fmtLg(sd.marketCap)} · Beta: ${sd.beta?fmt(sd.beta,2):'—'}</div>`:''}`;
+  ${sd?.marketCap?`<div style="margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--t3)">Market Cap: ${fmtLg(sd.marketCap)} · Beta: ${sd.beta?fmt(sd.beta,2):'—'} · EPS: ${sd.eps?'$'+fmt(sd.eps,2):'—'} · Debt/Eq: ${sd.debtToEquity?fmt(sd.debtToEquity,1):'—'}</div>`:''}`;
 }
 
 /* ── NEWS ── */
@@ -1208,6 +1363,253 @@ async function loadNews(q,btn){
     const dt=n.time?new Date(n.time*1000).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
     return`<a class="news-item" href="${n.link}" target="_blank" rel="noopener"><div class="n-pub">${n.publisher||''}</div><div class="n-title">${n.title}</div><div class="n-time">${dt}</div></a>`;
   }).join('');
+}
+
+/* ══════════════════════════════════════════
+   FINSCOPE SCORE — Metrica proprietaria 5D
+   Valutazione(25) · Redditività(25) · Momentum(20) · Consensus(20) · Stabilità(10)
+══════════════════════════════════════════ */
+function calcFinScopeScore(sd, qd){
+  if(!sd) return {total:null,details:{}};
+  let s=0, det={};
+
+  // 1. VALUTAZIONE (25pts): P/E + P/B vs benchmark
+  let v=0;
+  const pe=sd.pe;
+  if(pe!=null&&pe>0){
+    if(pe<=12)v+=18; else if(pe<=18)v+=14; else if(pe<=25)v+=10;
+    else if(pe<=40)v+=6; else v+=2;
+  } else v+=9; // dati assenti = neutro
+  if(sd.pb!=null&&sd.pb>0){
+    if(sd.pb<=1)v+=7; else if(sd.pb<=2)v+=5; else if(sd.pb<=4)v+=3; else v+=1;
+  }
+  det.valutazione=Math.min(25,v); s+=det.valutazione;
+
+  // 2. REDDITIVITÀ (25pts): ROE + EPS positivo + margini
+  let p=0;
+  if(sd.roe!=null){
+    const rp=sd.roe*100;
+    if(rp>=25)p+=16; else if(rp>=15)p+=12; else if(rp>=10)p+=8;
+    else if(rp>=5)p+=4; else if(rp<0)p+=0; else p+=2;
+  } else p+=8;
+  if(sd.eps!=null&&sd.eps>0)p+=5; else if(sd.eps!=null&&sd.eps<=0)p+=0;
+  if(sd.operatingMargins!=null){
+    const om=sd.operatingMargins*100;
+    if(om>=25)p+=4; else if(om>=15)p+=3; else if(om>=8)p+=2; else if(om>0)p+=1;
+  }
+  det.redditivita=Math.min(25,p); s+=det.redditivita;
+
+  // 3. MOMENTUM 52W (20pts): zona ottimale = 35%-72% del range
+  let m=0;
+  if(sd.week52High&&sd.week52Low&&qd?.price){
+    const range=sd.week52High-sd.week52Low;
+    const pos=range>0?(qd.price-sd.week52Low)/range:0.5;
+    if(pos>=0.35&&pos<=0.72)m=20;       // sweet spot: trend rialzista non ipercomprato
+    else if(pos>=0.20&&pos<0.35)m=15;   // vicino ai minimi — potenziale ma incertezza
+    else if(pos>0.72&&pos<=0.87)m=12;   // vicino ai massimi — cautela
+    else if(pos>0.87)m=7;               // ipercomprato
+    else m=10;                          // vicino ai minimi 52W — rischio elevato
+  } else m=10;
+  det.momentum=m; s+=m;
+
+  // 4. CONSENSUS ANALISTI (20pts)
+  const cp={strongbuy:20,buy:16,hold:9,sell:4,strongsell:0};
+  det.consensus=cp[sd.rec]??9; s+=det.consensus;
+
+  // 5. STABILITÀ BETA (10pts): beta 0.6-1.4 = ottimale
+  if(sd.beta!=null){
+    if(sd.beta>=0.6&&sd.beta<=1.4)det.stabilita=10;
+    else if(sd.beta>=0.4&&sd.beta<=1.8)det.stabilita=6;
+    else det.stabilita=3;
+  } else det.stabilita=5;
+  s+=det.stabilita;
+
+  return {total:Math.min(100,Math.round(s)), details:det};
+}
+
+function calcPriceTarget(sd, qd){
+  if(!sd||!qd?.price)return null;
+  const tgts=[];
+
+  // Metodo 1: Formula di Graham modificata — PT = EPS × (8.5 + 2×g) × (4.4/r)
+  // g = crescita attesa (10% default conservativo), r = rendimento obbligazioni AAA (~4.5%)
+  if(sd.eps&&sd.eps>0){
+    const g=10, r=4.5;
+    const pt=sd.eps*(8.5+2*g)*(4.4/r);
+    if(pt>0&&pt<qd.price*7)tgts.push({m:'Graham',v:pt,w:0.40});
+  }
+
+  // Metodo 2: P/E normalizzato al settore (blend tra P/E attuale e media storica ~18x)
+  if(sd.eps&&sd.eps>0&&sd.pe>0){
+    const normPE=Math.min(Math.max(sd.pe*0.85,10),30);
+    const pt=sd.eps*normPE;
+    if(pt>0)tgts.push({m:'P/E norm.',v:pt,w:0.25});
+  }
+
+  // Metodo 3: Consensus analisti (peso maggiore se disponibile — dato reale)
+  if(sd.targetPrice&&sd.targetPrice>0)tgts.push({m:'Consensus',v:sd.targetPrice,w:0.35});
+
+  if(!tgts.length)return null;
+  const tw=tgts.reduce((s,t)=>s+t.w,0);
+  const pt=tgts.reduce((s,t)=>s+t.v*(t.w/tw),0);
+  return {value:pt, upside:((pt-qd.price)/qd.price*100), methods:tgts};
+}
+
+function getRating(score){
+  if(score>=85)return{label:'Eccellente',color:'#047857',bg:'#D1FAE5'};
+  if(score>=70)return{label:'Molto buono',color:'var(--g)',bg:'var(--g2)'};
+  if(score>=55)return{label:'Buono',color:'#0891B2',bg:'#E0F7FA'};
+  if(score>=40)return{label:'Nella media',color:'var(--o)',bg:'var(--o2)'};
+  if(score>=25)return{label:'Sotto media',color:'#D97706',bg:'#FEF3C7'};
+  return{label:'Debole',color:'var(--r)',bg:'var(--r2)'};
+}
+function getScoreColor(pct){
+  if(pct>=70)return'var(--g)'; if(pct>=45)return'var(--o)'; return'var(--r)';
+}
+
+/* ── DARK MODE ── */
+function toggleDark(){
+  const dark=document.body.classList.toggle('dark');
+  localStorage.setItem('fs_dark',dark?'1':'0');
+  document.getElementById('dm-btn').textContent=dark?'☀':'🌙';
+}
+(function(){
+  if(localStorage.getItem('fs_dark')==='1'){
+    document.body.classList.add('dark');
+    const b=document.getElementById('dm-btn');if(b)b.textContent='☀';
+  }
+})();
+
+/* ── CONFRONTA TITOLI ── */
+let cmpList=[];
+function toggleCmp(sym,el){
+  if(el.checked){
+    if(cmpList.length>=3){el.checked=false;alert('Massimo 3 titoli da confrontare');return;}
+    if(!cmpList.includes(sym))cmpList.push(sym);
+  } else {
+    cmpList=cmpList.filter(s=>s!==sym);
+  }
+  const cnt=document.getElementById('cmp-count');
+  if(cnt)cnt.textContent=cmpList.length;
+  const fb=document.getElementById('cmp-float-btn');
+  if(fb)fb.classList.toggle('show',cmpList.length>=2);
+}
+
+function goToCompareFromScreener(){
+  if(cmpList.length<2)return;
+  // Popola gli input della pagina confronta
+  const t1=document.getElementById('cmp-t1');
+  const t2=document.getElementById('cmp-t2');
+  const t3=document.getElementById('cmp-t3');
+  if(t1)t1.value=cmpList[0]||'';
+  if(t2)t2.value=cmpList[1]||'';
+  if(t3)t3.value=cmpList[2]||'';
+  const btn=Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.textContent.includes('Confronta'));
+  if(btn)showPage('confronta',btn);
+  runCompare();
+}
+
+async function runCompare(){
+  const t1=(document.getElementById('cmp-t1')?.value||'').toUpperCase().trim();
+  const t2=(document.getElementById('cmp-t2')?.value||'').toUpperCase().trim();
+  const t3=(document.getElementById('cmp-t3')?.value||'').toUpperCase().trim();
+  const tickers=[t1,t2,t3].filter(Boolean);
+  if(tickers.length<2){
+    document.getElementById('cmp-result').innerHTML='<p style="color:var(--r);font-family:var(--fm);font-size:12px">Inserisci almeno 2 ticker.</p>';
+    return;
+  }
+  document.getElementById('cmp-result').innerHTML='<div class="ld">Caricamento dati comparativi...</div>';
+  const results=await Promise.all(tickers.map(async sym=>{
+    const [qd,sd]=await Promise.all([api(sym),api(sym,'summary')]);
+    const score=calcFinScopeScore(sd,qd);
+    const pt=calcPriceTarget(sd,qd);
+    return{sym,qd,sd,score,pt};
+  }));
+
+  const recMap={strongbuy:'Forte Acquisto',buy:'Acquisto',hold:'Mantieni',sell:'Vendita',strongsell:'Forte Vendita'};
+  const recCol={strongbuy:'var(--g)',buy:'var(--g)',hold:'var(--o)',sell:'var(--r)',strongsell:'var(--r)'};
+  const metrics=[
+    {k:'Prezzo',fn:r=>r.qd?'$'+fmt(r.qd.price,2):'—'},
+    {k:'Var. 1G',fn:r=>{const c=r.qd?chgPct(r.qd.price,r.qd.prev):null;const up=c==null||c>=0;return`<span class="${up?'up':'down'}">${chgStr(c)}</span>`;}},
+    {k:'P/E',fn:r=>r.sd?.pe?fmt(r.sd.pe,1):'—'},
+    {k:'P/B',fn:r=>r.sd?.pb?fmt(r.sd.pb,1):'—'},
+    {k:'P/S',fn:r=>r.sd?.ps?fmt(r.sd.ps,1):'—'},
+    {k:'ROE',fn:r=>r.sd?.roe?fmt(r.sd.roe*100,1)+'%':'—'},
+    {k:'EPS',fn:r=>r.sd?.eps?'$'+fmt(r.sd.eps,2):'—'},
+    {k:'Mg. Operativo',fn:r=>r.sd?.operatingMargins?fmt(r.sd.operatingMargins*100,1)+'%':'—'},
+    {k:'Crescita Ricavi',fn:r=>r.sd?.revenueGrowth?`<span class="${r.sd.revenueGrowth>=0?'up':'down'}">${r.sd.revenueGrowth>=0?'+':''}${fmt(r.sd.revenueGrowth*100,1)}%</span>`:'—'},
+    {k:'Debt/Equity',fn:r=>r.sd?.debtToEquity?fmt(r.sd.debtToEquity,1):'—'},
+    {k:'Dividendo',fn:r=>r.sd?.dividend?fmt(r.sd.dividend*100,2)+'%':'—'},
+    {k:'Market Cap',fn:r=>fmtLg(r.sd?.marketCap)},
+    {k:'Beta',fn:r=>r.sd?.beta?fmt(r.sd.beta,2):'—'},
+    {k:'52W Max',fn:r=>r.sd?.week52High?'$'+fmt(r.sd.week52High,2):'—'},
+    {k:'52W Min',fn:r=>r.sd?.week52Low?'$'+fmt(r.sd.week52Low,2):'—'},
+    {k:'Consensus',fn:r=>{const rec=r.sd?.rec||'hold';return`<span style="color:${recCol[rec]||'var(--o)'};font-weight:600">${recMap[rec]||'—'}</span>`;}},
+    {k:'Target Analisti',fn:r=>r.sd?.targetPrice?'$'+fmt(r.sd.targetPrice,2):'—'},
+    {k:'FinScope Target',fn:r=>r.pt?'<span style="color:var(--b);font-weight:600">$'+fmt(r.pt.value,2)+'</span>':'—'},
+    {k:'Upside/Down',fn:r=>{if(!r.pt)return'—';const u=r.pt.upside;return`<span class="${u>=0?'up':'down'}" style="font-weight:700">${u>=0?'▲':'▼'} ${fmt(Math.abs(u),1)}%</span>`;}},
+    {k:'FinScope Score',fn:r=>{if(r.score.total==null)return'—';const sc=r.score.total;const col=getScoreColor(sc);const rt=getRating(sc);return`<span style="font-weight:800;color:${col};font-size:14px">${sc}</span><span style="font-size:10px;color:var(--t3)">/100</span> <span style="font-size:10px;padding:1px 6px;border-radius:3px;background:${rt.bg};color:${rt.color};font-weight:600">${rt.label}</span>`;}},
+  ];
+
+  document.getElementById('cmp-result').innerHTML=`
+    <div class="tbl-wrap" style="margin-bottom:12px">
+      <table class="cmp-tbl">
+        <thead><tr><th>Metrica</th>${results.map(r=>`<th>${r.sym}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${metrics.map(({k,fn})=>`<tr><td class="metric-lbl">${k}</td>${results.map(r=>`<td>${fn(r)}</td>`).join('')}</tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:10px;color:var(--t3);font-family:var(--fm)">Dati da Yahoo Finance · Ritardo max 15 min · FinScope Target = media ponderata Graham, P/E norm. e Consensus analisti</p>`;
+}
+
+function clearCompare(){
+  cmpList=[];
+  ['cmp-t1','cmp-t2','cmp-t3'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('cmp-result').innerHTML='<p style="color:var(--t3);font-size:13px;font-family:var(--fm)">Inserisci almeno 2 ticker e premi Confronta.</p>';
+  document.getElementById('cmp-count').textContent='0';
+  document.getElementById('cmp-float-btn').classList.remove('show');
+}
+
+/* ── AI ANALYSIS ── */
+let _lastFA={qd:null,sd:null,ticker:''};
+
+async function runAI(){
+  const btn=document.getElementById('ai-btn');
+  const oldBox=document.getElementById('ai-result-box');
+  if(oldBox)oldBox.remove();
+  if(!_lastFA.ticker){return;}
+  btn.disabled=true;
+  btn.innerHTML='<span class="ai-badge">AI</span>Analisi in corso...';
+  try{
+    const r=await fetch('/api/analyze',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ticker:_lastFA.ticker,qd:_lastFA.qd,sd:_lastFA.sd})
+    });
+    const d=await r.json();
+    const box=document.createElement('div');
+    box.id='ai-result-box';
+    box.className='ai-result-box';
+    if(!r.ok||d.error){
+      box.innerHTML=`<span style="color:var(--r)">⚠ ${d.error||'Errore AI'}</span>`;
+    } else {
+      // Formatta il testo markdown in HTML semplice
+      const html=d.analysis
+        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
+        .replace(/\n/g,'<br>');
+      box.innerHTML=`<div class="ai-header"><span class="ai-tag">✦ FinScope AI · ${d.ticker}</span></div>${html}`;
+    }
+    document.getElementById('fa-res').after(box);
+  }catch(e){
+    const box=document.createElement('div');
+    box.id='ai-result-box';
+    box.className='ai-result-box';
+    box.innerHTML=`<span style="color:var(--r)">⚠ Errore connessione. Verifica che ANTHROPIC_API_KEY sia configurata in Vercel.</span>`;
+    document.getElementById('fa-res').after(box);
+  }
+  btn.disabled=false;
+  btn.innerHTML='<span class="ai-badge">AI</span>Analisi';
 }
 
 /* ── BOOT ── */
@@ -1428,10 +1830,7 @@ async function renderPortfolio(){
   const el=document.getElementById('port-list');
   if(!portfolio.length){
     el.innerHTML='<div class="ld">Nessun titolo aggiunto · Usa il form sopra per aggiungere</div>';
-    document.getElementById('ps-invested').textContent='—';
-    document.getElementById('ps-value').textContent='—';
-    document.getElementById('ps-pnl').textContent='—';
-    document.getElementById('ps-pnlpct').textContent='—';
+    document.getElementById('port-summary').innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
     return;
   }
 
