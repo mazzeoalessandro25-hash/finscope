@@ -55,13 +55,12 @@ nav{height:54px;background:var(--b2);
 .hb-upd{position:absolute;right:28px;font-family:var(--fm);font-size:10px;color:var(--t3)}
 
 /* TICKER TAPE BLU CHIARO */
-.tape{height:34px;background:#D6E4F7;
-  border-bottom:2px solid #A8C4E0;overflow:hidden;display:flex;align-items:center;flex-shrink:0}
-.tape-inner{display:flex;animation:scroll 38s linear infinite;white-space:nowrap}
-.tape-inner:hover{animation-play-state:paused}
-@keyframes scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.ti{display:inline-flex;align-items:center;gap:8px;padding:0 26px;border-right:1px solid #B8D0EC;height:34px;flex-shrink:0}
-.ti-sym{font-family:var(--fm);font-size:10px;color:#3A5F8A;letter-spacing:.4px;font-weight:600;text-transform:uppercase}
+.tape{height:34px;background:#D6E4F7;border-bottom:2px solid #A8C4E0;
+  overflow:hidden;display:flex;align-items:center;flex-shrink:0;position:relative}
+.tape-track{display:flex;align-items:center;white-space:nowrap;will-change:transform}
+.ti{display:inline-flex;align-items:center;gap:8px;padding:0 28px;
+  border-right:1px solid #B8D0EC;height:34px;flex-shrink:0}
+.ti-sym{font-family:var(--fm);font-size:10px;color:#3A5F8A;letter-spacing:.5px;font-weight:700;text-transform:uppercase}
 .ti-p{font-family:var(--fm);font-size:12px;font-weight:600;color:#0F1C2E}
 .ti-c{font-family:var(--fm);font-size:10px;font-weight:600}
 .up{color:#059669}.down{color:#DC2626}
@@ -111,7 +110,7 @@ nav{height:54px;background:var(--b2);
 .vix-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,#059669 0%,#D97706 45%,#DC2626 75%,#7F0000 100%);position:relative;margin-bottom:5px}
 .vix-needle{position:absolute;top:50%;width:3px;height:18px;background:var(--t);border-radius:2px;transform:translate(-50%,-50%);transition:left .5s}
 .vix-zones{display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--t3);margin-bottom:12px}
-.vix-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.vix-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .vs-item{text-align:center}
 .vs-val{font-family:var(--fm);font-size:13px;font-weight:500;color:var(--t)}
 .vs-lbl{font-size:9px;color:var(--t3);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
@@ -283,9 +282,8 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 </div>
 
 <!-- TICKER TAPE BLU CHIARO -->
-<div class="tape">
-  <div class="tape-inner" id="tape1"></div>
-  <div class="tape-inner" id="tape2"></div>
+<div class="tape" id="tape-container">
+  <div class="tape-track" id="tape-track"></div>
 </div>
 </div>
 
@@ -340,16 +338,43 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
   <div class="dash-bot">
     <div class="card">
       <div class="ch">
-        <div><div class="ct">VIX — Volatilità di mercato</div><div class="cs">Indice di paura S&P 500</div></div>
-        <div id="vix-badge" style="font-family:var(--fm);font-size:11px;padding:3px 10px;border-radius:100px;font-weight:600"></div>
+        <div>
+          <div class="ct" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px" onclick="openModal('^VIX','VIX — Indice di Volatilità')">
+            VIX — Volatilità di mercato
+            <span style="font-size:10px;color:var(--b);font-family:var(--fm);background:var(--b3);padding:2px 7px;border-radius:4px">↗ Grafico</span>
+          </div>
+          <div class="cs">CBOE Volatility Index · S&P 500 · clicca per aprire il grafico</div>
+        </div>
+        <div id="vix-badge" style="font-family:var(--fm);font-size:11px;padding:3px 10px;border-radius:100px;font-weight:600;cursor:pointer" onclick="openModal('^VIX','VIX — Indice di Volatilità')"></div>
       </div>
-      <div class="vix-num" id="vix-v">—</div>
+      <div class="vix-num" id="vix-v" style="cursor:pointer" onclick="openModal('^VIX','VIX — Indice di Volatilità')">—</div>
       <div class="vix-desc" id="vix-d">Caricamento...</div>
-      <div style="padding:0 4px">
+      <div style="padding:0 4px;margin-bottom:14px">
         <div class="vix-bar"><div class="vix-needle" id="vix-n" style="left:0%"></div></div>
         <div class="vix-zones"><span>&lt;15 Calmo</span><span>15–25 Normale</span><span>25–35 Tensione</span><span>&gt;35 Paura</span></div>
       </div>
       <div class="vix-stats" id="vix-stats"></div>
+      <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px">
+        <div style="font-size:10px;font-weight:600;color:var(--t2);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Guida alle zone VIX</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:10px;height:10px;border-radius:50%;background:#059669;flex-shrink:0"></div>
+            <div style="font-size:12px;color:var(--t)"><span style="font-family:var(--fm);font-weight:600">VIX &lt; 15</span> — Mercato sereno, bassa volatilità attesa</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:10px;height:10px;border-radius:50%;background:#1A56C4;flex-shrink:0"></div>
+            <div style="font-size:12px;color:var(--t)"><span style="font-family:var(--fm);font-weight:600">15 – 25</span> — Volatilità normale, mercato stabile</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:10px;height:10px;border-radius:50%;background:#D97706;flex-shrink:0"></div>
+            <div style="font-size:12px;color:var(--t)"><span style="font-family:var(--fm);font-weight:600">25 – 35</span> — Alta volatilità, incertezza crescente</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div style="width:10px;height:10px;border-radius:50%;background:#DC2626;flex-shrink:0"></div>
+            <div style="font-size:12px;color:var(--t)"><span style="font-family:var(--fm);font-weight:600">VIX &gt; 35</span> — Paura estrema, possibile opportunità contrarian</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- MIGLIORI E PEGGIORI DEL GIORNO -->
@@ -519,6 +544,7 @@ const STOCKS=[
 const ALL_IDX=[
   {s:'^GSPC',l:'S&P 500',g:'🇺🇸'},{s:'^NDX',l:'Nasdaq 100',g:'🇺🇸'},{s:'^DJI',l:'Dow Jones',g:'🇺🇸'},
   {s:'^FTSEMIB',l:'FTSE MIB',g:'🇮🇹'},{s:'^STOXX50E',l:'Euro Stoxx 50',g:'🇪🇺'},
+  {s:'^STOXX',l:'Stoxx 600',g:'🇪🇺'},
   {s:'^FTSE',l:'FTSE 100',g:'🇬🇧'},{s:'^GDAXI',l:'DAX',g:'🇩🇪'},
   {s:'^FCHI',l:'CAC 40',g:'🇫🇷'},{s:'^IBEX',l:'IBEX 35',g:'🇪🇸'},
   {s:'^N225',l:'Nikkei 225',g:'🇯🇵'},{s:'^HSI',l:'Hang Seng',g:'🇭🇰'},
@@ -599,18 +625,50 @@ function updateHours(){
 }
 updateHours();setInterval(updateHours,30000);
 
-/* ── TAPE ── */
+/* ── TAPE — scroll fluido con rAF ── */
+let tapeRAF=null, tapeX=0, tapeSpeed=0.5, tapeHalfW=0;
+
 async function loadTape(){
-  const items=[];
-  for(const item of TAPE_ITEMS){
-    const d=await api(item.s);if(!d)continue;
+  // Fetch tutti i dati in parallelo
+  const results=await Promise.all(TAPE_ITEMS.map(item=>api(item.s).then(d=>({item,d}))));
+
+  const html=results.map(({item,d})=>{
+    if(!d)return'';
     const c=chgPct(d.price,d.prev);const up=c==null||c>=0;
-    items.push(`<div class="ti"><span class="ti-sym">${item.l}</span><span class="ti-p">${fmt(d.price,item.dec)}</span><span class="ti-c ${up?'up':'down'}">${chgStr(c)}</span></div>`);
-  }
-  const html=items.join('');
-  document.getElementById('tape1').innerHTML=html;
-  document.getElementById('tape2').innerHTML=html;
+    return`<div class="ti"><span class="ti-sym">${item.l}</span><span class="ti-p">${fmt(d.price,item.dec)}</span><span class="ti-c ${up?'up':'down'}">${chgStr(c)}</span></div>`;
+  }).filter(Boolean).join('');
+
+  if(!html)return;
+
+  const track=document.getElementById('tape-track');
+  // Inserisci il contenuto duplicato per il loop seamless
+  track.innerHTML=html+html;
+  track.style.transform='translateX(0px)';
+
+  // Aspetta un frame per misurare la larghezza reale
+  requestAnimationFrame(()=>{
+    tapeHalfW=track.scrollWidth/2;
+    tapeX=0;
+    if(tapeRAF)cancelAnimationFrame(tapeRAF);
+    runTape();
+  });
 }
+
+function runTape(){
+  tapeX-=tapeSpeed;
+  if(tapeX<=-tapeHalfW)tapeX=0; // loop seamless esatto
+  document.getElementById('tape-track').style.transform=`translateX(${tapeX}px)`;
+  tapeRAF=requestAnimationFrame(runTape);
+}
+
+// Pausa al hover
+document.addEventListener('DOMContentLoaded',()=>{
+  const tc=document.getElementById('tape-container');
+  if(tc){
+    tc.addEventListener('mouseenter',()=>{if(tapeRAF){cancelAnimationFrame(tapeRAF);tapeRAF=null;}});
+    tc.addEventListener('mouseleave',()=>{if(!tapeRAF)runTape();});
+  }
+});
 
 /* ── CHART HELPERS ── */
 function buildLWChart(container,type,pts){
@@ -736,19 +794,22 @@ async function loadVIX(){
   const pct=Math.min(Math.max((v-10)/50*100,0),100);
   document.getElementById('vix-n').style.left=pct+'%';
   let label,bg,col;
-  if(v<15){label='Bassa volatilità — mercato sereno';bg='var(--g2)';col='#047857';}
-  else if(v<25){label='Volatilità nella norma';bg='var(--b3)';col='var(--b)';}
-  else if(v<35){label='Alta volatilità — attenzione';bg='var(--o2)';col='#92400E';}
-  else{label='Paura estrema di mercato';bg='var(--r2)';col='#B91C1C';}
+  if(v<15){label='Mercato sereno — investitori poco preoccupati';bg='var(--g2)';col='#047857';}
+  else if(v<25){label='Volatilità nella norma — mercato bilanciato';bg='var(--b3)';col='var(--b)';}
+  else if(v<35){label='Alta volatilità — attenzione alle posizioni aperte';bg='var(--o2)';col='#92400E';}
+  else{label='Paura estrema — storicamente zona di possibile rimbalzo';bg='var(--r2)';col='#B91C1C';}
   document.getElementById('vix-d').textContent=label;
   const badge=document.getElementById('vix-badge');
-  badge.textContent='VIX '+fmt(v,2);badge.style.background=bg;badge.style.color=col;
+  badge.textContent='● VIX '+fmt(v,2);badge.style.background=bg;badge.style.color=col;
   const c=chgPct(d.price,d.prev);
+  const absDiff=d.price-(d.prev||d.price);
   document.getElementById('vix-stats').innerHTML=`
-    <div class="vs-item"><div class="vs-val">${fmt(d.prev,2)}</div><div class="vs-lbl">Prec.</div></div>
-    <div class="vs-item"><div class="vs-val ${c>=0?'up':'down'}">${chgStr(c)}</div><div class="vs-lbl">Var.</div></div>
-    <div class="vs-item"><div class="vs-val">${d.dayHigh?fmt(d.dayHigh,2):'—'}</div><div class="vs-lbl">Max</div></div>
-    <div class="vs-item"><div class="vs-val">${d.dayLow?fmt(d.dayLow,2):'—'}</div><div class="vs-lbl">Min</div></div>`;
+    <div class="vs-item"><div class="vs-val">${fmt(d.prev,2)}</div><div class="vs-lbl">Chiusura prec.</div></div>
+    <div class="vs-item"><div class="vs-val ${c>=0?'up':'down'}">${chgStr(c)}</div><div class="vs-lbl">Variazione %</div></div>
+    <div class="vs-item"><div class="vs-val ${absDiff>=0?'up':'down'}">${absDiff>=0?'+':''}${fmt(absDiff,2)}</div><div class="vs-lbl">Variazione pt</div></div>
+    <div class="vs-item"><div class="vs-val">${d.dayHigh?fmt(d.dayHigh,2):'—'}</div><div class="vs-lbl">Max giornaliero</div></div>
+    <div class="vs-item"><div class="vs-val">${d.dayLow?fmt(d.dayLow,2):'—'}</div><div class="vs-lbl">Min giornaliero</div></div>
+    <div class="vs-item"><div class="vs-val" style="font-size:11px">${v<15?'Bassa':v<25?'Normale':v<35?'Alta':'Estrema'}</div><div class="vs-lbl">Regime attuale</div></div>`;
 }
 
 /* ── MOVERS ── */
