@@ -1690,10 +1690,11 @@ async function submitAuth(){
       errEl.textContent=d.error||'Errore sconosciuto';
       errEl.classList.add('show');
     } else {
-      // Salva token e utente
-      localStorage.setItem(TOKEN_KEY,d.token);
-      localStorage.setItem(USER_KEY,JSON.stringify(d.user));
-      currentToken=d.token;currentUser=d.user;
+      // Salva user_id come token persistente (non il sign_in_token monouso)
+      localStorage.setItem(TOKEN_KEY, d.user.id);
+      localStorage.setItem(USER_KEY, JSON.stringify(d.user));
+      localStorage.setItem('fs_login_at', Date.now().toString());
+      currentToken=d.user.id; currentUser=d.user;
       updateNavUser();
       okEl.textContent=authTab==='login'?'Accesso effettuato!':'Account creato con successo!';
       okEl.classList.add('show');
@@ -1720,6 +1721,9 @@ function updateNavUser(){
 function logout(){
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(USER_KEY);
+  localStorage.removeItem('fs_login_at');
+  localStorage.removeItem('fs_portfolio');
+  localStorage.removeItem('fs_watchlist');
   currentUser=null;currentToken=null;
   portfolio=[];watchlist=[];
   updateNavUser();
@@ -1729,44 +1733,41 @@ function logout(){
 async function verifySession(){
   const token=localStorage.getItem(TOKEN_KEY);
   const user=localStorage.getItem(USER_KEY);
+  const loginAt=localStorage.getItem('fs_login_at');
   if(!token||!user)return;
-  try{
-    const r=await fetch('/api/auth?action=verify',{
-      headers:{Authorization:'Bearer '+token}
-    });
-    const d=await r.json();
-    if(d.ok){
-      currentToken=token;
-      currentUser=JSON.parse(user);
-      updateNavUser();
-      await loadUserData();
-    } else {
-      localStorage.removeItem(TOKEN_KEY);
-      localStorage.removeItem(USER_KEY);
-    }
-  }catch{
-    // usa dati locali se offline
-    currentToken=token;
-    currentUser=JSON.parse(user);
-    updateNavUser();
+  // Sessione valida 30 giorni, nessuna chiamata API: il login è già avvenuto
+  if(loginAt&&Date.now()-parseInt(loginAt)>30*24*3600*1000){
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
+    localStorage.removeItem('fs_login_at');
+    return;
   }
+  currentToken=token;
+  currentUser=JSON.parse(user);
+  updateNavUser();
+  await loadUserData();
 }
 
 async function loadUserData(){
   if(!currentToken)return;
+  // Carica subito da localStorage come fallback immediato
+  try{const c=localStorage.getItem('fs_portfolio');if(c){portfolio=JSON.parse(c);renderPortfolio();}}catch{}
+  try{const c=localStorage.getItem('fs_watchlist');if(c)watchlist=JSON.parse(c);}catch{}
+  // Poi sincronizza con il cloud
   try{
     const r=await fetch('/api/user?type=all',{
       headers:{Authorization:'Bearer '+currentToken}
     });
     const d=await r.json();
-    if(d.watchlist)watchlist=d.watchlist;
-    if(d.portfolio)portfolio=d.portfolio;
+    if(d.watchlist){watchlist=d.watchlist;localStorage.setItem('fs_watchlist',JSON.stringify(watchlist));}
+    if(d.portfolio){portfolio=d.portfolio;localStorage.setItem('fs_portfolio',JSON.stringify(portfolio));}
     showPortfolioState();
     renderPortfolio();
   }catch{}
 }
 
 async function saveWatchlist(){
+  localStorage.setItem('fs_watchlist',JSON.stringify(watchlist));
   if(!currentToken)return;
   try{await fetch('/api/user?type=watchlist',{
     method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
@@ -1775,6 +1776,7 @@ async function saveWatchlist(){
 }
 
 async function savePortfolio(){
+  localStorage.setItem('fs_portfolio',JSON.stringify(portfolio));
   if(!currentToken)return;
   try{await fetch('/api/user?type=portfolio',{
     method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},

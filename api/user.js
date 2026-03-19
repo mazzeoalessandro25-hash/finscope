@@ -27,12 +27,10 @@ async function kv(method, key, value) {
 
 async function getUserFromToken(req) {
   const auth = req.headers.authorization || '';
-  const token = auth.replace('Bearer ', '');
-  if (!token) return null;
+  const userId = auth.replace('Bearer ', '');
+  if (!userId || !userId.startsWith('user_')) return null;
   try {
-    const tokenData = await clerk.signInTokens.getSignInToken(token);
-    if (!tokenData || tokenData.status !== 'pending') return null;
-    return await clerk.users.getUser(tokenData.userId);
+    return await clerk.users.getUser(userId);
   } catch { return null; }
 }
 
