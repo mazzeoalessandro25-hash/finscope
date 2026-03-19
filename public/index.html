@@ -662,7 +662,7 @@ async function loadTape(){
   let newsHtml='';
   if(newsData?.news?.length){
     const isOpen=newsData.isOpen;
-    const tag=isOpen?'APERTURA':'CHIUSURA';
+    const tag='NEWS';
     const tagCls=isOpen?'open':'close';
     newsHtml=`<div class="ti" style="padding:0 20px;opacity:.4"><span style="font-size:16px;color:#3A5F8A">|</span></div>`;
     newsData.news.forEach(n=>{
