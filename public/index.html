@@ -514,6 +514,41 @@ html.dark .auth-box{background:#1e293b}
 .cal-popup-row{display:flex;align-items:center;gap:6px;margin-top:5px}
 .cal-popup-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .cal-popup-text{font-size:10.5px;line-height:1.35}
+
+/* ═══ STOCK DETAIL OVERLAY ═══ */
+.sd-overlay{position:fixed;inset:0;background:var(--bg);z-index:2000;overflow-y:auto;
+  transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.sd-overlay.open{transform:translateX(0)}
+.sd-header{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--bd);
+  padding:12px 24px;display:flex;align-items:center;gap:14px;flex-shrink:0}
+.sd-back{background:var(--s2);border:1px solid var(--bd);color:var(--t);padding:6px 14px;
+  border-radius:8px;font-size:13px;cursor:pointer;font-family:var(--fm);transition:all .15s;white-space:nowrap}
+.sd-back:hover{background:var(--s);border-color:var(--t3)}
+.sd-hdr-sym{font-size:20px;font-weight:800;color:var(--t);font-family:var(--fm)}
+.sd-hdr-name{font-size:12px;color:var(--t3);margin-top:1px}
+.sd-hdr-price{font-size:22px;font-weight:700;font-family:var(--fm);color:var(--t)}
+.sd-hdr-chg{font-size:13px;font-weight:600;font-family:var(--fm);margin-top:1px}
+.sd-body{padding:20px 24px;flex:1}
+.sd-top{display:grid;grid-template-columns:1fr 300px;gap:16px;margin-bottom:16px}
+.sd-section{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px}
+.sd-section-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;
+  letter-spacing:.6px;font-family:var(--fm);margin-bottom:12px;border-bottom:1px solid var(--bd);padding-bottom:8px}
+.sd-mg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sd-m{background:var(--s2);border-radius:8px;padding:9px 10px}
+.sd-m-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.4px;font-family:var(--fm);margin-bottom:3px}
+.sd-m-val{font-size:14px;font-weight:700;color:var(--t);font-family:var(--fm)}
+.sd-m-val.up{color:var(--g)}.sd-m-val.down{color:var(--r)}
+.sd-funds{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px}
+.sd-desc-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}
+.sd-desc-txt{font-size:12px;color:var(--t2);line-height:1.75;margin-top:8px}
+.sd-rec-badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--fm)}
+.sd-rec-badge.strongbuy{background:#D1FAE5;color:#047857}
+.sd-rec-badge.buy{background:#ECFDF5;color:#059669}
+.sd-rec-badge.hold{background:#FEF9C3;color:#CA8A04}
+.sd-rec-badge.sell{background:#FEE2E2;color:#DC2626}
+.sd-rec-badge.strongsell{background:#7F0000;color:#fff}
+@media(max-width:800px){.sd-top{grid-template-columns:1fr}.sd-funds{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.sd-funds{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
