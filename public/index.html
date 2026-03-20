@@ -2304,6 +2304,8 @@ async function renderPortfolio(){
   }
   document.getElementById('port-summary').innerHTML=summaryHtml||'<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
   loadBenchmark();
+  loadDividendTracker();
+  loadPortPerf();
 }
 
 function renderWatchlistPort(){
