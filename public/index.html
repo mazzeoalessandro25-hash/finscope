@@ -2375,20 +2375,26 @@ function hmRender(){
     if(!vis.length)return'';
     return`<div class="hm-row">${vis.map(sec=>{
       const stocks=secMap[sec];
-      const col=HM_SEC_COLOR[sec]||'#1F2937';
+      const theme=HM_SEC_COLOR[sec]||{color:'#475569',bg:'#F8FAFC'};
       const secUp=stocks.filter(s=>s.chg>0.05).length;
       const secDn=stocks.filter(s=>s.chg<-0.05).length;
+      const udCol=secUp>=secDn?'#15803d':'#dc2626';
       return`<div class="hm-sec-block" style="flex:${stocks.length}">
-        <div class="hm-sec-hdr" style="background:${col}">
-          <span class="hm-sec-name">${sec}</span>
-          <span class="hm-sec-ud">${secUp}▲ ${secDn}▼</span>
+        <div class="hm-sec-hdr" style="background:${theme.bg};border-color:${theme.color}">
+          <span class="hm-sec-name" style="color:${theme.color}">${sec}</span>
+          <span class="hm-sec-ud" style="color:${udCol}">${secUp}▲ ${secDn}▼</span>
         </div>
-        <div class="hm-cells" style="background:${col}">
-          ${stocks.map(st=>`<div class="hm-cell" style="background:${hmColor(st.chg||0)}" onclick="openModal('${st.s}','${st.n}')">
-            <div class="hm-sym">${st.s.replace(/\.(MI|PA|DE|AS|F)$/,'')}</div>
-            <div class="hm-chg">${(st.chg>=0?'+':'')+(st.chg||0).toFixed(2)}%</div>
-            <div class="hm-name">${st.n}</div>
-          </div>`).join('')}
+        <div class="hm-cells">
+          ${stocks.map(st=>{
+            const bg=hmColor(st.chg||0);
+            const txt=hmTxt(st.chg||0);
+            const sym=st.s.replace(/\.(MI|PA|DE|AS|F)$/,'');
+            return`<div class="hm-cell" style="background:${bg}" onclick="openModal('${st.s}','${st.n}')">
+              <div class="hm-sym" style="color:${txt}">${sym}</div>
+              <div class="hm-chg" style="color:${txt}">${(st.chg>=0?'+':'')+(st.chg||0).toFixed(2)}%</div>
+              <div class="hm-name" style="color:${txt==='#fff'?'rgba(255,255,255,.7)':'rgba(0,0,0,.5)'}">${st.n}</div>
+            </div>`;
+          }).join('')}
         </div>
       </div>`;
     }).join('')}</div>`;
