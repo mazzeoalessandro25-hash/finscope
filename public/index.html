@@ -1939,9 +1939,7 @@ function toggleWl(sym,el){
   el.querySelector('.star-btn').classList.toggle('active',watchlist.includes(sym));
 }
 function openFA(sym){
-  const btn=Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.textContent==='Simulatore');
-  showPage('simulatore',btn);
-  document.getElementById('fat').value=sym;runFA();
+  openStockDetail(sym);
 }
 async function addCustomTicker(){
   const inp=document.getElementById('custom-ticker-inp');
