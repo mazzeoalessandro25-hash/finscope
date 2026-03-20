@@ -1216,8 +1216,11 @@ const ALLOC={
 
 let scData={}, scSummary={}, customStocks=[], scSummaryLoading=false;
 let simCI=null, pieCI=null, radarCI=null;
-let mainChart=null, modalChart=null;
-let mainSym='^GSPC', mainRange='1mo', mainType='candle';
+const dashCharts={
+  1:{inst:null,sym:'^GSPC', range:'1mo',type:'candle'},
+  2:{inst:null,sym:'^NDX',  range:'1mo',type:'candle'},
+};
+let modalChart=null;
 let modalSym='', modalRange='1mo', modalType='candle';
 let sortKey='score', sortDir=-1;
 let watchlist=JSON.parse(localStorage.getItem('fs_wl')||'[]');
