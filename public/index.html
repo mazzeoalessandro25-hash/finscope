@@ -3439,8 +3439,10 @@ async function loadSdChart(sym,range,btn){
     btn.classList.add('active');
   }
   const data=await api(sdSym,'history&range='+sdRange);
-  if(!data?.points?.length)return;
-  const pts=data.points;
+  if(!data)return;
+  // Supporta sia { points: [...] } che array diretto
+  const pts=Array.isArray(data)?data:data.points;
+  if(!pts?.length)return;
   const container=document.getElementById('sd-chart');
   if(sdChartInst){sdChartInst.remove();sdChartInst=null;}
   sdChartInst=buildLWChart(container,sdType,pts);
