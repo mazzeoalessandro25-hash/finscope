@@ -1916,7 +1916,7 @@ async function boot(){
   ]);
   loadTape();
   loadHeatmap();
-  renderCalendar();
+  renderCalendar(); // async, non serve await — si aggiorna da sola
   document.getElementById('dash-ts').textContent='Aggiornato: '+now();
 }
 boot();
