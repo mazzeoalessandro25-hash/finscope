@@ -612,46 +612,161 @@ html.dark .auth-box{background:#1e293b}
   <div class="pg-title">Dashboard</div>
   <div class="pg-sub">Dati aggiornati in tempo reale · Clicca su qualsiasi indice, commodity o crypto per aprire il grafico</div>
 
-  <!-- GRAFICO PRINCIPALE + INDICI UNIFICATI -->
-  <div class="dash-mid">
+  <!-- 2 GRAFICI INTERATTIVI -->
+  <div class="dash-charts">
+    <!-- Grafico 1 -->
     <div class="card">
-      <div class="ch">
-        <div><div class="ct" id="ch-title">S&P 500</div><div class="cs" id="ch-sub">Caricamento...</div></div>
+      <div class="ch" style="flex-wrap:wrap;gap:8px">
+        <div><div class="ct" id="ch1-title">S&P 500</div><div class="cs" id="ch1-sub">Caricamento...</div></div>
         <div class="cc-row">
-          <button class="chart-type-btn active" id="main-candle" onclick="setMainType('candle',this)">Candele</button>
-          <button class="chart-type-btn" id="main-line" onclick="setMainType('line',this)">Linea</button>
-          <div style="width:1px;height:14px;background:var(--bd);margin:0 4px"></div>
-          <select class="sym-sel" id="ch-sym" onchange="onSymChange()">
-            <option value="^GSPC">S&P 500</option>
-            <option value="FTSEMIB.MI">FTSE MIB</option>
-            <option value="^NDX">Nasdaq 100</option>
-            <option value="^DJI">Dow Jones</option>
-            <option value="^STOXX50E">Euro Stoxx 50</option>
-            <option value="^FTSE">FTSE 100</option>
-            <option value="^GDAXI">DAX</option>
-            <option value="^FCHI">CAC 40</option>
-            <option value="^IBEX">IBEX 35</option>
-            <option value="^N225">Nikkei 225</option>
-            <option value="GC=F">Oro</option>
-            <option value="BZ=F">Petrolio Brent</option>
-            <option value="BTC-USD">Bitcoin</option>
-            <option value="ETH-USD">Ethereum</option>
+          <button class="chart-type-btn active" onclick="setDashType(1,'candle',this)">Candele</button>
+          <button class="chart-type-btn" onclick="setDashType(1,'line',this)">Linea</button>
+          <div style="width:1px;height:14px;background:var(--bd);margin:0 2px"></div>
+          <select class="sym-sel" id="ch1-sym" onchange="onDashSymChange(1)">
+            <optgroup label="Indici USA">
+              <option value="^GSPC">S&P 500</option>
+              <option value="^NDX">Nasdaq 100</option>
+              <option value="^DJI">Dow Jones</option>
+              <option value="^RUT">Russell 2000</option>
+            </optgroup>
+            <optgroup label="Indici Europa">
+              <option value="FTSEMIB.MI">FTSE MIB</option>
+              <option value="^STOXX50E">Euro Stoxx 50</option>
+              <option value="^GDAXI">DAX</option>
+              <option value="^FCHI">CAC 40</option>
+              <option value="^FTSE">FTSE 100</option>
+              <option value="^IBEX">IBEX 35</option>
+            </optgroup>
+            <optgroup label="Indici Asia">
+              <option value="^N225">Nikkei 225</option>
+              <option value="^HSI">Hang Seng</option>
+              <option value="000001.SS">Shanghai</option>
+            </optgroup>
+            <optgroup label="Azioni USA">
+              <option value="AAPL">Apple</option>
+              <option value="MSFT">Microsoft</option>
+              <option value="NVDA">NVIDIA</option>
+              <option value="AMZN">Amazon</option>
+              <option value="GOOGL">Alphabet</option>
+              <option value="META">Meta</option>
+              <option value="TSLA">Tesla</option>
+              <option value="JPM">JPMorgan</option>
+              <option value="V">Visa</option>
+              <option value="BRK-B">Berkshire B</option>
+              <option value="NFLX">Netflix</option>
+              <option value="AMD">AMD</option>
+            </optgroup>
+            <optgroup label="Azioni Italia">
+              <option value="ENI.MI">ENI</option>
+              <option value="ENEL.MI">ENEL</option>
+              <option value="G.MI">Generali</option>
+              <option value="STLAM.MI">Stellantis</option>
+              <option value="STM.MI">STMicroelectronics</option>
+              <option value="ISP.MI">Intesa Sanpaolo</option>
+              <option value="UCG.MI">UniCredit</option>
+            </optgroup>
+            <optgroup label="Commodities">
+              <option value="GC=F">Oro</option>
+              <option value="SI=F">Argento</option>
+              <option value="BZ=F">Petrolio Brent</option>
+              <option value="CL=F">Petrolio WTI</option>
+              <option value="NG=F">Gas Naturale</option>
+            </optgroup>
+            <optgroup label="Crypto">
+              <option value="BTC-USD">Bitcoin</option>
+              <option value="ETH-USD">Ethereum</option>
+              <option value="SOL-USD">Solana</option>
+            </optgroup>
           </select>
-          <button class="cc-btn" onclick="loadMainChart(null,'1d',this)">1G</button>
-          <button class="cc-btn" onclick="loadMainChart(null,'5d',this)">5G</button>
-          <button class="cc-btn active" onclick="loadMainChart(null,'1mo',this)">1M</button>
-          <button class="cc-btn" onclick="loadMainChart(null,'3mo',this)">3M</button>
-          <button class="cc-btn" onclick="loadMainChart(null,'1y',this)">1A</button>
+          <button class="cc-btn" onclick="loadDashChart(1,null,'1d',this)">1G</button>
+          <button class="cc-btn" onclick="loadDashChart(1,null,'5d',this)">5G</button>
+          <button class="cc-btn active" onclick="loadDashChart(1,null,'1mo',this)">1M</button>
+          <button class="cc-btn" onclick="loadDashChart(1,null,'3mo',this)">3M</button>
+          <button class="cc-btn" onclick="loadDashChart(1,null,'1y',this)">1A</button>
         </div>
       </div>
-      <div id="mainChart" style="width:100%;height:280px"></div>
+      <div id="dashChart1" style="width:100%;height:260px"></div>
     </div>
 
-    <!-- INDICI UNIFICATI: USA + EUROPA + ASIA -->
-    <div class="card" style="overflow-y:auto;max-height:380px">
-      <div class="ch"><div><div class="ct">Indici globali</div><div class="cs">USA · Europa · Asia · clicca per grafico</div></div></div>
-      <div id="idx-list"><div class="ld">Caricamento...</div></div>
+    <!-- Grafico 2 -->
+    <div class="card">
+      <div class="ch" style="flex-wrap:wrap;gap:8px">
+        <div><div class="ct" id="ch2-title">Nasdaq 100</div><div class="cs" id="ch2-sub">Caricamento...</div></div>
+        <div class="cc-row">
+          <button class="chart-type-btn active" onclick="setDashType(2,'candle',this)">Candele</button>
+          <button class="chart-type-btn" onclick="setDashType(2,'line',this)">Linea</button>
+          <div style="width:1px;height:14px;background:var(--bd);margin:0 2px"></div>
+          <select class="sym-sel" id="ch2-sym" onchange="onDashSymChange(2)">
+            <optgroup label="Indici USA">
+              <option value="^GSPC">S&P 500</option>
+              <option value="^NDX" selected>Nasdaq 100</option>
+              <option value="^DJI">Dow Jones</option>
+              <option value="^RUT">Russell 2000</option>
+            </optgroup>
+            <optgroup label="Indici Europa">
+              <option value="FTSEMIB.MI">FTSE MIB</option>
+              <option value="^STOXX50E">Euro Stoxx 50</option>
+              <option value="^GDAXI">DAX</option>
+              <option value="^FCHI">CAC 40</option>
+              <option value="^FTSE">FTSE 100</option>
+              <option value="^IBEX">IBEX 35</option>
+            </optgroup>
+            <optgroup label="Indici Asia">
+              <option value="^N225">Nikkei 225</option>
+              <option value="^HSI">Hang Seng</option>
+              <option value="000001.SS">Shanghai</option>
+            </optgroup>
+            <optgroup label="Azioni USA">
+              <option value="AAPL">Apple</option>
+              <option value="MSFT">Microsoft</option>
+              <option value="NVDA">NVIDIA</option>
+              <option value="AMZN">Amazon</option>
+              <option value="GOOGL">Alphabet</option>
+              <option value="META">Meta</option>
+              <option value="TSLA">Tesla</option>
+              <option value="JPM">JPMorgan</option>
+              <option value="V">Visa</option>
+              <option value="BRK-B">Berkshire B</option>
+              <option value="NFLX">Netflix</option>
+              <option value="AMD">AMD</option>
+            </optgroup>
+            <optgroup label="Azioni Italia">
+              <option value="ENI.MI">ENI</option>
+              <option value="ENEL.MI">ENEL</option>
+              <option value="G.MI">Generali</option>
+              <option value="STLAM.MI">Stellantis</option>
+              <option value="STM.MI">STMicroelectronics</option>
+              <option value="ISP.MI">Intesa Sanpaolo</option>
+              <option value="UCG.MI">UniCredit</option>
+            </optgroup>
+            <optgroup label="Commodities">
+              <option value="GC=F">Oro</option>
+              <option value="SI=F">Argento</option>
+              <option value="BZ=F">Petrolio Brent</option>
+              <option value="CL=F">Petrolio WTI</option>
+              <option value="NG=F">Gas Naturale</option>
+            </optgroup>
+            <optgroup label="Crypto">
+              <option value="BTC-USD">Bitcoin</option>
+              <option value="ETH-USD">Ethereum</option>
+              <option value="SOL-USD">Solana</option>
+            </optgroup>
+          </select>
+          <button class="cc-btn" onclick="loadDashChart(2,null,'1d',this)">1G</button>
+          <button class="cc-btn" onclick="loadDashChart(2,null,'5d',this)">5G</button>
+          <button class="cc-btn active" onclick="loadDashChart(2,null,'1mo',this)">1M</button>
+          <button class="cc-btn" onclick="loadDashChart(2,null,'3mo',this)">3M</button>
+          <button class="cc-btn" onclick="loadDashChart(2,null,'1y',this)">1A</button>
+        </div>
+      </div>
+      <div id="dashChart2" style="width:100%;height:260px"></div>
     </div>
+  </div>
+
+  <!-- INDICI UNIFICATI: USA + EUROPA + ASIA -->
+  <div class="card" style="margin-bottom:14px">
+    <div class="ch"><div><div class="ct">Indici globali</div><div class="cs">USA · Europa · Asia · clicca per grafico</div></div></div>
+    <div id="idx-list"><div class="ld">Caricamento...</div></div>
   </div>
 
   <!-- VIX + MIGLIORI/PEGGIORI -->
