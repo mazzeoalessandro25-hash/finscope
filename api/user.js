@@ -83,5 +83,12 @@ export default async function handler(req, res) {
     return res.json({ ok: true });
   }
 
+  // ── SAVE ALERTS ──
+  if (req.method === 'POST' && type === 'alerts') {
+    const { alerts } = req.body;
+    await kv('SET', `${uid}:alerts`, alerts || []);
+    return res.json({ ok: true });
+  }
+
   return res.status(400).json({ error: 'Tipo non valido' });
 }
