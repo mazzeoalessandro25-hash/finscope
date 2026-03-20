@@ -1844,12 +1844,17 @@ async function loadSummariesBg(){
   if(scSummaryLoading)return;
   scSummaryLoading=true;
   const allS=STOCKS.concat(customStocks);
-  for(let i=0;i<allS.length;i+=5){
-    await Promise.all(allS.slice(i,i+5).map(async s=>{
-      const sd=await api(s.s,'summary');
-      if(sd)scSummary[s.s]=sd;
-    }));
-    applyF();
+  for(let i=0;i<allS.length;i+=3){
+    // Skip symbols currently open in stock detail (will be fetched with priority)
+    const batch=allS.slice(i,i+3).filter(s=>s.s!==sdSym);
+    if(batch.length){
+      await Promise.all(batch.map(async s=>{
+        const sd=await api(s.s,'summary');
+        if(sd)scSummary[s.s]=sd;
+      }));
+      applyF();
+    }
+    await new Promise(r=>setTimeout(r,300));
   }
   scSummaryLoading=false;
 }
