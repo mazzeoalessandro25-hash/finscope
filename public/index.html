@@ -601,7 +601,10 @@ html.dark .auth-box{background:#1e293b}
     </div>
     <div style="text-align:right;flex-shrink:0">
       <div class="sd-hdr-price" id="sd-hdr-price">—</div>
-      <div class="sd-hdr-chg" id="sd-hdr-chg">—</div>
+      <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end">
+        <div class="sd-hdr-chg" id="sd-hdr-chg">—</div>
+        <div id="sd-refresh-dot" style="width:7px;height:7px;border-radius:50%;background:var(--t3);flex-shrink:0;transition:background .3s" title="Aggiornamento automatico ogni 30s"></div>
+      </div>
     </div>
     <button class="star-btn" id="sd-wl-btn" onclick="sdToggleWl()" style="font-size:18px;padding:4px 8px;flex-shrink:0">★</button>
   </div>
