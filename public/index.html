@@ -3472,11 +3472,8 @@ function sdSetPctChg(id,v){
 }
 
 async function loadSdData(sym){
-  // Usa la cache dello screener se disponibile, altrimenti chiama l'API
-  const [d,sd]=await Promise.all([
-    scData[sym]?Promise.resolve(scData[sym]):api(sym),
-    scSummary[sym]?Promise.resolve(scSummary[sym]):api(sym,'summary')
-  ]);
+  // Fetch quote data (basic price info)
+  const d=scData[sym]||await api(sym);
   if(!d)return;
   const cur=d.currency==='EUR'?'€':'$';
   const c=chgPct(d.price,d.prev);
@@ -3492,11 +3489,28 @@ async function loadSdData(sym){
   sdSet('sdm-price',cur+fmt(d.price,d.price<10?4:2));
   sdSetChg('sdm-chg',c);
   sdSet('sdm-vol',d.volume?fmtLg(d.volume):'—');
-  // Se summary non è ancora pronta, ritenta dopo 2s
+  // Mostra indicatore caricamento per i fondamentali
+  document.getElementById('sd-description').textContent='Caricamento dati fondamentali...';
+  // Recupera summary: prova cache, poi polling breve, poi fetch diretto con retry
+  let sd=scSummary[sym];
   if(!sd){
-    setTimeout(()=>loadSdData(sym),2000);
-    return;
+    // Aspetta fino a 4s che il loader in background la popoli
+    for(let i=0;i<8&&!sd;i++){
+      await new Promise(r=>setTimeout(r,500));
+      sd=scSummary[sym];
+    }
   }
+  if(!sd){
+    // Fetch diretto con 3 tentativi (il loader bg ha avuto la sua pausa)
+    for(let attempt=0;attempt<3&&!sd;attempt++){
+      sd=await api(sym,'summary');
+      if(!sd&&attempt<2)await new Promise(r=>setTimeout(r,1000*(attempt+1)));
+    }
+    if(sd)scSummary[sym]=sd;
+  }
+  // Se il simbolo è cambiato mentre aspettavamo, ignora
+  if(sdSym!==sym)return;
+  if(!sd){document.getElementById('sd-description').textContent='Dati fondamentali non disponibili al momento.';return;}
   // Salva in cache per usi futuri
   scSummary[sym]=sd;
   // Market / Size
