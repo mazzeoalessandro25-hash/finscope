@@ -641,6 +641,16 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
     <div class="crypto-item" onclick="openModal('XRP-USD','XRP')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4;font-size:11px">XRP</div><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k4" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div>
     <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k5" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div>
   </div>
+
+  <!-- MARKET HEATMAP -->
+  <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Market Heatmap</div><div class="sdiv-l"></div></div>
+  <div class="card" id="heatmap-card">
+    <div class="ch">
+      <div><div class="ct">Heatmap di mercato</div><div class="cs">Performance giornaliera per settore · Clicca per analizzare il titolo</div></div>
+      <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadHeatmap()">↻ Aggiorna</button>
+    </div>
+    <div id="heatmap-container"><div class="ld">Caricamento...</div></div>
+  </div>
 </div>
 
 <!-- ═══ SCREENER ═══ -->
