@@ -2626,6 +2626,402 @@ async function loadBenchmark(){
     <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Portafoglio calcolato dal prezzo di acquisto · Benchmark: variazione ultimo mese</div>`;
 }
 
+/* ══════════════════════════════════════════
+   FEATURE 1: ALERT PREZZI
+══════════════════════════════════════════ */
+let alerts=[];
+
+async function saveAlerts(){
+  localStorage.setItem('fs_alerts',JSON.stringify(alerts));
+  if(!currentToken)return;
+  try{await fetch('/api/user?type=alerts',{
+    method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
+    body:JSON.stringify({alerts})
+  });}catch{}
+}
+
+async function addAlert(){
+  if(!currentUser){openAuthModal();return;}
+  const sym=(document.getElementById('al-sym').value||'').toUpperCase().trim();
+  const target=parseFloat(document.getElementById('al-price').value);
+  const condition=document.getElementById('al-cond').value;
+  const label=document.getElementById('al-label').value.trim();
+  if(!sym||!target||target<=0)return;
+  alerts.push({sym,target,condition,label,addedAt:Date.now()});
+  document.getElementById('al-sym').value='';
+  document.getElementById('al-price').value='';
+  document.getElementById('al-label').value='';
+  await saveAlerts();
+  renderAlerts();
+}
+
+async function removeAlert(idx){
+  alerts.splice(idx,1);
+  await saveAlerts();
+  renderAlerts();
+}
+
+function renderAlerts(){
+  const el=document.getElementById('alerts-list');
+  const cnt=document.getElementById('alerts-count');
+  if(!el)return;
+  if(!alerts.length){
+    el.innerHTML='<div class="ld">Nessun alert configurato · Usa il form sopra per aggiungere</div>';
+    if(cnt)cnt.textContent='Nessun alert attivo';
+    return;
+  }
+  if(cnt)cnt.textContent=alerts.length+' alert attivi';
+  el.innerHTML=alerts.map((a,i)=>`
+    <div class="alert-item">
+      <div>
+        <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${a.sym}</div>
+        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">
+          ${a.condition==='above'?'↑ Sopra':'↓ Sotto'} $${fmt(a.target,2)}
+          ${a.label?'· '+a.label:''}
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString('it-IT')}</span>
+        <button class="port-del" onclick="removeAlert(${i})" title="Rimuovi alert">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+async function checkAlerts(){
+  if(!alerts.length)return;
+  const banners=document.getElementById('alert-triggered-banners');
+  if(!banners)return;
+  banners.innerHTML='';
+  const syms=[...new Set(alerts.map(a=>a.sym))];
+  const prices={};
+  await Promise.all(syms.map(async s=>{
+    const d=await api(s);
+    if(d?.price)prices[s]=d.price;
+  }));
+  alerts.forEach(a=>{
+    const p=prices[a.sym];
+    if(p==null)return;
+    const triggered=(a.condition==='above'&&p>=a.target)||(a.condition==='below'&&p<=a.target);
+    if(triggered){
+      const div=document.createElement('div');
+      div.className='alert-triggered '+a.condition;
+      div.innerHTML=`🔔 <strong>${a.sym}</strong> — Prezzo attuale <strong>$${fmt(p,2)}</strong> è ${a.condition==='above'?'sopra':'sotto'} il target $${fmt(a.target,2)}${a.label?' · '+a.label:''}`;
+      banners.appendChild(div);
+    }
+  });
+}
+
+/* ══════════════════════════════════════════
+   FEATURE 2: DIVIDEND TRACKER
+══════════════════════════════════════════ */
+async function loadDividendTracker(){
+  const el=document.getElementById('div-tracker-content');
+  if(!el)return;
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per vedere i dividendi</div>';return;
+  }
+  el.innerHTML='<div class="ld" style="padding:10px">Caricamento dati dividendi...</div>';
+  const summaries=await Promise.all(portfolio.map(item=>api(item.sym,'summary')));
+  const rows=[];
+  let totalAnnualUSD=0,totalAnnualEUR=0;
+  let totalWeightedYield=0,totalInvested=0;
+  portfolio.forEach((item,i)=>{
+    const sd=summaries[i];
+    if(!sd?.divYield&&!sd?.dividend)return;
+    const divYield=sd.divYield||(sd.dividend||0);
+    if(divYield<=0)return;
+    const isEUR=item.currency==='EUR';
+    const invested=item.qty*item.buyPrice;
+    const annualIncome=invested*divYield;
+    if(isEUR)totalAnnualEUR+=annualIncome;else totalAnnualUSD+=annualIncome;
+    totalWeightedYield+=divYield*invested;
+    totalInvested+=invested;
+    rows.push({sym:item.sym,qty:item.qty,divYield,annualIncome,currency:item.currency,sym2:item.symbol||'$'});
+  });
+  if(!rows.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Nessun titolo con dividendi nel portafoglio</div>';return;
+  }
+  const avgYield=totalInvested>0?totalWeightedYield/totalInvested:0;
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      ${totalAnnualUSD>0?`<div class="rb"><div class="rl">REDDITO ANNUALE USD</div><div class="rv2 g">$${fmt(totalAnnualUSD,2)}</div></div>`:''}
+      ${totalAnnualEUR>0?`<div class="rb"><div class="rl">REDDITO ANNUALE EUR</div><div class="rv2 g">€${fmt(totalAnnualEUR,2)}</div></div>`:''}
+      <div class="rb"><div class="rl">YIELD MEDIO PONDERATO</div><div class="rv2 a">${fmt(avgYield*100,2)}%</div></div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo</div>
+    ${rows.map(r=>`<div class="div-row">
+      <div style="font-family:var(--fm);font-weight:700;color:var(--t)">${r.sym}</div>
+      <div style="color:var(--t3);font-size:11px">${r.qty} pz</div>
+      <div style="color:var(--g);font-weight:600">${fmt(r.divYield*100,2)}% yield</div>
+      <div style="color:var(--t);font-weight:600">${r.sym2}${fmt(r.annualIncome,2)}/anno</div>
+    </div>`).join('')}
+    <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Stime basate sul yield attuale · Non garantite</div>`;
+}
+
+/* ══════════════════════════════════════════
+   FEATURE 3: WATCHLIST POTENZIATA
+══════════════════════════════════════════ */
+async function renderWatchlistPort(){
+  const el=document.getElementById('wl-list-port');
+  if(!el)return;
+  if(!watchlist.length){
+    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Aggiungi titoli allo screener con ★</div>';
+    return;
+  }
+  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">Caricamento prezzi...</div>';
+  const quotes=await Promise.all(watchlist.map(s=>api(s)));
+  const sparks=await Promise.all(watchlist.map(s=>fetchSparkData(s)));
+  const stockInfo=s=>STOCKS.find(x=>x.s===s);
+  el.innerHTML=watchlist.map((sym,i)=>{
+    const d=quotes[i];
+    const info=stockInfo(sym);
+    const c=d?chgPct(d.price,d.prev):null;
+    const up=c==null||c>=0;
+    const spId='wl-sp-'+sym.replace(/[^a-z0-9]/gi,'');
+    return`<div class="wl-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${sym}</div>
+          ${info?`<div style="font-size:11px;color:var(--t3)">${info.n}</div>`:''}
+        </div>
+        <div style="text-align:right">
+          <div class="wl-card-price">${d?'$'+fmt(d.price,d.price<10?4:2):'—'}</div>
+          <span class="wl-card-chg ${up?'up':'down'}">${chgStr(c)}</span>
+        </div>
+      </div>
+      <svg class="spark" id="${spId}" width="100%" height="36" style="display:block;margin:8px 0"></svg>
+      <div class="wl-card-btns">
+        <button class="wl-card-btn" onclick="openFA('${sym}')">Analizza</button>
+        <button class="wl-card-btn del" onclick="removeFromWatchlist('${sym}')">Rimuovi</button>
+      </div>
+    </div>`;
+  }).join('');
+  requestAnimationFrame(()=>{
+    watchlist.forEach((sym,i)=>{
+      const spId='wl-sp-'+sym.replace(/[^a-z0-9]/gi,'');
+      const d=quotes[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+      if(sparks[i]&&sparks[i].length)drawSparkline(spId,sparks[i],up);
+    });
+  });
+}
+
+/* ══════════════════════════════════════════
+   FEATURE 4: DARK MODE (html.dark toggle)
+══════════════════════════════════════════ */
+// Override existing toggleDark to use html.dark class
+function toggleDark(){
+  const isDark=document.documentElement.classList.toggle('dark');
+  document.body.classList.toggle('dark',isDark);
+  localStorage.setItem('fs_theme',isDark?'dark':'light');
+  document.getElementById('dm-btn').textContent=isDark?'☀':'🌙';
+}
+(function initTheme(){
+  const saved=localStorage.getItem('fs_theme')||localStorage.getItem('fs_dark');
+  const isDark=saved==='dark'||saved==='1';
+  if(isDark){
+    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark');
+    const b=document.getElementById('dm-btn');if(b)b.textContent='☀';
+  }
+})();
+
+/* ══════════════════════════════════════════
+   FEATURE 5: PORTFOLIO PERFORMANCE CHART
+══════════════════════════════════════════ */
+let portPerfCI=null;
+async function loadPortPerf(){
+  const canvas=document.getElementById('portPerfChart');
+  if(!canvas||!portfolio.length)return;
+  const [spyData,...portData]=await Promise.all([
+    api('SPY','history&range=1mo'),
+    ...portfolio.map(item=>api(item.sym,'history&range=1mo'))
+  ]);
+  if(!spyData?.points?.length)return;
+  const spyPts=spyData.points;
+  const spyFirst=spyPts[0].close;
+  const spyReturns=spyPts.map(p=>((p.close-spyFirst)/spyFirst*100));
+  const labels=spyPts.map(p=>p.time);
+  // Calculate weighted portfolio returns
+  let totalInvested=0;
+  const weights=portfolio.map(item=>{
+    const inv=item.qty*item.buyPrice;
+    totalInvested+=inv;
+    return inv;
+  });
+  const portReturns=spyPts.map((_,di)=>{
+    let wSum=0;
+    portfolio.forEach((item,pi)=>{
+      const pts=portData[pi]?.points||[];
+      if(!pts.length)return;
+      const first=pts[0].close;
+      const cur=pts[di]?.close||pts[pts.length-1].close;
+      const ret=((cur-first)/first*100);
+      wSum+=ret*(weights[pi]/totalInvested);
+    });
+    return wSum;
+  });
+  if(portPerfCI){portPerfCI.destroy();portPerfCI=null;}
+  const ctx=canvas.getContext('2d');
+  portPerfCI=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {label:'Portafoglio',data:portReturns,borderColor:'#1A56C4',borderWidth:2,fill:true,
+          backgroundColor:cx=>{const g=cx.chart.ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'rgba(26,86,196,.15)');g.addColorStop(1,'rgba(26,86,196,0)');return g;},
+          tension:.3,pointRadius:0},
+        {label:'S&P 500',data:spyReturns,borderColor:'#8499B0',borderWidth:1.5,borderDash:[4,4],fill:false,tension:.3,pointRadius:0}
+      ]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{labels:{color:'var(--t2)',font:{family:'IBM Plex Mono',size:11}}}},
+      scales:{
+        x:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8},grid:{color:'rgba(216,226,239,.4)'}},
+        y:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:10},callback:v=>(v>=0?'+':'')+v.toFixed(1)+'%'},grid:{color:'rgba(216,226,239,.4)'}}
+      }
+    }
+  });
+}
+
+/* ══════════════════════════════════════════
+   FEATURE 6: MACRO DASHBOARD
+══════════════════════════════════════════ */
+async function loadMacroDashboard(){
+  // Rates & Central Banks
+  const rateSyms=[
+    {s:'^TNX',l:'US 10Y Treasury',unit:'%'},
+    {s:'^IRX',l:'US 3M T-Bill',unit:'%'},
+    {s:'^TYX',l:'US 30Y Treasury',unit:'%'},
+    {s:'EURUSD=X',l:'EUR/USD',unit:'',dec:4},
+  ];
+  const ratesEl=document.getElementById('macro-rates');
+  if(ratesEl){
+    const rd=await Promise.all(rateSyms.map(x=>api(x.s)));
+    ratesEl.innerHTML=rateSyms.map((x,i)=>{
+      const d=rd[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+      return`<div class="macro-stat">
+        <div class="macro-stat-lbl">${x.l}</div>
+        <div class="macro-stat-val">${d?fmt(d.price,x.dec||2)+x.unit:'—'}</div>
+        <div class="macro-stat-chg ${up?'up':'down'}">${chgStr(c)}</div>
+      </div>`;
+    }).join('');
+  }
+  // Forex
+  const fxSyms=[
+    {s:'EURUSD=X',l:'EUR/USD',dec:4},
+    {s:'GBPUSD=X',l:'GBP/USD',dec:4},
+    {s:'USDJPY=X',l:'USD/JPY',dec:2},
+    {s:'USDCHF=X',l:'USD/CHF',dec:4},
+  ];
+  const fxEl=document.getElementById('macro-forex');
+  if(fxEl){
+    const fd=await Promise.all(fxSyms.map(x=>api(x.s)));
+    fxEl.innerHTML=fxSyms.map((x,i)=>{
+      const d=fd[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+      return`<div class="macro-stat">
+        <div class="macro-stat-lbl">${x.l}</div>
+        <div class="macro-stat-val">${d?fmt(d.price,x.dec):'—'}</div>
+        <div class="macro-stat-chg ${up?'up':'down'}">${chgStr(c)}</div>
+      </div>`;
+    }).join('');
+  }
+  // Commodities
+  const commSyms=[
+    {s:'GC=F',l:'Oro · XAU/USD'},
+    {s:'BZ=F',l:'Petrolio Brent'},
+    {s:'NG=F',l:'Gas Naturale'},
+    {s:'SI=F',l:'Argento · XAG/USD'},
+  ];
+  const cmEl=document.getElementById('macro-comms');
+  if(cmEl){
+    const cd=await Promise.all(commSyms.map(x=>api(x.s)));
+    cmEl.innerHTML=commSyms.map((x,i)=>{
+      const d=cd[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+      return`<div class="macro-stat" style="cursor:pointer" onclick="openModal('${x.s}','${x.l}')">
+        <div class="macro-stat-lbl">${x.l}</div>
+        <div class="macro-stat-val">${d?'$'+fmt(d.price,2):'—'}</div>
+        <div class="macro-stat-chg ${up?'up':'down'}">${chgStr(c)}</div>
+      </div>`;
+    }).join('');
+  }
+}
+
+/* ══════════════════════════════════════════
+   FEATURE 7: EXPORT CSV
+══════════════════════════════════════════ */
+async function exportPortfolioCSV(){
+  if(!portfolio.length){alert('Nessun titolo nel portafoglio');return;}
+  const quotes=await Promise.all(portfolio.map(item=>api(item.sym)));
+  const rows=[['Ticker','Quantità','Prezzo Acquisto','Valuta','Prezzo Attuale','Valore Investito','Valore Attuale','P&L','P&L %']];
+  portfolio.forEach((item,i)=>{
+    const d=quotes[i];
+    const cur=item.currency||'USD';
+    const invested=item.qty*item.buyPrice;
+    const curVal=d?.price?item.qty*d.price:null;
+    const pnl=curVal!=null?curVal-invested:null;
+    const pnlPct=pnl!=null?(pnl/invested*100):null;
+    rows.push([
+      item.sym,
+      item.qty,
+      item.buyPrice.toFixed(2),
+      cur,
+      d?.price?d.price.toFixed(2):'N/D',
+      invested.toFixed(2),
+      curVal!=null?curVal.toFixed(2):'N/D',
+      pnl!=null?pnl.toFixed(2):'N/D',
+      pnlPct!=null?pnlPct.toFixed(2)+'%':'N/D',
+    ]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${v}"`).join(',')).join('\n');
+  const today=new Date().toISOString().slice(0,10);
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`portafoglio_${today}.csv`;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+/* ══════════════════════════════════════════
+   FEATURE 8: ECONOMIC CALENDAR
+══════════════════════════════════════════ */
+const ECO_EVENTS=[
+  {date:'2026-03-19',label:'Fed Meeting',type:'fed',detail:'Decisione tassi FOMC'},
+  {date:'2026-03-28',label:'PCE USA',type:'macro',detail:'Inflazione preferita dalla Fed'},
+  {date:'2026-04-10',label:'CPI USA',type:'macro',detail:'Inflazione al consumo'},
+  {date:'2026-04-16',label:'BCE Meeting',type:'bce',detail:'Decisione tassi BCE'},
+  {date:'2026-04-30',label:'PIL USA Q1',type:'macro',detail:'GDP preliminare Q1 2026'},
+  {date:'2026-05-07',label:'Fed Meeting',type:'fed',detail:'Decisione tassi FOMC'},
+  {date:'2026-05-13',label:'CPI USA',type:'macro',detail:'Inflazione al consumo'},
+  {date:'2026-05-30',label:'PIL UE Q1',type:'bce',detail:'GDP preliminare Eurozona'},
+  {date:'2026-06-05',label:'NFP USA',type:'macro',detail:'Buste paga non agricole'},
+  {date:'2026-06-11',label:'CPI USA',type:'macro',detail:'Inflazione al consumo'},
+  {date:'2026-06-12',label:'Fed Meeting',type:'fed',detail:'Decisione tassi FOMC'},
+  {date:'2026-06-18',label:'BCE Meeting',type:'bce',detail:'Decisione tassi BCE'},
+];
+
+function renderCalendar(){
+  const el=document.getElementById('eco-calendar-content');
+  if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  const next7=new Date(today);next7.setDate(next7.getDate()+7);
+  const future=ECO_EVENTS.filter(e=>new Date(e.date)>=today).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!future.length){el.innerHTML='<div class="ld">Nessun evento futuro</div>';return;}
+  el.innerHTML=future.map(e=>{
+    const d=new Date(e.date);
+    const isSoon=d<=next7;
+    const dateStr=d.toLocaleDateString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',year:'2-digit'});
+    return`<div class="eco-event${isSoon?' soon':''}">
+      <div class="eco-date">${dateStr}</div>
+      <div>
+        <div><span class="eco-label">${e.label}</span><span class="eco-type-${e.type}">${e.type.toUpperCase()}</span>${isSoon?'<span style="font-size:9px;color:var(--o);font-weight:700;margin-left:6px;font-family:var(--fm)">IMMINENTE</span>':''}</div>
+        <div class="eco-detail">${e.detail}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
 // Avvia verifica sessione
 verifySession();
 </script>
