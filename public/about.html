@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>FinScope — Analisi Finanziaria Professionale, Gratuita</title>
+<meta name="description" content="FinScope è il dashboard gratuito per analizzare azioni, indici e crypto. FinScope Score proprietario, Price Target, portafoglio live e molto altro. Registrati gratis."/>
+<meta property="og:title" content="FinScope — Analisi Finanziaria Professionale"/>
+<meta property="og:description" content="Dashboard gratuito per investitori. FinScope Score, Price Target proprietario, portafoglio live, screener e news in un unico posto."/>
+<meta property="og:type" content="website"/>
+<meta name="theme-color" content="#1448A8"/>
+<link rel="manifest" href="/manifest.json"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F0F4FA;--s2:#F8FAFD;--bd:#D8E2EF;
+  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;--b4:#2563EB;
+  --g:#059669;--g2:#D1FAE5;--r:#DC2626;--r2:#FEE2E2;
+  --o:#D97706;--o2:#FEF3C7;
+  --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
+  --card:#fff;--ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+/* ─── NAV ─── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;
+  background:rgba(20,36,72,.96);backdrop-filter:blur(12px);
+  display:flex;align-items:center;justify-content:space-between;padding:0 40px;
+  border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:7px;height:7px;background:#34D399;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+.logo span{color:rgba(255,255,255,.6)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-link{color:rgba(255,255,255,.65);text-decoration:none;font-size:13px;font-weight:500;transition:color .15s}
+.nav-link:hover{color:#fff}
+.nav-cta{background:var(--b4);color:#fff;padding:8px 20px;border-radius:8px;
+  font-size:13px;font-weight:700;text-decoration:none;transition:all .15s;border:none;cursor:pointer;font-family:var(--ff)}
+.nav-cta:hover{background:var(--b);transform:translateY(-1px)}
+
+/* ─── HERO ─── */
+.hero{background:linear-gradient(160deg,#0D1A2B 0%,#1A3460 60%,#1448A8 100%);
+  padding:110px 40px 80px;min-height:100vh;display:flex;align-items:center;
+  position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-40%;right:-20%;
+  width:700px;height:700px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,86,196,.25) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-30%;left:-10%;
+  width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(5,150,105,.12) 0%,transparent 70%);pointer-events:none}
+.hero-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 380px;gap:64px;align-items:center;position:relative;z-index:1;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.9);
+  padding:6px 16px;border-radius:100px;font-size:11px;font-family:var(--fm);
+  letter-spacing:.8px;text-transform:uppercase;margin-bottom:24px}
+.hero h1{font-size:clamp(38px,4.5vw,62px);font-weight:800;color:#fff;
+  letter-spacing:-2px;line-height:1.06;margin-bottom:20px}
+.hero h1 em{font-style:normal;
+  background:linear-gradient(135deg,#60A5FA,#34D399);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:17px;color:rgba(255,255,255,.68);max-width:520px;
+  margin-bottom:36px;line-height:1.65;font-weight:300}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.btn-primary{background:#fff;color:var(--b2);padding:14px 32px;border-radius:10px;
+  font-weight:700;font-size:15px;text-decoration:none;transition:all .2s;
+  box-shadow:0 4px 20px rgba(0,0,0,.2);display:inline-block}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.btn-secondary{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  color:#fff;padding:14px 28px;border-radius:10px;font-weight:600;font-size:15px;
+  text-decoration:none;transition:all .2s;display:inline-block}
+.btn-secondary:hover{background:rgba(255,255,255,.18)}
+.hero-proof{display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,.5)}
+.hero-proof-dot{width:5px;height:5px;background:#34D399;border-radius:50%}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:rgba(255,255,255,.1);border-radius:12px;overflow:hidden;margin-top:40px}
+.stat-item{background:rgba(255,255,255,.06);padding:16px;text-align:center}
+.stat-n{font-family:var(--fm);font-size:24px;font-weight:600;color:#fff}
+.stat-l{font-size:10px;color:rgba(255,255,255,.5);margin-top:3px;letter-spacing:.5px;text-transform:uppercase}
+
+/* AUTH CARD */
+.auth-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);
+  border-radius:18px;padding:30px;backdrop-filter:blur(20px)}
+.auth-card-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:4px}
+.auth-card-sub{font-size:12px;color:rgba(255,255,255,.55);margin-bottom:22px;font-family:var(--fm)}
+.auth-tabs{display:flex;background:rgba(255,255,255,.08);border-radius:8px;padding:3px;margin-bottom:18px;gap:3px}
+.auth-tab{flex:1;padding:8px;border:none;background:none;border-radius:6px;
+  font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;
+  color:rgba(255,255,255,.55);transition:all .15s}
+.auth-tab.active{background:rgba(255,255,255,.18);color:#fff}
+.auth-field label{display:block;font-size:10px;color:rgba(255,255,255,.5);
+  font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:5px}
+.auth-field input{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:#fff;padding:11px 14px;border-radius:9px;font-family:var(--ff);font-size:14px;
+  outline:none;transition:all .15s;margin-bottom:13px}
+.auth-field input::placeholder{color:rgba(255,255,255,.35)}
+.auth-field input:focus{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.16)}
+.auth-submit{width:100%;background:#fff;color:var(--b2);border:none;padding:13px;
+  border-radius:9px;font-family:var(--ff);font-weight:700;font-size:15px;
+  cursor:pointer;transition:all .15s;margin-top:2px}
+.auth-submit:hover{background:rgba(255,255,255,.92);transform:translateY(-1px)}
+.auth-submit:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.auth-err{background:rgba(239,68,68,.2);color:#FCA5A5;font-size:12px;
+  padding:9px 12px;border-radius:7px;margin-bottom:12px;display:none;font-family:var(--fm)}
+.auth-err.show{display:block}
+.auth-ok{background:rgba(5,150,105,.2);color:#6EE7B7;font-size:12px;
+  padding:9px 12px;border-radius:7px;margin-bottom:12px;display:none;font-family:var(--fm)}
+.auth-ok.show{display:block}
+.already-logged{text-align:center;padding:16px 0}
+.already-logged p{color:rgba(255,255,255,.8);font-size:14px;margin-bottom:16px}
+
+/* ─── TRUST BAR ─── */
+.trust-bar{background:var(--card);border-top:3px solid var(--b);border-bottom:1px solid var(--bd);
+  padding:18px 40px;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
+.trust-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--t2)}
+.trust-icon{font-size:16px}
+
+/* ─── SECTION LAYOUT ─── */
+.section{padding:80px 40px;max-width:1080px;margin:0 auto}
+.section-tag{font-family:var(--fm);font-size:10px;color:var(--b);letter-spacing:2.5px;
+  text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.section-title{font-size:clamp(26px,3.5vw,38px);font-weight:800;letter-spacing:-1px;
+  margin-bottom:14px;color:var(--t);line-height:1.15}
+.section-sub{font-size:16px;color:var(--t2);max-width:600px;line-height:1.65;margin-bottom:48px}
+
+/* ─── FEATURES GRID ─── */
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.feat{background:var(--card);border:1px solid var(--bd);border-radius:16px;
+  padding:26px;transition:all .2s;cursor:default}
+.feat:hover{border-color:rgba(26,86,196,.35);box-shadow:0 6px 24px rgba(26,86,196,.08);transform:translateY(-2px)}
+.feat-icon{width:46px;height:46px;border-radius:12px;background:var(--b3);
+  display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.feat h3{font-size:15px;font-weight:700;margin-bottom:7px;color:var(--t)}
+.feat p{font-size:13px;color:var(--t2);line-height:1.6;margin:0}
+.feat-new{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.6px;
+  background:var(--b3);color:var(--b);padding:2px 7px;border-radius:3px;
+  text-transform:uppercase;margin-left:6px;vertical-align:middle}
+
+/* ─── SCORE SHOWCASE ─── */
+.score-section{background:linear-gradient(135deg,#0D1A2B,#1A3460);padding:80px 40px;overflow:hidden;position:relative}
+.score-section::before{content:'';position:absolute;right:-100px;top:-100px;
+  width:400px;height:400px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,86,196,.2),transparent 70%)}
+.score-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
+.score-tag{font-family:var(--fm);font-size:10px;color:#60A5FA;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px}
+.score-title{font-size:clamp(26px,3vw,36px);font-weight:800;color:#fff;letter-spacing:-1px;line-height:1.2;margin-bottom:16px}
+.score-sub{font-size:15px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:32px}
+.score-dims{display:flex;flex-direction:column;gap:10px}
+.score-dim{display:flex;align-items:center;gap:12px}
+.score-dim-bar{flex:1;height:5px;background:rgba(255,255,255,.12);border-radius:3px;overflow:hidden}
+.score-dim-fill{height:5px;border-radius:3px}
+.score-dim-label{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.6);width:90px;flex-shrink:0;text-align:right}
+.score-dim-val{font-family:var(--fm);font-size:11px;font-weight:600;color:#fff;width:30px;text-align:right;flex-shrink:0}
+.score-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);border-radius:18px;padding:28px}
+.score-card-ticker{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.5);letter-spacing:.8px;margin-bottom:4px}
+.score-card-name{font-size:17px;font-weight:700;color:#fff;margin-bottom:20px}
+.score-big{font-family:var(--fm);font-size:52px;font-weight:800;line-height:1;margin-bottom:6px}
+.score-label{display:inline-block;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:700;font-family:var(--fm);margin-bottom:20px}
+.score-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.score-cell{background:rgba(255,255,255,.06);border-radius:8px;padding:8px 4px;text-align:center;border:1px solid rgba(255,255,255,.08)}
+.score-cell-val{font-family:var(--fm);font-size:12px;font-weight:700}
+.score-cell-lbl{font-size:8px;color:rgba(255,255,255,.4);margin-top:2px}
+.score-pt{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;align-items:center}
+.score-pt-label{font-size:10px;color:rgba(255,255,255,.5);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase}
+.score-pt-val{font-family:var(--fm);font-size:18px;font-weight:700;color:#60A5FA}
+.score-pt-up{font-family:var(--fm);font-size:12px;color:#34D399}
+
+/* ─── HOW IT WORKS ─── */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:0;position:relative}
+.steps::before{content:'';position:absolute;top:28px;left:calc(16.66% + 20px);right:calc(16.66% + 20px);height:2px;background:linear-gradient(90deg,var(--b),var(--g));z-index:0}
+.step{text-align:center;padding:0 20px;position:relative;z-index:1}
+.step-num{width:56px;height:56px;border-radius:50%;background:var(--b);color:#fff;
+  font-family:var(--fm);font-size:18px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;margin:0 auto 20px;box-shadow:0 0 0 6px var(--b3)}
+.step-num.done{background:var(--g);box-shadow:0 0 0 6px var(--g2)}
+.step h3{font-size:16px;font-weight:700;margin-bottom:8px;color:var(--t)}
+.step p{font-size:13px;color:var(--t2);line-height:1.6}
+
+/* ─── COMPARISON TABLE ─── */
+.comp-wrap{overflow-x:auto;margin-top:40px}
+.comp-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.comp-tbl th{padding:12px 16px;text-align:center;font-family:var(--fm);font-size:10px;
+  letter-spacing:.8px;text-transform:uppercase;color:var(--t3);border-bottom:2px solid var(--bd)}
+.comp-tbl th:first-child{text-align:left;color:var(--t2)}
+.comp-tbl th.hl{background:var(--b);color:#fff;border-radius:8px 8px 0 0}
+.comp-tbl td{padding:11px 16px;border-bottom:1px solid var(--bd);text-align:center;color:var(--t2)}
+.comp-tbl td:first-child{text-align:left;font-weight:500;color:var(--t)}
+.comp-tbl td.hl{background:var(--b3);font-weight:600;color:var(--b)}
+.comp-tbl tr:last-child td{border-bottom:none}
+.check{color:var(--g);font-size:16px}
+.cross{color:var(--r2);font-size:14px}
+.partial{color:var(--o);font-size:13px}
+
+/* ─── STORY ─── */
+.story{background:var(--card);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.story-inner{max-width:740px;margin:0 auto;padding:80px 40px}
+blockquote{border-left:3px solid var(--b);padding-left:22px;
+  color:var(--t2);font-size:16px;line-height:1.8;margin:28px 0;font-style:italic}
+.author-row{display:flex;align-items:center;gap:14px;margin-top:32px}
+.author-av{width:50px;height:50px;border-radius:50%;background:var(--b);
+  color:#fff;font-weight:800;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.author-name{font-weight:700;font-size:15px;color:var(--t)}
+.author-role{font-size:12px;color:var(--t3);font-family:var(--fm);margin-top:2px}
+
+/* ─── FAQ ─── */
+.faq-list{display:flex;flex-direction:column;gap:0;margin-top:40px;border:1px solid var(--bd);border-radius:16px;overflow:hidden}
+.faq-item{border-bottom:1px solid var(--bd);background:var(--card)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{width:100%;text-align:left;padding:18px 22px;background:none;border:none;
+  font-family:var(--ff);font-size:14px;font-weight:600;color:var(--t);cursor:pointer;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;transition:background .15s}
+.faq-q:hover{background:var(--b3)}
+.faq-arr{font-size:16px;color:var(--b);transition:transform .25s;flex-shrink:0}
+.faq-a{display:none;padding:0 22px 18px;font-size:13.5px;color:var(--t2);line-height:1.7}
+.faq-item.open .faq-a{display:block}
+.faq-item.open .faq-arr{transform:rotate(180deg)}
+
+/* ─── FINAL CTA ─── */
+.cta-section{background:linear-gradient(135deg,#1448A8,#1A56C4);padding:80px 40px;text-align:center}
+.cta-section h2{font-size:clamp(28px,4vw,44px);font-weight:800;color:#fff;letter-spacing:-1.5px;margin-bottom:16px}
+.cta-section p{font-size:17px;color:rgba(255,255,255,.7);margin-bottom:36px;max-width:520px;margin-left:auto;margin-right:auto}
+.cta-btn{background:#fff;color:var(--b2);padding:16px 44px;border-radius:12px;
+  font-weight:800;font-size:16px;text-decoration:none;display:inline-block;
+  transition:all .2s;box-shadow:0 4px 24px rgba(0,0,0,.25)}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.cta-note{font-size:12px;color:rgba(255,255,255,.45);margin-top:16px;font-family:var(--fm)}
+
+/* ─── FOOTER ─── */
+footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.foot-logo{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.5px}
+.foot-logo span{color:rgba(255,255,255,.5)}
+.foot-links{display:flex;gap:24px;flex-wrap:wrap}
+.foot-link{color:rgba(255,255,255,.4);font-size:12px;text-decoration:none;transition:color .15s;font-family:var(--fm)}
+.foot-link:hover{color:rgba(255,255,255,.8)}
+.foot-note{font-size:11px;color:rgba(255,255,255,.3);font-family:var(--fm);text-align:right}
+
+/* ─── PRIVACY/DISCLAIMER (nascosti, accessibili da link) ─── */
+.legal-section{background:var(--s2);border-top:1px solid var(--bd);padding:60px 40px}
+.legal-inner{max-width:820px;margin:0 auto}
+.legal-inner h2{font-size:22px;font-weight:700;color:var(--t);margin-bottom:20px;letter-spacing:-.5px}
+.legal-inner h3{font-size:15px;font-weight:600;color:var(--t);margin:22px 0 8px}
+.legal-inner p,.legal-inner li{font-size:13px;color:var(--t2);line-height:1.7}
+.legal-inner ul{padding-left:20px;margin:8px 0}
+.legal-inner li{margin-bottom:5px}
+.legal-inner .updated{font-family:var(--fm);font-size:11px;color:var(--t3);margin-top:20px}
+.disclaimer-box{background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;padding:20px 24px;margin:20px 0}
+.disclaimer-box strong{color:#92400E;font-size:13px}
+.disclaimer-box p{color:#78350F;font-size:13px;margin-top:6px}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px){
+  .hero-inner{grid-template-columns:1fr;gap:40px;text-align:center}
+  .hero-sub{margin:0 auto 36px}
+  .hero-actions{justify-content:center}
+  .features-grid{grid-template-columns:1fr 1fr}
+  .score-inner{grid-template-columns:1fr}
+  .steps::before{display:none}
+  .steps{grid-template-columns:1fr;gap:32px}
+  nav .nav-links{display:none}
+}
+@media(max-width:600px){
+  nav{padding:0 20px}
+  .hero{padding:100px 20px 60px}
+  .section{padding:56px 20px}
+  .features-grid{grid-template-columns:1fr}
+  footer{flex-direction:column;text-align:center}
+  .foot-note{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="./about.html" class="logo"><div class="logo-dot"></div>Fin<span>Scope</span></a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Funzionalità</a>
+    <a href="#come-funziona" class="nav-link">Come funziona</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+  </div>
+  <a href="./index.html" class="nav-cta" id="nav-dashboard-btn">Apri la Dashboard →</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-badge"><div class="logo-dot"></div>Dati live · Aggiornati ogni 60 secondi</div>
+      <h1>Investi con dati<br><em>veri e precisi</em></h1>
+      <p class="hero-sub">Dashboard professionale per analizzare azioni, indici e crypto. Con il <strong style="color:#fff">FinScope Score</strong> — la nostra metrica proprietaria — sai sempre se un titolo vale davvero la pena.</p>
+      <div class="hero-actions">
+        <a href="#register" class="btn-primary" onclick="scrollToForm()">Inizia gratis →</a>
+        <a href="./index.html" class="btn-secondary">Guarda la demo</a>
+      </div>
+      <div class="hero-proof">
+        <div class="hero-proof-dot"></div>
+        <span id="user-count-text">Caricamento...</span>
+        <span style="margin:0 8px">·</span>
+        <span>Gratuito al 100%</span>
+        <span style="margin:0 8px">·</span>
+        <span>Nessuna carta richiesta</span>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-n">28+</div><div class="stat-l">Titoli monitorati</div></div>
+        <div class="stat-item"><div class="stat-n">12</div><div class="stat-l">Indici globali</div></div>
+        <div class="stat-item"><div class="stat-n">5D</div><div class="stat-l">FinScope Score</div></div>
+      </div>
+    </div>
+
+    <!-- AUTH FORM -->
+    <div id="auth-card" class="auth-card">
+      <div class="auth-card-title">Inizia gratuitamente</div>
+      <div class="auth-card-sub">Zero costi · Nessuna carta richiesta</div>
+      <div class="auth-tabs">
+        <button class="auth-tab" onclick="switchTab('login',this)">Accedi</button>
+        <button class="auth-tab active" onclick="switchTab('register',this)">Registrati</button>
+      </div>
+      <div class="auth-err" id="auth-err"></div>
+      <div class="auth-ok" id="auth-ok"></div>
+      <div class="auth-field" id="name-field-lp">
+        <label>Nome</label>
+        <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
+        <label>Password</label>
+        <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')submitAuth()"/>
+      </div>
+      <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Crea account gratuito</button>
+      <p style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;line-height:1.5">
+        Continuando accetti la <a href="#privacy" style="color:rgba(255,255,255,.55)">Privacy Policy</a>. Conforme GDPR.
+      </p>
+    </div>
+
+    <!-- GIÀ LOGGATO -->
+    <div class="auth-card already-logged" id="logged-card" style="display:none">
+      <div style="font-size:36px;margin-bottom:14px">👋</div>
+      <p id="logged-msg" style="color:rgba(255,255,255,.85);font-size:15px;margin-bottom:20px">Bentornato!</p>
+      <a href="./index.html" class="auth-submit" style="display:block;text-decoration:none;text-align:center">Apri la Dashboard →</a>
+      <button onclick="logout()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer;margin-top:14px;width:100%;font-family:var(--ff)">Esci dall'account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TRUST BAR ═══ -->
+<div class="trust-bar">
+  <div class="trust-item"><span class="trust-icon">🆓</span>Completamente gratuito</div>
+  <div class="trust-item"><span class="trust-icon">🌍</span>Mercati globali</div>
+  <div class="trust-item"><span class="trust-icon">📊</span>Dati da Yahoo Finance</div>
+  <div class="trust-item"><span class="trust-icon">🔒</span>Dati cifrati · GDPR compliant</div>
+  <div class="trust-item"><span class="trust-icon">⚡</span>Aggiornamento ogni 60 secondi</div>
+</div>
+
+<!-- ═══ FEATURES ═══ -->
+<div class="section" id="features">
+  <div class="section-tag">Le funzionalità</div>
+  <div class="section-title">Tutto quello che ti serve,<br>in un unico posto</div>
+  <div class="section-sub">Niente abbonamenti costosi. Niente complessità inutile. Solo gli strumenti che ogni investitore consapevole dovrebbe avere.</div>
+
+  <div class="features-grid">
+    <div class="feat">
+      <div class="feat-icon">📊</div>
+      <h3>Dashboard live</h3>
+      <p>Indici globali (USA, Europa, Asia), VIX, commodities e crypto con sparkline. Tutto aggiornato ogni 60 secondi.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🔍</div>
+      <h3>Stock Screener</h3>
+      <p>Filtra 28+ titoli per settore, mercato e tipo. Prezzi live, variazione giornaliera e grafico 5 giorni per ogni titolo.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⭐</div>
+      <h3>FinScope Score <span class="feat-new">Nuovo</span></h3>
+      <p>Metrica proprietaria 5 dimensioni: Valutazione, Redditività, Momentum, Consensus e Stabilità. Da 0 a 100.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🎯</div>
+      <h3>Price Target <span class="feat-new">Nuovo</span></h3>
+      <p>Target price calcolato con formula Graham, P/E normalizzato e consensus analisti. Upside/downside immediato.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">💼</div>
+      <h3>Portafoglio personale</h3>
+      <p>Inserisci i titoli con prezzo di acquisto e monitora il P&L in tempo reale. Salvato nel cloud, accessibile ovunque.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">⚖️</div>
+      <h3>Confronto titoli <span class="feat-new">Nuovo</span></h3>
+      <p>Affianca fino a 3 titoli su 19 metriche fondamentali. Trova il migliore prima di investire.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">📈</div>
+      <h3>Grafici professionali</h3>
+      <p>Candele e linea con TradingView Lightweight Charts. Da 1 giorno a 1 anno, con zoom e crosshair.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🧮</div>
+      <h3>Simulatore investimenti</h3>
+      <p>Proiezione portafoglio con interesse composto. Scegli la strategia e vedi il tuo patrimonio crescere nel tempo.</p>
+    </div>
+    <div class="feat">
+      <div class="feat-icon">🗞️</div>
+      <h3>News filtrate</h3>
+      <p>Notizie finanziarie per categoria: mercati, Italia, USA, commodities, forex, crypto e macro. Sempre aggiornate.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FINSCOPE SCORE SHOWCASE ═══ -->
+<div class="score-section">
+  <div class="score-inner">
+    <div>
+      <div class="score-tag">✦ Metrica proprietaria</div>
+      <div class="score-title">Il FinScope Score —<br>sai subito se vale la pena</div>
+      <p class="score-sub">Nessun altro strumento gratuito ti dà una valutazione multidimensionale come questa. Il FinScope Score analizza ogni titolo su 5 dimensioni e ti restituisce un voto da 0 a 100 — con motivazione dettagliata per ogni dimensione.</p>
+      <div class="score-dims">
+        <div class="score-dim">
+          <span class="score-dim-label">Valutazione</span>
+          <div class="score-dim-bar"><div class="score-dim-fill" style="width:88%;background:#60A5FA"></div></div>
+          <span class="score-dim-val">22/25</span>
+        </div>
+        <div class="score-dim">
+          <span class="score-dim-label">Redditività</span>
+          <div class="score-dim-bar"><div class="score-dim-fill" style="width:84%;background:#34D399"></div></div>
+          <span class="score-dim-val">21/25</span>
+        </div>
+        <div class="score-dim">
+          <span class="score-dim-label">Momentum</span>
+          <div class="score-dim-bar"><div class="score-dim-fill" style="width:75%;background:#A78BFA"></div></div>
+          <span class="score-dim-val">15/20</span>
+        </div>
+        <div class="score-dim">
+          <span class="score-dim-label">Consensus</span>
+          <div class="score-dim-bar"><div class="score-dim-fill" style="width:80%;background:#FCD34D"></div></div>
+          <span class="score-dim-val">16/20</span>
+        </div>
+        <div class="score-dim">
+          <span class="score-dim-label">Stabilità</span>
+          <div class="score-dim-bar"><div class="score-dim-fill" style="width:100%;background:#F87171"></div></div>
+          <span class="score-dim-val">10/10</span>
+        </div>
+      </div>
+    </div>
+    <div class="score-card">
+      <div class="score-card-ticker">AAPL · NASDAQ</div>
+      <div class="score-card-name">Apple Inc.</div>
+      <div class="score-big" style="color:#34D399">84</div>
+      <div><span class="score-label" style="background:rgba(52,211,153,.15);color:#34D399">Molto buono</span></div>
+      <div class="score-grid">
+        <div class="score-cell"><div class="score-cell-val" style="color:#60A5FA">22</div><div class="score-cell-lbl">Valut.</div></div>
+        <div class="score-cell"><div class="score-cell-val" style="color:#34D399">21</div><div class="score-cell-lbl">Reddit.</div></div>
+        <div class="score-cell"><div class="score-cell-val" style="color:#A78BFA">15</div><div class="score-cell-lbl">Moment.</div></div>
+        <div class="score-cell"><div class="score-cell-val" style="color:#FCD34D">16</div><div class="score-cell-lbl">Consens.</div></div>
+        <div class="score-cell"><div class="score-cell-val" style="color:#F87171">10</div><div class="score-cell-lbl">Stabil.</div></div>
+      </div>
+      <div class="score-pt">
+        <div>
+          <div class="score-pt-label">FinScope Target</div>
+          <div class="score-pt-val">$221.40</div>
+        </div>
+        <div style="text-align:right">
+          <div class="score-pt-label">Upside stimato</div>
+          <div class="score-pt-up">▲ +12.3%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ COME FUNZIONA ═══ -->
+<div class="section" id="come-funziona">
+  <div style="text-align:center;max-width:600px;margin:0 auto 56px">
+    <div class="section-tag" style="justify-content:center;display:flex">Come funziona</div>
+    <div class="section-title">Inizia in 3 minuti</div>
+    <div class="section-sub" style="margin:0 auto">Nessuna configurazione, nessuna carta di credito. Registrati e hai subito accesso a tutti gli strumenti.</div>
+  </div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Crea il tuo account</h3>
+      <p>Registrazione gratuita con email e password. In 30 secondi sei dentro.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Esplora la dashboard</h3>
+      <p>Mercati live, indici globali, VIX, commodities e crypto ti accolgono subito.</p>
+    </div>
+    <div class="step">
+      <div class="step-num done">3</div>
+      <h3>Analizza e investi meglio</h3>
+      <p>Usa lo screener, il FinScope Score e il simulatore per decisioni più consapevoli.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CONFRONTO ═══ -->
+<div style="background:var(--card);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:80px 40px">
+  <div style="max-width:1080px;margin:0 auto">
+    <div class="section-tag">Perché FinScope</div>
+    <div class="section-title">Cosa non trovi da nessun'altra parte</div>
+    <div class="comp-wrap">
+      <table class="comp-tbl">
+        <thead>
+          <tr>
+            <th>Funzionalità</th>
+            <th class="hl">FinScope ✦</th>
+            <th>TradingView Free</th>
+            <th>Borsa Italiana</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Completamente gratuito</td><td class="hl"><span class="check">✓</span></td><td><span class="partial">Parziale</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>FinScope Score proprietario</td><td class="hl"><span class="check">✓</span></td><td>—</td><td>—</td></tr>
+          <tr><td>Price Target calcolato</td><td class="hl"><span class="check">✓</span></td><td>—</td><td>—</td></tr>
+          <tr><td>Portafoglio P&L live</td><td class="hl"><span class="check">✓</span></td><td><span class="partial">Premium</span></td><td>—</td></tr>
+          <tr><td>Confronto titoli side-by-side</td><td class="hl"><span class="check">✓</span></td><td><span class="partial">Premium</span></td><td>—</td></tr>
+          <tr><td>Screener con filtri</td><td class="hl"><span class="check">✓</span></td><td><span class="partial">Limitato</span></td><td>—</td></tr>
+          <tr><td>Copertura mercati globali</td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="partial">Solo IT</span></td></tr>
+          <tr><td>Simulatore interesse composto</td><td class="hl"><span class="check">✓</span></td><td>—</td><td>—</td></tr>
+          <tr><td>Dark mode</td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STORIA ═══ -->
+<div class="story">
+  <div class="story-inner">
+    <div class="section-tag">La storia</div>
+    <h2 style="font-size:clamp(22px,3vw,32px);font-weight:800;letter-spacing:-.8px;margin-bottom:20px;color:var(--t)">Stanco di avere 10 schede aperte per capire un singolo titolo</h2>
+    <p style="color:var(--t2);font-size:15px;line-height:1.75;margin-bottom:16px">
+      Tre anni fa ho iniziato ad investire per interesse personale. Nessuno me lo aveva insegnato — ho imparato sul campo, sbagliando, leggendo, cercando. E mi sono subito scontrato con una realtà che probabilmente conosci anche tu: <strong style="color:var(--t)">le informazioni ci sono, ma sono sparse ovunque.</strong>
+    </p>
+    <p style="color:var(--t2);font-size:15px;line-height:1.75;margin-bottom:16px">
+      Un sito per i prezzi live. Un altro per i fondamentali. Un altro ancora per le notizie. TradingView per i grafici. Un foglio Excel per il portafoglio. E il bello? I dati non coincidevano mai tra un sito e l'altro. Il P/E di un titolo era diverso a seconda di dove lo cercavi. Il prezzo mostrava ritardi diversi. L'analisi fondamentale era nascosta dietro un paywall.
+    </p>
+    <blockquote>
+      "Mi sono stancato di perdere tempo a mettere insieme i pezzi invece di analizzare davvero i mercati. Ho deciso di costruire lo strumento che avrei voluto avere dal primo giorno: tutto in un posto, dati coerenti, zero costi. È nato così FinScope."
+    </blockquote>
+    <p style="color:var(--t2);font-size:15px;line-height:1.75">
+      Il FinScope Score è la risposta a un'altra domanda che mi facevo ogni volta prima di comprare un titolo: <em>"Ma lo sto comprando al prezzo giusto? È davvero una buona azienda?"</em> — Invece di risponderti con un articolo generico, FinScope ti dà un numero: da 0 a 100, calcolato su valutazione, redditività, momentum, consensus degli analisti e stabilità. Senza opinioni. Solo dati.
+    </p>
+    <div class="author-row">
+      <div class="author-av">AM</div>
+      <div>
+        <div class="author-name">Alessandro Mazzeo</div>
+        <div class="author-role">Fondatore di FinScope · Investitore indipendente</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FAQ ═══ -->
+<div class="section" id="faq">
+  <div class="section-tag">Domande frequenti</div>
+  <div class="section-title">Hai dubbi? Ti rispondiamo</div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">È davvero gratuito? Ci sono costi nascosti? <span class="faq-arr">▾</span></button>
+      <div class="faq-a">Sì, FinScope è completamente gratuito. Non ci sono costi nascosti, nessuna carta di credito richiesta e nessun trial che scade. In futuro potremmo introdurre un piano premium opzionale con funzionalità avanzate, ma le funzionalità attuali resteranno sempre gratuite.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Come viene calcolato il FinScope Score? <span class="faq-arr">▾</span></button>
+      <div class="faq-a">Il FinScope Score è una metrica proprietaria che valuta ogni titolo su 5 dimensioni: <strong>Valutazione</strong> (25pt) basata su P/E e P/B, <strong>Redditività</strong> (25pt) da ROE ed EPS, <strong>Momentum</strong> (20pt) dalla posizione nel range 52 settimane, <strong>Consensus</strong> (20pt) dagli analisti, e <strong>Stabilità</strong> (10pt) dal beta. Totale: 100 punti.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">Come viene calcolato il FinScope Price Target? <span class="faq-arr">▾</span></button>
+      <div class="faq-a">Il FinScope Price Target è una media ponderata di tre metodi: la <strong>Formula di Graham modificata</strong> (peso 40%) — EPS × (8,5 + 2×10%) × (4,4/4,5%) — il <strong>P/E normalizzato</strong> (25%) e il <strong>Consensus degli analisti</strong> (35%) quando disponibile. È una stima indicativa, non una raccomandazione di investimento.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">I dati sono affidabili e aggiornati? <span class="faq-arr">▾</span></button>
+      <div class="faq-a">I dati provengono da Yahoo Finance, aggiornati ogni 60 secondi. Durante le sessioni di borsa possono esserci ritardi fino a 15 minuti. FinScope è uno strumento informativo — non adatto a trading ad alta frequenza. Per investimento a medio-lungo termine è più che sufficiente.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">I miei dati (portafoglio, watchlist) sono al sicuro? <span class="faq-arr">▾</span></button>
+      <div class="faq-a">Sì. Le password sono gestite da Clerk (cifrate con bcrypt, noi non le vediamo mai). Portafoglio e watchlist sono salvati su Upstash Redis con accesso autenticato. Tutti i dati viaggiano su HTTPS. Siamo conformi al GDPR.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">FinScope costituisce consulenza finanziaria? <span class="faq-arr">▾</span></button>
+      <div class="faq-a">No. FinScope è uno strumento di informazione e monitoraggio. Nessun contenuto costituisce consulenza finanziaria ai sensi del TUF e della Direttiva MiFID II. Il fondatore non è un consulente OCF abilitato. Ogni decisione di investimento è di esclusiva responsabilità dell'utente.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FINAL CTA ═══ -->
+<div class="cta-section" id="register">
+  <h2>Inizia ad investire meglio,<br>oggi. Gratis.</h2>
+  <p>Unisciti agli investitori che usano FinScope per prendere decisioni più informate ogni giorno.</p>
+  <a href="#" class="cta-btn" onclick="scrollToForm();return false">Crea il tuo account gratuito →</a>
+  <div class="cta-note">Nessuna carta · Nessun abbonamento · Pronto in 30 secondi</div>
+</div>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-logo">Fin<span>Scope</span></div>
+  <div class="foot-links">
+    <a href="#privacy" class="foot-link">Privacy Policy</a>
+    <a href="#disclaimer" class="foot-link">Disclaimer</a>
+    <a href="./index.html" class="foot-link">Dashboard</a>
+    <a href="#faq" class="foot-link">FAQ</a>
+  </div>
+  <div class="foot-note">© 2026 FinScope · Alessandro Mazzeo<br>Dati da Yahoo Finance · Ritardo max 15 min</div>
+</footer>
+
+<!-- ═══ PRIVACY POLICY (accessibile dal link footer) ═══ -->
+<div class="legal-section" id="privacy">
+  <div class="legal-inner">
+    <h2>Privacy Policy</h2>
+    <p>Informativa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR).</p>
+    <h3>1. Titolare del trattamento</h3>
+    <p>Alessandro Mazzeo, fondatore di FinScope. Contatto tramite il sito.</p>
+    <h3>2. Dati raccolti</h3>
+    <ul>
+      <li><strong>Email e password</strong> — per la gestione dell'account. La password è cifrata con bcrypt da Clerk (clerk.com). Non la vediamo mai in chiaro.</li>
+      <li><strong>Watchlist e portafoglio</strong> — dati inseriti volontariamente dall'utente.</li>
+      <li><strong>Log anonimi</strong> — raccolti da Vercel per il funzionamento dell'infrastruttura.</li>
+    </ul>
+    <h3>3. Utilizzo dei dati</h3>
+    <ul>
+      <li>Accesso all'account e recupero watchlist/portafoglio</li>
+      <li>Mantenimento della sessione attiva</li>
+      <li>Non vendiamo né condividiamo dati con terze parti a scopo commerciale</li>
+    </ul>
+    <h3>4. Provider terzi</h3>
+    <ul>
+      <li><strong>Clerk</strong> (clerk.com) — autenticazione</li>
+      <li><strong>Vercel</strong> (vercel.com) — hosting</li>
+      <li><strong>Upstash</strong> (upstash.com) — database watchlist/portafoglio</li>
+      <li><strong>Yahoo Finance</strong> — dati di mercato in sola lettura</li>
+    </ul>
+    <h3>5. I tuoi diritti (GDPR)</h3>
+    <p>Hai diritto di accesso, rettifica, cancellazione, portabilità e opposizione al trattamento. Per esercitarli, contattaci tramite il sito.</p>
+    <h3>6. Cookie</h3>
+    <p>Solo cookie tecnici strettamente necessari al funzionamento (sessione di autenticazione). Nessun cookie di profilazione o tracciamento.</p>
+    <div class="updated">Ultimo aggiornamento: Marzo 2026 · v1.0</div>
+  </div>
+</div>
+
+<!-- ═══ DISCLAIMER (accessibile dal link footer) ═══ -->
+<div class="legal-section" id="disclaimer" style="background:var(--bg)">
+  <div class="legal-inner">
+    <h2>Disclaimer legale</h2>
+    <div class="disclaimer-box">
+      <strong>⚠ Non è consulenza finanziaria</strong>
+      <p>FinScope è uno strumento di informazione e monitoraggio. Nessun contenuto costituisce consulenza finanziaria, di investimento, legale o fiscale ai sensi del D.Lgs. 58/1998 (TUF) e della Direttiva MiFID II. Il fondatore non è un consulente finanziario abilitato OCF.</p>
+    </div>
+    <div class="disclaimer-box">
+      <strong>📉 Rischi di investimento</strong>
+      <p>Investire comporta rischi, inclusa la possibile perdita del capitale. I rendimenti passati non garantiscono quelli futuri. I dati hanno ritardi fino a 15 minuti durante le sessioni di borsa.</p>
+    </div>
+    <div class="disclaimer-box">
+      <strong>⚖ Limitazione di responsabilità</strong>
+      <p>FinScope non si assume responsabilità per perdite derivanti dall'utilizzo delle informazioni presenti. I dati sono forniti "così come sono" senza garanzie di accuratezza o completezza. L'utilizzo del servizio implica l'accettazione di queste condizioni.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOKEN_KEY='fs_token', USER_KEY='fs_user';
+let authTab='register';
+
+// Carica contatore utenti reale
+async function loadUserCount(){
+  try{
+    const r=await fetch('/api/stats');
+    const d=await r.json();
+    const n=d.count||0;
+    const el=document.getElementById('user-count-text');
+    if(!el)return;
+    if(n>=10){
+      el.textContent=n.toLocaleString('it-IT')+' investitori già registrati';
+    } else if(n>0){
+      el.textContent='Primi investitori già a bordo — unisciti a loro';
+    } else {
+      el.textContent='Sii tra i primi a registrarti';
+    }
+  }catch{
+    const el=document.getElementById('user-count-text');
+    if(el)el.textContent='Registrazione gratuita';
+  }
+}
+loadUserCount();
+
+function scrollToForm(){
+  const el=document.getElementById('auth-card');
+  if(el&&el.style.display!=='none'){
+    el.scrollIntoView({behavior:'smooth',block:'center'});
+    setTimeout(()=>document.getElementById('auth-email')?.focus(),500);
+  } else {
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+}
+
+function switchTab(tab,btn){
+  authTab=tab;
+  document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('auth-submit').textContent=tab==='login'?'Accedi':'Crea account gratuito';
+  document.getElementById('auth-err').classList.remove('show');
+  document.getElementById('auth-ok').classList.remove('show');
+  document.getElementById('name-field-lp').style.display=tab==='register'?'block':'none';
+}
+
+async function submitAuth(){
+  const email=document.getElementById('auth-email').value.trim();
+  const pwd=document.getElementById('auth-pwd').value;
+  const name=document.getElementById('auth-name')?.value.trim()||'';
+  const errEl=document.getElementById('auth-err');
+  const okEl=document.getElementById('auth-ok');
+  const btn=document.getElementById('auth-submit');
+  errEl.classList.remove('show');okEl.classList.remove('show');
+  if(!email||!pwd){errEl.textContent='Inserisci email e password';errEl.classList.add('show');return;}
+  if(authTab==='register'&&!name){errEl.textContent='Inserisci il tuo nome';errEl.classList.add('show');return;}
+  if(authTab==='register'&&pwd.length<8){errEl.textContent='Password minimo 8 caratteri';errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Caricamento...';
+  try{
+    const r=await fetch('/api/auth?action='+authTab,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password:pwd,name})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.ok){
+      errEl.textContent=d.error||'Errore sconosciuto';
+      errEl.classList.add('show');
+    } else {
+      localStorage.setItem(TOKEN_KEY,d.token);
+      localStorage.setItem(USER_KEY,JSON.stringify(d.user));
+      localStorage.setItem('fs_login_at',Date.now().toString());
+      const displayName=d.user.name||d.user.email;
+      okEl.textContent=authTab==='login'?`Ciao, ${displayName}! Reindirizzamento...`:`Benvenuto in FinScope, ${displayName}! Reindirizzamento...`;
+      okEl.classList.add('show');
+      setTimeout(()=>{ window.location.href='./index.html'; },1200);
+    }
+  }catch(e){
+    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.classList.add('show');
+  }
+  btn.disabled=false;
+  btn.textContent=authTab==='login'?'Accedi':'Crea account gratuito';
+}
+
+function logout(){
+  localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(USER_KEY);
+  document.getElementById('auth-card').style.display='block';
+  document.getElementById('logged-card').style.display='none';
+}
+
+function toggleFaq(btn){
+  const item=btn.closest('.faq-item');
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+
+// Controlla sessione esistente
+const savedUser=localStorage.getItem(USER_KEY);
+if(savedUser){
+  try{
+    const user=JSON.parse(savedUser);
+    document.getElementById('auth-card').style.display='none';
+    document.getElementById('logged-card').style.display='block';
+    document.getElementById('logged-msg').textContent=`Ciao, ${user.name||user.email}!`;
+  }catch{}
+}
+</script>
+</body>
+</html>
