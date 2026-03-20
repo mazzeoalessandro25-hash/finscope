@@ -3473,12 +3473,17 @@ function openStockDetail(sym){
   // Load
   loadSdChart(sym,'1mo',null);
   loadSdData(sym);
+  // Auto-refresh prezzo ogni 30s
+  if(sdPriceTimer)clearInterval(sdPriceTimer);
+  sdPriceTimer=setInterval(()=>{if(sdSym)refreshSdPrice(sdSym);},30000);
 }
 
 function closeStockDetail(){
   document.getElementById('stock-detail-overlay').classList.remove('open');
   document.body.style.overflow='';
   if(sdChartInst){sdChartInst.remove();sdChartInst=null;}
+  if(sdPriceTimer){clearInterval(sdPriceTimer);sdPriceTimer=null;}
+  sdSym='';
 }
 
 function sdToggleWl(){
