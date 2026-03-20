@@ -764,7 +764,7 @@ const savedUser=localStorage.getItem(USER_KEY);
 if(savedUser){
   try{
     const user=JSON.parse(savedUser);
-    document.getElementById('logged-card').style.display='block';
+    document.getElementById('logged-card').style.display='flex';
     document.getElementById('logged-msg').textContent=`Ciao, ${user.name||user.email}!`;
   }catch{}
 }
