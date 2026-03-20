@@ -2168,6 +2168,129 @@ function toggleWl(sym,el){
   saveWatchlist();
 }
 
+/* ══════════════════════════════════════════
+   BUY ZONE INDICATOR
+══════════════════════════════════════════ */
+function renderBuyZone(sd,qd){
+  if(!sd?.week52High||!sd?.week52Low||!qd?.price)return'';
+  const hi=sd.week52High,lo=sd.week52Low,cur=qd.price;
+  const range=hi-lo;if(range<=0)return'';
+  const pos=Math.max(0,Math.min(100,((cur-lo)/range)*100));
+  let statusText,statusColor;
+  if(pos<=30){statusText='🟢 Buy Zone — Prezzo vicino ai minimi annuali';statusColor='var(--g)';}
+  else if(pos<=65){statusText='🟡 Fair Zone — Prezzo in area di equilibrio';statusColor='var(--o)';}
+  else{statusText='🔴 Top Zone — Prezzo vicino ai massimi annuali';statusColor='var(--r)';}
+  return`<div class="bz-wrap">
+    <div class="bz-title">Buy Zone Indicator ✦ Posizione nel range 52 settimane</div>
+    <div class="bz-track"><div class="bz-marker" style="left:${pos.toFixed(1)}%"></div></div>
+    <div class="bz-labels"><span>Min 52W $${fmt(lo,2)}</span><span>Max 52W $${fmt(hi,2)}</span></div>
+    <div class="bz-status" style="color:${statusColor}">${statusText} · ${pos.toFixed(0)}° percentile</div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   MARKET HEATMAP
+══════════════════════════════════════════ */
+const HM_STOCKS=[
+  {s:'AAPL',n:'Apple',sec:'Technology'},{s:'MSFT',n:'Microsoft',sec:'Technology'},
+  {s:'NVDA',n:'NVIDIA',sec:'Technology'},{s:'GOOGL',n:'Alphabet',sec:'Technology'},
+  {s:'META',n:'Meta',sec:'Technology'},{s:'AMZN',n:'Amazon',sec:'Consumer Cyclical'},
+  {s:'TSLA',n:'Tesla',sec:'Consumer Cyclical'},{s:'NFLX',n:'Netflix',sec:'Communication Services'},
+  {s:'JPM',n:'JPMorgan',sec:'Financial Services'},{s:'V',n:'Visa',sec:'Financial Services'},
+  {s:'MA',n:'Mastercard',sec:'Financial Services'},{s:'GS',n:'Goldman',sec:'Financial Services'},
+  {s:'XOM',n:'ExxonMobil',sec:'Energy'},{s:'CVX',n:'Chevron',sec:'Energy'},
+  {s:'ENI.MI',n:'ENI',sec:'Energy'},{s:'BP',n:'BP',sec:'Energy'},
+  {s:'JNJ',n:'J&J',sec:'Healthcare'},{s:'LLY',n:'Eli Lilly',sec:'Healthcare'},
+  {s:'NVO',n:'Novo Nordisk',sec:'Healthcare'},{s:'PFE',n:'Pfizer',sec:'Healthcare'},
+  {s:'CAT',n:'Caterpillar',sec:'Industrials'},{s:'BA',n:'Boeing',sec:'Industrials'},
+  {s:'ENEL.MI',n:'Enel',sec:'Utilities'},{s:'NEE',n:'NextEra',sec:'Utilities'},
+  {s:'COST',n:'Costco',sec:'Consumer Defensive'},{s:'OR.PA',n:"L'Oréal",sec:'Consumer Defensive'},
+];
+async function loadHeatmap(){
+  const container=document.getElementById('heatmap-container');
+  container.innerHTML='<div class="ld">Caricamento heatmap...</div>';
+  const quotes=await Promise.all(HM_STOCKS.map(s=>api(s.s)));
+  const sectors={};
+  HM_STOCKS.forEach((st,i)=>{
+    const q=quotes[i];if(!q)return;
+    const chg=q.prev?((q.price-q.prev)/q.prev*100):0;
+    if(!sectors[st.sec])sectors[st.sec]=[];
+    sectors[st.sec].push({...st,chg,price:q.price});
+  });
+  const getColor=chg=>{
+    const abs=Math.min(Math.abs(chg),5);
+    const t=abs/5;
+    return chg>=0
+      ?`rgb(${Math.round(30+t*20)},${Math.round(120+t*100)},${Math.round(30+t*20)})`
+      :`rgb(${Math.round(140+t*100)},${Math.round(30+t*20)},${Math.round(30+t*20)})`;
+  };
+  const getTxt=chg=>Math.abs(chg)>3?'#fff':chg>=0?'#064e1f':'#7f1d1d';
+  if(!Object.keys(sectors).length){container.innerHTML='<div class="ld">Dati non disponibili</div>';return;}
+  container.innerHTML=Object.entries(sectors).map(([sec,stocks])=>`
+    <div class="hm-sector">
+      <div class="hm-sector-title">${sec}</div>
+      <div class="heatmap-grid">
+        ${stocks.map(st=>`
+          <div class="hm-cell" style="background:${getColor(st.chg)};color:${getTxt(st.chg)}" onclick="openModal('${st.s}','${st.n}')">
+            <div class="hm-sym">${st.s.replace(/\.(MI|PA|DE|AS)$/,'')}</div>
+            <div class="hm-chg">${st.chg>=0?'+':''}${st.chg.toFixed(2)}%</div>
+            <div class="hm-name">${st.n}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+/* ══════════════════════════════════════════
+   PORTFOLIO VS BENCHMARK
+══════════════════════════════════════════ */
+async function loadBenchmark(){
+  const el=document.getElementById('bench-content');
+  if(!el)return;
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per il confronto</div>';return;
+  }
+  el.innerHTML='<div class="ld" style="padding:10px">Caricamento...</div>';
+  const BENCHMARKS=[
+    {s:'^GSPC',n:'S&P 500',flag:'🇺🇸'},
+    {s:'FTSEMIB.MI',n:'FTSE MIB',flag:'🇮🇹'},
+    {s:'^STOXX50E',n:'Euro Stoxx 50',flag:'🇪🇺'},
+  ];
+  const [portQuotes,...bmResults]=await Promise.all([
+    Promise.all(portfolio.map(item=>api(item.sym))),
+    ...BENCHMARKS.map(b=>api(b.s,'history&range=1mo')),
+  ]);
+  let totalInv=0,totalVal=0;
+  portfolio.forEach((item,i)=>{
+    const q=portQuotes[i];
+    const invested=item.qty*item.buyPrice;
+    const curVal=q?.price?item.qty*q.price:invested;
+    totalInv+=invested;totalVal+=curVal;
+  });
+  const portRet=totalInv>0?((totalVal-totalInv)/totalInv*100):0;
+  const bmReturns=bmResults.map((data,i)=>{
+    if(!data?.points?.length)return{...BENCHMARKS[i],ret:null};
+    const pts=data.points;
+    const ret=((pts[pts.length-1].close-pts[0].close)/pts[0].close*100);
+    return{...BENCHMARKS[i],ret};
+  });
+  const allVals=[Math.abs(portRet),...bmReturns.filter(b=>b.ret!=null).map(b=>Math.abs(b.ret))];
+  const maxAbs=Math.max(...allVals,3);
+  const makeRow=(label,ret)=>{
+    if(ret==null)return'';
+    const barPct=Math.round(Math.abs(ret)/maxAbs*100);
+    const isPos=ret>=0;
+    return`<div class="bench-row">
+      <div class="bench-label">${label}</div>
+      <div class="bench-bar-wrap"><div class="bench-bar" style="width:${barPct}%;background:${isPos?'var(--g)':'var(--r)'}"></div></div>
+      <div class="bench-val" style="color:${isPos?'var(--g)':'var(--r)'}">${isPos?'+':''}${ret.toFixed(2)}%</div>
+    </div>`;
+  };
+  el.innerHTML=`
+    ${makeRow('📊 Il tuo portafoglio',portRet)}
+    ${bmReturns.map(b=>makeRow(`${b.flag} ${b.n}`,b.ret)).join('')}
+    <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Portafoglio calcolato dal prezzo di acquisto · Benchmark: variazione ultimo mese</div>`;
+}
+
 // Avvia verifica sessione
 verifySession();
 </script>
