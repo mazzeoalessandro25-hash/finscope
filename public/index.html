@@ -1351,8 +1351,8 @@ async function loadVIX(){
   const absDiff=d.price-(d.prev||d.price);
   document.getElementById('vix-stats').innerHTML=`
     <div class="vs-item"><div class="vs-val">${fmt(d.prev,2)}</div><div class="vs-lbl">Chiusura prec.</div></div>
-    <div class="vs-item"><div class="vs-val ${c>=0?'up':'down'}">${chgStr(c)}</div><div class="vs-lbl">Variazione %</div></div>
-    <div class="vs-item"><div class="vs-val ${absDiff>=0?'up':'down'}">${absDiff>=0?'+':''}${fmt(absDiff,2)}</div><div class="vs-lbl">Variazione pt</div></div>
+    <div class="vs-item"><div class="vs-val ${c>=0?'down':'up'}">${chgStr(c)}</div><div class="vs-lbl">Variazione %</div></div>
+    <div class="vs-item"><div class="vs-val ${absDiff>=0?'down':'up'}">${absDiff>=0?'+':''}${fmt(absDiff,2)}</div><div class="vs-lbl">Variazione pt</div></div>
     <div class="vs-item"><div class="vs-val">${d.dayHigh?fmt(d.dayHigh,2):'—'}</div><div class="vs-lbl">Max giornaliero</div></div>
     <div class="vs-item"><div class="vs-val">${d.dayLow?fmt(d.dayLow,2):'—'}</div><div class="vs-lbl">Min giornaliero</div></div>
     <div class="vs-item"><div class="vs-val" style="font-size:11px">${v<15?'Bassa':v<25?'Normale':v<35?'Alta':'Estrema'}</div><div class="vs-lbl">Regime attuale</div></div>`;
