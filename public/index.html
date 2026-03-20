@@ -3449,16 +3449,22 @@ function openStockDetail(sym){
   document.getElementById('sd-hdr-chg').textContent='';
   document.getElementById('sd-wl-btn').classList.toggle('active',watchlist.includes(sym));
   // Reset all metric cells
-  ['sdm-price','sdm-chg','sdm-cap','sdm-beta','sdm-52h','sdm-52l','sdm-vol','sdm-avgvol',
-   'sdm-emp','sdm-rec','sdm-pe','sdm-fpe','sdm-pb','sdm-ps','sdm-eps','sdm-target',
-   'sdm-roe','sdm-roa','sdm-gm','sdm-pm','sdm-revg','sdm-earng',
-   'sdm-div','sdm-fcf','sdm-cash','sdm-debt','sdm-de','sdm-cr'
+  ['sdm-price','sdm-chg','sdm-dh','sdm-dl','sdm-cap','sdm-beta','sdm-52h','sdm-52l',
+   'sdm-vol','sdm-avgvol','sdm-emp','sdm-short',
+   'sdm-pe','sdm-fpe','sdm-pb','sdm-ps','sdm-eps','sdm-feps',
+   'sdm-roe','sdm-roa','sdm-gm','sdm-om','sdm-pm','sdm-ebitda',
+   'sdm-revg','sdm-earng','sdm-rev','sdm-fcf','sdm-div','sdm-shares',
+   'sdm-cash','sdm-debt','sdm-de','sdm-cr','sdm-qr','sdm-float',
+   'sdm-target','sdm-target-range','sdm-nanalysts'
   ].forEach(id=>{
     const el=document.getElementById(id);
-    if(el){el.textContent='···';el.className='sd-metric-val';}
+    if(el){el.textContent='···';el.className='sd-m-val';}
   });
+  document.getElementById('sdm-rec').textContent='···';
+  document.getElementById('sd-sector-bar').style.display='none';
   document.getElementById('sd-description').textContent='Caricamento...';
   document.getElementById('sd-website').innerHTML='';
+  document.getElementById('sd-news-list').innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento...</div>';
   // Reset range buttons
   document.querySelectorAll('#stock-detail-overlay .cc-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('sd-range-1mo').classList.add('active');
