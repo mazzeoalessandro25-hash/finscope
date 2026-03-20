@@ -2208,16 +2208,15 @@ function renderBuyZone(sd,qd){
 }
 
 /* ══════════════════════════════════════════
-   STOCK HEATMAP — 75+ titoli · tutti i settori
+   STOCK HEATMAP — stile Finviz treemap
+   3 righe · 10 settori · 83 titoli
 ══════════════════════════════════════════ */
-// market: US | EU | IT  |  lg:true = cella grande (mega cap)
 const HM_STOCKS=[
-  /* ── TECHNOLOGY ── */
-  {s:'AAPL',n:'Apple',sec:'Technology',mkt:'US',lg:true},
-  {s:'MSFT',n:'Microsoft',sec:'Technology',mkt:'US',lg:true},
-  {s:'NVDA',n:'NVIDIA',sec:'Technology',mkt:'US',lg:true},
-  {s:'GOOGL',n:'Alphabet',sec:'Technology',mkt:'US',lg:true},
-  {s:'META',n:'Meta',sec:'Technology',mkt:'US',lg:true},
+  {s:'AAPL',n:'Apple',sec:'Technology',mkt:'US'},
+  {s:'MSFT',n:'Microsoft',sec:'Technology',mkt:'US'},
+  {s:'NVDA',n:'NVIDIA',sec:'Technology',mkt:'US'},
+  {s:'GOOGL',n:'Alphabet',sec:'Technology',mkt:'US'},
+  {s:'META',n:'Meta',sec:'Technology',mkt:'US'},
   {s:'AVGO',n:'Broadcom',sec:'Technology',mkt:'US'},
   {s:'ORCL',n:'Oracle',sec:'Technology',mkt:'US'},
   {s:'AMD',n:'AMD',sec:'Technology',mkt:'US'},
@@ -2227,26 +2226,23 @@ const HM_STOCKS=[
   {s:'CRM',n:'Salesforce',sec:'Technology',mkt:'US'},
   {s:'ASML',n:'ASML',sec:'Technology',mkt:'EU'},
   {s:'SAP.DE',n:'SAP',sec:'Technology',mkt:'EU'},
-  /* ── CONSUMER CYCLICAL ── */
-  {s:'AMZN',n:'Amazon',sec:'Consumer Cyclical',mkt:'US',lg:true},
-  {s:'TSLA',n:'Tesla',sec:'Consumer Cyclical',mkt:'US',lg:true},
-  {s:'HD',n:'Home Depot',sec:'Consumer Cyclical',mkt:'US'},
-  {s:'MCD',n:"McDonald's",sec:'Consumer Cyclical',mkt:'US'},
-  {s:'NKE',n:'Nike',sec:'Consumer Cyclical',mkt:'US'},
-  {s:'SBUX',n:'Starbucks',sec:'Consumer Cyclical',mkt:'US'},
-  {s:'BKNG',n:'Booking',sec:'Consumer Cyclical',mkt:'US'},
-  {s:'TGT',n:'Target',sec:'Consumer Cyclical',mkt:'US'},
-  {s:'LVMH.PA',n:'LVMH',sec:'Consumer Cyclical',mkt:'EU'},
-  {s:'BMW.DE',n:'BMW',sec:'Consumer Cyclical',mkt:'EU'},
-  /* ── COMMUNICATION SERVICES ── */
-  {s:'NFLX',n:'Netflix',sec:'Communication',mkt:'US'},
-  {s:'DIS',n:'Disney',sec:'Communication',mkt:'US'},
-  {s:'T',n:'AT&T',sec:'Communication',mkt:'US'},
-  {s:'VZ',n:'Verizon',sec:'Communication',mkt:'US'},
-  {s:'CMCSA',n:'Comcast',sec:'Communication',mkt:'US'},
-  {s:'SPOT',n:'Spotify',sec:'Communication',mkt:'EU'},
-  /* ── FINANCIAL SERVICES ── */
-  {s:'JPM',n:'JPMorgan',sec:'Financial',mkt:'US',lg:true},
+  {s:'AMZN',n:'Amazon',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'TSLA',n:'Tesla',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'HD',n:'Home Depot',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'MCD',n:"McDonald's",sec:'Cons. Cycl.',mkt:'US'},
+  {s:'NKE',n:'Nike',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'SBUX',n:'Starbucks',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'BKNG',n:'Booking',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'TGT',n:'Target',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'LVMH.PA',n:'LVMH',sec:'Cons. Cycl.',mkt:'EU'},
+  {s:'BMW.DE',n:'BMW',sec:'Cons. Cycl.',mkt:'EU'},
+  {s:'NFLX',n:'Netflix',sec:'Communic.',mkt:'US'},
+  {s:'DIS',n:'Disney',sec:'Communic.',mkt:'US'},
+  {s:'T',n:'AT&T',sec:'Communic.',mkt:'US'},
+  {s:'VZ',n:'Verizon',sec:'Communic.',mkt:'US'},
+  {s:'CMCSA',n:'Comcast',sec:'Communic.',mkt:'US'},
+  {s:'SPOT',n:'Spotify',sec:'Communic.',mkt:'US'},
+  {s:'JPM',n:'JPMorgan',sec:'Financial',mkt:'US'},
   {s:'BAC',n:'Bank of Am.',sec:'Financial',mkt:'US'},
   {s:'WFC',n:'Wells Fargo',sec:'Financial',mkt:'US'},
   {s:'GS',n:'Goldman',sec:'Financial',mkt:'US'},
@@ -2259,8 +2255,7 @@ const HM_STOCKS=[
   {s:'ISP.MI',n:'Intesa SP',sec:'Financial',mkt:'IT'},
   {s:'MB.MI',n:'Mediobanca',sec:'Financial',mkt:'IT'},
   {s:'ALV.DE',n:'Allianz',sec:'Financial',mkt:'EU'},
-  /* ── HEALTHCARE ── */
-  {s:'LLY',n:'Eli Lilly',sec:'Healthcare',mkt:'US',lg:true},
+  {s:'LLY',n:'Eli Lilly',sec:'Healthcare',mkt:'US'},
   {s:'UNH',n:'UnitedHealth',sec:'Healthcare',mkt:'US'},
   {s:'JNJ',n:'J&J',sec:'Healthcare',mkt:'US'},
   {s:'ABBV',n:'AbbVie',sec:'Healthcare',mkt:'US'},
@@ -2268,16 +2263,14 @@ const HM_STOCKS=[
   {s:'PFE',n:'Pfizer',sec:'Healthcare',mkt:'US'},
   {s:'AMGN',n:'Amgen',sec:'Healthcare',mkt:'US'},
   {s:'NVO',n:'Novo Nordisk',sec:'Healthcare',mkt:'EU'},
-  {s:'RMS.PA',n:'Roche',sec:'Healthcare',mkt:'EU'},
-  /* ── ENERGY ── */
-  {s:'XOM',n:'ExxonMobil',sec:'Energy',mkt:'US',lg:true},
+  {s:'AZN',n:'AstraZeneca',sec:'Healthcare',mkt:'EU'},
+  {s:'XOM',n:'ExxonMobil',sec:'Energy',mkt:'US'},
   {s:'CVX',n:'Chevron',sec:'Energy',mkt:'US'},
   {s:'COP',n:'ConocoPhillips',sec:'Energy',mkt:'US'},
   {s:'SLB',n:'SLB',sec:'Energy',mkt:'US'},
   {s:'ENI.MI',n:'ENI',sec:'Energy',mkt:'IT'},
   {s:'BP',n:'BP',sec:'Energy',mkt:'EU'},
   {s:'TTE',n:'TotalEnergies',sec:'Energy',mkt:'EU'},
-  /* ── INDUSTRIALS ── */
   {s:'CAT',n:'Caterpillar',sec:'Industrials',mkt:'US'},
   {s:'BA',n:'Boeing',sec:'Industrials',mkt:'US'},
   {s:'HON',n:'Honeywell',sec:'Industrials',mkt:'US'},
@@ -2286,28 +2279,40 @@ const HM_STOCKS=[
   {s:'LMT',n:'Lockheed',sec:'Industrials',mkt:'US'},
   {s:'SIE.DE',n:'Siemens',sec:'Industrials',mkt:'EU'},
   {s:'LDO.MI',n:'Leonardo',sec:'Industrials',mkt:'IT'},
-  /* ── CONSUMER DEFENSIVE ── */
-  {s:'WMT',n:'Walmart',sec:'Consumer Def.',mkt:'US',lg:true},
-  {s:'PG',n:'P&G',sec:'Consumer Def.',mkt:'US'},
-  {s:'KO',n:'Coca-Cola',sec:'Consumer Def.',mkt:'US'},
-  {s:'PEP',n:'PepsiCo',sec:'Consumer Def.',mkt:'US'},
-  {s:'COST',n:'Costco',sec:'Consumer Def.',mkt:'US'},
-  {s:'PM',n:'Philip Morris',sec:'Consumer Def.',mkt:'US'},
-  {s:'OR.PA',n:"L'Oréal",sec:'Consumer Def.',mkt:'EU'},
-  /* ── UTILITIES ── */
+  {s:'WMT',n:'Walmart',sec:'Cons. Def.',mkt:'US'},
+  {s:'PG',n:'P&G',sec:'Cons. Def.',mkt:'US'},
+  {s:'KO',n:'Coca-Cola',sec:'Cons. Def.',mkt:'US'},
+  {s:'PEP',n:'PepsiCo',sec:'Cons. Def.',mkt:'US'},
+  {s:'COST',n:'Costco',sec:'Cons. Def.',mkt:'US'},
+  {s:'PM',n:'Philip Morris',sec:'Cons. Def.',mkt:'US'},
+  {s:'OR.PA',n:"L'Oréal",sec:'Cons. Def.',mkt:'EU'},
   {s:'NEE',n:'NextEra',sec:'Utilities',mkt:'US'},
   {s:'DUK',n:'Duke Energy',sec:'Utilities',mkt:'US'},
   {s:'SO',n:'Southern Co.',sec:'Utilities',mkt:'US'},
   {s:'ENEL.MI',n:'Enel',sec:'Utilities',mkt:'IT'},
   {s:'TRN.MI',n:'Terna',sec:'Utilities',mkt:'IT'},
-  /* ── BASIC MATERIALS ── */
   {s:'LIN',n:'Linde',sec:'Materials',mkt:'US'},
   {s:'NEM',n:'Newmont',sec:'Materials',mkt:'US'},
   {s:'FCX',n:'Freeport',sec:'Materials',mkt:'US'},
   {s:'BAS.DE',n:'BASF',sec:'Materials',mkt:'EU'},
 ];
 
-let hmData={};    // cache dati heatmap
+// Righe del treemap (settori → colonne proporzionali)
+const HM_ROWS=[
+  ['Technology','Cons. Cycl.','Communic.'],
+  ['Financial','Healthcare','Energy'],
+  ['Industrials','Cons. Def.','Utilities','Materials'],
+];
+
+// Colore header per settore
+const HM_SEC_COLOR={
+  'Technology':'#1E3A8A','Cons. Cycl.':'#92400E','Communic.':'#5B21B6',
+  'Financial':'#064E3B','Healthcare':'#881337','Energy':'#7C2D12',
+  'Industrials':'#1F2937','Cons. Def.':'#134E4A','Utilities':'#1E3A5F',
+  'Materials':'#78350F',
+};
+
+let hmData={};
 let hmFilter='all';
 
 function hmSetFilter(f,btn){
@@ -2318,81 +2323,81 @@ function hmSetFilter(f,btn){
 }
 
 function hmColor(chg){
-  const abs=Math.min(Math.abs(chg),6);
-  const t=abs/6;
-  if(chg>=0){
-    const g=Math.round(110+t*130);
-    const rb=Math.round(10+t*5);
-    return`rgb(${rb},${g},${rb})`;
-  } else {
-    const r=Math.round(120+t*120);
-    const gb=Math.round(10+t*5);
-    return`rgb(${r},${gb},${gb})`;
-  }
+  const c=Math.max(-5,Math.min(5,chg));
+  if(Math.abs(c)<0.08)return'#1e293b';
+  const t=Math.abs(c)/5;
+  return c>0
+    ?`rgb(${Math.round(8+12*t)},${Math.round(90+145*t)},${Math.round(8+12*t)})`
+    :`rgb(${Math.round(100+145*t)},${Math.round(8+10*t)},${Math.round(8+10*t)})`;
 }
 
 function hmRender(){
   const container=document.getElementById('heatmap-container');
-  const visible=HM_STOCKS.filter(st=>{
-    if(!hmData[st.s])return false;
-    if(hmFilter==='all')return true;
-    return st.mkt===hmFilter;
-  });
-  if(!visible.length){container.innerHTML='<div class="ld">Nessun dato disponibile</div>';return;}
 
-  // Aggiorna summary bar
+  // Mappa settore → titoli visibili
+  const secMap={};
+  HM_STOCKS.forEach(st=>{
+    if(!hmData[st.s])return;
+    if(hmFilter!=='all'&&st.mkt!==hmFilter)return;
+    if(!secMap[st.sec])secMap[st.sec]=[];
+    secMap[st.sec].push({...st,...hmData[st.s]});
+  });
+
+  // Summary
   let up=0,dn=0,nc=0;
-  visible.forEach(st=>{const c=hmData[st.s]?.chg||0;if(c>0.05)up++;else if(c<-0.05)dn++;else nc++;});
-  document.getElementById('hm-up').textContent=`▲ ${up} su`;
-  document.getElementById('hm-dn').textContent=`▼ ${dn} giù`;
-  document.getElementById('hm-nc').textContent=`— ${nc} flat`;
+  Object.values(secMap).forEach(arr=>arr.forEach(st=>{
+    if(st.chg>0.05)up++;else if(st.chg<-0.05)dn++;else nc++;
+  }));
+  const upEl=document.getElementById('hm-up'),dnEl=document.getElementById('hm-dn'),ncEl=document.getElementById('hm-nc');
+  if(upEl)upEl.textContent=`▲ ${up} su`;
+  if(dnEl)dnEl.textContent=`▼ ${dn} giù`;
+  if(ncEl)ncEl.textContent=`— ${nc} flat`;
 
-  // Raggruppa per settore
-  const sectors={};
-  const secOrder=['Technology','Consumer Cyclical','Communication','Financial','Healthcare','Energy','Industrials','Consumer Def.','Utilities','Materials'];
-  visible.forEach(st=>{
-    if(!sectors[st.sec])sectors[st.sec]=[];
-    sectors[st.sec].push({...st,...hmData[st.s]});
-  });
+  if(!Object.keys(secMap).length){
+    container.innerHTML='<div class="ld" style="padding:20px">Caricamento in corso...</div>';return;
+  }
 
-  container.innerHTML=secOrder.filter(s=>sectors[s]).map(sec=>{
-    const stocks=sectors[sec];
-    const secUp=stocks.filter(s=>s.chg>0.05).length;
-    const secDn=stocks.filter(s=>s.chg<-0.05).length;
-    const secColor=secUp>secDn?'#059669':secDn>secUp?'#DC2626':'#94A3B8';
-    return`<div class="hm-sector">
-      <div class="hm-sector-title">
-        ${sec}
-        <span class="hm-sec-badge" style="background:${secColor}22;color:${secColor}">${secUp}▲ ${secDn}▼</span>
-      </div>
-      <div class="heatmap-grid">
-        ${stocks.map(st=>`
-          <div class="hm-cell${st.lg?' lg':''}" style="background:${hmColor(st.chg||0)}" onclick="openModal('${st.s}','${st.n}')">
+  // Treemap: righe → settori proporzionali → celle
+  const rowsHtml=HM_ROWS.map(rowSecs=>{
+    const vis=rowSecs.filter(s=>secMap[s]&&secMap[s].length);
+    if(!vis.length)return'';
+    return`<div class="hm-row">${vis.map(sec=>{
+      const stocks=secMap[sec];
+      const col=HM_SEC_COLOR[sec]||'#1F2937';
+      const secUp=stocks.filter(s=>s.chg>0.05).length;
+      const secDn=stocks.filter(s=>s.chg<-0.05).length;
+      return`<div class="hm-sec-block" style="flex:${stocks.length}">
+        <div class="hm-sec-hdr" style="background:${col}">
+          <span class="hm-sec-name">${sec}</span>
+          <span class="hm-sec-ud">${secUp}▲ ${secDn}▼</span>
+        </div>
+        <div class="hm-cells" style="background:${col}">
+          ${stocks.map(st=>`<div class="hm-cell" style="background:${hmColor(st.chg||0)}" onclick="openModal('${st.s}','${st.n}')">
             <div class="hm-sym">${st.s.replace(/\.(MI|PA|DE|AS|F)$/,'')}</div>
-            <div class="hm-chg">${(st.chg>=0?'+':'') + (st.chg||0).toFixed(2)}%</div>
+            <div class="hm-chg">${(st.chg>=0?'+':'')+(st.chg||0).toFixed(2)}%</div>
             <div class="hm-name">${st.n}</div>
           </div>`).join('')}
-      </div>
-    </div>`;
+        </div>
+      </div>`;
+    }).join('')}</div>`;
   }).join('');
+
+  container.innerHTML=`<div class="hm-tree">${rowsHtml}</div>`;
 }
 
 async function loadHeatmap(){
   const container=document.getElementById('heatmap-container');
-  container.innerHTML='<div class="ld">Caricamento heatmap...</div>';
+  container.innerHTML='<div class="ld" style="padding:20px">Caricamento heatmap...</div>';
   hmData={};
-
-  // Carica in batch da 12 per non sovraccaricare l'API
-  const BATCH=12;
+  const BATCH=14;
   for(let i=0;i<HM_STOCKS.length;i+=BATCH){
     const batch=HM_STOCKS.slice(i,i+BATCH);
     const quotes=await Promise.all(batch.map(st=>api(st.s)));
     batch.forEach((st,j)=>{
       const q=quotes[j];if(!q)return;
-      const chg=q.prev?((q.price-q.prev)/q.prev*100):0;
-      hmData[st.s]={chg,price:q.price};
+      hmData[st.s]={chg:q.prev?((q.price-q.prev)/q.prev*100):0,price:q.price};
     });
-    hmRender(); // aggiorna progressivamente
+    hmRender();
   }
 }
 
