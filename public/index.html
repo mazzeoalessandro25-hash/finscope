@@ -1133,6 +1133,8 @@ function showPage(id,btn){
   if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati finanziari');
   if(id==='screener'&&Object.keys(scData).length===0)loadScreener();
   if(id==='portafoglio')showPortfolioState();
+  if(id==='alerts'){renderAlerts();checkAlerts();}
+  if(id==='macro')loadMacroDashboard();
   if(id==='screener')document.getElementById('cmp-float-btn').classList.toggle('show',cmpList.length>=2);
   if(id!=='screener')document.getElementById('cmp-float-btn').classList.remove('show');
 }
