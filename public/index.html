@@ -3465,7 +3465,11 @@ function sdSetPctChg(id,v){
 }
 
 async function loadSdData(sym){
-  const [d,sd]=await Promise.all([api(sym),api(sym,'summary')]);
+  // Usa la cache dello screener se disponibile, altrimenti chiama l'API
+  const [d,sd]=await Promise.all([
+    scData[sym]?Promise.resolve(scData[sym]):api(sym),
+    scSummary[sym]?Promise.resolve(scSummary[sym]):api(sym,'summary')
+  ]);
   if(!d)return;
   const cur=d.currency==='EUR'?'€':'$';
   const c=chgPct(d.price,d.prev);
