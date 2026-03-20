@@ -7,8 +7,8 @@ export default async function handler(req, res) {
   // Cache 6 ore — i dati macro non cambiano ogni minuto
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=3600');
 
-  const TOKEN = process.env.FINNHUB_API_KEY;
-  if (!TOKEN) return res.status(500).json({ error: 'FINNHUB_API_KEY non configurata' });
+  const TOKEN = process.env.FMP_API_KEY;
+  if (!TOKEN) return res.status(500).json({ error: 'FMP_API_KEY non configurata' });
 
   // Recupera il mese richiesto oppure usa il corrente
   const now = new Date();
@@ -20,13 +20,15 @@ export default async function handler(req, res) {
   const to   = `${year}-${String(month).padStart(2,'0')}-${lastDay}`;
 
   try {
-    const url = `https://finnhub.io/api/v1/calendar/economic?from=${from}&to=${to}&token=${TOKEN}`;
+    const url = `https://financialmodelingprep.com/api/v3/economic_calendar?from=${from}&to=${to}&apikey=${TOKEN}`;
     const r = await fetch(url);
-    if (!r.ok) throw new Error(`Finnhub ${r.status}`);
-    const data = await r.json();
+    if (!r.ok) throw new Error(`FMP ${r.status}`);
+    const raw = await r.json();
 
-    const events = (data.economicCalendar || [])
-      // Solo eventi USA e Eurozona ad alto/medio impatto
+    // FMP restituisce un array direttamente
+    const list = Array.isArray(raw) ? raw : [];
+
+    const events = list
       .filter(e => {
         const country = (e.country || '').toUpperCase();
         const impact  = (e.impact  || '').toLowerCase();
@@ -34,23 +36,22 @@ export default async function handler(req, res) {
             && (impact === 'high' || impact === 'medium');
       })
       .map(e => {
-        // Determina tipo per colore
         let type = 'macro';
         const ev = (e.event || '').toLowerCase();
-        if (ev.includes('fed') || ev.includes('fomc') || ev.includes('powell')) type = 'fed';
-        else if (ev.includes('ecb') || ev.includes('bce') || ev.includes('lagarde')
-              || ev.includes('european central')) type = 'bce';
+        if (ev.includes('fed') || ev.includes('fomc') || ev.includes('powell')
+         || ev.includes('federal reserve')) type = 'fed';
+        else if (ev.includes('ecb') || ev.includes('european central bank')
+              || ev.includes('lagarde') || ev.includes('bce')) type = 'bce';
 
         return {
-          date:   e.time,           // "YYYY-MM-DD"
-          label:  e.event,
+          date:    e.date,          // "YYYY-MM-DD"
+          label:   e.event,
           type,
-          detail: buildDetail(e),
           country: e.country || '',
           impact:  e.impact  || '',
           actual:  e.actual  ?? null,
           estimate:e.estimate?? null,
-          prev:    e.prev    ?? null,
+          prev:    e.previous?? null,
           unit:    e.unit    || '',
         };
       })
@@ -60,13 +61,4 @@ export default async function handler(req, res) {
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
-}
-
-function buildDetail(e) {
-  const parts = [];
-  if (e.country) parts.push(e.country);
-  if (e.impact)  parts.push(`Impatto: ${e.impact}`);
-  if (e.estimate != null) parts.push(`Stima: ${e.estimate}${e.unit || ''}`);
-  if (e.prev     != null) parts.push(`Prec: ${e.prev}${e.unit || ''}`);
-  return parts.join(' · ') || e.event;
 }
