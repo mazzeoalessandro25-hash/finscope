@@ -2029,7 +2029,8 @@ async function runAI(){
 async function boot(){
   updateHours();
   await Promise.all([
-    loadMainChart('^GSPC','1mo',null),
+    loadDashChart(1,'^GSPC','1mo',null),
+    loadDashChart(2,'^NDX','1mo',null),
     loadIndices(),
     loadVIX(),
     loadComs(),
