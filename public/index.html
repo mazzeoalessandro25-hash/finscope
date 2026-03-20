@@ -432,6 +432,83 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 .cmp-tbl tr:hover td{background:var(--b3)}
 .cmp-tbl .metric-lbl{font-size:10px;color:var(--t3);font-family:var(--ff);font-weight:500}
 .cmp-winner{background:rgba(5,150,105,.08);font-weight:700}
+
+/* ═══ FEATURE 1: ALERT PREZZI ═══ */
+.alert-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;
+  border-radius:8px;background:var(--s2);border:1px solid var(--bd);margin-bottom:8px}
+.alert-triggered{padding:12px 16px;border-radius:10px;margin-bottom:12px;font-family:var(--fm);font-size:13px;font-weight:600}
+.alert-triggered.above{background:var(--g2);color:#047857;border:1px solid #6ee7b7}
+.alert-triggered.below{background:var(--r2);color:#B91C1C;border:1px solid #fca5a5}
+.alert-inp-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+
+/* ═══ FEATURE 2: DIVIDEND TRACKER ═══ */
+.div-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.div-row{display:flex;justify-content:space-between;align-items:center;
+  padding:8px 10px;border-bottom:1px solid var(--bd);font-family:var(--fm)}
+.div-row:last-child{border-bottom:none}
+.div-row:hover{background:var(--b3)}
+
+/* ═══ FEATURE 3: WATCHLIST CARDS ═══ */
+.wl-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;
+  margin-bottom:10px;transition:all .15s}
+.wl-card:hover{border-color:rgba(26,86,196,.3);box-shadow:0 3px 12px rgba(26,86,196,.08)}
+.wl-card-price{font-family:var(--fm);font-size:16px;font-weight:600;color:var(--t)}
+.wl-card-chg{font-family:var(--fm);font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-block}
+.wl-card-chg.up{background:var(--g2);color:#047857}
+.wl-card-chg.down{background:var(--r2);color:#B91C1C}
+.wl-card-btns{display:flex;gap:6px;margin-top:10px}
+.wl-card-btn{background:var(--b3);border:1px solid rgba(26,86,196,.2);color:var(--b);
+  font-size:11px;font-weight:600;padding:4px 10px;border-radius:6px;cursor:pointer;font-family:var(--fm);transition:all .15s}
+.wl-card-btn:hover{background:var(--b);color:#fff}
+.wl-card-btn.del{background:var(--r2);border-color:rgba(220,38,38,.2);color:var(--r)}
+.wl-card-btn.del:hover{background:var(--r);color:#fff}
+
+/* ═══ FEATURE 4: DARK MODE (html.dark) ═══ */
+html.dark{--s:#1e293b;--s2:#0f172a;--bd:#334155;--t:#f1f5f9;--t2:#cbd5e1;--t3:#64748b}
+html.dark body{background:#0f172a;color:#f1f5f9}
+html.dark .card{background:#1e293b;border-color:#334155}
+html.dark .navbar,.dark nav{background:#0f172a;border-color:#334155}
+html.dark .hm-sec-hdr{background:#1e293b!important}
+html.dark .hm-cells{background:#334155!important}
+html.dark .sc-tbl th{background:#1e293b}
+html.dark .hours-bar{background:#1e293b;border-bottom-color:#334155}
+html.dark .tape{background:#0a1020;border-bottom-color:#334155}
+html.dark .tbl thead tr{background:#0f172a}
+html.dark .modal-box,.dark .auth-box{background:#1e293b}
+html.dark .port-item{background:#0f172a;border-color:#334155}
+html.dark .rb{background:#0f172a;border-color:#334155}
+html.dark footer{background:#1e293b;border-top-color:#334155}
+html.dark .alert-item{background:#0f172a;border-color:#334155}
+html.dark .wl-card{background:#1e293b;border-color:#334155}
+html.dark .auth-box{background:#1e293b}
+
+/* ═══ FEATURE 5: PORTFOLIO PERF CHART ═══ */
+.port-perf-card{margin-top:16px}
+
+/* ═══ FEATURE 6: MACRO DASHBOARD ═══ */
+.macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.macro-stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;
+  box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.macro-stat-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;
+  text-transform:uppercase;margin-bottom:6px}
+.macro-stat-val{font-family:var(--fm);font-size:20px;font-weight:600;color:var(--t);line-height:1}
+.macro-stat-chg{font-family:var(--fm);font-size:11px;font-weight:500;margin-top:4px}
+
+/* ═══ FEATURE 8: ECONOMIC CALENDAR ═══ */
+.eco-event{display:flex;align-items:flex-start;gap:14px;padding:12px 14px;
+  border-radius:10px;background:var(--card);border:1px solid var(--bd);margin-bottom:8px;transition:all .15s}
+.eco-event:hover{border-color:rgba(26,86,196,.25);box-shadow:0 2px 8px rgba(26,86,196,.06)}
+.eco-event.soon{border-color:var(--o);background:var(--o2)}
+.eco-date{font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t2);min-width:80px;padding-top:1px}
+.eco-label{font-size:13px;font-weight:600;color:var(--t)}
+.eco-detail{font-size:11px;color:var(--t3);margin-top:2px}
+.eco-type-fed{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;
+  letter-spacing:.5px;background:#EBF1FB;color:#1A56C4;font-family:var(--fm);margin-left:8px}
+.eco-type-bce{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;
+  letter-spacing:.5px;background:#D1FAE5;color:#047857;font-family:var(--fm);margin-left:8px}
+.eco-type-macro{display:inline-block;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:700;
+  letter-spacing:.5px;background:var(--o2);color:#92400E;font-family:var(--fm);margin-left:8px}
+.eco-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 </style>
 </head>
 <body>
