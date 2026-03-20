@@ -601,6 +601,10 @@ html.dark .auth-box{background:#1e293b}
   </div>
   <div class="sd-body">
     <!-- Chart + Metriche rapide -->
+    <!-- Info settore sopra il grafico -->
+    <div id="sd-sector-bar" style="display:none;margin-bottom:12px;font-size:11px;color:var(--t3);font-family:var(--fm)">
+      <span id="sd-sector-txt"></span>
+    </div>
     <div class="sd-top">
       <div class="sd-section">
         <div class="cc-row" style="margin-bottom:12px">
@@ -616,24 +620,48 @@ html.dark .auth-box{background:#1e293b}
         </div>
         <div id="sd-chart" style="width:100%;height:310px"></div>
       </div>
-      <!-- Metriche rapide -->
+      <!-- Dati chiave -->
       <div class="sd-section">
         <div class="sd-section-title">Dati chiave</div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl">Prezzo</div><div class="sd-m-val" id="sdm-price">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Variazione</div><div class="sd-m-val" id="sdm-chg">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Market Cap</div><div class="sd-m-val" id="sdm-cap">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Beta</div><div class="sd-m-val" id="sdm-beta">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Max giornaliero</div><div class="sd-m-val" id="sdm-dh">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Min giornaliero</div><div class="sd-m-val" id="sdm-dl">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Max 52 sett.</div><div class="sd-m-val" id="sdm-52h">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Min 52 sett.</div><div class="sd-m-val" id="sdm-52l">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Volume</div><div class="sd-m-val" id="sdm-vol">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Vol. Medio</div><div class="sd-m-val" id="sdm-avgvol">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Market Cap</div><div class="sd-m-val" id="sdm-cap">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Beta</div><div class="sd-m-val" id="sdm-beta">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Dipendenti</div><div class="sd-m-val" id="sdm-emp">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Raccomandazione</div><div class="sd-m-val" id="sdm-rec">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Short Ratio</div><div class="sd-m-val" id="sdm-short">—</div></div>
         </div>
       </div>
     </div>
-    <!-- Sezioni fondamentali: Valutazione / Redditività / Bilancio -->
+    <!-- Raccomandazione analisti -->
+    <div class="sd-section" style="margin-bottom:16px">
+      <div class="sd-section-title">Raccomandazione analisti</div>
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div id="sdm-rec" style="font-size:15px;font-weight:700;font-family:var(--fm)">—</div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Consenso</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="sd-m-val" id="sdm-target" style="font-size:15px">—</div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Target medio</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="sd-m-val" id="sdm-target-range" style="font-size:13px;color:var(--t2)">—</div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Range target</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <div class="sd-m-val" id="sdm-nanalysts" style="font-size:13px;color:var(--t2)">—</div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">N. analisti</div>
+        </div>
+      </div>
+    </div>
+    <!-- Sezioni fondamentali: 4 colonne -->
     <div class="sd-funds">
       <div class="sd-section">
         <div class="sd-section-title">Valutazione</div>
@@ -642,8 +670,8 @@ html.dark .auth-box{background:#1e293b}
           <div class="sd-m"><div class="sd-m-lbl">P/E Forward</div><div class="sd-m-val" id="sdm-fpe">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">P/B</div><div class="sd-m-val" id="sdm-pb">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">P/S</div><div class="sd-m-val" id="sdm-ps">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">EPS</div><div class="sd-m-val" id="sdm-eps">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Target Analisti</div><div class="sd-m-val" id="sdm-target">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EPS (TTM)</div><div class="sd-m-val" id="sdm-eps">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EPS Forward</div><div class="sd-m-val" id="sdm-feps">—</div></div>
         </div>
       </div>
       <div class="sd-section">
@@ -652,28 +680,47 @@ html.dark .auth-box{background:#1e293b}
           <div class="sd-m"><div class="sd-m-lbl">ROE</div><div class="sd-m-val" id="sdm-roe">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">ROA</div><div class="sd-m-val" id="sdm-roa">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Margine Lordo</div><div class="sd-m-val" id="sdm-gm">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Margine Operativo</div><div class="sd-m-val" id="sdm-om">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Margine Netto</div><div class="sd-m-val" id="sdm-pm">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EBITDA</div><div class="sd-m-val" id="sdm-ebitda">—</div></div>
         </div>
       </div>
       <div class="sd-section">
-        <div class="sd-section-title">Bilancio &amp; Dividendo</div>
+        <div class="sd-section-title">Crescita</div>
         <div class="sd-mg">
-          <div class="sd-m"><div class="sd-m-lbl">Dividendo</div><div class="sd-m-val" id="sdm-div">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Ricavi Totali</div><div class="sd-m-val" id="sdm-rev">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Free Cash Flow</div><div class="sd-m-val" id="sdm-fcf">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Dividendo</div><div class="sd-m-val" id="sdm-div">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Azioni Circ.</div><div class="sd-m-val" id="sdm-shares">—</div></div>
+        </div>
+      </div>
+      <div class="sd-section">
+        <div class="sd-section-title">Bilancio</div>
+        <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl">Cassa Totale</div><div class="sd-m-val" id="sdm-cash">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Debito Totale</div><div class="sd-m-val" id="sdm-debt">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Debt/Equity</div><div class="sd-m-val" id="sdm-de">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Current Ratio</div><div class="sd-m-val" id="sdm-cr">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Quick Ratio</div><div class="sd-m-val" id="sdm-qr">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Float Azioni</div><div class="sd-m-val" id="sdm-float">—</div></div>
         </div>
       </div>
     </div>
-    <!-- Descrizione azienda -->
-    <div class="sd-desc-card">
-      <div class="sd-section-title">Sull'azienda</div>
-      <div class="sd-desc-txt" id="sd-description">Caricamento...</div>
-      <div style="margin-top:10px" id="sd-website"></div>
+    <!-- Notizie + Descrizione -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="sd-bottom-row">
+      <div class="sd-desc-card" style="margin-bottom:0">
+        <div class="sd-section-title">Sull'azienda</div>
+        <div class="sd-desc-txt" id="sd-description">Caricamento...</div>
+        <div style="margin-top:10px" id="sd-website"></div>
+      </div>
+      <div class="sd-desc-card" style="margin-bottom:0">
+        <div class="sd-section-title">Ultime notizie</div>
+        <div id="sd-news-list" style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
+          <div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento...</div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
