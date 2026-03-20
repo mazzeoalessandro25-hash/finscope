@@ -2153,6 +2153,7 @@ async function loadUserData(){
   // Carica subito da localStorage come fallback immediato
   try{const c=localStorage.getItem('fs_portfolio');if(c){portfolio=JSON.parse(c);renderPortfolio();}}catch{}
   try{const c=localStorage.getItem('fs_watchlist');if(c)watchlist=JSON.parse(c);}catch{}
+  try{const c=localStorage.getItem('fs_alerts');if(c)alerts=JSON.parse(c);}catch{}
   // Poi sincronizza con il cloud
   try{
     const r=await fetch('/api/user?type=all',{
@@ -2161,6 +2162,7 @@ async function loadUserData(){
     const d=await r.json();
     if(d.watchlist){watchlist=d.watchlist;localStorage.setItem('fs_watchlist',JSON.stringify(watchlist));}
     if(d.portfolio){portfolio=d.portfolio;localStorage.setItem('fs_portfolio',JSON.stringify(portfolio));}
+    if(d.alerts){alerts=d.alerts;localStorage.setItem('fs_alerts',JSON.stringify(alerts));}
     showPortfolioState();
     renderPortfolio();
   }catch{}
