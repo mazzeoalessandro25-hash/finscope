@@ -1538,7 +1538,47 @@ async function runFA(){
     <div style="font-family:var(--fm);font-size:14px;font-weight:600;color:${recCol[rec]||'var(--o)'}">${recMap[rec]||'—'}</div></div>
     ${sd?.targetPrice?`<div style="text-align:right"><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">TARGET ANALISTI</div><div style="font-family:var(--fm);font-size:14px;font-weight:600;color:var(--b)">$${fmt(sd.targetPrice,2)}</div></div>`:''}
   </div>
-  ${sd?.marketCap?`<div style="margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--t3)">Market Cap: ${fmtLg(sd.marketCap)} · Beta: ${sd.beta?fmt(sd.beta,2):'—'} · EPS: ${sd.eps?'$'+fmt(sd.eps,2):'—'} · Debt/Eq: ${sd.debtToEquity?fmt(sd.debtToEquity,1):'—'}</div>`:''}`;
+  ${sd?.marketCap?`<div style="margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--t3)">Market Cap: ${fmtLg(sd.marketCap)} · Beta: ${sd.beta?fmt(sd.beta,2):'—'} · EPS: ${sd.eps?'$'+fmt(sd.eps,2):'—'} · Debt/Eq: ${sd.debtToEquity?fmt(sd.debtToEquity,1):'—'}</div>`:''}
+  ${renderBuyZone(sd,qd)}
+  ${fss.total!=null?`<div style="display:flex;align-items:center;gap:16px;margin-top:10px;padding:14px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;flex-wrap:wrap">
+    <div class="radar-wrap"><canvas id="radarChart"></canvas></div>
+    <div style="flex:1;min-width:160px">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">PROFILO FINSCOPE ✦ Radar 5 dimensioni</div>
+      ${Object.entries(fss.details).map(([k,v])=>`<div class="bench-row"><div class="bench-label">${dimLabels[k]||k}</div><div class="bench-bar-wrap"><div class="bench-bar" style="width:${Math.round(v/(dimMax[k]||10)*100)}%;background:${getScoreColor(v/(dimMax[k]||10)*100)}"></div></div><div class="bench-val">${v}/${dimMax[k]}</div></div>`).join('')}
+    </div>
+  </div>`:''}`;
+
+  // Init radar chart
+  if(fss.total!=null){
+    const radarCtx=document.getElementById('radarChart');
+    if(radarCtx){
+      if(radarCI){radarCI.destroy();radarCI=null;}
+      radarCI=new Chart(radarCtx,{
+        type:'radar',
+        data:{
+          labels:['Valutazione','Redditività','Momentum','Consensus','Stabilità'],
+          datasets:[{
+            data:[
+              Math.round((fss.details.valutazione||0)/25*100),
+              Math.round((fss.details.redditivita||0)/25*100),
+              Math.round((fss.details.momentum||0)/20*100),
+              Math.round((fss.details.consensus||0)/20*100),
+              Math.round((fss.details.stabilita||0)/10*100),
+            ],
+            backgroundColor:'rgba(26,86,196,.12)',
+            borderColor:'#1A56C4',
+            pointBackgroundColor:'#1A56C4',
+            borderWidth:2,pointRadius:3,
+          }]
+        },
+        options:{
+          responsive:true,maintainAspectRatio:false,
+          scales:{r:{beginAtZero:true,max:100,ticks:{display:false},grid:{color:'rgba(0,0,0,.08)'},pointLabels:{font:{size:9,family:"'Space Grotesk',sans-serif"},color:'#64748B'}}},
+          plugins:{legend:{display:false}}
+        }
+      });
+    }
+  }
 }
 
 /* ── NEWS ── */
