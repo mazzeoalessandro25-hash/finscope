@@ -947,6 +947,51 @@ html.dark .auth-box{background:#1e293b}
   <div id="cmp-result"><p style="color:var(--t3);font-size:13px;font-family:var(--fm)">Inserisci almeno 2 ticker e premi Confronta.</p></div>
 </div>
 
+<!-- ═══ ALERT PREZZI ═══ -->
+<div class="page" id="page-alerts">
+  <div class="pg-title">Alert Prezzi</div>
+  <div class="pg-sub">Ricevi una notifica quando un titolo raggiunge il tuo obiettivo di prezzo</div>
+  <div id="alert-triggered-banners"></div>
+  <div class="card" style="margin-bottom:16px">
+    <div class="ch"><div><div class="ct">Aggiungi Alert</div><div class="cs">Inserisci ticker, prezzo obiettivo e condizione</div></div></div>
+    <div class="alert-inp-row">
+      <input class="port-inp" id="al-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:120px;text-transform:uppercase"/>
+      <input class="port-inp" id="al-price" type="number" placeholder="Prezzo obiettivo" min="0" step="any" style="width:150px"/>
+      <select class="fsel" id="al-cond">
+        <option value="above">Sopra (above)</option>
+        <option value="below">Sotto (below)</option>
+      </select>
+      <input class="port-inp" id="al-label" type="text" placeholder="Nota (opz.)" style="width:140px"/>
+      <button class="port-btn" onclick="addAlert()">+ Aggiungi Alert</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><div><div class="ct">Alert attivi</div><div class="cs" id="alerts-count">—</div></div></div>
+    <div id="alerts-list"><div class="ld">Nessun alert configurato</div></div>
+  </div>
+</div>
+
+<!-- ═══ MACRO DASHBOARD ═══ -->
+<div class="page" id="page-macro">
+  <div class="pg-title">Macro Dashboard</div>
+  <div class="pg-sub">Tassi, spread, forex e materie prime chiave</div>
+
+  <div class="sdiv"><div class="sdiv-t">Tassi &amp; Banche Centrali</div><div class="sdiv-l"></div></div>
+  <div class="macro-grid" id="macro-rates">
+    <div class="ld">Caricamento...</div>
+  </div>
+
+  <div class="sdiv"><div class="sdiv-t">Forex</div><div class="sdiv-l"></div></div>
+  <div class="macro-grid" id="macro-forex">
+    <div class="ld">Caricamento...</div>
+  </div>
+
+  <div class="sdiv"><div class="sdiv-t">Materie Prime Chiave</div><div class="sdiv-l"></div></div>
+  <div class="macro-grid" id="macro-comms">
+    <div class="ld">Caricamento...</div>
+  </div>
+</div>
+
 <!-- FLOATING COMPARE BTN (attivato dallo screener) -->
 <button class="cmp-float" id="cmp-float-btn" onclick="goToCompareFromScreener()">
   ⚖ Confronta <span class="cmp-count-badge" id="cmp-count">0</span>
