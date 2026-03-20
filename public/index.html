@@ -1362,32 +1362,35 @@ function buildLWChart(container,type,pts){
   return chart;
 }
 
-/* ── MAIN CHART ── */
-function onSymChange(){
-  mainSym=document.getElementById('ch-sym').value;
-  document.getElementById('ch-title').textContent=document.getElementById('ch-sym').selectedOptions[0].text;
-  loadMainChart(mainSym,mainRange,null);
+/* ── DASH CHARTS ── */
+function onDashSymChange(n){
+  const sel=document.getElementById(`ch${n}-sym`);
+  dashCharts[n].sym=sel.value;
+  document.getElementById(`ch${n}-title`).textContent=sel.selectedOptions[0].text;
+  loadDashChart(n,null,null,null);
 }
-function setMainType(t,btn){
-  mainType=t;
-  document.querySelectorAll('#main-candle,#main-line').forEach(b=>b.classList.remove('active'));
+function setDashType(n,t,btn){
+  dashCharts[n].type=t;
+  btn.closest('.cc-row').querySelectorAll('.chart-type-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  loadMainChart(mainSym,mainRange,null);
+  loadDashChart(n,null,null,null);
 }
-async function loadMainChart(sym,range,btn){
-  if(sym)mainSym=sym;if(range)mainRange=range;
-  if(btn){document.querySelectorAll('.cc-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-  const data=await api(mainSym,'history&range='+mainRange);
-  const sub=document.getElementById('ch-sub');
+async function loadDashChart(n,sym,range,btn){
+  const s=dashCharts[n];
+  if(sym)s.sym=sym;
+  if(range)s.range=range;
+  if(btn){btn.closest('.cc-row').querySelectorAll('.cc-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  const data=await api(s.sym,'history&range='+s.range);
+  const sub=document.getElementById(`ch${n}-sub`);
   if(!data?.points?.length){sub.textContent='Dati non disponibili';return;}
   const pts=data.points;
   const last=pts[pts.length-1].close,first=pts[0].close;
   const ch=((last-first)/first*100);
-  sub.textContent=`${fmt(last,last<20?4:0)} · ${mainRange}: ${ch>=0?'+':''}${fmt(ch,2)}%`;
+  sub.textContent=`${fmt(last,last<20?4:0)} · ${s.range}: ${ch>=0?'+':''}${fmt(ch,2)}%`;
   sub.style.color=ch>=0?'var(--g)':'var(--r)';
-  const container=document.getElementById('mainChart');
-  if(mainChart){mainChart.remove();mainChart=null;}
-  mainChart=buildLWChart(container,mainType,pts);
+  const container=document.getElementById(`dashChart${n}`);
+  if(s.inst){s.inst.remove();s.inst=null;}
+  s.inst=buildLWChart(container,s.type,pts);
 }
 
 /* ── MODAL CHART ── */
