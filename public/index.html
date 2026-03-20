@@ -3506,11 +3506,9 @@ async function refreshSdPrice(sym){
     sdSet('sdm-dh',d.dayHigh?cur+fmt(d.dayHigh,d.dayHigh<10?4:2):'—');
     sdSet('sdm-dl',d.dayLow?cur+fmt(d.dayLow,d.dayLow<10?4:2):'—');
     sdSet('sdm-vol',d.volume?fmtLg(d.volume):'—');
-    // Lampeggio verde/rosso per indicare aggiornamento
-    const priceEl=document.getElementById('sd-hdr-price');
-    priceEl.style.transition='color .3s';
-    priceEl.style.color=up?'var(--g)':'var(--r)';
-    setTimeout(()=>{priceEl.style.color='';},800);
+    // Pallino lampeggiante per indicare aggiornamento
+    const dot=document.getElementById('sd-refresh-dot');
+    if(dot){dot.style.background=up?'var(--g)':'var(--r)';setTimeout(()=>{dot.style.background='var(--t3)';},1200);}
   }catch(_){}
 }
 
