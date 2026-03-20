@@ -1478,6 +1478,19 @@ async function loadVIX(){
     <div class="vs-item"><div class="vs-val">${d.dayHigh?fmt(d.dayHigh,2):'—'}</div><div class="vs-lbl">Max giornaliero</div></div>
     <div class="vs-item"><div class="vs-val">${d.dayLow?fmt(d.dayLow,2):'—'}</div><div class="vs-lbl">Min giornaliero</div></div>
     <div class="vs-item"><div class="vs-val" style="font-size:11px">${v<15?'Bassa':v<25?'Normale':v<35?'Alta':'Estrema'}</div><div class="vs-lbl">Regime attuale</div></div>`;
+  // Allinea altezza delle 3 card al VIX
+  requestAnimationFrame(()=>{
+    const cards=[...document.querySelectorAll('.dash-bot .card')];
+    if(cards.length<2)return;
+    const vixH=cards[0].scrollHeight;
+    cards.forEach(c=>{
+      c.style.height=vixH+'px';
+      c.style.overflow='hidden';
+    });
+    // Indici: lista scorrevole dentro la card
+    const idxList=document.getElementById('idx-list');
+    if(idxList){idxList.style.overflowY='auto';idxList.style.maxHeight=(vixH-70)+'px';}
+  });
 }
 
 /* ── MOVERS ── */
