@@ -585,6 +585,99 @@ html.dark .auth-box{background:#1e293b}
   </div>
 </div>
 
+<!-- ═══ STOCK DETAIL OVERLAY ═══ -->
+<div id="stock-detail-overlay" class="sd-overlay">
+  <div class="sd-header">
+    <button class="sd-back" onclick="closeStockDetail()">← Indietro</button>
+    <div style="flex:1;min-width:0">
+      <div class="sd-hdr-sym" id="sd-sym">—</div>
+      <div class="sd-hdr-name" id="sd-name">—</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div class="sd-hdr-price" id="sd-hdr-price">—</div>
+      <div class="sd-hdr-chg" id="sd-hdr-chg">—</div>
+    </div>
+    <button class="star-btn" id="sd-wl-btn" onclick="sdToggleWl()" style="font-size:18px;padding:4px 8px;flex-shrink:0">★</button>
+  </div>
+  <div class="sd-body">
+    <!-- Chart + Metriche rapide -->
+    <div class="sd-top">
+      <div class="sd-section">
+        <div class="cc-row" style="margin-bottom:12px">
+          <button class="chart-type-btn active" id="sd-btn-candle" onclick="setSdType('candle',this)">Candele</button>
+          <button class="chart-type-btn" id="sd-btn-line" onclick="setSdType('line',this)">Linea</button>
+          <div style="width:1px;height:14px;background:var(--bd);margin:0 4px"></div>
+          <button class="cc-btn" onclick="loadSdChart(null,'1d',this)">1G</button>
+          <button class="cc-btn" onclick="loadSdChart(null,'5d',this)">5G</button>
+          <button class="cc-btn active" id="sd-range-1mo" onclick="loadSdChart(null,'1mo',this)">1M</button>
+          <button class="cc-btn" onclick="loadSdChart(null,'3mo',this)">3M</button>
+          <button class="cc-btn" onclick="loadSdChart(null,'1y',this)">1A</button>
+          <button class="cc-btn" onclick="loadSdChart(null,'5y',this)">5A</button>
+        </div>
+        <div id="sd-chart" style="width:100%;height:310px"></div>
+      </div>
+      <!-- Metriche rapide -->
+      <div class="sd-section">
+        <div class="sd-section-title">Dati chiave</div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl">Prezzo</div><div class="sd-m-val" id="sdm-price">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Variazione</div><div class="sd-m-val" id="sdm-chg">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Market Cap</div><div class="sd-m-val" id="sdm-cap">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Beta</div><div class="sd-m-val" id="sdm-beta">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Max 52 sett.</div><div class="sd-m-val" id="sdm-52h">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Min 52 sett.</div><div class="sd-m-val" id="sdm-52l">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Volume</div><div class="sd-m-val" id="sdm-vol">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Vol. Medio</div><div class="sd-m-val" id="sdm-avgvol">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Dipendenti</div><div class="sd-m-val" id="sdm-emp">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Raccomandazione</div><div class="sd-m-val" id="sdm-rec">—</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Sezioni fondamentali: Valutazione / Redditività / Bilancio -->
+    <div class="sd-funds">
+      <div class="sd-section">
+        <div class="sd-section-title">Valutazione</div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl">P/E Trailing</div><div class="sd-m-val" id="sdm-pe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/E Forward</div><div class="sd-m-val" id="sdm-fpe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/B</div><div class="sd-m-val" id="sdm-pb">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/S</div><div class="sd-m-val" id="sdm-ps">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EPS</div><div class="sd-m-val" id="sdm-eps">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Target Analisti</div><div class="sd-m-val" id="sdm-target">—</div></div>
+        </div>
+      </div>
+      <div class="sd-section">
+        <div class="sd-section-title">Redditività</div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl">ROE</div><div class="sd-m-val" id="sdm-roe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">ROA</div><div class="sd-m-val" id="sdm-roa">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Margine Lordo</div><div class="sd-m-val" id="sdm-gm">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Margine Netto</div><div class="sd-m-val" id="sdm-pm">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
+        </div>
+      </div>
+      <div class="sd-section">
+        <div class="sd-section-title">Bilancio &amp; Dividendo</div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl">Dividendo</div><div class="sd-m-val" id="sdm-div">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Free Cash Flow</div><div class="sd-m-val" id="sdm-fcf">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Cassa Totale</div><div class="sd-m-val" id="sdm-cash">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Debito Totale</div><div class="sd-m-val" id="sdm-debt">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Debt/Equity</div><div class="sd-m-val" id="sdm-de">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Current Ratio</div><div class="sd-m-val" id="sdm-cr">—</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- Descrizione azienda -->
+    <div class="sd-desc-card">
+      <div class="sd-section-title">Sull'azienda</div>
+      <div class="sd-desc-txt" id="sd-description">Caricamento...</div>
+      <div style="margin-top:10px" id="sd-website"></div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL GRAFICO -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
   <div class="modal-box" onclick="event.stopPropagation()">
