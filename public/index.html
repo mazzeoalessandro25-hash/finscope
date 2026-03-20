@@ -2907,24 +2907,47 @@ const ECO_EVENTS=[
   {date:'2026-06-18',label:'BCE Meeting',type:'bce',detail:'Decisione tassi BCE'},
 ];
 
-let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth(), calCache={};
 function calChangeMonth(d){
   calMonth+=d;
   if(calMonth>11){calMonth=0;calYear++;}
   if(calMonth<0){calMonth=11;calYear--;}
   renderCalendar();
 }
-function renderCalendar(){
+async function renderCalendar(){
   const el=document.getElementById('eco-calendar-content');
   const titleEl=document.getElementById('cal-month-title');
   if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
-  // Build event map: key = "YYYY-MM-DD" → array of events
-  const evMap={};
-  ECO_EVENTS.forEach(e=>{evMap[e.date]=(evMap[e.date]||[]).concat(e);});
   // Month title
   const monthName=new Date(calYear,calMonth,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
   if(titleEl)titleEl.textContent=monthName;
+  // Show spinner while loading
+  el.innerHTML='<div class="ld">Caricamento eventi...</div>';
+  // Fetch from API (with per-month cache)
+  const cacheKey=`${calYear}-${calMonth}`;
+  let events=calCache[cacheKey];
+  if(!events){
+    try{
+      const m=calMonth+1;
+      const r=await fetch(`/api/ecocal?year=${calYear}&month=${m}`);
+      const data=await r.json();
+      if(data.ok&&Array.isArray(data.events)){
+        events=data.events;
+        calCache[cacheKey]=events;
+      } else {
+        events=[];
+        el.innerHTML=`<div class="ld" style="color:var(--r)">Errore: ${data.error||'risposta non valida'}</div>`;
+        return;
+      }
+    }catch(err){
+      el.innerHTML=`<div class="ld" style="color:var(--r)">Errore connessione API</div>`;
+      return;
+    }
+  }
+  // Build event map: key = "YYYY-MM-DD" → array of events
+  const evMap={};
+  events.forEach(e=>{evMap[e.date]=(evMap[e.date]||[]).concat(e);});
   // Calendar grid
   const firstDay=new Date(calYear,calMonth,1);
   const lastDay=new Date(calYear,calMonth+1,0);
@@ -2932,33 +2955,32 @@ function renderCalendar(){
   let startDow=firstDay.getDay()-1; if(startDow<0)startDow=6;
   const DOW_LABELS=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
   let html='<div class="cal-grid">';
-  // Day-of-week headers
   DOW_LABELS.forEach(d=>{html+=`<div class="cal-dow">${d}</div>`;});
-  // Empty cells before first day
-  for(let i=0;i<startDow;i++){
-    html+=`<div class="cal-day other-month"></div>`;
-  }
-  // Days of month
+  for(let i=0;i<startDow;i++) html+=`<div class="cal-day other-month"></div>`;
   for(let day=1;day<=lastDay.getDate();day++){
     const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const events=evMap[dateStr]||[];
+    const evs=evMap[dateStr]||[];
     const isToday=new Date(calYear,calMonth,day).getTime()===today.getTime();
-    const hasEv=events.length>0;
+    const hasEv=evs.length>0;
     html+=`<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}">`;
     html+=`<div class="cal-day-num">${day}</div>`;
     if(hasEv){
-      html+=`<div class="cal-dots">${events.map(e=>`<div class="cal-dot ${e.type}"></div>`).join('')}</div>`;
-      html+=`<div class="cal-event-labels">${events.map(e=>`<span class="cal-event-lbl">${e.label}</span>`).join('')}</div>`;
+      // Show max 3 dots
+      html+=`<div class="cal-dots">${evs.slice(0,3).map(e=>`<div class="cal-dot ${e.type}"></div>`).join('')}${evs.length>3?`<span style="font-size:8px;color:var(--t3)">+${evs.length-3}</span>`:''}</div>`;
+      html+=`<div class="cal-event-labels">${evs.slice(0,2).map(e=>`<span class="cal-event-lbl">${e.label}</span>`).join('')}</div>`;
       // Popup
       html+=`<div class="cal-popup"><div class="cal-popup-title">${dateStr.split('-').reverse().join('/')}</div>`;
-      events.forEach(e=>{
-        html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot ${e.type}"></div><div class="cal-popup-text"><strong>${e.label}</strong><br>${e.detail}</div></div>`;
+      evs.forEach(e=>{
+        const vals=[];
+        if(e.actual!=null)vals.push(`Eff: <b>${e.actual}${e.unit}</b>`);
+        if(e.estimate!=null)vals.push(`Stima: ${e.estimate}${e.unit}`);
+        if(e.prev!=null)vals.push(`Prec: ${e.prev}${e.unit}`);
+        html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot ${e.type}"></div><div class="cal-popup-text"><strong>${e.label}</strong>${vals.length?'<br><span style="opacity:.8">'+vals.join(' · ')+'</span>':''}</div></div>`;
       });
       html+=`</div>`;
     }
     html+=`</div>`;
   }
-  // Fill remaining cells
   const totalCells=startDow+lastDay.getDate();
   const remainder=totalCells%7;
   if(remainder>0){for(let i=0;i<7-remainder;i++)html+=`<div class="cal-day other-month"></div>`;}
