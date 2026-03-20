@@ -3512,6 +3512,13 @@ async function loadSdChart(sym,range,btn){
   sdChartInst=buildLWChart(container,sdType,pts);
 }
 
+function timeAgo(ts){
+  const s=Math.floor((Date.now()/1000)-ts);
+  if(s<60)return 'ora';
+  if(s<3600)return Math.floor(s/60)+'m fa';
+  if(s<86400)return Math.floor(s/3600)+'h fa';
+  return Math.floor(s/86400)+'g fa';
+}
 function sdSet(id,val){const el=document.getElementById(id);if(el)el.textContent=val??'—';}
 function sdSetChg(id,c){
   const el=document.getElementById(id);if(!el)return;
