@@ -33,11 +33,12 @@ export default async function handler(req, res) {
     const meta = data?.chart?.result?.[0]?.meta;
     if (!meta) return res.status(404).json({ error: 'no data' });
     return res.json({
-      price:   meta.regularMarketPrice ?? null,
-      prev:    meta.previousClose ?? meta.chartPreviousClose ?? null,
-      dayHigh: meta.regularMarketDayHigh ?? null,
-      dayLow:  meta.regularMarketDayLow ?? null,
-      volume:  meta.regularMarketVolume ?? null,
+      price:    meta.regularMarketPrice ?? null,
+      prev:     meta.previousClose ?? meta.chartPreviousClose ?? null,
+      currency: meta.currency || 'USD',
+      dayHigh:  meta.regularMarketDayHigh ?? null,
+      dayLow:   meta.regularMarketDayLow ?? null,
+      volume:   meta.regularMarketVolume ?? null,
     });
   }
 
