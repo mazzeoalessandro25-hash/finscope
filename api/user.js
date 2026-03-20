@@ -48,15 +48,17 @@ export default async function handler(req, res) {
 
   // ── LOAD ALL USER DATA ──
   if (req.method === 'GET' && type === 'all') {
-    const [watchlist, portfolio, prefs] = await Promise.all([
+    const [watchlist, portfolio, prefs, alerts] = await Promise.all([
       kv('GET', `${uid}:watchlist`),
       kv('GET', `${uid}:portfolio`),
       kv('GET', `${uid}:prefs`),
+      kv('GET', `${uid}:alerts`),
     ]);
     return res.json({
       watchlist: watchlist || [],
       portfolio: portfolio || [],
-      prefs: prefs || {}
+      prefs: prefs || {},
+      alerts: alerts || []
     });
   }
 
