@@ -16,10 +16,10 @@ async function kv(method, key, value) {
     return d.result ? JSON.parse(d.result) : null;
   }
   if (method === 'SET') {
-    await fetch(`${base}/set/${encodeURIComponent(key)}`, {
+    await fetch(base, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(JSON.stringify(value))
+      body: JSON.stringify(['SET', key, JSON.stringify(value)])
     });
     return true;
   }
