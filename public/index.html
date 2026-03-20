@@ -1341,7 +1341,7 @@ async function loadVIX(){
   document.getElementById('vix-n').style.left=pct+'%';
   let label,bg,col;
   if(v<15){label='Mercato sereno — investitori poco preoccupati';bg='var(--g2)';col='#047857';}
-  else if(v<25){label='Volatilità nella norma — mercato bilanciato';bg='var(--b3)';col='var(--b)';}
+  else if(v<25){label='Volatilità nella norma — mercato bilanciato';bg='#FEF9C3';col='#CA8A04';}
   else if(v<35){label='Alta volatilità — attenzione alle posizioni aperte';bg='var(--o2)';col='#92400E';}
   else{label='Paura estrema — storicamente zona di possibile rimbalzo';bg='var(--r2)';col='#B91C1C';}
   document.getElementById('vix-d').textContent=label;
