@@ -337,12 +337,13 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
       </p>
     </div>
 
-    <!-- GIÀ LOGGATO -->
-    <div class="auth-card already-logged" id="logged-card" style="display:none">
-      <div style="font-size:36px;margin-bottom:14px">👋</div>
-      <p id="logged-msg" style="color:rgba(255,255,255,.85);font-size:15px;margin-bottom:20px">Bentornato!</p>
-      <a href="./index.html" class="auth-submit" style="display:block;text-decoration:none;text-align:center">Apri la Dashboard →</a>
-      <button onclick="logout()" style="background:none;border:none;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer;margin-top:14px;width:100%;font-family:var(--ff)">Esci dall'account</button>
+    <!-- GIÀ LOGGATO (banner compatto sopra il form) -->
+    <div id="logged-card" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 16px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <span id="logged-msg" style="color:rgba(255,255,255,.9);font-size:13px;font-weight:600;font-family:var(--ff)">Bentornato!</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <a href="./index.html" style="font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.2);border-radius:7px;padding:5px 12px;text-decoration:none;font-family:var(--ff)">Apri Dashboard →</a>
+        <button onclick="logout()" style="background:none;border:none;color:rgba(255,255,255,.45);font-size:11px;cursor:pointer;font-family:var(--ff);padding:4px">Esci</button>
+      </div>
     </div>
   </div>
 </div>
