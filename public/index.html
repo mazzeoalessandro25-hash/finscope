@@ -3486,6 +3486,31 @@ function closeStockDetail(){
   sdSym='';
 }
 
+async function refreshSdPrice(sym){
+  try{
+    const r=await fetch(`/api/stockdetail?symbol=${encodeURIComponent(sym)}&priceonly=1`);
+    if(!r.ok||sdSym!==sym)return;
+    const d=await r.json();
+    if(d.error)return;
+    const cur=d.currency==='EUR'?'€':'$';
+    const c=chgPct(d.price,d.prev);
+    const up=c==null||c>=0;
+    document.getElementById('sd-hdr-price').textContent=cur+fmt(d.price,d.price<10?4:2);
+    const chgEl=document.getElementById('sd-hdr-chg');
+    chgEl.textContent=chgStr(c);chgEl.style.color=up?'var(--g)':'var(--r)';
+    sdSet('sdm-price',cur+fmt(d.price,d.price<10?4:2));
+    sdSetChg('sdm-chg',c);
+    sdSet('sdm-dh',d.dayHigh?cur+fmt(d.dayHigh,d.dayHigh<10?4:2):'—');
+    sdSet('sdm-dl',d.dayLow?cur+fmt(d.dayLow,d.dayLow<10?4:2):'—');
+    sdSet('sdm-vol',d.volume?fmtLg(d.volume):'—');
+    // Lampeggio verde/rosso per indicare aggiornamento
+    const priceEl=document.getElementById('sd-hdr-price');
+    priceEl.style.transition='color .3s';
+    priceEl.style.color=up?'var(--g)':'var(--r)';
+    setTimeout(()=>{priceEl.style.color='';},800);
+  }catch(_){}
+}
+
 function sdToggleWl(){
   const i=watchlist.indexOf(sdSym);
   if(i===-1)watchlist.push(sdSym);else watchlist.splice(i,1);
