@@ -748,7 +748,6 @@ async function submitAuth(){
 
 function logout(){
   localStorage.removeItem(TOKEN_KEY);localStorage.removeItem(USER_KEY);
-  document.getElementById('auth-card').style.display='block';
   document.getElementById('logged-card').style.display='none';
 }
 
