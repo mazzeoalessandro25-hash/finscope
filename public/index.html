@@ -755,9 +755,19 @@ html.dark .auth-box{background:#1e293b}
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Calendario Economico</div><div class="sdiv-l"></div></div>
   <div class="card" id="eco-calendar-card">
     <div class="ch">
-      <div><div class="ct">Prossimi eventi macro</div><div class="cs">Fed · BCE · CPI · PIL · NFP · prossimi 3 mesi</div></div>
+      <div><div class="ct">Calendario Macro</div><div class="cs">Fed · BCE · CPI · PIL · NFP</div></div>
     </div>
-    <div id="eco-calendar-content" class="eco-grid"><div class="ld">Caricamento...</div></div>
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calChangeMonth(-1)">&#8592;</button>
+      <div class="cal-month-title" id="cal-month-title">—</div>
+      <button class="cal-nav-btn" onclick="calChangeMonth(1)">&#8594;</button>
+    </div>
+    <div id="eco-calendar-content"><div class="ld">Caricamento...</div></div>
+    <div class="cal-legend">
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-dot fed"></div>Fed</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-dot bce"></div>BCE</div>
+      <div class="cal-legend-item"><div class="cal-legend-dot cal-dot macro"></div>Macro</div>
+    </div>
   </div>
 </div>
 
