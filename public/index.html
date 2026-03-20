@@ -815,6 +815,7 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 const API='/api/quote';
 
 const STOCKS=[
+  // ── USA ──
   {s:'AAPL',n:'Apple',sec:'Technology',t:'growth',mkt:'US',score:82},
   {s:'NVDA',n:'NVIDIA',sec:'Technology',t:'growth',mkt:'US',score:91},
   {s:'MSFT',n:'Microsoft',sec:'Technology',t:'growth',mkt:'US',score:86},
@@ -829,6 +830,14 @@ const STOCKS=[
   {s:'XOM',n:'ExxonMobil',sec:'Energy',t:'dividend',mkt:'US',score:73},
   {s:'KO',n:'Coca-Cola',sec:'Consumer Defensive',t:'dividend',mkt:'US',score:74},
   {s:'WMT',n:'Walmart',sec:'Consumer Defensive',t:'dividend',mkt:'US',score:76},
+  {s:'V',n:'Visa',sec:'Financial Services',t:'growth',mkt:'US',score:83},
+  {s:'MA',n:'Mastercard',sec:'Financial Services',t:'growth',mkt:'US',score:84},
+  {s:'NFLX',n:'Netflix',sec:'Communication Services',t:'growth',mkt:'US',score:75},
+  {s:'AMD',n:'AMD',sec:'Technology',t:'growth',mkt:'US',score:79},
+  {s:'COST',n:'Costco',sec:'Consumer Defensive',t:'dividend',mkt:'US',score:78},
+  {s:'PFE',n:'Pfizer',sec:'Healthcare',t:'dividend',mkt:'US',score:65},
+  {s:'DIS',n:'Walt Disney',sec:'Communication Services',t:'growth',mkt:'US',score:68},
+  // ── ITALIA ──
   {s:'ENI.MI',n:'Eni',sec:'Energy',t:'dividend',mkt:'IT',score:74},
   {s:'UCG.MI',n:'UniCredit',sec:'Financial Services',t:'value',mkt:'IT',score:79},
   {s:'ISP.MI',n:'Intesa Sanpaolo',sec:'Financial Services',t:'dividend',mkt:'IT',score:72},
@@ -837,12 +846,21 @@ const STOCKS=[
   {s:'LDO.MI',n:'Leonardo',sec:'Industrials',t:'value',mkt:'IT',score:75},
   {s:'RACE.MI',n:'Ferrari',sec:'Consumer Cyclical',t:'growth',mkt:'IT',score:85},
   {s:'G.MI',n:'Generali',sec:'Financial Services',t:'dividend',mkt:'IT',score:73},
+  {s:'BAMI.MI',n:'Banco BPM',sec:'Financial Services',t:'dividend',mkt:'IT',score:70},
+  {s:'MB.MI',n:'Mediobanca',sec:'Financial Services',t:'value',mkt:'IT',score:72},
+  {s:'TRN.MI',n:'Terna',sec:'Utilities',t:'dividend',mkt:'IT',score:74},
+  {s:'PRY.MI',n:'Prysmian',sec:'Industrials',t:'growth',mkt:'IT',score:75},
+  // ── EUROPA ──
   {s:'ASML',n:'ASML',sec:'Technology',t:'growth',mkt:'EU',score:88},
   {s:'SAP',n:'SAP',sec:'Technology',t:'growth',mkt:'EU',score:79},
   {s:'LVMH.PA',n:'LVMH',sec:'Consumer Cyclical',t:'growth',mkt:'EU',score:82},
   {s:'AIR.PA',n:'Airbus',sec:'Industrials',t:'growth',mkt:'EU',score:77},
   {s:'SIE.DE',n:'Siemens',sec:'Industrials',t:'dividend',mkt:'EU',score:76},
   {s:'NESN.SW',n:'Nestlé',sec:'Consumer Defensive',t:'dividend',mkt:'EU',score:75},
+  {s:'NVO',n:'Novo Nordisk',sec:'Healthcare',t:'growth',mkt:'EU',score:85},
+  {s:'OR.PA',n:'L\'Oréal',sec:'Consumer Defensive',t:'growth',mkt:'EU',score:80},
+  {s:'ALV.DE',n:'Allianz',sec:'Financial Services',t:'dividend',mkt:'EU',score:76},
+  {s:'BAS.DE',n:'BASF',sec:'Industrials',t:'dividend',mkt:'EU',score:66},
 ];
 
 /* Tutti gli indici unificati */
