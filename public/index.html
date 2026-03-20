@@ -617,13 +617,13 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 <!-- ═══ SCREENER ═══ -->
 <div class="page" id="page-screener">
   <div class="pg-title">Stock Screener</div>
-  <div class="pg-sub">Oltre 30 titoli con prezzi live · Clicca un titolo per l'analisi fondamentale</div>
+  <div class="pg-sub">Oltre 40 titoli con prezzi live · Score dinamico da dati reali · Clicca per l'analisi fondamentale</div>
   <div class="sc-f">
     <select class="fsel" id="fs" onchange="applyF()">
       <option value="">Tutti i settori</option>
       <option>Technology</option><option>Energy</option><option>Financial Services</option>
       <option>Healthcare</option><option>Industrials</option><option>Consumer Cyclical</option>
-      <option>Consumer Defensive</option><option>Utilities</option>
+      <option>Consumer Defensive</option><option>Utilities</option><option>Communication Services</option>
     </select>
     <select class="fsel" id="ft" onchange="applyF()">
       <option value="">Tutti i tipi</option>
@@ -633,14 +633,40 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
       <option value="">Tutti i mercati</option>
       <option value="US">🇺🇸 USA</option><option value="IT">🇮🇹 Italia</option><option value="EU">🇪🇺 Europa</option>
     </select>
+    <select class="fsel" id="fcap" onchange="applyF()">
+      <option value="">Tutte le cap</option>
+      <option value="large">Large Cap (&gt;10B)</option>
+      <option value="mid">Mid Cap (2–10B)</option>
+      <option value="small">Small Cap (&lt;2B)</option>
+    </select>
+    <select class="fsel" id="fdiv" onchange="applyF()">
+      <option value="">Tutti</option>
+      <option value="yes">Con dividendo</option>
+      <option value="no">Senza dividendo</option>
+    </select>
     <input class="finp" id="fq" type="text" placeholder="Cerca ticker o nome..." oninput="applyF()"/>
     <button class="sc-btn" onclick="loadScreener()">↻ Aggiorna</button>
     <span class="sc-cnt" id="sc-cnt">—</span>
   </div>
+  <div class="sc-add-row">
+    <input class="finp" id="custom-ticker-inp" type="text" placeholder="Aggiungi qualsiasi ticker (es. TSMC, BRK-B, SHOP, SIE.DE...)" maxlength="12" onkeydown="if(event.key==='Enter')addCustomTicker()"/>
+    <button class="sc-btn" id="custom-ticker-btn" onclick="addCustomTicker()">+ Aggiungi</button>
+    <span id="custom-ticker-msg" style="font-size:12px;font-family:var(--fm)"></span>
+  </div>
   <div class="tbl-wrap">
     <table class="tbl">
-      <thead><tr><th title="Seleziona per confronto">⚖</th><th></th><th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th><th>MKT</th><th>SETTORE</th><th>TIPO</th><th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th><th>5 GIORNI</th><th onclick="sortTbl('score')">SCORE ↕</th></tr></thead>
-      <tbody id="sc-body"><tr><td colspan="9" class="ld">Caricamento...</td></tr></tbody>
+      <thead><tr>
+        <th title="Seleziona per confronto">⚖</th><th></th>
+        <th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th>
+        <th>MKT</th><th>SETTORE</th><th>TIPO</th>
+        <th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th>
+        <th>5 GG</th>
+        <th onclick="sortTbl('pe')" title="Price/Earnings — ordinabile">P/E ↕</th>
+        <th onclick="sortTbl('cap')" title="Market Cap — ordinabile">CAP ↕</th>
+        <th onclick="sortTbl('div')" title="Dividend Yield — ordinabile">DIV% ↕</th>
+        <th onclick="sortTbl('score')">SCORE ↕</th>
+      </tr></thead>
+      <tbody id="sc-body"><tr><td colspan="14" class="ld">Caricamento...</td></tr></tbody>
     </table>
   </div>
 </div>
