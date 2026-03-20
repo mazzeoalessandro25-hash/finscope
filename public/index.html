@@ -1243,47 +1243,101 @@ async function loadCrypto(){
 /* ── SCREENER ── */
 let scSparkData={};
 async function loadScreener(){
-  document.getElementById('sc-body').innerHTML='<tr><td colspan="10" class="ld">Caricamento prezzi reali...</td></tr>';
-  await Promise.all(STOCKS.map(async s=>{
+  const allS=STOCKS.concat(customStocks);
+  document.getElementById('sc-body').innerHTML='<tr><td colspan="14" class="ld">Caricamento prezzi reali...</td></tr>';
+  await Promise.all(allS.map(async s=>{
     const [d,spark]=await Promise.all([api(s.s),fetchSparkData(s.s)]);
     if(d)scData[s.s]=d;
     if(spark.length)scSparkData[s.s]=spark;
   }));
   applyF();
+  loadSummariesBg();
+}
+async function loadSummariesBg(){
+  if(scSummaryLoading)return;
+  scSummaryLoading=true;
+  const allS=STOCKS.concat(customStocks);
+  for(let i=0;i<allS.length;i+=5){
+    await Promise.all(allS.slice(i,i+5).map(async s=>{
+      const sd=await api(s.s,'summary');
+      if(sd)scSummary[s.s]=sd;
+    }));
+    applyF();
+  }
+  scSummaryLoading=false;
 }
 function applyF(){
   const sq=(document.getElementById('fq').value||'').toUpperCase();
   const ss=document.getElementById('fs').value,st=document.getElementById('ft').value,sm=document.getElementById('fm2').value;
-  let list=STOCKS.filter(s=>{
+  const fcap=document.getElementById('fcap').value,fdiv=document.getElementById('fdiv').value;
+  const allS=customStocks.concat(STOCKS);
+  let list=allS.filter(s=>{
     if(sq&&!s.s.includes(sq)&&!s.n.toUpperCase().includes(sq))return false;
-    if(ss&&s.sec!==ss)return false;if(st&&s.t!==st)return false;if(sm&&s.mkt!==sm)return false;return true;
+    if(ss&&s.sec!==ss)return false;
+    if(st&&s.t!==st)return false;
+    if(sm&&s.mkt!==sm)return false;
+    if(fcap&&scSummary[s.s]){
+      const cap=scSummary[s.s].marketCap;
+      if(cap){if(fcap==='large'&&cap<10e9)return false;if(fcap==='mid'&&(cap<2e9||cap>=10e9))return false;if(fcap==='small'&&cap>=2e9)return false;}
+    }
+    if(fdiv&&scSummary[s.s]){
+      const dy=scSummary[s.s].divYield||0;
+      if(fdiv==='yes'&&dy<=0)return false;
+      if(fdiv==='no'&&dy>0)return false;
+    }
+    return true;
   });
   list=[...list].sort((a,b)=>{
-    let av=a[sortKey]||0,bv=b[sortKey]||0;
+    let av=0,bv=0;
+    if(sortKey==='s'){return a.s>b.s?sortDir:-sortDir;}
+    if(sortKey==='n'){return a.n>b.n?sortDir:-sortDir;}
     if(sortKey==='price'){av=scData[a.s]?.price||0;bv=scData[b.s]?.price||0;}
-    if(sortKey==='chg'){const da=scData[a.s],db=scData[b.s];av=da?chgPct(da.price,da.prev)||0:0;bv=db?chgPct(db.price,db.prev)||0:0;}
+    else if(sortKey==='chg'){const da=scData[a.s],db=scData[b.s];av=da?chgPct(da.price,da.prev)||0:0;bv=db?chgPct(db.price,db.prev)||0:0;}
+    else if(sortKey==='pe'){av=scSummary[a.s]?.pe>0?scSummary[a.s].pe:0;bv=scSummary[b.s]?.pe>0?scSummary[b.s].pe:0;}
+    else if(sortKey==='cap'){av=scSummary[a.s]?.marketCap||0;bv=scSummary[b.s]?.marketCap||0;}
+    else if(sortKey==='div'){av=scSummary[a.s]?.divYield||0;bv=scSummary[b.s]?.divYield||0;}
+    else if(sortKey==='score'){
+      av=scSummary[a.s]?calcFinScopeScore(scSummary[a.s],scData[a.s]).total||0:a.score||0;
+      bv=scSummary[b.s]?calcFinScopeScore(scSummary[b.s],scData[b.s]).total||0:b.score||0;
+    } else {av=a[sortKey]||0;bv=b[sortKey]||0;}
     return(av>bv?1:-1)*sortDir;
   });
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
-  if(!list.length){body.innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
+  if(!list.length){body.innerHTML='<tr><td colspan="14" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
   const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺'};
   body.innerHTML=list.map(s=>{
     const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
     const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
-    return`<tr onclick="openFA('${s.s}')">
+    const sd=scSummary[s.s];
+    const peCell=sd?(sd.pe&&sd.pe>0?fmt(sd.pe,1):'—'):'<span class="sc-load">···</span>';
+    const capCell=sd?fmtLg(sd.marketCap):'<span class="sc-load">···</span>';
+    const divCell=sd?(sd.divYield&&sd.divYield>0?fmt(sd.divYield*100,1)+'%':'—'):'<span class="sc-load">···</span>';
+    let scoreCell;
+    if(sd){
+      const fss=calcFinScopeScore(sd,d);const sc=fss.total;const col=getScoreColor(sc);
+      scoreCell=sc!=null?`<div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round(sc*.44)}px;background:${col}"></div></div><span style="font-size:11px;font-weight:700;color:${col}">${sc}</span></div>`:'—';
+    } else {
+      scoreCell=`<div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round((s.score||50)*.44)}px"></div></div><span style="font-size:11px;color:var(--t3)">${s.score||'···'}</span></div>`;
+    }
+    const price=d?(d.currency==='EUR'?'€':'$')+fmt(d.price,d.price<10?4:2):'—';
+    return`<tr onclick="openFA('${s.s}')" ${s.custom?'class="sc-custom-row"':''}>
       <td onclick="event.stopPropagation()"><input type="checkbox" class="cmp-cb" ${cmpList.includes(s.s)?'checked':''} onchange="toggleCmp('${s.s}',this)"/></td>
       <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${watchlist.includes(s.s)?'active':''}">★</button></td>
-      <td style="font-weight:600">${s.s}</td><td style="color:var(--t2)">${s.n}</td>
-      <td>${flags[s.mkt]||''}</td><td style="color:var(--t3);font-size:11px">${s.sec}</td>
+      <td style="font-weight:700">${s.s}${s.custom?'<span class="sc-custom-badge">+</span>':''}</td>
+      <td style="color:var(--t2);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.n}</td>
+      <td>${flags[s.mkt]||'🌐'}</td>
+      <td style="color:var(--t3);font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.sec}</td>
       <td><span class="tag ${s.t}">${s.t}</span></td>
-      <td>${d?'$'+fmt(d.price,2):'—'}</td>
+      <td style="font-weight:600">${price}</td>
       <td class="${up?'up':'down'}">${chgStr(c)}</td>
       <td><svg id="${spId}" width="72" height="30"></svg></td>
-      <td><div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round(s.score*.44)}px"></div></div><span style="font-size:11px;color:var(--t2)">${s.score}</span></div></td>
+      <td style="color:var(--t2)">${peCell}</td>
+      <td style="color:var(--t2)">${capCell}</td>
+      <td class="${sd&&sd.divYield>0?'up':''}">${divCell}</td>
+      <td>${scoreCell}</td>
     </tr>`;
   }).join('');
-  // Disegna sparkline dopo il render del DOM
   requestAnimationFrame(()=>{
     list.forEach(s=>{
       const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
@@ -1302,6 +1356,34 @@ function openFA(sym){
   const btn=Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.textContent==='Simulatore');
   showPage('simulatore',btn);
   document.getElementById('fat').value=sym;runFA();
+}
+async function addCustomTicker(){
+  const inp=document.getElementById('custom-ticker-inp');
+  const msg=document.getElementById('custom-ticker-msg');
+  const btn=document.getElementById('custom-ticker-btn');
+  const sym=inp.value.trim().toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');
+  if(!sym)return;
+  if(STOCKS.some(s=>s.s===sym)||customStocks.some(s=>s.s===sym)){
+    msg.style.color='var(--o)';msg.textContent=sym+' già presente nella lista';
+    inp.value='';setTimeout(()=>msg.textContent='',2500);return;
+  }
+  btn.textContent='···';btn.disabled=true;msg.textContent='';
+  const d=await api(sym);
+  if(!d||!d.price){
+    msg.style.color='var(--r)';msg.textContent='Ticker "'+sym+'" non trovato — verifica il simbolo';
+    btn.textContent='+ Aggiungi';btn.disabled=false;
+    setTimeout(()=>msg.textContent='',3500);return;
+  }
+  const mkt=sym.endsWith('.MI')?'IT':sym.includes('.PA')||sym.includes('.DE')||sym.includes('.AS')||sym.includes('.SW')||sym.includes('.CO')?'EU':'US';
+  customStocks.unshift({s:sym,n:d.name||sym,sec:'—',t:'growth',mkt,custom:true});
+  scData[sym]=d;
+  msg.style.color='var(--g)';msg.textContent=sym+' aggiunto con successo';
+  setTimeout(()=>msg.textContent='',2500);
+  btn.textContent='+ Aggiungi';btn.disabled=false;
+  inp.value='';
+  applyF();
+  fetchSparkData(sym).then(spark=>{if(spark.length){scSparkData[sym]=spark;applyF();}});
+  api(sym,'summary').then(sd=>{if(sd){scSummary[sym]=sd;applyF();}});
 }
 
 /* ── SIMULATORE ── */
