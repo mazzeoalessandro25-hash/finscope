@@ -3531,95 +3531,129 @@ function sdSetPctChg(id,v){
 }
 
 async function loadSdData(sym){
-  // Fetch quote data (basic price info)
-  const d=scData[sym]||await api(sym);
-  if(!d)return;
-  const cur=d.currency==='EUR'?'€':'$';
-  const c=chgPct(d.price,d.prev);
-  const up=c==null||c>=0;
-  // Header
-  document.getElementById('sd-sym').textContent=sym;
-  document.getElementById('sd-name').textContent=d.name||sym;
-  const priceEl=document.getElementById('sd-hdr-price');
-  priceEl.textContent=cur+fmt(d.price,d.price<10?4:2);
-  const chgEl=document.getElementById('sd-hdr-chg');
-  chgEl.textContent=chgStr(c);chgEl.style.color=up?'var(--g)':'var(--r)';
-  // Dati chiave da quote
-  sdSet('sdm-price',cur+fmt(d.price,d.price<10?4:2));
-  sdSetChg('sdm-chg',c);
-  sdSet('sdm-vol',d.volume?fmtLg(d.volume):'—');
-  // Mostra indicatore caricamento per i fondamentali
-  document.getElementById('sd-description').textContent='Caricamento dati fondamentali...';
-  // Recupera summary: prova cache, poi polling breve, poi fetch diretto con retry
-  let sd=scSummary[sym];
-  if(!sd){
-    // Aspetta fino a 4s che il loader in background la popoli
-    for(let i=0;i<8&&!sd;i++){
-      await new Promise(r=>setTimeout(r,500));
-      sd=scSummary[sym];
-    }
-  }
-  if(!sd){
-    // Fetch diretto con 3 tentativi (il loader bg ha avuto la sua pausa)
-    for(let attempt=0;attempt<3&&!sd;attempt++){
-      sd=await api(sym,'summary');
-      if(!sd&&attempt<2)await new Promise(r=>setTimeout(r,1000*(attempt+1)));
-    }
-    if(sd)scSummary[sym]=sd;
+  // Usa endpoint dedicato /api/stockdetail — separato dal loader screener, niente concorrenza
+  let d=null;
+  for(let attempt=0;attempt<3&&!d;attempt++){
+    try{
+      const r=await fetch(`/api/stockdetail?symbol=${encodeURIComponent(sym)}`);
+      if(r.ok)d=await r.json();
+    }catch(_){}
+    if(!d&&attempt<2)await new Promise(r=>setTimeout(r,1200*(attempt+1)));
   }
   // Se il simbolo è cambiato mentre aspettavamo, ignora
   if(sdSym!==sym)return;
-  if(!sd){document.getElementById('sd-description').textContent='Dati fondamentali non disponibili al momento.';return;}
-  // Salva in cache per usi futuri
-  scSummary[sym]=sd;
-  // Market / Size
-  sdSet('sdm-cap',fmtLg(sd.marketCap));
-  sdSet('sdm-beta',sd.beta!=null?fmt(sd.beta,2):'—');
-  sdSet('sdm-52h',sd.week52High?cur+fmt(sd.week52High,2):'—');
-  sdSet('sdm-52l',sd.week52Low?cur+fmt(sd.week52Low,2):'—');
-  sdSet('sdm-avgvol',sd.avgVolume?fmtLg(sd.avgVolume):'—');
-  sdSet('sdm-emp',sd.employees?sd.employees.toLocaleString('it-IT')+'  pers.':'—');
-  // Raccomandazione
+  if(!d||d.error){
+    document.getElementById('sd-description').textContent='Dati non disponibili al momento.';
+    document.getElementById('sd-news-list').innerHTML='';
+    return;
+  }
+  // Aggiorna anche cache screener
+  scData[sym]=d;
+  scSummary[sym]=d;
+
+  const cur=d.currency==='EUR'?'€':'$';
+  const c=chgPct(d.price,d.prev);
+  const up=c==null||c>=0;
+
+  // Header
+  document.getElementById('sd-sym').textContent=sym;
+  document.getElementById('sd-name').textContent=d.name||sym;
+  document.getElementById('sd-hdr-price').textContent=cur+fmt(d.price,d.price<10?4:2);
+  const chgEl=document.getElementById('sd-hdr-chg');
+  chgEl.textContent=chgStr(c);chgEl.style.color=up?'var(--g)':'var(--r)';
+
+  // Settore / Industria
+  if(d.sector||d.industry){
+    const bar=document.getElementById('sd-sector-bar');
+    bar.style.display='block';
+    document.getElementById('sd-sector-txt').textContent=[d.sector,d.industry].filter(Boolean).join(' · ');
+  }
+
+  // Dati chiave
+  sdSet('sdm-price',cur+fmt(d.price,d.price<10?4:2));
+  sdSetChg('sdm-chg',c);
+  sdSet('sdm-dh',d.dayHigh?cur+fmt(d.dayHigh,d.dayHigh<10?4:2):'—');
+  sdSet('sdm-dl',d.dayLow?cur+fmt(d.dayLow,d.dayLow<10?4:2):'—');
+  sdSet('sdm-52h',d.week52High?cur+fmt(d.week52High,2):'—');
+  sdSet('sdm-52l',d.week52Low?cur+fmt(d.week52Low,2):'—');
+  sdSet('sdm-vol',d.volume?fmtLg(d.volume):'—');
+  sdSet('sdm-avgvol',d.avgVolume?fmtLg(d.avgVolume):'—');
+  sdSet('sdm-cap',fmtLg(d.marketCap));
+  sdSet('sdm-beta',d.beta!=null?fmt(d.beta,2):'—');
+  sdSet('sdm-emp',d.employees?d.employees.toLocaleString('it-IT')+' pers.':'—');
+  sdSet('sdm-short',d.shortRatio!=null?fmt(d.shortRatio,1):'—');
+
+  // Raccomandazione analisti
   const recEl=document.getElementById('sdm-rec');
-  if(sd.rec){
+  if(d.rec){
     const recMap={strongbuy:'Forte Acquisto',buy:'Acquisto',hold:'Neutrale',sell:'Vendita',strongsell:'Forte Vendita'};
-    const key=sd.rec.replace('-','');
-    recEl.innerHTML=`<span class="sd-rec-badge ${key}">${recMap[key]||sd.rec}</span>`;
+    const key=d.rec.replace('-','');
+    recEl.innerHTML=`<span class="sd-rec-badge ${key}">${recMap[key]||d.rec}</span>`;
   } else recEl.textContent='—';
-  // Valutazione
-  sdSet('sdm-pe',sd.pe!=null&&sd.pe>0?fmt(sd.pe,1):'—');
-  sdSet('sdm-fpe',sd.forwardPE!=null&&sd.forwardPE>0?fmt(sd.forwardPE,1):'—');
-  sdSet('sdm-pb',sd.pb!=null?fmt(sd.pb,2):'—');
-  sdSet('sdm-ps',sd.ps!=null?fmt(sd.ps,2):'—');
-  sdSet('sdm-eps',sd.eps!=null?cur+fmt(sd.eps,2):'—');
-  if(sd.targetPrice&&d.price){
-    const upside=((sd.targetPrice-d.price)/d.price*100);
+  if(d.targetPrice&&d.price){
+    const upside=((d.targetPrice-d.price)/d.price*100);
     const tel=document.getElementById('sdm-target');
-    tel.textContent=cur+fmt(sd.targetPrice,2)+' ('+( upside>=0?'+':'')+fmt(upside,1)+'%)';
+    tel.textContent=cur+fmt(d.targetPrice,2)+' ('+(upside>=0?'+':'')+fmt(upside,1)+'%)';
     tel.className='sd-m-val '+(upside>=0?'up':'down');
   }
+  if(d.targetLow!=null&&d.targetHigh!=null){
+    sdSet('sdm-target-range',cur+fmt(d.targetLow,2)+' – '+cur+fmt(d.targetHigh,2));
+  }
+  sdSet('sdm-nanalysts',d.numAnalysts!=null?d.numAnalysts+' analisti':'—');
+
+  // Valutazione
+  sdSet('sdm-pe',d.pe!=null&&d.pe>0?fmt(d.pe,1):'—');
+  sdSet('sdm-fpe',d.forwardPE!=null&&d.forwardPE>0?fmt(d.forwardPE,1):'—');
+  sdSet('sdm-pb',d.pb!=null?fmt(d.pb,2):'—');
+  sdSet('sdm-ps',d.ps!=null?fmt(d.ps,2):'—');
+  sdSet('sdm-eps',d.eps!=null?cur+fmt(d.eps,2):'—');
+  sdSet('sdm-feps',d.forwardEps!=null?cur+fmt(d.forwardEps,2):'—');
+
   // Redditività
-  sdSetPct('sdm-roe',sd.roe,sd.roe>0);
-  sdSetPct('sdm-roa',sd.roa,sd.roa>0);
-  sdSetPct('sdm-gm',sd.grossMargins,sd.grossMargins>0.2);
-  sdSetPct('sdm-pm',sd.profitMargins,sd.profitMargins>0);
-  sdSetPctChg('sdm-revg',sd.revenueGrowth);
-  sdSetPctChg('sdm-earng',sd.earningsGrowth);
-  // Bilancio
+  sdSetPct('sdm-roe',d.roe,d.roe>0);
+  sdSetPct('sdm-roa',d.roa,d.roa>0);
+  sdSetPct('sdm-gm',d.grossMargins,d.grossMargins>0.2);
+  sdSetPct('sdm-om',d.operatingMargins,d.operatingMargins>0.1);
+  sdSetPct('sdm-pm',d.profitMargins,d.profitMargins>0);
+  sdSet('sdm-ebitda',d.ebitda?fmtLg(d.ebitda):'—');
+
+  // Crescita
+  sdSetPctChg('sdm-revg',d.revenueGrowth);
+  sdSetPctChg('sdm-earng',d.earningsGrowth);
+  sdSet('sdm-rev',d.totalRevenue?fmtLg(d.totalRevenue):'—');
+  sdSet('sdm-fcf',d.freeCashflow?fmtLg(d.freeCashflow):'—');
   const divEl=document.getElementById('sdm-div');
-  const divVal=sd.dividend||sd.divYield;
-  if(divVal&&divVal>0){divEl.textContent=fmt(divVal*100,2)+'%';divEl.className='sd-m-val up';}
+  if(d.dividend&&d.dividend>0){divEl.textContent=fmt(d.dividend*100,2)+'%';divEl.className='sd-m-val up';}
   else{divEl.textContent='Nessuno';divEl.className='sd-m-val';}
-  sdSet('sdm-fcf',sd.freeCashflow?fmtLg(sd.freeCashflow):'—');
-  sdSet('sdm-cash',sd.totalCash?fmtLg(sd.totalCash):'—');
-  sdSet('sdm-debt',sd.totalDebt?fmtLg(sd.totalDebt):'—');
-  sdSet('sdm-de',sd.debtToEquity!=null?fmt(sd.debtToEquity,1):'—');
-  sdSet('sdm-cr',sd.currentRatio!=null?fmt(sd.currentRatio,2):'—');
-  // Descrizione
-  document.getElementById('sd-description').textContent=sd.description||'Nessuna descrizione disponibile.';
-  if(sd.website){
+  sdSet('sdm-shares',d.sharesOutstanding?fmtLg(d.sharesOutstanding):'—');
+
+  // Bilancio
+  sdSet('sdm-cash',d.totalCash?fmtLg(d.totalCash):'—');
+  sdSet('sdm-debt',d.totalDebt?fmtLg(d.totalDebt):'—');
+  sdSet('sdm-de',d.debtToEquity!=null?fmt(d.debtToEquity,1):'—');
+  sdSet('sdm-cr',d.currentRatio!=null?fmt(d.currentRatio,2):'—');
+  sdSet('sdm-qr',d.quickRatio!=null?fmt(d.quickRatio,2):'—');
+  sdSet('sdm-float',d.floatShares?fmtLg(d.floatShares):'—');
+
+  // Descrizione azienda
+  document.getElementById('sd-description').textContent=d.description||'Nessuna descrizione disponibile.';
+  if(d.website){
     document.getElementById('sd-website').innerHTML=
-      `<a href="${sd.website}" target="_blank" rel="noopener" style="font-size:11px;color:var(--b);text-decoration:none;font-family:var(--fm)">🔗 ${sd.website}</a>`;
+      `<a href="${d.website}" target="_blank" rel="noopener" style="font-size:11px;color:var(--b);text-decoration:none;font-family:var(--fm)">🔗 ${d.website}</a>`;
+  }
+
+  // Notizie
+  const newsList=document.getElementById('sd-news-list');
+  if(d.news&&d.news.length){
+    newsList.innerHTML=d.news.map(n=>{
+      const ago=n.time?timeAgo(n.time):'';
+      return `<div class="sd-news-item">
+        <a href="${n.link}" target="_blank" rel="noopener" class="sd-news-title">${n.title}</a>
+        <div class="sd-news-meta">${n.publisher}${ago?' · '+ago:''}</div>
+      </div>`;
+    }).join('');
+  } else {
+    newsList.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessuna notizia recente.</div>';
   }
 }
 
