@@ -2907,25 +2907,63 @@ const ECO_EVENTS=[
   {date:'2026-06-18',label:'BCE Meeting',type:'bce',detail:'Decisione tassi BCE'},
 ];
 
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+function calChangeMonth(d){
+  calMonth+=d;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCalendar();
+}
 function renderCalendar(){
   const el=document.getElementById('eco-calendar-content');
+  const titleEl=document.getElementById('cal-month-title');
   if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
-  const next7=new Date(today);next7.setDate(next7.getDate()+7);
-  const future=ECO_EVENTS.filter(e=>new Date(e.date)>=today).sort((a,b)=>a.date.localeCompare(b.date));
-  if(!future.length){el.innerHTML='<div class="ld">Nessun evento futuro</div>';return;}
-  el.innerHTML=future.map(e=>{
-    const d=new Date(e.date);
-    const isSoon=d<=next7;
-    const dateStr=d.toLocaleDateString('it-IT',{weekday:'short',day:'2-digit',month:'2-digit',year:'2-digit'});
-    return`<div class="eco-event${isSoon?' soon':''}">
-      <div class="eco-date">${dateStr}</div>
-      <div>
-        <div><span class="eco-label">${e.label}</span><span class="eco-type-${e.type}">${e.type.toUpperCase()}</span>${isSoon?'<span style="font-size:9px;color:var(--o);font-weight:700;margin-left:6px;font-family:var(--fm)">IMMINENTE</span>':''}</div>
-        <div class="eco-detail">${e.detail}</div>
-      </div>
-    </div>`;
-  }).join('');
+  // Build event map: key = "YYYY-MM-DD" → array of events
+  const evMap={};
+  ECO_EVENTS.forEach(e=>{evMap[e.date]=(evMap[e.date]||[]).concat(e);});
+  // Month title
+  const monthName=new Date(calYear,calMonth,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
+  if(titleEl)titleEl.textContent=monthName;
+  // Calendar grid
+  const firstDay=new Date(calYear,calMonth,1);
+  const lastDay=new Date(calYear,calMonth+1,0);
+  // Start grid on Monday (0=Mon ... 6=Sun)
+  let startDow=firstDay.getDay()-1; if(startDow<0)startDow=6;
+  const DOW_LABELS=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+  let html='<div class="cal-grid">';
+  // Day-of-week headers
+  DOW_LABELS.forEach(d=>{html+=`<div class="cal-dow">${d}</div>`;});
+  // Empty cells before first day
+  for(let i=0;i<startDow;i++){
+    html+=`<div class="cal-day other-month"></div>`;
+  }
+  // Days of month
+  for(let day=1;day<=lastDay.getDate();day++){
+    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const events=evMap[dateStr]||[];
+    const isToday=new Date(calYear,calMonth,day).getTime()===today.getTime();
+    const hasEv=events.length>0;
+    html+=`<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}">`;
+    html+=`<div class="cal-day-num">${day}</div>`;
+    if(hasEv){
+      html+=`<div class="cal-dots">${events.map(e=>`<div class="cal-dot ${e.type}"></div>`).join('')}</div>`;
+      html+=`<div class="cal-event-labels">${events.map(e=>`<span class="cal-event-lbl">${e.label}</span>`).join('')}</div>`;
+      // Popup
+      html+=`<div class="cal-popup"><div class="cal-popup-title">${dateStr.split('-').reverse().join('/')}</div>`;
+      events.forEach(e=>{
+        html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot ${e.type}"></div><div class="cal-popup-text"><strong>${e.label}</strong><br>${e.detail}</div></div>`;
+      });
+      html+=`</div>`;
+    }
+    html+=`</div>`;
+  }
+  // Fill remaining cells
+  const totalCells=startDow+lastDay.getDate();
+  const remainder=totalCells%7;
+  if(remainder>0){for(let i=0;i<7-remainder;i++)html+=`<div class="cal-day other-month"></div>`;}
+  html+='</div>';
+  el.innerHTML=html;
 }
 
 // Avvia verifica sessione
