@@ -655,8 +655,15 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Market Heatmap</div><div class="sdiv-l"></div></div>
   <div class="card" id="heatmap-card">
     <div class="ch">
-      <div><div class="ct">Heatmap di mercato</div><div class="cs">Performance giornaliera per settore · Clicca per analizzare il titolo</div></div>
+      <div><div class="ct">Stock Heatmap</div><div class="cs">Performance giornaliera per settore · oltre 75 titoli · clicca per analizzare</div></div>
       <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadHeatmap()">↻ Aggiorna</button>
+    </div>
+    <div class="hm-toolbar">
+      <button class="hm-filter-btn active" onclick="hmSetFilter('all',this)">🌍 Tutti</button>
+      <button class="hm-filter-btn" onclick="hmSetFilter('US',this)">🇺🇸 USA</button>
+      <button class="hm-filter-btn" onclick="hmSetFilter('EU',this)">🇪🇺 Europa</button>
+      <button class="hm-filter-btn" onclick="hmSetFilter('IT',this)">🇮🇹 Italia</button>
+      <div class="hm-summary"><span class="hm-sum-up" id="hm-up">▲ —</span><span class="hm-sum-dn" id="hm-dn">▼ —</span><span class="hm-sum-nc" id="hm-nc">— —</span></div>
     </div>
     <div id="heatmap-container"><div class="ld">Caricamento...</div></div>
   </div>
