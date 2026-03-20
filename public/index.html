@@ -1095,8 +1095,6 @@ function showPage(id,btn){
   if(id==='portafoglio')showPortfolioState();
   if(id==='alerts'){renderAlerts();checkAlerts();}
   if(id==='macro')loadMacroDashboard();
-  if(id==='screener')document.getElementById('cmp-float-btn').classList.toggle('show',cmpList.length>=2);
-  if(id!=='screener')document.getElementById('cmp-float-btn').classList.remove('show');
 }
 
 /* ── ORARI ── */
