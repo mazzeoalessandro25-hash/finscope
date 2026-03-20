@@ -238,6 +238,35 @@ nav{height:54px;background:var(--b2);
 .sc-load{color:var(--t3);font-style:italic;font-size:11px;animation:scpulse 1.4s infinite}
 @keyframes scpulse{0%,100%{opacity:.4}50%{opacity:1}}
 
+/* ── HEATMAP ── */
+.hm-sector{margin-bottom:20px}
+.hm-sector-title{font-family:var(--fm);font-size:9px;letter-spacing:.8px;color:var(--t3);text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bd)}
+.heatmap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:5px}
+.hm-cell{border-radius:9px;padding:10px 8px;cursor:pointer;transition:transform .15s,filter .15s;text-align:center;user-select:none}
+.hm-cell:hover{transform:scale(1.06);filter:brightness(1.1)}
+.hm-sym{font-family:var(--fm);font-size:11px;font-weight:700;color:#fff;letter-spacing:.3px}
+.hm-chg{font-family:var(--fm);font-size:14px;font-weight:800;color:#fff;margin-top:2px;line-height:1}
+.hm-name{font-size:9px;color:rgba(255,255,255,.75);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── BUY ZONE ── */
+.bz-wrap{margin:14px 0 10px;padding:14px 16px;background:var(--s2);border:1px solid var(--bd);border-radius:10px}
+.bz-title{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+.bz-track{position:relative;height:18px;border-radius:6px;overflow:visible;background:linear-gradient(to right,#DC2626 0%,#DC2626 20%,#F59E0B 20%,#F59E0B 35%,#059669 35%,#059669 72%,#F59E0B 72%,#F59E0B 87%,#DC2626 87%,#DC2626 100%)}
+.bz-marker{position:absolute;top:-4px;width:4px;height:26px;background:#1A56C4;border-radius:2px;transform:translateX(-50%);box-shadow:0 0 6px rgba(26,86,196,.5)}
+.bz-labels{display:flex;justify-content:space-between;margin-top:5px;font-family:var(--fm);font-size:9px;color:var(--t3)}
+.bz-status{display:inline-block;margin-top:8px;font-family:var(--fm);font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px}
+
+/* ── RADAR ── */
+.radar-wrap{width:180px;height:180px;flex-shrink:0}
+
+/* ── BENCHMARK ── */
+.bench-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.bench-row:last-child{border-bottom:none}
+.bench-label{font-family:var(--fm);font-size:11px;color:var(--t2);width:130px;flex-shrink:0}
+.bench-bar-wrap{flex:1;height:8px;background:var(--bd);border-radius:4px;overflow:hidden}
+.bench-bar{height:8px;border-radius:4px;transition:width .6s ease}
+.bench-val{font-family:var(--fm);font-size:12px;font-weight:700;width:56px;text-align:right;flex-shrink:0}
+
 /* SIMULATORE */
 .sim-l{display:grid;grid-template-columns:350px 1fr;gap:20px}
 .fg{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
