@@ -1694,13 +1694,21 @@ async function loadCrypto(){
 let scSparkData={};
 async function loadScreener(){
   const allS=STOCKS.concat(customStocks);
-  document.getElementById('sc-body').innerHTML='<tr><td colspan="14" class="ld">Caricamento prezzi reali...</td></tr>';
-  await Promise.all(allS.map(async s=>{
-    const [d,spark]=await Promise.all([api(s.s),fetchSparkData(s.s)]);
-    if(d)scData[s.s]=d;
-    if(spark.length)scSparkData[s.s]=spark;
-  }));
-  applyF();
+  scData={};scSparkData={};
+  document.getElementById('sc-body').innerHTML='<tr><td colspan="14" class="ld">Caricamento prezzi reali (0/'+allS.length+')...</td></tr>';
+  const BATCH=12;
+  let loaded=0;
+  for(let i=0;i<allS.length;i+=BATCH){
+    const batch=allS.slice(i,i+BATCH);
+    await Promise.all(batch.map(async s=>{
+      const [d,spark]=await Promise.all([api(s.s),fetchSparkData(s.s)]);
+      if(d)scData[s.s]=d;
+      if(spark.length)scSparkData[s.s]=spark;
+      loaded++;
+    }));
+    document.getElementById('sc-body').innerHTML='<tr><td colspan="14" class="ld">Caricamento prezzi reali ('+loaded+'/'+allS.length+')...</td></tr>';
+    applyF();
+  }
   loadSummariesBg();
 }
 async function loadSummariesBg(){
