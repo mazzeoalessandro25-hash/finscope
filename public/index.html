@@ -2304,12 +2304,18 @@ const HM_ROWS=[
   ['Industrials','Cons. Def.','Utilities','Materials'],
 ];
 
-// Colore header per settore
+// Colore e stile header per settore (colore testo + bordo)
 const HM_SEC_COLOR={
-  'Technology':'#1E3A8A','Cons. Cycl.':'#92400E','Communic.':'#5B21B6',
-  'Financial':'#064E3B','Healthcare':'#881337','Energy':'#7C2D12',
-  'Industrials':'#1F2937','Cons. Def.':'#134E4A','Utilities':'#1E3A5F',
-  'Materials':'#78350F',
+  'Technology':    {color:'#1D4ED8',bg:'#EFF6FF'},
+  'Cons. Cycl.':   {color:'#B45309',bg:'#FFFBEB'},
+  'Communic.':     {color:'#7C3AED',bg:'#F5F3FF'},
+  'Financial':     {color:'#059669',bg:'#ECFDF5'},
+  'Healthcare':    {color:'#DB2777',bg:'#FDF2F8'},
+  'Energy':        {color:'#EA580C',bg:'#FFF7ED'},
+  'Industrials':   {color:'#475569',bg:'#F8FAFC'},
+  'Cons. Def.':    {color:'#0D9488',bg:'#F0FDFA'},
+  'Utilities':     {color:'#2563EB',bg:'#EFF6FF'},
+  'Materials':     {color:'#92400E',bg:'#FEF3C7'},
 };
 
 let hmData={};
@@ -2322,13 +2328,19 @@ function hmSetFilter(f,btn){
   hmRender();
 }
 
+// 7 livelli di colore netti — stile Finviz
 function hmColor(chg){
-  const c=Math.max(-5,Math.min(5,chg));
-  if(Math.abs(c)<0.08)return'#1e293b';
-  const t=Math.abs(c)/5;
-  return c>0
-    ?`rgb(${Math.round(8+12*t)},${Math.round(90+145*t)},${Math.round(8+12*t)})`
-    :`rgb(${Math.round(100+145*t)},${Math.round(8+10*t)},${Math.round(8+10*t)})`;
+  if(chg>= 3)  return'#15803d'; // verde brillante
+  if(chg>= 1.5)return'#16a34a'; // verde medio
+  if(chg>= 0.1)return'#4ade80'; // verde chiaro → testo scuro
+  if(chg>=-0.1)return'#64748b'; // grigio neutro
+  if(chg>=-1.5)return'#f87171'; // rosso chiaro
+  if(chg>=-3)  return'#dc2626'; // rosso medio
+  return         '#991b1b';     // rosso scuro
+}
+// testo bianco o scuro in base al colore di sfondo
+function hmTxt(chg){
+  return(chg>=0.1&&chg<1.5)?'#14532d':'#fff';
 }
 
 function hmRender(){
