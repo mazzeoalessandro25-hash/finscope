@@ -1144,9 +1144,8 @@ async function loadStats(isFirstLoad){
     // Badge testuale
     const badge=document.getElementById('user-count-text');
     if(badge){
-      if(users>=10) badge.textContent=users.toLocaleString('it-IT')+' investitori già a bordo';
-      else if(users>0) badge.textContent='Primi investitori già a bordo — unisciti a loro';
-      else badge.textContent='Sii tra i primi a registrarti';
+      if(users>=1) badge.textContent=users.toLocaleString('it-IT')+' investitori iscritti';
+      else badge.textContent='Registrazione gratuita · Zero costi';
     }
 
     // Stat box utenti iscritti
