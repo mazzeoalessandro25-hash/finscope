@@ -4152,7 +4152,7 @@ function renderPortAnalysis(portItems, quotes){
           else if(badCount===0&&okCount>=2){finalSignal='MANTIENI+';finalColor='#047857';finalBg='#D1FAE5';}
           else if(badCount<=1&&okCount>=2){finalSignal='NEUTRALE';finalColor='#92400E';finalBg='#FEF3C7';}
           else if(badCount>=2){finalSignal='ATTENZIONE';finalColor='#B91C1C';finalBg='#FEE2E2';}
-          else{finalSignal='MONITORA';finalColor='#1E40AF';finalBg:'#EBF1FB';}
+          else{finalSignal='MONITORA';finalColor='#1E40AF';finalBg='#EBF1FB';}
           return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:8px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
               <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${item.sym}</div>
