@@ -695,17 +695,17 @@ html.dark .auth-box{background:#1e293b}
         <label>Email</label>
         <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
       </div>
-      <div class="auth-field">
-        <label>Password</label>
+      <div class="auth-field" id="pwd-field">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+          <label style="margin-bottom:0">Password</label>
+          <button id="forgot-link" onclick="showAuthView('forgot')" style="background:none;border:none;color:var(--b);font-size:11px;cursor:pointer;font-family:var(--fm);padding:0;font-weight:600;letter-spacing:.2px">
+            Password dimenticata?
+          </button>
+        </div>
         <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
           onkeydown="if(event.key==='Enter')submitAuth()"/>
       </div>
       <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Accedi</button>
-      <div style="text-align:center;margin-top:12px">
-        <button onclick="showAuthView('forgot')" style="background:none;border:none;color:var(--b);font-size:12px;cursor:pointer;font-family:var(--ff);text-decoration:underline;padding:0">
-          Hai dimenticato la password?
-        </button>
-      </div>
       <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.5">
         Continuando accetti la nostra <a href="#" style="color:var(--b)">Privacy Policy</a>.<br>
         I tuoi dati sono trattati secondo il GDPR.
