@@ -1985,10 +1985,35 @@ async function api(sym,type=''){
 }
 
 /* ── NAV ── */
+// ─── Mobile nav drawer ───
+function toggleMobileNav(){
+  const drawer=document.getElementById('mobile-drawer');
+  const btn=document.getElementById('hamburger-btn');
+  const isOpen=drawer.classList.contains('open');
+  if(isOpen){drawer.classList.remove('open');btn.classList.remove('open');}
+  else{drawer.classList.add('open');btn.classList.add('open');}
+}
+function closeMobileNav(){
+  document.getElementById('mobile-drawer')?.classList.remove('open');
+  document.getElementById('hamburger-btn')?.classList.remove('open');
+}
+// Chiudi drawer cliccando fuori
+document.addEventListener('click',e=>{
+  const drawer=document.getElementById('mobile-drawer');
+  const btn=document.getElementById('hamburger-btn');
+  if(drawer?.classList.contains('open')&&!drawer.contains(e.target)&&!btn.contains(e.target)){
+    closeMobileNav();
+  }
+});
+
 function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');
+  document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  const mobBtn=document.getElementById('mob-nb-'+id);
+  if(mobBtn)mobBtn.classList.add('active');
   if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati finanziari');
   if(id==='screener'&&Object.keys(scData).length===0)loadScreener();
   if(id==='portafoglio')showPortfolioState();
