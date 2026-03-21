@@ -665,24 +665,22 @@ html.dark .auth-box{background:#1e293b}
     </div>
     <!-- Raccomandazione analisti -->
     <div class="sd-section" style="margin-bottom:16px">
-      <div class="sd-section-title">Raccomandazione analisti</div>
-      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <div id="sdm-rec" style="font-size:15px;font-weight:700;font-family:var(--fm)">—</div>
-          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Consenso</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <div class="sd-m-val" id="sdm-target" style="font-size:15px">—</div>
-          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Target medio</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <div class="sd-m-val" id="sdm-target-range" style="font-size:13px;color:var(--t2)">—</div>
-          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Range target</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:4px">
-          <div class="sd-m-val" id="sdm-nanalysts" style="font-size:13px;color:var(--t2)">—</div>
-          <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">N. analisti</div>
-        </div>
+      <div class="sd-section-title" style="display:flex;align-items:center">
+        Raccomandazione analisti
+        <span class="sd-info-btn">i<div class="sd-tip">Consenso degli analisti finanziari che coprono il titolo.<br><br><b>Score</b>: da 1 (Forte Acquisto) a 5 (Forte Vendita).<br><b>Target price</b>: prezzo obiettivo medio stimato a 12 mesi.<br><b>Upside</b>: potenziale di rialzo/ribasso rispetto al prezzo attuale.</div></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+        <div id="sdm-rec" style="font-size:15px;font-weight:700;font-family:var(--fm)">—</div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" id="sdm-nanalysts"></div>
+      </div>
+      <div class="sd-rec-bar-wrap">
+        <div class="sd-rec-bar"><div class="sd-rec-marker" id="sd-rec-marker" style="left:50%"></div></div>
+        <div class="sd-rec-labels"><span>Forte Acquisto</span><span>Acquisto</span><span>Neutrale</span><span>Vendita</span><span>Forte Vendita</span></div>
+      </div>
+      <div class="sd-rec-grid">
+        <div class="sd-rec-item"><div class="sd-rec-item-lbl">Target medio</div><div class="sd-rec-item-val" id="sdm-target">—</div></div>
+        <div class="sd-rec-item"><div class="sd-rec-item-lbl">Upside potenziale</div><div class="sd-rec-item-val" id="sdm-upside">—</div></div>
+        <div class="sd-rec-item"><div class="sd-rec-item-lbl">Range target</div><div class="sd-rec-item-val" id="sdm-target-range" style="font-size:11px">—</div></div>
       </div>
     </div>
     <!-- Sezioni fondamentali: 4 colonne -->
