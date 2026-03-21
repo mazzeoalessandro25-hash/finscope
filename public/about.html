@@ -260,6 +260,7 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   .steps::before{display:none}
   .steps{grid-template-columns:1fr;gap:32px}
   nav .nav-links{display:none}
+  .pricing-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:600px){
   nav{padding:0 20px}
@@ -268,7 +269,93 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   .features-grid{grid-template-columns:1fr}
   footer{flex-direction:column;text-align:center}
   .foot-note{text-align:center}
+  .pricing-grid{grid-template-columns:1fr}
 }
+
+/* ─── SCROLL REVEAL ─── */
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:none}
+.reveal-left{opacity:0;transform:translateX(-28px);transition:opacity .65s ease,transform .65s ease}
+.reveal-left.visible{opacity:1;transform:none}
+.reveal-right{opacity:0;transform:translateX(28px);transition:opacity .65s ease,transform .65s ease}
+.reveal-right.visible{opacity:1;transform:none}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ─── HERO FLOATING ORBS ─── */
+.hero-orb{position:absolute;border-radius:50%;pointer-events:none}
+.hero-orb-1{width:320px;height:320px;top:10%;right:5%;
+  background:radial-gradient(circle,rgba(52,211,153,.08),transparent 70%);
+  animation:floatOrb 10s ease-in-out infinite}
+.hero-orb-2{width:200px;height:200px;bottom:15%;left:5%;
+  background:radial-gradient(circle,rgba(96,165,250,.07),transparent 70%);
+  animation:floatOrb 14s ease-in-out infinite reverse}
+@keyframes floatOrb{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+
+/* ─── USER COUNT BADGE ─── */
+.user-count-badge{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(52,211,153,.15);border:1px solid rgba(52,211,153,.3);
+  color:#34D399;padding:8px 18px;border-radius:100px;
+  font-size:13px;font-weight:600;font-family:var(--fm);margin-bottom:20px}
+.uc-pulse{width:8px;height:8px;background:#34D399;border-radius:50%;
+  animation:ucPulse 1.5s ease-in-out infinite}
+@keyframes ucPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+/* ─── FORGOT PASSWORD IN AUTH CARD ─── */
+.auth-view{animation:authFadeIn .2s ease}
+@keyframes authFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.auth-back-btn-lp{background:none;border:none;color:rgba(255,255,255,.5);
+  font-size:11px;cursor:pointer;font-family:var(--ff);width:100%;
+  text-align:center;margin-top:8px;padding:6px;
+  text-decoration:underline;text-underline-offset:3px;transition:color .15s}
+.auth-back-btn-lp:hover{color:rgba(255,255,255,.85)}
+.fp-code-inp-lp{width:100%;background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.2);color:#fff;padding:14px;
+  border-radius:9px;font-family:var(--fm);font-size:22px;
+  text-align:center;letter-spacing:8px;outline:none;margin-bottom:13px;transition:border-color .15s}
+.fp-code-inp-lp:focus{border-color:rgba(255,255,255,.5)}
+.forgot-link-lp{background:none;border:none;color:rgba(100,160,255,.9);
+  font-size:11px;cursor:pointer;font-family:var(--fm);
+  text-decoration:underline;text-underline-offset:3px;
+  display:block;text-align:right;margin:-5px 0 10px;padding:2px 0;transition:color .15s}
+.forgot-link-lp:hover{color:rgba(255,255,255,.9)}
+
+/* ─── PRICING TIERS ─── */
+.pricing-section{padding:80px 40px;background:var(--s2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.pricing-inner{max-width:1080px;margin:0 auto}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:40px}
+.pricing-card{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:28px 20px;position:relative;transition:all .2s}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.1)}
+.pricing-card.featured{border-color:var(--b);box-shadow:0 0 0 1px var(--b),0 8px 32px rgba(26,86,196,.12)}
+.pricing-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--b);color:#fff;font-size:10px;font-weight:700;
+  padding:4px 14px;border-radius:100px;font-family:var(--fm);letter-spacing:.6px;white-space:nowrap}
+.pricing-color-bar{width:36px;height:4px;border-radius:2px;margin-bottom:16px}
+.pricing-tier{font-family:var(--fm);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
+.pricing-name{font-size:20px;font-weight:800;color:var(--t);letter-spacing:-.5px;margin-bottom:4px}
+.pricing-price{font-family:var(--fm);font-size:30px;font-weight:700;color:var(--t);margin:12px 0 4px;line-height:1}
+.pricing-price sup{font-size:14px;font-weight:500;color:var(--t2);vertical-align:top;margin-top:6px;display:inline-block}
+.pricing-price span{font-size:13px;font-weight:500;color:var(--t3)}
+.pricing-desc{font-size:12px;color:var(--t2);margin-bottom:20px;line-height:1.5}
+.pricing-features{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:24px}
+.pricing-features li{font-size:12px;color:var(--t2);display:flex;align-items:flex-start;gap:7px;line-height:1.4}
+.pricing-features li::before{content:'✓';color:var(--g);font-weight:700;flex-shrink:0;margin-top:1px}
+.pricing-features li.no{color:var(--t3)}
+.pricing-features li.no::before{content:'—';color:var(--t3);font-weight:400}
+.pricing-btn{width:100%;padding:11px;border:none;border-radius:9px;font-family:var(--ff);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s}
+.pricing-btn.primary{background:var(--b);color:#fff}
+.pricing-btn.primary:hover{background:var(--b2);transform:translateY(-1px)}
+.pricing-btn.outline{background:transparent;border:1.5px solid var(--bd);color:var(--t2)}
+.pricing-btn.outline:hover{border-color:var(--b);color:var(--b)}
+
+/* ─── ANIMATED COUNTER ─── */
+@keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.counter-animated{animation:countUp .8s ease forwards}
+
+/* ─── STATS COUNTER IN HERO ─── */
+.stat-n{position:relative}
 </style>
 </head>
 <body>
