@@ -2716,34 +2716,51 @@ async function renderPortfolio(){
     const up=pnl==null||pnl>=0;
     const weight=grandTotalInv>0?invested/grandTotalInv:0;
     const weightPct=Math.round(weight*100);
+    const name=scData[item.sym]?.name||d?.name||item.sym;
 
     if(cur==='EUR'){totalEUR_inv+=invested;if(curVal!=null)totalEUR_val+=curVal;}
     else{totalUSD_inv+=invested;if(curVal!=null)totalUSD_val+=curVal;}
 
     const stateClass=pnl==null?'neu':up?'pos':'neg';
+    const barColor=stateClass==='pos'?'#059669':stateClass==='neg'?'#DC2626':'var(--b)';
     return`<div class="port-item ${stateClass}" onclick="openStockDetail('${item.sym}')">
-      <div style="min-width:0">
-        <div style="display:flex;align-items:center;gap:5px">
-          <span class="port-sym">${item.sym}</span>
-          <span style="font-size:9px;color:var(--t3);background:var(--b3);padding:1px 5px;border-radius:3px">${cur}</span>
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div style="min-width:0;flex:1">
+          <div style="display:flex;align-items:center;gap:6px">
+            <span class="port-sym">${item.sym}</span>
+            <span style="font-size:9px;color:var(--t3);background:var(--b3);padding:1px 5px;border-radius:3px;font-family:var(--fm)">${cur}</span>
+          </div>
+          <div class="port-name">${name}</div>
         </div>
-        <div class="port-info">${item.qty} pz · acq. ${csym}${fmt(item.buyPrice,2)}</div>
-      </div>
-      <div class="port-weight-bar" style="text-align:center">
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3);margin-bottom:3px">${weightPct}% port.</div>
-        <div style="height:3px;background:var(--bd);border-radius:10px;overflow:hidden">
-          <div style="height:3px;width:${weightPct}%;background:var(--b);border-radius:10px"></div>
+        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+          <div style="text-align:right">
+            <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}</div>
+          </div>
+          <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
         </div>
       </div>
-      <div style="text-align:center;min-width:64px">
-        <div style="font-family:var(--fm);font-size:12px;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">prezzo</div>
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
+        <div style="display:flex;gap:16px">
+          <div>
+            <div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${up?'up':'down'}">${pnl!=null?(up?'+':'')+csym+fmt(Math.abs(pnl),0):'—'}</div>
+            <div style="font-size:9px;color:var(--t3)">P&amp;L</div>
+          </div>
+          <div>
+            <div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${pnlPct!=null?(pnlPct>=0?'up':'down'):''}">${pnlPct!=null?(pnlPct>=0?'+':'')+fmt(pnlPct,1)+'%':'—'}</div>
+            <div style="font-size:9px;color:var(--t3)">Rend.</div>
+          </div>
+        </div>
+        <div style="flex:1;max-width:140px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">peso</div>
+            <div style="font-size:9px;font-family:var(--fm);font-weight:600;color:${barColor}">${weightPct}%</div>
+          </div>
+          <div style="height:4px;background:var(--bd);border-radius:10px;overflow:hidden">
+            <div style="height:4px;width:${weightPct}%;background:${barColor};border-radius:10px;transition:width .6s ease"></div>
+          </div>
+        </div>
       </div>
-      <div class="port-pnl ${up?'up':'down'}">
-        ${pnl!=null?(up?'+':'')+csym+fmt(pnl,0):'—'}
-        ${pnlPct!=null?`<div style="font-size:10px">${up?'+':''}${fmt(pnlPct,1)}%</div>`:''}
-      </div>
-      <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
     </div>`;
   });
 
