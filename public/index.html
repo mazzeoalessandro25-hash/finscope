@@ -1190,67 +1190,110 @@ html.dark .auth-box{background:#1e293b}
   </div>
 
   <div id="port-content" style="display:none">
-    <!-- Top row: Aggiungi titolo + Riepilogo -->
-    <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:16px">
-      <div class="card">
-        <div class="ch"><div><div class="ct">Aggiungi titolo</div><div class="cs">Inserisci ticker, quantità e prezzo di acquisto</div></div></div>
-        <div class="port-add-row">
-          <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:120px;text-transform:uppercase"/>
-          <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any" style="width:100px"/>
-          <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acquisto $" min="0" step="any" style="width:150px"/>
-          <button class="port-btn" onclick="addPortfolioItem()">+ Aggiungi</button>
+
+    <!-- ── HERO KPI BAR ── -->
+    <div class="port-hero" id="port-hero">
+      <div class="port-hero-kpi">
+        <div class="port-hero-lbl">Valore totale</div>
+        <div class="port-hero-val" id="ph-val-usd">—</div>
+        <div class="port-hero-sub" id="ph-val-eur"></div>
+      </div>
+      <div class="port-hero-kpi">
+        <div class="port-hero-lbl">P&amp;L totale</div>
+        <div class="port-hero-val" id="ph-pnl">—</div>
+        <div class="port-hero-sub" id="ph-pnl-pct"></div>
+      </div>
+      <div class="port-hero-kpi">
+        <div class="port-hero-lbl">Titoli</div>
+        <div class="port-hero-val" id="ph-count">—</div>
+        <div class="port-hero-sub" id="ph-sectors"></div>
+      </div>
+      <div class="port-hero-kpi">
+        <div class="port-hero-lbl">Rendimento</div>
+        <div class="port-hero-val" id="ph-rend">—</div>
+        <div class="port-hero-sub">dal prezzo acquisto</div>
+      </div>
+      <div class="port-hero-kpi">
+        <div class="port-hero-lbl">Cambio EUR/USD</div>
+        <div class="port-hero-val" id="ph-rate">—</div>
+        <div class="port-hero-sub" id="ph-rate-chg"></div>
+      </div>
+    </div>
+
+    <!-- ── RIGA PRINCIPALE: Titoli sx + Riepilogo/Watchlist dx ── -->
+    <div style="display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:14px">
+
+      <!-- Titoli in portafoglio -->
+      <div class="card" style="padding:16px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+          <div>
+            <div class="ct">Titoli in portafoglio</div>
+            <div class="cs">Prezzi live · clicca per aprire il dettaglio</div>
+          </div>
+          <div style="display:flex;gap:7px">
+            <button class="sc-btn" style="font-size:11px;padding:5px 10px" onclick="togglePortAdd()">＋ Aggiungi</button>
+            <button class="sc-btn" style="font-size:11px;padding:5px 10px" onclick="exportPortfolioCSV()">⬇ CSV</button>
+          </div>
         </div>
-        <!-- Watchlist -->
-        <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px">
-          <div class="ct" style="margin-bottom:10px;font-size:12px">Watchlist</div>
+        <!-- Form aggiungi (nascosto di default) -->
+        <div id="port-add-panel" style="display:none;padding:12px;background:var(--s2);border-radius:10px;border:1px solid var(--bd);margin-bottom:12px">
+          <div class="port-add-row">
+            <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:110px;text-transform:uppercase"/>
+            <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any" style="width:90px"/>
+            <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acquisto" min="0" step="any" style="width:130px"/>
+            <button class="port-btn" onclick="addPortfolioItem()">Aggiungi</button>
+            <button class="port-btn" style="background:var(--s2);color:var(--t2);border:1px solid var(--bd)" onclick="togglePortAdd()">✕</button>
+          </div>
+        </div>
+        <div id="port-list"><div class="ld">Nessun titolo aggiunto · Clicca "＋ Aggiungi" per iniziare</div></div>
+      </div>
+
+      <!-- Colonna destra: Riepilogo + Watchlist -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="card" style="padding:16px">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="ct">Riepilogo</div>
+            <div style="font-size:10px;color:var(--t3);font-family:var(--fm)" id="port-summary-rate"></div>
+          </div>
+          <div id="port-summary"><div class="ld" style="padding:8px 0">Caricamento...</div></div>
+        </div>
+        <div class="card" style="padding:16px">
+          <div class="ct" style="margin-bottom:10px">Watchlist</div>
           <div id="wl-list-port"><div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Nessun titolo in watchlist</div></div>
         </div>
       </div>
-      <div class="card">
-        <div class="ch"><div><div class="ct">Riepilogo portafoglio</div><div class="cs" id="port-summary-rate"></div></div></div>
-        <div id="port-summary">
-          <div class="ld" style="padding:10px">Caricamento...</div>
-        </div>
+    </div>
+
+    <!-- ── RIGA 2: Benchmark + Dividend Tracker affiancati ── -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+      <div class="card" id="bench-card">
+        <div class="ch"><div><div class="ct">vs Benchmark</div><div class="cs">Performance vs indici (1 mese)</div></div></div>
+        <div id="bench-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
+      </div>
+      <div class="card" id="div-tracker-card">
+        <div class="ch"><div><div class="ct">Dividend Tracker</div><div class="cs">Reddito stimato da dividendi</div></div></div>
+        <div id="div-tracker-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
       </div>
     </div>
 
-    <!-- Lista titoli full-width -->
-    <div class="card" style="margin-bottom:16px">
-      <div class="ch"><div><div class="ct">Titoli in portafoglio</div><div class="cs">Prezzi live · clicca per grafico</div></div><button class="sc-btn" style="font-size:11px;padding:5px 12px" onclick="exportPortfolioCSV()">⬇ Esporta CSV</button></div>
-      <div id="port-list"><div class="ld">Nessun titolo aggiunto</div></div>
-    </div>
-
-    <!-- PORTAFOGLIO VS BENCHMARK -->
-    <div class="card" style="margin-top:16px" id="bench-card">
-      <div class="ch"><div><div class="ct">Portafoglio vs Benchmark</div><div class="cs">Performance dal prezzo di acquisto vs indici principali (1 mese)</div></div></div>
-      <div id="bench-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
-    </div>
-
-    <!-- DIVIDEND TRACKER -->
-    <div class="card" style="margin-top:16px" id="div-tracker-card">
-      <div class="ch"><div><div class="ct">Dividend Tracker</div><div class="cs">Reddito annuale da dividendi stimato per i titoli in portafoglio</div></div></div>
-      <div id="div-tracker-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
-    </div>
-
-    <!-- ANALISI & BILANCIAMENTO -->
-    <div class="card" style="margin-top:16px" id="port-analysis-card">
-      <div class="ch">
-        <div><div class="ct">Analisi & Bilanciamento</div><div class="cs">Composizione, rischio e profilo investitore</div></div>
-      </div>
+    <!-- ── ANALISI & BILANCIAMENTO ── -->
+    <div class="card" style="margin-bottom:14px" id="port-analysis-card">
+      <div class="ch"><div><div class="ct">Analisi & Bilanciamento</div><div class="cs">Composizione, rischio e profilo investitore</div></div></div>
       <div id="port-analysis-content"><div class="ld" style="padding:10px">Aggiungi titoli per vedere l'analisi</div></div>
     </div>
 
-    <!-- PROSPETTO VALORE FUTURO -->
-    <div class="card" style="margin-top:16px" id="port-targets-card">
+    <!-- ── PROSPETTO VALORE FUTURO ── -->
+    <div class="card" style="margin-bottom:14px" id="port-targets-card">
       <div class="ch"><div><div class="ct">Prospetto Valore Futuro</div><div class="cs">Proiezione a 12 mesi basata sui prezzi target degli analisti</div></div></div>
       <div id="port-targets-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
     </div>
 
-    <!-- PORTFOLIO PERFORMANCE CHART -->
+    <!-- ── PERFORMANCE CHART ── -->
     <div class="card port-perf-card" id="port-perf-card">
       <div class="ch"><div><div class="ct">Performance Portafoglio</div><div class="cs">Rendimento ponderato 1 mese vs S&P 500</div></div></div>
       <canvas id="portPerfChart" height="110"></canvas>
     </div>
+
   </div>
 </div>
 
