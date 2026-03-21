@@ -1094,11 +1094,11 @@ async function loadStats(isFirstLoad){
 
     // Stat box utenti iscritti
     const elU=document.getElementById('stat-users');
-    if(elU) animateCounter(elU,_prevUsers,users);
+    if(elU){elU.innerHTML='';animateCounter(elU,_prevUsers,users);}
 
     // Stat box visite totali
     const elV=document.getElementById('stat-views');
-    if(elV) animateCounter(elV,_prevViews,views);
+    if(elV){elV.innerHTML='';animateCounter(elV,_prevViews,views);}
 
     _prevUsers=users; _prevOnline=online; _prevViews=views;
   }catch{
