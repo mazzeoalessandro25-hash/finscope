@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@clerk/backend": "^1.0.0"
+    "@clerk/backend": "^1.0.0",
+    "yahoo-finance2": "^3.13.2"
   }
 }
