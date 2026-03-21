@@ -1159,7 +1159,7 @@ async function loadStats(isFirstLoad){
     _prevUsers=users; _prevOnline=online; _prevViews=views;
   }catch{
     const badge=document.getElementById('user-count-text');
-    if(badge)badge.textContent='Registrazione gratuita · Zero costi';
+    if(badge)badge.textContent='Registrazione gratuita';
   }
 }
 loadStats(true);
