@@ -362,7 +362,10 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 @keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .counter-animated{animation:countUp .8s ease forwards}
 
-/* ─── STATS COUNTER IN HERO ─── */
+/* ─── STATS LIVE DOT ─── */
+.stat-live-dot{display:inline-block;width:7px;height:7px;background:#34D399;border-radius:50%;
+  margin-left:5px;vertical-align:middle;animation:livePulse 1.8s ease-in-out infinite}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
 .stat-n{position:relative}
 </style>
 </head>
