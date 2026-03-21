@@ -933,27 +933,8 @@ const revealObs=new IntersectionObserver(entries=>{
 },{threshold:0.12});
 document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>revealObs.observe(el));
 
-// ─── User Count ───
-async function loadUserCount(){
-  try{
-    const r=await fetch('/api/stats');
-    const d=await r.json();
-    const n=d.count||0;
-    const el=document.getElementById('user-count-text');
-    if(!el)return;
-    if(n>=10){
-      animateCounter(el,0,n,' investitori già a bordo');
-    } else if(n>0){
-      el.textContent='Primi investitori già a bordo — unisciti a loro';
-    } else {
-      el.textContent='Sii tra i primi a registrarti';
-    }
-  }catch{
-    const el=document.getElementById('user-count-text');
-    if(el)el.textContent='Registrazione gratuita · Zero costi';
-  }
-}
-function animateCounter(el,from,to,suffix){
+// ─── Stats ───
+function animateCounter(el,from,to,suffix=''){
   const dur=1200,start=performance.now();
   function step(now){
     const p=Math.min((now-start)/dur,1);
@@ -964,7 +945,43 @@ function animateCounter(el,from,to,suffix){
   }
   requestAnimationFrame(step);
 }
-loadUserCount();
+
+let _prevOnline=0,_prevUsers=0,_prevViews=0;
+async function loadStats(isFirstLoad){
+  try{
+    const url=isFirstLoad?'/api/stats?visit=1':'/api/stats';
+    const r=await fetch(url,isFirstLoad?{method:'POST'}:{});
+    const d=await r.json();
+    const users=d.count||0, online=d.online||0, views=d.views||0;
+
+    // Badge testuale
+    const badge=document.getElementById('user-count-text');
+    if(badge){
+      if(users>=10) badge.textContent=users.toLocaleString('it-IT')+' investitori già a bordo';
+      else if(users>0) badge.textContent='Primi investitori già a bordo — unisciti a loro';
+      else badge.textContent='Sii tra i primi a registrarti';
+    }
+
+    // Stat box utenti iscritti
+    const elU=document.getElementById('stat-users');
+    if(elU) animateCounter(elU,_prevUsers,users);
+
+    // Stat box online ora
+    const elO=document.getElementById('stat-online-num');
+    if(elO) animateCounter(elO,_prevOnline,online);
+
+    // Stat box visite totali
+    const elV=document.getElementById('stat-views');
+    if(elV) animateCounter(elV,_prevViews,views);
+
+    _prevUsers=users; _prevOnline=online; _prevViews=views;
+  }catch{
+    const badge=document.getElementById('user-count-text');
+    if(badge)badge.textContent='Registrazione gratuita · Zero costi';
+  }
+}
+loadStats(true);
+setInterval(()=>loadStats(false),30000);
 
 function scrollToForm(){
   const el=document.getElementById('auth-card');
