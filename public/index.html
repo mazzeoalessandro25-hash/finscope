@@ -3405,6 +3405,103 @@ function toggleDark(){
 })();
 
 /* ══════════════════════════════════════════
+   PROSPETTO VALORE FUTURO
+══════════════════════════════════════════ */
+async function loadPortTargets(){
+  const el=document.getElementById('port-targets-content');
+  if(!el)return;
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;
+  }
+  el.innerHTML='<div class="ld" style="padding:10px">Recupero prezzi target analisti...</div>';
+
+  const [summaries,quotes]=await Promise.all([
+    Promise.all(portfolio.map(item=>api(item.sym,'summary'))),
+    _lastPortQuotes.length===portfolio.length
+      ?Promise.resolve(_lastPortQuotes)
+      :Promise.all(portfolio.map(item=>api(item.sym)))
+  ]);
+
+  let totalCurVal=0,totalTargetVal=0,totalInv=0,coverageCount=0;
+  const recColors={strongbuy:'#059669',buy:'#10B981',hold:'#CA8A04',sell:'#EF4444',strongsell:'#7F0000'};
+  const recLabels={strongbuy:'Forte Acq.',buy:'Acquisto',hold:'Neutrale',sell:'Vendita',strongsell:'Forte Vend.'};
+
+  const rows=portfolio.map((item,i)=>{
+    const q=quotes[i];
+    const sd=summaries[i];
+    const curPrice=q?.price??null;
+    const target=sd?.targetPrice??null;
+    const targetHigh=sd?.targetHigh??null;
+    const targetLow=sd?.targetLow??null;
+    const numAnalysts=sd?.numAnalysts??null;
+    const rec=(sd?.rec||'').replace('-','');
+    const invested=item.qty*item.buyPrice;
+    const curVal=curPrice?item.qty*curPrice:invested;
+    const targetVal=target?item.qty*target:null;
+    const upside=target&&curPrice?((target-curPrice)/curPrice*100):null;
+    const gainFromBuy=targetVal!=null?targetVal-invested:null;
+    const gainFromBuyPct=gainFromBuy!=null&&invested>0?(gainFromBuy/invested*100):null;
+    const cur=item.currency==='EUR'?'€':'$';
+    totalInv+=invested;totalCurVal+=curVal;
+    if(targetVal!=null){totalTargetVal+=targetVal;coverageCount++;}
+    return{item,curPrice,target,targetHigh,targetLow,numAnalysts,rec,curVal,targetVal,upside,gainFromBuy,gainFromBuyPct,cur,invested};
+  });
+
+  const totalUpside=totalCurVal>0&&totalTargetVal>0?((totalTargetVal-totalCurVal)/totalCurVal*100):null;
+  const totalGain=totalTargetVal>0?totalTargetVal-totalCurVal:null;
+  const coverage=Math.round(coverageCount/portfolio.length*100);
+  // Valuta prevalente: se tutti EUR usa €, altrimenti $
+  const mainCur=portfolio.every(it=>it.currency==='EUR')?'€':'$';
+
+  el.innerHTML=`
+    <div class="port-target-summary">
+      <div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;letter-spacing:.5px">VALORE ATTUALE</div>
+        <div style="font-size:20px;font-weight:700;color:var(--t);font-family:var(--fm)">${mainCur}${fmt(totalCurVal,0)}</div>
+        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Investito ${mainCur}${fmt(totalInv,0)}</div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:22px;color:var(--t3)">→</div>
+        <div style="font-size:10px;font-family:var(--fm);color:var(--t3)">${coverage}% copertura</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">12 mesi</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;letter-spacing:.5px">TARGET ANALISTI</div>
+        <div style="font-size:20px;font-weight:700;font-family:var(--fm);color:${totalUpside==null?'var(--t)':totalUpside>=0?'var(--g)':'var(--r)'}">${totalTargetVal>0?mainCur+fmt(totalTargetVal,0):'—'}</div>
+        <div style="font-size:11px;font-family:var(--fm);color:${totalUpside==null?'var(--t3)':totalUpside>=0?'var(--g)':'var(--r)'}">${totalGain!=null?(totalGain>=0?'+':'')+mainCur+fmt(totalGain,0)+' ('+fmt(totalUpside,1)+'%)':'Dati insufficienti'}</div>
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo</div>
+    ${rows.map(r=>{
+      const up=r.upside==null||r.upside>=0;
+      return`<div class="port-target-row">
+        <div>
+          <div style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px">${r.item.sym}</div>
+          ${r.rec?`<div style="font-size:9px;font-family:var(--fm);color:${recColors[r.rec]||'var(--t3)'}">${recLabels[r.rec]||r.rec}${r.numAnalysts?' ('+r.numAnalysts+')':''}</div>`:''}
+        </div>
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:11px">
+            <span style="color:var(--t2)">${r.cur}${r.curPrice?fmt(r.curPrice,r.curPrice<10?3:2):'—'}</span>
+            <span style="color:var(--t3)">→</span>
+            <span style="font-weight:600;color:${r.target==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.target?r.cur+fmt(r.target,r.target<10?3:2):'N/D'}</span>
+          </div>
+          ${r.targetLow&&r.targetHigh?`<div style="font-size:9px;color:var(--t3);font-family:var(--fm)">Range: ${r.cur}${fmt(r.targetLow,0)} – ${r.cur}${fmt(r.targetHigh,0)}</div>`:''}
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${r.upside==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.upside!=null?(r.upside>=0?'+':'')+fmt(r.upside,1)+'%':'—'}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">upside</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:${r.gainFromBuy==null?'var(--t3)':r.gainFromBuy>=0?'var(--g)':'var(--r)'}">${r.gainFromBuy!=null?(r.gainFromBuy>=0?'+':'')+r.cur+fmt(r.gainFromBuy,0):'—'}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${r.gainFromBuyPct!=null?(r.gainFromBuyPct>=0?'+':'')+fmt(r.gainFromBuyPct,1)+'% dal costo':''}</div>
+        </div>
+      </div>`;
+    }).join('')}
+    <div style="margin-top:12px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ Proiezione a ~12 mesi basata sui prezzi target medi degli analisti · Non garantisce rendimenti futuri · Per titoli senza copertura analitica il dato non è disponibile</div>
+  `;
+}
+
+/* ══════════════════════════════════════════
    FEATURE 5: PORTFOLIO PERFORMANCE CHART
 ══════════════════════════════════════════ */
 let portPerfCI=null;
