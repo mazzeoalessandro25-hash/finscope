@@ -673,7 +673,10 @@ html.dark .auth-box{background:#1e293b}
     <!-- Sezioni fondamentali: 4 colonne -->
     <div class="sd-funds">
       <div class="sd-section">
-        <div class="sd-section-title">Valutazione</div>
+        <div class="sd-section-title" style="display:flex;justify-content:space-between;align-items:center">
+          Valutazione
+          <span id="sd-val-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
+        </div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl">P/E Trailing</div><div class="sd-m-val" id="sdm-pe">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">P/E Forward</div><div class="sd-m-val" id="sdm-fpe">—</div></div>
