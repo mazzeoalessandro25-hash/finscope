@@ -1179,34 +1179,34 @@ html.dark .auth-box{background:#1e293b}
   </div>
 
   <div id="port-content" style="display:none">
-    <!-- Aggiungi titolo -->
-    <div class="card" style="margin-bottom:16px">
-      <div class="ch"><div><div class="ct">Aggiungi titolo</div><div class="cs">Inserisci ticker, quantità e prezzo di acquisto</div></div></div>
-      <div class="port-add-row">
-        <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:120px;text-transform:uppercase"/>
-        <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any" style="width:100px"/>
-        <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acquisto $" min="0" step="any" style="width:150px"/>
-        <button class="port-btn" onclick="addPortfolioItem()">+ Aggiungi</button>
-      </div>
-    </div>
-
-    <!-- Lista titoli + riepilogo -->
-    <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
+    <!-- Top row: Aggiungi titolo + Riepilogo -->
+    <div style="display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:16px">
       <div class="card">
-        <div class="ch"><div><div class="ct">Titoli in portafoglio</div><div class="cs">Prezzi live · clicca per grafico</div></div><button class="sc-btn" style="font-size:11px;padding:5px 12px" onclick="exportPortfolioCSV()">⬇ Esporta CSV</button></div>
-        <div id="port-list"><div class="ld">Nessun titolo aggiunto</div></div>
-      </div>
-      <div class="card">
-        <div class="ch"><div><div class="ct">Riepilogo</div></div></div>
-        <div id="port-summary">
-          <div class="ld" style="padding:10px">Caricamento...</div>
+        <div class="ch"><div><div class="ct">Aggiungi titolo</div><div class="cs">Inserisci ticker, quantità e prezzo di acquisto</div></div></div>
+        <div class="port-add-row">
+          <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:120px;text-transform:uppercase"/>
+          <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any" style="width:100px"/>
+          <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acquisto $" min="0" step="any" style="width:150px"/>
+          <button class="port-btn" onclick="addPortfolioItem()">+ Aggiungi</button>
         </div>
         <!-- Watchlist -->
-        <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
-          <div class="ct" style="margin-bottom:12px">Watchlist</div>
+        <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px">
+          <div class="ct" style="margin-bottom:10px;font-size:12px">Watchlist</div>
           <div id="wl-list-port"><div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Nessun titolo in watchlist</div></div>
         </div>
       </div>
+      <div class="card">
+        <div class="ch"><div><div class="ct">Riepilogo portafoglio</div><div class="cs" id="port-summary-rate"></div></div></div>
+        <div id="port-summary">
+          <div class="ld" style="padding:10px">Caricamento...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista titoli full-width -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="ch"><div><div class="ct">Titoli in portafoglio</div><div class="cs">Prezzi live · clicca per grafico</div></div><button class="sc-btn" style="font-size:11px;padding:5px 12px" onclick="exportPortfolioCSV()">⬇ Esporta CSV</button></div>
+      <div id="port-list"><div class="ld">Nessun titolo aggiunto</div></div>
     </div>
 
     <!-- PORTAFOGLIO VS BENCHMARK -->
