@@ -86,10 +86,7 @@ export default async function handler(req, res) {
     }
 
     if (type === 'summary') {
-      const url = `https://query2.finance.yahoo.com/v10/finance/quoteSummary/${encodeURIComponent(symbol)}?modules=defaultKeyStatistics,summaryDetail,financialData,assetProfile`;
-      const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' } });
-      const data = await r.json();
-      const d = data?.quoteSummary?.result?.[0];
+      const d = await fetchQuoteSummary(symbol);
       if (!d) return res.status(404).json({ error: 'no data' });
       return res.json({
         pe:               d.summaryDetail?.trailingPE?.raw ?? null,
