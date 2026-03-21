@@ -423,6 +423,20 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 .pricing-btn.outline{background:transparent;border:1.5px solid var(--bd);color:var(--t2)}
 .pricing-btn.outline:hover{border-color:var(--b);color:var(--b)}
 
+/* ─── PRICING TABLE ─── */
+.pricing-tbl-wrap{margin-top:40px;border-radius:14px;overflow:hidden;border:1px solid var(--bd);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.pricing-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.pricing-tbl thead tr{background:var(--s2);border-bottom:2px solid var(--bd)}
+.pricing-tbl th{padding:16px 14px;text-align:center;font-family:var(--fm);font-size:11px;color:var(--t2);border-bottom:2px solid var(--bd);vertical-align:bottom}
+.pricing-tbl th:first-child{text-align:left;color:var(--t2)}
+.pricing-tbl th.hl{background:var(--b3);color:var(--b)!important;border-bottom-color:var(--b)}
+.pricing-tbl td{padding:11px 14px;border-bottom:1px solid var(--bd);text-align:center;color:var(--t2);font-family:var(--fm);font-size:12px}
+.pricing-tbl td:first-child{text-align:left;font-size:13px;font-weight:500;color:var(--t);font-family:var(--ff)}
+.pricing-tbl td.hl{background:rgba(26,86,196,.04)}
+.pricing-tbl tr:last-child td{border-bottom:none;padding:14px}
+.pricing-tbl tr:hover td:not([colspan]){background:var(--s2)}
+.pricing-tbl tr:hover td.hl:not([colspan]){background:var(--b3)}
+
 /* ─── HERO PURE CSS ANIMATIONS (no JS dependency) ─── */
 @keyframes heroFadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
 .hero-fade-1{animation:heroFadeUp .5s ease both .05s}
