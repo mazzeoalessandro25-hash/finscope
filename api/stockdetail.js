@@ -94,7 +94,7 @@ export default async function handler(req, res) {
     recScore:          sd?.financialData?.recommendationMean ?? null,
     sector:            sd?.assetProfile?.sector ?? null,
     industry:          sd?.assetProfile?.industry ?? null,
-    description:       await translateToItalian(sd?.assetProfile?.longBusinessSummary ?? null),
+    description:       sd?.assetProfile?.longBusinessSummary ?? null,
     employees:         sd?.assetProfile?.fullTimeEmployees ?? null,
     website:           sd?.assetProfile?.website ?? null,
     news,
