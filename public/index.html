@@ -2678,7 +2678,6 @@ function showPortfolioState(){
     logMsg.style.display='none';content.style.display='block';
     sub.textContent=`${currentUser.name||currentUser.email} · ${portfolio.length} titoli`;
     renderPortfolio();
-    renderWatchlistPort();
   } else {
     logMsg.style.display='block';content.style.display='none';
     sub.textContent='Accedi per salvare e monitorare i tuoi titoli';
