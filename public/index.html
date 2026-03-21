@@ -4162,7 +4162,7 @@ function renderPortAnalysis(portItems, quotes){
               </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:3px">
-              ${signals.map(s=>`<div style="font-size:11px;font-family:var(--fm);color:var(--t2);display:flex;gap:6px;align-items:flex-start"><span style="color:${s.c==='ok'?'var(--g)':s.c==='bad'?'var(--r)':'var(--o)';flex-shrink:0}">${s.c==='ok'?'✓':s.c==='bad'?'✗':'○'}</span>${s.t}</div>`).join('')}
+              ${signals.map(s=>`<div style="font-size:11px;font-family:var(--fm);color:var(--t2);display:flex;gap:6px;align-items:flex-start"><span style="color:${s.c==='ok'?'var(--g)':s.c==='bad'?'var(--r)':'var(--o)'};flex-shrink:0">${s.c==='ok'?'✓':s.c==='bad'?'✗':'○'}</span>${s.t}</div>`).join('')}
             </div>
           </div>`;
         }).join('');
