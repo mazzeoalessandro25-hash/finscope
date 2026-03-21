@@ -418,6 +418,90 @@ html.dark .dm-track{transform:translateX(22px)}
 html.dark .dm-toggle .dm-sun{opacity:0}
 html:not(.dark) .dm-toggle .dm-moon{opacity:0}
 
+/* ═══ PORTFOLIO MAIN LAYOUT ═══ */
+.port-main-layout{display:grid;grid-template-columns:1fr 320px;gap:14px;margin-bottom:14px}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  /* Nascondi hours-bar e tape per guadagnare spazio */
+  .hours-bar{display:none}
+  .tape{display:none}
+  .page{margin-top:54px;padding:14px 18px 48px}
+  .nav-time{display:none}
+  /* Grids */
+  .dash-bot{grid-template-columns:1fr 1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .news-grid{grid-template-columns:1fr}
+  .macro-grid{grid-template-columns:1fr 1fr}
+  .port-kpi-row{grid-template-columns:1fr 1fr}
+  .port-analysis-2col{grid-template-columns:1fr}
+  .port-hero{grid-template-columns:1fr 1fr 1fr}
+  .port-main-layout{grid-template-columns:1fr}
+  /* Simulatore */
+  .sim-l{grid-template-columns:1fr}
+  /* Modal */
+  #modal-chart{height:240px}
+  .modal-box{padding:16px}
+  /* SD overlay */
+  .sd-body{padding:14px 16px}
+  .sd-header{padding:10px 16px}
+  /* Bench */
+  .bench-label{width:90px}
+  /* Nav */
+  .nav-items .nav-btn:not(.active){display:none}
+  .nav-user-email{display:none}
+}
+@media(max-width:600px){
+  nav{padding:0 14px}
+  .page{padding:12px 12px 56px}
+  /* Tutto in colonna singola */
+  .dash-charts{grid-template-columns:1fr}
+  .dash-bot{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr 1fr}
+  .grid2{grid-template-columns:1fr}
+  .macro-grid{grid-template-columns:1fr 1fr}
+  .port-kpi-row{grid-template-columns:1fr 1fr}
+  .port-hero{grid-template-columns:1fr 1fr}
+  .res-row{grid-template-columns:1fr}
+  .fa-grid{grid-template-columns:1fr}
+  /* Screener - scroll orizzontale */
+  .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl{min-width:640px}
+  /* Testo */
+  .pg-title{font-size:17px}
+  .pg-sub{font-size:12px}
+  .card{padding:14px}
+  /* Radar */
+  .radar-wrap{width:140px;height:140px}
+  /* VIX */
+  .vix-num{font-size:36px}
+  /* Modal */
+  #modal-chart{height:200px}
+  /* SD */
+  .sd-funds{grid-template-columns:1fr 1fr}
+  .sd-rec-grid{grid-template-columns:1fr 1fr}
+  .sd-top{grid-template-columns:1fr}
+  .sd-hdr-sym{font-size:16px}
+  .sd-hdr-price{font-size:18px}
+  /* Rebalancing */
+  .reb-row{grid-template-columns:60px 1fr 60px auto;gap:6px}
+  /* Tax */
+  .tax-row{grid-template-columns:1fr auto;gap:6px;flex-wrap:wrap}
+  /* Port tabs scroll */
+  .port-tabs{gap:0}
+  .port-tab{padding:8px 10px;font-size:11px}
+  /* Footer */
+  footer{flex-direction:column;text-align:center;padding:16px}
+}
+@media(max-width:400px){
+  .grid3{grid-template-columns:1fr}
+  .port-kpi-row{grid-template-columns:1fr}
+  .port-hero{grid-template-columns:1fr 1fr}
+  .macro-grid{grid-template-columns:1fr}
+  .sd-funds{grid-template-columns:1fr}
+  .sd-rec-grid{grid-template-columns:1fr}
+}
+
 /* ═══ THEME TRANSITIONS ═══ */
 body,nav,.card,.auth-box,.hours-bar,.tape,.port-hero-kpi,.rb,.macro-stat,.alert-item,.wl-card,
 .hm-sec-hdr,.sd-section,.sd-m,.port-item,.modal-box{transition:background-color .25s,border-color .25s,color .15s}
