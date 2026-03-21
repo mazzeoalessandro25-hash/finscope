@@ -14,25 +14,6 @@ async function fetchNews(symbol) {
   } catch (_) { return []; }
 }
 
-async function translateToItalian(text) {
-  if (!text || text.length < 20) return text;
-  const chunks = [];
-  for (let i = 0; i < text.length; i += 450) chunks.push(text.slice(i, i + 450));
-  const parts = [];
-  for (const chunk of chunks) {
-    try {
-      const r = await fetch(
-        `https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=en|it`,
-        { signal: AbortSignal.timeout(5000) }
-      );
-      if (!r.ok) { parts.push(chunk); continue; }
-      const d = await r.json();
-      const t = d?.responseData?.translatedText;
-      parts.push(t && !t.includes('MYMEMORY WARNING') ? t : chunk);
-    } catch { parts.push(chunk); }
-  }
-  return parts.join(' ');
-}
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
