@@ -2805,6 +2805,17 @@ async function renderPortfolio(){
   if(rateEl) rateEl.textContent = `EUR/USD: ${fmt(eurUsd,4)}`;
 
   let summaryHtml='';
+  // Mini donut allocation
+  const holdingEntries=portfolio.map((item,i)=>[item.sym,item.qty*item.buyPrice]).sort((a,b)=>b[1]-a[1]);
+  if(holdingEntries.length>0){
+    summaryHtml+=`<div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:10px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:8px">ALLOCAZIONE TITOLI</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="flex-shrink:0">${svgDonut(holdingEntries.slice(0,8),null,76,16)}</div>
+        <div style="flex:1">${donutLegend(holdingEntries.slice(0,5),null)}</div>
+      </div>
+    </div>`;
+  }
   // Totale unificato
   if(totalUSD_inv>0 || totalEUR_inv>0){
     summaryHtml+=`<div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:10px">
