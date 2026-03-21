@@ -2565,18 +2565,7 @@ function getScoreColor(pct){
   if(pct>=70)return'var(--g)'; if(pct>=45)return'var(--o)'; return'var(--r)';
 }
 
-/* ── DARK MODE ── */
-function toggleDark(){
-  const dark=document.body.classList.toggle('dark');
-  localStorage.setItem('fs_dark',dark?'1':'0');
-  document.getElementById('dm-btn').textContent=dark?'☀':'🌙';
-}
-(function(){
-  if(localStorage.getItem('fs_dark')==='1'){
-    document.body.classList.add('dark');
-    const b=document.getElementById('dm-btn');if(b)b.textContent='☀';
-  }
-})();
+/* ── DARK MODE (gestito da initTheme + toggleDark sotto) ── */
 
 /* ── AI ANALYSIS ── */
 let _lastFA={qd:null,sd:null,ticker:''};
