@@ -1119,6 +1119,32 @@ function scrollToForm(){
   }
 }
 
+function scrollToLogin(){
+  scrollToForm();
+  setTimeout(()=>{
+    const loginBtn=document.querySelector('.auth-tab');
+    if(loginBtn&&authTab!=='login') switchTab('login',loginBtn);
+  },400);
+}
+
+// ─── Mobile sticky CTA ───
+(function(){
+  const bar=document.getElementById('mobile-cta-bar');
+  if(!bar)return;
+  const hero=document.querySelector('.hero');
+  let heroBottom=0;
+  function update(){
+    if(!heroBottom&&hero) heroBottom=hero.getBoundingClientRect().bottom+window.scrollY;
+    const scrolled=window.scrollY;
+    const atBottom=(window.innerHeight+scrolled)>=document.body.scrollHeight-80;
+    if(scrolled<heroBottom-100||atBottom) bar.classList.add('hidden');
+    else bar.classList.remove('hidden');
+  }
+  bar.classList.add('hidden');
+  window.addEventListener('scroll',update,{passive:true});
+  setTimeout(update,300);
+})();
+
 // ─── Auth views ───
 function showLpView(view){
   ['lp-main-view','lp-forgot-view','lp-reset-view'].forEach(id=>{
