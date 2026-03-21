@@ -959,10 +959,6 @@ async function loadStats(isFirstLoad){
     const elU=document.getElementById('stat-users');
     if(elU) animateCounter(elU,_prevUsers,users);
 
-    // Stat box online ora
-    const elO=document.getElementById('stat-online-num');
-    if(elO) animateCounter(elO,_prevOnline,online);
-
     // Stat box visite totali
     const elV=document.getElementById('stat-views');
     if(elV) animateCounter(elV,_prevViews,views);
