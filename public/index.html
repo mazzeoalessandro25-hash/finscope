@@ -3664,14 +3664,30 @@ function renderValuation(d, cur){
 
 // Applica i dati fondamentali (bilancio) all'UI
 function renderFundamentals(d, cur){
-  sdSetPct('sdm-roe',d.roe,d.roe>0);
-  sdSetPct('sdm-roa',d.roa,d.roa>0);
-  sdSetPct('sdm-gm',d.grossMargins,d.grossMargins>0.2);
-  sdSetPct('sdm-om',d.operatingMargins,d.operatingMargins>0.1);
-  sdSetPct('sdm-pm',d.profitMargins,d.profitMargins>0);
+  function pctArrow(id,v,threshold){
+    const el=document.getElementById(id);if(!el)return;
+    if(v==null){el.textContent='—';el.className='sd-m-val';return;}
+    const pct=fmt(v*100,1)+'%';
+    const good=v>threshold;
+    const arrow=good?'▲ ':'▼ ';
+    el.textContent=arrow+pct;
+    el.className='sd-m-val '+(good?'up':'down');
+  }
+  function pctChgArrow(id,v){
+    const el=document.getElementById(id);if(!el)return;
+    if(v==null){el.textContent='—';el.className='sd-m-val';return;}
+    const arrow=v>=0?'▲ ':'▼ ';
+    el.textContent=arrow+(v>=0?'+':'')+fmt(v*100,1)+'%';
+    el.className='sd-m-val '+(v>=0?'up':'down');
+  }
+  pctArrow('sdm-roe',d.roe,0);
+  pctArrow('sdm-roa',d.roa,0);
+  pctArrow('sdm-gm',d.grossMargins,0.2);
+  pctArrow('sdm-om',d.operatingMargins,0.1);
+  pctArrow('sdm-pm',d.profitMargins,0);
   sdSet('sdm-ebitda',d.ebitda?fmtLg(d.ebitda):'—');
-  sdSetPctChg('sdm-revg',d.revenueGrowth);
-  sdSetPctChg('sdm-earng',d.earningsGrowth);
+  pctChgArrow('sdm-revg',d.revenueGrowth);
+  pctChgArrow('sdm-earng',d.earningsGrowth);
   sdSet('sdm-rev',d.totalRevenue?fmtLg(d.totalRevenue):'—');
   sdSet('sdm-fcf',d.freeCashflow?fmtLg(d.freeCashflow):'—');
   sdSet('sdm-cash',d.totalCash?fmtLg(d.totalCash):'—');
@@ -3679,32 +3695,30 @@ function renderFundamentals(d, cur){
   sdSet('sdm-de',d.debtToEquity!=null?fmt(d.debtToEquity,1):'—');
   sdSet('sdm-cr',d.currentRatio!=null?fmt(d.currentRatio,2):'—');
   sdSet('sdm-qr',d.quickRatio!=null?fmt(d.quickRatio,2):'—');
-  sdSet('sdm-emp',d.employees?d.employees.toLocaleString('it-IT')+' pers.':'—');
-  // Azienda
+  // Dipendenti senza "pers."
+  sdSet('sdm-emp',d.employees?d.employees.toLocaleString('it-IT'):'—');
   if(d.sector||d.industry){
     const bar=document.getElementById('sd-sector-bar');
-    bar.style.display='block';
-    document.getElementById('sd-sector-txt').textContent=[d.sector,d.industry].filter(Boolean).join(' · ');
+    if(bar)bar.style.display='block';
+    const txt=document.getElementById('sd-sector-txt');
+    if(txt)txt.textContent=[d.sector,d.industry].filter(Boolean).join(' · ');
   }
   document.getElementById('sd-description').textContent=d.description||'Nessuna descrizione disponibile.';
   if(d.website)
     document.getElementById('sd-website').innerHTML=
       `<a href="${d.website}" target="_blank" rel="noopener" style="font-size:11px;color:var(--b);text-decoration:none;font-family:var(--fm)">🔗 ${d.website}</a>`;
-  // Badge aggiornamento trimestrale
   const badge=document.getElementById('sd-fund-badge');
   if(badge)badge.textContent='Dati bilancio al: '+new Date(d._ts||Date.now()).toLocaleDateString('it-IT');
-  // Notizie
   const newsList=document.getElementById('sd-news-list');
-  if(d.news&&d.news.length){
-    newsList.innerHTML=d.news.map(n=>{
-      const ago=n.time?timeAgo(n.time):'';
-      return `<div class="sd-news-item">
-        <a href="${n.link}" target="_blank" rel="noopener" class="sd-news-title">${n.title}</a>
-        <div class="sd-news-meta">${n.publisher}${ago?' · '+ago:''}</div>
-      </div>`;
-    }).join('');
-  } else {
-    newsList.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessuna notizia recente.</div>';
+  if(newsList){
+    if(d.news&&d.news.length){
+      newsList.innerHTML=d.news.map(n=>{
+        const ago=n.time?timeAgo(n.time):'';
+        return `<div class="sd-news-item"><a href="${n.link}" target="_blank" rel="noopener" class="sd-news-title">${n.title}</a><div class="sd-news-meta">${n.publisher}${ago?' · '+ago:''}</div></div>`;
+      }).join('');
+    } else {
+      newsList.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessuna notizia recente.</div>';
+    }
   }
 }
 
