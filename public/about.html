@@ -263,71 +263,97 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 @media(max-width:900px){
   nav{padding:0 24px}
   nav .nav-links{display:none}
-  .nav-login{display:none} /* su tablet mostra solo il CTA principale */
-  .hero-inner{grid-template-columns:1fr;gap:36px;text-align:center}
-  .hero-sub{margin:0 auto 36px}
+  .nav-login{display:none}
+
+  /* ── Hero ── */
+  .hero{padding:100px 28px 64px;min-height:auto}
+  .hero-inner{grid-template-columns:1fr;gap:40px;text-align:center;justify-items:center}
+  .hero-left{display:flex;flex-direction:column;align-items:center;width:100%}
+  .user-count-badge{margin-bottom:20px}
+  .hero-badge{margin-bottom:24px}
+  .hero h1{text-align:center}
+  .hero-sub{max-width:560px;text-align:center;margin:0 auto 36px}
   .hero-actions{justify-content:center}
-  .user-count-badge{margin:0 auto 20px}
-  .hero-badge{margin:0 auto 24px}
-  .hero-stats{grid-template-columns:1fr 1fr;max-width:360px;margin:40px auto 0}
+  .hero-proof{justify-content:center;flex-wrap:wrap;text-align:center}
+  .hero-stats{grid-template-columns:1fr 1fr;max-width:340px;margin:36px auto 0}
+  .auth-card{width:100%;max-width:440px}
+
+  /* ── Sezioni ── */
   .features-grid{grid-template-columns:1fr 1fr}
+  .section-title{text-align:center}
+  .section-sub{text-align:center;margin-left:auto;margin-right:auto}
+  .section-tag{text-align:center;display:block}
   .score-inner{grid-template-columns:1fr;gap:32px}
+  .score-title,.score-sub{text-align:center}
+  .score-dims{max-width:480px;margin:0 auto}
   .steps::before{display:none}
   .steps{grid-template-columns:1fr;gap:32px}
   .pricing-grid{grid-template-columns:1fr 1fr}
   .testi-grid{grid-template-columns:1fr}
   .story-inner{padding:60px 28px}
   .section{padding:60px 28px}
-  /* Footer */
+
+  /* ── Footer ── */
   footer{padding:28px 24px}
   footer>div:first-child{flex-direction:column;gap:24px;align-items:flex-start}
   footer>div:first-child>div:last-child{gap:24px}
 }
 
-/* Mobile grande */
+/* Mobile */
 @media(max-width:600px){
   nav{padding:0 16px}
-  .hero{padding:90px 16px 60px}
+  .hero{padding:88px 16px 52px}
+  .hero-inner{gap:32px}
+  .hero h1{font-size:clamp(30px,8vw,42px);letter-spacing:-1px}
+  .hero-sub{font-size:15px}
+  .btn-primary,.btn-secondary{padding:13px 24px;font-size:14px;width:100%;text-align:center;box-sizing:border-box}
+  .hero-actions{flex-direction:column;align-items:center;gap:10px;width:100%}
+  .hero-proof{font-size:11px;gap:6px}
+  .hero-stats{max-width:100%}
+  .auth-card{padding:22px 18px;max-width:100%}
+
+  /* ── Sezioni ── */
   .section{padding:48px 16px}
-  .hero-inner{gap:28px}
-  .hero h1{letter-spacing:-1px}
   .features-grid{grid-template-columns:1fr}
   .pricing-grid{grid-template-columns:1fr}
   .testi-grid{grid-template-columns:1fr}
-  .score-section{padding:60px 16px}
+  .score-section{padding:56px 16px}
   .score-inner{gap:24px}
   .score-card{padding:20px}
   .score-big{font-size:42px}
   .steps{gap:24px}
   .step{padding:0 8px}
-  .trust-bar{padding:14px 16px;gap:20px}
-  .trust-item{font-size:12px}
+  .trust-bar{padding:14px 16px;gap:16px;justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap}
+  .trust-item{font-size:12px;white-space:nowrap}
   .story-inner{padding:48px 16px}
   .testimonials-section{padding:48px 16px}
   .pricing-section{padding:48px 16px}
-  .cta-section{padding:60px 16px}
-  /* Comparison table scroll */
+  .cta-section{padding:56px 16px;text-align:center}
+  .cta-section h2{font-size:clamp(24px,7vw,36px)}
+
+  /* ── Comparison table ── */
   .comp-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .comp-tbl{min-width:480px}
-  /* Footer mobile */
+
+  /* ── Footer ── */
   footer{padding:24px 16px}
   footer>div:first-child{flex-direction:column;gap:20px}
   footer>div:first-child>div:last-child{flex-direction:column;gap:20px}
   footer>div:last-child{flex-direction:column;gap:6px;align-items:flex-start}
   .foot-note{text-align:left}
-  /* Nav login: visibile anche su mobile per "Accedi" */
   .nav-login{display:inline-block!important;padding:6px 12px;font-size:12px}
   .nav-cta{font-size:12px;padding:7px 14px}
 }
 
 /* Mobile piccolo */
 @media(max-width:400px){
-  .hero h1{font-size:34px}
+  .hero{padding:82px 14px 48px}
+  .hero h1{font-size:30px}
   .hero-stats{grid-template-columns:1fr 1fr}
   .pricing-grid{grid-template-columns:1fr}
-  .btn-primary,.btn-secondary{padding:12px 22px;font-size:14px}
-  .section-title{font-size:24px}
-  .cta-section h2{font-size:26px}
+  .section-title{font-size:22px}
+  .cta-section h2{font-size:24px}
+  .auth-card{padding:18px 14px}
 }
 
 /* ─── SCROLL REVEAL ─── */
