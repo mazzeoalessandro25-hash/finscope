@@ -2752,6 +2752,31 @@ async function renderPortfolio(){
 
   el.innerHTML=rows.join('');
 
+  // ── Popola Hero Bar ──
+  const _heroValUSD=(totalUSD_val||totalUSD_inv)+(totalEUR_val||totalEUR_inv)*eurUsd;
+  const _heroValEUR=(totalUSD_val||totalUSD_inv)/eurUsd+(totalEUR_val||totalEUR_inv);
+  const _heroInvUSD=totalUSD_inv+totalEUR_inv*eurUsd;
+  const _heroPnl=_heroValUSD-_heroInvUSD;
+  const _heroRend=_heroInvUSD>0?(_heroPnl/_heroInvUSD*100):0;
+  const _heroUp=_heroPnl>=0;
+  const allSects=[...new Set(STOCKS.concat(customStocks).filter(s=>portfolio.find(p=>p.sym===s.s)).map(s=>s.sec))];
+  const setV=id=>v=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const setC=id=>(v,cls)=>{const e=document.getElementById(id);if(e){e.textContent=v;if(cls)e.style.color=cls;}};
+  setV('ph-val-usd')('$'+fmt(_heroValUSD,0));
+  setV('ph-val-eur')('€'+fmt(_heroValEUR,0));
+  setV('ph-count')(portfolio.length);
+  setV('ph-sectors')(allSects.length+' '+(allSects.length===1?'settore':'settori'));
+  setC('ph-pnl')(((_heroUp?'+':'')+($=>'$'+fmt($,0))(_heroPnl)),_heroUp?'var(--g)':'var(--r)');
+  setC('ph-pnl-pct')((_heroUp?'+':'')+fmt(_heroPnl/_heroInvUSD*100,2)+'%',_heroUp?'var(--g)':'var(--r)');
+  setC('ph-rend')((_heroUp?'+':'')+fmt(_heroRend,2)+'%',_heroUp?'var(--g)':'var(--r)');
+  setV('ph-rate')(fmt(eurUsd,4));
+  const _fxChg=fxData?chgPct(fxData.price,fxData.prev):null;
+  setC('ph-rate-chg')(_fxChg!=null?chgStr(_fxChg):'',_fxChg==null||_fxChg>=0?'var(--g)':'var(--r)');
+  // Colora le hero card P&L e Rendimento
+  ['ph-pnl','ph-pnl-pct','ph-rend'].forEach(id=>{
+    const e=document.getElementById(id);if(e){const kpi=e.closest('.port-hero-kpi');if(kpi)kpi.style.borderColor=_heroUp?'rgba(5,150,105,.3)':'rgba(220,38,38,.3)';}
+  });
+
   // Totale unificato con cambio EUR/USD
   const totalInvUSD = totalUSD_inv + totalEUR_inv * eurUsd;
   const totalValUSD = (totalUSD_val||totalUSD_inv) + (totalEUR_val||totalEUR_inv) * eurUsd;
