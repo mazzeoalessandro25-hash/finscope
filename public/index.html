@@ -1031,13 +1031,13 @@ html.dark .auth-box{background:#1e293b}
 <nav>
   <div class="logo" style="cursor:pointer" onclick="window.location.href='./about.html'"><div class="logo-dot"></div>Fin<span>Scope</span></div>
   <div class="nav-items">
-    <button class="nav-btn active" onclick="showPage('dashboard',this)">Dashboard</button>
-    <button class="nav-btn" onclick="showPage('screener',this)">Screener</button>
-    <button class="nav-btn" onclick="showPage('portafoglio',this)">Portafoglio</button>
-    <button class="nav-btn" onclick="showPage('simulatore',this)">Simulatore</button>
-    <button class="nav-btn" onclick="showPage('news',this)">News</button>
-    <button class="nav-btn" onclick="showPage('alerts',this)">🔔 Alert</button>
-    <button class="nav-btn" onclick="showPage('macro',this)">📊 Macro</button>
+    <button class="nav-btn active" id="nb-dashboard" onclick="showPage('dashboard',this)">Dashboard</button>
+    <button class="nav-btn" id="nb-screener" onclick="showPage('screener',this)">Screener</button>
+    <button class="nav-btn" id="nb-portafoglio" onclick="showPage('portafoglio',this)">Portafoglio</button>
+    <button class="nav-btn" id="nb-simulatore" onclick="showPage('simulatore',this)">Simulatore</button>
+    <button class="nav-btn" id="nb-news" onclick="showPage('news',this)">News</button>
+    <button class="nav-btn" id="nb-alerts" onclick="showPage('alerts',this)">🔔 Alert</button>
+    <button class="nav-btn" id="nb-macro" onclick="showPage('macro',this)">📊 Macro</button>
   </div>
   <div class="nav-right">
     <button class="dm-toggle" id="dm-btn" onclick="toggleDark()" title="Cambia tema chiaro/scuro" aria-label="Toggle tema">
@@ -1049,8 +1049,22 @@ html.dark .auth-box{background:#1e293b}
     <div class="nav-user" id="nav-user-area">
       <button class="nav-login-btn" onclick="window.location.href='./about.html'">Accedi</button>
     </div>
+    <button class="hamburger" id="hamburger-btn" onclick="toggleMobileNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE NAV DRAWER -->
+<div class="mobile-drawer" id="mobile-drawer">
+  <button class="mob-nav-btn active" id="mob-nb-dashboard" onclick="showPage('dashboard',document.getElementById('nb-dashboard'));closeMobileNav()">Dashboard</button>
+  <button class="mob-nav-btn" id="mob-nb-screener" onclick="showPage('screener',document.getElementById('nb-screener'));closeMobileNav()">Screener</button>
+  <button class="mob-nav-btn" id="mob-nb-portafoglio" onclick="showPage('portafoglio',document.getElementById('nb-portafoglio'));closeMobileNav()">Portafoglio</button>
+  <button class="mob-nav-btn" id="mob-nb-simulatore" onclick="showPage('simulatore',document.getElementById('nb-simulatore'));closeMobileNav()">Simulatore</button>
+  <button class="mob-nav-btn" id="mob-nb-news" onclick="showPage('news',document.getElementById('nb-news'));closeMobileNav()">News</button>
+  <button class="mob-nav-btn" id="mob-nb-alerts" onclick="showPage('alerts',document.getElementById('nb-alerts'));closeMobileNav()">🔔 Alert</button>
+  <button class="mob-nav-btn" id="mob-nb-macro" onclick="showPage('macro',document.getElementById('nb-macro'));closeMobileNav()">📊 Macro</button>
+</div>
 
 <!-- ORARI BORSE CENTRATI -->
 <div class="hours-bar" style="position:relative">
