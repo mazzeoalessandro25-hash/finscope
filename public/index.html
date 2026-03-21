@@ -3735,18 +3735,44 @@ function renderFundamentals(d, cur){
   }
 }
 
+async function translateDescription(sym, text){
+  if(!text||text.length<20)return;
+  const chunks=[];
+  for(let i=0;i<text.length;i+=450)chunks.push(text.slice(i,i+450));
+  const parts=[];
+  for(const chunk of chunks){
+    try{
+      const r=await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(chunk)}&langpair=en|it`,
+        {signal:AbortSignal.timeout(5000)});
+      if(!r.ok){parts.push(chunk);continue;}
+      const j=await r.json();
+      const t=j?.responseData?.translatedText;
+      parts.push(t&&!t.includes('MYMEMORY WARNING')?t:chunk);
+    }catch{parts.push(chunk);}
+  }
+  const translated=parts.join(' ');
+  if(sdSym===sym){
+    const el=document.getElementById('sd-description');
+    if(el)el.textContent=translated;
+    const cached=sdCacheGet(sym,'fund');
+    if(cached){cached.description=translated;cached._translated=true;sdCacheSet(sym,'fund',cached);}
+  }
+}
+
 async function loadSdData(sym){
   // ── 1. Cache locale: mostra subito quello che abbiamo ─────────────────
   const cachedVal  = sdCacheGet(sym,'val');
   const cachedFund = sdCacheGet(sym,'fund');
-  // Prima di avere la currency, usiamo quella della cache o default USD
-  const cachedCur  = cachedVal?.(cachedVal.currency==='EUR'?'€':'$') || '$';
 
   if(cachedVal)  renderValuation(cachedVal, cachedVal.currency==='EUR'?'€':'$');
   if(cachedFund) renderFundamentals(cachedFund, cachedFund.currency==='EUR'?'€':'$');
 
   // ── 2. Fetch API se almeno una cache manca ────────────────────────────
-  if(cachedVal && cachedFund) return; // tutto fresco, non serve chiamata
+  if(cachedVal && cachedFund){
+    // Traduzione lazy se descrizione non ancora tradotta
+    if(!cachedFund._translated&&cachedFund.description) translateDescription(sym,cachedFund.description);
+    return;
+  }
 
   let d=null;
   for(let attempt=0;attempt<3&&!d;attempt++){
@@ -3754,7 +3780,7 @@ async function loadSdData(sym){
       const r=await fetch(`/api/stockdetail?symbol=${encodeURIComponent(sym)}`);
       if(r.ok)d=await r.json();
     }catch(_){}
-    if(!d&&attempt<2)await new Promise(r=>setTimeout(r,1200*(attempt+1)));
+    if(!d&&attempt<2)await new Promise(r=>setTimeout(r,400*(attempt+1)));
   }
   if(sdSym!==sym)return;
   if(!d||d.error){
