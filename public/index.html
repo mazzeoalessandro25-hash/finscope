@@ -677,31 +677,74 @@ html.dark .auth-box{background:#1e293b}
 <div class="auth-overlay" id="auth-modal">
   <div class="auth-box">
     <div class="auth-logo">Fin<span>Scope</span></div>
-    <div class="auth-sub">Accedi per salvare watchlist, portafoglio e preferenze</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login',this)">Accedi</button>
-      <button class="auth-tab" onclick="switchTab('register',this)">Registrati</button>
+    <div class="auth-sub" id="auth-modal-sub">Accedi per salvare watchlist, portafoglio e preferenze</div>
+
+    <!-- ── VISTA PRINCIPALE: Login / Registrati ── -->
+    <div id="auth-main-view" class="auth-view">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login',this)">Accedi</button>
+        <button class="auth-tab" onclick="switchTab('register',this)">Registrati</button>
+      </div>
+      <div class="auth-err" id="auth-err"></div>
+      <div class="auth-ok" id="auth-ok"></div>
+      <div class="auth-field" id="name-field" style="display:none">
+        <label>Nome</label>
+        <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+      </div>
+      <div class="auth-field">
+        <label>Email</label>
+        <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
+          onkeydown="if(event.key==='Enter')submitAuth()"/>
+      </div>
+      <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Accedi</button>
+      <div style="text-align:center;margin-top:12px">
+        <button onclick="showAuthView('forgot')" style="background:none;border:none;color:var(--b);font-size:12px;cursor:pointer;font-family:var(--ff);text-decoration:underline;padding:0">
+          Hai dimenticato la password?
+        </button>
+      </div>
+      <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.5">
+        Continuando accetti la nostra <a href="#" style="color:var(--b)">Privacy Policy</a>.<br>
+        I tuoi dati sono trattati secondo il GDPR.
+      </p>
     </div>
-    <div class="auth-err" id="auth-err"></div>
-    <div class="auth-ok" id="auth-ok"></div>
-    <div class="auth-field" id="name-field" style="display:none">
-      <label>Nome</label>
-      <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+
+    <!-- ── VISTA: Password dimenticata ── -->
+    <div id="auth-forgot-view" class="auth-view" style="display:none">
+      <div class="auth-err" id="fp-err"></div>
+      <div class="auth-ok" id="fp-ok"></div>
+      <div class="auth-field">
+        <label>Email del tuo account</label>
+        <input type="email" id="fp-email" placeholder="la-tua@email.com" autocomplete="email"
+          onkeydown="if(event.key==='Enter')submitForgotPw()"/>
+      </div>
+      <button class="auth-submit" id="fp-submit" onclick="submitForgotPw()">Invia codice di reset</button>
+      <button class="auth-back-btn" onclick="showAuthView('main')">← Torna al login</button>
     </div>
-    <div class="auth-field">
-      <label>Email</label>
-      <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
+
+    <!-- ── VISTA: Reset password ── -->
+    <div id="auth-reset-view" class="auth-view" style="display:none">
+      <div class="auth-err" id="rp-err"></div>
+      <div class="auth-ok" id="rp-ok"></div>
+      <input type="hidden" id="rp-email-hidden"/>
+      <div class="auth-field">
+        <label>Codice di reset (6 cifre)</label>
+        <input class="fp-code-input" type="text" id="rp-code" placeholder="— — — — — —"
+          maxlength="6" inputmode="numeric" autocomplete="one-time-code"
+          onkeydown="if(event.key==='Enter')document.getElementById('rp-pwd').focus()"/>
+      </div>
+      <div class="auth-field">
+        <label>Nuova password</label>
+        <input type="password" id="rp-pwd" placeholder="Minimo 8 caratteri"
+          onkeydown="if(event.key==='Enter')submitResetPw()"/>
+      </div>
+      <button class="auth-submit" id="rp-submit" onclick="submitResetPw()">Aggiorna password</button>
+      <button class="auth-back-btn" onclick="showAuthView('forgot')">← Torna indietro</button>
     </div>
-    <div class="auth-field">
-      <label>Password</label>
-      <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
-        onkeydown="if(event.key==='Enter')submitAuth()"/>
-    </div>
-    <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Accedi</button>
-    <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:16px;line-height:1.5">
-      Continuando accetti la nostra <a href="#" style="color:var(--b)">Privacy Policy</a>.<br>
-      I tuoi dati sono trattati secondo il GDPR.
-    </p>
+
   </div>
 </div>
 
