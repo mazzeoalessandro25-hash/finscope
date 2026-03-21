@@ -466,6 +466,19 @@ html.dark .auth-box{background:#1e293b}
 
 /* ═══ FEATURE 5: PORTFOLIO PERF CHART ═══ */
 .port-perf-card{margin-top:16px}
+.port-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.port-analysis-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
+.port-dist-item{margin-bottom:10px}
+.port-dist-lbl{display:flex;justify-content:space-between;margin-bottom:4px;font-size:11px;color:var(--t2);font-family:var(--fm)}
+.port-dist-track{height:5px;background:var(--bd);border-radius:10px;overflow:hidden}
+.port-dist-fill{height:5px;border-radius:10px;transition:width .4s}
+.port-profile-tabs{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.port-profile-tab{padding:5px 14px;border-radius:20px;border:1px solid var(--bd);background:var(--s2);color:var(--t2);font-size:11px;font-family:var(--fm);cursor:pointer;transition:.15s}
+.port-profile-tab.active{color:#fff;border-color:transparent}
+.port-score-box{display:flex;align-items:center;gap:18px;padding:14px;background:var(--s2);border-radius:10px;border:1px solid var(--bd);margin-bottom:12px}
+.port-score-ring{flex-shrink:0}
+.port-rec{padding:8px 12px;border-radius:6px;border-left:3px solid;background:var(--s2);margin-bottom:7px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.5}
+.port-rec.ok{border-color:#059669}.port-rec.warn{border-color:#CA8A04}.port-rec.bad{border-color:#DC2626}
 
 /* ═══ FEATURE 6: MACRO DASHBOARD ═══ */
 .macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
