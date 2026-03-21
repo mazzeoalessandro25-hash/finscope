@@ -2881,6 +2881,16 @@ async function renderPortfolio(){
 
   el.innerHTML=rows.join('');
 
+  // Fetch sparklines async (5d history, non bloccante)
+  (async()=>{
+    const sparkData=await Promise.all(portfolio.map(item=>fetchSparkData(item.sym)));
+    portfolio.forEach((item,i)=>{
+      const q=quotes[i];
+      const up=q?(q.price>=q.prev):true;
+      drawSparkline('psp-'+i,sparkData[i],up);
+    });
+  })();
+
   // ── Popola Hero Bar ──
   const _heroValUSD=(totalUSD_val||totalUSD_inv)+(totalEUR_val||totalEUR_inv)*eurUsd;
   const _heroValEUR=(totalUSD_val||totalUSD_inv)/eurUsd+(totalEUR_val||totalEUR_inv);
