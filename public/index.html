@@ -1518,6 +1518,13 @@ html.dark .auth-box{background:#1e293b}
         <div class="fg"><label>VERSAMENTO MENSILE (€)</label><input type="number" id="sm" value="200" min="0" oninput="calcSim()"/></div>
         <div class="fg"><label>ANNI</label><input type="range" id="sy" min="1" max="40" value="10" oninput="document.getElementById('syv').textContent=this.value+' anni';calcSim()"/><div class="rv" id="syv">10 anni</div></div>
         <div class="fg"><label>RENDIMENTO ATTESO (%/anno)</label><input type="range" id="sr" min="1" max="20" value="8" step="0.5" oninput="document.getElementById('srv').textContent=this.value+'%';calcSim()"/><div class="rv" id="srv">8%</div></div>
+        <!-- Hidden legacy strategy selector for calcSim compatibility -->
+        <select id="ss" style="display:none" onchange="calcSim()">
+          <option value="balanced">Bilanciato (60/40)</option>
+          <option value="growth">Growth (80/20)</option>
+          <option value="conservative">Conservativo (40/60)</option>
+          <option value="etf">Solo ETF globale</option>
+        </select>
         <div class="fg" id="sim-tax-row" style="display:none"><label>TASSAZIONE AGEVOLATA (PENSIONE)</label>
           <select id="sim-tax" onchange="calcSim()">
             <option value="15">15% (dopo 15+ anni)</option>
