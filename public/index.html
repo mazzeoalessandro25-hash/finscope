@@ -890,7 +890,11 @@ html.dark .auth-box{background:#1e293b}
     <button class="nav-btn" onclick="showPage('macro',this)">📊 Macro</button>
   </div>
   <div class="nav-right">
-    <button class="dm-toggle" id="dm-btn" onclick="toggleDark()" title="Tema scuro/chiaro">🌙</button>
+    <button class="dm-toggle" id="dm-btn" onclick="toggleDark()" title="Cambia tema chiaro/scuro" aria-label="Toggle tema">
+      <span class="dm-moon">🌙</span>
+      <span class="dm-track">☀</span>
+      <span class="dm-sun">☀</span>
+    </button>
     <div class="nav-time" id="clock">--:--:--</div>
     <div class="nav-user" id="nav-user-area">
       <button class="nav-login-btn" onclick="window.location.href='./about.html'">Accedi</button>
