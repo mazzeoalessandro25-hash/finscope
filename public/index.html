@@ -547,6 +547,18 @@ html.dark .auth-box{background:#1e293b}
 .sd-rec-badge.hold{background:#FEF9C3;color:#CA8A04}
 .sd-rec-badge.sell{background:#FEE2E2;color:#DC2626}
 .sd-rec-badge.strongsell{background:#7F0000;color:#fff}
+.sd-info-btn{display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);color:var(--t3);font-size:9px;font-weight:700;cursor:help;position:relative;margin-left:5px;flex-shrink:0;vertical-align:middle}
+.sd-info-btn .sd-tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px 13px;width:230px;font-size:11px;color:var(--t2);line-height:1.55;font-family:var(--fm);font-weight:400;text-transform:none;letter-spacing:0;opacity:0;pointer-events:none;transition:opacity .15s;z-index:300;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.sd-info-btn:hover .sd-tip{opacity:1}
+.sd-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--bd)}
+.sd-rec-bar-wrap{margin:12px 0 8px;position:relative}
+.sd-rec-bar{height:8px;border-radius:100px;background:linear-gradient(to right,#047857,#059669,#CA8A04,#DC2626,#7F0000);position:relative}
+.sd-rec-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;border-radius:50%;background:white;border:2px solid var(--t);box-shadow:0 1px 4px rgba(0,0,0,.3);transition:left .4s}
+.sd-rec-labels{display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:4px}
+.sd-rec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.sd-rec-item{background:var(--s2);border-radius:8px;padding:8px 10px}
+.sd-rec-item-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.sd-rec-item-val{font-size:14px;font-weight:700;font-family:var(--fm);color:var(--t)}
 .sd-news-item{border-bottom:1px solid var(--bd);padding-bottom:8px}
 .sd-news-item:last-child{border-bottom:none;padding-bottom:0}
 .sd-news-title{font-size:12px;color:var(--t);font-family:var(--fm);line-height:1.4;text-decoration:none;display:block}
