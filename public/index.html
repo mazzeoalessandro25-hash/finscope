@@ -3503,6 +3503,69 @@ function renderPortAnalysis(portItems, quotes){
     </div>
     ${getRecs(selectedProfile).map(r=>`<div class="port-rec ${r.cls}">${r.txt}</div>`).join('')}
     <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Classificazione basata sui dati dello screener · Beta ponderato per valore investito</div>
+
+    <!-- Contributo P&L per titolo -->
+    <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Contributo P&L per titolo</div>
+      ${(()=>{
+        // Calcola P&L di ogni titolo e la sua contribuzione al portafoglio
+        const portPnlItems=portItems.map((item,i)=>{
+          const q=quotes[i];
+          const curPrice=q?.price??item.buyPrice;
+          const invested=item.qty*item.buyPrice;
+          const curVal=item.qty*curPrice;
+          const pnl=curVal-invested;
+          const pnlPct=invested>0?(pnl/invested*100):0;
+          return{sym:item.sym,pnl,pnlPct,invested,curVal};
+        });
+        const totalPortPnl=portPnlItems.reduce((s,x)=>s+x.pnl,0);
+        const totalPortInv=portPnlItems.reduce((s,x)=>s+x.invested,0);
+        const sorted=[...portPnlItems].sort((a,b)=>b.pnl-a.pnl);
+        const maxAbsPnl=Math.max(...sorted.map(x=>Math.abs(x.pnl)),1);
+        return sorted.map(x=>{
+          const contrib=totalPortInv>0?(x.pnl/totalPortInv*100):0;
+          const barW=Math.round(Math.abs(x.pnl)/maxAbsPnl*100);
+          const up=x.pnl>=0;
+          return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+            <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);width:60px;flex-shrink:0">${x.sym}</div>
+            <div style="flex:1;height:5px;background:var(--bd);border-radius:10px;overflow:hidden">
+              <div style="height:5px;width:${barW}%;background:${up?'#10B981':'#EF4444'};border-radius:10px"></div>
+            </div>
+            <div style="font-family:var(--fm);font-size:11px;color:${up?'var(--g)':'var(--r)'};font-weight:600;width:55px;text-align:right">${up?'+':''}${fmt(x.pnlPct,1)}%</div>
+            <div style="font-family:var(--fm);font-size:10px;color:var(--t3);width:60px;text-align:right">${contrib>=0?'+':''}${fmt(contrib,2)}% port.</div>
+          </div>`;
+        }).join('');
+      })()}
+    </div>
+
+    <!-- Stress Test -->
+    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:16px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Stress Test — Impatto calo mercato</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${[{label:'-10%',drop:.10},{label:'-20%',drop:.20},{label:'-30%',drop:.30},{label:'-50%',drop:.50}].map(sc=>{
+          const totalVal=portItems.reduce((s,item,i)=>{
+            const q=quotes[i];const curPrice=q?.price??item.buyPrice;return s+item.qty*curPrice;
+          },0);
+          const loss=portItems.reduce((s,item,i)=>{
+            const allS2=STOCKS.concat(customStocks);
+            const q=quotes[i];const info=allS2.find(x=>x.s===item.sym)||{};
+            const summ2=scSummary[item.sym]||scData[item.sym];
+            const beta2=q?.beta??summ2?.beta??1.0;
+            const curPrice=q?.price??item.buyPrice;
+            const curVal=item.qty*curPrice;
+            return s+curVal*sc.drop*Math.min(beta2,2.5);
+          },0);
+          const lossP=totalVal>0?(loss/totalVal*100):0;
+          return`<div style="padding:10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);text-align:center">
+            <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--r)">${sc.label}</div>
+            <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px">mercato</div>
+            <div style="font-size:14px;font-family:var(--fm);font-weight:700;color:var(--r);margin-top:6px">-${fmt(lossP,1)}%</div>
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">portafoglio</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Simulazione lineare ponderata per beta · Solo scopo informativo</div>
+    </div>
   `;
 }
 
