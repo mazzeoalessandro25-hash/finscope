@@ -963,9 +963,12 @@ function scrollToForm(){
 
 // ─── Auth views ───
 function showLpView(view){
-  document.getElementById('lp-main-view').style.display=view==='main'?'':'none';
-  document.getElementById('lp-forgot-view').style.display=view==='forgot'?'':'none';
-  document.getElementById('lp-reset-view').style.display=view==='reset'?'':'none';
+  ['lp-main-view','lp-forgot-view','lp-reset-view'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.style.display='none';el.classList.remove('auth-view-transition');
+  });
+  const target=document.getElementById(view==='main'?'lp-main-view':view==='forgot'?'lp-forgot-view':'lp-reset-view');
+  if(target){target.style.display='';target.classList.add('auth-view-transition');}
   const titles={main:'Inizia gratuitamente',forgot:'Recupera password',reset:'Nuova password'};
   const subs={main:'Zero costi · Nessuna carta richiesta',forgot:'Inserisci la tua email per ricevere il codice',reset:'Inserisci il codice ricevuto'};
   document.getElementById('lp-card-title').textContent=titles[view]||'';
