@@ -1554,7 +1554,7 @@ const ALLOC={
   etf:{l:['ETF Globale','ETF Obbligazionario'],p:[70,30],c:['#1A56C4','#0EA5E9']},
 };
 
-let scData={}, scSummary={}, customStocks=[], scSummaryLoading=false;
+let scData={}, scSummary={}, customStocks=[], scSummaryLoading=false, _lastPortQuotes=[];
 let simCI=null, pieCI=null, radarCI=null;
 const dashCharts={
   1:{inst:null,sym:'^GSPC', range:'1mo',type:'candle'},
