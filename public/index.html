@@ -3450,7 +3450,7 @@ function svgDonut(entries,palette,size=108,thick=20){
 }
 function donutLegend(entries,palette){
   const tot=entries.reduce((s,[,v])=>s+v,0);
-  return`<div style="margin-top:8px">`+entries.slice(0,6).map(([k,v],i)=>`
+  return`<div>`+entries.slice(0,6).map(([k,v],i)=>`
     <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
       <div style="width:8px;height:8px;border-radius:2px;background:${(palette||COLORS)[i%COLORS.length]};flex-shrink:0"></div>
       <div style="font-size:10px;color:var(--t2);font-family:var(--fm);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k}</div>
