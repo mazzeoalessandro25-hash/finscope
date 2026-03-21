@@ -952,15 +952,46 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 </div>
 
 <!-- ═══ FOOTER ═══ -->
-<footer>
-  <div class="foot-logo">Fin<span>Scope</span></div>
-  <div class="foot-links">
-    <a href="#privacy" class="foot-link">Privacy Policy</a>
-    <a href="#disclaimer" class="foot-link">Disclaimer</a>
-    <a href="./index.html" class="foot-link">Dashboard</a>
-    <a href="#faq" class="foot-link">FAQ</a>
+<footer style="flex-direction:column;gap:20px;padding:36px 40px">
+  <div style="display:flex;justify-content:space-between;align-items:center;width:100%;flex-wrap:wrap;gap:16px">
+    <div>
+      <div class="foot-logo" style="font-size:18px;margin-bottom:4px">Fin<span>Scope</span></div>
+      <div style="font-size:11px;color:rgba(255,255,255,.3);font-family:var(--fm)">Dashboard gratuito per investitori italiani</div>
+    </div>
+    <div style="display:flex;gap:32px;flex-wrap:wrap">
+      <div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--fm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Prodotto</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <a href="#features" class="foot-link">Funzionalità</a>
+          <a href="#pricing" class="foot-link">Piani</a>
+          <a href="./index.html" class="foot-link">Dashboard →</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--fm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Informazioni</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <a href="#faq" class="foot-link">FAQ</a>
+          <a href="#privacy" class="foot-link">Privacy Policy</a>
+          <a href="#disclaimer" class="foot-link">Disclaimer</a>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--fm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">Contatti</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <a href="mailto:info@finscope.it" class="foot-link">info@finscope.it</a>
+          <span style="color:rgba(255,255,255,.25);font-size:12px;font-family:var(--fm)">Risposta entro 24h</span>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="foot-note">© 2026 FinScope · Alessandro Mazzeo<br>Dati da Yahoo Finance · Ritardo max 15 min</div>
+  <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px;width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div class="foot-note" style="text-align:left">© 2026 FinScope · Alessandro Mazzeo · Dati da Yahoo Finance · Ritardo max 15 min</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <span style="font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)">v2.5 · Beta</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)">·</span>
+      <span style="font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)">GDPR compliant</span>
+    </div>
+  </div>
 </footer>
 
 <!-- ═══ PRIVACY POLICY (accessibile dal link footer) ═══ -->
