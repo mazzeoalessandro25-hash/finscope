@@ -3829,7 +3829,12 @@ async function loadSdData(sym){
   };
 
   if(!cachedVal)  { sdCacheSet(sym,'val',valData);   renderValuation(valData,cur); }
-  if(!cachedFund) { sdCacheSet(sym,'fund',fundData); renderFundamentals(fundData,cur); }
+  if(!cachedFund) {
+    sdCacheSet(sym,'fund',fundData);
+    renderFundamentals(fundData,cur);
+    // Traduzione descrizione in background (non blocca il rendering)
+    if(fundData.description) translateDescription(sym,fundData.description);
+  }
 
   scData[sym]=d; scSummary[sym]=d;
 }
