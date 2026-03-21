@@ -2790,7 +2790,23 @@ async function renderPortfolio(){
     grandTotalInv+=item.qty*item.buyPrice;
   });
 
-  const rows=portfolio.map((item,i)=>{
+  // Applica ordinamento
+  let sortedPortfolio=[...portfolio.map((item,i)=>({...item,_origIdx:i}))];
+  if(portSortKey==='name'){
+    sortedPortfolio.sort((a,b)=>a.sym.localeCompare(b.sym));
+  } else if(portSortKey==='weight'){
+    sortedPortfolio.sort((a,b)=>(b.qty*b.buyPrice)-(a.qty*a.buyPrice));
+  } else if(portSortKey==='pnl_pct'){
+    sortedPortfolio.sort((a,b)=>{
+      const qa=quotes[a._origIdx],qb=quotes[b._origIdx];
+      const pa=qa?.price??a.buyPrice,pb=qb?.price??b.buyPrice;
+      const ra=(pa-a.buyPrice)/a.buyPrice,rb=(pb-b.buyPrice)/b.buyPrice;
+      return rb-ra;
+    });
+  }
+
+  const rows=sortedPortfolio.map((item,si)=>{
+    const i=item._origIdx;
     const d=quotes[i];
     const csym=item.currency==='EUR'?'€':'$';
     const cur=item.currency||'USD';
