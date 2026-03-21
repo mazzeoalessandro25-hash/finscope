@@ -92,6 +92,82 @@ export default async function handler(req, res) {
     }
   }
 
+  // ── FORGOT PASSWORD ──
+  if (action === 'forgot' && req.method === 'POST') {
+    try {
+      const { email } = req.body;
+      if (!email) return res.status(400).json({ error: 'Email richiesta' });
+
+      const result = await clerk.users.getUserList({ emailAddress: [email], limit: 1 });
+      const users = result.data ?? result;
+      if (!Array.isArray(users) || !users.length) {
+        // Non rivelare se l'email esiste (sicurezza), ma per questa app personale
+        // restituiamo un messaggio generico senza codice
+        return res.json({ ok: true, code: null });
+      }
+
+      const user = users[0];
+      const code = String(Math.floor(100000 + Math.random() * 900000));
+      const expiry = Date.now() + 15 * 60 * 1000; // 15 minuti
+
+      await clerk.users.updateUserMetadata(user.id, {
+        privateMetadata: {
+          ...user.privateMetadata,
+          resetCode: code,
+          resetExpiry: expiry,
+        },
+      });
+
+      // Nota: in produzione integrare un servizio email (es. Resend) per inviare il codice.
+      // Per ora il codice viene restituito nella risposta per uso senza email.
+      return res.json({ ok: true, code });
+    } catch (e) {
+      return res.status(500).json({ error: 'Errore del server: ' + e.message });
+    }
+  }
+
+  // ── RESET PASSWORD ──
+  if (action === 'reset' && req.method === 'POST') {
+    try {
+      const { email, code, newPassword } = req.body;
+      if (!email || !code || !newPassword) return res.status(400).json({ error: 'Dati mancanti' });
+      if (newPassword.length < 8) return res.status(400).json({ error: 'Password minimo 8 caratteri' });
+
+      const result = await clerk.users.getUserList({ emailAddress: [email], limit: 1 });
+      const users = result.data ?? result;
+      if (!Array.isArray(users) || !users.length) {
+        return res.status(401).json({ error: 'Codice non valido o scaduto' });
+      }
+
+      const user = users[0];
+      const meta = user.privateMetadata || {};
+
+      if (!meta.resetCode || !meta.resetExpiry) {
+        return res.status(401).json({ error: 'Nessun reset richiesto. Genera prima un nuovo codice.' });
+      }
+      if (Date.now() > meta.resetExpiry) {
+        return res.status(401).json({ error: 'Codice scaduto (15 min). Richiedi un nuovo codice.' });
+      }
+      if (meta.resetCode !== String(code)) {
+        return res.status(401).json({ error: 'Codice non corretto' });
+      }
+
+      const pwHash = await hashPw(newPassword);
+      await clerk.users.updateUserMetadata(user.id, {
+        privateMetadata: {
+          ...meta,
+          pwHash,
+          resetCode: null,
+          resetExpiry: null,
+        },
+      });
+
+      return res.json({ ok: true });
+    } catch (e) {
+      return res.status(500).json({ error: 'Errore del server: ' + e.message });
+    }
+  }
+
   // ── VERIFY TOKEN ──
   if (action === 'verify' && req.method === 'GET') {
     try {
