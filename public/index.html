@@ -2781,7 +2781,7 @@ async function renderPortfolio(){
   const setV=id=>v=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   const setC=id=>(v,cls)=>{const e=document.getElementById(id);if(e){e.textContent=v;if(cls)e.style.color=cls;}};
   setV('ph-val-usd')('$'+fmt(_heroValUSD,0));
-  setV('ph-val-eur')('€'+fmt(_heroValEUR,0));
+  setV('ph-val-eur')('≈ €'+fmt(_heroValEUR,0));
   setV('ph-count')(portfolio.length);
   setV('ph-sectors')(allSects.length+' '+(allSects.length===1?'settore':'settori'));
   setC('ph-pnl')(((_heroUp?'+':'')+($=>'$'+fmt($,0))(_heroPnl)),_heroUp?'var(--g)':'var(--r)');
