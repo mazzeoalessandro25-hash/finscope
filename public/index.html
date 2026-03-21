@@ -3232,7 +3232,7 @@ function renderPortAnalysis(portItems, quotes){
     return;
   }
 
-  // --- Calcola dati base per ogni titolo ---
+  // --- Calcola dati base ---
   const allS=STOCKS.concat(customStocks);
   let totalInv=0;
   const items=portItems.map((item,i)=>{
@@ -3240,18 +3240,16 @@ function renderPortAnalysis(portItems, quotes){
     const info=allS.find(s=>s.s===item.sym)||{t:'growth',sec:'Other',mkt:'US'};
     const invested=item.qty*item.buyPrice;
     totalInv+=invested;
-    // Beta da scSummary/scData se disponibile
     const summ=scSummary[item.sym]||scData[item.sym];
     const beta=q?.beta??summ?.beta??1.0;
     return{sym:item.sym,invested,type:info.t||'growth',sec:info.sec||'Other',mkt:info.mkt||'US',beta};
   });
 
-  // --- Distribuzioni pesate per valore investito ---
+  // --- Distribuzioni pesate ---
   const byType={dividend:0,value:0,growth:0};
   const bySec={};
   const byMkt={US:0,IT:0,EU:0,UK:0,AS:0};
-  let weightedBeta=0;
-  let maxConc=0;
+  let weightedBeta=0,maxConc=0;
   items.forEach(it=>{
     const w=totalInv>0?it.invested/totalInv:0;
     byType[it.type]=(byType[it.type]||0)+w;
@@ -3272,10 +3270,10 @@ function renderPortAnalysis(portItems, quotes){
     return tw>0?ty/tw:0;
   })();
 
-  // --- Score allineamento profilo ---
+  // --- Score ---
   function calcScore(profKey){
     const prof=INVESTOR_PROFILES[profKey];
-    const td=byType.dividend||0, tv=byType.value||0, tg=byType.growth||0;
+    const td=byType.dividend||0,tv=byType.value||0,tg=byType.growth||0;
     const diff=Math.abs(td-prof.types.dividend)+Math.abs(tv-prof.types.value)+Math.abs(tg-prof.types.growth);
     const typeScore=Math.max(0,60*(1-diff/1.5));
     const betaScore=weightedBeta<=prof.maxBeta?25:Math.max(0,25-(weightedBeta-prof.maxBeta)*18);
@@ -3308,29 +3306,65 @@ function renderPortAnalysis(portItems, quotes){
     return recs;
   }
 
-  // --- Helper distribuzione barre ---
+  // --- SVG Donut helper ---
   const COLORS=['#1A56C4','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#EC4899','#6B7280'];
-  function distBars(distObj,palette){
-    const sorted=Object.entries(distObj).filter(([,v])=>v>0.005).sort((a,b)=>b[1]-a[1]);
-    return sorted.map(([k,v],i)=>`
-      <div class="port-dist-item">
-        <div class="port-dist-lbl"><span>${k}</span><span>${fmt(v*100,1)}%</span></div>
-        <div class="port-dist-track"><div class="port-dist-fill" style="width:${fmt(v*100,1)}%;background:${(palette||COLORS)[i%COLORS.length]}"></div></div>
-      </div>`).join('');
+  function svgDonut(entries,palette,size=108,thick=20){
+    const tot=entries.reduce((s,[,v])=>s+v,0);
+    if(!tot)return`<svg width="${size}" height="${size}"><text x="${size/2}" y="${size/2}" text-anchor="middle" font-size="10" fill="var(--t3)" font-family="IBM Plex Mono">N/D</text></svg>`;
+    const cx=size/2,cy=size/2,r=(size-thick)/2;
+    const C=2*Math.PI*r;
+    let acc=0;
+    const slices=entries.map(([,v],i)=>{
+      const len=(v/tot)*C;
+      const off=C-acc;
+      const s=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${(palette||COLORS)[i%COLORS.length]}" stroke-width="${thick}" stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
+      acc+=len;return s;
+    });
+    return`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${slices.join('')}</svg>`;
+  }
+  function donutLegend(entries,palette){
+    const tot=entries.reduce((s,[,v])=>s+v,0);
+    return`<div style="margin-top:8px">`+entries.slice(0,6).map(([k,v],i)=>`
+      <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+        <div style="width:8px;height:8px;border-radius:2px;background:${(palette||COLORS)[i%COLORS.length]};flex-shrink:0"></div>
+        <div style="font-size:10px;color:var(--t2);font-family:var(--fm);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k}</div>
+        <div style="font-size:10px;font-family:var(--fm);font-weight:600;color:var(--t)">${fmt(v/tot*100,1)}%</div>
+      </div>`).join('')+`</div>`;
   }
 
-  // --- Render completo ---
+  // Dati per i 3 grafici
+  const typeEntries=[['Dividendo',byType.dividend||0],['Value',byType.value||0],['Growth',byType.growth||0]].filter(([,v])=>v>0.005);
+  const typePal=['#10B981','#1A56C4','#F59E0B'];
   const mktLabels={US:'USA 🇺🇸',IT:'Italia 🇮🇹',EU:'Europa 🇪🇺',UK:'UK 🇬🇧',AS:'Asia 🌏'};
-  const mktNamed=Object.fromEntries(Object.entries(byMkt).filter(([,v])=>v>0.005).map(([k,v])=>[mktLabels[k]||k,v]));
-  const typeNamed={'Dividendo':byType.dividend||0,'Value':byType.value||0,'Growth':byType.growth||0};
+  const mktEntries=Object.entries(byMkt).map(([k,v])=>[mktLabels[k]||k,v]).filter(([,v])=>v>0.005).sort((a,b)=>b[1]-a[1]);
+  const secEntries=Object.entries(bySec).filter(([,v])=>v>0.005).sort((a,b)=>b[1]-a[1]);
+
+  // Profilo
   const profKeys=Object.keys(INVESTOR_PROFILES);
   const scores=Object.fromEntries(profKeys.map(k=>[k,calcScore(k)]));
   const bestMatch=profKeys.reduce((a,b)=>scores[a]>=scores[b]?a:b);
   const prof=INVESTOR_PROFILES[selectedProfile];
   const score=scores[selectedProfile];
   const scoreColor=score>=75?'#10B981':score>=50?'#F59E0B':'#EF4444';
-  const circumference=2*Math.PI*34;
-  const dash=score/100*circumference;
+  const C2=2*Math.PI*34;
+  const dash=score/100*C2;
+
+  // Barre confronto attuale vs target profilo
+  function compRow(label,actual,target){
+    const aW=Math.round(actual*100),tW=Math.round(target*100);
+    const diff=Math.abs(actual-target);
+    const col=diff<0.10?'#10B981':diff<0.20?'#F59E0B':'#EF4444';
+    return`<div style="margin-bottom:7px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--fm);margin-bottom:3px">
+        <span style="color:var(--t2)">${label}</span>
+        <span><span style="color:${col};font-weight:700">${aW}%</span> <span style="color:var(--t3)">/ target ${tW}%</span></span>
+      </div>
+      <div style="height:5px;background:var(--bd);border-radius:10px;position:relative">
+        <div style="position:absolute;height:5px;left:0;width:${tW}%;background:var(--bd);border-radius:10px"></div>
+        <div style="position:absolute;height:5px;left:0;width:${aW}%;background:${col};border-radius:10px;transition:width .4s"></div>
+      </div>
+    </div>`;
+  }
 
   el.innerHTML=`
     <!-- KPI rapidi -->
@@ -3341,20 +3375,23 @@ function renderPortAnalysis(portItems, quotes){
       <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:18px">${nSectors}</div></div>
     </div>
 
-    <!-- Distribuzioni -->
-    <div class="port-analysis-2col" style="margin-bottom:16px">
-      <div>
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Tipo di investimento</div>
-        ${distBars(typeNamed,['#10B981','#1A56C4','#F59E0B'])}
+    <!-- 3 grafici a ciambella -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--bd)">
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Tipo</div>
+        <div style="display:flex;justify-content:center">${svgDonut(typeEntries,typePal)}</div>
+        ${donutLegend(typeEntries,typePal)}
       </div>
-      <div>
+      <div style="text-align:center">
         <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Area geografica</div>
-        ${distBars(mktNamed)}
+        <div style="display:flex;justify-content:center">${svgDonut(mktEntries)}</div>
+        ${donutLegend(mktEntries)}
       </div>
-    </div>
-    <div style="margin-bottom:16px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Settori</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 24px">${distBars(bySec)}</div>
+      <div style="text-align:center">
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Settori</div>
+        <div style="display:flex;justify-content:center">${svgDonut(secEntries.slice(0,8))}</div>
+        ${donutLegend(secEntries.slice(0,8))}
+      </div>
     </div>
 
     <!-- Profilo investitore -->
@@ -3362,25 +3399,34 @@ function renderPortAnalysis(portItems, quotes){
     <div class="port-profile-tabs">
       ${profKeys.map(k=>{
         const p=INVESTOR_PROFILES[k];
-        return`<button class="port-profile-tab${k===selectedProfile?' active':''}" style="${k===selectedProfile?'background:'+p.color:''}" onclick="selectedProfile='${k}';renderPortAnalysis(portfolio,_lastPortQuotes)">${p.emoji} ${p.name} <span style="font-size:10px;opacity:.8">${scores[k]}</span></button>`;
+        return`<button class="port-profile-tab${k===selectedProfile?' active':''}" style="${k===selectedProfile?'background:'+p.color+';border-color:'+p.color:''}" onclick="selectedProfile='${k}';renderPortAnalysis(portfolio,_lastPortQuotes)">${p.emoji} ${p.name} <span style="font-size:10px;opacity:.85">${scores[k]}pt</span></button>`;
       }).join('')}
     </div>
-    <div class="port-score-box">
-      <svg class="port-score-ring" width="80" height="80" viewBox="0 0 80 80">
-        <circle cx="40" cy="40" r="34" fill="none" stroke="var(--bd)" stroke-width="8"/>
-        <circle cx="40" cy="40" r="34" fill="none" stroke="${scoreColor}" stroke-width="8"
-          stroke-dasharray="${dash.toFixed(1)} ${circumference.toFixed(1)}" stroke-linecap="round"
-          transform="rotate(-90 40 40)"/>
-        <text x="40" y="44" text-anchor="middle" font-size="18" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
-      </svg>
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;margin-bottom:14px">
+      <div style="display:flex;flex-direction:column;align-items:center;padding:14px 18px;background:var(--s2);border-radius:10px;border:1px solid var(--bd)">
+        <svg width="82" height="82" viewBox="0 0 82 82">
+          <circle cx="41" cy="41" r="34" fill="none" stroke="var(--bd)" stroke-width="9"/>
+          <circle cx="41" cy="41" r="34" fill="none" stroke="${scoreColor}" stroke-width="9"
+            stroke-dasharray="${dash.toFixed(1)} ${C2.toFixed(1)}" stroke-linecap="round"
+            transform="rotate(-90 41 41)"/>
+          <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
+        </svg>
+        <div style="font-size:11px;font-family:var(--fm);color:${scoreColor};font-weight:700;margin-top:6px">${score>=75?'Ottimo':score>=50?'Discreto':'Da migliorare'}</div>
+      </div>
       <div>
-        <div style="font-size:13px;font-weight:700;color:var(--t)">${prof.emoji} ${prof.name}</div>
-        <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">${prof.desc}</div>
-        ${bestMatch!==selectedProfile?`<div style="font-size:11px;color:var(--b);font-family:var(--fm)">Best match: ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`:'<div style="font-size:11px;color:#10B981;font-family:var(--fm)">✓ Profilo ottimale per questo portafoglio</div>'}
+        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px">${prof.emoji} ${prof.name}</div>
+        <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:12px">${prof.desc}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Allocazione attuale vs target</div>
+        ${compRow('Dividendo',byType.dividend||0,prof.types.dividend)}
+        ${compRow('Value',byType.value||0,prof.types.value)}
+        ${compRow('Growth',byType.growth||0,prof.types.growth)}
+        ${bestMatch!==selectedProfile
+          ?`<div style="font-size:11px;color:var(--b);font-family:var(--fm);margin-top:8px">Best match: ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
+          :'<div style="font-size:11px;color:#10B981;font-family:var(--fm);margin-top:8px">✓ Profilo ottimale per questo portafoglio</div>'}
       </div>
     </div>
     ${getRecs(selectedProfile).map(r=>`<div class="port-rec ${r.cls}">${r.txt}</div>`).join('')}
-    <div style="margin-top:6px;font-size:10px;color:var(--t3);font-family:var(--fm)">Analisi basata su tipo, beta e diversificazione · I dati di tipo usano la classificazione dello screener</div>
+    <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Classificazione basata sui dati dello screener · Beta ponderato per valore investito</div>
   `;
 }
 
