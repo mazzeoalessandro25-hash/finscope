@@ -370,11 +370,15 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 .port-name{font-size:11px;color:var(--t2);font-weight:500;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
 .port-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0;line-height:1}
 .port-del:hover{color:var(--r)}
-.port-hero{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
-.port-hero-kpi{padding:14px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px}
+.port-hero{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px}
+.port-hero-kpi{padding:14px 16px;background:var(--card);border:1px solid var(--bd);border-radius:12px;transition:.2s}
+.port-hero-kpi:first-child{background:linear-gradient(135deg,var(--b2),var(--b4));border-color:transparent}
+.port-hero-kpi:first-child .port-hero-lbl{color:rgba(255,255,255,.6)}
+.port-hero-kpi:first-child .port-hero-val{color:#fff;font-size:24px}
+.port-hero-kpi:first-child .port-hero-sub{color:rgba(255,255,255,.75)}
 .port-hero-lbl{font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:5px}
 .port-hero-val{font-size:20px;font-family:var(--fm);font-weight:700;color:var(--t);line-height:1}
-.port-hero-sub{font-size:10px;font-family:var(--fm);color:var(--t3);margin-top:3px}
+.port-hero-sub{font-size:11px;font-family:var(--fm);color:var(--t3);margin-top:4px}
 
 /* ═══ DARK MODE ═══ */
 body.dark{
