@@ -3470,6 +3470,20 @@ function openStockDetail(sym){
   document.getElementById('sd-hdr-price').textContent='—';
   document.getElementById('sd-hdr-chg').textContent='';
   document.getElementById('sd-wl-btn').classList.toggle('active',watchlist.includes(sym));
+  // Pre-popola subito da dati screener già in memoria (nessuna attesa API)
+  const _pre=scData[sym];
+  if(_pre){
+    const _c=_pre.currency==='EUR'?'€':'$';
+    document.getElementById('sd-name').textContent=_pre.name||sym;
+    document.getElementById('sd-hdr-price').textContent=_c+fmt(_pre.price,_pre.price<10?4:2);
+    const _chg=chgPct(_pre.price,_pre.prev);
+    const _chgEl=document.getElementById('sd-hdr-chg');
+    _chgEl.textContent=chgStr(_chg);_chgEl.style.color=(_chg==null||_chg>=0)?'var(--g)':'var(--r)';
+    sdSetChg('sdm-chg',_chg);
+    sdSet('sdm-dh',_pre.dayHigh?_c+fmt(_pre.dayHigh,_pre.dayHigh<10?4:2):'—');
+    sdSet('sdm-dl',_pre.dayLow?_c+fmt(_pre.dayLow,_pre.dayLow<10?4:2):'—');
+    sdSet('sdm-vol',_pre.volume?fmtLg(_pre.volume):'—');
+  }
   // Reset all metric cells
   ['sdm-divk','sdm-chg','sdm-dh','sdm-dl','sdm-cap','sdm-beta','sdm-52h','sdm-52l',
    'sdm-vol','sdm-avgvol','sdm-emp','sdm-short',
