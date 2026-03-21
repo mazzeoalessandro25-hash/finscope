@@ -407,10 +407,47 @@ body.dark .modal-box,body.dark .auth-box{background:#111E30}
 body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 
 /* ═══ DARK MODE TOGGLE ═══ */
-.dm-toggle{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;
-  width:28px;height:28px;border-radius:6px;cursor:pointer;font-size:13px;
-  display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
-.dm-toggle:hover{background:rgba(255,255,255,.22)}
+.dm-toggle{position:relative;width:48px;height:26px;border-radius:100px;border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.1);cursor:pointer;flex-shrink:0;transition:background .25s,border-color .25s}
+.dm-toggle:hover{background:rgba(255,255,255,.2)}
+.dm-track{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;
+  background:#fff;transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center;font-size:10px}
+html.dark .dm-track{transform:translateX(22px)}
+.dm-toggle .dm-sun{position:absolute;right:5px;top:50%;transform:translateY(-50%);font-size:10px;opacity:.6;transition:opacity .2s}
+.dm-toggle .dm-moon{position:absolute;left:5px;top:50%;transform:translateY(-50%);font-size:10px;opacity:.6;transition:opacity .2s}
+html.dark .dm-toggle .dm-sun{opacity:0}
+html:not(.dark) .dm-toggle .dm-moon{opacity:0}
+
+/* ═══ THEME TRANSITIONS ═══ */
+body,nav,.card,.auth-box,.hours-bar,.tape,.port-hero-kpi,.rb,.macro-stat,.alert-item,.wl-card,
+.hm-sec-hdr,.sd-section,.sd-m,.port-item,.modal-box{transition:background-color .25s,border-color .25s,color .15s}
+
+/* ═══ DARK MODE — NUOVI ELEMENTI ═══ */
+html.dark .reb-target-inp{background:#111E30;border-color:#233247;color:#E4EDF8}
+html.dark .reb-target-inp:focus{border-color:#3B82F6}
+html.dark .corr-table th{color:#5D7A96;background:transparent}
+html.dark .drip-card{background:#0f172a;border-color:#334155}
+html.dark .tax-badge.gain{background:rgba(5,150,105,.18);color:#34D399}
+html.dark .tax-badge.loss{background:rgba(220,38,38,.18);color:#F87171}
+html.dark .reb-row{border-color:#233247}
+html.dark .tax-row{border-color:#233247}
+html.dark .div-row{border-color:#233247}
+html.dark .auth-field input{background:#172234;border-color:#233247;color:#E4EDF8}
+html.dark .auth-tabs{background:#172234}
+html.dark .auth-tab.active{background:#111E30;color:#E4EDF8}
+html.dark .auth-tab{color:#8FAFC8}
+
+/* ═══ PASSWORD DIMENTICATA ═══ */
+.auth-view{animation:authFadeIn .2s ease}
+@keyframes authFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.auth-back-btn{background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;
+  font-family:var(--ff);display:flex;align-items:center;gap:4px;margin:12px auto 0;
+  padding:4px 8px;border-radius:6px;transition:color .15s}
+.auth-back-btn:hover{color:var(--b)}
+.fp-code-input{width:100%;background:var(--s2);border:1px solid var(--bd);color:var(--t);
+  padding:14px;border-radius:9px;font-family:var(--fm);font-size:22px;outline:none;
+  transition:all .15s;text-align:center;letter-spacing:8px}
+.fp-code-input:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(26,86,196,.1)}
 
 /* ═══ FINSCOPE SCORE ═══ */
 .fs-score-wrap{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:10px}
