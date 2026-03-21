@@ -4680,6 +4680,508 @@ async function loadSdData(sym){
   scData[sym]=d; scSummary[sym]=d;
 }
 
+/* ══════════════════════════════════════════
+   RISK ANALYTICS — Sharpe · VaR · Drawdown · Correlazione
+══════════════════════════════════════════ */
+async function loadRiskMetrics(){
+  const el=document.getElementById('risk-content');
+  if(!el)return;
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per calcolare le metriche di rischio</div>';return;
+  }
+  el.innerHTML='<div class="ld" style="padding:10px">Recupero 3 mesi di dati storici...</div>';
+
+  const RISK_FREE=0.045; // 4.5% risk-free (US 3m T-bill)
+  const [spyHist,...histData]=await Promise.all([
+    api('SPY','history&range=3mo'),
+    ...portfolio.map(item=>api(item.sym,'history&range=3mo'))
+  ]);
+  const quotes=_lastPortQuotes.length===portfolio.length
+    ?_lastPortQuotes
+    :await Promise.all(portfolio.map(item=>api(item.sym)));
+
+  if(!spyHist?.points?.length){
+    el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">Dati storici non disponibili. Riprova tra qualche secondo.</div>';return;
+  }
+
+  const spyPts=spyHist.points;
+  const _mean=arr=>arr.length?arr.reduce((s,v)=>s+v,0)/arr.length:0;
+  const _std=arr=>{
+    if(arr.length<2)return 0;
+    const m=_mean(arr);
+    return Math.sqrt(arr.reduce((s,v)=>s+(v-m)**2,0)/arr.length);
+  };
+
+  // Daily returns per holding
+  const stockRets=portfolio.map((_,pi)=>{
+    const pts=histData[pi]?.points||[];
+    const r=[];
+    for(let i=1;i<pts.length;i++){const p=pts[i-1].close;if(p>0)r.push((pts[i].close-p)/p);}
+    return r;
+  });
+
+  // Portfolio daily returns (weighted by invested value)
+  let totalInv=0;
+  const wts=portfolio.map(item=>{const v=item.qty*item.buyPrice;totalInv+=v;return v;});
+  const minLen=stockRets.reduce((mn,r)=>r.length?Math.min(mn,r.length):mn,999);
+  const portRets=[];
+  for(let di=0;di<minLen&&minLen<999;di++){
+    let wr=0;
+    portfolio.forEach((_,pi)=>{wr+=(stockRets[pi][di]??0)*(wts[pi]/totalInv);});
+    portRets.push(wr);
+  }
+
+  const spyRets=[];
+  for(let i=1;i<spyPts.length;i++){const p=spyPts[i-1].close;if(p>0)spyRets.push((spyPts[i].close-p)/p);}
+
+  if(!portRets.length){
+    el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">Dati storici insufficienti (meno di 2 punti). Aggiungi titoli con più storico.</div>';return;
+  }
+
+  // ── Metrics ──
+  const annRet=_mean(portRets)*252;
+  const annVol=_std(portRets)*Math.sqrt(252);
+  const sharpe=annVol>0?(annRet-RISK_FREE)/annVol:0;
+
+  // Max Drawdown
+  let peak=1,maxDD=0,cum=1;
+  portRets.forEach(r=>{cum*=(1+r);if(cum>peak)peak=cum;const dd=(peak-cum)/peak;if(dd>maxDD)maxDD=dd;});
+
+  // VaR 95% historical
+  const sorted=[...portRets].sort((a,b)=>a-b);
+  const var95=sorted[Math.floor(sorted.length*0.05)]||0;
+  const portVal=portfolio.reduce((s,item,i)=>s+item.qty*(quotes[i]?.price??item.buyPrice),0);
+  const var95Abs=Math.abs(var95)*portVal;
+
+  // Beta vs SPY
+  const spyLen=Math.min(portRets.length,spyRets.length);
+  let beta=1;
+  if(spyLen>=10){
+    const pS=portRets.slice(0,spyLen),sS=spyRets.slice(0,spyLen);
+    const pm=_mean(pS),sm=_mean(sS);
+    const cov=pS.reduce((s,r,i)=>s+(r-pm)*(sS[i]-sm),0)/spyLen;
+    const sv=sS.reduce((s,r)=>s+(r-sm)**2,0)/spyLen;
+    if(sv>0)beta=cov/sv;
+  }
+
+  // Sortino (downside deviation)
+  const negRets=portRets.filter(r=>r<0);
+  const downDev=negRets.length?_std(negRets)*Math.sqrt(252):0;
+  const sortino=downDev>0?(annRet-RISK_FREE)/downDev:0;
+
+  // Calmar
+  const calmar=maxDD>0?annRet/maxDD:0;
+
+  // Correlation matrix
+  const corrM=portfolio.map((_,a)=>portfolio.map((_2,b)=>{
+    if(a===b)return 1;
+    const rA=stockRets[a],rB=stockRets[b];
+    const len=Math.min(rA.length,rB.length);
+    if(len<5)return null;
+    const mA=_mean(rA.slice(0,len)),mB=_mean(rB.slice(0,len));
+    const num=rA.slice(0,len).reduce((s,r,i)=>s+(r-mA)*(rB[i]-mB),0);
+    const dA=Math.sqrt(rA.slice(0,len).reduce((s,r)=>s+(r-mA)**2,0));
+    const dB=Math.sqrt(rB.slice(0,len).reduce((s,r)=>s+(r-mB)**2,0));
+    return(dA*dB)>0?num/(dA*dB):0;
+  }));
+
+  const corrBg=v=>{
+    if(v===null)return'var(--bd)';
+    if(v>=1)return'#374151';
+    if(v>=0.8)return'#7F1D1D';if(v>=0.6)return'#DC2626';if(v>=0.4)return'#F97316';
+    if(v>=-0.2)return'#64748B';if(v>=-0.5)return'#3B82F6';return'#1D4ED8';
+  };
+  const corrTxt=v=>(v===null||Math.abs(v)<0.5)?'var(--t)':'#fff';
+  const shCol=sharpe>=1.5?'var(--g)':sharpe>=0.5?'var(--o)':'var(--r)';
+  const shLbl=sharpe>=1.5?'Eccellente':sharpe>=1?'Buono':sharpe>=0.5?'Sufficiente':'Da migliorare';
+  const vCol=annVol*100>30?'var(--r)':annVol*100>15?'var(--o)':'var(--g)';
+  const vLbl=annVol*100>30?'Alta':annVol*100>15?'Media':'Bassa';
+
+  el.innerHTML=`
+    <!-- 5 KPI principali -->
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
+      <div class="rb">
+        <div class="rl">SHARPE RATIO</div>
+        <div class="rv2" style="color:${shCol};font-size:20px">${fmt(sharpe,2)}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:${shCol}">${shLbl}</div>
+      </div>
+      <div class="rb">
+        <div class="rl">MAX DRAWDOWN</div>
+        <div class="rv2 down" style="font-size:20px">-${fmt(maxDD*100,1)}%</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">picco → minimo</div>
+      </div>
+      <div class="rb">
+        <div class="rl">VaR 95% (1g)</div>
+        <div class="rv2 down" style="font-size:20px">-${fmt(Math.abs(var95)*100,2)}%</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -$${fmt(var95Abs,0)}/giorno</div>
+      </div>
+      <div class="rb">
+        <div class="rl">VOLATILITÀ ANNUA</div>
+        <div class="rv2" style="color:${vCol};font-size:20px">${fmt(annVol*100,1)}%</div>
+        <div style="font-size:9px;font-family:var(--fm);color:${vCol}">${vLbl}</div>
+      </div>
+      <div class="rb">
+        <div class="rl">BETA VS S&P 500</div>
+        <div class="rv2 ${beta>1.3?'down':beta<0.7?'b':'a'}" style="font-size:20px">${fmt(beta,2)}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${beta>1?'Più volatile':'Meno volatile'} del mercato</div>
+      </div>
+    </div>
+
+    <!-- 3 metriche avanzate -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
+      <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px">Sortino Ratio</div>
+        <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${sortino>=1?'var(--g)':sortino>=0.5?'var(--o)':'var(--r)'}">${fmt(sortino,2)}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">Come Sharpe ma conta solo il rischio di perdita · >1 = buono</div>
+      </div>
+      <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px">Calmar Ratio</div>
+        <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${calmar>=1?'var(--g)':calmar>=0.5?'var(--o)':'var(--r)'}">${fmt(calmar,2)}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">Rendimento annualizzato / Max Drawdown · >1 = buono</div>
+      </div>
+      <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px">Rendimento annualizzato</div>
+        <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${annRet>=0?'var(--g)':'var(--r)'}">${annRet>=0?'+':''}${fmt(annRet*100,1)}%</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">Estrapolato dagli ultimi 3 mesi di rendimento</div>
+      </div>
+    </div>
+
+    <!-- VaR spiegazione -->
+    <div style="padding:10px 14px;background:var(--b3);border-radius:8px;border-left:3px solid var(--b);margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.6;font-family:var(--fm)">
+      <strong style="color:var(--t)">VaR 95%: ${fmt(Math.abs(var95)*100,2)}% al giorno</strong> — Con il 95% di probabilità la perdita giornaliera non supera
+      <strong>$${fmt(var95Abs,0)}</strong>. Il restante 5% dei giorni (≈1 ogni 20) potrebbe registrare perdite superiori.
+    </div>
+
+    <!-- Volatilità per titolo -->
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Volatilità per titolo (annualizzata, 3 mesi)</div>
+    <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+      ${portfolio.map((item,pi)=>{
+        const r=stockRets[pi];
+        if(!r.length)return`<div style="font-family:var(--fm);font-size:11px;color:var(--t3);padding:4px 0">${item.sym}: dati storici insufficienti</div>`;
+        const sv=_std(r)*Math.sqrt(252)*100;
+        const sr=(r.reduce((acc,x)=>acc*(1+x),1)-1)*100;
+        const vc=sv>40?'var(--r)':sv>20?'var(--o)':'var(--g)';
+        const bw=Math.min(sv/60*100,100);
+        return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
+          <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);width:72px;flex-shrink:0">${item.sym}</div>
+          <div style="flex:1;height:5px;background:var(--bd);border-radius:10px;overflow:hidden">
+            <div style="height:5px;width:${bw}%;background:${vc};border-radius:10px"></div>
+          </div>
+          <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${vc};width:46px;text-align:right">${fmt(sv,1)}%</div>
+          <div style="font-family:var(--fm);font-size:10px;color:${sr>=0?'var(--g)':'var(--r)'};width:55px;text-align:right">${sr>=0?'+':''}${fmt(sr,1)}% (3m)</div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- Correlation matrix -->
+    ${portfolio.length>=2?`
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Matrice di correlazione (3 mesi) — valori da -1 a +1</div>
+    <div style="overflow-x:auto;margin-bottom:10px">
+      <table class="corr-table">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:4px 10px;min-width:60px"></th>
+            ${portfolio.map(it=>`<th>${it.sym}</th>`).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${portfolio.map((itA,a)=>`
+            <tr>
+              <th style="text-align:left;padding:4px 10px;color:var(--t2);font-size:11px;white-space:nowrap">${itA.sym}</th>
+              ${portfolio.map((_,b)=>{
+                const v=corrM[a][b];
+                return`<td style="background:${corrBg(v)};color:${corrTxt(v)};padding:5px 8px;border-radius:4px">${v!==null?fmt(v,2):'—'}</td>`;
+              }).join('')}
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px">
+      ${[['≥ 0.8','#7F1D1D','Correlazione molto alta — rischio concentrazione'],['0.4–0.8','#F97316','Correlazione media'],['−0.2–0.4','#64748B','Correlazione bassa — buona diversificazione'],['< −0.2','#3B82F6','Correlazione negativa — hedge naturale']].map(([l,c,d])=>`
+      <div style="display:flex;align-items:center;gap:5px">
+        <div style="width:10px;height:10px;border-radius:2px;background:${c};flex-shrink:0"></div>
+        <span style="font-size:9px;font-family:var(--fm);color:var(--t3)">${l} — ${d}</span>
+      </div>`).join('')}
+    </div>`:'<div style="font-size:12px;color:var(--t3);padding:8px 0;font-family:var(--fm)">Aggiungi almeno 2 titoli per vedere la matrice di correlazione.</div>'}
+
+    <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">Calcoli basati su dati storici degli ultimi 3 mesi · Sharpe e Sortino con tasso risk-free 4.5% · Solo scopo informativo, non costituisce consulenza finanziaria</div>
+  `;
+}
+
+/* ══════════════════════════════════════════
+   REBALANCING TOOL
+══════════════════════════════════════════ */
+let _rebTargets={};
+function _loadRebTargets(){try{const s=localStorage.getItem('fs_reb_targets');if(s)_rebTargets=JSON.parse(s);}catch{}}
+function _saveRebTargets(){localStorage.setItem('fs_reb_targets',JSON.stringify(_rebTargets));}
+
+function renderRebalancing(){
+  const el=document.getElementById('rebalancing-content');
+  if(!el)return;
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per usare il Rebalancing Tool</div>';return;
+  }
+  _loadRebTargets();
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  if(!quotes){
+    el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';
+    Promise.all(portfolio.map(item=>api(item.sym))).then(q=>{_lastPortQuotes=q;renderRebalancing();});
+    return;
+  }
+
+  let totalVal=0;
+  const items=portfolio.map((item,i)=>{
+    const q=quotes[i];const curPrice=q?.price??item.buyPrice;
+    const val=item.qty*curPrice;totalVal+=val;
+    return{...item,curPrice,val,q};
+  });
+
+  // Init targets if not set
+  const hasTargets=portfolio.some(item=>_rebTargets[item.sym]!=null);
+  if(!hasTargets){
+    const eq=Math.round(100/portfolio.length);
+    portfolio.forEach((item,i)=>{_rebTargets[item.sym]=i<portfolio.length-1?eq:100-eq*(portfolio.length-1);});
+  }
+
+  const totalTarget=portfolio.reduce((s,item)=>s+(_rebTargets[item.sym]||0),0);
+  const orders=items.map(item=>{
+    const tPct=(_rebTargets[item.sym]||0)/100;
+    const tVal=totalVal*tPct;
+    const delta=tVal-item.val;
+    const shares=item.curPrice>0?delta/item.curPrice:0;
+    const cur=item.currency==='EUR'?'€':'$';
+    return{...item,tPct,tVal,delta,shares,cur};
+  });
+  const totalImbalance=orders.reduce((s,o)=>s+Math.abs(o.delta),0);
+
+  el.innerHTML=`
+    <!-- KPI -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+      <div class="rb">
+        <div class="rl">VALORE PORTAFOGLIO</div>
+        <div class="rv2 b" style="font-size:18px">$${fmt(totalVal,0)}</div>
+      </div>
+      <div class="rb">
+        <div class="rl">TOTALE TARGET</div>
+        <div class="rv2 ${Math.abs(totalTarget-100)<1?'g':totalTarget>100?'down':'a'}" style="font-size:18px">${fmt(totalTarget,0)}%</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${Math.abs(totalTarget-100)<1?'✓ Corretto':totalTarget>100?'⚠ Supera 100%':'⚠ Inferiore a 100%'}</div>
+      </div>
+      <div class="rb">
+        <div class="rl">DA RIBILANCIARE</div>
+        <div class="rv2 a" style="font-size:18px">$${fmt(totalImbalance/2,0)}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">volume di operazioni</div>
+      </div>
+    </div>
+
+    ${Math.abs(totalTarget-100)>=1?`<div style="padding:8px 12px;background:var(--o2);border-radius:6px;border-left:3px solid var(--o);font-size:11px;color:#92400E;font-family:var(--fm);margin-bottom:12px">⚠ Somma target = ${fmt(totalTarget,0)}% — i target devono sommare a 100%. Modifica i valori nella colonna Target %.</div>`:''}
+
+    <!-- Header colonne -->
+    <div style="display:grid;grid-template-columns:72px 1fr 72px 100px 1fr;gap:10px;padding:0 0 6px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--bd);margin-bottom:2px">
+      <div>Titolo</div><div>Allocazione attuale</div><div style="text-align:center">Target %</div><div style="text-align:right">Delta</div><div style="text-align:right">Ordine suggerito</div>
+    </div>
+
+    <!-- Righe -->
+    ${orders.map(o=>{
+      const curPct=totalVal>0?o.val/totalVal*100:0;
+      const tPct=o.tPct*100;
+      const isOk=Math.abs(curPct-tPct)<1;
+      const isBuy=o.delta>0,isSell=o.delta<0;
+      const barMax=Math.max(...orders.map(x=>totalVal>0?x.val/totalVal*100:0),1);
+      const bW=Math.min(curPct/barMax*100,100);
+      const tW=Math.min(tPct/barMax*100,100);
+      const oClass=isOk?'ok':isBuy?'buy':'sell';
+      const oText=isOk?'✓ In equilibrio':isBuy
+        ?`＋ Acquista ${fmt(Math.abs(o.shares),o.curPrice<10?3:1)} az · ${o.cur}${fmt(Math.abs(o.delta),0)}`
+        :`－ Vendi ${fmt(Math.abs(o.shares),o.curPrice<10?3:1)} az · ${o.cur}${fmt(Math.abs(o.delta),0)}`;
+      return`<div class="reb-row">
+        <div class="reb-sym">${o.sym}<div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${o.cur}${fmt(o.curPrice,o.curPrice<10?3:2)}</div></div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--fm);margin-bottom:3px">
+            <span style="color:var(--t2)">${fmt(curPct,1)}%</span>
+            <span style="color:var(--t3)">${o.cur}${fmt(o.val,0)}</span>
+          </div>
+          <div style="position:relative;height:6px;background:var(--bd);border-radius:10px">
+            <div style="position:absolute;height:6px;left:0;width:${tW}%;background:rgba(26,86,196,.2);border-radius:10px"></div>
+            <div style="position:absolute;height:6px;left:0;width:${bW}%;background:${isOk?'var(--g)':isBuy?'var(--o)':'var(--b)'};border-radius:10px;transition:width .4s"></div>
+          </div>
+        </div>
+        <div style="text-align:center">
+          <input class="reb-target-inp" type="number" min="0" max="100" step="1" value="${fmt(tPct,0)}" onchange="
+            const v=Math.max(0,Math.min(100,parseFloat(this.value)||0));
+            _rebTargets['${o.sym}']=v;this.value=v;
+            _saveRebTargets();renderRebalancing();" onclick="event.stopPropagation()"/>
+        </div>
+        <div style="text-align:right;font-family:var(--fm);font-size:11px;font-weight:600;color:${isOk?'var(--t3)':isBuy?'var(--g)':'var(--r)'}">
+          ${isOk?'—':(isBuy?'+':'')+o.cur+fmt(o.delta,0)}
+        </div>
+        <div class="reb-order ${oClass}">${oText}</div>
+      </div>`;
+    }).join('')}
+
+    <!-- Nuovo capitale -->
+    <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Distribuisci nuovo capitale secondo i target</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
+        <input id="reb-new-money" class="port-inp" type="number" placeholder="Importo da investire ($)" min="0" step="100" style="width:200px" oninput="_renderRebNewMoney()"/>
+      </div>
+      <div id="reb-new-money-result"></div>
+    </div>
+
+    <!-- Azioni rapide -->
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="sc-btn" style="font-size:11px;padding:6px 14px" onclick="
+        const eq=Math.round(100/portfolio.length);
+        portfolio.forEach((item,i)=>{_rebTargets[item.sym]=i<portfolio.length-1?eq:100-eq*(portfolio.length-1);});
+        _saveRebTargets();renderRebalancing();">↺ Uguale per tutti</button>
+      <button class="sc-btn" style="font-size:11px;padding:6px 14px;background:var(--s2);color:var(--t2);border-color:var(--bd)" onclick="
+        portfolio.forEach(item=>{delete _rebTargets[item.sym];});
+        _saveRebTargets();renderRebalancing();">✕ Reset target</button>
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">I target vengono salvati nel browser · Non considera i costi di transazione · Solo scopo informativo</div>
+  `;
+}
+
+function _renderRebNewMoney(){
+  const el=document.getElementById('reb-new-money-result');
+  if(!el)return;
+  const nm=parseFloat(document.getElementById('reb-new-money')?.value)||0;
+  if(!nm||!portfolio.length){el.innerHTML='';return;}
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:[];
+  let rows='';
+  portfolio.forEach((item,i)=>{
+    const tPct=(_rebTargets[item.sym]||0)/100;
+    const amount=nm*tPct;
+    if(amount<0.5)return;
+    const q=quotes[i];const p=q?.price??item.buyPrice;
+    const shares=p>0?amount/p:0;
+    const cur=item.currency==='EUR'?'€':'$';
+    rows+=`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);font-family:var(--fm);font-size:11px">
+      <span style="font-weight:700;color:var(--t);width:70px">${item.sym}</span>
+      <span style="color:var(--t3)">${fmt(tPct*100,1)}% = ${cur}${fmt(amount,0)}</span>
+      <span style="color:var(--g);font-weight:600">＋ ${fmt(shares,shares<10?3:1)} az @ ${cur}${fmt(p,p<10?3:2)}</span>
+    </div>`;
+  });
+  el.innerHTML=rows?`<div style="background:var(--s2);border-radius:8px;border:1px solid var(--bd);padding:6px 12px">${rows}</div>`:'';
+}
+
+/* ══════════════════════════════════════════
+   TAX DASHBOARD (Italia)
+══════════════════════════════════════════ */
+function renderTaxDashboard(){
+  const el=document.getElementById('fisco-content');
+  if(!el)return;
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per vedere la situazione fiscale</div>';return;
+  }
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  if(!quotes){
+    el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';
+    Promise.all(portfolio.map(item=>api(item.sym))).then(q=>{_lastPortQuotes=q;renderTaxDashboard();});
+    return;
+  }
+
+  const TAX=0.26;
+  let totalGain=0,totalLoss=0,totalInv=0;
+  const rows=portfolio.map((item,i)=>{
+    const q=quotes[i];const p=q?.price??item.buyPrice;
+    const inv=item.qty*item.buyPrice;const val=item.qty*p;
+    const pnl=val-inv;const pnlPct=inv>0?(pnl/inv*100):0;
+    const isGain=pnl>=0;const tax=isGain?pnl*TAX:0;
+    const cur=item.currency==='EUR'?'€':'$';
+    totalInv+=inv;if(pnl>0)totalGain+=pnl;else totalLoss+=Math.abs(pnl);
+    return{sym:item.sym,inv,val,pnl,pnlPct,isGain,tax,cur,p,qty:item.qty};
+  });
+
+  const netGain=totalGain-totalLoss;
+  const taxable=Math.max(0,netGain);
+  const estTax=taxable*TAX;
+  const netAfterTax=netGain-estTax;
+  const sortedRows=[...rows].sort((a,b)=>b.pnl-a.pnl);
+  const hasLoss=rows.some(r=>r.pnl<0);
+  const hasGain=rows.some(r=>r.pnl>0);
+
+  el.innerHTML=`
+    <!-- KPI fiscali -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
+      <div class="rb">
+        <div class="rl">PLUSVALENZE LATENTI</div>
+        <div class="rv2 g" style="font-size:18px">+$${fmt(totalGain,0)}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">se vendessi tutte le posizioni in gain</div>
+      </div>
+      <div class="rb">
+        <div class="rl">MINUSVALENZE LATENTI</div>
+        <div class="rv2 down" style="font-size:18px">-$${fmt(totalLoss,0)}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">compensabili per 4 anni fiscali</div>
+      </div>
+      <div class="rb">
+        <div class="rl">GUADAGNO NETTO</div>
+        <div class="rv2 ${netGain>=0?'g':'down'}" style="font-size:18px">${netGain>=0?'+':''}$${fmt(netGain,0)}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">plusvalenze − minusvalenze</div>
+      </div>
+      <div class="rb">
+        <div class="rl">IMPOSTA STIMATA 26%</div>
+        <div class="rv2 down" style="font-size:18px">${estTax>0?'$'+fmt(estTax,0):'—'}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${estTax>0?'se realizzi tutte le plusvalenze':'Nessuna imposta dovuta'}</div>
+      </div>
+    </div>
+
+    ${estTax>0?`
+    <!-- Barra imposta -->
+    <div style="padding:12px 14px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:11px;margin-bottom:6px">
+        <span style="color:var(--t2)">Guadagno netto lordo</span>
+        <span style="font-weight:700;color:var(--t)">$${fmt(netGain,0)}</span>
+      </div>
+      <div style="height:12px;background:var(--g2);border-radius:10px;overflow:hidden;position:relative">
+        <div style="height:12px;width:26%;background:#DC2626;border-radius:0 10px 10px 0;position:absolute;right:0"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;margin-top:5px">
+        <span style="color:var(--g)">■ Netto dopo tasse: $${fmt(netAfterTax,0)} (${fmt(100-TAX*100,0)}%)</span>
+        <span style="color:var(--r)">■ Imposta: $${fmt(estTax,0)} (26%)</span>
+      </div>
+    </div>`:''}
+
+    ${hasLoss&&hasGain?`
+    <!-- Tax-Loss Harvesting -->
+    <div style="padding:12px 14px;background:var(--o2);border:1px solid #FCD34D;border-radius:8px;border-left:3px solid var(--o);margin-bottom:14px">
+      <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:6px">💡 Opportunità Tax-Loss Harvesting</div>
+      <div style="font-size:11px;color:#92400E;line-height:1.6;font-family:var(--fm)">
+        Hai <strong>${rows.filter(r=>r.pnl<0).length} posizioni in perdita</strong> (totale -$${fmt(totalLoss,0)}) che puoi realizzare per compensare le plusvalenze.
+        Risparmio fiscale stimato: <strong>$${fmt(Math.min(totalLoss,totalGain)*TAX,0)}</strong>.
+        Le minusvalenze sono utilizzabili per i successivi <strong>4 anni fiscali</strong> (Regime Dichiarativo/Amministrato).
+      </div>
+    </div>`:''}
+
+    <!-- Dettaglio per titolo -->
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo</div>
+    ${sortedRows.map(r=>`
+    <div class="tax-row">
+      <div>
+        <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${r.sym}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">${r.qty} az · ${r.cur}${fmt(r.p,r.p<10?3:2)} · costo ${r.cur}${fmt(r.inv,0)}</div>
+      </div>
+      <div><span class="tax-badge ${r.isGain?'gain':'loss'}">${r.isGain?'PLUS':'MINUS'}</span></div>
+      <div style="text-align:right">
+        <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${r.isGain?'var(--g)':'var(--r)'}">${r.pnl>=0?'+':''}${r.cur}${fmt(r.pnl,0)}</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${r.pnlPct>=0?'+':''}${fmt(r.pnlPct,1)}%</div>
+      </div>
+      <div style="text-align:right">
+        ${r.isGain?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;color:var(--r)">-${r.cur}${fmt(r.tax,0)} imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">se realizzi oggi</div>`:`<div style="font-family:var(--fm);font-size:11px;color:var(--g)">Nessuna imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">compensazione 4 anni</div>`}
+      </div>
+    </div>`).join('')}
+
+    <!-- Note legali -->
+    <div style="margin-top:14px;padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);font-size:11px;color:var(--t2);line-height:1.7;font-family:var(--fm)">
+      <div style="font-weight:700;color:var(--t);margin-bottom:4px">Note fiscali (Italia)</div>
+      · Aliquota capital gains su titoli esteri: <strong>26%</strong> (D.Lgs. 461/97 · art. 5 D.Lgs. 461/97)<br>
+      · Minusvalenze compensano plusvalenze per i successivi <strong>4 anni fiscali</strong> (Regime Dichiarativo o Amministrato)<br>
+      · Dividendi soggetti a ritenuta alla fonte <strong>26%</strong> (applicata direttamente dall'intermediario in regime amministrato)<br>
+      · Valori calcolati sui prezzi di mercato attuali — la situazione fiscale reale dipende dalle date di acquisto/vendita effettive<br>
+      · ⚠ Queste sono stime indicative. Consulta un commercialista o consulente fiscale per la tua situazione specifica.
+    </div>
+  `;
+}
+
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStockDetail();});
 
 // Avvia verifica sessione
