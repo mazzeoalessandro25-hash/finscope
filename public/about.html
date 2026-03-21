@@ -1196,6 +1196,27 @@ async function loadStats(isFirstLoad){
 loadStats(true);
 setInterval(()=>loadStats(false),30000);
 
+function toggleAboutNav(){
+  const drawer=document.getElementById('nav-drawer');
+  const burger=document.getElementById('nav-burger');
+  if(!drawer)return;
+  const isOpen=drawer.classList.contains('open');
+  drawer.classList.toggle('open',!isOpen);
+  burger.classList.toggle('open',!isOpen);
+}
+function closeAboutNav(){
+  document.getElementById('nav-drawer')?.classList.remove('open');
+  document.getElementById('nav-burger')?.classList.remove('open');
+}
+// Chiudi drawer cliccando fuori
+document.addEventListener('click',function(e){
+  const drawer=document.getElementById('nav-drawer');
+  const burger=document.getElementById('nav-burger');
+  if(drawer?.classList.contains('open')&&!drawer.contains(e.target)&&!burger?.contains(e.target)){
+    closeAboutNav();
+  }
+});
+
 function scrollToForm(){
   const el=document.getElementById('auth-card');
   if(el){
