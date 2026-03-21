@@ -1273,34 +1273,50 @@ html.dark .auth-box{background:#1e293b}
       </div>
     </div>
 
-    <!-- ── RIGA 2: Benchmark + Dividend Tracker affiancati ── -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-      <div class="card" id="bench-card">
-        <div class="ch"><div><div class="ct">vs Benchmark</div><div class="cs">Performance vs indici (1 mese)</div></div></div>
-        <div id="bench-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
+    <!-- ── TABS SEZIONI ── -->
+    <div>
+      <div class="port-tabs">
+        <button class="port-tab active" id="ptab-btn-analisi" onclick="switchPortTab('analisi')">📊 Analisi</button>
+        <button class="port-tab" id="ptab-btn-prospetto" onclick="switchPortTab('prospetto')">🎯 Prospetto</button>
+        <button class="port-tab" id="ptab-btn-performance" onclick="switchPortTab('performance')">📈 Performance</button>
+        <button class="port-tab" id="ptab-btn-benchmark" onclick="switchPortTab('benchmark')">⚖️ Benchmark</button>
+        <button class="port-tab" id="ptab-btn-dividendi" onclick="switchPortTab('dividendi')">💰 Dividendi</button>
       </div>
-      <div class="card" id="div-tracker-card">
-        <div class="ch"><div><div class="ct">Dividend Tracker</div><div class="cs">Reddito stimato da dividendi</div></div></div>
-        <div id="div-tracker-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
+
+      <div class="port-tab-panel active" id="ptab-analisi">
+        <div class="card" id="port-analysis-card">
+          <div class="ch"><div><div class="ct">Analisi & Bilanciamento</div><div class="cs">Composizione, rischio e profilo investitore</div></div></div>
+          <div id="port-analysis-content"><div class="ld" style="padding:10px">Aggiungi titoli per vedere l'analisi</div></div>
+        </div>
       </div>
-    </div>
 
-    <!-- ── ANALISI & BILANCIAMENTO ── -->
-    <div class="card" style="margin-bottom:14px" id="port-analysis-card">
-      <div class="ch"><div><div class="ct">Analisi & Bilanciamento</div><div class="cs">Composizione, rischio e profilo investitore</div></div></div>
-      <div id="port-analysis-content"><div class="ld" style="padding:10px">Aggiungi titoli per vedere l'analisi</div></div>
-    </div>
+      <div class="port-tab-panel" id="ptab-prospetto">
+        <div class="card" id="port-targets-card">
+          <div class="ch"><div><div class="ct">Prospetto Valore Futuro</div><div class="cs">Proiezione a 12 mesi basata sui prezzi target degli analisti</div></div></div>
+          <div id="port-targets-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+        </div>
+      </div>
 
-    <!-- ── PROSPETTO VALORE FUTURO ── -->
-    <div class="card" style="margin-bottom:14px" id="port-targets-card">
-      <div class="ch"><div><div class="ct">Prospetto Valore Futuro</div><div class="cs">Proiezione a 12 mesi basata sui prezzi target degli analisti</div></div></div>
-      <div id="port-targets-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
-    </div>
+      <div class="port-tab-panel" id="ptab-performance">
+        <div class="card" id="port-perf-card">
+          <div class="ch"><div><div class="ct">Performance Portafoglio</div><div class="cs">Rendimento ponderato 1 mese vs S&P 500</div></div></div>
+          <canvas id="portPerfChart" height="80"></canvas>
+        </div>
+      </div>
 
-    <!-- ── PERFORMANCE CHART ── -->
-    <div class="card port-perf-card" id="port-perf-card">
-      <div class="ch"><div><div class="ct">Performance Portafoglio</div><div class="cs">Rendimento ponderato 1 mese vs S&P 500</div></div></div>
-      <canvas id="portPerfChart" height="80"></canvas>
+      <div class="port-tab-panel" id="ptab-benchmark">
+        <div class="card" id="bench-card">
+          <div class="ch"><div><div class="ct">vs Benchmark</div><div class="cs">Performance vs indici (1 mese)</div></div></div>
+          <div id="bench-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
+        </div>
+      </div>
+
+      <div class="port-tab-panel" id="ptab-dividendi">
+        <div class="card" id="div-tracker-card">
+          <div class="ch"><div><div class="ct">Dividend Tracker</div><div class="cs">Reddito stimato da dividendi</div></div></div>
+          <div id="div-tracker-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
+        </div>
+      </div>
     </div>
 
   </div>
