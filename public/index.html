@@ -2755,24 +2755,24 @@ async function renderPortfolio(){
           <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
         </div>
       </div>
-      <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:10px">
-        <div style="display:flex;gap:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px">
+        <div style="display:flex;gap:12px">
           <div>
-            <div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${up?'up':'down'}">${pnl!=null?(up?'+':'')+csym+fmt(Math.abs(pnl),0):'—'}</div>
-            <div style="font-size:9px;color:var(--t3)">P&amp;L</div>
+            <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${up?'up':'down'}">${pnl!=null?(up?'+':'')+csym+fmt(Math.abs(pnl),0):'—'}</div>
+            <div style="font-size:8px;color:var(--t3)">P&amp;L</div>
           </div>
           <div>
-            <div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${pnlPct!=null?(pnlPct>=0?'up':'down'):''}">${pnlPct!=null?(pnlPct>=0?'+':'')+fmt(pnlPct,1)+'%':'—'}</div>
-            <div style="font-size:9px;color:var(--t3)">Rend.</div>
+            <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${pnlPct!=null?(pnlPct>=0?'up':'down'):''}">${pnlPct!=null?(pnlPct>=0?'+':'')+fmt(pnlPct,1)+'%':'—'}</div>
+            <div style="font-size:8px;color:var(--t3)">Rend.</div>
           </div>
         </div>
-        <div style="flex:1;max-width:140px">
+        <div style="flex:1;max-width:130px">
           <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">peso</div>
-            <div style="font-size:9px;font-family:var(--fm);font-weight:600;color:${barColor}">${weightPct}%</div>
+            <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">peso</div>
+            <div style="font-size:8px;font-family:var(--fm);font-weight:600;color:${barColor}">${weightPct}%</div>
           </div>
-          <div style="height:4px;background:var(--bd);border-radius:10px;overflow:hidden">
-            <div style="height:4px;width:${weightPct}%;background:${barColor};border-radius:10px;transition:width .6s ease"></div>
+          <div style="height:3px;background:var(--bd);border-radius:10px;overflow:hidden">
+            <div style="height:3px;width:${weightPct}%;background:${barColor};border-radius:10px;transition:width .6s ease"></div>
           </div>
         </div>
       </div>
