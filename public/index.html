@@ -2729,6 +2729,66 @@ async function submitAuth(){
   btn.textContent=authTab==='login'?'Accedi':'Crea account';
 }
 
+/* ── PASSWORD DIMENTICATA ── */
+async function submitForgotPw(){
+  const email=(document.getElementById('fp-email').value||'').trim();
+  const errEl=document.getElementById('fp-err');
+  const okEl=document.getElementById('fp-ok');
+  const btn=document.getElementById('fp-submit');
+  errEl.classList.remove('show');okEl.classList.remove('show');
+  if(!email){errEl.textContent='Inserisci la tua email';errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Invio in corso...';
+  try{
+    const r=await fetch('/api/auth?action=forgot',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.ok){
+      errEl.textContent=d.error||'Errore. Riprova.';errEl.classList.add('show');
+    } else {
+      const codeMsg=d.code?` Il tuo codice: <strong>${d.code}</strong>`:'';
+      okEl.innerHTML=`Codice di reset generato.${codeMsg}<br><small>Valido 15 minuti</small>`;
+      okEl.classList.add('show');
+      document.getElementById('rp-email-hidden').value=email;
+      setTimeout(()=>showAuthView('reset'),1800);
+    }
+  }catch{
+    errEl.textContent='Errore di connessione. Riprova.';errEl.classList.add('show');
+  }
+  btn.disabled=false;btn.textContent='Invia codice di reset';
+}
+
+async function submitResetPw(){
+  const email=document.getElementById('rp-email-hidden').value;
+  const code=(document.getElementById('rp-code').value||'').trim();
+  const pwd=document.getElementById('rp-pwd').value;
+  const errEl=document.getElementById('rp-err');
+  const okEl=document.getElementById('rp-ok');
+  const btn=document.getElementById('rp-submit');
+  errEl.classList.remove('show');okEl.classList.remove('show');
+  if(!code||code.length!==6){errEl.textContent='Inserisci il codice a 6 cifre';errEl.classList.add('show');return;}
+  if(!pwd||pwd.length<8){errEl.textContent='La password deve essere di almeno 8 caratteri';errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Aggiornamento...';
+  try{
+    const r=await fetch('/api/auth?action=reset',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,code,newPassword:pwd})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.ok){
+      errEl.textContent=d.error||'Codice non valido o scaduto.';errEl.classList.add('show');
+    } else {
+      okEl.textContent='Password aggiornata con successo! Accedi con le nuove credenziali.';
+      okEl.classList.add('show');
+      setTimeout(()=>showAuthView('main'),2500);
+    }
+  }catch{
+    errEl.textContent='Errore di connessione. Riprova.';errEl.classList.add('show');
+  }
+  btn.disabled=false;btn.textContent='Aggiorna password';
+}
+
 function updateNavUser(){
   const area=document.getElementById('nav-user-area');
   if(currentUser){
