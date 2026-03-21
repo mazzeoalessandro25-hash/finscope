@@ -3812,26 +3812,32 @@ async function loadPortTargets(){
     <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo</div>
     ${rows.map(r=>{
       const up=r.upside==null||r.upside>=0;
+      const barMax=40; // max % per barra piena
+      const barW=r.upside!=null?Math.min(Math.abs(r.upside)/barMax*100,100):0;
+      const barColor=r.upside==null?'var(--bd)':up?'#10B981':'#EF4444';
       return`<div class="port-target-row">
         <div>
           <div style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px">${r.item.sym}</div>
-          ${r.rec?`<div style="font-size:9px;font-family:var(--fm);color:${recColors[r.rec]||'var(--t3)'}">${recLabels[r.rec]||r.rec}${r.numAnalysts?' ('+r.numAnalysts+')':''}</div>`:''}
+          ${r.rec?`<div style="font-size:9px;font-family:var(--fm);color:${recColors[r.rec]||'var(--t3)'};margin-top:1px">${recLabels[r.rec]||r.rec}${r.numAnalysts?' · '+r.numAnalysts+' analisti':''}</div>`:''}
         </div>
-        <div>
-          <div style="display:flex;align-items:center;gap:6px;font-family:var(--fm);font-size:11px">
+        <div style="display:flex;flex-direction:column;justify-content:center;gap:3px">
+          <div style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:11px">
             <span style="color:var(--t2)">${r.cur}${r.curPrice?fmt(r.curPrice,r.curPrice<10?3:2):'—'}</span>
             <span style="color:var(--t3)">→</span>
             <span style="font-weight:600;color:${r.target==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.target?r.cur+fmt(r.target,r.target<10?3:2):'N/D'}</span>
           </div>
-          ${r.targetLow&&r.targetHigh?`<div style="font-size:9px;color:var(--t3);font-family:var(--fm)">Range: ${r.cur}${fmt(r.targetLow,0)} – ${r.cur}${fmt(r.targetHigh,0)}</div>`:''}
+          <div style="height:4px;background:var(--bd);border-radius:10px;overflow:hidden">
+            <div style="height:4px;width:${barW}%;background:${barColor};border-radius:10px;transition:width .6s"></div>
+          </div>
+          ${r.targetLow&&r.targetHigh?`<div style="font-size:8px;color:var(--t3);font-family:var(--fm)">range: ${r.cur}${fmt(r.targetLow,0)}–${r.cur}${fmt(r.targetHigh,0)}</div>`:''}
         </div>
         <div style="text-align:right">
           <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${r.upside==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.upside!=null?(r.upside>=0?'+':'')+fmt(r.upside,1)+'%':'—'}</div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">upside</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">upside</div>
         </div>
         <div style="text-align:right">
           <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:${r.gainFromBuy==null?'var(--t3)':r.gainFromBuy>=0?'var(--g)':'var(--r)'}">${r.gainFromBuy!=null?(r.gainFromBuy>=0?'+':'')+r.cur+fmt(r.gainFromBuy,0):'—'}</div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${r.gainFromBuyPct!=null?(r.gainFromBuyPct>=0?'+':'')+fmt(r.gainFromBuyPct,1)+'% dal costo':''}</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.gainFromBuyPct!=null?(r.gainFromBuyPct>=0?'+':'')+fmt(r.gainFromBuyPct,1)+'% dal costo':''}</div>
         </div>
       </div>`;
     }).join('')}
