@@ -2632,8 +2632,12 @@ async function renderPortfolio(){
     return;
   }
 
-  // Fetch prezzi in parallelo
-  const quotes=await Promise.all(portfolio.map(item=>api(item.sym)));
+  // Fetch prezzi in parallelo + tasso di cambio EUR/USD
+  const [quotes, fxData] = await Promise.all([
+    Promise.all(portfolio.map(item=>api(item.sym))),
+    api('EURUSD=X'),
+  ]);
+  const eurUsd = fxData?.price || 1.08; // fallback 1.08
 
   // Calcola P&L separato per valuta
   let totalUSD_inv=0, totalUSD_val=0;
