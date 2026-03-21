@@ -3791,13 +3791,12 @@ async function loadSdData(sym){
 
   const cur=d.currency==='EUR'?'€':'$';
 
-  // Header nome (solo alla prima apertura)
+  // Header nome e prezzo (aggiorna sempre con dati freschi)
   document.getElementById('sd-name').textContent=d.name||sym;
   document.getElementById('sd-hdr-price').textContent=cur+fmt(d.price,d.price<10?4:2);
   const chgEl=document.getElementById('sd-hdr-chg');
   const c=chgPct(d.price,d.prev);
   chgEl.textContent=chgStr(c);chgEl.style.color=(c==null||c>=0)?'var(--g)':'var(--r)';
-  sdSet('sdm-price',cur+fmt(d.price,d.price<10?4:2));
   sdSetChg('sdm-chg',c);
   sdSet('sdm-dh',d.dayHigh?cur+fmt(d.dayHigh,d.dayHigh<10?4:2):'—');
   sdSet('sdm-dl',d.dayLow?cur+fmt(d.dayLow,d.dayLow<10?4:2):'—');
