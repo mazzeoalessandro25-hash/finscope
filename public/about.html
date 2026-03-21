@@ -802,107 +802,76 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 <!-- ═══ PRICING ═══ -->
 <div class="pricing-section" id="pricing">
   <div class="pricing-inner">
-    <div style="text-align:center;max-width:640px;margin:0 auto 0" class="reveal">
+    <div style="text-align:center;max-width:640px;margin:0 auto 40px" class="reveal">
       <div class="section-tag" style="display:flex;justify-content:center">I piani</div>
-      <div class="section-title">Semplice, trasparente,<br>accessibile a tutti</div>
-      <p class="section-sub" style="margin-left:auto;margin-right:auto;margin-bottom:0">Inizia gratis con tutte le funzionalità base. Sblocca gli strumenti avanzati quando sei pronto — senza sorprese.</p>
+      <div class="section-title">Tutto incluso oggi,<br>piani in arrivo</div>
+      <p class="section-sub" style="margin-left:auto;margin-right:auto;margin-bottom:0">Durante la beta tutte le funzionalità sono gratuite. Ecco cosa troverai in ogni piano quando li lanceremo.</p>
     </div>
-    <div class="pricing-grid">
 
-      <!-- FREE -->
-      <div class="pricing-card reveal reveal-delay-1">
-        <div class="pricing-color-bar" style="background:#059669"></div>
-        <div class="pricing-tier">Free</div>
-        <div class="pricing-name">Starter</div>
-        <div class="pricing-free-tag">✓ Gratis per sempre</div>
-        <div class="pricing-desc" style="margin-top:8px">Mercati, screener e grafici. Tutto quello che serve per seguire i mercati ogni giorno.</div>
-        <ul class="pricing-features">
-          <li>Dashboard live — S&P 500, FTSE MIB, Nasdaq, VIX, commodities, crypto</li>
-          <li>Stock Screener (160+ titoli — USA, Italia, Europa)</li>
-          <li>FinScope Score 5D su tutti i titoli</li>
-          <li>Grafici TradingView (candele + linea, 7 timeframe)</li>
-          <li>News filtrate per categoria (7 sezioni)</li>
-          <li>Watchlist personale (cloud)</li>
-          <li>Dark / Light mode</li>
-          <li class="no">Portafoglio P&L live</li>
-          <li class="no">Alert prezzi</li>
-          <li class="no">Simulatore investimenti</li>
-        </ul>
-        <button class="pricing-btn outline" onclick="scrollToForm()">Inizia gratis →</button>
-      </div>
-
-      <!-- BASIC -->
-      <div class="pricing-card reveal reveal-delay-2">
-        <div class="pricing-color-bar" style="background:#1A56C4"></div>
-        <div class="pricing-tier">Basic</div>
-        <div class="pricing-name">Investor</div>
-        <div class="pricing-coming">⏳ In arrivo · ~€2/mese</div>
-        <div class="pricing-coming-note">Oggi incluso gratis nella beta</div>
-        <div class="pricing-desc">Gestisci il tuo portafoglio e ricevi alert. Per chi investe attivamente ogni settimana.</div>
-        <ul class="pricing-features">
-          <li>Tutto di Free</li>
-          <li>Portafoglio P&L live (EUR + USD, multi-valuta)</li>
-          <li>Aggiornamento automatico prezzi portafoglio</li>
-          <li>Alert prezzi (sopra/sotto soglia)</li>
-          <li>Price Target calcolato (Formula Graham + analisti)</li>
-          <li>Confronto titoli side-by-side (fino a 3)</li>
-          <li>Simulatore investimenti (azioni, ETF globali)</li>
-          <li>Ticker autocomplete — suggerimento titoli</li>
-          <li>Export CSV portafoglio</li>
-          <li class="no">Risk Analytics (Sharpe, VaR, Beta)</li>
-        </ul>
-        <button class="pricing-btn outline" onclick="scrollToForm()" style="border-color:var(--b);color:var(--b)">Inizia gratis →</button>
-      </div>
-
-      <!-- PRO -->
-      <div class="pricing-card featured reveal reveal-delay-3">
-        <div class="pricing-badge">Più popolare</div>
-        <div class="pricing-color-bar" style="background:#7C3AED"></div>
-        <div class="pricing-tier">Pro</div>
-        <div class="pricing-name">Premium</div>
-        <div class="pricing-coming" style="background:#EDE9FE;color:#7C3AED">⏳ In arrivo · ~€3/mese</div>
-        <div class="pricing-coming-note">Oggi incluso gratis nella beta</div>
-        <div class="pricing-desc">Analisi professionale del portafoglio. Rischio, fisco, ribilanciamento e segnali di acquisto.</div>
-        <ul class="pricing-features">
-          <li>Tutto di Basic</li>
-          <li>Risk Analytics — Sharpe, VaR 95%, Max Drawdown, Beta, Sortino</li>
-          <li>Correlazione tra titoli (matrice)</li>
-          <li>Rebalancing Tool — ordini di ribilanciamento automatici</li>
-          <li>Dashboard Fiscale Italia — plusvalenze, 26%, tax-loss harvesting</li>
-          <li>DRIP Simulator — dividendi reinvestiti</li>
-          <li>Performance vs Benchmark (S&P 500, FTSE MIB, Nasdaq)</li>
-          <li>Segnale di acquisto per titolo (COMPRA / NEUTRALE / ATTENZIONE)</li>
-          <li>Simulatore ETF + Fondi (azionario, obbligazionario, misto)</li>
-          <li>7 profili investitore (Income → Speculativo)</li>
-        </ul>
-        <button class="pricing-btn primary" onclick="scrollToForm()">Inizia gratis →</button>
-      </div>
-
-      <!-- MAX -->
-      <div class="pricing-card reveal reveal-delay-4">
-        <div class="pricing-color-bar" style="background:#D97706"></div>
-        <div class="pricing-tier">Max</div>
-        <div class="pricing-name">Full Access</div>
-        <div class="pricing-coming">⏳ In arrivo · ~€5/mese</div>
-        <div class="pricing-coming-note">Oggi incluso gratis nella beta</div>
-        <div class="pricing-desc">Accesso completo a ogni strumento, inclusi pensione, macro e portfolio news personalizzate.</div>
-        <ul class="pricing-features">
-          <li>Tutto di Pro</li>
-          <li>Simulatore Previdenza — PIP, Fondo Aperto, Fondo Chiuso (con note fiscali IRPEF)</li>
-          <li>Macro Dashboard — tassi BCE/FED, spread BTP, forex, commodities</li>
-          <li>News del Portafoglio — notizie filtrate solo per i tuoi titoli</li>
-          <li>Prospetto Valore Futuro — proiezione a 12 mesi su target analisti</li>
-          <li>Dividend Tracker — reddito annuo stimato da dividendi per titolo</li>
-          <li>Stress Test portafoglio (−10%, −20%, −30%, −50%)</li>
-          <li>Analisi fondamentale dettagliata per ogni titolo</li>
-          <li>Accesso anticipato alle nuove funzionalità</li>
-          <li>Supporto prioritario</li>
-        </ul>
-        <button class="pricing-btn outline" onclick="scrollToForm()" style="border-color:var(--o);color:var(--o)">Inizia gratis →</button>
-      </div>
+    <div class="pricing-tbl-wrap reveal">
+      <table class="comp-tbl pricing-tbl">
+        <thead>
+          <tr>
+            <th style="text-align:left;min-width:180px">Funzionalità</th>
+            <th>
+              <div style="font-size:11px;font-weight:700;color:var(--t2)">Starter</div>
+              <div class="pricing-free-tag" style="margin:6px auto 0;font-size:10px;padding:4px 10px">Gratis</div>
+            </th>
+            <th>
+              <div style="font-size:11px;font-weight:700;color:var(--t2)">Investor</div>
+              <div class="pricing-coming" style="margin:6px auto 0;font-size:10px;padding:4px 10px">~€2/mese</div>
+            </th>
+            <th class="hl">
+              <div style="font-size:11px;font-weight:700;color:var(--b)">Premium ✦</div>
+              <div style="background:#EDE9FE;color:#7C3AED;display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:4px 10px;border-radius:6px;margin:6px auto 0;font-family:var(--fm)">~€3/mese</div>
+            </th>
+            <th>
+              <div style="font-size:11px;font-weight:700;color:var(--t2)">Full Access</div>
+              <div class="pricing-coming" style="background:var(--o2);color:var(--o);margin:6px auto 0;font-size:10px;padding:4px 10px">~€5/mese</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td colspan="5" style="background:var(--s2);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;padding:8px 16px">Base</td></tr>
+          <tr><td>Dashboard live (S&amp;P 500, VIX, Crypto…)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Stock Screener 160+ titoli</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>FinScope Score 5D</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Grafici TradingView (7 timeframe)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>News filtrate per categoria</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Watchlist personale (cloud)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Dark / Light mode</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td colspan="5" style="background:var(--s2);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;padding:8px 16px">Portafoglio</td></tr>
+          <tr><td>Portafoglio P&amp;L live (EUR + USD)</td><td>—</td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Alert prezzi personalizzati</td><td>—</td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Price Target (Graham + analisti)</td><td>—</td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Confronto titoli side-by-side (3)</td><td>—</td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Simulatore azioni + ETF</td><td>—</td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Export CSV portafoglio</td><td>—</td><td><span class="check">✓</span></td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td colspan="5" style="background:var(--s2);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;padding:8px 16px">Analisi avanzata</td></tr>
+          <tr><td>Risk Analytics (Sharpe, VaR, Beta, Sortino)</td><td>—</td><td>—</td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Rebalancing Tool automatico</td><td>—</td><td>—</td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Dashboard Fiscale Italia (26%, tax-loss)</td><td>—</td><td>—</td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>Segnale acquisto (COMPRA / NEUTRALE)</td><td>—</td><td>—</td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td>7 profili investitore</td><td>—</td><td>—</td><td class="hl"><span class="check">✓</span></td><td><span class="check">✓</span></td></tr>
+          <tr><td colspan="5" style="background:var(--s2);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:1px;text-transform:uppercase;padding:8px 16px">Full Access</td></tr>
+          <tr><td>Simulatore Previdenza (PIP, Fondo Aperto)</td><td>—</td><td>—</td><td class="hl">—</td><td><span class="check">✓</span></td></tr>
+          <tr><td>Macro Dashboard (BCE/FED, BTP, Forex)</td><td>—</td><td>—</td><td class="hl">—</td><td><span class="check">✓</span></td></tr>
+          <tr><td>News portafoglio personalizzate</td><td>—</td><td>—</td><td class="hl">—</td><td><span class="check">✓</span></td></tr>
+          <tr><td>Dividend Tracker + Stress Test</td><td>—</td><td>—</td><td class="hl">—</td><td><span class="check">✓</span></td></tr>
+          <tr><td>Accesso anticipato alle novità</td><td>—</td><td>—</td><td class="hl">—</td><td><span class="check">✓</span></td></tr>
+          <tr>
+            <td style="font-weight:700;color:var(--t)">Inizia ora</td>
+            <td><button class="pricing-btn outline" onclick="scrollToForm()" style="padding:8px 14px;font-size:12px">Gratis →</button></td>
+            <td><button class="pricing-btn outline" onclick="scrollToForm()" style="border-color:var(--b);color:var(--b);padding:8px 14px;font-size:12px">Inizia →</button></td>
+            <td class="hl"><button class="pricing-btn primary" onclick="scrollToForm()" style="padding:8px 14px;font-size:12px">Inizia →</button></td>
+            <td><button class="pricing-btn outline" onclick="scrollToForm()" style="border-color:var(--o);color:var(--o);padding:8px 14px;font-size:12px">Inizia →</button></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <p style="text-align:center;font-size:12px;color:var(--t3);margin-top:24px;font-family:var(--fm)">
-      ✦ Siamo in <strong style="color:var(--t2)">beta aperta</strong> — tutte le funzionalità sono gratuite adesso. I piani a pagamento arriveranno in futuro. Chi si registra ora avrà <strong style="color:var(--t2)">accesso anticipato e prezzo speciale</strong>.
+
+    <p style="text-align:center;font-size:12px;color:var(--t3);margin-top:20px;font-family:var(--fm)">
+      ✦ Siamo in <strong style="color:var(--t2)">beta aperta</strong> — tutte le funzionalità sono gratuite adesso. Chi si registra ora avrà <strong style="color:var(--t2)">accesso anticipato e prezzo speciale</strong>.
     </p>
   </div>
 </div>
