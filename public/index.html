@@ -2825,24 +2825,28 @@ async function renderPortfolio(){
 
     const stateClass=pnl==null?'neu':up?'pos':'neg';
     const barColor=stateClass==='pos'?'#059669':stateClass==='neg'?'#DC2626':'var(--b)';
-    return`<div class="port-item ${stateClass}" onclick="openStockDetail('${item.sym}')">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+    return`<div class="port-item ${stateClass}" id="port-item-${i}" onclick="openStockDetail('${item.sym}')">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <div style="min-width:0;flex:1">
-          <div style="display:flex;align-items:center;gap:6px">
+          <div style="display:flex;align-items:center;gap:5px">
             <span class="port-sym">${item.sym}</span>
             <span style="font-size:9px;color:var(--t3);background:var(--b3);padding:1px 5px;border-radius:3px;font-family:var(--fm)">${cur}</span>
           </div>
           <div class="port-name">${name}</div>
         </div>
-        <div style="display:flex;align-items:flex-start;gap:8px;flex-shrink:0">
+        <svg id="psp-${i}" width="56" height="26" style="flex-shrink:0;margin:0 8px"></svg>
+        <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
           <div style="text-align:right">
             <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
             <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}</div>
           </div>
-          <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <button class="port-del" onclick="event.stopPropagation();togglePortEdit(${i})" title="Modifica" style="color:var(--b)">✎</button>
+            <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
+          </div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
         <div style="display:flex;gap:12px">
           <div>
             <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${up?'up':'down'}">${pnl!=null?(up?'+':'')+csym+fmt(Math.abs(pnl),0):'—'}</div>
@@ -2861,6 +2865,15 @@ async function renderPortfolio(){
           <div style="height:3px;background:var(--bd);border-radius:10px;overflow:hidden">
             <div style="height:3px;width:${weightPct}%;background:${barColor};border-radius:10px;transition:width .6s ease"></div>
           </div>
+        </div>
+      </div>
+      <div class="port-edit-panel" id="port-edit-${i}" style="display:none">
+        <div class="port-edit-row">
+          <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Modifica:</span>
+          <input class="port-inp" id="pei-qty-${i}" type="number" value="${item.qty}" placeholder="Quantità" style="width:75px" onclick="event.stopPropagation()"/>
+          <input class="port-inp" id="pei-price-${i}" type="number" value="${item.buyPrice}" placeholder="Prezzo acq." style="width:95px" onclick="event.stopPropagation()"/>
+          <button class="port-btn" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();savePortEdit(${i})">Salva</button>
+          <button class="port-btn" style="padding:4px 8px;font-size:11px;background:var(--s2);color:var(--t2);border:1px solid var(--bd)" onclick="event.stopPropagation();togglePortEdit(${i})">✕</button>
         </div>
       </div>
     </div>`;
