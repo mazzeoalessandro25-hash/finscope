@@ -3546,6 +3546,38 @@ async function loadDividendTracker(){
       </div>
     </div>`).join('')}
     <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Stime basate sul dividend yield attuale e valore di mercato · Mesi di pagamento approssimati · Non garantiti</div>`;
+
+  // ── DRIP Simulator ──
+  const portVal=portfolio.reduce((s,item,i)=>s+item.qty*(quotes[i]?.price??item.buyPrice),0);
+  if((totalAnnualUSD>0||totalAnnualEUR>0)&&portVal>0){
+    const totalAnnual=totalAnnualUSD+(totalAnnualEUR>0?totalAnnualEUR/(_lastFxRate||1.08):0);
+    const yld=portVal>0?totalAnnual/portVal:0;
+    const BASE_RET=0.07; // 7% rendimento azionario annuo assunto
+    const scenarios=[
+      {years:10,label:'10 anni'},
+      {years:20,label:'20 anni'},
+      {years:30,label:'30 anni'},
+    ];
+    const dripRows=scenarios.map(sc=>{
+      const withDrip=portVal*Math.pow(1+BASE_RET+yld,sc.years);
+      const withoutDrip=portVal*Math.pow(1+BASE_RET,sc.years)+totalAnnual*sc.years; // dividendi cash non reinvestiti
+      const bonus=withDrip-withoutDrip;
+      const growthPct=(withDrip/portVal-1)*100;
+      return`<div class="drip-card">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">${sc.label} · DRIP</div>
+        <div class="drip-val">$${fmtLg(withDrip)}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px">+${fmt(growthPct,0)}% vs oggi</div>
+        <div style="font-size:9px;color:var(--b);font-family:var(--fm);margin-top:4px;padding-top:4px;border-top:1px solid var(--bd)">+$${fmtLg(bonus)} grazie al DRIP</div>
+      </div>`;
+    }).join('');
+    el.innerHTML+=`
+    <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">DRIP Simulator — Reinvestimento automatico dividendi</div>
+      <div style="font-size:11px;color:var(--t2);font-family:var(--fm);margin-bottom:12px">Yield attuale <strong>${fmt(yld*100,2)}%</strong> · Rendimento azionario assunto 7%/anno · Confronto con dividendi ricevuti come cash</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">${dripRows}</div>
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Simulazione illustrativa: assume yield costante e rendimento azionario del 7%/anno. Non considera la tassazione dei dividendi (26% Italia). Solo scopo educativo.</div>
+    </div>`;
+  }
 }
 
 /* ══════════════════════════════════════════
