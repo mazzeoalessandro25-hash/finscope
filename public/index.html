@@ -2774,6 +2774,9 @@ function switchPortTab(name){
   if(btn)btn.classList.add('active');
   if(panel)panel.classList.add('active');
   if(name==='performance')loadPortPerf();
+  if(name==='risk')loadRiskMetrics();
+  if(name==='rebalancing')renderRebalancing();
+  if(name==='fisco')renderTaxDashboard();
 }
 
 function setPortSort(key){
