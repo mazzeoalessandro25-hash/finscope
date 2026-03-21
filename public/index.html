@@ -2674,6 +2674,16 @@ async function addPortfolioItem(){
   renderPortfolio();
 }
 
+function togglePortCurrency(){
+  _portCurrView=_portCurrView==='EUR'?'USD':'EUR';
+  const isEUR=_portCurrView==='EUR';
+  const mainEl=document.getElementById('ph-val-usd');
+  const subEl=document.getElementById('ph-val-eur');
+  const lblEl=document.getElementById('ph-val-lbl');
+  if(mainEl)mainEl.textContent=isEUR?'€'+fmt(_portHeroEUR,0):'$'+fmt(_portHeroUSD,0);
+  if(subEl)subEl.textContent=isEUR?'≈ $'+fmt(_portHeroUSD,0):'≈ €'+fmt(_portHeroEUR,0);
+  if(lblEl)lblEl.textContent=isEUR?'Valore totale (EUR)':'Valore totale (USD)';
+}
 function togglePortAdd(){
   const p=document.getElementById('port-add-panel');
   if(p) p.style.display=p.style.display==='none'?'block':'none';
