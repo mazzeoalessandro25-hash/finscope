@@ -1480,17 +1480,50 @@ html.dark .auth-box{background:#1e293b}
 
 <!-- ═══ SIMULATORE ═══ -->
 <div class="page" id="page-simulatore">
-  <div class="pg-title">Simulatore & Analisi</div>
-  <div class="pg-sub">Proiezione portafoglio con interesse composto e analisi fondamentale live</div>
+  <div class="pg-title">Simulatore Investimenti</div>
+  <div class="pg-sub">Proiezione portafoglio con interesse composto · Azioni, ETF, Fondi e Pensione</div>
   <div class="sim-l">
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="card">
         <div class="ch"><div><div class="ct">Parametri</div><div class="cs">Configura la tua strategia</div></div></div>
+        <div class="fg"><label>TIPO DI INVESTIMENTO</label>
+          <select id="sim-type" onchange="onSimTypeChange()">
+            <optgroup label="Azioni">
+              <option value="balanced">Portafoglio Bilanciato (60/40)</option>
+              <option value="growth">Portafoglio Growth (80/20)</option>
+              <option value="conservative">Portafoglio Conservativo (40/60)</option>
+              <option value="dividend">Portafoglio Dividendi</option>
+            </optgroup>
+            <optgroup label="ETF">
+              <option value="etf">ETF Globale (MSCI World)</option>
+              <option value="etf_sp500">ETF S&amp;P 500</option>
+              <option value="etf_eu">ETF Europa</option>
+              <option value="etf_em">ETF Mercati Emergenti</option>
+              <option value="etf_bond">ETF Obbligazionario</option>
+            </optgroup>
+            <optgroup label="Fondi">
+              <option value="fund_eq">Fondo Azionario Attivo</option>
+              <option value="fund_mix">Fondo Misto Bilanciato</option>
+              <option value="fund_bond">Fondo Obbligazionario</option>
+            </optgroup>
+            <optgroup label="Previdenza">
+              <option value="pension_pip">Piano Individuale Pensionistico (PIP)</option>
+              <option value="pension_fop">Fondo Pensione Aperto</option>
+              <option value="pension_fch">Fondo Pensione Chiuso (Categoria)</option>
+            </optgroup>
+          </select>
+        </div>
+        <div class="fg" id="sim-info-box" style="background:var(--s2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.6;display:none"></div>
         <div class="fg"><label>CAPITALE INIZIALE (€)</label><input type="number" id="sc2" value="5000" min="100" oninput="calcSim()"/></div>
         <div class="fg"><label>VERSAMENTO MENSILE (€)</label><input type="number" id="sm" value="200" min="0" oninput="calcSim()"/></div>
         <div class="fg"><label>ANNI</label><input type="range" id="sy" min="1" max="40" value="10" oninput="document.getElementById('syv').textContent=this.value+' anni';calcSim()"/><div class="rv" id="syv">10 anni</div></div>
         <div class="fg"><label>RENDIMENTO ATTESO (%/anno)</label><input type="range" id="sr" min="1" max="20" value="8" step="0.5" oninput="document.getElementById('srv').textContent=this.value+'%';calcSim()"/><div class="rv" id="srv">8%</div></div>
-        <div class="fg"><label>STRATEGIA</label><select id="ss" onchange="calcSim()"><option value="balanced">Bilanciato (60/40)</option><option value="growth">Growth (80/20)</option><option value="conservative">Conservativo (40/60)</option><option value="etf">Solo ETF globale</option></select></div>
+        <div class="fg" id="sim-tax-row" style="display:none"><label>TASSAZIONE AGEVOLATA (PENSIONE)</label>
+          <select id="sim-tax" onchange="calcSim()">
+            <option value="15">15% (dopo 15+ anni)</option>
+            <option value="9">9% (contributi datoriali)</option>
+          </select>
+        </div>
       </div>
       <div class="card"><div class="ch"><div><div class="ct">Allocazione</div></div></div><canvas id="pieChart" height="180"></canvas><div class="pie-leg" id="pie-leg"></div></div>
     </div>
@@ -1505,10 +1538,9 @@ html.dark .auth-box{background:#1e293b}
         </div>
         <canvas id="simChart" height="190"></canvas>
       </div>
-      <div class="card">
-        <div class="ch"><div><div class="ct">Analisi fondamentale live</div><div class="cs">Dati reali da Yahoo Finance</div></div></div>
-        <div class="fa-row"><input class="fa-inp" id="fat" type="text" placeholder="AAPL · ENI.MI · MSFT · NVDA · ASML" maxlength="12"/><button class="fa-btn" onclick="runFA()">Analizza</button></div>
-        <div id="fa-res"><p style="color:var(--t3);font-size:12px;font-family:var(--fm)">Inserisci un ticker per i dati fondamentali</p></div>
+      <div class="card" id="sim-tax-note-card" style="display:none">
+        <div class="ch"><div><div class="ct">Note fiscali</div><div class="cs">Vantaggi fiscali del veicolo selezionato</div></div></div>
+        <div id="sim-tax-note-content"></div>
       </div>
     </div>
   </div>
