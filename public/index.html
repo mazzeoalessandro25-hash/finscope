@@ -2830,7 +2830,7 @@ async function renderPortfolio(){
     Promise.all(portfolio.map(item=>api(item.sym))),
     api('EURUSD=X'),
   ]);
-  const eurUsd = fxData?.price || 1.08;
+  const eurUsd = fxData?.price || 1.08; _lastFxRate=eurUsd;
 
   // Calcola totali
   let totalUSD_inv=0, totalUSD_val=0;
