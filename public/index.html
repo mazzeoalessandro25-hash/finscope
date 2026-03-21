@@ -3471,13 +3471,13 @@ function openStockDetail(sym){
   document.getElementById('sd-hdr-chg').textContent='';
   document.getElementById('sd-wl-btn').classList.toggle('active',watchlist.includes(sym));
   // Reset all metric cells
-  ['sdm-price','sdm-chg','sdm-dh','sdm-dl','sdm-cap','sdm-beta','sdm-52h','sdm-52l',
+  ['sdm-divk','sdm-chg','sdm-dh','sdm-dl','sdm-cap','sdm-beta','sdm-52h','sdm-52l',
    'sdm-vol','sdm-avgvol','sdm-emp','sdm-short',
    'sdm-pe','sdm-fpe','sdm-pb','sdm-ps','sdm-eps','sdm-feps',
    'sdm-roe','sdm-roa','sdm-gm','sdm-om','sdm-pm','sdm-ebitda',
    'sdm-revg','sdm-earng','sdm-rev','sdm-fcf','sdm-div','sdm-shares',
    'sdm-cash','sdm-debt','sdm-de','sdm-cr','sdm-qr','sdm-float',
-   'sdm-target','sdm-target-range','sdm-nanalysts'
+   'sdm-target','sdm-target-range','sdm-upside'
   ].forEach(id=>{
     const el=document.getElementById(id);
     if(el){el.textContent='···';el.className='sd-m-val';}
