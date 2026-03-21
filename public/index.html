@@ -1920,16 +1920,15 @@ async function loadSummariesBg(){
   scSummaryLoading=true;
   const allS=STOCKS.concat(customStocks);
   for(let i=0;i<allS.length;i+=3){
-    // Skip symbols currently open in stock detail (will be fetched with priority)
-    const batch=allS.slice(i,i+3).filter(s=>s.s!==sdSym);
-    if(batch.length){
-      await Promise.all(batch.map(async s=>{
-        const sd=await api(s.s,'summary');
-        if(sd)scSummary[s.s]=sd;
-      }));
-      applyF();
-    }
-    await new Promise(r=>setTimeout(r,300));
+    // Pausa completa mentre stock detail è aperto (evita rate limiting su Yahoo)
+    while(sdSym) await new Promise(r=>setTimeout(r,600));
+    const batch=allS.slice(i,i+3);
+    await Promise.all(batch.map(async s=>{
+      const sd=await api(s.s,'summary');
+      if(sd)scSummary[s.s]=sd;
+    }));
+    applyF();
+    await new Promise(r=>setTimeout(r,400));
   }
   scSummaryLoading=false;
 }
