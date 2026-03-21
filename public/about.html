@@ -517,8 +517,19 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   <div style="display:flex;align-items:center;gap:10px">
     <button class="nav-login" id="nav-login-btn" onclick="scrollToLogin()">Accedi</button>
     <a href="./index.html" class="nav-cta" id="nav-dashboard-btn">Apri la Dashboard →</a>
+    <button class="nav-burger" id="nav-burger" onclick="toggleAboutNav()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+<!-- Mobile nav drawer -->
+<div class="nav-drawer" id="nav-drawer">
+  <a href="#features" class="nav-drawer-link" onclick="closeAboutNav()">Funzionalità</a>
+  <a href="#come-funziona" class="nav-drawer-link" onclick="closeAboutNav()">Come funziona</a>
+  <a href="#pricing" class="nav-drawer-link" onclick="closeAboutNav()">Piani</a>
+  <a href="#faq" class="nav-drawer-link" onclick="closeAboutNav()">FAQ</a>
+  <a href="./index.html" class="nav-drawer-cta">Apri la Dashboard →</a>
+</div>
 
 <!-- ═══ HERO ═══ -->
 <div class="hero">
