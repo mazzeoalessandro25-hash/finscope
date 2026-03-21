@@ -686,8 +686,8 @@ html.dark .auth-box{background:#1e293b}
     <!-- Sezioni fondamentali: 4 colonne -->
     <div class="sd-funds">
       <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;justify-content:space-between;align-items:center">
-          Valutazione
+        <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center">Valutazione<span class="sd-info-btn">i<div class="sd-tip"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
           <span id="sd-val-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
@@ -700,8 +700,8 @@ html.dark .auth-box{background:#1e293b}
         </div>
       </div>
       <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;justify-content:space-between;align-items:center">
-          Redditività
+        <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center">Redditività<span class="sd-info-btn">i<div class="sd-tip"><b>ROE</b>: rendimento sul capitale proprio. &gt;15% ottimo.<br><b>ROA</b>: rendimento sugli asset. &gt;5% buono.<br><b>Margine Lordo</b>: ricavi - costo del venduto / ricavi. &gt;40% eccellente.<br><b>Margine Netto</b>: utile netto / ricavi. Verde se positivo.<br><b>EBITDA</b>: utile prima di interessi, tasse e ammortamenti.</div></span></span>
           <span id="sd-fund-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
@@ -714,18 +714,18 @@ html.dark .auth-box{background:#1e293b}
         </div>
       </div>
       <div class="sd-section">
-        <div class="sd-section-title">Crescita</div>
+        <div class="sd-section-title" style="display:flex;align-items:center">Crescita<span class="sd-info-btn">i<div class="sd-tip"><b>Cresc. Ricavi/Utili</b>: variazione YoY (anno su anno). ▲ verde = crescita, ▼ rosso = calo.<br><b>Free Cash Flow</b>: liquidità generata dopo le spese in conto capitale. Più alto è meglio.<br><b>Azioni Circolanti</b>: numero totale di azioni emesse.</div></span></div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Ricavi Totali</div><div class="sd-m-val" id="sdm-rev">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Free Cash Flow</div><div class="sd-m-val" id="sdm-fcf">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Dividendo</div><div class="sd-m-val" id="sdm-div">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Dividendo %</div><div class="sd-m-val" id="sdm-div">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Azioni Circ.</div><div class="sd-m-val" id="sdm-shares">—</div></div>
         </div>
       </div>
       <div class="sd-section">
-        <div class="sd-section-title">Bilancio</div>
+        <div class="sd-section-title" style="display:flex;align-items:center">Bilancio<span class="sd-info-btn">i<div class="sd-tip"><b>Debt/Equity</b>: debito totale / capitale proprio. &lt;1 solido, &gt;2 attenzione.<br><b>Current Ratio</b>: attivo corrente / passivo corrente. &gt;1.5 buono.<br><b>Quick Ratio</b>: come Current Ratio ma senza le scorte. &gt;1 buono.<br><b>Float</b>: azioni disponibili per la negoziazione pubblica.</div></span></div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl">Cassa Totale</div><div class="sd-m-val" id="sdm-cash">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">Debito Totale</div><div class="sd-m-val" id="sdm-debt">—</div></div>
