@@ -5,11 +5,16 @@ const yf = new yahooFinanceModule({ suppressNotices: ['yahooSurvey'] });
 
 export { yf };
 
+const timeout = (ms) => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms));
+
 export async function fetchQuoteSummary(symbol) {
   try {
-    return await yf.quoteSummary(symbol, {
-      modules: ['defaultKeyStatistics', 'summaryDetail', 'financialData', 'assetProfile'],
-    });
+    return await Promise.race([
+      yf.quoteSummary(symbol, {
+        modules: ['defaultKeyStatistics', 'summaryDetail', 'financialData', 'assetProfile'],
+      }),
+      timeout(7000),
+    ]);
   } catch (_) {
     return null;
   }
@@ -17,7 +22,7 @@ export async function fetchQuoteSummary(symbol) {
 
 export async function fetchYahooQuote(symbol) {
   try {
-    return await yf.quote(symbol);
+    return await Promise.race([yf.quote(symbol), timeout(5000)]);
   } catch (_) {
     return null;
   }
