@@ -1364,7 +1364,11 @@ html.dark .auth-box{background:#1e293b}
         <!-- Form aggiungi (nascosto di default) -->
         <div id="port-add-panel" style="display:none;padding:12px;background:var(--s2);border-radius:10px;border:1px solid var(--bd);margin-bottom:12px">
           <div class="port-add-row">
-            <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:110px;text-transform:uppercase"/>
+            <div style="position:relative;width:140px">
+              <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:100%;text-transform:uppercase"
+                oninput="portSymInput(this)" onblur="setTimeout(()=>closePortSuggestions(),200)" autocomplete="off"/>
+              <div id="port-sym-suggestions" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--card);border:1px solid var(--bd);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:100;max-height:200px;overflow-y:auto;margin-top:2px"></div>
+            </div>
             <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any" style="width:90px"/>
             <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acquisto" min="0" step="any" style="width:130px"/>
             <button class="port-btn" onclick="addPortfolioItem()">Aggiungi</button>
