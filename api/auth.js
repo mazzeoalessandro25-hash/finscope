@@ -1,12 +1,33 @@
+import { createClerkClient } from '@clerk/backend';
+import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
+import { promisify } from 'util';
+
+const scryptAsync = promisify(scrypt);
+
+async function hashPw(password) {
+  const salt = randomBytes(16).toString('hex');
+  const buf = await scryptAsync(password, salt, 64);
+  return `${salt}:${buf.toString('hex')}`;
+}
+
+async function verifyPw(password, stored) {
+  const [salt, hash] = stored.split(':');
+  const hashBuf = Buffer.from(hash, 'hex');
+  const derivedBuf = await scryptAsync(password, salt, 64);
+  return timingSafeEqual(hashBuf, derivedBuf);
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const { action } = req.query;
   const SECRET = process.env.CLERK_SECRET_KEY;
   if (!SECRET) return res.status(500).json({ error: 'Configurazione mancante' });
+
+  const clerk = createClerkClient({ secretKey: SECRET });
+  const { action } = req.query;
 
   // ── REGISTER ──
   if (action === 'register' && req.method === 'POST') {
@@ -15,27 +36,25 @@ export default async function handler(req, res) {
       if (!email || !password) return res.status(400).json({ error: 'Email e password richiesti' });
       if (password.length < 8) return res.status(400).json({ error: 'Password minimo 8 caratteri' });
 
-      const body = { email_address: [email], password };
-      if (name) body.first_name = name;
+      const pwHash = await hashPw(password);
 
-      const r = await fetch('https://api.clerk.com/v1/users', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${SECRET}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+      const createBody = { emailAddress: [email], skipPasswordRequirement: true };
+      if (name) createBody.firstName = name;
+
+      const user = await clerk.users.createUser(createBody);
+
+      await clerk.users.updateUserMetadata(user.id, {
+        privateMetadata: { pwHash },
       });
-      const data = await r.json();
-      if (!r.ok) {
-        const msg = data.errors?.[0]?.long_message || data.errors?.[0]?.message || 'Errore registrazione';
-        return res.status(400).json({ error: msg });
-      }
 
       return res.json({
         ok: true,
-        token: data.id,
-        user: { id: data.id, email: data.email_addresses?.[0]?.email_address, name: data.first_name || null }
+        token: user.id,
+        user: { id: user.id, email: user.emailAddresses?.[0]?.emailAddress, name: user.firstName || null },
       });
     } catch (e) {
-      return res.status(500).json({ error: 'Errore del server: ' + e.message });
+      const msg = e.errors?.[0]?.longMessage || e.errors?.[0]?.message || e.message || 'Errore registrazione';
+      return res.status(400).json({ error: msg });
     }
   }
 
@@ -45,32 +64,28 @@ export default async function handler(req, res) {
       const { email, password } = req.body;
       if (!email || !password) return res.status(400).json({ error: 'Email e password richiesti' });
 
-      // Cerca utente — parametro corretto è email_address (array)
-      const ur = await fetch(
-        `https://api.clerk.com/v1/users?email_address[]=${encodeURIComponent(email)}&limit=1`,
-        { headers: { 'Authorization': `Bearer ${SECRET}` } }
-      );
-      const usersData = await ur.json();
-      const users = usersData?.data || usersData;
+      const result = await clerk.users.getUserList({ emailAddress: [email], limit: 1 });
+      const users = result.data ?? result;
       if (!Array.isArray(users) || !users.length) {
         return res.status(401).json({ error: 'Email non trovata' });
       }
       const user = users[0];
+      const pwHash = user.privateMetadata?.pwHash;
 
-      // Verifica password
-      const vr = await fetch(`https://api.clerk.com/v1/users/${user.id}/verify_password`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${SECRET}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-      if (!vr.ok) {
-        return res.status(401).json({ error: 'Password non corretta' });
+      if (!pwHash) {
+        // Account vecchio senza hash — chiedi di re-registrarsi
+        return res.status(401).json({
+          error: 'Account non aggiornato. Elimina l\'account e registrati di nuovo.',
+        });
       }
+
+      const valid = await verifyPw(password, pwHash);
+      if (!valid) return res.status(401).json({ error: 'Password non corretta' });
 
       return res.json({
         ok: true,
         token: user.id,
-        user: { id: user.id, email: user.email_addresses?.[0]?.email_address, name: user.first_name || null }
+        user: { id: user.id, email: user.emailAddresses?.[0]?.emailAddress, name: user.firstName || null },
       });
     } catch (e) {
       return res.status(500).json({ error: 'Errore del server: ' + e.message });
@@ -83,21 +98,10 @@ export default async function handler(req, res) {
       const token = (req.headers.authorization || '').replace('Bearer ', '');
       if (!token) return res.status(401).json({ error: 'Token mancante' });
 
-      const r = await fetch(`https://api.clerk.com/v1/sign_in_tokens/${token}`, {
-        headers: { 'Authorization': `Bearer ${SECRET}` },
-      });
-      if (!r.ok) return res.status(401).json({ error: 'Token non valido' });
-      const data = await r.json();
-      if (data.status !== 'pending') return res.status(401).json({ error: 'Token scaduto' });
-
-      const ur = await fetch(`https://api.clerk.com/v1/users/${data.user_id}`, {
-        headers: { 'Authorization': `Bearer ${SECRET}` },
-      });
-      const user = await ur.json();
-
+      const user = await clerk.users.getUser(token);
       return res.json({
         ok: true,
-        user: { id: user.id, email: user.email_addresses?.[0]?.email_address }
+        user: { id: user.id, email: user.emailAddresses?.[0]?.emailAddress, name: user.firstName || null },
       });
     } catch (e) {
       return res.status(401).json({ error: 'Token non valido' });
