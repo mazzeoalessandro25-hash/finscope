@@ -5387,6 +5387,171 @@ function renderTaxDashboard(){
 
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStockDetail();});
 
+/* ══════════════════════════════════════════
+   TICKER AUTOCOMPLETE
+══════════════════════════════════════════ */
+function portSymInput(inp){
+  const q=(inp.value||'').toUpperCase().trim();
+  const box=document.getElementById('port-sym-suggestions');
+  if(!box)return;
+  if(!q||q.length<1){box.style.display='none';return;}
+  const allS=STOCKS.concat(customStocks);
+  const matches=allS.filter(s=>s.s.startsWith(q)||s.n.toUpperCase().includes(q)).slice(0,8);
+  if(!matches.length){box.style.display='none';return;}
+  box.innerHTML=matches.map(s=>`
+    <div onclick="selectPortSym('${s.s}')"
+      style="padding:8px 12px;cursor:pointer;display:flex;gap:8px;align-items:center;transition:background .1s"
+      onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+      <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t);min-width:60px">${s.s}</div>
+      <div style="font-size:11px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.n}</div>
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);flex-shrink:0">${s.sec}</div>
+    </div>`).join('');
+  box.style.display='block';
+}
+function selectPortSym(sym){
+  const inp=document.getElementById('port-sym');
+  if(inp)inp.value=sym;
+  closePortSuggestions();
+  document.getElementById('port-qty')?.focus();
+}
+function closePortSuggestions(){
+  const box=document.getElementById('port-sym-suggestions');
+  if(box)box.style.display='none';
+}
+
+/* ══════════════════════════════════════════
+   PORTFOLIO NEWS
+══════════════════════════════════════════ */
+let _portNewsLoaded=false;
+async function loadPortfolioNews(){
+  const el=document.getElementById('portnews-content');
+  if(!el)return;
+  if(!portfolio.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per vedere le news</div>';
+    return;
+  }
+  el.innerHTML='<div class="ld">Caricamento news del portafoglio...</div>';
+  const tickers=portfolio.map(p=>p.sym);
+  const query=tickers.map(t=>t.replace('.MI','').replace('.PA','').replace('.DE','')).join(' OR ');
+  try{
+    const r=await fetch('/api/news?q='+encodeURIComponent(query)+'&lang=it&count=20');
+    const data=await r.json();
+    const articles=data.articles||data.items||data||[];
+    if(!articles.length){
+      el.innerHTML='<div class="ld" style="padding:10px">Nessuna news trovata per i titoli in portafoglio</div>';
+      return;
+    }
+    el.innerHTML=`
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:12px;letter-spacing:.5px">
+        News per: ${tickers.join(' · ')}
+      </div>
+      <div class="news-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;display:grid">
+        ${articles.slice(0,16).map(a=>`
+          <a href="${a.url||a.link}" target="_blank" rel="noopener" style="text-decoration:none" class="news-card">
+            ${a.image||a.urlToImage?`<div class="news-img" style="background-image:url('${a.image||a.urlToImage}')"></div>`:''}
+            <div class="news-body">
+              <div class="news-src">${a.source?.name||a.source||'Fonte'}</div>
+              <div class="news-title">${a.title||''}</div>
+              <div class="news-date">${a.publishedAt||a.date?new Date(a.publishedAt||a.date).toLocaleDateString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—'}</div>
+            </div>
+          </a>`).join('')}
+      </div>`;
+  }catch(e){
+    // Fallback: mostra link di ricerca per ogni ticker
+    el.innerHTML=`
+      <div style="font-size:12px;color:var(--t2);margin-bottom:12px">
+        News per i tuoi titoli (apri su Google Finance):
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${tickers.map(t=>`<a href="https://www.google.com/finance/quote/${t}" target="_blank" rel="noopener"
+          style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--b3);
+          color:var(--b);border-radius:8px;font-family:var(--fm);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s"
+          onmouseover="this.style.background='var(--b)';this.style.color='#fff'"
+          onmouseout="this.style.background='var(--b3)';this.style.color='var(--b)'">
+          ${t} ↗</a>`).join('')}
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--t3);font-family:var(--fm)">
+        ℹ API news non disponibile — apertura diretta su Google Finance per ogni titolo
+      </div>`;
+  }
+}
+
+/* ══════════════════════════════════════════
+   SIMULATORE — TIPO INVESTIMENTO
+══════════════════════════════════════════ */
+const SIM_PRESETS={
+  balanced:   {label:'Portafoglio Bilanciato',rate:8,  alloc:{azionario:.60,obbligazionario:.30,liquidità:.10},info:'Mix classico 60/40. Bilanciamento tra crescita e protezione del capitale.',pension:false},
+  growth:     {label:'Growth',               rate:10, alloc:{azionario:.80,obbligazionario:.15,liquidità:.05},info:'Orientamento alla crescita di lungo periodo. Maggiore volatilità, potenziale rendimento superiore.',pension:false},
+  conservative:{label:'Conservativo',        rate:5,  alloc:{azionario:.40,obbligazionario:.50,liquidità:.10},info:'Priorità alla protezione del capitale. Adatto a orizzonti brevi o bassa tolleranza al rischio.',pension:false},
+  dividend:   {label:'Dividendi',            rate:7,  alloc:{azionario:.70,dividendi:.25,liquidità:.05},info:'Focus su titoli con alto dividendo. Reddito passivo costante + crescita moderata.',pension:false},
+  etf:        {label:'ETF MSCI World',        rate:9,  alloc:{'ETF Globale':1.0},info:'Un singolo ETF che replica 1.500+ aziende in 23 mercati sviluppati. Diversificazione massima, costi minimi (TER ~0.20%).',pension:false},
+  etf_sp500:  {label:'ETF S&P 500',           rate:10, alloc:{'ETF S&P 500':1.0},info:'500 maggiori aziende USA. Storicamente ~10% annuo lordo negli ultimi 30 anni. TER tipico: 0.07–0.20%.',pension:false},
+  etf_eu:     {label:'ETF Europa',             rate:7,  alloc:{'ETF Europa':1.0},info:'Replica dei principali indici europei (EuroStoxx, MSCI Europe). Diversificazione valutaria ridotta (EUR).',pension:false},
+  etf_em:     {label:'ETF Mercati Emergenti',  rate:8,  alloc:{'ETF Emergenti':.7,'ETF Asia':.3},info:'Esposizione a Cina, India, Brasile, Korea. Alta crescita potenziale, alta volatilità.',pension:false},
+  etf_bond:   {label:'ETF Obbligazionario',    rate:4,  alloc:{'Bond Governativi':.6,'Bond Societari':.4},info:'Reddito fisso tramite ETF. Bassa volatilità, protezione in fasi di recessione. TER ~0.10%.',pension:false},
+  fund_eq:    {label:'Fondo Azionario Attivo', rate:8.5,alloc:{azionario:.90,liquidità:.10},info:'Gestione attiva da parte di professionisti. Costi più alti (TER 1.5–2.5%) ma potenziale alpha.',pension:false},
+  fund_mix:   {label:'Fondo Misto Bilanciato', rate:6.5,alloc:{azionario:.50,obbligazionario:.40,liquidità:.10},info:'Fondo bilanciato con gestione attiva. Adatto a investitori che preferiscono delega totale.',pension:false},
+  fund_bond:  {label:'Fondo Obbligazionario',  rate:3.5,alloc:{obbligazionario:.90,liquidità:.10},info:'Gestione attiva del reddito fisso. TER tipico 0.8–1.5%. Bassa volatilità.',pension:false},
+  pension_pip:{label:'PIP (Piano Individuale Pensionistico)',rate:7,alloc:{azionario:.60,obbligazionario:.35,liquidità:.05},info:'Veicolo previdenziale individuale. Deducibile fino a €5.164/anno. Tassazione agevolata in fase di erogazione (15% → 9%).',pension:true,taxNote:'Contributi deducibili IRPEF fino a €5.164,57/anno · Rendimenti tassati al 20% (vs 26% ETF) · Prestazione finale: aliquota 15% (decrescente fino a 9% dopo 35 anni di contribuzione)'},
+  pension_fop:{label:'Fondo Pensione Aperto',  rate:7,alloc:{azionario:.55,obbligazionario:.40,liquidità:.05},info:'Fondi pensione aperti — accessibili a tutti. Ottima flessibilità. Stessi vantaggi fiscali del PIP.',pension:true,taxNote:'Deducibilità IRPEF €5.164,57/anno · Tassazione rendimenti 20% · Erogazione tassata 15%→9% · Possibilità riscatto anticipato in caso di difficoltà'},
+  pension_fch:{label:'Fondo Pensione Chiuso',  rate:6.5,alloc:{azionario:.50,obbligazionario:.45,liquidità:.05},info:'Fondi di categoria (CCNL). Contributo datoriale aggiuntivo — massimizzare è sempre conveniente. Rendimenti tipici stabili ma conservativi.',pension:true,taxNote:'Contributo datoriale spesso incluso · Tassazione rendimenti 20% · Erogazione 9% se contributi datoriali prevalgono · Massimizza il contributo del datore di lavoro — è denaro "gratuito"'},
+};
+
+function onSimTypeChange(){
+  const type=document.getElementById('sim-type').value;
+  const preset=SIM_PRESETS[type];
+  if(!preset)return;
+  // Aggiorna rendimento atteso
+  document.getElementById('sr').value=preset.rate;
+  document.getElementById('srv').textContent=preset.rate+'%';
+  // Info box
+  const infoBox=document.getElementById('sim-info-box');
+  if(infoBox){infoBox.style.display='block';infoBox.textContent=preset.info;}
+  // Tax row (pensione)
+  const taxRow=document.getElementById('sim-tax-row');
+  if(taxRow)taxRow.style.display=preset.pension?'block':'none';
+  // Tax note card
+  const noteCard=document.getElementById('sim-tax-note-card');
+  const noteContent=document.getElementById('sim-tax-note-content');
+  if(noteCard&&noteContent){
+    if(preset.pension&&preset.taxNote){
+      noteCard.style.display='block';
+      noteContent.innerHTML=`<div style="font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.8;padding:4px 0">
+        ${preset.taxNote.split(' · ').map(n=>`<div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:5px"><span style="color:var(--g);flex-shrink:0">✓</span><span>${n}</span></div>`).join('')}
+      </div>`;
+    } else {
+      noteCard.style.display='none';
+    }
+  }
+  calcSim();
+}
+
+/* ══════════════════════════════════════════
+   CALCOLO SIMULAZIONE (override per nuovi tipi)
+══════════════════════════════════════════ */
+const _origCalcSim=typeof calcSim==='function'?calcSim:null;
+// La funzione calcSim esistente usa #ss — la aggiornammo al #sim-type
+// Patch: aggiorniamo la strategia per la pie chart
+const _origSs=document.getElementById('ss');
+// aggiungiamo sincronizzazione tra sim-type e la vecchia logica
+(function patchSimType(){
+  const simTypeSel=document.getElementById('sim-type');
+  if(!simTypeSel)return;
+  simTypeSel.addEventListener('change',function(){
+    // Sync strategy labels for pie chart
+    const val=this.value;
+    const ss=document.getElementById('ss');
+    if(!ss)return;
+    // Mappa i nuovi tipi alle strategie esistenti
+    const map={balanced:'balanced',growth:'growth',conservative:'conservative',dividend:'balanced',
+      etf:'etf',etf_sp500:'etf',etf_eu:'etf',etf_em:'etf',etf_bond:'conservative',
+      fund_eq:'growth',fund_mix:'balanced',fund_bond:'conservative',
+      pension_pip:'balanced',pension_fop:'balanced',pension_fch:'conservative'};
+    const mapped=map[val]||'balanced';
+    if(ss.value!==mapped){ss.value=mapped;calcSim();}
+  });
+})();
+
 // Avvia verifica sessione
 verifySession();
 </script>
