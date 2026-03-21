@@ -3631,9 +3631,9 @@ function renderPortAnalysis(portItems, quotes){
         return`<button class="port-profile-tab${k===selectedProfile?' active':''}" style="${k===selectedProfile?'background:'+p.color+';border-color:'+p.color:''}" onclick="selectedProfile='${k}';renderPortAnalysis(portfolio,_lastPortQuotes)">${p.emoji} ${p.name} <span style="font-size:10px;opacity:.85">${scores[k]}pt</span></button>`;
       }).join('')}
     </div>
-    <div style="display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;margin-bottom:14px">
-      <div style="display:flex;flex-direction:column;align-items:center;padding:14px 18px;background:var(--s2);border-radius:10px;border:1px solid var(--bd)">
-        <svg width="82" height="82" viewBox="0 0 82 82">
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;margin-bottom:12px">
+      <div style="display:flex;flex-direction:column;align-items:center;padding:10px 14px;background:var(--s2);border-radius:10px;border:1px solid var(--bd)">
+        <svg width="72" height="72" viewBox="0 0 82 82">
           <circle cx="41" cy="41" r="34" fill="none" stroke="var(--bd)" stroke-width="9"/>
           <circle cx="41" cy="41" r="34" fill="none" stroke="${scoreColor}" stroke-width="9"
             stroke-dasharray="${dash.toFixed(1)} ${C2.toFixed(1)}" stroke-linecap="round"
