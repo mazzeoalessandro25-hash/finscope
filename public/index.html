@@ -1034,7 +1034,9 @@ html.dark .auth-box{background:#1e293b}
           <button class="cc-btn" onclick="loadDashChart(1,null,'5d',this)">5G</button>
           <button class="cc-btn active" onclick="loadDashChart(1,null,'1mo',this)">1M</button>
           <button class="cc-btn" onclick="loadDashChart(1,null,'3mo',this)">3M</button>
+          <button class="cc-btn" onclick="loadDashChart(1,null,'6mo',this)">6M</button>
           <button class="cc-btn" onclick="loadDashChart(1,null,'1y',this)">1A</button>
+          <button class="cc-btn" onclick="loadDashChart(1,null,'2y',this)">2A</button>
         </div>
       </div>
       <div id="dashChart1" style="width:100%;height:260px"></div>
@@ -1294,7 +1296,7 @@ html.dark .auth-box{background:#1e293b}
         <th onclick="sortTbl('div')" title="Dividend Yield — ordinabile">DIV% ↕</th>
         <th onclick="sortTbl('score')">SCORE ↕</th>
       </tr></thead>
-      <tbody id="sc-body"><tr><td colspan="14" class="ld">Caricamento...</td></tr></tbody>
+      <tbody id="sc-body"><tr><td colspan="13" class="ld">Caricamento...</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -2151,7 +2153,7 @@ let scSparkData={};
 async function loadScreener(){
   const allS=STOCKS.concat(customStocks);
   scData={};scSparkData={};
-  document.getElementById('sc-body').innerHTML='<tr><td colspan="14" class="ld">Caricamento prezzi reali (0/'+allS.length+')...</td></tr>';
+  document.getElementById('sc-body').innerHTML='<tr><td colspan="13" class="ld">Caricamento prezzi reali (0/'+allS.length+')...</td></tr>';
   const BATCH=12;
   let loaded=0;
   for(let i=0;i<allS.length;i+=BATCH){
@@ -2162,7 +2164,7 @@ async function loadScreener(){
       if(spark.length)scSparkData[s.s]=spark;
       loaded++;
     }));
-    document.getElementById('sc-body').innerHTML='<tr><td colspan="14" class="ld">Caricamento prezzi reali ('+loaded+'/'+allS.length+')...</td></tr>';
+    document.getElementById('sc-body').innerHTML='<tr><td colspan="13" class="ld">Caricamento prezzi reali ('+loaded+'/'+allS.length+')...</td></tr>';
     applyF();
   }
   loadSummariesBg();
@@ -2222,7 +2224,7 @@ function applyF(){
   });
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
-  if(!list.length){body.innerHTML='<tr><td colspan="14" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
+  if(!list.length){body.innerHTML='<tr><td colspan="13" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
   const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺'};
   body.innerHTML=list.map(s=>{
     const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
