@@ -402,29 +402,68 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 
     <!-- AUTH FORM -->
     <div id="auth-card" class="auth-card">
-      <div class="auth-card-title">Inizia gratuitamente</div>
-      <div class="auth-card-sub">Zero costi · Nessuna carta richiesta</div>
-      <div class="auth-tabs">
-        <button class="auth-tab" onclick="switchTab('login',this)">Accedi</button>
-        <button class="auth-tab active" onclick="switchTab('register',this)">Registrati</button>
+      <div id="lp-card-title" class="auth-card-title">Inizia gratuitamente</div>
+      <div id="lp-card-sub" class="auth-card-sub">Zero costi · Nessuna carta richiesta</div>
+
+      <!-- VIEW 1: Login / Register -->
+      <div id="lp-main-view" class="auth-view">
+        <div class="auth-tabs">
+          <button class="auth-tab" onclick="switchTab('login',this)">Accedi</button>
+          <button class="auth-tab active" onclick="switchTab('register',this)">Registrati</button>
+        </div>
+        <div class="auth-err" id="auth-err"></div>
+        <div class="auth-ok" id="auth-ok"></div>
+        <div class="auth-field" id="name-field-lp">
+          <label>Nome</label>
+          <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
+        </div>
+        <div class="auth-field">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+            <label style="margin-bottom:0;font-size:10px;color:rgba(255,255,255,.5);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase">Password</label>
+            <button class="forgot-link-lp" id="lp-forgot-link" onclick="showLpView('forgot')" style="display:none">Password dimenticata?</button>
+          </div>
+          <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
+            onkeydown="if(event.key==='Enter')submitAuth()"/>
+        </div>
+        <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Crea account gratuito</button>
+        <p style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;line-height:1.5">
+          Continuando accetti la <a href="#privacy" style="color:rgba(255,255,255,.55)">Privacy Policy</a>. Conforme GDPR.
+        </p>
       </div>
-      <div class="auth-err" id="auth-err"></div>
-      <div class="auth-ok" id="auth-ok"></div>
-      <div class="auth-field" id="name-field-lp">
-        <label>Nome</label>
-        <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+
+      <!-- VIEW 2: Forgot Password -->
+      <div id="lp-forgot-view" class="auth-view" style="display:none">
+        <div class="auth-err" id="lp-fp-err"></div>
+        <div class="auth-ok" id="lp-fp-ok"></div>
+        <div class="auth-field">
+          <label>Email del tuo account</label>
+          <input type="email" id="lp-fp-email" placeholder="la-tua@email.com" autocomplete="email"/>
+        </div>
+        <button class="auth-submit" id="lp-fp-submit" onclick="submitLpForgot()">Invia codice di reset</button>
+        <button class="auth-back-btn-lp" onclick="showLpView('main')">← Torna al login</button>
       </div>
-      <div class="auth-field">
-        <label>Email</label>
-        <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
-        <label>Password</label>
-        <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
-          onkeydown="if(event.key==='Enter')submitAuth()"/>
+
+      <!-- VIEW 3: Reset Password -->
+      <div id="lp-reset-view" class="auth-view" style="display:none">
+        <div class="auth-err" id="lp-rp-err"></div>
+        <div class="auth-ok" id="lp-rp-ok"></div>
+        <input type="hidden" id="lp-rp-email"/>
+        <div class="auth-field">
+          <label>Codice di reset (6 cifre)</label>
+          <input class="fp-code-inp-lp" type="text" id="lp-rp-code" maxlength="6" inputmode="numeric"
+            placeholder="000000" autocomplete="one-time-code"/>
+        </div>
+        <div class="auth-field">
+          <label>Nuova password</label>
+          <input type="password" id="lp-rp-pwd" placeholder="Minimo 8 caratteri"/>
+        </div>
+        <button class="auth-submit" id="lp-rp-submit" onclick="submitLpReset()">Aggiorna password</button>
+        <button class="auth-back-btn-lp" onclick="showLpView('forgot')">← Torna indietro</button>
       </div>
-      <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Crea account gratuito</button>
-      <p style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;line-height:1.5">
-        Continuando accetti la <a href="#privacy" style="color:rgba(255,255,255,.55)">Privacy Policy</a>. Conforme GDPR.
-      </p>
     </div>
 
     <!-- GIÀ LOGGATO (banner compatto sopra il form) -->
