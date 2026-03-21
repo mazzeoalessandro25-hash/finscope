@@ -3607,6 +3607,10 @@ function sdCacheSet(sym, type, data){
 
 // Applica i dati di valutazione all'UI
 function renderValuation(d, cur){
+  // Dati chiave
+  sdSet('sdm-divk', d.dividend&&d.dividend>0 ? fmt(d.dividend*100,2)+'%' : 'Nessuno');
+  const divkEl=document.getElementById('sdm-divk');
+  if(divkEl) divkEl.className='sd-m-val '+(d.dividend&&d.dividend>0?'up':'');
   sdSet('sdm-cap',fmtLg(d.marketCap));
   sdSet('sdm-beta',d.beta!=null?fmt(d.beta,2):'—');
   sdSet('sdm-52h',d.week52High?cur+fmt(d.week52High,2):'—');
@@ -3618,17 +3622,29 @@ function renderValuation(d, cur){
   if(d.rec){
     const recMap={strongbuy:'Forte Acquisto',buy:'Acquisto',hold:'Neutrale',sell:'Vendita',strongsell:'Forte Vendita'};
     const key=d.rec.replace('-','');
-    recEl.innerHTML=`<span class="sd-rec-badge ${key}">${recMap[key]||d.rec}</span>`;
-  } else recEl.textContent='—';
+    const cls={strongbuy:'strongbuy',buy:'buy',hold:'hold',sell:'sell',strongsell:'strongsell'}[key]||'hold';
+    recEl.innerHTML=`<span class="sd-rec-badge ${cls}">${recMap[key]||d.rec}</span>`;
+    // Barra consenso: score 1=forte acquisto, 5=forte vendita
+    const score=d.recScore||(key==='strongbuy'?1:key==='buy'?2:key==='hold'?3:key==='sell'?4:5);
+    const pct=((score-1)/4*100).toFixed(1);
+    const marker=document.getElementById('sd-rec-marker');
+    if(marker)marker.style.left=pct+'%';
+  } else { recEl.textContent='—'; }
+  sdSet('sdm-nanalysts', d.numAnalysts!=null ? d.numAnalysts+' analisti coprono il titolo' : '');
   if(d.targetPrice&&d.price){
     const upside=((d.targetPrice-d.price)/d.price*100);
     const tel=document.getElementById('sdm-target');
-    tel.textContent=cur+fmt(d.targetPrice,2)+' ('+(upside>=0?'+':'')+fmt(upside,1)+'%)';
-    tel.className='sd-m-val '+(upside>=0?'up':'down');
+    if(tel){tel.textContent=cur+fmt(d.targetPrice,2);tel.className='sd-m-val';}
+    const uEl=document.getElementById('sdm-upside');
+    if(uEl){
+      const arrow=upside>=0?'▲':'▼';
+      uEl.textContent=arrow+' '+(upside>=0?'+':'')+fmt(upside,1)+'%';
+      uEl.className='sd-m-val '+(upside>=0?'up':'down');
+    }
   }
   if(d.targetLow!=null&&d.targetHigh!=null)
     sdSet('sdm-target-range',cur+fmt(d.targetLow,2)+' – '+cur+fmt(d.targetHigh,2));
-  sdSet('sdm-nanalysts',d.numAnalysts!=null?d.numAnalysts+' analisti':'—');
+  // Valutazione
   sdSet('sdm-pe',d.pe!=null&&d.pe>0?fmt(d.pe,1):'—');
   sdSet('sdm-fpe',d.forwardPE!=null&&d.forwardPE>0?fmt(d.forwardPE,1):'—');
   sdSet('sdm-pb',d.pb!=null?fmt(d.pb,2):'—');
@@ -3636,11 +3652,12 @@ function renderValuation(d, cur){
   sdSet('sdm-eps',d.eps!=null?cur+fmt(d.eps,2):'—');
   sdSet('sdm-feps',d.forwardEps!=null?cur+fmt(d.forwardEps,2):'—');
   const divEl=document.getElementById('sdm-div');
-  if(d.dividend&&d.dividend>0){divEl.textContent=fmt(d.dividend*100,2)+'%';divEl.className='sd-m-val up';}
-  else{divEl.textContent='Nessuno';divEl.className='sd-m-val';}
+  if(divEl){
+    if(d.dividend&&d.dividend>0){divEl.textContent=fmt(d.dividend*100,2)+'%';divEl.className='sd-m-val up';}
+    else{divEl.textContent='Nessuno';divEl.className='sd-m-val';}
+  }
   sdSet('sdm-shares',d.sharesOutstanding?fmtLg(d.sharesOutstanding):'—');
   sdSet('sdm-float',d.floatShares?fmtLg(d.floatShares):'—');
-  // Badge aggiornamento
   const badge=document.getElementById('sd-val-badge');
   if(badge)badge.textContent='Aggiornato: '+new Date(d._ts||Date.now()).toLocaleDateString('it-IT');
 }
