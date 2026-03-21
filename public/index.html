@@ -2639,9 +2639,26 @@ let currentToken=null;
 let authTab='login';
 let portfolio=[];
 
+function showAuthView(view){
+  document.getElementById('auth-main-view').style.display=view==='main'?'':'none';
+  document.getElementById('auth-forgot-view').style.display=view==='forgot'?'':'none';
+  document.getElementById('auth-reset-view').style.display=view==='reset'?'':'none';
+  const subMap={
+    main:'Accedi per salvare watchlist, portafoglio e preferenze',
+    forgot:'Inserisci la tua email per ricevere il codice di reset',
+    reset:'Inserisci il codice ricevuto e scegli una nuova password'
+  };
+  const subEl=document.getElementById('auth-modal-sub');
+  if(subEl)subEl.textContent=subMap[view]||'';
+  ['fp-err','fp-ok','rp-err','rp-ok'].forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('show');});
+  if(view==='forgot')setTimeout(()=>document.getElementById('fp-email')?.focus(),80);
+  if(view==='reset')setTimeout(()=>document.getElementById('rp-code')?.focus(),80);
+}
+
 function openAuthModal(){
   document.getElementById('auth-modal').classList.add('open');
   document.body.style.overflow='hidden';
+  showAuthView('main');
   document.getElementById('auth-err').classList.remove('show');
   document.getElementById('auth-ok').classList.remove('show');
   document.getElementById('auth-email').value='';
