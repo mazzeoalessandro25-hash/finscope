@@ -3860,7 +3860,7 @@ async function loadPortPerf(){
   const spyPts=spyData.points;
   const spyFirst=spyPts[0].close;
   const spyReturns=spyPts.map(p=>((p.close-spyFirst)/spyFirst*100));
-  const labels=spyPts.map(p=>p.time);
+  const labels=spyPts.map(p=>p.date);
   // Calculate weighted portfolio returns
   let totalInvested=0;
   const weights=portfolio.map(item=>{
