@@ -3989,14 +3989,12 @@ function renderPortAnalysis(portItems, quotes){
 }
 
 /* ══════════════════════════════════════════
-   FEATURE 4: DARK MODE (html.dark toggle)
+   DARK MODE
 ══════════════════════════════════════════ */
-// Override existing toggleDark to use html.dark class
 function toggleDark(){
   const isDark=document.documentElement.classList.toggle('dark');
   document.body.classList.toggle('dark',isDark);
   localStorage.setItem('fs_theme',isDark?'dark':'light');
-  document.getElementById('dm-btn').textContent=isDark?'☀':'🌙';
 }
 (function initTheme(){
   const saved=localStorage.getItem('fs_theme')||localStorage.getItem('fs_dark');
@@ -4004,7 +4002,6 @@ function toggleDark(){
   if(isDark){
     document.documentElement.classList.add('dark');
     document.body.classList.add('dark');
-    const b=document.getElementById('dm-btn');if(b)b.textContent='☀';
   }
 })();
 
