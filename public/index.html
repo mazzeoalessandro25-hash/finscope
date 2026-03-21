@@ -3534,7 +3534,6 @@ async function refreshSdPrice(sym){
     document.getElementById('sd-hdr-price').textContent=cur+fmt(d.price,d.price<10?4:2);
     const chgEl=document.getElementById('sd-hdr-chg');
     chgEl.textContent=chgStr(c);chgEl.style.color=up?'var(--g)':'var(--r)';
-    sdSet('sdm-price',cur+fmt(d.price,d.price<10?4:2));
     sdSetChg('sdm-chg',c);
     sdSet('sdm-dh',d.dayHigh?cur+fmt(d.dayHigh,d.dayHigh<10?4:2):'—');
     sdSet('sdm-dl',d.dayLow?cur+fmt(d.dayLow,d.dayLow<10?4:2):'—');
