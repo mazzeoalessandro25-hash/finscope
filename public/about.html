@@ -904,7 +904,13 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 const TOKEN_KEY='fs_token', USER_KEY='fs_user';
 let authTab='register';
 
-// Carica contatore utenti reale
+// ─── Scroll Reveal ───
+const revealObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible')});
+},{threshold:0.12});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>revealObs.observe(el));
+
+// ─── User Count ───
 async function loadUserCount(){
   try{
     const r=await fetch('/api/stats');
@@ -913,7 +919,7 @@ async function loadUserCount(){
     const el=document.getElementById('user-count-text');
     if(!el)return;
     if(n>=10){
-      el.textContent=n.toLocaleString('it-IT')+' investitori già registrati';
+      animateCounter(el,0,n,' investitori già a bordo');
     } else if(n>0){
       el.textContent='Primi investitori già a bordo — unisciti a loro';
     } else {
@@ -921,19 +927,44 @@ async function loadUserCount(){
     }
   }catch{
     const el=document.getElementById('user-count-text');
-    if(el)el.textContent='Registrazione gratuita';
+    if(el)el.textContent='Registrazione gratuita · Zero costi';
   }
+}
+function animateCounter(el,from,to,suffix){
+  const dur=1200,start=performance.now();
+  function step(now){
+    const p=Math.min((now-start)/dur,1);
+    const ease=1-Math.pow(1-p,3);
+    const v=Math.round(from+(to-from)*ease);
+    el.textContent=v.toLocaleString('it-IT')+suffix;
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 loadUserCount();
 
 function scrollToForm(){
   const el=document.getElementById('auth-card');
-  if(el&&el.style.display!=='none'){
+  if(el){
     el.scrollIntoView({behavior:'smooth',block:'center'});
     setTimeout(()=>document.getElementById('auth-email')?.focus(),500);
   } else {
     window.scrollTo({top:0,behavior:'smooth'});
   }
+}
+
+// ─── Auth views ───
+function showLpView(view){
+  document.getElementById('lp-main-view').style.display=view==='main'?'':'none';
+  document.getElementById('lp-forgot-view').style.display=view==='forgot'?'':'none';
+  document.getElementById('lp-reset-view').style.display=view==='reset'?'':'none';
+  const titles={main:'Inizia gratuitamente',forgot:'Recupera password',reset:'Nuova password'};
+  const subs={main:'Zero costi · Nessuna carta richiesta',forgot:'Inserisci la tua email per ricevere il codice',reset:'Inserisci il codice ricevuto'};
+  document.getElementById('lp-card-title').textContent=titles[view]||'';
+  document.getElementById('lp-card-sub').textContent=subs[view]||'';
+  ['lp-fp-err','lp-fp-ok','lp-rp-err','lp-rp-ok'].forEach(id=>{
+    const e=document.getElementById(id);if(e)e.classList.remove('show');
+  });
 }
 
 function switchTab(tab,btn){
@@ -944,6 +975,8 @@ function switchTab(tab,btn){
   document.getElementById('auth-err').classList.remove('show');
   document.getElementById('auth-ok').classList.remove('show');
   document.getElementById('name-field-lp').style.display=tab==='register'?'block':'none';
+  const fl=document.getElementById('lp-forgot-link');
+  if(fl)fl.style.display=tab==='login'?'block':'none';
 }
 
 async function submitAuth(){
@@ -982,6 +1015,60 @@ async function submitAuth(){
   }
   btn.disabled=false;
   btn.textContent=authTab==='login'?'Accedi':'Crea account gratuito';
+}
+
+// ─── Forgot / Reset Password ───
+async function submitLpForgot(){
+  const email=document.getElementById('lp-fp-email').value.trim();
+  const errEl=document.getElementById('lp-fp-err');
+  const okEl=document.getElementById('lp-fp-ok');
+  const btn=document.getElementById('lp-fp-submit');
+  errEl.classList.remove('show');okEl.classList.remove('show');
+  if(!email){errEl.textContent='Inserisci la tua email';errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Invio...';
+  try{
+    const r=await fetch('/api/auth?action=forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
+    const d=await r.json();
+    if(!r.ok){errEl.textContent=d.error||'Errore';errEl.classList.add('show');return;}
+    document.getElementById('lp-rp-email').value=email;
+    if(d.code){
+      okEl.textContent=`Codice: ${d.code} — inseriscilo nel prossimo step`;
+      okEl.classList.add('show');
+    } else {
+      okEl.textContent='Se l\'email è registrata, riceverai il codice di reset';
+      okEl.classList.add('show');
+    }
+    setTimeout(()=>showLpView('reset'),1600);
+  }catch{
+    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.classList.add('show');
+  }
+  btn.disabled=false;btn.textContent='Invia codice di reset';
+}
+
+async function submitLpReset(){
+  const email=document.getElementById('lp-rp-email').value;
+  const code=document.getElementById('lp-rp-code').value.trim();
+  const pwd=document.getElementById('lp-rp-pwd').value;
+  const errEl=document.getElementById('lp-rp-err');
+  const okEl=document.getElementById('lp-rp-ok');
+  const btn=document.getElementById('lp-rp-submit');
+  errEl.classList.remove('show');okEl.classList.remove('show');
+  if(!code||code.length!==6){errEl.textContent='Codice 6 cifre richiesto';errEl.classList.add('show');return;}
+  if(!pwd||pwd.length<8){errEl.textContent='Password minimo 8 caratteri';errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent='Aggiornamento...';
+  try{
+    const r=await fetch('/api/auth?action=reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,code,newPassword:pwd})});
+    const d=await r.json();
+    if(!r.ok||!d.ok){errEl.textContent=d.error||'Errore';errEl.classList.add('show');return;}
+    okEl.textContent='Password aggiornata! Effettua il login.';
+    okEl.classList.add('show');
+    setTimeout(()=>showLpView('main'),2000);
+  }catch{
+    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.classList.add('show');
+  }
+  btn.disabled=false;btn.textContent='Aggiorna password';
 }
 
 function logout(){
