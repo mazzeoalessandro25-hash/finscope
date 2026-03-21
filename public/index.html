@@ -3830,14 +3830,20 @@ async function renderWatchlistPort(){
    ANALISI & BILANCIAMENTO PORTAFOGLIO
 ══════════════════════════════════════════ */
 const INVESTOR_PROFILES={
-  conservative:{name:'Conservativo',emoji:'🛡️',desc:'Preservazione capitale, reddito stabile',
-    types:{dividend:.65,value:.25,growth:.10},maxBeta:.85,color:'#3B82F6'},
-  moderate:{name:'Moderato',emoji:'⚖️',desc:'Equilibrio tra crescita e stabilità',
-    types:{dividend:.40,value:.30,growth:.30},maxBeta:1.05,color:'#10B981'},
-  dynamic:{name:'Dinamico',emoji:'🚀',desc:'Crescita a lungo termine, tolleranza al rischio',
-    types:{dividend:.15,value:.25,growth:.60},maxBeta:1.25,color:'#F59E0B'},
-  aggressive:{name:'Aggressivo',emoji:'⚡',desc:'Massima crescita, alto rischio',
-    types:{dividend:.05,value:.15,growth:.80},maxBeta:1.5,color:'#EF4444'},
+  income:{name:'Income',emoji:'💰',desc:'Massimo reddito passivo, dividendi elevati, rischio minimo',
+    types:{dividend:.80,value:.18,growth:.02},maxBeta:.65,color:'#0EA5E9'},
+  conservative:{name:'Conservativo',emoji:'🛡️',desc:'Preservazione capitale, reddito stabile, alta qualità',
+    types:{dividend:.60,value:.30,growth:.10},maxBeta:.85,color:'#3B82F6'},
+  moderate:{name:'Moderato',emoji:'⚖️',desc:'Equilibrio tra crescita e stabilità, portafoglio core',
+    types:{dividend:.35,value:.35,growth:.30},maxBeta:1.05,color:'#10B981'},
+  balanced_growth:{name:'Crescita Bilanciata',emoji:'📈',desc:'Prevalenza growth con quota difensiva',
+    types:{dividend:.20,value:.25,growth:.55},maxBeta:1.15,color:'#6366F1'},
+  dynamic:{name:'Dinamico',emoji:'🚀',desc:'Crescita a lungo termine, buona tolleranza al rischio',
+    types:{dividend:.10,value:.20,growth:.70},maxBeta:1.30,color:'#F59E0B'},
+  aggressive:{name:'Aggressivo',emoji:'⚡',desc:'Massima crescita, alto rischio, orizzonte lungo',
+    types:{dividend:.03,value:.12,growth:.85},maxBeta:1.60,color:'#EF4444'},
+  speculative:{name:'Speculativo',emoji:'🎯',desc:'Titoli ad alto rischio/rendimento, concentrazione elevata',
+    types:{dividend:.0,value:.05,growth:.95},maxBeta:2.0,color:'#EC4899'},
 };
 let selectedProfile='moderate';
 
