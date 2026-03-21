@@ -3405,6 +3405,30 @@ const INVESTOR_PROFILES={
 };
 let selectedProfile='moderate';
 
+// ── Donut chart helpers (global) ──
+const COLORS=['#1A56C4','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#EC4899','#6B7280'];
+function svgDonut(entries,palette,size=108,thick=20){
+  const tot=entries.reduce((s,[,v])=>s+v,0);
+  if(!tot)return`<svg width="${size}" height="${size}"><text x="${size/2}" y="${size/2}" text-anchor="middle" font-size="10" fill="var(--t3)" font-family="IBM Plex Mono">N/D</text></svg>`;
+  const cx=size/2,cy=size/2,r=(size-thick)/2;
+  const C=2*Math.PI*r;let acc=0;
+  const slices=entries.map(([,v],i)=>{
+    const len=(v/tot)*C,off=C-acc;
+    const s=`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${(palette||COLORS)[i%COLORS.length]}" stroke-width="${thick}" stroke-dasharray="${len.toFixed(2)} ${(C-len).toFixed(2)}" stroke-dashoffset="${off.toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
+    acc+=len;return s;
+  });
+  return`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${slices.join('')}</svg>`;
+}
+function donutLegend(entries,palette){
+  const tot=entries.reduce((s,[,v])=>s+v,0);
+  return`<div style="margin-top:8px">`+entries.slice(0,6).map(([k,v],i)=>`
+    <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px">
+      <div style="width:8px;height:8px;border-radius:2px;background:${(palette||COLORS)[i%COLORS.length]};flex-shrink:0"></div>
+      <div style="font-size:10px;color:var(--t2);font-family:var(--fm);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k}</div>
+      <div style="font-size:10px;font-family:var(--fm);font-weight:600;color:var(--t)">${fmt(v/tot*100,1)}%</div>
+    </div>`).join('')+`</div>`;
+}
+
 function renderPortAnalysis(portItems, quotes){
   const el=document.getElementById('port-analysis-content');
   if(!el)return;
