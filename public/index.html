@@ -2717,6 +2717,44 @@ function togglePortCurrency(){
   if(subEl)subEl.textContent=isEUR?'≈ $'+fmt(_portHeroUSD,0):'≈ €'+fmt(_portHeroEUR,0);
   if(lblEl)lblEl.textContent=isEUR?'Valore totale (EUR)':'Valore totale (USD)';
 }
+function switchPortTab(name){
+  _portActiveTab=name;
+  document.querySelectorAll('.port-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.port-tab-panel').forEach(p=>p.classList.remove('active'));
+  const btn=document.getElementById('ptab-btn-'+name);
+  const panel=document.getElementById('ptab-'+name);
+  if(btn)btn.classList.add('active');
+  if(panel)panel.classList.add('active');
+  if(name==='performance')loadPortPerf();
+}
+
+function setPortSort(key){
+  portSortKey=key;
+  document.querySelectorAll('.port-sort-btn').forEach(b=>b.classList.remove('active'));
+  const btn=document.getElementById('psort-'+(key==='pnl_pct'?'pnl':key==='weight'?'weight':key==='name'?'name':'default'));
+  if(btn)btn.classList.add('active');
+  renderPortfolio();
+}
+
+function togglePortEdit(idx){
+  const el=document.getElementById('port-edit-'+idx);
+  if(!el)return;
+  el.style.display=el.style.display==='none'||!el.style.display?'block':'none';
+}
+
+async function savePortEdit(idx){
+  const qtyEl=document.getElementById('pei-qty-'+idx);
+  const priceEl=document.getElementById('pei-price-'+idx);
+  if(!qtyEl||!priceEl)return;
+  const qty=parseFloat(qtyEl.value);
+  const price=parseFloat(priceEl.value);
+  if(!qty||!price||qty<=0||price<=0)return;
+  portfolio[idx].qty=qty;
+  portfolio[idx].buyPrice=price;
+  await savePortfolio();
+  renderPortfolio();
+}
+
 function togglePortAdd(){
   const p=document.getElementById('port-add-panel');
   if(p) p.style.display=p.style.display==='none'?'block':'none';
