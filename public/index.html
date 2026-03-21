@@ -2672,6 +2672,11 @@ async function addPortfolioItem(){
   renderPortfolio();
 }
 
+function togglePortAdd(){
+  const p=document.getElementById('port-add-panel');
+  if(p) p.style.display=p.style.display==='none'?'block':'none';
+}
+
 async function removePortfolioItem(idx){
   portfolio.splice(idx,1);
   await savePortfolio();
