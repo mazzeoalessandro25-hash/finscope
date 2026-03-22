@@ -706,28 +706,28 @@ const INDEX_DATA = {
    BULK QUOTE via Yahoo Finance (gratuito, no key)
    ───────────────────────────────────────────────────────── */
 async function yahooQuote(symbols) {
-  const CHUNK = 100;
+  const CHUNK = 20; // chunk conservativo per yahoo-finance2
   const chunks = [];
   for (let i = 0; i < symbols.length; i += CHUNK) chunks.push(symbols.slice(i, i + CHUNK));
 
   const maps = await Promise.all(chunks.map(async chunk => {
-    const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(chunk.join(','))}&fields=regularMarketPrice,regularMarketPreviousClose,regularMarketChangePercent,trailingPE,marketCap,regularMarketVolume,trailingAnnualDividendRate`;
     try {
-      const r = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' },
+      const results = await yf.quote(chunk, {
+        fields: ['regularMarketPrice','regularMarketPreviousClose','regularMarketChangePercent',
+                 'trailingPE','marketCap','regularMarketVolume','trailingAnnualDividendRate'],
       });
-      if (!r.ok) return {};
-      const data = await r.json();
+      const arr = Array.isArray(results) ? results : [results];
       const m = {};
-      (data?.quoteResponse?.result || []).forEach(q => {
+      arr.forEach(q => {
+        if (!q?.symbol) return;
         m[q.symbol] = {
-          price:     q.regularMarketPrice              ?? null,
-          prev:      q.regularMarketPreviousClose      ?? null,
-          chg:       q.regularMarketChangePercent      ?? null,
-          pe:        q.trailingPE                      ?? null,
-          marketCap: q.marketCap                       ?? null,
-          volume:    q.regularMarketVolume             ?? null,
-          divAnnual: q.trailingAnnualDividendRate      ?? null,
+          price:     q.regularMarketPrice            ?? null,
+          prev:      q.regularMarketPreviousClose    ?? null,
+          chg:       q.regularMarketChangePercent    ?? null,
+          pe:        q.trailingPE                    ?? null,
+          marketCap: q.marketCap                     ?? null,
+          volume:    q.regularMarketVolume           ?? null,
+          divAnnual: q.trailingAnnualDividendRate    ?? null,
         };
       });
       return m;
