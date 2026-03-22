@@ -680,19 +680,25 @@ body.dark .sd-item:hover{background:var(--s3)}
   <div class="pg-title">Stock Screener</div>
   <div class="pg-sub">Accesso a migliaia di titoli globali · Modalità "Mercato completo" tramite FMP · ★ per watchlist</div>
 
-  <!-- MODE SWITCH: Featured vs Tutto il mercato -->
-  <div class="sc-mode-bar">
-    <button class="sc-mode-btn active" id="sc-tab-featured" onclick="setScreenerMode('featured',this)">
-      ⭐ In evidenza <span class="sc-mode-badge" id="sc-featured-count">57</span>
-    </button>
-    <button class="sc-mode-btn" id="sc-tab-market" onclick="setScreenerMode('market',this)">
-      🌐 Mercato completo <span class="sc-mode-badge">via FMP</span>
-    </button>
+  <!-- INDICI MONDIALI -->
+  <div class="sc-idx-bar" id="sc-idx-bar">
+    <button class="sc-idx-btn active" onclick="setScreenerIndex('sp500',this)">🇺🇸 S&amp;P 500</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('nasdaq100',this)">🇺🇸 NASDAQ 100</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('dowjones',this)">🇺🇸 Dow Jones 30</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('ftsemib',this)">🇮🇹 FTSE MIB</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('dax',this)">🇩🇪 DAX 40</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('cac40',this)">🇫🇷 CAC 40</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('ftse100',this)">🇬🇧 FTSE 100</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('eurostoxx50',this)">🇪🇺 Euro Stoxx 50</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('ibex35',this)">🇪🇸 IBEX 35</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('smi',this)">🇨🇭 SMI</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('nikkei225',this)">🇯🇵 Nikkei 225</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('tsx',this)">🇨🇦 TSX</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('all',this)">🌐 Tutti</button>
   </div>
 
   <!-- FILTRI -->
   <div class="sc-f">
-    <!-- Settore (entrambe le modalità) -->
     <select class="fsel" id="fs" onchange="onFilterChange()">
       <option value="">Tutti i settori</option>
       <option>Technology</option><option>Financial Services</option><option>Healthcare</option>
@@ -700,17 +706,7 @@ body.dark .sd-item:hover{background:var(--s3)}
       <option>Energy</option><option>Industrials</option><option>Utilities</option>
       <option>Basic Materials</option><option>Communication Services</option><option>Real Estate</option>
     </select>
-    <!-- Tipo (solo featured) -->
-    <select class="fsel" id="ft" onchange="applyF()">
-      <option value="">Tutti i tipi</option>
-      <option value="growth">Growth</option><option value="value">Value</option><option value="dividend">Dividend</option>
-    </select>
-    <!-- Mercato (featured) -->
-    <select class="fsel" id="fm2" onchange="applyF()">
-      <option value="">Tutti i mercati</option>
-      <option value="US">🇺🇸 USA</option><option value="IT">🇮🇹 Italia</option><option value="EU">🇪🇺 Europa</option>
-    </select>
-    <!-- Paese (market mode) — nascosto di default -->
+    <!-- Paese (solo modalità "Tutti") — nascosto di default -->
     <select class="fsel" id="sc-country" style="display:none" onchange="onFilterChange()">
       <option value="">🌍 Tutti i paesi</option>
       <option value="US">🇺🇸 USA</option>
