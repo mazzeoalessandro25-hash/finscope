@@ -2415,7 +2415,7 @@ async function loadMarketScreener(reset=true){
   if(reset){ dynamicStocks=[];screenerPage=0; }
   const body=document.getElementById('sc-body');
   const isAll=currentIndex==='all';
-  if(reset) body.innerHTML='<tr><td colspan="15" class="ld">Caricamento in corso…</td></tr>';
+  if(reset) body.innerHTML='<tr><td colspan="13" class="ld">Caricamento in corso…</td></tr>';
   const loadBtn=document.getElementById('sc-load-btn');
   if(loadBtn){loadBtn.disabled=true;loadBtn.textContent='Caricamento…';}
 
