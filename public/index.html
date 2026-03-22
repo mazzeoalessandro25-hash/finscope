@@ -2489,6 +2489,42 @@ async function loadMarketScreener(reset=true){
 
 async function loadMoreScreener(){ await loadMarketScreener(false); }
 
+// ─── OVERALL SCORE per titolo (0–100) ─────────────────────────────────────
+// Modifica questa funzione per personalizzare il calcolo del punteggio.
+// Parametri disponibili: s.pe, s.marketCap, s.chg, s.price, s.divAnnual, s.beta
+function calcStockScore(s){
+  if(!s.price) return null;
+  let score=50; // base neutra
+
+  // Valutazione P/E: PE basso = meglio (value), PE nullo = neutro
+  if(s.pe!=null&&s.pe>0){
+    if(s.pe<12)       score+=15;
+    else if(s.pe<20)  score+=10;
+    else if(s.pe<30)  score+=5;
+    else if(s.pe>50)  score-=10;
+    else if(s.pe>35)  score-=5;
+  }
+
+  // Momentum 1g: variazione positiva = meglio
+  if(s.chg!=null){
+    if(s.chg>3)        score+=10;
+    else if(s.chg>1)   score+=5;
+    else if(s.chg<-3)  score-=10;
+    else if(s.chg<-1)  score-=5;
+  }
+
+  // Capitalizzazione: large cap = più stabile
+  if(s.marketCap!=null){
+    if(s.marketCap>500e9)       score+=15;
+    else if(s.marketCap>100e9)  score+=10;
+    else if(s.marketCap>10e9)   score+=5;
+    else if(s.marketCap<1e9)    score-=5;
+  }
+
+  return Math.min(100,Math.max(0,Math.round(score)));
+}
+// ──────────────────────────────────────────────────────────────────────────
+
 function renderMarketStocks(){
   const q=(document.getElementById('fq').value||'').toUpperCase();
   const sec=document.getElementById('fs').value;
