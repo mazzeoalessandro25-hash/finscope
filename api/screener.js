@@ -705,36 +705,43 @@ const INDEX_DATA = {
 /* ─────────────────────────────────────────────────────────
    BULK QUOTE via Yahoo Finance (gratuito, no key)
    ───────────────────────────────────────────────────────── */
+const YF_FIELDS = ['regularMarketPrice','regularMarketPreviousClose','regularMarketChangePercent',
+                   'trailingPE','marketCap','regularMarketVolume','trailingAnnualDividendRate'];
+
+async function fetchChunk(chunk) {
+  try {
+    const results = await yf.quote(chunk, { fields: YF_FIELDS });
+    const arr = Array.isArray(results) ? results : [results];
+    const m = {};
+    arr.forEach(q => {
+      if (!q?.symbol) return;
+      m[q.symbol] = {
+        price:     q.regularMarketPrice            ?? null,
+        prev:      q.regularMarketPreviousClose    ?? null,
+        chg:       q.regularMarketChangePercent    ?? null,
+        pe:        q.trailingPE                    ?? null,
+        marketCap: q.marketCap                     ?? null,
+        volume:    q.regularMarketVolume           ?? null,
+        divAnnual: q.trailingAnnualDividendRate    ?? null,
+      };
+    });
+    return m;
+  } catch { return {}; }
+}
+
 async function yahooQuote(symbols) {
-  const CHUNK = 20; // chunk conservativo per yahoo-finance2
+  const CHUNK = 20;
+  const CONCURRENCY = 3; // max 3 richieste parallele per evitare rate limit
   const chunks = [];
   for (let i = 0; i < symbols.length; i += CHUNK) chunks.push(symbols.slice(i, i + CHUNK));
 
-  const maps = await Promise.all(chunks.map(async chunk => {
-    try {
-      const results = await yf.quote(chunk, {
-        fields: ['regularMarketPrice','regularMarketPreviousClose','regularMarketChangePercent',
-                 'trailingPE','marketCap','regularMarketVolume','trailingAnnualDividendRate'],
-      });
-      const arr = Array.isArray(results) ? results : [results];
-      const m = {};
-      arr.forEach(q => {
-        if (!q?.symbol) return;
-        m[q.symbol] = {
-          price:     q.regularMarketPrice            ?? null,
-          prev:      q.regularMarketPreviousClose    ?? null,
-          chg:       q.regularMarketChangePercent    ?? null,
-          pe:        q.trailingPE                    ?? null,
-          marketCap: q.marketCap                     ?? null,
-          volume:    q.regularMarketVolume           ?? null,
-          divAnnual: q.trailingAnnualDividendRate    ?? null,
-        };
-      });
-      return m;
-    } catch { return {}; }
-  }));
-
-  return Object.assign({}, ...maps);
+  const result = {};
+  for (let i = 0; i < chunks.length; i += CONCURRENCY) {
+    const batch = chunks.slice(i, i + CONCURRENCY);
+    const maps = await Promise.all(batch.map(fetchChunk));
+    maps.forEach(m => Object.assign(result, m));
+  }
+  return result;
 }
 
 /* ─────────────────────────────────────────────────────────
