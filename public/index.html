@@ -2456,24 +2456,27 @@ async function loadMarketScreener(reset=true){
   renderMarketStocks();
 
   if(stocks.length>0 && stocks[0].price==null){
-    const CHUNK=100;
+    const CHUNK=60; // chunk piccoli per ridurre il carico su Yahoo
+    const CONCURRENT=2; // max 2 richieste parallele dal frontend
     const chunks=[];
-    for(let i=0;i<stocks.length;i+=CHUNK) chunks.push(stocks.slice(i,i+CHUNK));
-    const qMaps=await Promise.all(chunks.map(async chunk=>{
-      try{
-        const symStr=chunk.map(s=>s.s).join(',');
-        const r=await fetch('/api/screener?symbols='+encodeURIComponent(symStr));
-        if(!r.ok) return {};
-        const qd=await r.json();
-        const m={};(qd.quotes||[]).forEach(q=>{m[q.s]=q;});return m;
-      }catch{return {};}
-    }));
-    const qMap=Object.assign({},...qMaps);
-    dynamicStocks.forEach(s=>{
-      const q=qMap[s.s];
-      if(q){s.price=q.price??null;s.prev=q.prev??null;s.chg=q.chg??null;s.pe=q.pe??null;s.marketCap=q.marketCap??null;s.divAnnual=q.divAnnual??null;}
-    });
-    renderMarketStocks();
+    for(let i=0;i<dynamicStocks.length;i+=CHUNK) chunks.push(dynamicStocks.slice(i,i+CHUNK));
+    const qMap={};
+    for(let i=0;i<chunks.length;i+=CONCURRENT){
+      const batch=chunks.slice(i,i+CONCURRENT);
+      const maps=await Promise.all(batch.map(async chunk=>{
+        try{
+          const symStr=chunk.map(s=>s.s).join(',');
+          const r=await fetch('/api/screener?symbols='+encodeURIComponent(symStr));
+          if(!r.ok) return {};
+          const qd=await r.json();
+          const m={};(qd.quotes||[]).forEach(q=>{m[q.s]=q;});return m;
+        }catch{return {};}
+      }));
+      maps.forEach(m=>Object.assign(qMap,m));
+      // aggiorna la tabella dopo ogni batch per mostrare i dati man mano
+      dynamicStocks.forEach(s=>{const q=qMap[s.s];if(q){s.price=q.price??null;s.prev=q.prev??null;s.chg=q.chg??null;s.pe=q.pe??null;s.marketCap=q.marketCap??null;s.divAnnual=q.divAnnual??null;}});
+      renderMarketStocks();
+    }
   }
   const status=document.getElementById('sc-market-status');
   if(status) status.textContent=`${dynamicStocks.length} titoli`;
