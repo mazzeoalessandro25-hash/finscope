@@ -2215,11 +2215,15 @@ function renderWatchlistPort(){
     el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Aggiungi titoli allo screener con ★</div>';
     return;
   }
-  el.innerHTML=watchlist.map(sym=>`
-    <div class="port-item" style="margin-bottom:6px" onclick="openModal('${sym}','${sym}')">
-      <div class="port-sym">${sym}</div>
+  el.innerHTML=watchlist.map(sym=>{
+    const stock=STOCKS.find(x=>x.s===sym);
+    const name=stock?.n||sym;
+    return`<div class="port-item" style="margin-bottom:6px;gap:10px" onclick="openModal('${sym}','${sym} — ${name}')">
+      ${logoHtmlSm(sym,name)}
+      <div style="flex:1"><div class="port-sym">${sym}</div><div style="font-size:10px;color:var(--t3)">${name}</div></div>
       <button class="port-del" onclick="event.stopPropagation();removeFromWatchlist('${sym}')" title="Rimuovi">✕</button>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
 
 async function removeFromWatchlist(sym){
