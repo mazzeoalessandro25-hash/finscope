@@ -4,36 +4,135 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Disclaimer — FinScope</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#F0F4FA;--bd:#D8E2EF;
   --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;
-  --o:#D97706;--o2:#FEF3C7;
+  --o:#D97706;--o2:#FEF3C7;--o3:#FFFBEB;--o4:#92400E;--o5:#78350F;
+  --g:#059669;--g2:#D1FAE5;--g3:#ECFDF5;
   --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
   --card:#fff;--ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
 }
-body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7}
-nav{height:56px;background:#0D1A2B;display:flex;align-items:center;padding:0 40px;gap:16px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:56px;background:rgba(13,26,43,.97);backdrop-filter:blur(12px);
+  display:flex;align-items:center;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08)}
 .logo{font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
 .logo-dot{width:7px;height:7px;background:#34D399;border-radius:50%}
 .logo span{color:rgba(255,255,255,.5)}
-.back{color:rgba(255,255,255,.5);font-size:12px;font-family:var(--fm);text-decoration:none;margin-left:auto;transition:color .15s}
+.back{color:rgba(255,255,255,.45);font-size:12px;font-family:var(--fm);text-decoration:none;
+  margin-left:auto;transition:color .15s;display:flex;align-items:center;gap:6px}
 .back:hover{color:#fff}
-.wrap{max-width:760px;margin:0 auto;padding:64px 32px 80px}
-.tag{font-family:var(--fm);font-size:10px;color:var(--b);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
-h1{font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-1px;color:var(--t);margin-bottom:8px}
-.updated{font-family:var(--fm);font-size:11px;color:var(--t3);margin-bottom:40px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:32px;margin-bottom:20px}
-.card.warn{background:#FFFBEB;border-color:#FDE68A}
-h2{font-size:16px;font-weight:700;color:var(--t);margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.card.warn h2{color:#92400E}
-h2 .icon{font-size:18px}
-p{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:10px}
-p:last-child{margin-bottom:0}
-.card.warn p{color:#78350F}
-footer{text-align:center;padding:32px;font-size:11px;color:var(--t3);font-family:var(--fm);border-top:1px solid var(--bd)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#1A1200 0%,#3B1F00 50%,#78350F 100%);
+  padding:56px 40px 52px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(217,119,6,.2),transparent 70%);pointer-events:none}
+.hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;letter-spacing:-1.2px;
+  line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);font-family:var(--fm)}
+
+/* WRAP */
+.wrap{max-width:760px;margin:0 auto;padding:48px 32px 80px}
+
+/* SUMMARY BOX */
+.summary{background:var(--o3);border:1px solid var(--o2);border-left:4px solid var(--o);
+  border-radius:14px;padding:24px 28px;margin-bottom:40px}
+.summary-label{font-family:var(--fm);font-size:10px;color:var(--o);letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.summary h2{font-size:17px;font-weight:700;color:var(--o4);margin-bottom:8px}
+.summary p{font-size:13.5px;color:var(--o5);line-height:1.7;margin:0}
+
+/* TABLE OF CONTENTS */
+.toc{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:22px 26px;margin-bottom:36px}
+.toc-label{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:12px}
+.toc-list{display:flex;flex-direction:column;gap:6px}
+.toc-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--b);
+  text-decoration:none;font-weight:500;transition:color .15s}
+.toc-item:hover{color:var(--b2)}
+.toc-num{font-family:var(--fm);font-size:10px;color:var(--t3);width:18px;flex-shrink:0}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;
+  padding:28px 32px;margin-bottom:20px;scroll-margin-top:72px}
+.card.alert{background:var(--o3);border-color:var(--o2)}
+.card-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.card-icon{width:42px;height:42px;border-radius:11px;background:var(--b3);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.card.alert .card-icon{background:#FDE68A}
+.card-title-group{flex:1}
+.card-num{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1px;margin-bottom:3px}
+.card.alert .card-num{color:var(--o)}
+h2{font-size:16px;font-weight:700;color:var(--t);line-height:1.3}
+.card.alert h2{color:var(--o4)}
+.legal-text{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:14px}
+.card.alert .legal-text{color:var(--o5)}
+.legal-text:last-child{margin-bottom:0}
+ul{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+ul:last-child{margin-bottom:0}
+li{font-size:13.5px;color:var(--t2);line-height:1.7;padding-left:20px;position:relative}
+li::before{content:'→';position:absolute;left:0;color:var(--b);font-size:12px;top:2px}
+.card.alert li{color:var(--o5)}
+.card.alert li::before{color:var(--o)}
+li strong{color:var(--t);font-weight:600}
+.card.alert li strong{color:var(--o4)}
+
+/* PLAIN LANGUAGE CALLOUT */
+.plain{background:var(--b3);border-radius:10px;padding:14px 18px;margin-top:16px;
+  display:flex;align-items:flex-start;gap:10px}
+.card.alert .plain{background:#FEF3C7}
+.plain-label{font-family:var(--fm);font-size:9px;color:var(--b);letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:700;white-space:nowrap;margin-top:1px;flex-shrink:0}
+.card.alert .plain-label{color:var(--o)}
+.plain p{font-size:12.5px;color:var(--b2);line-height:1.65;margin:0;font-weight:500}
+.card.alert .plain p{color:var(--o4)}
+
+/* NORMA TABLE */
+.norm-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.norm-item{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.norm-code{font-family:var(--fm);font-size:10px;color:var(--b);font-weight:600;letter-spacing:.5px;margin-bottom:4px}
+.norm-desc{font-size:12px;color:var(--t2);line-height:1.55}
+
+/* GREEN CALLOUT */
+.safe-box{background:var(--g3);border:1px solid var(--g2);border-left:4px solid var(--g);
+  border-radius:14px;padding:22px 26px;margin-top:32px}
+.safe-label{font-family:var(--fm);font-size:10px;color:var(--g);letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.safe-box p{font-size:13.5px;color:#065F46;line-height:1.7;margin:0}
+
+/* FOOTER */
+footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px}
+.foot-logo{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.foot-logo span{color:rgba(255,255,255,.4)}
+.foot-links{display:flex;gap:20px}
+.foot-link{color:rgba(255,255,255,.35);font-size:11px;font-family:var(--fm);
+  text-decoration:none;transition:color .15s}
+.foot-link:hover{color:rgba(255,255,255,.75)}
+.foot-note{font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  nav{padding:0 20px}
+  .hero{padding:40px 20px 36px}
+  .wrap{padding:32px 16px 56px}
+  .card{padding:22px 20px}
+  .norm-grid{grid-template-columns:1fr}
+  footer{padding:20px;flex-direction:column;align-items:flex-start;gap:16px}
+  .foot-links{flex-direction:column;gap:10px}
+}
 </style>
 </head>
 <body>
@@ -43,33 +142,190 @@ footer{text-align:center;padding:32px;font-size:11px;color:var(--t3);font-family
   <a href="./about.html" class="back">← Torna alla home</a>
 </nav>
 
-<div class="wrap">
-  <div class="tag">Legale</div>
-  <h1>Disclaimer legale</h1>
-  <p class="updated">Ultimo aggiornamento: Marzo 2026 · v1.0</p>
-
-  <div class="card warn">
-    <h2><span class="icon">⚠️</span>Non è consulenza finanziaria</h2>
-    <p>FinScope è uno strumento di informazione e monitoraggio. Nessun contenuto costituisce consulenza finanziaria, di investimento, legale o fiscale ai sensi del D.Lgs. 58/1998 (TUF) e della Direttiva MiFID II. Il fondatore non è un consulente finanziario abilitato OCF.</p>
-  </div>
-
-  <div class="card warn">
-    <h2><span class="icon">📉</span>Rischi di investimento</h2>
-    <p>Investire comporta rischi, inclusa la possibile perdita del capitale. I rendimenti passati non garantiscono quelli futuri. I dati hanno ritardi fino a 15 minuti durante le sessioni di borsa.</p>
-  </div>
-
-  <div class="card warn">
-    <h2><span class="icon">⚖️</span>Limitazione di responsabilità</h2>
-    <p>FinScope non si assume responsabilità per perdite derivanti dall'utilizzo delle informazioni presenti. I dati sono forniti "così come sono" senza garanzie di accuratezza o completezza. L'utilizzo del servizio implica l'accettazione di queste condizioni.</p>
-  </div>
-
-  <div class="card">
-    <h2><span class="icon">📊</span>Natura dei dati</h2>
-    <p>I dati mostrati provengono da Yahoo Finance con possibile ritardo fino a 15 minuti durante le sessioni di borsa. FinScope è pensato per investimento a medio-lungo termine e non è adatto a trading ad alta frequenza.</p>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Documento legale</div>
+    <h1>Disclaimer legale</h1>
+    <div class="hero-sub">Ultimo aggiornamento: Marzo 2026 &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; Ai sensi del D.Lgs. 58/1998 (TUF) e Direttiva MiFID II</div>
   </div>
 </div>
 
-<footer>© 2026 FinScope · Alessandro Mazzeo · Tutti i diritti riservati</footer>
+<div class="wrap">
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <div class="summary-label">Prima di tutto — leggilo davvero</div>
+    <h2>FinScope non è un consulente finanziario. Mai.</h2>
+    <p>Quello che vedi su FinScope — score, price target, grafici, notizie — sono dati e strumenti informativi, non consigli su cosa comprare o vendere. Le decisioni di investimento sono tue e solo tue. Investire comporta sempre il rischio di perdere denaro.</p>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-label">Indice</div>
+    <div class="toc-list">
+      <a href="#no-consulenza" class="toc-item"><span class="toc-num">01</span>Non è consulenza finanziaria</a>
+      <a href="#rischi" class="toc-item"><span class="toc-num">02</span>Rischi di investimento</a>
+      <a href="#dati" class="toc-item"><span class="toc-num">03</span>Accuratezza dei dati</a>
+      <a href="#responsabilita" class="toc-item"><span class="toc-num">04</span>Limitazione di responsabilità</a>
+      <a href="#strumento" class="toc-item"><span class="toc-num">05</span>Cos'è FinScope (e cosa non è)</a>
+      <a href="#normativa" class="toc-item"><span class="toc-num">06</span>Normativa applicabile</a>
+    </div>
+  </div>
+
+  <!-- 01 NO CONSULENZA -->
+  <div class="card alert" id="no-consulenza">
+    <div class="card-head">
+      <div class="card-icon">⚠️</div>
+      <div class="card-title-group">
+        <div class="card-num">01 — NATURA DEL SERVIZIO</div>
+        <h2>FinScope non è consulenza finanziaria</h2>
+      </div>
+    </div>
+    <p class="legal-text">Nessun contenuto presente su FinScope — inclusi FinScope Score, Price Target, screener, news, simulazioni e qualsiasi altro dato o elaborazione — costituisce consulenza finanziaria, di investimento, legale o fiscale ai sensi del D.Lgs. 58/1998 (Testo Unico della Finanza) e della Direttiva MiFID II (2014/65/UE).</p>
+    <p class="legal-text">Il fondatore di FinScope non è iscritto all'Albo dei Consulenti Finanziari (OCF) e non è autorizzato a prestare consulenza in materia di investimenti ai sensi della normativa vigente.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Il FinScope Score che dice "85/100" su un titolo non è un consiglio di acquisto. È un dato elaborato. La decisione finale — comprare, vendere, aspettare — è sempre tua.</p>
+    </div>
+  </div>
+
+  <!-- 02 RISCHI -->
+  <div class="card alert" id="rischi">
+    <div class="card-head">
+      <div class="card-icon">📉</div>
+      <div class="card-title-group">
+        <div class="card-num">02 — RISCHI DI INVESTIMENTO</div>
+        <h2>Investire comporta rischi reali</h2>
+      </div>
+    </div>
+    <ul>
+      <li>Qualsiasi investimento in strumenti finanziari comporta il <strong>rischio di perdita parziale o totale del capitale investito</strong>.</li>
+      <li>I <strong>rendimenti passati non sono indicativi di quelli futuri</strong>. Un titolo che ha performato bene ieri può perdere valore domani.</li>
+      <li>Le <strong>simulazioni e proiezioni</strong> mostrate (es. simulatore di crescita del portafoglio) sono stime basate su ipotesi, non previsioni garantite.</li>
+      <li>Mercati azionari, obbligazionari e crypto sono soggetti a <strong>alta volatilità</strong> e possono essere influenzati da fattori imprevedibili.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Puoi perdere soldi investendo. Questo vale sempre, indipendentemente da quello che dice qualsiasi strumento — incluso FinScope. Non investire mai più di quello che puoi permetterti di perdere.</p>
+    </div>
+  </div>
+
+  <!-- 03 DATI -->
+  <div class="card" id="dati">
+    <div class="card-head">
+      <div class="card-icon">📊</div>
+      <div class="card-title-group">
+        <div class="card-num">03 — ACCURATEZZA DEI DATI</div>
+        <h2>I dati sono informativi, non certificati</h2>
+      </div>
+    </div>
+    <ul>
+      <li>I dati di mercato (prezzi, volumi, indicatori) provengono da <strong>Yahoo Finance</strong> e possono avere un <strong>ritardo fino a 15 minuti</strong> durante le sessioni di borsa.</li>
+      <li>I dati fondamentali (P/E, EPS, ROE, ecc.) sono aggiornati con cadenza variabile e potrebbero differire da quelli presenti su altre piattaforme a causa di diversi metodi di calcolo.</li>
+      <li>Il <strong>FinScope Score</strong> e il <strong>Price Target</strong> sono metriche proprietarie basate su modelli quantitativi. Non rappresentano una valutazione certificata da enti terzi.</li>
+      <li>FinScope non garantisce l'assenza di errori, omissioni o interruzioni nel flusso dati.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>I prezzi che vedi potrebbero avere qualche minuto di ritardo. Non usare FinScope per trading intraday o decisioni che richiedono dati in tempo reale certificato.</p>
+    </div>
+  </div>
+
+  <!-- 04 RESPONSABILITA -->
+  <div class="card alert" id="responsabilita">
+    <div class="card-head">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title-group">
+        <div class="card-num">04 — LIMITAZIONE DI RESPONSABILITÀ</div>
+        <h2>Cosa non possiamo garantire</h2>
+      </div>
+    </div>
+    <p class="legal-text">FinScope e il suo fondatore non si assumono alcuna responsabilità per:</p>
+    <ul>
+      <li>Perdite finanziarie derivanti da decisioni di investimento prese sulla base delle informazioni presenti sulla piattaforma</li>
+      <li>Errori, imprecisioni o interruzioni nei dati forniti da terze parti (Yahoo Finance, provider di dati fondamentali)</li>
+      <li>Danni diretti, indiretti, incidentali o consequenziali derivanti dall'uso o dall'impossibilità di uso della piattaforma</li>
+    </ul>
+    <p class="legal-text">I dati e gli strumenti sono forniti <em>"così come sono"</em> (as-is), senza garanzie esplicite o implicite di accuratezza, completezza o idoneità a uno scopo specifico. L'accesso e l'utilizzo del servizio implicano l'accettazione integrale di queste condizioni.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Se perdi soldi in borsa dopo aver usato FinScope, non possiamo esserne ritenuti responsabili. Lo strumento ti aiuta ad analizzare — ma la scelta di investire e il rischio che ne deriva sono tuoi.</p>
+    </div>
+  </div>
+
+  <!-- 05 STRUMENTO -->
+  <div class="card" id="strumento">
+    <div class="card-head">
+      <div class="card-icon">🔍</div>
+      <div class="card-title-group">
+        <div class="card-num">05 — NATURA DELLO STRUMENTO</div>
+        <h2>Cos'è FinScope (e cosa non è)</h2>
+      </div>
+    </div>
+    <div class="norm-grid">
+      <div class="norm-item">
+        <div class="norm-code">✓ COSA È</div>
+        <div class="norm-desc">Uno strumento di informazione, monitoraggio e analisi quantitativa per investitori individuali.</div>
+      </div>
+      <div class="norm-item">
+        <div class="norm-code">✗ COSA NON È</div>
+        <div class="norm-desc">Un servizio di consulenza finanziaria, un gestore patrimoniale, una piattaforma di trading.</div>
+      </div>
+      <div class="norm-item">
+        <div class="norm-code">✓ A CHI È RIVOLTO</div>
+        <div class="norm-desc">Investitori consapevoli che vogliono aggregare e analizzare dati pubblici in modo efficiente.</div>
+      </div>
+      <div class="norm-item">
+        <div class="norm-code">✗ NON ADATTO A</div>
+        <div class="norm-desc">Trading ad alta frequenza, decisioni basate su dati certificati in tempo reale, gestione di patrimoni altrui.</div>
+      </div>
+    </div>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>FinScope è uno strumento che ti aiuta a <em>capire meglio</em> le azioni che stai valutando. Non ti dice cosa fare. Sei tu l'investitore.</p>
+    </div>
+  </div>
+
+  <!-- 06 NORMATIVA -->
+  <div class="card" id="normativa">
+    <div class="card-head">
+      <div class="card-icon">📋</div>
+      <div class="card-title-group">
+        <div class="card-num">06 — NORMATIVA APPLICABILE</div>
+        <h2>Riferimenti legislativi</h2>
+      </div>
+    </div>
+    <ul>
+      <li><strong>D.Lgs. 58/1998 (TUF)</strong> — Testo Unico della Finanza: disciplina i servizi di investimento in Italia.</li>
+      <li><strong>Direttiva MiFID II (2014/65/UE)</strong> — Markets in Financial Instruments Directive: regolamenta i mercati finanziari nell'UE.</li>
+      <li><strong>Reg. (UE) 596/2014 (MAR)</strong> — Market Abuse Regulation: disciplina le informazioni privilegiate.</li>
+      <li><strong>Reg. UE 2016/679 (GDPR)</strong> — per il trattamento dei dati personali (vedi Privacy Policy).</li>
+    </ul>
+    <p class="legal-text">Questo disclaimer è redatto ai sensi della normativa italiana ed europea vigente. Per qualsiasi controversia è competente il foro di residenza del Titolare.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Queste sono le leggi italiane ed europee che definiscono cosa può e non può fare uno strumento come FinScope. Le rispettiamo.</p>
+    </div>
+  </div>
+
+  <!-- GREEN CLOSING BOX -->
+  <div class="safe-box">
+    <div class="safe-label">Quello che puoi fare con FinScope</div>
+    <p>Analizzare titoli con dati fondamentali aggregati, monitorare il tuo portafoglio in tempo reale, esplorare idee di investimento con lo screener, simulare la crescita dei tuoi risparmi nel tempo. Tutto questo, con spirito critico e consapevolezza dei rischi.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-logo">Fin<span>Scope</span></div>
+  <div class="foot-links">
+    <a href="./about.html" class="foot-link">Home</a>
+    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="mailto:info@finscope.it" class="foot-link">Contatti</a>
+  </div>
+  <div class="foot-note">© 2026 Alessandro Mazzeo · Tutti i diritti riservati · v1.0</div>
+</footer>
 
 </body>
 </html>
