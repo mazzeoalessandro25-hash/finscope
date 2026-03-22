@@ -2399,8 +2399,8 @@ function setScreenerIndex(idx, btn){
   document.getElementById('sc-mktcap-min').style.display = isAll?'':'none';
   document.getElementById('sc-div-min').style.display    = isAll?'':'none';
   document.getElementById('sc-load-wrap').style.display  = isAll?'block':'none';
-  document.getElementById('sc-th-spark').style.display='none';
-  document.getElementById('sc-th-score').style.display='none';
+  const thSpark=document.getElementById('sc-th-spark');
+  if(thSpark) thSpark.style.display='none';
   hideSearchDropdown();
   dynamicStocks=[];screenerPage=0;
   loadMarketScreener(true);
