@@ -1395,6 +1395,153 @@ function toggleWl(sym,el){
   localStorage.setItem('fs_wl',JSON.stringify(watchlist));
   el.querySelector('.star-btn').classList.toggle('active',watchlist.includes(sym));
 }
+
+/* ── LOGHI AZIENDE ──
+   Primary: FMP image (ticker senza suffisso borsa)
+   Fallback: avatar testuale con colore hash-based
+*/
+function avatarColor(str){
+  const colors=['#1A56C4','#059669','#D97706','#7C3AED','#DC2626','#0891B2','#65A30D','#DB2777','#0F766E','#B45309'];
+  let h=0;for(let i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))%colors.length;
+  return colors[Math.abs(h)];
+}
+
+function cleanTicker(ticker){
+  // Rimuove suffisso borsa: .MI .PA .DE .L .SW .AS ecc.
+  return ticker.replace(/\.[A-Z0-9]+$/,'');
+}
+
+function logoHtml(ticker,name){
+  const clean=cleanTicker(ticker);
+  const src=`https://financialmodelingprep.com/image-stock/${clean}.png`;
+  const initials=clean.slice(0,2).toUpperCase();
+  const color=avatarColor(clean);
+  // onerror: nasconde img e mostra avatar testuale
+  return`<span style="display:inline-flex;align-items:center;width:36px;height:36px">
+    <img class="sc-logo" src="${src}" alt="${name}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"/>
+    <span class="logo-av" style="background:${color}">${initials}</span>
+  </span>`;
+}
+
+function logoHtmlSm(ticker,name){
+  const clean=cleanTicker(ticker);
+  const src=`https://financialmodelingprep.com/image-stock/${clean}.png`;
+  const initials=clean.slice(0,2).toUpperCase();
+  const color=avatarColor(clean);
+  return`<span style="display:inline-flex;align-items:center;width:28px;height:28px;flex-shrink:0">
+    <img class="wl-logo" src="${src}" alt="${name}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"/>
+    <span class="logo-av-sm" style="background:${color}">${initials}</span>
+  </span>`;
+}
+
+/* ── SCREENER — WATCHLIST PANEL ── */
+async function renderScreenerWatchlist(){
+  const el=document.getElementById('sc-wl-content');
+  if(!el)return;
+  if(!watchlist.length){
+    el.innerHTML='<div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nella tabella sopra</div>';
+    return;
+  }
+  const rows=await Promise.all(watchlist.map(async sym=>{
+    let d=scData[sym];
+    if(!d)d=await api(sym); // fetch se non in cache
+    const stock=STOCKS.find(x=>x.s===sym);
+    const name=stock?.n||sym;
+    const c=d?chgPct(d.price,d.prev):null;
+    const up=c==null||c>=0;
+    const cur=sym.endsWith('.L')?'£':sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||sym.endsWith('.SW')?'€':'$';
+    return`<div class="wl-row" onclick="openModal('${sym}','${sym} — ${name}')">
+      ${logoHtmlSm(sym,name)}
+      <span class="wl-sym">${sym}</span>
+      <span class="wl-name">${name}</span>
+      <span class="wl-price">${d?cur+fmt(d.price,2):'—'}</span>
+      <span class="wl-chg ${up?'up':'down'}">${chgStr(c)}</span>
+      <button class="wl-del" onclick="event.stopPropagation();removeFromWlScreener('${sym}')" title="Rimuovi dalla watchlist">✕</button>
+    </div>`;
+  }));
+  el.innerHTML=rows.join('');
+}
+
+function removeFromWlScreener(sym){
+  watchlist=watchlist.filter(s=>s!==sym);
+  localStorage.setItem('fs_wl',JSON.stringify(watchlist));
+  saveWatchlist();
+  renderScreenerWatchlist();
+  // Aggiorna stella nella tabella screener
+  document.querySelectorAll('#sc-body .star-btn').forEach(btn=>{
+    const row=btn.closest('tr');
+    if(row&&row.getAttribute('onclick')===`openFA('${sym}')`)
+      btn.classList.remove('active');
+  });
+}
+
+function switchScTab(tab,btn){
+  document.querySelectorAll('.sc-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sc-tab-wl').style.display=tab==='wl'?'block':'none';
+  document.getElementById('sc-tab-al').style.display=tab==='al'?'block':'none';
+  if(tab==='wl')renderScreenerWatchlist();
+  if(tab==='al')renderAlerts();
+}
+
+/* ── ALERT PREZZI ── */
+let alerts=JSON.parse(localStorage.getItem('fs_alerts')||'[]');
+
+function addAlert(){
+  const sym=(document.getElementById('al-sym').value||'').toUpperCase().trim();
+  const type=document.getElementById('al-type').value;
+  const price=parseFloat(document.getElementById('al-price').value);
+  if(!sym||!price||price<=0){return;}
+  alerts.push({sym,type,price,active:true,addedAt:Date.now()});
+  localStorage.setItem('fs_alerts',JSON.stringify(alerts));
+  document.getElementById('al-sym').value='';
+  document.getElementById('al-price').value='';
+  renderAlerts();
+}
+
+function removeAlert(idx){
+  alerts.splice(idx,1);
+  localStorage.setItem('fs_alerts',JSON.stringify(alerts));
+  renderAlerts();
+}
+
+function checkSingleAlert(a){
+  const d=scData[a.sym];
+  if(!d)return false;
+  return a.type==='above'?d.price>=a.price:d.price<=a.price;
+}
+
+function checkAlerts(){
+  let changed=false;
+  alerts.forEach(a=>{if(a.active&&checkSingleAlert(a)){a.triggered=true;changed=true;}});
+  if(changed)localStorage.setItem('fs_alerts',JSON.stringify(alerts));
+}
+
+function renderAlerts(){
+  const el=document.getElementById('sc-al-content');
+  if(!el)return;
+  checkAlerts();
+  if(!alerts.length){
+    el.innerHTML='<div class="ld">Nessun alert impostato · Inserisci ticker, condizione e prezzo target sopra</div>';
+    return;
+  }
+  el.innerHTML='<div class="alert-grid">'+alerts.map((a,i)=>{
+    const triggered=a.triggered||checkSingleAlert(a);
+    const cur=a.sym.endsWith('.L')?'£':a.sym.endsWith('.MI')||a.sym.endsWith('.PA')||a.sym.endsWith('.DE')||a.sym.endsWith('.SW')?'€':'$';
+    const d=scData[a.sym];
+    const curPrice=d?` · attuale: ${cur}${fmt(d.price,2)}`:'';
+    return`<div class="alert-row">
+      ${logoHtmlSm(a.sym,a.sym)}
+      <span class="alert-sym">${a.sym}</span>
+      <span class="alert-cond">${a.type==='above'?'▲ sopra':'▼ sotto'} <strong>${cur}${fmt(a.price,2)}</strong>${curPrice}</span>
+      <span class="alert-badge ${triggered?'triggered':'active'}">${triggered?'⚡ Attivato':'● Attivo'}</span>
+      <button class="alert-del" onclick="removeAlert(${i})" title="Elimina alert">✕</button>
+    </div>`;
+  }).join('')+'</div>';
+}
+
 function openFA(sym){
   const btn=Array.from(document.querySelectorAll('.nav-btn')).find(b=>b.textContent==='Simulatore');
   showPage('simulatore',btn);
