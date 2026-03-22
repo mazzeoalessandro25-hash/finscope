@@ -2228,7 +2228,7 @@ async function removeFromWatchlist(sym){
   renderWatchlistPort();
 }
 
-// Override toggleWl per sync con server
+// Override toggleWl per sync con server e aggiornamento panel screener
 const _origToggleWl=toggleWl;
 function toggleWl(sym,el){
   const i=watchlist.indexOf(sym);
@@ -2236,6 +2236,11 @@ function toggleWl(sym,el){
   localStorage.setItem('fs_wl',JSON.stringify(watchlist));
   el.querySelector('.star-btn').classList.toggle('active',watchlist.includes(sym));
   saveWatchlist();
+  // Aggiorna watchlist panel nello screener (se attiva)
+  const wlTab=document.getElementById('sc-tab-wl');
+  if(wlTab&&wlTab.style.display!=='none')renderScreenerWatchlist();
+  // Aggiorna watchlist nel portafoglio (se visibile)
+  if(currentUser)renderWatchlistPort();
 }
 
 // Avvia verifica sessione
