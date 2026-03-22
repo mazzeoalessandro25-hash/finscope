@@ -1399,147 +1399,143 @@ async function loadCrypto(){
 }
 
 /* ══════════════════════════════════════════════════════════
-   SCREENER DINAMICO — Modalità Featured + Mercato Completo
+   SCREENER — Indici mondiali via FMP
    ══════════════════════════════════════════════════════════ */
 
-/* Cambia modalità: 'featured' (lista statica) o 'market' (FMP) */
-function setScreenerMode(mode, btn){
-  screenerMode=mode;
-  document.querySelectorAll('.sc-mode-btn').forEach(b=>b.classList.remove('active'));
+/* Seleziona indice */
+function setScreenerIndex(idx, btn){
+  currentIndex=idx;
+  document.querySelectorAll('.sc-idx-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-
-  // Mostra/nascondi filtri specifici per modalità
-  const isMkt=mode==='market';
-  document.getElementById('ft').style.display         = isMkt?'none':'';
-  document.getElementById('fm2').style.display        = isMkt?'none':'';
-  document.getElementById('sc-country').style.display = isMkt?'':'none';
-  document.getElementById('sc-mktcap-min').style.display = isMkt?'':'none';
-  document.getElementById('sc-div-min').style.display    = isMkt?'':'none';
-  document.getElementById('sc-load-wrap').style.display  = isMkt?'block':'none';
-
-  // Intestazione colonne: nascondi sparkline e score in market mode
-  document.getElementById('sc-th-spark').style.display = isMkt?'none':'';
-  document.getElementById('sc-th-score').style.display = isMkt?'none':'';
-
+  // Filtri extra solo in modalità "Tutti"
+  const isAll=idx==='all';
+  document.getElementById('sc-country').style.display    = isAll?'':'none';
+  document.getElementById('sc-mktcap-min').style.display = isAll?'':'none';
+  document.getElementById('sc-div-min').style.display    = isAll?'':'none';
+  document.getElementById('sc-load-wrap').style.display  = isAll?'block':'none';
+  // Nascondi sparkline e score (non disponibili da API)
+  document.getElementById('sc-th-spark').style.display='none';
+  document.getElementById('sc-th-score').style.display='none';
   hideSearchDropdown();
-
-  if(mode==='market'){
-    dynamicStocks=[];
-    screenerPage=0;
-    loadMarketScreener(true);
-  } else {
-    if(Object.keys(scData).length===0) loadScreener();
-    else applyF();
-  }
+  dynamicStocks=[];screenerPage=0;
+  loadMarketScreener(true);
 }
 
-/* Handler comune per cambio filtri (agisce su entrambe le modalità) */
+/* Cambio filtro settore / paese / cap / div */
 function onFilterChange(){
-  if(screenerMode==='market'){ dynamicStocks=[];screenerPage=0;loadMarketScreener(true);}
-  else applyF();
+  if(currentIndex==='all'){ dynamicStocks=[];screenerPage=0;loadMarketScreener(true); }
+  else renderMarketStocks();
 }
 
-/* ── MARKET MODE: carica da FMP ── */
+/* Carica indice / screener da FMP */
 async function loadMarketScreener(reset=true){
   if(reset){ dynamicStocks=[];screenerPage=0; }
-
   const body=document.getElementById('sc-body');
-  if(reset) body.innerHTML='<tr><td colspan="15" class="ld">Ricerca nel mercato globale via FMP…</td></tr>';
-
+  const isAll=currentIndex==='all';
+  if(reset) body.innerHTML='<tr><td colspan="15" class="ld">Caricamento in corso…</td></tr>';
   const loadBtn=document.getElementById('sc-load-btn');
   if(loadBtn){loadBtn.disabled=true;loadBtn.textContent='Caricamento…';}
 
-  // Parametri filtro
-  const params=new URLSearchParams({limit:50});
-  const sector=document.getElementById('fs').value;
-  const country=document.getElementById('sc-country').value;
-  const mktcapMin=document.getElementById('sc-mktcap-min').value;
-  const divMin=document.getElementById('sc-div-min').value;
-  const q=document.getElementById('fq').value.trim();
-  if(sector) params.set('sector',sector);
-  if(country) params.set('country',country);
-  if(mktcapMin) params.set('marketCapMin',mktcapMin);
-  if(divMin) params.set('dividendMin',divMin);
+  // Costruisci URL API
+  let url;
+  if(isAll){
+    const params=new URLSearchParams({limit:50});
+    const sector=document.getElementById('fs').value;
+    const country=document.getElementById('sc-country').value;
+    const mktcapMin=document.getElementById('sc-mktcap-min').value;
+    const divMin=document.getElementById('sc-div-min').value;
+    if(sector)   params.set('sector',sector);
+    if(country)  params.set('country',country);
+    if(mktcapMin)params.set('marketCapMin',mktcapMin);
+    if(divMin)   params.set('dividendMin',divMin);
+    url='/api/screener?'+params.toString();
+  } else {
+    const params=new URLSearchParams({index:currentIndex});
+    const sector=document.getElementById('fs').value;
+    if(sector) params.set('sector',sector);
+    url='/api/screener?'+params.toString();
+  }
 
-  // 1. Chiama screener FMP per ottenere la lista con dati base
-  let screenRes;
+  // Fetch lista titoli
+  let stocks=[];
   try{
-    const r=await fetch('/api/screener?'+params.toString());
-    screenRes=await r.json();
-    if(!r.ok) throw new Error(screenRes.error||'Errore '+r.status);
+    const r=await fetch(url);
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||'Errore '+r.status);
+    stocks=data.stocks||[];
   }catch(e){
-    body.innerHTML=`<tr><td colspan="15"><div class="sc-market-err">
-      ⚠ ${e.message}<br><span style="font-size:10px;color:var(--t3)">
-      Verifica che FMP_API_KEY sia configurata in Vercel → Settings → Environment Variables</span>
-    </div></td></tr>`;
+    body.innerHTML=`<tr><td colspan="15"><div class="sc-market-err">⚠ ${e.message}<br><span style="font-size:10px;color:var(--t3)">Verifica FMP_API_KEY su Vercel → Settings → Environment Variables</span></div></td></tr>`;
     if(loadBtn){loadBtn.disabled=false;loadBtn.textContent='Riprova';}
     return;
   }
 
-  const newStocks=screenRes.stocks||[];
-
-  // Filtra per ricerca testuale se presente
-  const filtered=q
-    ? newStocks.filter(s=>s.s.includes(q.toUpperCase())||s.n.toUpperCase().includes(q.toUpperCase()))
-    : newStocks;
-
-  // 2. Fetch bulk quote FMP per prezzo live, change%, P/E
-  if(filtered.length){
-    const symStr=filtered.map(s=>s.s).join(',');
-    try{
-      const r2=await fetch('/api/screener?symbols='+encodeURIComponent(symStr));
-      if(r2.ok){
-        const qd=await r2.json();
-        const qMap={};
-        (qd.quotes||[]).forEach(q=>{ qMap[q.s]=q; });
-        filtered.forEach(s=>{
-          const q=qMap[s.s];
-          if(q){
-            s.price=q.price??s.price;
-            s.prev=q.prev;
-            s.chg=q.chg;
-            s.pe=q.pe;
-            s.marketCap=q.marketCap??s.marketCap;
-          }
-        });
-      }
-    }catch{}
+  // Per indici US (endpoint constituent), i prezzi non sono inclusi → bulk quote
+  if(stocks.length>0 && stocks[0].price==null){
+    const CHUNK=200;
+    const chunks=[];
+    for(let i=0;i<stocks.length;i+=CHUNK) chunks.push(stocks.slice(i,i+CHUNK));
+    const qMaps=await Promise.all(chunks.map(async chunk=>{
+      try{
+        const symStr=chunk.map(s=>s.s).join(',');
+        const r=await fetch('/api/screener?symbols='+encodeURIComponent(symStr));
+        if(!r.ok) return {};
+        const qd=await r.json();
+        const m={};(qd.quotes||[]).forEach(q=>{m[q.s]=q;});return m;
+      }catch{return {};}
+    }));
+    const qMap=Object.assign({},...qMaps);
+    stocks.forEach(s=>{
+      const q=qMap[s.s];
+      if(q){s.price=q.price??null;s.prev=q.prev??null;s.chg=q.chg??null;s.pe=q.pe??null;s.marketCap=q.marketCap??null;s.eps=q.eps??null;}
+    });
   }
 
-  dynamicStocks=[...dynamicStocks,...filtered];
-  screenerPage++;
-  screenerHasMore=newStocks.length>=50;
+  if(isAll){
+    dynamicStocks=[...dynamicStocks,...stocks];
+    screenerPage++;
+    screenerHasMore=stocks.length>=50;
+  } else {
+    dynamicStocks=stocks;
+    screenerHasMore=false;
+  }
 
-  // Render
   renderMarketStocks();
-  document.getElementById('sc-cnt').textContent=dynamicStocks.length+' titoli';
   const status=document.getElementById('sc-market-status');
-  if(status) status.textContent=`${dynamicStocks.length} titoli caricati · fonte: Financial Modeling Prep`;
-
-  if(loadBtn){
-    loadBtn.disabled=!screenerHasMore;
-    loadBtn.textContent=screenerHasMore?'Mostra altri 50':'Fine risultati';
-  }
+  if(status) status.textContent=`${dynamicStocks.length} titoli · fonte: Financial Modeling Prep`;
+  if(loadBtn){loadBtn.disabled=!screenerHasMore;loadBtn.textContent=screenerHasMore?'Mostra altri 50':'Fine risultati';}
+  renderScreenerWatchlist();
+  renderAlerts();
 }
 
 async function loadMoreScreener(){ await loadMarketScreener(false); }
 
-/* Render tabella market mode */
+/* Render tabella con filtro client-side + sort */
 function renderMarketStocks(){
+  const q=(document.getElementById('fq').value||'').toUpperCase();
+  const sec=document.getElementById('fs').value;
+  let list=dynamicStocks.filter(s=>{
+    if(q&&!s.s.includes(q)&&!s.n.toUpperCase().includes(q)) return false;
+    if(sec&&s.sec!==sec) return false;
+    return true;
+  });
+  list=[...list].sort((a,b)=>{
+    if(sortKey==='s') return(a.s>b.s?1:-1)*sortDir;
+    if(sortKey==='n') return(a.n>b.n?1:-1)*sortDir;
+    const av=sortKey==='price'?a.price||0:sortKey==='chg'?a.chg||0:sortKey==='pe'?a.pe||0:sortKey==='mktcap'?a.marketCap||0:sortKey==='div'?(a.divAnnual&&a.price?a.divAnnual/a.price*100:0):0;
+    const bv=sortKey==='price'?b.price||0:sortKey==='chg'?b.chg||0:sortKey==='pe'?b.pe||0:sortKey==='mktcap'?b.marketCap||0:sortKey==='div'?(b.divAnnual&&b.price?b.divAnnual/b.price*100:0):0;
+    return(av>bv?1:-1)*sortDir;
+  });
+  document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
-  if(!dynamicStocks.length){
-    body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:24px;color:var(--t3);font-size:12px">Nessun risultato · Modifica i filtri o prova un paese diverso</td></tr>';
-    return;
-  }
-  const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺'};
-  body.innerHTML=dynamicStocks.map(s=>{
+  if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:24px;color:var(--t3);font-size:12px">Nessun risultato · Cambia indice o modifica i filtri</td></tr>';return;}
+  const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺',AS:'🇯🇵',CA:'🇨🇦'};
+  body.innerHTML=list.map(s=>{
     const up=s.chg==null||s.chg>=0;
-    const cur=s.mkt==='US'?'$':s.s.endsWith('.L')?'£':'€';
+    const cur=s.mkt==='US'?'$':s.mkt==='IT'||s.mkt==='EU'?'€':s.s.endsWith('.L')?'£':'';
     const priceStr=s.price!=null?cur+fmt(s.price,s.price>=1000?0:2):'—';
     const chgStr2=s.chg!=null?(s.chg>=0?'+':'')+fmt(s.chg,2)+'%':'—';
     const pe=s.pe?fmt(s.pe,1):'—';
     const mktcap=s.marketCap?fmtLg(s.marketCap):'—';
-    // Dividendo yield = divAnnual/price*100
     const divYield=s.divAnnual&&s.price&&s.price>0?fmt(s.divAnnual/s.price*100,2)+'%':'—';
     return`<tr onclick="openFA('${s.s}')">
       <td onclick="event.stopPropagation()"><input type="checkbox" class="cmp-cb" ${cmpList.includes(s.s)?'checked':''} onchange="toggleCmp('${s.s}',this)"/></td>
@@ -1547,9 +1543,9 @@ function renderMarketStocks(){
       <td onclick="event.stopPropagation()">${logoHtml(s.s,s.n)}</td>
       <td style="font-weight:600">${s.s}</td>
       <td style="color:var(--t2)">${s.n}</td>
-      <td>${flags[s.mkt]||s.country||''}</td>
+      <td>${flags[s.mkt]||''}</td>
       <td style="color:var(--t3);font-size:11px">${s.sec||'—'}</td>
-      <td><span class="tag growth">—</span></td>
+      <td></td>
       <td style="font-weight:600">${priceStr}</td>
       <td class="${up?'up':'down'}">${chgStr2}</td>
       <td style="color:var(--t2)">${pe}</td>
@@ -1564,9 +1560,7 @@ function renderMarketStocks(){
 /* ── AUTOCOMPLETE SEARCH ── */
 function onFqInput(){
   const q=(document.getElementById('fq').value||'').trim();
-  // Sempre filtra la lista locale in featured mode
-  if(screenerMode==='featured') applyF();
-  // Autocomplete se ≥ 2 caratteri
+  renderMarketStocks(); // filtro client-side immediato
   if(q.length>=2){
     clearTimeout(searchDebounce);
     searchDebounce=setTimeout(()=>fetchSearchSuggestions(q),320);
@@ -1583,10 +1577,7 @@ async function fetchSearchSuggestions(q){
   try{
     const r=await fetch('/api/screener?q='+encodeURIComponent(q));
     const data=await r.json();
-    if(!data.quotes?.length){
-      dd.innerHTML='<div class="sd-hint">Nessun risultato per "'+q+'"</div>';
-      return;
-    }
+    if(!data.quotes?.length){dd.innerHTML='<div class="sd-hint">Nessun risultato per "'+q+'"</div>';return;}
     dd.innerHTML=data.quotes.map(item=>`
       <div class="sd-item" onclick="selectSearchTicker('${item.symbol}','${(item.name||'').replace(/['"]/g,'')}','${(item.exchange||'').replace(/'/g,'')}')">
         ${logoHtmlSm(item.symbol,item.name||item.symbol)}
@@ -1594,9 +1585,7 @@ async function fetchSearchSuggestions(q){
         <span class="sd-name">${item.name||item.symbol}</span>
         <span class="sd-ex">${item.exchange||''}</span>
       </div>`).join('');
-  }catch{
-    dd.innerHTML='<div class="sd-hint">Errore di rete</div>';
-  }
+  }catch{dd.innerHTML='<div class="sd-hint">Errore di rete</div>';}
 }
 
 function hideSearchDropdown(){
@@ -1604,7 +1593,6 @@ function hideSearchDropdown(){
   if(dd){dd.classList.remove('open');dd.innerHTML='';}
 }
 
-// Chiude dropdown cliccando fuori
 document.addEventListener('click',e=>{
   if(!e.target.closest('.search-wrap')) hideSearchDropdown();
 });
@@ -1612,114 +1600,25 @@ document.addEventListener('click',e=>{
 async function selectSearchTicker(symbol,name,exchange){
   hideSearchDropdown();
   document.getElementById('fq').value=symbol;
-
-  if(screenerMode==='market'){
-    // Aggiunge il titolo cercato in cima alla lista dinamica
-    if(!dynamicStocks.find(s=>s.s===symbol)){
-      const [d,sd]=await Promise.all([api(symbol),api(symbol,'summary')]);
-      if(d){
-        const mkt=symbol.endsWith('.MI')?'IT':symbol.endsWith('.PA')||symbol.endsWith('.DE')||symbol.endsWith('.L')||symbol.endsWith('.SW')?'EU':'US';
-        dynamicStocks.unshift({
-          s:symbol, n:name||symbol, sec:sd?.sector||'—',
-          mkt, country:'', exchange,
-          price:d.price, prev:d.prev, chg:d.price&&d.prev?(d.price-d.prev)/d.prev*100:null,
-          pe:sd?.pe||null, marketCap:sd?.marketCap||null,
-          divAnnual:sd?.dividend&&d.price?sd.dividend*d.price:null,
-        });
-        if(d) scData[symbol]=d;
-        if(sd) scSummaryData[symbol]=sd;
-      }
+  if(!dynamicStocks.find(s=>s.s===symbol)){
+    const [d,sd]=await Promise.all([api(symbol),api(symbol,'summary')]);
+    if(d){
+      const mkt=symbol.endsWith('.MI')?'IT':symbol.endsWith('.PA')||symbol.endsWith('.DE')||symbol.endsWith('.L')||symbol.endsWith('.SW')?'EU':'US';
+      dynamicStocks.unshift({
+        s:symbol,n:name||symbol,sec:sd?.sector||'—',mkt,country:'',exchange,
+        price:d.price,prev:d.prev,chg:d.price&&d.prev?(d.price-d.prev)/d.prev*100:null,
+        pe:sd?.pe||null,marketCap:sd?.marketCap||null,
+        divAnnual:sd?.dividend&&d.price?sd.dividend*d.price:null,
+      });
     }
-    renderMarketStocks();
-  } else {
-    // In featured mode: apri analisi fondamentale
-    applyF();
-    setTimeout(()=>openFA(symbol),80);
   }
+  renderMarketStocks();
+  setTimeout(()=>openFA(symbol),80);
 }
 
 /* ── SCREENER ── */
-let scSparkData={};
-async function loadScreener(){
-  if(screenerMode==='market'){ await loadMarketScreener(true); return; }
-  document.getElementById('sc-body').innerHTML='<tr><td colspan="15" class="ld">Caricamento prezzi reali...</td></tr>';
-  // Fetch quote + sparkline in parallelo per tutti i titoli
-  // Summary (P/E, mktcap, dividend) caricato in background senza bloccare la tabella
-  await Promise.all(STOCKS.map(async s=>{
-    const [d,spark]=await Promise.all([api(s.s),fetchSparkData(s.s)]);
-    if(d)scData[s.s]=d;
-    if(spark.length)scSparkData[s.s]=spark;
-  }));
-  applyF();
-  renderScreenerWatchlist();
-  renderAlerts();
-  // Carica summary in background e aggiorna la tabella quando pronto
-  Promise.all(STOCKS.map(async s=>{
-    const sd=await api(s.s,'summary');
-    if(sd)scSummaryData[s.s]=sd;
-  })).then(()=>{ applyF(); });
-}
-function applyF(){
-  if(screenerMode==='market'){ renderMarketStocks(); return; }
-  const sq=(document.getElementById('fq').value||'').toUpperCase();
-  const ss=document.getElementById('fs').value,st=document.getElementById('ft').value,sm=document.getElementById('fm2').value;
-  let list=STOCKS.filter(s=>{
-    if(sq&&!s.s.includes(sq)&&!s.n.toUpperCase().includes(sq))return false;
-    if(ss&&s.sec!==ss)return false;if(st&&s.t!==st)return false;if(sm&&s.mkt!==sm)return false;return true;
-  });
-  list=[...list].sort((a,b)=>{
-    let av=a[sortKey]||0,bv=b[sortKey]||0;
-    if(sortKey==='price'){av=scData[a.s]?.price||0;bv=scData[b.s]?.price||0;}
-    if(sortKey==='chg'){const da=scData[a.s],db=scData[b.s];av=da?chgPct(da.price,da.prev)||0:0;bv=db?chgPct(db.price,db.prev)||0:0;}
-    if(sortKey==='pe'){av=scSummaryData[a.s]?.pe||0;bv=scSummaryData[b.s]?.pe||0;}
-    if(sortKey==='mktcap'){av=scSummaryData[a.s]?.marketCap||0;bv=scSummaryData[b.s]?.marketCap||0;}
-    if(sortKey==='div'){av=scSummaryData[a.s]?.dividend||0;bv=scSummaryData[b.s]?.dividend||0;}
-    return(av>bv?1:-1)*sortDir;
-  });
-  document.getElementById('sc-cnt').textContent=list.length+' titoli';
-  const body=document.getElementById('sc-body');
-  if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
-  const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺'};
-  body.innerHTML=list.map(s=>{
-    const d=scData[s.s];
-    const sd=scSummaryData[s.s];
-    const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
-    const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
-    // Dati fondamentali (da summary, con fallback --)
-    const pe=sd?.pe?fmt(sd.pe,1):'—';
-    const mktcap=sd?.marketCap?fmtLg(sd.marketCap):'—';
-    const div=sd?.dividend>0?fmt(sd.dividend*100,2)+'%':'—';
-    // Valuta in base al mercato
-    const cur=s.mkt==='US'?'$':s.s.endsWith('.L')?'£':'€';
-    // Prezzo formattato
-    const priceStr=d?cur+fmt(d.price,d.price>=1000?0:2):'—';
-    return`<tr onclick="openFA('${s.s}')">
-      <td onclick="event.stopPropagation()"><input type="checkbox" class="cmp-cb" ${cmpList.includes(s.s)?'checked':''} onchange="toggleCmp('${s.s}',this)"/></td>
-      <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${watchlist.includes(s.s)?'active':''}">★</button></td>
-      <td onclick="event.stopPropagation()">${logoHtml(s.s,s.n)}</td>
-      <td style="font-weight:600">${s.s}</td>
-      <td style="color:var(--t2)">${s.n}</td>
-      <td>${flags[s.mkt]||''}</td>
-      <td style="color:var(--t3);font-size:11px">${s.sec}</td>
-      <td><span class="tag ${s.t}">${s.t}</span></td>
-      <td style="font-weight:600">${priceStr}</td>
-      <td class="${up?'up':'down'}">${chgStr(c)}</td>
-      <td style="color:var(--t2)">${pe}</td>
-      <td style="color:var(--t2)">${mktcap}</td>
-      <td class="${sd?.dividend>0?'up':''}">${div}</td>
-      <td><svg id="${spId}" width="60" height="30"></svg></td>
-      <td><div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round(s.score*.44)}px"></div></div><span style="font-size:11px;color:var(--t2)">${s.score}</span></div></td>
-    </tr>`;
-  }).join('');
-  // Disegna sparkline dopo il render del DOM
-  requestAnimationFrame(()=>{
-    list.forEach(s=>{
-      const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
-      const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
-      if(scSparkData[s.s])drawSparkline(spId,scSparkData[s.s],up);
-    });
-  });
-}
+async function loadScreener(){ await loadMarketScreener(true); }
+function applyF(){ renderMarketStocks(); }
 function sortTbl(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}applyF();}
 function toggleWl(sym,el){
   const i=watchlist.indexOf(sym);if(i===-1)watchlist.push(sym);else watchlist.splice(i,1);
