@@ -2515,8 +2515,10 @@ function renderMarketStocks(){
     const chgStr2=s.chg!=null?(s.chg>=0?'+':'')+fmt(s.chg,2)+'%':'—';
     const pe=s.pe?fmt(s.pe,1):'—';
     const mktcap=s.marketCap?fmtLg(s.marketCap):'—';
-    const divYield=s.divAnnual&&s.price&&s.price>0?fmt(s.divAnnual/s.price*100,2)+'%':'—';
     const logo=typeof logoHtml==='function'?logoHtml(s.s,s.n):'';
+    const sc=calcStockScore(s);
+    const scStr=sc!=null?sc:'—';
+    const scColor=sc==null?'var(--t3)':sc>=70?'#10B981':sc>=45?'#F59E0B':'#EF4444';
     return`<tr onclick="openFA('${s.s}')">
       <td onclick="event.stopPropagation()"><input type="checkbox" class="cmp-cb" ${typeof cmpList!=='undefined'&&cmpList.includes(s.s)?'checked':''} onchange="toggleCmp('${s.s}',this)"/></td>
       <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${typeof watchlist!=='undefined'&&watchlist.includes(s.s)?'active':''}">★</button></td>
@@ -2530,9 +2532,7 @@ function renderMarketStocks(){
       <td class="${up?'up':'down'}">${chgStr2}</td>
       <td style="color:var(--t2)">${pe}</td>
       <td style="color:var(--t2)">${mktcap}</td>
-      <td class="${s.divAnnual>0?'up':''}">${divYield}</td>
-      <td style="display:none"></td>
-      <td style="display:none">—</td>
+      <td style="font-weight:700;color:${scColor}">${scStr}</td>
     </tr>`;
   }).join('');
 }
