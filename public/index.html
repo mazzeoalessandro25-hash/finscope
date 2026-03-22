@@ -2054,7 +2054,8 @@ function showPage(id,btn){
   const mobBtn=document.getElementById('mob-nb-'+id);
   if(mobBtn)mobBtn.classList.add('active');
   if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati finanziari');
-  if(id==='screener'&&Object.keys(scData).length===0)loadScreener();
+  if(id==='screener'&&dynamicStocks.length===0)loadScreener();
+  if(id==='screener'&&dynamicStocks.length>0){renderScreenerWatchlist&&renderScreenerWatchlist();renderAlerts&&renderAlerts();}
   if(id==='portafoglio')showPortfolioState();
   if(id==='alerts'){renderAlerts();checkAlerts();}
   if(id==='macro')loadMacroDashboard();
