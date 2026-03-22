@@ -4,35 +4,133 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Privacy Policy — FinScope</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
   --bg:#F0F4FA;--bd:#D8E2EF;
-  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;
+  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;--b4:#2563EB;
+  --g:#059669;--g2:#D1FAE5;--g3:#ECFDF5;
   --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
   --card:#fff;--ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
 }
-body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7}
-nav{height:56px;background:#0D1A2B;display:flex;align-items:center;padding:0 40px;gap:16px}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:56px;background:rgba(13,26,43,.97);backdrop-filter:blur(12px);
+  display:flex;align-items:center;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08)}
 .logo{font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
 .logo-dot{width:7px;height:7px;background:#34D399;border-radius:50%}
 .logo span{color:rgba(255,255,255,.5)}
-.back{color:rgba(255,255,255,.5);font-size:12px;font-family:var(--fm);text-decoration:none;margin-left:auto;transition:color .15s}
+.back{color:rgba(255,255,255,.45);font-size:12px;font-family:var(--fm);text-decoration:none;
+  margin-left:auto;transition:color .15s;display:flex;align-items:center;gap:6px}
 .back:hover{color:#fff}
-.wrap{max-width:760px;margin:0 auto;padding:64px 32px 80px}
-.tag{font-family:var(--fm);font-size:10px;color:var(--b);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
-h1{font-size:clamp(26px,3vw,34px);font-weight:800;letter-spacing:-1px;color:var(--t);margin-bottom:8px}
-.updated{font-family:var(--fm);font-size:11px;color:var(--t3);margin-bottom:40px}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:32px;margin-bottom:20px}
-h2{font-size:16px;font-weight:700;color:var(--t);margin-bottom:14px;display:flex;align-items:center;gap:10px}
-h2 .icon{font-size:18px}
-p{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:10px}
-p:last-child{margin-bottom:0}
-ul{padding-left:18px;margin:8px 0}
-li{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:6px}
-li strong{color:var(--t)}
-footer{text-align:center;padding:32px;font-size:11px;color:var(--t3);font-family:var(--fm);border-top:1px solid var(--bd)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0D1A2B 0%,#1A3460 70%,#1448A8 100%);
+  padding:56px 40px 52px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,86,196,.2),transparent 70%);pointer-events:none}
+.hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;letter-spacing:-1.2px;
+  line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);font-family:var(--fm)}
+
+/* WRAP */
+.wrap{max-width:760px;margin:0 auto;padding:48px 32px 80px}
+
+/* SUMMARY BOX */
+.summary{background:var(--g3);border:1px solid var(--g2);border-left:4px solid var(--g);
+  border-radius:14px;padding:24px 28px;margin-bottom:40px}
+.summary-label{font-family:var(--fm);font-size:10px;color:var(--g);letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.summary h2{font-size:17px;font-weight:700;color:#065F46;margin-bottom:8px}
+.summary p{font-size:13.5px;color:#065F46;line-height:1.7;margin:0}
+
+/* INDEX */
+.toc{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:22px 26px;margin-bottom:36px}
+.toc-label{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:12px}
+.toc-list{display:flex;flex-direction:column;gap:6px}
+.toc-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--b);
+  text-decoration:none;font-weight:500;transition:color .15s}
+.toc-item:hover{color:var(--b2)}
+.toc-num{font-family:var(--fm);font-size:10px;color:var(--t3);width:18px;flex-shrink:0}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;
+  padding:28px 32px;margin-bottom:20px;scroll-margin-top:72px}
+.card-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.card-icon{width:42px;height:42px;border-radius:11px;background:var(--b3);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.card-title-group{flex:1}
+.card-num{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1px;margin-bottom:3px}
+h2{font-size:16px;font-weight:700;color:var(--t);line-height:1.3}
+.legal-text{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:14px}
+.legal-text:last-child{margin-bottom:0}
+ul{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+ul:last-child{margin-bottom:0}
+li{font-size:13.5px;color:var(--t2);line-height:1.7;padding-left:20px;position:relative}
+li::before{content:'→';position:absolute;left:0;color:var(--b);font-size:12px;top:2px}
+li strong{color:var(--t);font-weight:600}
+
+/* PLAIN LANGUAGE CALLOUT */
+.plain{background:var(--b3);border-radius:10px;padding:14px 18px;margin-top:16px;
+  display:flex;align-items:flex-start;gap:10px}
+.plain-label{font-family:var(--fm);font-size:9px;color:var(--b);letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:700;white-space:nowrap;margin-top:1px;flex-shrink:0}
+.plain p{font-size:12.5px;color:var(--b2);line-height:1.65;margin:0;font-weight:500}
+
+/* PROVIDER TABLE */
+.provider-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.provider-card{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.provider-name{font-size:13px;font-weight:700;color:var(--t);margin-bottom:2px}
+.provider-role{font-size:11px;color:var(--t3);font-family:var(--fm)}
+.provider-url{font-size:11px;color:var(--b);font-family:var(--fm);text-decoration:none}
+.provider-url:hover{text-decoration:underline}
+
+/* RIGHTS GRID */
+.rights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.right-item{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.right-name{font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px}
+.right-desc{font-size:12px;color:var(--t2);line-height:1.55}
+
+/* CONTACT BOX */
+.contact-box{background:linear-gradient(135deg,#EBF1FB,#F0F4FA);border:1px solid var(--bd);
+  border-radius:14px;padding:24px;text-align:center;margin-top:32px}
+.contact-box p{font-size:14px;color:var(--t2);margin-bottom:12px}
+.contact-btn{display:inline-flex;align-items:center;gap:8px;background:var(--b);color:#fff;
+  padding:10px 24px;border-radius:9px;font-weight:700;font-size:13px;text-decoration:none;
+  transition:all .15s}
+.contact-btn:hover{background:var(--b2);transform:translateY(-1px)}
+
+/* FOOTER */
+footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px}
+.foot-logo{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.foot-logo span{color:rgba(255,255,255,.4)}
+.foot-links{display:flex;gap:20px}
+.foot-link{color:rgba(255,255,255,.35);font-size:11px;font-family:var(--fm);
+  text-decoration:none;transition:color .15s}
+.foot-link:hover{color:rgba(255,255,255,.75)}
+.foot-note{font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  nav{padding:0 20px}
+  .hero{padding:40px 20px 36px}
+  .wrap{padding:32px 16px 56px}
+  .card{padding:22px 20px}
+  .provider-grid,.rights-grid{grid-template-columns:1fr}
+  footer{padding:20px;flex-direction:column;align-items:flex-start;gap:16px}
+  .foot-links{flex-direction:column;gap:10px}
+}
 </style>
 </head>
 <body>
@@ -42,61 +140,273 @@ footer{text-align:center;padding:32px;font-size:11px;color:var(--t3);font-family
   <a href="./about.html" class="back">← Torna alla home</a>
 </nav>
 
-<div class="wrap">
-  <div class="tag">Legale</div>
-  <h1>Privacy Policy</h1>
-  <p class="updated">Ultimo aggiornamento: Marzo 2026 · v1.0</p>
-
-  <div class="card">
-    <h2><span class="icon">📋</span>Informativa generale</h2>
-    <p>Informativa sul trattamento dei dati personali ai sensi del Regolamento UE 2016/679 (GDPR).</p>
-  </div>
-
-  <div class="card">
-    <h2><span class="icon">👤</span>Titolare del trattamento</h2>
-    <p>Alessandro Mazzeo, fondatore di FinScope. Contatto tramite il sito all'indirizzo <strong>info@finscope.it</strong>.</p>
-  </div>
-
-  <div class="card">
-    <h2><span class="icon">🗂</span>Dati raccolti</h2>
-    <ul>
-      <li><strong>Email e password</strong> — per la gestione dell'account. La password è cifrata con bcrypt da Clerk (clerk.com). Non la vediamo mai in chiaro.</li>
-      <li><strong>Watchlist e portafoglio</strong> — dati inseriti volontariamente dall'utente.</li>
-      <li><strong>Log anonimi</strong> — raccolti da Vercel per il funzionamento dell'infrastruttura.</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2><span class="icon">🎯</span>Utilizzo dei dati</h2>
-    <ul>
-      <li>Accesso all'account e recupero watchlist/portafoglio</li>
-      <li>Mantenimento della sessione attiva</li>
-      <li>Non vendiamo né condividiamo dati con terze parti a scopo commerciale</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2><span class="icon">🔗</span>Provider terzi</h2>
-    <ul>
-      <li><strong>Clerk</strong> (clerk.com) — autenticazione</li>
-      <li><strong>Vercel</strong> (vercel.com) — hosting</li>
-      <li><strong>Upstash</strong> (upstash.com) — database watchlist/portafoglio</li>
-      <li><strong>Yahoo Finance</strong> — dati di mercato in sola lettura</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <h2><span class="icon">⚖️</span>I tuoi diritti (GDPR)</h2>
-    <p>Hai diritto di accesso, rettifica, cancellazione, portabilità e opposizione al trattamento. Per esercitarli, contattaci a <strong>info@finscope.it</strong>.</p>
-  </div>
-
-  <div class="card">
-    <h2><span class="icon">🍪</span>Cookie</h2>
-    <p>Solo cookie tecnici strettamente necessari al funzionamento (sessione di autenticazione). Nessun cookie di profilazione o tracciamento.</p>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Documento legale</div>
+    <h1>Privacy Policy</h1>
+    <div class="hero-sub">Ultimo aggiornamento: Marzo 2026 &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; Conforme GDPR (Reg. UE 2016/679)</div>
   </div>
 </div>
 
-<footer>© 2026 FinScope · Alessandro Mazzeo · Conforme GDPR</footer>
+<div class="wrap">
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <div class="summary-label">In breve — senza legalese</div>
+    <h2>Cosa facciamo con i tuoi dati? La risposta onesta.</h2>
+    <p>Raccogliamo solo quello che serve per farti funzionare l'account: email, password (cifrata, non la vediamo) e i dati che inserisci tu stesso (portafoglio e watchlist). Non vendiamo niente a nessuno. Non c'è nessuna pubblicità. Puoi chiedere la cancellazione di tutto in qualsiasi momento.</p>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-label">Indice</div>
+    <div class="toc-list">
+      <a href="#titolare" class="toc-item"><span class="toc-num">01</span>Titolare del trattamento</a>
+      <a href="#base" class="toc-item"><span class="toc-num">02</span>Base giuridica</a>
+      <a href="#dati" class="toc-item"><span class="toc-num">03</span>Dati raccolti</a>
+      <a href="#utilizzo" class="toc-item"><span class="toc-num">04</span>Come usiamo i dati</a>
+      <a href="#provider" class="toc-item"><span class="toc-num">05</span>Provider terzi</a>
+      <a href="#conservazione" class="toc-item"><span class="toc-num">06</span>Conservazione</a>
+      <a href="#diritti" class="toc-item"><span class="toc-num">07</span>I tuoi diritti GDPR</a>
+      <a href="#cookie" class="toc-item"><span class="toc-num">08</span>Cookie</a>
+      <a href="#contatti" class="toc-item"><span class="toc-num">09</span>Contatti</a>
+    </div>
+  </div>
+
+  <!-- 01 TITOLARE -->
+  <div class="card" id="titolare">
+    <div class="card-head">
+      <div class="card-icon">👤</div>
+      <div class="card-title-group">
+        <div class="card-num">01 — TITOLARE DEL TRATTAMENTO</div>
+        <h2>Chi è responsabile dei tuoi dati</h2>
+      </div>
+    </div>
+    <p class="legal-text">Il Titolare del trattamento ai sensi dell'art. 4 n. 7 del Reg. UE 2016/679 (GDPR) è <strong>Alessandro Mazzeo</strong>, fondatore e sviluppatore di FinScope, raggiungibile all'indirizzo e-mail <strong>info@finscope.it</strong>.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Alessandro Mazzeo è la persona fisica che gestisce FinScope. Se hai domande sui tuoi dati, lui è il punto di contatto diretto.</p>
+    </div>
+  </div>
+
+  <!-- 02 BASE GIURIDICA -->
+  <div class="card" id="base">
+    <div class="card-head">
+      <div class="card-icon">📜</div>
+      <div class="card-title-group">
+        <div class="card-num">02 — BASE GIURIDICA</div>
+        <h2>Perché siamo autorizzati a trattare i tuoi dati</h2>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Esecuzione del contratto (art. 6.1.b GDPR)</strong> — i dati di account sono necessari per fornirti il servizio.</li>
+      <li><strong>Legittimo interesse (art. 6.1.f GDPR)</strong> — i log tecnici anonimi servono a mantenere la sicurezza e il corretto funzionamento della piattaforma.</li>
+      <li><strong>Consenso (art. 6.1.a GDPR)</strong> — per qualsiasi comunicazione facoltativa via e-mail, se mai la attivassimo.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Trattiamo i tuoi dati perché sono indispensabili per farti usare FinScope. Senza email non puoi accedere; senza portafoglio salvato non hai il servizio. Niente di più.</p>
+    </div>
+  </div>
+
+  <!-- 03 DATI RACCOLTI -->
+  <div class="card" id="dati">
+    <div class="card-head">
+      <div class="card-icon">🗂️</div>
+      <div class="card-title-group">
+        <div class="card-num">03 — DATI RACCOLTI</div>
+        <h2>Cosa raccogliamo esattamente</h2>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Email</strong> — usata per l'accesso e il recupero della password. Non usata per marketing.</li>
+      <li><strong>Password</strong> — mai memorizzata in chiaro. Viene cifrata con <strong>bcrypt</strong> da Clerk prima di essere salvata. Nemmeno noi possiamo vederla.</li>
+      <li><strong>Portafoglio e watchlist</strong> — dati che inserisci tu volontariamente: ticker, quantità, prezzi di carico.</li>
+      <li><strong>Log tecnici anonimi</strong> — generati automaticamente da Vercel (IP anonimizzato, percorso richiesta, timestamp). Servono solo per la sicurezza e la diagnostica.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Raccogliamo il minimo indispensabile. Non c'è tracciamento comportamentale, nessun pixel di advertising, nessun profilo costruito su di te.</p>
+    </div>
+  </div>
+
+  <!-- 04 UTILIZZO -->
+  <div class="card" id="utilizzo">
+    <div class="card-head">
+      <div class="card-icon">🎯</div>
+      <div class="card-title-group">
+        <div class="card-num">04 — UTILIZZO DEI DATI</div>
+        <h2>Per cosa usiamo i tuoi dati</h2>
+      </div>
+    </div>
+    <ul>
+      <li>Autenticazione e accesso sicuro al tuo account</li>
+      <li>Recupero e visualizzazione di portafoglio e watchlist</li>
+      <li>Mantenimento della sessione attiva tra una visita e l'altra</li>
+      <li>Diagnostica tecnica in caso di errori o malfunzionamenti</li>
+    </ul>
+    <p class="legal-text" style="margin-top:4px"><strong>Non utilizziamo i dati per:</strong> pubblicità, profilazione, rivendita a terzi, analisi di marketing, o qualsiasi scopo diverso dalla fornitura del servizio.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>I tuoi dati servono solo a far funzionare FinScope per te. Fine.</p>
+    </div>
+  </div>
+
+  <!-- 05 PROVIDER -->
+  <div class="card" id="provider">
+    <div class="card-head">
+      <div class="card-icon">🔗</div>
+      <div class="card-title-group">
+        <div class="card-num">05 — PROVIDER TERZI</div>
+        <h2>Servizi esterni che utilizziamo</h2>
+      </div>
+    </div>
+    <p class="legal-text">I seguenti fornitori trattano dati per conto di FinScope in qualità di Responsabili del trattamento (art. 28 GDPR). Tutti operano con adeguati livelli di protezione.</p>
+    <div class="provider-grid">
+      <div class="provider-card">
+        <div class="provider-name">Clerk</div>
+        <div class="provider-role">Autenticazione &amp; gestione account</div>
+        <a href="https://clerk.com/privacy" target="_blank" class="provider-url">clerk.com/privacy →</a>
+      </div>
+      <div class="provider-card">
+        <div class="provider-name">Vercel</div>
+        <div class="provider-role">Hosting e infrastruttura</div>
+        <a href="https://vercel.com/legal/privacy-policy" target="_blank" class="provider-url">vercel.com/legal →</a>
+      </div>
+      <div class="provider-card">
+        <div class="provider-name">Upstash</div>
+        <div class="provider-role">Database portafoglio &amp; watchlist</div>
+        <a href="https://upstash.com/trust/privacy.pdf" target="_blank" class="provider-url">upstash.com/trust →</a>
+      </div>
+      <div class="provider-card">
+        <div class="provider-name">Yahoo Finance</div>
+        <div class="provider-role">Dati di mercato (sola lettura)</div>
+        <a href="https://legal.yahoo.com/us/en/yahoo/privacy/index.html" target="_blank" class="provider-url">legal.yahoo.com →</a>
+      </div>
+    </div>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Usiamo strumenti affidabili e diffusi nel settore. Nessuno di questi ha accesso a dati che non servano strettamente al proprio compito specifico.</p>
+    </div>
+  </div>
+
+  <!-- 06 CONSERVAZIONE -->
+  <div class="card" id="conservazione">
+    <div class="card-head">
+      <div class="card-icon">🗓️</div>
+      <div class="card-title-group">
+        <div class="card-num">06 — CONSERVAZIONE</div>
+        <h2>Per quanto tempo conserviamo i dati</h2>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Dati di account</strong> — conservati per tutta la durata dell'account attivo.</li>
+      <li><strong>Portafoglio e watchlist</strong> — conservati fino alla cancellazione esplicita da parte dell'utente o alla chiusura dell'account.</li>
+      <li><strong>Log tecnici anonimi</strong> — conservati da Vercel per un massimo di 30 giorni, poi eliminati automaticamente.</li>
+    </ul>
+    <p class="legal-text">Alla cancellazione dell'account, tutti i dati personali vengono eliminati entro 30 giorni, salvo obblighi di legge.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Teniamo i tuoi dati finché usi il servizio. Se cancelli l'account, cancelliamo tutto entro un mese.</p>
+    </div>
+  </div>
+
+  <!-- 07 DIRITTI GDPR -->
+  <div class="card" id="diritti">
+    <div class="card-head">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title-group">
+        <div class="card-num">07 — DIRITTI DELL'UTENTE</div>
+        <h2>I tuoi diritti garantiti dal GDPR</h2>
+      </div>
+    </div>
+    <div class="rights-grid">
+      <div class="right-item">
+        <div class="right-name">Accesso (art. 15)</div>
+        <div class="right-desc">Puoi richiedere una copia di tutti i dati che abbiamo su di te.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-name">Rettifica (art. 16)</div>
+        <div class="right-desc">Puoi correggere dati inesatti o incompleti.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-name">Cancellazione (art. 17)</div>
+        <div class="right-desc">Puoi chiedere di eliminare tutti i tuoi dati ("diritto all'oblio").</div>
+      </div>
+      <div class="right-item">
+        <div class="right-name">Portabilità (art. 20)</div>
+        <div class="right-desc">Puoi ricevere i tuoi dati in formato leggibile e trasferirli altrove.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-name">Opposizione (art. 21)</div>
+        <div class="right-desc">Puoi opporti al trattamento basato su legittimo interesse.</div>
+      </div>
+      <div class="right-item">
+        <div class="right-name">Limitazione (art. 18)</div>
+        <div class="right-desc">Puoi chiedere di bloccare temporaneamente il trattamento.</div>
+      </div>
+    </div>
+    <p class="legal-text">Per esercitare qualsiasi diritto scrivi a <strong>info@finscope.it</strong>. Risponderemo entro 30 giorni come previsto dal GDPR. Hai anche il diritto di proporre reclamo al Garante per la Protezione dei Dati Personali (garante.it).</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Hai il controllo completo sui tuoi dati. Basta una email per richiedere qualsiasi cosa: copia, modifica o cancellazione totale.</p>
+    </div>
+  </div>
+
+  <!-- 08 COOKIE -->
+  <div class="card" id="cookie">
+    <div class="card-head">
+      <div class="card-icon">🍪</div>
+      <div class="card-title-group">
+        <div class="card-num">08 — COOKIE</div>
+        <h2>Cosa sono e quali usiamo</h2>
+      </div>
+    </div>
+    <ul>
+      <li><strong>Cookie tecnici di sessione</strong> — gestiti da Clerk, necessari per mantenere attivo il login. Senza di essi il servizio non funziona.</li>
+      <li><strong>Cookie di profilazione</strong> — <strong>nessuno</strong>. Non tracciamo le tue abitudini di navigazione.</li>
+      <li><strong>Cookie di terze parti per advertising</strong> — <strong>nessuno</strong>. Non c'è nessun pixel di Facebook, Google Ads o simili.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Solo il cookie che ti tiene loggato. Nient'altro. Non vedrai pubblicità basata sulla tua navigazione su FinScope.</p>
+    </div>
+  </div>
+
+  <!-- 09 CONTATTI -->
+  <div class="card" id="contatti">
+    <div class="card-head">
+      <div class="card-icon">✉️</div>
+      <div class="card-title-group">
+        <div class="card-num">09 — CONTATTI</div>
+        <h2>Come raggiungerci</h2>
+      </div>
+    </div>
+    <p class="legal-text">Per qualsiasi domanda relativa a questa Privacy Policy o per esercitare i tuoi diritti, contatta il Titolare del trattamento:</p>
+    <ul>
+      <li><strong>Email</strong> — info@finscope.it (risposta entro 24h in orari lavorativi)</li>
+      <li><strong>Oggetto consigliato</strong> — "Richiesta GDPR – [tipo di richiesta]"</li>
+    </ul>
+  </div>
+
+  <!-- CONTACT CTA -->
+  <div class="contact-box">
+    <p>Hai una domanda sulla tua privacy o vuoi esercitare i tuoi diritti?</p>
+    <a href="mailto:info@finscope.it?subject=Richiesta GDPR" class="contact-btn">✉ Scrivici a info@finscope.it</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-logo">Fin<span>Scope</span></div>
+  <div class="foot-links">
+    <a href="./about.html" class="foot-link">Home</a>
+    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="mailto:info@finscope.it" class="foot-link">Contatti</a>
+  </div>
+  <div class="foot-note">© 2026 Alessandro Mazzeo · Conforme GDPR · v1.0</div>
+</footer>
 
 </body>
 </html>
