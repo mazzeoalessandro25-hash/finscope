@@ -2387,124 +2387,221 @@ async function loadCrypto(){
   }
 }
 
-/* ── SCREENER ── */
-let scSparkData={};
-async function loadScreener(){
-  const allS=STOCKS.concat(customStocks);
-  scData={};scSparkData={};
-  document.getElementById('sc-body').innerHTML='<tr><td colspan="13" class="ld">Caricamento prezzi reali (0/'+allS.length+')...</td></tr>';
-  const BATCH=12;
-  let loaded=0;
-  for(let i=0;i<allS.length;i+=BATCH){
-    const batch=allS.slice(i,i+BATCH);
-    await Promise.all(batch.map(async s=>{
-      const [d,spark]=await Promise.all([api(s.s),fetchSparkData(s.s)]);
-      if(d)scData[s.s]=d;
-      if(spark.length)scSparkData[s.s]=spark;
-      loaded++;
-    }));
-    document.getElementById('sc-body').innerHTML='<tr><td colspan="13" class="ld">Caricamento prezzi reali ('+loaded+'/'+allS.length+')...</td></tr>';
-    applyF();
-  }
-  loadSummariesBg();
+/* ══════════════════════════════════════════════════════════
+   SCREENER — Indici mondiali via FMP
+   ══════════════════════════════════════════════════════════ */
+
+/* Seleziona indice */
+function setScreenerIndex(idx, btn){
+  currentIndex=idx;
+  document.querySelectorAll('.sc-idx-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const isAll=idx==='all';
+  document.getElementById('sc-country').style.display    = isAll?'':'none';
+  document.getElementById('sc-mktcap-min').style.display = isAll?'':'none';
+  document.getElementById('sc-div-min').style.display    = isAll?'':'none';
+  document.getElementById('sc-load-wrap').style.display  = isAll?'block':'none';
+  document.getElementById('sc-th-spark').style.display='none';
+  document.getElementById('sc-th-score').style.display='none';
+  hideSearchDropdown();
+  dynamicStocks=[];screenerPage=0;
+  loadMarketScreener(true);
 }
-async function loadSummariesBg(){
-  if(scSummaryLoading)return;
-  scSummaryLoading=true;
-  const allS=STOCKS.concat(customStocks);
-  for(let i=0;i<allS.length;i+=3){
-    // Pausa completa mentre stock detail è aperto (evita rate limiting su Yahoo)
-    while(sdSym) await new Promise(r=>setTimeout(r,600));
-    const batch=allS.slice(i,i+3);
-    await Promise.all(batch.map(async s=>{
-      const sd=await api(s.s,'summary');
-      if(sd)scSummary[s.s]=sd;
-    }));
-    applyF();
-    await new Promise(r=>setTimeout(r,400));
-  }
-  scSummaryLoading=false;
+
+function onFilterChange(){
+  if(currentIndex==='all'){ dynamicStocks=[];screenerPage=0;loadMarketScreener(true); }
+  else renderMarketStocks();
 }
-function applyF(){
-  const sq=(document.getElementById('fq').value||'').toUpperCase();
-  const ss=document.getElementById('fs').value,st=document.getElementById('ft').value,sm=document.getElementById('fm2').value;
-  const fcap=document.getElementById('fcap').value,fdiv=document.getElementById('fdiv').value;
-  const allS=customStocks.concat(STOCKS);
-  let list=allS.filter(s=>{
-    if(sq&&!s.s.includes(sq)&&!s.n.toUpperCase().includes(sq))return false;
-    if(ss&&s.sec!==ss)return false;
-    if(st&&s.t!==st)return false;
-    if(sm&&s.mkt!==sm)return false;
-    if(fcap&&scSummary[s.s]){
-      const cap=scSummary[s.s].marketCap;
-      if(cap){if(fcap==='large'&&cap<10e9)return false;if(fcap==='mid'&&(cap<2e9||cap>=10e9))return false;if(fcap==='small'&&cap>=2e9)return false;}
-    }
-    if(fdiv&&scSummary[s.s]){
-      const dy=scSummary[s.s].divYield||0;
-      if(fdiv==='yes'&&dy<=0)return false;
-      if(fdiv==='no'&&dy>0)return false;
-    }
+
+async function loadMarketScreener(reset=true){
+  if(reset){ dynamicStocks=[];screenerPage=0; }
+  const body=document.getElementById('sc-body');
+  const isAll=currentIndex==='all';
+  if(reset) body.innerHTML='<tr><td colspan="15" class="ld">Caricamento in corso…</td></tr>';
+  const loadBtn=document.getElementById('sc-load-btn');
+  if(loadBtn){loadBtn.disabled=true;loadBtn.textContent='Caricamento…';}
+
+  let url;
+  if(isAll){
+    const params=new URLSearchParams({limit:50});
+    const sector=document.getElementById('fs').value;
+    const country=document.getElementById('sc-country').value;
+    const mktcapMin=document.getElementById('sc-mktcap-min').value;
+    const divMin=document.getElementById('sc-div-min').value;
+    if(sector)   params.set('sector',sector);
+    if(country)  params.set('country',country);
+    if(mktcapMin)params.set('marketCapMin',mktcapMin);
+    if(divMin)   params.set('dividendMin',divMin);
+    url='/api/screener?'+params.toString();
+  } else {
+    const params=new URLSearchParams({index:currentIndex});
+    const sector=document.getElementById('fs').value;
+    if(sector) params.set('sector',sector);
+    url='/api/screener?'+params.toString();
+  }
+
+  let stocks=[];
+  try{
+    const r=await fetch(url);
+    const data=await r.json();
+    if(!r.ok) throw new Error(data.error||'Errore '+r.status);
+    stocks=data.stocks||[];
+  }catch(e){
+    body.innerHTML=`<tr><td colspan="15"><div class="sc-market-err">⚠ ${e.message}<br><span style="font-size:10px;color:var(--t3)">Verifica FMP_API_KEY su Vercel → Settings → Environment Variables</span></div></td></tr>`;
+    if(loadBtn){loadBtn.disabled=false;loadBtn.textContent='Riprova';}
+    return;
+  }
+
+  if(stocks.length>0 && stocks[0].price==null){
+    const CHUNK=200;
+    const chunks=[];
+    for(let i=0;i<stocks.length;i+=CHUNK) chunks.push(stocks.slice(i,i+CHUNK));
+    const qMaps=await Promise.all(chunks.map(async chunk=>{
+      try{
+        const symStr=chunk.map(s=>s.s).join(',');
+        const r=await fetch('/api/screener?symbols='+encodeURIComponent(symStr));
+        if(!r.ok) return {};
+        const qd=await r.json();
+        const m={};(qd.quotes||[]).forEach(q=>{m[q.s]=q;});return m;
+      }catch{return {};}
+    }));
+    const qMap=Object.assign({},...qMaps);
+    stocks.forEach(s=>{
+      const q=qMap[s.s];
+      if(q){s.price=q.price??null;s.prev=q.prev??null;s.chg=q.chg??null;s.pe=q.pe??null;s.marketCap=q.marketCap??null;s.eps=q.eps??null;}
+    });
+  }
+
+  if(isAll){
+    dynamicStocks=[...dynamicStocks,...stocks];
+    screenerPage++;
+    screenerHasMore=stocks.length>=50;
+  } else {
+    dynamicStocks=stocks;
+    screenerHasMore=false;
+  }
+
+  renderMarketStocks();
+  const status=document.getElementById('sc-market-status');
+  if(status) status.textContent=`${dynamicStocks.length} titoli · fonte: Financial Modeling Prep`;
+  if(loadBtn){loadBtn.disabled=!screenerHasMore;loadBtn.textContent=screenerHasMore?'Mostra altri 50':'Fine risultati';}
+  if(typeof renderScreenerWatchlist==='function') renderScreenerWatchlist();
+  if(typeof renderAlerts==='function') renderAlerts();
+}
+
+async function loadMoreScreener(){ await loadMarketScreener(false); }
+
+function renderMarketStocks(){
+  const q=(document.getElementById('fq').value||'').toUpperCase();
+  const sec=document.getElementById('fs').value;
+  let list=dynamicStocks.filter(s=>{
+    if(q&&!s.s.includes(q)&&!s.n.toUpperCase().includes(q)) return false;
+    if(sec&&s.sec!==sec) return false;
     return true;
   });
   list=[...list].sort((a,b)=>{
-    let av=0,bv=0;
-    if(sortKey==='s'){return a.s>b.s?sortDir:-sortDir;}
-    if(sortKey==='n'){return a.n>b.n?sortDir:-sortDir;}
-    if(sortKey==='price'){av=scData[a.s]?.price||0;bv=scData[b.s]?.price||0;}
-    else if(sortKey==='chg'){const da=scData[a.s],db=scData[b.s];av=da?chgPct(da.price,da.prev)||0:0;bv=db?chgPct(db.price,db.prev)||0:0;}
-    else if(sortKey==='pe'){av=scSummary[a.s]?.pe>0?scSummary[a.s].pe:0;bv=scSummary[b.s]?.pe>0?scSummary[b.s].pe:0;}
-    else if(sortKey==='cap'){av=scSummary[a.s]?.marketCap||0;bv=scSummary[b.s]?.marketCap||0;}
-    else if(sortKey==='div'){av=scSummary[a.s]?.divYield||0;bv=scSummary[b.s]?.divYield||0;}
-    else if(sortKey==='score'){
-      av=scSummary[a.s]?calcFinEdgeScore(scSummary[a.s],scData[a.s]).total||0:a.score||0;
-      bv=scSummary[b.s]?calcFinEdgeScore(scSummary[b.s],scData[b.s]).total||0:b.score||0;
-    } else {av=a[sortKey]||0;bv=b[sortKey]||0;}
+    if(sortKey==='s') return(a.s>b.s?1:-1)*sortDir;
+    if(sortKey==='n') return(a.n>b.n?1:-1)*sortDir;
+    const av=sortKey==='price'?a.price||0:sortKey==='chg'?a.chg||0:sortKey==='pe'?a.pe||0:sortKey==='mktcap'?a.marketCap||0:sortKey==='div'?(a.divAnnual&&a.price?a.divAnnual/a.price*100:0):0;
+    const bv=sortKey==='price'?b.price||0:sortKey==='chg'?b.chg||0:sortKey==='pe'?b.pe||0:sortKey==='mktcap'?b.marketCap||0:sortKey==='div'?(b.divAnnual&&b.price?b.divAnnual/b.price*100:0):0;
     return(av>bv?1:-1)*sortDir;
   });
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
-  if(!list.length){body.innerHTML='<tr><td colspan="13" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
-  const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺'};
+  if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:24px;color:var(--t3);font-size:12px">Nessun risultato · Cambia indice o modifica i filtri</td></tr>';return;}
+  const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺',AS:'🇯🇵',CA:'🇨🇦'};
   body.innerHTML=list.map(s=>{
-    const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
-    const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
-    const sd=scSummary[s.s];
-    const peCell=sd?(sd.pe&&sd.pe>0?fmt(sd.pe,1):'—'):'<span class="sc-load">···</span>';
-    const capCell=sd?fmtLg(sd.marketCap):'<span class="sc-load">···</span>';
-    const divCell=sd?(sd.divYield&&sd.divYield>0?fmt(sd.divYield*100,1)+'%':'—'):'<span class="sc-load">···</span>';
-    let scoreCell;
-    if(sd){
-      const fss=calcFinEdgeScore(sd,d);const sc=fss.total;const col=getScoreColor(sc);
-      scoreCell=sc!=null?`<div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round(sc*.44)}px;background:${col}"></div></div><span style="font-size:11px;font-weight:700;color:${col}">${sc}</span></div>`:'—';
-    } else {
-      scoreCell=`<div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round((s.score||50)*.44)}px"></div></div><span style="font-size:11px;color:var(--t3)">${s.score||'···'}</span></div>`;
-    }
-    const price=d?(d.currency==='EUR'?'€':'$')+fmt(d.price,d.price<10?4:2):'—';
-    return`<tr onclick="openFA('${s.s}')" ${s.custom?'class="sc-custom-row"':''}>
-      <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${watchlist.includes(s.s)?'active':''}">★</button></td>
-      <td style="font-weight:700">${s.s}${s.custom?'<span class="sc-custom-badge">+</span>':''}</td>
-      <td style="color:var(--t2);max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.n}</td>
-      <td>${flags[s.mkt]||'🌐'}</td>
-      <td style="color:var(--t3);font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.sec}</td>
-      <td><span class="tag ${s.t}">${s.t}</span></td>
-      <td style="font-weight:600">${price}</td>
-      <td class="${up?'up':'down'}">${chgStr(c)}</td>
-      <td><svg id="${spId}" width="72" height="30"></svg></td>
-      <td style="color:var(--t2)">${peCell}</td>
-      <td style="color:var(--t2)">${capCell}</td>
-      <td class="${sd&&sd.divYield>0?'up':''}">${divCell}</td>
-      <td>${scoreCell}</td>
+    const up=s.chg==null||s.chg>=0;
+    const cur=s.mkt==='US'?'$':s.mkt==='IT'||s.mkt==='EU'?'€':s.s.endsWith('.L')?'£':'';
+    const priceStr=s.price!=null?cur+fmt(s.price,s.price>=1000?0:2):'—';
+    const chgStr2=s.chg!=null?(s.chg>=0?'+':'')+fmt(s.chg,2)+'%':'—';
+    const pe=s.pe?fmt(s.pe,1):'—';
+    const mktcap=s.marketCap?fmtLg(s.marketCap):'—';
+    const divYield=s.divAnnual&&s.price&&s.price>0?fmt(s.divAnnual/s.price*100,2)+'%':'—';
+    const logo=typeof logoHtml==='function'?logoHtml(s.s,s.n):'';
+    return`<tr onclick="openFA('${s.s}')">
+      <td onclick="event.stopPropagation()"><input type="checkbox" class="cmp-cb" ${typeof cmpList!=='undefined'&&cmpList.includes(s.s)?'checked':''} onchange="toggleCmp('${s.s}',this)"/></td>
+      <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${typeof watchlist!=='undefined'&&watchlist.includes(s.s)?'active':''}">★</button></td>
+      <td onclick="event.stopPropagation()">${logo}</td>
+      <td style="font-weight:600">${s.s}</td>
+      <td style="color:var(--t2)">${s.n}</td>
+      <td>${flags[s.mkt]||''}</td>
+      <td style="color:var(--t3);font-size:11px">${s.sec||'—'}</td>
+      <td></td>
+      <td style="font-weight:600">${priceStr}</td>
+      <td class="${up?'up':'down'}">${chgStr2}</td>
+      <td style="color:var(--t2)">${pe}</td>
+      <td style="color:var(--t2)">${mktcap}</td>
+      <td class="${s.divAnnual>0?'up':''}">${divYield}</td>
+      <td style="display:none"></td>
+      <td style="display:none">—</td>
     </tr>`;
   }).join('');
-  requestAnimationFrame(()=>{
-    list.forEach(s=>{
-      const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
-      const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
-      if(scSparkData[s.s])drawSparkline(spId,scSparkData[s.s],up);
-    });
-  });
 }
-function sortTbl(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}applyF();}
+
+function onFqInput(){
+  const q=(document.getElementById('fq').value||'').trim();
+  renderMarketStocks();
+  if(q.length>=2){
+    clearTimeout(searchDebounce);
+    searchDebounce=setTimeout(()=>fetchSearchSuggestions(q),320);
+  } else {
+    hideSearchDropdown();
+  }
+}
+
+async function fetchSearchSuggestions(q){
+  const dd=document.getElementById('search-dropdown');
+  if(!dd) return;
+  dd.innerHTML='<div class="sd-hint">Ricerca in corso…</div>';
+  dd.classList.add('open');
+  try{
+    const r=await fetch('/api/screener?q='+encodeURIComponent(q));
+    const data=await r.json();
+    if(!data.quotes?.length){dd.innerHTML='<div class="sd-hint">Nessun risultato per "'+q+'"</div>';return;}
+    const lh=typeof logoHtmlSm==='function'?logoHtmlSm:()=>'';
+    dd.innerHTML=data.quotes.map(item=>`
+      <div class="sd-item" onclick="selectSearchTicker('${item.symbol}','${(item.name||'').replace(/['"]/g,'')}','${(item.exchange||'').replace(/'/g,'')}')">
+        ${lh(item.symbol,item.name||item.symbol)}
+        <span class="sd-sym">${item.symbol}</span>
+        <span class="sd-name">${item.name||item.symbol}</span>
+        <span class="sd-ex">${item.exchange||''}</span>
+      </div>`).join('');
+  }catch{dd.innerHTML='<div class="sd-hint">Errore di rete</div>';}
+}
+
+function hideSearchDropdown(){
+  const dd=document.getElementById('search-dropdown');
+  if(dd){dd.classList.remove('open');dd.innerHTML='';}
+}
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.search-wrap')) hideSearchDropdown();
+});
+
+async function selectSearchTicker(symbol,name,exchange){
+  hideSearchDropdown();
+  document.getElementById('fq').value=symbol;
+  if(!dynamicStocks.find(s=>s.s===symbol)){
+    const [d,sd]=await Promise.all([api(symbol),api(symbol,'summary')]);
+    if(d){
+      const mkt=symbol.endsWith('.MI')?'IT':symbol.endsWith('.PA')||symbol.endsWith('.DE')||symbol.endsWith('.L')||symbol.endsWith('.SW')?'EU':'US';
+      dynamicStocks.unshift({
+        s:symbol,n:name||symbol,sec:sd?.sector||'—',mkt,country:'',exchange,
+        price:d.price,prev:d.prev,chg:d.price&&d.prev?(d.price-d.prev)/d.prev*100:null,
+        pe:sd?.pe||null,marketCap:sd?.marketCap||null,
+        divAnnual:sd?.dividend&&d.price?sd.dividend*d.price:null,
+      });
+    }
+  }
+  renderMarketStocks();
+  setTimeout(()=>openFA(symbol),80);
+}
+
+async function loadScreener(){ await loadMarketScreener(true); }
+function applyF(){ renderMarketStocks(); }
+
+function sortTbl(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}renderMarketStocks();}
 function toggleWl(sym,el){
   const i=watchlist.indexOf(sym);if(i===-1)watchlist.push(sym);else watchlist.splice(i,1);
   localStorage.setItem('fs_wl',JSON.stringify(watchlist));
@@ -2512,34 +2609,6 @@ function toggleWl(sym,el){
 }
 function openFA(sym){
   openStockDetail(sym);
-}
-async function addCustomTicker(){
-  const inp=document.getElementById('custom-ticker-inp');
-  const msg=document.getElementById('custom-ticker-msg');
-  const btn=document.getElementById('custom-ticker-btn');
-  const sym=inp.value.trim().toUpperCase().replace(/[^A-Z0-9.\-^=]/g,'');
-  if(!sym)return;
-  if(STOCKS.some(s=>s.s===sym)||customStocks.some(s=>s.s===sym)){
-    msg.style.color='var(--o)';msg.textContent=sym+' già presente nella lista';
-    inp.value='';setTimeout(()=>msg.textContent='',2500);return;
-  }
-  btn.textContent='···';btn.disabled=true;msg.textContent='';
-  const d=await api(sym);
-  if(!d||!d.price){
-    msg.style.color='var(--r)';msg.textContent='Ticker "'+sym+'" non trovato — verifica il simbolo';
-    btn.textContent='+ Aggiungi';btn.disabled=false;
-    setTimeout(()=>msg.textContent='',3500);return;
-  }
-  const mkt=sym.endsWith('.MI')?'IT':sym.includes('.PA')||sym.includes('.DE')||sym.includes('.AS')||sym.includes('.SW')||sym.includes('.CO')?'EU':'US';
-  customStocks.unshift({s:sym,n:d.name||sym,sec:'—',t:'growth',mkt,custom:true});
-  scData[sym]=d;
-  msg.style.color='var(--g)';msg.textContent=sym+' aggiunto con successo';
-  setTimeout(()=>msg.textContent='',2500);
-  btn.textContent='+ Aggiungi';btn.disabled=false;
-  inp.value='';
-  applyF();
-  fetchSparkData(sym).then(spark=>{if(spark.length){scSparkData[sym]=spark;applyF();}});
-  api(sym,'summary').then(sd=>{if(sd){scSummary[sym]=sd;applyF();}});
 }
 
 /* ── SIMULATORE ── */
