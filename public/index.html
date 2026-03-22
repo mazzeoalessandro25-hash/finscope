@@ -2482,8 +2482,6 @@ async function loadMarketScreener(reset=true){
       renderMarketStocks();
     }
   }
-  const status=document.getElementById('sc-market-status');
-  if(status) status.textContent=`${dynamicStocks.length} titoli`;
   if(loadBtn){loadBtn.disabled=!screenerHasMore;loadBtn.textContent=screenerHasMore?'Mostra altri 50':'Fine risultati';}
   if(typeof renderScreenerWatchlist==='function') renderScreenerWatchlist();
   if(typeof renderAlerts==='function') renderAlerts();
