@@ -1677,7 +1677,7 @@ async function renderScreenerWatchlist(){
   const rows=await Promise.all(watchlist.map(async sym=>{
     let d=scData[sym];
     if(!d)d=await api(sym); // fetch se non in cache
-    const stock=STOCKS.find(x=>x.s===sym);
+    const stock=dynamicStocks.find(x=>x.s===sym)||STOCKS.find(x=>x.s===sym);
     const name=stock?.n||sym;
     const c=d?chgPct(d.price,d.prev):null;
     const up=c==null||c>=0;
