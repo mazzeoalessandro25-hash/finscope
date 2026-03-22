@@ -2467,6 +2467,7 @@ async function loadMarketScreener(reset=true){
     for(let i=0;i<dynamicStocks.length;i+=CHUNK) chunks.push(dynamicStocks.slice(i,i+CHUNK));
     const qMap={};
     for(let i=0;i<chunks.length;i+=CONCURRENT){
+      if(loadId!==_screenerLoadId) return; // utente ha cambiato indice
       const batch=chunks.slice(i,i+CONCURRENT);
       const maps=await Promise.all(batch.map(async chunk=>{
         try{
