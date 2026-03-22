@@ -649,13 +649,14 @@ body.dark .sc-tab.active{background:var(--s3)}
 <!-- ═══ SCREENER ═══ -->
 <div class="page" id="page-screener">
   <div class="pg-title">Stock Screener</div>
-  <div class="pg-sub">Oltre 30 titoli con prezzi live · Clicca un titolo per l'analisi fondamentale</div>
+  <div class="pg-sub">Oltre 60 titoli — S&P 500, Europa, Italia · Clicca un titolo per l'analisi fondamentale · ★ per aggiungere alla watchlist</div>
   <div class="sc-f">
     <select class="fsel" id="fs" onchange="applyF()">
       <option value="">Tutti i settori</option>
       <option>Technology</option><option>Energy</option><option>Financial Services</option>
       <option>Healthcare</option><option>Industrials</option><option>Consumer Cyclical</option>
       <option>Consumer Defensive</option><option>Utilities</option>
+      <option>Basic Materials</option><option>Communication Services</option>
     </select>
     <select class="fsel" id="ft" onchange="applyF()">
       <option value="">Tutti i tipi</option>
@@ -669,11 +670,65 @@ body.dark .sc-tab.active{background:var(--s3)}
     <button class="sc-btn" onclick="loadScreener()">↻ Aggiorna</button>
     <span class="sc-cnt" id="sc-cnt">—</span>
   </div>
-  <div class="tbl-wrap">
-    <table class="tbl">
-      <thead><tr><th title="Seleziona per confronto">⚖</th><th></th><th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th><th>MKT</th><th>SETTORE</th><th>TIPO</th><th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th><th>5 GIORNI</th><th onclick="sortTbl('score')">SCORE ↕</th></tr></thead>
-      <tbody id="sc-body"><tr><td colspan="9" class="ld">Caricamento...</td></tr></tbody>
+  <div class="tbl-wrap" style="overflow-x:auto">
+    <table class="tbl" style="min-width:1000px">
+      <thead><tr>
+        <th title="Seleziona per confronto">⚖</th>
+        <th title="Aggiungi a watchlist">★</th>
+        <th></th>
+        <th onclick="sortTbl('s')">TICKER ↕</th>
+        <th onclick="sortTbl('n')">NOME ↕</th>
+        <th>MKT</th>
+        <th>SETTORE</th>
+        <th>TIPO</th>
+        <th onclick="sortTbl('price')">PREZZO ↕</th>
+        <th onclick="sortTbl('chg')">VAR 1G ↕</th>
+        <th onclick="sortTbl('pe')">P/E ↕</th>
+        <th onclick="sortTbl('mktcap')">MKT CAP ↕</th>
+        <th onclick="sortTbl('div')">DIV% ↕</th>
+        <th>5G</th>
+        <th onclick="sortTbl('score')">SCORE ↕</th>
+      </tr></thead>
+      <tbody id="sc-body"><tr><td colspan="15" class="ld">Caricamento...</td></tr></tbody>
     </table>
+  </div>
+
+  <!-- WATCHLIST + ALERT PANEL integrati nello Screener -->
+  <div class="sc-panel" id="sc-bottom-panel">
+    <div class="sc-tabs">
+      <button class="sc-tab active" id="sct-wl" onclick="switchScTab('wl',this)">★ Watchlist</button>
+      <button class="sc-tab" id="sct-al" onclick="switchScTab('al',this)">🔔 Alert Prezzi</button>
+    </div>
+    <!-- Tab Watchlist -->
+    <div id="sc-tab-wl">
+      <div class="wl-grid" id="sc-wl-content">
+        <div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nella tabella</div>
+      </div>
+    </div>
+    <!-- Tab Alert -->
+    <div id="sc-tab-al" style="display:none">
+      <div class="alert-form">
+        <div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px">TICKER</div>
+          <input class="alert-inp" id="al-sym" type="text" placeholder="Es. AAPL" maxlength="12" style="width:120px;text-transform:uppercase"/>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px">CONDIZIONE</div>
+          <select class="alert-sel" id="al-type">
+            <option value="above">▲ Supera</option>
+            <option value="below">▼ Scende sotto</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px">PREZZO TARGET</div>
+          <input class="alert-inp" id="al-price" type="number" placeholder="0.00" min="0" step="any" style="width:130px"/>
+        </div>
+        <button class="alert-add-btn" onclick="addAlert()" style="margin-top:20px">+ Aggiungi alert</button>
+      </div>
+      <div class="alert-grid" id="sc-al-content">
+        <div class="ld">Nessun alert impostato</div>
+      </div>
+    </div>
   </div>
 </div>
 
