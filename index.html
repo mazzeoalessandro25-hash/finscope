@@ -1647,6 +1647,7 @@ async function selectSearchTicker(symbol,name,exchange){
 /* ── SCREENER ── */
 let scSparkData={};
 async function loadScreener(){
+  if(screenerMode==='market'){ await loadMarketScreener(true); return; }
   document.getElementById('sc-body').innerHTML='<tr><td colspan="15" class="ld">Caricamento prezzi reali...</td></tr>';
   // Fetch quote + sparkline in parallelo per tutti i titoli
   // Summary (P/E, mktcap, dividend) caricato in background senza bloccare la tabella
