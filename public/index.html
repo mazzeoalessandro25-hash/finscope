@@ -1996,6 +1996,8 @@ const ALLOC={
 };
 
 let scData={}, scSummary={}, customStocks=[], scSummaryLoading=false, _lastPortQuotes=[];
+let currentIndex='sp500';
+let dynamicStocks=[], screenerPage=0, screenerHasMore=false, searchDebounce=null;
 let _portHeroUSD=0, _portHeroEUR=0, _portCurrView='EUR', _lastFxRate=1.08;
 let portSortKey='default';
 let _portActiveTab='analisi';
