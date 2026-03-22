@@ -1372,59 +1372,81 @@ html.dark .auth-box{background:#1e293b}
 <!-- ═══ SCREENER ═══ -->
 <div class="page" id="page-screener">
   <div class="pg-title">Stock Screener</div>
-  <div class="pg-sub">Oltre 150 titoli con prezzi live · Score dinamico da dati reali · Clicca per l'analisi fondamentale</div>
+  <div class="pg-sub">Indici mondiali con prezzi live · Fonte: Financial Modeling Prep · Clicca per l'analisi fondamentale</div>
+
+  <!-- INDICI MONDIALI -->
+  <div class="sc-idx-bar" id="sc-idx-bar">
+    <button class="sc-idx-btn active" onclick="setScreenerIndex('sp500',this)">🇺🇸 S&amp;P 500</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('nasdaq100',this)">🇺🇸 NASDAQ 100</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('dowjones',this)">🇺🇸 Dow Jones 30</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('ftsemib',this)">🇮🇹 FTSE MIB</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('dax',this)">🇩🇪 DAX 40</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('cac40',this)">🇫🇷 CAC 40</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('ftse100',this)">🇬🇧 FTSE 100</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('eurostoxx50',this)">🇪🇺 Euro Stoxx 50</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('ibex35',this)">🇪🇸 IBEX 35</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('smi',this)">🇨🇭 SMI</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('nikkei225',this)">🇯🇵 Nikkei 225</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('tsx',this)">🇨🇦 TSX</button>
+    <button class="sc-idx-btn" onclick="setScreenerIndex('all',this)">🌐 Tutti</button>
+  </div>
+
   <div class="sc-f">
-    <select class="fsel" id="fs" onchange="applyF()">
+    <select class="fsel" id="fs" onchange="onFilterChange()">
       <option value="">Tutti i settori</option>
       <option>Technology</option><option>Financial Services</option><option>Healthcare</option>
       <option>Consumer Cyclical</option><option>Consumer Defensive</option><option>Industrials</option>
       <option>Energy</option><option>Communication Services</option><option>Utilities</option>
       <option>Real Estate</option>
     </select>
-    <select class="fsel" id="ft" onchange="applyF()">
-      <option value="">Tutti i tipi</option>
-      <option value="growth">Growth</option><option value="value">Value</option><option value="dividend">Dividend</option>
-    </select>
-    <select class="fsel" id="fm2" onchange="applyF()">
-      <option value="">Tutti i mercati</option>
+    <select class="fsel" id="sc-country" style="display:none" onchange="onFilterChange()">
+      <option value="">Tutti i paesi</option>
       <option value="US">🇺🇸 USA</option><option value="IT">🇮🇹 Italia</option>
       <option value="EU">🇪🇺 Europa</option><option value="UK">🇬🇧 UK</option>
-      <option value="AS">🌏 Asia</option>
+      <option value="JP">🇯🇵 Giappone</option><option value="CA">🇨🇦 Canada</option>
     </select>
-    <select class="fsel" id="fcap" onchange="applyF()">
+    <select class="fsel" id="sc-mktcap-min" style="display:none" onchange="onFilterChange()">
       <option value="">Tutte le cap</option>
-      <option value="large">Large Cap (&gt;10B)</option>
-      <option value="mid">Mid Cap (2–10B)</option>
-      <option value="small">Small Cap (&lt;2B)</option>
+      <option value="10000000000">Large Cap (&gt;10B)</option>
+      <option value="2000000000">Mid Cap (&gt;2B)</option>
+      <option value="300000000">Small Cap (&gt;300M)</option>
     </select>
-    <select class="fsel" id="fdiv" onchange="applyF()">
-      <option value="">Tutti</option>
-      <option value="yes">Con dividendo</option>
-      <option value="no">Senza dividendo</option>
+    <select class="fsel" id="sc-div-min" style="display:none" onchange="onFilterChange()">
+      <option value="">Tutti i dividendi</option>
+      <option value="1">Div &gt; 1%</option>
+      <option value="2">Div &gt; 2%</option>
+      <option value="3">Div &gt; 3%</option>
     </select>
-    <input class="finp" id="fq" type="text" placeholder="Cerca ticker o nome..." oninput="applyF()"/>
+    <div class="search-wrap" style="position:relative">
+      <input class="finp" id="fq" type="text" placeholder="Cerca ticker o nome..." oninput="onFqInput()"/>
+      <div id="search-dropdown" class="search-dd"></div>
+    </div>
     <button class="sc-btn" onclick="loadScreener()">↻ Aggiorna</button>
     <span class="sc-cnt" id="sc-cnt">—</span>
+    <span id="sc-market-status" style="font-family:var(--fm);font-size:10px;color:var(--t3);margin-left:8px"></span>
   </div>
-  <div class="sc-add-row">
-    <input class="finp" id="custom-ticker-inp" type="text" placeholder="Aggiungi qualsiasi ticker (es. TSMC, BRK-B, SHOP, SIE.DE...)" maxlength="12" onkeydown="if(event.key==='Enter')addCustomTicker()"/>
-    <button class="sc-btn" id="custom-ticker-btn" onclick="addCustomTicker()">+ Aggiungi</button>
-    <span id="custom-ticker-msg" style="font-size:12px;font-family:var(--fm)"></span>
+
+  <div id="sc-load-wrap" style="display:none;margin-bottom:12px">
+    <button class="sc-btn" id="sc-load-btn" onclick="loadMoreScreener()" style="background:var(--s2);color:var(--b);border:1px solid var(--bd)">Mostra altri 50</button>
   </div>
+
   <div class="tbl-wrap">
     <table class="tbl">
       <thead><tr>
         <th></th>
+        <th></th>
+        <th></th>
         <th onclick="sortTbl('s')">TICKER ↕</th><th onclick="sortTbl('n')">NOME ↕</th>
-        <th>MKT</th><th>SETTORE</th><th>TIPO</th>
+        <th>MKT</th><th>SETTORE</th>
+        <th id="sc-th-spark" style="display:none">5 GG</th>
         <th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th>
-        <th>5 GG</th>
         <th onclick="sortTbl('pe')" title="Price/Earnings — ordinabile">P/E ↕</th>
-        <th onclick="sortTbl('cap')" title="Market Cap — ordinabile">CAP ↕</th>
+        <th onclick="sortTbl('mktcap')" title="Market Cap — ordinabile">CAP ↕</th>
         <th onclick="sortTbl('div')" title="Dividend Yield — ordinabile">DIV% ↕</th>
-        <th onclick="sortTbl('score')">SCORE ↕</th>
+        <th id="sc-th-score" style="display:none">SCORE ↕</th>
+        <th style="display:none"></th>
       </tr></thead>
-      <tbody id="sc-body"><tr><td colspan="13" class="ld">Caricamento...</td></tr></tbody>
+      <tbody id="sc-body"><tr><td colspan="15" class="ld">Caricamento...</td></tr></tbody>
     </table>
   </div>
 </div>
