@@ -1666,6 +1666,7 @@ async function loadScreener(){
   })).then(()=>{ applyF(); });
 }
 function applyF(){
+  if(screenerMode==='market'){ renderMarketStocks(); return; }
   const sq=(document.getElementById('fq').value||'').toUpperCase();
   const ss=document.getElementById('fs').value,st=document.getElementById('ft').value,sm=document.getElementById('fm2').value;
   let list=STOCKS.filter(s=>{
