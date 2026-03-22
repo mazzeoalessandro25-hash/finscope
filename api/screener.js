@@ -3,11 +3,12 @@
  *
  * Modalità:
  *   GET /api/screener?q=apple           → autocomplete Yahoo Finance
- *   GET /api/screener?symbols=AAPL,...  → bulk quote Yahoo Finance (gratuito, no key)
- *   GET /api/screener?index=sp500       → costituenti statici + prezzi Yahoo Finance
+ *   GET /api/screener?symbols=AAPL,...  → bulk quote via yahoo-finance2
+ *   GET /api/screener?index=sp500       → costituenti statici (prezzi caricati dal frontend)
  *
- * Nessuna API key richiesta.
+ * Usa yahoo-finance2 (gestisce crumb/cookie automaticamente).
  */
+import { yf } from './_lib/yahoo.js';
 
 /* ─────────────────────────────────────────────────────────
    COSTITUENTI STATICI DEGLI INDICI
