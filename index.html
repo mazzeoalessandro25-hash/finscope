@@ -1081,8 +1081,8 @@ function showPage(id,btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');
   if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati finanziari');
-  if(id==='screener'&&Object.keys(scData).length===0)loadScreener();
-  if(id==='screener'&&Object.keys(scData).length>0){renderScreenerWatchlist();renderAlerts();}
+  if(id==='screener'&&dynamicStocks.length===0)loadScreener();
+  if(id==='screener'&&dynamicStocks.length>0){renderScreenerWatchlist();renderAlerts();}
   if(id==='portafoglio')showPortfolioState();
   if(id==='screener')document.getElementById('cmp-float-btn').classList.toggle('show',cmpList.length>=2);
   if(id!=='screener')document.getElementById('cmp-float-btn').classList.remove('show');
