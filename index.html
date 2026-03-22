@@ -387,6 +387,48 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 .cmp-tbl tr:hover td{background:var(--b3)}
 .cmp-tbl .metric-lbl{font-size:10px;color:var(--t3);font-family:var(--ff);font-weight:500}
 .cmp-winner{background:rgba(5,150,105,.08);font-weight:700}
+
+/* ═══ LOGO AZIENDE ═══ */
+/* Immagine logo da FMP con fallback avatar testuale colorato */
+.sc-logo{width:36px;height:36px;border-radius:8px;object-fit:contain;background:var(--s2);padding:3px;flex-shrink:0;display:inline-block;vertical-align:middle}
+.logo-av{width:36px;height:36px;border-radius:8px;display:none;align-items:center;justify-content:center;font-family:var(--fm);font-size:11px;font-weight:700;color:#fff;flex-shrink:0;vertical-align:middle}
+.wl-logo{width:28px;height:28px;border-radius:6px;object-fit:contain;background:var(--s2);padding:2px;flex-shrink:0;display:inline-block;vertical-align:middle}
+.logo-av-sm{width:28px;height:28px;border-radius:6px;display:none;align-items:center;justify-content:center;font-family:var(--fm);font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+
+/* ═══ SCREENER BOTTOM PANEL (Watchlist + Alert integrati) ═══ */
+.sc-panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sc-tabs{display:flex;gap:4px;background:var(--s2);border-radius:9px;padding:3px;width:fit-content;margin-bottom:16px}
+.sc-tab{padding:7px 20px;border:none;background:none;border-radius:7px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;color:var(--t2);transition:all .15s}
+.sc-tab.active{background:#fff;color:var(--t);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.wl-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;border:1px solid var(--bd);cursor:pointer;transition:background .12s;background:var(--s2)}
+.wl-row:hover{background:var(--b3)}
+.wl-sym{font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t);min-width:64px}
+.wl-name{font-size:11px;color:var(--t3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wl-price{font-family:var(--fm);font-size:12px;color:var(--t);min-width:62px;text-align:right}
+.wl-chg{font-family:var(--fm);font-size:11px;font-weight:600;padding:2px 7px;border-radius:3px;min-width:56px;text-align:center}
+.wl-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0;transition:color .15s;line-height:1}
+.wl-del:hover{color:var(--r)}
+/* Alert styles */
+.alert-form{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px;padding:14px;background:var(--s2);border-radius:10px;border:1px solid var(--bd)}
+.alert-inp{background:var(--card);border:1px solid var(--bd);color:var(--t);padding:7px 11px;border-radius:7px;font-family:var(--fm);font-size:12px;outline:none;transition:all .15s}
+.alert-inp:focus{border-color:rgba(26,86,196,.5)}
+.alert-sel{background:var(--card);border:1px solid var(--bd);color:var(--t);padding:7px 11px;border-radius:7px;font-family:var(--ff);font-size:12px;outline:none;cursor:pointer}
+.alert-add-btn{background:var(--b);color:#fff;border:none;padding:7px 16px;border-radius:7px;font-weight:600;font-size:12px;cursor:pointer;font-family:var(--ff);transition:all .15s}
+.alert-add-btn:hover{background:var(--b2)}
+.alert-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:8px}
+.alert-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:var(--s2);border:1px solid var(--bd)}
+.alert-sym{font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t);min-width:64px}
+.alert-cond{font-size:11px;color:var(--t);flex:1;font-family:var(--fm)}
+.alert-badge{font-family:var(--fm);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;letter-spacing:.3px}
+.alert-badge.active{background:var(--g2);color:#047857}
+.alert-badge.triggered{background:var(--o2);color:#92400E}
+.alert-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0;transition:color .15s;line-height:1}
+.alert-del:hover{color:var(--r)}
+
+/* ═══ DARK MODE aggiuntivo ═══ */
+body.dark .sc-logo,body.dark .wl-logo{background:var(--s3)}
+body.dark .sc-tab.active{background:var(--s3)}
 </style>
 </head>
 <body>
