@@ -831,18 +831,9 @@ export default async function handler(req, res) {
       filtered = filtered.filter(s => s.mkt === mktMap[country] || s.country === country);
     }
 
-    const qMap = await yahooQuote(filtered.map(s => s.s));
-    const stocks = filtered.map(s => ({
-      ...s,
-      price:     qMap[s.s]?.price     ?? null,
-      prev:      qMap[s.s]?.prev      ?? null,
-      chg:       qMap[s.s]?.chg       ?? null,
-      pe:        qMap[s.s]?.pe        ?? null,
-      marketCap: qMap[s.s]?.marketCap ?? null,
-      divAnnual: qMap[s.s]?.divAnnual ?? null,
-    }));
-
-    return res.json({ stocks, total: stocks.length, source: 'yahoo' });
+    // Restituisce la lista statica senza prezzi — il frontend li carica in batch via ?symbols=
+    const stocks = filtered.map(s => ({ ...s, price: null, prev: null, chg: null, pe: null, marketCap: null, divAnnual: null }));
+    return res.json({ stocks, total: stocks.length, source: 'static' });
 
   } catch (e) {
     console.error('[screener]', e.message);
