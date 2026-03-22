@@ -2543,10 +2543,33 @@ function renderMarketStocks(){
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
   if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:24px;color:var(--t3);font-size:12px">Nessun risultato · Cambia indice o modifica i filtri</td></tr>';return;}
-  const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺',AS:'🇯🇵',CA:'🇨🇦'};
+  const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺',AS:'🇯🇵',CA:'🇨🇦',UK:'🇬🇧',CH:'🇨🇭'};
+  // Determina valuta dal suffisso del ticker (più affidabile del campo mkt)
+  function stockCur(sym){
+    if(sym.endsWith('.L'))  return '£';
+    if(sym.endsWith('.SW')) return 'CHF\u00A0';
+    if(sym.endsWith('.T'))  return '¥';
+    if(sym.endsWith('.TO')) return 'C$';
+    if(/\.(MI|PA|DE|MC|AS|BR|LS|VI|CO|HE|OL|ST)$/.test(sym)) return '€';
+    if(sym.endsWith('.IT')) return '€';
+    return '$';
+  }
+  // Determina bandiera dal suffisso se mkt non è preciso
+  function stockFlag(s){
+    if(s.s.endsWith('.L'))  return '🇬🇧';
+    if(s.s.endsWith('.SW')) return '🇨🇭';
+    if(s.s.endsWith('.T'))  return '🇯🇵';
+    if(s.s.endsWith('.TO')) return '🇨🇦';
+    if(s.s.endsWith('.MI')) return '🇮🇹';
+    if(s.s.endsWith('.PA')) return '🇫🇷';
+    if(s.s.endsWith('.DE')) return '🇩🇪';
+    if(s.s.endsWith('.MC')) return '🇪🇸';
+    if(s.s.endsWith('.AS')) return '🇳🇱';
+    return flags[s.mkt]||'';
+  }
   body.innerHTML=list.map(s=>{
     const up=s.chg==null||s.chg>=0;
-    const cur=s.mkt==='US'?'$':s.mkt==='IT'||s.mkt==='EU'?'€':s.s.endsWith('.L')?'£':'';
+    const cur=stockCur(s.s);
     const priceStr=s.price!=null?cur+fmt(s.price,s.price>=1000?0:2):'—';
     const chgStr2=s.chg!=null?(s.chg>=0?'+':'')+fmt(s.chg,2)+'%':'—';
     const pe=s.pe?fmt(s.pe,1):'—';
