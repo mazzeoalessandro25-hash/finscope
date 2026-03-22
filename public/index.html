@@ -1433,7 +1433,6 @@ html.dark .auth-box{background:#1e293b}
     </div>
     <button class="sc-btn" onclick="loadScreener()">↻ Aggiorna</button>
     <span class="sc-cnt" id="sc-cnt">—</span>
-    <span id="sc-market-status" style="font-family:var(--fm);font-size:10px;color:var(--t3);margin-left:8px"></span>
   </div>
 
   <div id="sc-load-wrap" style="display:none;margin-bottom:12px">
@@ -1453,7 +1452,7 @@ html.dark .auth-box{background:#1e293b}
         <th onclick="sortTbl('mktcap')" title="Market Cap — ordinabile">CAP ↕</th>
         <th onclick="sortTbl('score')" title="Overall Score — ordinabile" style="color:var(--b)">SCORE ↕</th>
       </tr></thead>
-      <tbody id="sc-body"><tr><td colspan="13" class="ld">Caricamento...</td></tr></tbody>
+      <tbody id="sc-body"><tr><td colspan="12" class="ld">Caricamento...</td></tr></tbody>
     </table>
   </div>
 </div>
@@ -2416,7 +2415,7 @@ async function loadMarketScreener(reset=true){
   if(reset){ dynamicStocks=[];screenerPage=0; }
   const body=document.getElementById('sc-body');
   const isAll=currentIndex==='all';
-  if(reset) body.innerHTML='<tr><td colspan="13" class="ld">Caricamento in corso…</td></tr>';
+  if(reset) body.innerHTML='<tr><td colspan="12" class="ld">Caricamento in corso…</td></tr>';
   const loadBtn=document.getElementById('sc-load-btn');
   if(loadBtn){loadBtn.disabled=true;loadBtn.textContent='Caricamento…';}
 
@@ -2446,7 +2445,7 @@ async function loadMarketScreener(reset=true){
     if(!r.ok) throw new Error(data.error||'Errore '+r.status);
     stocks=data.stocks||[];
   }catch(e){
-    body.innerHTML=`<tr><td colspan="13"><div class="sc-market-err">⚠ ${e.message}</div></td></tr>`;
+    body.innerHTML=`<tr><td colspan="12"><div class="sc-market-err">⚠ ${e.message}</div></td></tr>`;
     if(loadBtn){loadBtn.disabled=false;loadBtn.textContent='Riprova';}
     return;
   }
