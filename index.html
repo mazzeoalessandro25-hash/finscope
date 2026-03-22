@@ -1054,6 +1054,13 @@ let modalSym='', modalRange='1mo', modalType='candle';
 let sortKey='score', sortDir=-1;
 let watchlist=JSON.parse(localStorage.getItem('fs_wl')||'[]');
 
+/* ── SCREENER DINAMICO ── */
+let screenerMode='featured';      // 'featured' | 'market'
+let dynamicStocks=[];             // stocks caricati da FMP in market mode
+let screenerPage=0;               // pagina corrente (market mode)
+let screenerHasMore=false;        // ci sono altri titoli da caricare
+let searchDebounce=null;          // timer per debounce autocomplete
+
 const fmt=(n,d=2)=>n==null||isNaN(n)?'—':n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
 const fmtLg=n=>!n?'—':n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(0)+'M':'—';
 const chgPct=(p,v)=>v?((p-v)/v*100):null;
