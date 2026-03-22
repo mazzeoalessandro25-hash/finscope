@@ -2583,7 +2583,7 @@ function renderMarketStocks(){
       <td onclick="event.stopPropagation()">${logo}</td>
       <td style="font-weight:600">${s.s}</td>
       <td style="color:var(--t2)">${s.n}</td>
-      <td>${flags[s.mkt]||''}</td>
+      <td>${stockFlag(s)}</td>
       <td style="color:var(--t3);font-size:11px">${s.sec||'—'}</td>
       <td style="display:none"></td>
       <td style="font-weight:600">${priceStr}</td>
