@@ -793,22 +793,9 @@ export default async function handler(req, res) {
       const constituents = INDEX_DATA[index];
       if (!constituents) return res.status(400).json({ error: 'Indice non supportato: ' + index });
 
-      // Recupera prezzi via Yahoo Finance
-      const symbols = constituents.map(s => s.s);
-      const qMap = await yahooQuote(symbols);
-
-      const stocks = constituents.map(s => ({
-        ...s,
-        price:     qMap[s.s]?.price     ?? null,
-        prev:      qMap[s.s]?.prev      ?? null,
-        chg:       qMap[s.s]?.chg       ?? null,
-        pe:        qMap[s.s]?.pe        ?? null,
-        marketCap: qMap[s.s]?.marketCap ?? null,
-        volume:    qMap[s.s]?.volume    ?? null,
-        divAnnual: qMap[s.s]?.divAnnual ?? null,
-      }));
-
-      return res.json({ stocks, total: stocks.length, source: 'yahoo', index });
+      // Restituisce lista statica — il frontend carica i prezzi in batch via ?symbols=
+      const stocks = constituents.map(s => ({ ...s, price: null, prev: null, chg: null, pe: null, marketCap: null, volume: null, divAnnual: null }));
+      return res.json({ stocks, total: stocks.length, source: 'static', index });
     }
 
     // ── TUTTI (screener generico) ─────────────────────────────────────────────
