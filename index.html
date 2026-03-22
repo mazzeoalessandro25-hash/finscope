@@ -1049,10 +1049,10 @@ let sortKey='score', sortDir=-1;
 let watchlist=JSON.parse(localStorage.getItem('fs_wl')||'[]');
 
 /* ── SCREENER DINAMICO ── */
-let screenerMode='featured';      // 'featured' | 'market'
-let dynamicStocks=[];             // stocks caricati da FMP in market mode
-let screenerPage=0;               // pagina corrente (market mode)
-let screenerHasMore=false;        // ci sono altri titoli da caricare
+let currentIndex='sp500';         // indice attivo
+let dynamicStocks=[];             // stocks caricati da API
+let screenerPage=0;               // pagina corrente (solo 'all' mode)
+let screenerHasMore=false;        // altri titoli disponibili in 'all' mode
 let searchDebounce=null;          // timer per debounce autocomplete
 
 const fmt=(n,d=2)=>n==null||isNaN(n)?'—':n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
