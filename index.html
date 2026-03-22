@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>FinScope — Analisi Mercati Finanziari | Azioni, Indici, Crypto</title>
-<meta name="description" content="FinScope — Dashboard professionale per l'analisi di azioni, indici globali, commodities e crypto. Screener, portafoglio, simulatore e analisi fondamentale con AI."/>
+<title>FinEdge — Analisi Mercati Finanziari | Azioni, Indici, Crypto</title>
+<meta name="description" content="FinEdge — Dashboard professionale per l'analisi di azioni, indici globali, commodities e crypto. Screener, portafoglio, simulatore e analisi fondamentale con AI."/>
 <meta name="keywords" content="analisi azioni, mercati finanziari, screener azioni, borsa italiana, portafoglio investimenti, analisi fondamentale, FTSE MIB, S&P 500, crypto"/>
 <meta name="author" content="Alessandro Mazzeo"/>
 <meta name="robots" content="index, follow"/>
-<meta property="og:title" content="FinScope — Analisi Mercati Finanziari"/>
-<meta property="og:description" content="Dashboard professionale per analisi azioni, indici, commodities e crypto in tempo reale. FinScope Score proprietario + AI Analysis."/>
+<meta property="og:title" content="FinEdge — Analisi Mercati Finanziari"/>
+<meta property="og:description" content="Dashboard professionale per analisi azioni, indici, commodities e crypto in tempo reale. FinEdge Score proprietario + AI Analysis."/>
 <meta property="og:type" content="website"/>
 <meta property="og:locale" content="it_IT"/>
 <meta name="twitter:card" content="summary_large_image"/>
@@ -342,7 +342,7 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
   display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0}
 .dm-toggle:hover{background:rgba(255,255,255,.22)}
 
-/* ═══ FINSCOPE SCORE ═══ */
+/* ═══ FINEDGE SCORE ═══ */
 .fs-score-wrap{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:10px}
 .fs-score-bar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden;margin-top:6px;width:160px}
 .fs-score-fill{height:6px;border-radius:3px;transition:width .6s ease}
@@ -394,7 +394,7 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="auth-modal">
   <div class="auth-box">
-    <div class="auth-logo">Fin<span>Scope</span></div>
+    <div class="auth-logo">Fin<span>Edge</span></div>
     <div class="auth-sub">Accedi per salvare watchlist, portafoglio e preferenze</div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login',this)">Accedi</button>
@@ -443,7 +443,7 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 <div class="site-header">
 <!-- NAV BLU -->
 <nav>
-  <div class="logo" style="cursor:pointer" onclick="window.location.href='./about.html'"><div class="logo-dot"></div>Fin<span>Scope</span></div>
+  <div class="logo" style="cursor:pointer" onclick="window.location.href='./about.html'"><div class="logo-dot"></div>Fin<span>Edge</span></div>
   <div class="nav-items">
     <button class="nav-btn active" onclick="showPage('dashboard',this)">Dashboard</button>
     <button class="nav-btn" onclick="showPage('screener',this)">Screener</button>
@@ -755,7 +755,7 @@ body.dark .ti-news-txt,body.dark .ti-p{color:#E4EDF8}
 </button>
 
 <footer>
-  <div class="flogo">Fin<span>Scope</span></div>
+  <div class="flogo">Fin<span>Edge</span></div>
   <p class="fnote">Dati da Yahoo Finance · Ritardo max 15 min durante sessioni di borsa · Solo uso informativo · Non costituisce consulenza finanziaria</p>
 </footer>
 
@@ -1295,8 +1295,8 @@ async function runFA(){
   const recCol={strongbuy:'var(--g)',buy:'var(--g)',hold:'var(--o)',sell:'var(--r)',strongsell:'var(--r)'};
   const rec=sd?.rec||'hold';
 
-  // FinScope Score 5D
-  const fss=calcFinScopeScore(sd,qd);
+  // FinEdge Score 5D
+  const fss=calcFinEdgeScore(sd,qd);
   const pt=calcPriceTarget(sd,qd);
   const rating=fss.total!=null?getRating(fss.total):null;
   const sc=fss.total;
@@ -1309,7 +1309,7 @@ async function runFA(){
   <div class="fs-score-wrap">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div>
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINSCOPE SCORE ✦ Metrica proprietaria</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINEDGE SCORE ✦ Metrica proprietaria</div>
         <div style="display:flex;align-items:baseline;gap:7px">
           <span style="font-family:var(--fm);font-size:32px;font-weight:800;color:${scCol};line-height:1">${sc}</span>
           <span style="font-family:var(--fm);font-size:12px;color:var(--t3)">/100</span>
@@ -1318,7 +1318,7 @@ async function runFA(){
         <div class="fs-score-bar"><div class="fs-score-fill" style="width:${sc}%;background:${scCol}"></div></div>
       </div>
       ${pt?`<div style="text-align:right">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINSCOPE TARGET PRICE</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINEDGE TARGET PRICE</div>
         <div style="font-family:var(--fm);font-size:22px;font-weight:700;color:var(--b);line-height:1">$${fmt(pt.value,2)}</div>
         <div style="font-family:var(--fm);font-size:11px;margin-top:3px" class="${pt.upside>=0?'up':'down'}">${pt.upside>=0?'▲':'▼'} ${fmt(Math.abs(pt.upside),1)}% upside vs oggi</div>
         <div class="fs-pt-methods">${pt.methods.map(m=>m.m+': $'+fmt(m.v,2)).join(' · ')}</div>
@@ -1366,10 +1366,10 @@ async function loadNews(q,btn){
 }
 
 /* ══════════════════════════════════════════
-   FINSCOPE SCORE — Metrica proprietaria 5D
+   FINEDGE SCORE — Metrica proprietaria 5D
    Valutazione(25) · Redditività(25) · Momentum(20) · Consensus(20) · Stabilità(10)
 ══════════════════════════════════════════ */
-function calcFinScopeScore(sd, qd){
+function calcFinEdgeScore(sd, qd){
   if(!sd) return {total:null,details:{}};
   let s=0, det={};
 
@@ -1521,7 +1521,7 @@ async function runCompare(){
   document.getElementById('cmp-result').innerHTML='<div class="ld">Caricamento dati comparativi...</div>';
   const results=await Promise.all(tickers.map(async sym=>{
     const [qd,sd]=await Promise.all([api(sym),api(sym,'summary')]);
-    const score=calcFinScopeScore(sd,qd);
+    const score=calcFinEdgeScore(sd,qd);
     const pt=calcPriceTarget(sd,qd);
     return{sym,qd,sd,score,pt};
   }));
@@ -1546,9 +1546,9 @@ async function runCompare(){
     {k:'52W Min',fn:r=>r.sd?.week52Low?'$'+fmt(r.sd.week52Low,2):'—'},
     {k:'Consensus',fn:r=>{const rec=r.sd?.rec||'hold';return`<span style="color:${recCol[rec]||'var(--o)'};font-weight:600">${recMap[rec]||'—'}</span>`;}},
     {k:'Target Analisti',fn:r=>r.sd?.targetPrice?'$'+fmt(r.sd.targetPrice,2):'—'},
-    {k:'FinScope Target',fn:r=>r.pt?'<span style="color:var(--b);font-weight:600">$'+fmt(r.pt.value,2)+'</span>':'—'},
+    {k:'FinEdge Target',fn:r=>r.pt?'<span style="color:var(--b);font-weight:600">$'+fmt(r.pt.value,2)+'</span>':'—'},
     {k:'Upside/Down',fn:r=>{if(!r.pt)return'—';const u=r.pt.upside;return`<span class="${u>=0?'up':'down'}" style="font-weight:700">${u>=0?'▲':'▼'} ${fmt(Math.abs(u),1)}%</span>`;}},
-    {k:'FinScope Score',fn:r=>{if(r.score.total==null)return'—';const sc=r.score.total;const col=getScoreColor(sc);const rt=getRating(sc);return`<span style="font-weight:800;color:${col};font-size:14px">${sc}</span><span style="font-size:10px;color:var(--t3)">/100</span> <span style="font-size:10px;padding:1px 6px;border-radius:3px;background:${rt.bg};color:${rt.color};font-weight:600">${rt.label}</span>`;}},
+    {k:'FinEdge Score',fn:r=>{if(r.score.total==null)return'—';const sc=r.score.total;const col=getScoreColor(sc);const rt=getRating(sc);return`<span style="font-weight:800;color:${col};font-size:14px">${sc}</span><span style="font-size:10px;color:var(--t3)">/100</span> <span style="font-size:10px;padding:1px 6px;border-radius:3px;background:${rt.bg};color:${rt.color};font-weight:600">${rt.label}</span>`;}},
   ];
 
   document.getElementById('cmp-result').innerHTML=`
@@ -1560,7 +1560,7 @@ async function runCompare(){
         </tbody>
       </table>
     </div>
-    <p style="font-size:10px;color:var(--t3);font-family:var(--fm)">Dati da Yahoo Finance · Ritardo max 15 min · FinScope Target = media ponderata Graham, P/E norm. e Consensus analisti</p>`;
+    <p style="font-size:10px;color:var(--t3);font-family:var(--fm)">Dati da Yahoo Finance · Ritardo max 15 min · FinEdge Target = media ponderata Graham, P/E norm. e Consensus analisti</p>`;
 }
 
 function clearCompare(){
@@ -1598,7 +1598,7 @@ async function runAI(){
       const html=d.analysis
         .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
         .replace(/\n/g,'<br>');
-      box.innerHTML=`<div class="ai-header"><span class="ai-tag">✦ FinScope AI · ${d.ticker}</span></div>${html}`;
+      box.innerHTML=`<div class="ai-header"><span class="ai-tag">✦ FinEdge AI · ${d.ticker}</span></div>${html}`;
     }
     document.getElementById('fa-res').after(box);
   }catch(e){

@@ -1,11 +1,11 @@
-# FinScope 🚀
+# FinEdge 🚀
 
 Dashboard finanziaria con dati reali da Yahoo Finance.
 
 ## Struttura progetto
 
 ```
-finscope/
+finedge/
 ├── api/
 │   └── quote.js        ← Backend serverless (chiama Yahoo Finance)
 ├── public/
@@ -17,20 +17,20 @@ finscope/
 
 ### 1. Crea account GitHub
 - Vai su https://github.com → Sign up
-- Crea un nuovo repository chiamato `finscope` (pubblico)
+- Crea un nuovo repository chiamato `finedge` (pubblico)
 
 ### 2. Carica i file
-- Trascina l'intera cartella `finscope/` su GitHub
+- Trascina l'intera cartella `finedge/` su GitHub
 - Oppure usa GitHub Desktop (più facile)
 
 ### 3. Collega Vercel
 - Vai su https://vercel.com → Sign up con GitHub
 - Clicca "Add New Project"
-- Seleziona il repository `finscope`
+- Seleziona il repository `finedge`
 - Clicca "Deploy" — nessuna configurazione necessaria
 
 ### 4. Vai live!
-- Il tuo sito sarà su: `https://finscope-[tuo-username].vercel.app`
+- Il tuo sito sarà su: `https://finedge-[tuo-username].vercel.app`
 - Ogni volta che aggiorni GitHub, Vercel rideploya automaticamente
 
 ## Come funziona

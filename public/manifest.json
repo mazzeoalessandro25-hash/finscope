@@ -1,6 +1,6 @@
 {
-  "name": "FinScope — Analisi Mercati Finanziari",
-  "short_name": "FinScope",
+  "name": "FinEdge — Analisi Mercati Finanziari",
+  "short_name": "FinEdge",
   "description": "Dashboard professionale per l'analisi di azioni, indici, commodities e crypto in tempo reale.",
   "start_url": "/",
   "display": "standalone",

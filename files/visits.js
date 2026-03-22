@@ -14,7 +14,7 @@ export default async function handler(req, res) {
   try {
     if (req.method === 'POST') {
       // Incrementa il contatore atomicamente
-      const r = await fetch(`${base}/incr/finscope:visits`, {
+      const r = await fetch(`${base}/incr/finedge:visits`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
     }
 
     // GET — restituisce il valore corrente senza incrementare
-    const r = await fetch(`${base}/get/finscope:visits`, {
+    const r = await fetch(`${base}/get/finedge:visits`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     const d = await r.json();
