@@ -3,871 +3,1125 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Demo — FinEdge</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<title>FinEdge — Demo Prodotto</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#060E1A;--card:#0D1829;--card2:#111F33;
-  --b:#1A56C4;--b2:#2563EB;--b3:#1E3A5F;
-  --g:#059669;--g2:#34D399;--r:#DC2626;--r2:#F87171;
-  --o:#D97706;--o2:#FCD34D;
-  --t:#F0F6FF;--t2:#8AAAC8;--t3:#4A6A8A;
-  --bd:rgba(255,255,255,.08);
+  --bg:#F0F4FA;--s1:#fff;--s2:#F8FAFD;
+  --bd:#D8E2EF;--bd2:#C2CFE0;
+  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;
+  --g:#059669;--g2:#D1FAE5;--r:#DC2626;--r2:#FEE2E2;
+  --o:#D97706;--o2:#FEF3C7;
+  --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
   --ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
 }
+
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:14px}
+body{
+  background:radial-gradient(ellipse at 25% 60%,#0F2847 0%,#070E1A 55%,#0A1830 100%);
+  font-family:var(--ff);
+  display:flex;flex-direction:column;align-items:center;
+  min-height:100vh;overflow:hidden;position:relative;
+}
 
-/* ─── PAGE NAV ─── */
-.page-nav{position:fixed;top:0;left:0;right:0;z-index:200;height:52px;
-  background:rgba(6,14,26,.95);backdrop-filter:blur(12px);
-  display:flex;align-items:center;padding:0 28px;
-  border-bottom:1px solid var(--bd);gap:16px}
-.page-logo{font-size:17px;font-weight:800;color:#fff;text-decoration:none;
-  letter-spacing:-.4px;display:flex;align-items:center;gap:7px}
-.logo-dot{width:7px;height:7px;background:var(--g2);border-radius:50%}
-.page-logo span{color:rgba(255,255,255,.45)}
-.page-back{margin-left:auto;color:var(--t2);font-size:11px;font-family:var(--fm);
-  text-decoration:none;transition:color .15s}
-.page-back:hover{color:#fff}
+/* BACKGROUND ORBS */
+.orb{position:fixed;border-radius:50%;pointer-events:none;z-index:0}
+.orb1{width:600px;height:600px;background:rgba(26,86,196,.08);filter:blur(80px);top:-120px;left:-80px;animation:floatA 14s ease-in-out infinite}
+.orb2{width:500px;height:500px;background:rgba(99,58,196,.06);filter:blur(100px);bottom:-100px;right:-60px;animation:floatB 16s ease-in-out infinite}
+.orb3{width:380px;height:380px;background:rgba(5,150,105,.05);filter:blur(90px);top:45%;left:58%;animation:floatC 12s ease-in-out infinite}
+.orb4{width:280px;height:280px;background:rgba(26,86,196,.07);filter:blur(70px);bottom:18%;left:8%;animation:floatA 18s ease-in-out infinite reverse}
+@keyframes floatA{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-30px) translateX(15px)}}
+@keyframes floatB{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(25px) translateX(-20px)}}
+@keyframes floatC{0%,100%{transform:translateY(0) translateX(0)}50%{transform:translateY(-22px) translateX(12px)}}
 
-/* ─── DEMO OUTER ─── */
-.demo-outer{position:fixed;top:52px;left:0;right:0;bottom:0;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:20px 16px 16px;gap:14px}
+/* TOP PAGE NAV */
+.page-nav{
+  position:relative;z-index:10;
+  width:100%;max-width:1120px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px 10px;flex-shrink:0;
+}
+.page-logo{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.page-logo span{color:rgba(255,255,255,.4)}
+.page-back{font-size:12px;color:rgba(255,255,255,.45);text-decoration:none;font-weight:500;transition:color .15s}
+.page-back:hover{color:rgba(255,255,255,.85)}
 
-/* ─── BROWSER FRAME ─── */
-.browser{width:100%;max-width:960px;border-radius:14px;overflow:hidden;
-  box-shadow:0 32px 80px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.07);
-  display:flex;flex-direction:column;flex:1;min-height:0}
-.browser-chrome{height:38px;background:#1A2535;display:flex;align-items:center;
-  padding:0 14px;gap:0;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.06)}
-.chrome-dots{display:flex;gap:6px;margin-right:14px}
-.chrome-dot{width:11px;height:11px;border-radius:50%}
-.chrome-dot:nth-child(1){background:#FF5F57}
-.chrome-dot:nth-child(2){background:#FFBD2E}
-.chrome-dot:nth-child(3){background:#28C840}
-.chrome-url{flex:1;height:22px;background:rgba(0,0,0,.3);border-radius:5px;
-  display:flex;align-items:center;padding:0 10px;
-  font-family:var(--fm);font-size:10px;color:var(--t3);max-width:320px;margin:0 auto}
-.chrome-url::before{content:'🔒 ';font-size:9px;margin-right:4px;opacity:.6}
+/* BROWSER FRAME */
+.browser-wrap{
+  position:relative;z-index:5;
+  width:min(1100px,96vw);flex-shrink:0;
+  transform:scale(1);transition:transform 6s cubic-bezier(.4,0,.2,1);
+}
+.browser-wrap.ken{transform:scale(1.008)}
 
-/* ─── SCENE CONTAINER ─── */
-.scenes{flex:1;position:relative;overflow:hidden;background:var(--bg)}
-.scene{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;
-  display:flex;flex-direction:column;overflow:hidden;pointer-events:none}
-.scene.active{opacity:1;pointer-events:auto}
+.browser-chrome{
+  background:#EBEBEB;border-radius:14px 14px 0 0;
+  padding:10px 14px 0;display:flex;align-items:center;gap:12px;
+}
+.traffic{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.tl-dot{width:12px;height:12px;border-radius:50%}
+.tl-dot.r{background:#FF5F57}.tl-dot.y{background:#FFBD2E}.tl-dot.g{background:#28C840}
 
-/* ─── MOCK APP SHELL ─── */
-.mock-shell{display:flex;flex:1;min-height:0;overflow:hidden}
-.mock-sidebar{width:52px;background:#070F1C;border-right:1px solid var(--bd);
-  display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:10px;flex-shrink:0}
-.mock-sico{width:32px;height:32px;border-radius:9px;background:var(--card2);
-  display:flex;align-items:center;justify-content:center;font-size:14px;opacity:.55;cursor:pointer}
-.mock-sico.active{background:var(--b3);opacity:1}
-.mock-main{flex:1;overflow:hidden;display:flex;flex-direction:column;min-width:0}
-.mock-topbar{height:44px;border-bottom:1px solid var(--bd);display:flex;
-  align-items:center;padding:0 16px;gap:10px;flex-shrink:0;background:var(--card)}
-.mock-tab{font-size:11px;font-weight:600;color:var(--t2);padding:5px 10px;
-  border-radius:6px;cursor:pointer}
-.mock-tab.active{background:var(--b3);color:var(--b2)}
-.mock-content{flex:1;overflow:hidden;padding:14px 16px;display:flex;flex-direction:column;gap:12px}
+.url-bar{
+  flex:1;background:#fff;border-radius:5px;height:24px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);font-size:11px;color:#666;
+  border:1px solid #D0D0D0;gap:5px;
+}
+.url-lock{color:#999;font-size:10px}
 
-/* ─── CAPTION ─── */
-.scene-caption{position:absolute;bottom:0;left:0;right:0;
-  background:linear-gradient(transparent,rgba(6,14,26,.92) 35%);
-  padding:32px 20px 14px;pointer-events:none}
-.cap-inner{max-width:600px}
-.cap-tag{font-family:var(--fm);font-size:9px;color:var(--b2);letter-spacing:2px;
-  text-transform:uppercase;margin-bottom:4px;font-weight:600}
-.cap-title{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.4px;margin-bottom:3px}
-.cap-sub{font-size:12px;color:var(--t2);line-height:1.5}
+.browser-body{
+  background:var(--bg);border-radius:0 0 10px 10px;overflow:hidden;
+  box-shadow:0 0 0 1px rgba(255,255,255,.06),0 40px 100px rgba(0,0,0,.7),0 0 60px rgba(26,86,196,.15);
+  height:530px;display:flex;flex-direction:column;
+}
 
-/* ─── CONTROLS ─── */
-.controls{width:100%;max-width:960px;display:flex;align-items:center;gap:12px;flex-shrink:0}
-.ctrl-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--bd);
-  background:rgba(255,255,255,.05);color:var(--t2);font-size:13px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .15s;flex-shrink:0}
+/* ---- SITE HEADER ---- */
+.site-header{display:flex;flex-direction:column;flex-shrink:0}
+
+.site-nav{
+  height:54px;background:#1448A8;
+  display:flex;align-items:center;justify-content:space-between;padding:0 28px;
+}
+.logo{font-size:18px;font-weight:800;letter-spacing:-.5px;display:flex;align-items:center;gap:9px;color:#fff}
+.logo-dot{width:8px;height:8px;background:#fff;border-radius:50%;animation:blinkDot 2s infinite}
+@keyframes blinkDot{0%,100%{opacity:.9}50%{opacity:.3}}
+.logo-fade{color:rgba(255,255,255,.55)}
+.nav-items{display:flex;align-items:center;gap:2px}
+.nav-btn{background:none;border:none;color:rgba(255,255,255,.65);font-family:var(--ff);font-size:13px;font-weight:500;padding:6px 14px;border-radius:7px;cursor:default;transition:all .15s}
+.nav-btn.active{background:rgba(255,255,255,.2);color:#fff}
+.nav-time{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.5)}
+
+.hours-bar{
+  height:38px;background:#fff;border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;padding:0 28px;flex-shrink:0;
+}
+.hb-ex{display:flex;align-items:center;gap:8px;padding:0 28px;border-right:1px solid var(--bd)}
+.hb-ex:last-child{border-right:none}
+.hb-flag{font-size:13px}
+.hb-name{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase}
+.hb-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.hb-dot.open{background:#059669}.hb-dot.closed{background:#DC2626}
+.hb-st{font-family:var(--fm);font-size:11px;font-weight:600}
+.hb-st.open{color:#059669}.hb-st.closed{color:#DC2626}
+.hb-time{font-family:var(--fm);font-size:10px;color:var(--t3)}
+
+.tape{
+  height:34px;background:#D6E4F7;border-bottom:2px solid #A8C4E0;
+  overflow:hidden;display:flex;align-items:center;flex-shrink:0;
+}
+.tape-track{
+  display:inline-flex;align-items:center;white-space:nowrap;
+  animation:scrollTape 30s linear infinite;
+}
+@keyframes scrollTape{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ti{display:inline-flex;align-items:center;gap:8px;padding:0 26px;border-right:1px solid #B8D0EC;height:34px;flex-shrink:0}
+.ti-sym{font-family:var(--fm);font-size:10px;color:#3A5F8A;letter-spacing:.5px;font-weight:700;text-transform:uppercase}
+.ti-p{font-family:var(--fm);font-size:12px;font-weight:600;color:#0F1C2E}
+.ti-c{font-family:var(--fm);font-size:10px;font-weight:600}
+.up{color:#059669}.down{color:#DC2626}
+
+/* ---- CONTENT ---- */
+.content-area{flex:1;overflow:hidden;background:var(--bg);position:relative}
+.scene{display:none;padding:16px 26px 16px;height:100%;overflow:hidden}
+.scene.active{display:block}
+
+.pg-title{font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:3px;color:var(--t)}
+.pg-sub{font-size:12px;color:var(--t2);margin-bottom:12px}
+
+/* Cards */
+.card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.section-label{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px}
+.badge{display:inline-block;padding:2px 8px;border-radius:5px;font-family:var(--fm);font-size:11px;font-weight:600}
+.badge.up{background:#D1FAE5;color:#047857}
+.badge.dn{background:#FEE2E2;color:#B91C1C}
+
+/* Scene 1: Dashboard */
+.idx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.idx-card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:13px 14px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.idx-label{font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.4px;margin-bottom:5px;text-transform:uppercase}
+.idx-val{font-family:var(--fm);font-size:15px;font-weight:600;color:var(--t);margin-bottom:6px}
+
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:12px;align-items:start}
+.mover-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 10px;border-radius:8px;margin-bottom:2px;
+  opacity:0;transform:translateX(-10px);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.mover-item.in{opacity:1;transform:translateX(0)}
+.mv-sym{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)}
+.mv-name{font-size:10px;color:var(--t3);margin-top:1px}
+.mv-price{font-family:var(--fm);font-size:12px;color:var(--t);text-align:right;margin-bottom:3px}
+
+.vix-num{font-family:var(--fm);font-size:40px;font-weight:500;text-align:center;line-height:1;margin:4px 0 2px;color:var(--t)}
+.vix-desc{font-size:11px;color:var(--t2);text-align:center;font-weight:600;margin-bottom:10px}
+.vix-bar-wrap{position:relative;margin:0 4px 4px}
+.vix-bar{height:8px;border-radius:4px;background:linear-gradient(90deg,#059669 0%,#D97706 45%,#DC2626 75%,#7F0000 100%)}
+.vix-needle{position:absolute;top:50%;width:3px;height:18px;background:#0F1C2E;border-radius:2px;transform:translate(-50%,-50%);left:21%}
+.vix-zones{display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--t3)}
+
+/* Scene 2: Score */
+.score-layout{display:grid;grid-template-columns:1fr 1.6fr;gap:14px;margin-top:4px}
+.score-card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:20px 16px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.score-svg-wrap{position:relative;width:140px;height:140px}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num{font-family:var(--fm);font-size:36px;font-weight:700;color:var(--t);line-height:1}
+.score-denom{font-family:var(--fm);font-size:12px;color:var(--t3)}
+.score-badge{display:inline-block;padding:3px 12px;border-radius:100px;background:#D1FAE5;color:#047857;font-size:11px;font-weight:700;font-family:var(--fm)}
+
+.dim-card{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.dim-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:12px}
+.dim-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.dim-label{font-size:11px;color:var(--t2);width:90px;flex-shrink:0}
+.dim-track{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden}
+.dim-fill{height:6px;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.dim-val{font-family:var(--fm);font-size:11px;font-weight:600;width:28px;text-align:right;color:var(--t2)}
+
+.target-card{background:#EBF1FB;border:1px solid rgba(26,86,196,.2);border-radius:10px;
+  padding:11px 14px;margin-top:12px;display:flex;align-items:center;justify-content:space-between}
+.target-lbl{font-size:11px;color:var(--t2);font-weight:600;margin-bottom:2px}
+.target-sub{font-family:var(--fm);font-size:10px;color:var(--t3)}
+.target-price{font-family:var(--fm);font-size:18px;font-weight:700;color:#1A56C4}
+.target-up{font-family:var(--fm);font-size:11px;color:#059669;font-weight:600}
+
+/* Stock header */
+.stock-hdr{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.stock-ticker{font-family:var(--fm);font-size:13px;font-weight:700;color:#1A56C4;background:#EBF1FB;padding:2px 9px;border-radius:5px}
+.stock-name{font-size:18px;font-weight:700;color:var(--t)}
+.stock-price{font-family:var(--fm);font-size:22px;font-weight:700;color:var(--t)}
+.stock-chg{font-family:var(--fm);font-size:13px;font-weight:600;color:#DC2626}
+
+/* Scene 3: Portfolio */
+.port-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.port-kpi{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:13px 15px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.port-kpi.hero{background:linear-gradient(135deg,#1448A8,#2563EB);border-color:transparent}
+.port-kpi.hero .port-kpi-lbl{color:rgba(255,255,255,.6)}
+.port-kpi.hero .port-kpi-val{color:#fff}
+.port-kpi-lbl{font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:5px}
+.port-kpi-val{font-family:var(--fm);font-size:20px;font-weight:700;color:var(--t);line-height:1}
+.port-kpi-sub{font-family:var(--fm);font-size:10px;color:#059669;margin-top:3px}
+
+/* Tables */
+.tbl-wrap{background:#fff;border:1px solid var(--bd);border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl thead tr{background:#F8FAFD;border-bottom:1px solid var(--bd)}
+.tbl th{text-align:left;padding:9px 12px;color:var(--t3);font-family:var(--fm);
+  font-size:9px;letter-spacing:.7px;font-weight:400;text-transform:uppercase;white-space:nowrap}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--bd);font-family:var(--fm);
+  vertical-align:middle;color:var(--t);font-size:12px}
+.tbl tr:last-child td{border-bottom:none}
+.tbl-row{opacity:0;transform:translateX(-10px);transition:opacity .4s ease,transform .4s ease}
+.tbl-row.in{opacity:1;transform:translateX(0)}
+.sym-bold{font-weight:700}
+.sym-link{color:#1A56C4;font-weight:700}
+.pill{display:inline-block;padding:2px 8px;border-radius:5px;font-size:10px;font-weight:700;font-family:var(--fm)}
+.pill.green{background:#D1FAE5;color:#047857}
+.pill.blue{background:#EBF1FB;color:#1A56C4}
+.pill.amber{background:#FEF3C7;color:#92400E}
+
+/* Scene 4: Screener */
+.filter-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.fsel{background:#fff;border:1px solid var(--bd);color:var(--t);padding:7px 10px;
+  border-radius:8px;font-family:var(--ff);font-size:12px;outline:none;cursor:default}
+.sc-btn{background:#1A56C4;color:#fff;border:none;padding:7px 16px;border-radius:8px;font-weight:600;font-size:12px;cursor:default}
+.fbadge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:100px;
+  background:#EBF1FB;color:#1A56C4;font-family:var(--fm);font-size:10px;font-weight:600}
+.sc-cnt{font-family:var(--fm);font-size:11px;color:var(--t3);margin-left:auto}
+
+/* Scene 5: AI */
+.ai-scene-hdr{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.ai-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;
+  background:rgba(124,58,237,.12);color:#7C3AED;font-size:11px;font-weight:700;font-family:var(--fm)}
+.ai-who{font-size:13px;color:var(--t2)}
+.ai-card{background:#fff;border:1px solid var(--bd);border-left:3px solid #7C3AED;border-radius:14px;
+  padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:10px}
+.ai-tag{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.ai-tag-lbl{font-size:10px;font-weight:600;color:#7C3AED;font-family:var(--fm);letter-spacing:.3px}
+.ai-text{font-size:12px;line-height:1.75;color:var(--t);font-family:var(--ff);min-height:90px}
+.ai-cursor{display:inline-block;width:2px;height:13px;background:#1A56C4;vertical-align:middle;margin-left:1px;animation:cursorBlink .75s infinite}
+@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
+
+.ind-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ind-label{font-size:11px;color:var(--t2);width:88px;flex-shrink:0}
+.ind-track{flex:1;height:5px;background:var(--bd);border-radius:3px;overflow:hidden}
+.ind-fill{height:5px;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.ind-status{font-family:var(--fm);font-size:10px;font-weight:600;width:58px;text-align:right}
+
+/* TRANSITION OVERLAY */
+.trans-overlay{
+  position:absolute;inset:0;z-index:100;
+  background:rgba(7,14,26,.85);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  opacity:0;pointer-events:none;
+  transition:opacity .2s ease;
+}
+.trans-overlay.show{opacity:1}
+.trans-title{font-size:16px;font-weight:700;color:#fff;font-family:var(--ff)}
+.trans-line{width:36px;height:2px;background:#1A56C4;border-radius:2px}
+
+/* Score pulse */
+@keyframes pulseRing{
+  0%{stroke-opacity:.7;stroke-width:5}
+  100%{stroke-opacity:0;stroke-width:14}
+}
+.pulse-anim{animation:pulseRing 1.6s ease-out infinite}
+
+/* CAPTION */
+.caption-wrap{
+  position:relative;z-index:5;
+  text-align:center;margin-top:12px;flex-shrink:0;
+}
+.caption-title{font-size:14px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:3px}
+.caption-sub{font-size:12px;color:rgba(255,255,255,.4)}
+
+/* CONTROLS */
+.controls{
+  position:relative;z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  margin-top:14px;width:min(700px,90vw);flex-shrink:0;
+}
+.prog-wrap{
+  width:100%;height:4px;background:rgba(255,255,255,.1);border-radius:2px;
+  cursor:pointer;position:relative;
+}
+.prog-wrap:hover{background:rgba(255,255,255,.15)}
+.prog-fill{height:4px;background:#1A56C4;border-radius:2px;width:0%;transition:width .1s linear}
+
+.ctrl-row{display:flex;align-items:center;gap:8px}
+.ctrl-btn{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.65);border-radius:8px;
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;transition:all .15s;font-family:var(--ff);
+}
 .ctrl-btn:hover{background:rgba(255,255,255,.12);color:#fff}
-.progress-wrap{flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:2px;cursor:pointer;position:relative}
-.progress-fill{height:4px;background:var(--b2);border-radius:2px;transition:width .1s linear;width:0%}
-.progress-thumb{position:absolute;top:50%;right:0;transform:translate(50%,-50%);
-  width:10px;height:10px;border-radius:50%;background:#fff;opacity:0;transition:opacity .15s}
-.progress-wrap:hover .progress-thumb{opacity:1}
-.scene-dots{display:flex;gap:6px;flex-shrink:0}
-.scene-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);
-  cursor:pointer;transition:all .2s}
-.scene-dot.active{background:var(--b2);width:18px;border-radius:3px}
-.ctrl-time{font-family:var(--fm);font-size:10px;color:var(--t3);flex-shrink:0;width:32px}
+.ctrl-btn.play{width:40px;height:40px;font-size:15px;background:rgba(26,86,196,.28);border-color:rgba(26,86,196,.4)}
+.ctrl-btn.play:hover{background:rgba(26,86,196,.48)}
 
-/* ═══════════════════════════════
-   SCENE 1: DASHBOARD
-═══════════════════════════════ */
-.idx-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.idx-card{background:var(--card2);border:1px solid var(--bd);border-radius:10px;
-  padding:10px 12px;transition:all .3s}
-.idx-card.up{border-color:rgba(52,211,153,.2)}
-.idx-card.dn{border-color:rgba(248,113,113,.2)}
-.idx-name{font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px}
-.idx-val{font-size:15px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:-.3px}
-.idx-chg{font-size:10px;font-weight:600;margin-top:2px;font-family:var(--fm)}
-.idx-chg.up{color:var(--g2)}.idx-chg.dn{color:var(--r2)}
+.dots{display:flex;gap:6px;align-items:center}
+.dot-btn{height:6px;background:rgba(255,255,255,.2);border-radius:3px;border:none;cursor:pointer;transition:all .3s;width:6px;padding:0}
+.dot-btn.active{width:20px;background:#1A56C4}
 
-.mock-tbl{width:100%;border-collapse:collapse}
-.mock-th{font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:1px;
-  text-transform:uppercase;padding:7px 8px;border-bottom:1px solid var(--bd);text-align:left}
-.mock-th:last-child{text-align:center}
-.mock-td{padding:9px 8px;border-bottom:1px solid rgba(255,255,255,.04);
-  font-size:12px;color:var(--t);vertical-align:middle}
-.mock-td:last-child{text-align:center}
-.ticker{font-family:var(--fm);font-weight:600;font-size:12px;color:var(--b2)}
-.chg-up{color:var(--g2);font-family:var(--fm);font-size:11px}
-.chg-dn{color:var(--r2);font-family:var(--fm);font-size:11px}
-.price-val{font-family:var(--fm);font-size:12px}
-.s-badge{display:inline-flex;align-items:center;justify-content:center;
-  width:32px;height:20px;border-radius:5px;font-family:var(--fm);
-  font-size:10px;font-weight:700}
-.s-green{background:rgba(5,150,105,.2);color:var(--g2)}
-.s-blue{background:rgba(37,99,235,.2);color:#60A5FA}
-.s-amber{background:rgba(217,119,6,.2);color:var(--o2)}
-
-.anim-row{opacity:0;transform:translateX(-8px);transition:opacity .35s ease,transform .35s ease}
-.anim-row.show{opacity:1;transform:none}
-
-/* ═══════════════════════════════
-   SCENE 2: FINSEDGE SCORE
-═══════════════════════════════ */
-.score-layout{display:flex;gap:14px;flex:1;min-height:0}
-.score-left{width:180px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;
-  justify-content:flex-start;padding-top:8px;gap:12px}
-.score-circle-wrap{position:relative;width:130px;height:130px}
-.score-svg{width:130px;height:130px;transform:rotate(-90deg)}
-.score-track{fill:none;stroke:rgba(255,255,255,.08);stroke-width:10;stroke-linecap:round}
-.score-arc{fill:none;stroke-width:10;stroke-linecap:round;
-  stroke-dasharray:345;stroke-dashoffset:345;transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)}
-.score-num-wrap{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center}
-.score-num{font-family:var(--fm);font-size:36px;font-weight:700;color:#fff;line-height:1}
-.score-denom{font-family:var(--fm);font-size:10px;color:var(--t3)}
-.score-label{padding:4px 14px;border-radius:20px;font-size:11px;font-weight:700;
-  font-family:var(--fm);letter-spacing:.5px}
-.score-label.good{background:rgba(5,150,105,.2);color:var(--g2)}
-.score-label.medium{background:rgba(217,119,6,.2);color:var(--o2)}
-
-.score-dims{flex:1;display:flex;flex-direction:column;gap:9px;padding-top:4px}
-.dim-row{display:flex;align-items:center;gap:10px}
-.dim-name{font-size:10px;color:var(--t3);font-family:var(--fm);width:88px;flex-shrink:0;text-align:right}
-.dim-bar-wrap{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
-.dim-bar-fill{height:6px;border-radius:3px;width:0;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
-.dim-val{font-family:var(--fm);font-size:10px;color:var(--t2);width:28px;text-align:right;flex-shrink:0}
-
-.score-right{flex:1;display:flex;flex-direction:column;gap:10px}
-.stock-header{display:flex;align-items:flex-start;justify-content:space-between}
-.stock-ticker{font-family:var(--fm);font-size:11px;color:var(--b2);letter-spacing:.5px;margin-bottom:2px}
-.stock-name{font-size:15px;font-weight:700;color:var(--t)}
-.stock-price{font-family:var(--fm);font-size:20px;font-weight:600;color:var(--t);letter-spacing:-.5px}
-.stock-chg-neg{font-family:var(--fm);font-size:11px;color:var(--r2)}
-.stock-chg-pos{font-family:var(--fm);font-size:11px;color:var(--g2)}
-
-.pt-card{background:var(--card2);border:1px solid var(--bd);border-radius:10px;
-  padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
-.pt-label{font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:3px}
-.pt-val{font-family:var(--fm);font-size:18px;font-weight:700;color:#60A5FA}
-.pt-up{font-family:var(--fm);font-size:11px;color:var(--g2)}
-
-/* ═══════════════════════════════
-   SCENE 3: PORTFOLIO
-═══════════════════════════════ */
-.pf-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.pf-card{background:var(--card2);border:1px solid var(--bd);border-radius:10px;padding:10px 14px}
-.pf-card-label{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:1px;
-  text-transform:uppercase;margin-bottom:4px}
-.pf-card-val{font-family:var(--fm);font-size:18px;font-weight:700;color:var(--t);letter-spacing:-.5px}
-.pf-card-val.green{color:var(--g2)}.pf-card-val.red{color:var(--r2)}
-
-/* ═══════════════════════════════
-   SCENE 4: SCREENER
-═══════════════════════════════ */
-.filter-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.filter-chip{display:inline-flex;align-items:center;gap:5px;
-  background:rgba(37,99,235,.15);border:1px solid rgba(37,99,235,.3);
-  color:#60A5FA;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:600;
-  font-family:var(--fm)}
-.filter-chip .x{color:rgba(96,165,250,.5);cursor:pointer}
-.scr-row-wrap{display:flex;flex-direction:column;gap:1px}
-
-/* ═══════════════════════════════
-   SCENE 5: AI
-═══════════════════════════════ */
-.ai-header{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.ai-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(139,92,246,.15);
-  border:1px solid rgba(139,92,246,.3);color:#A78BFA;padding:5px 12px;
-  border-radius:20px;font-size:10px;font-weight:700;font-family:var(--fm)}
-.ai-pulse{width:6px;height:6px;background:#A78BFA;border-radius:50%;
-  animation:aiPulse 1.2s ease-in-out infinite}
-@keyframes aiPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.6)}}
-.ai-ticker-label{font-family:var(--fm);font-size:11px;color:var(--t3)}
-
-.ai-box{background:var(--card2);border:1px solid var(--bd);border-radius:12px;
-  padding:16px;flex:1;overflow:hidden;position:relative}
-.ai-text{font-size:12.5px;color:var(--t2);line-height:1.8;font-weight:400}
-.ai-cursor{display:inline-block;width:2px;height:13px;background:var(--b2);
-  vertical-align:middle;margin-left:1px;animation:blink .7s step-end infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-.ai-sections{display:flex;flex-direction:column;gap:6px;margin-top:12px}
-.ai-sec{display:flex;align-items:center;gap:8px;font-size:11px}
-.ai-sec-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.ai-sec-label{color:var(--t3);font-family:var(--fm);width:80px;font-size:10px}
-.ai-sec-bar{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
-.ai-sec-fill{height:4px;border-radius:2px;transition:width 1s ease}
-
-/* ═══════════════════════════════
-   SHARED UI ELEMENTS
-═══════════════════════════════ */
-.section-label{font-size:9px;font-family:var(--fm);color:var(--t3);
-  letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
-.live-dot{display:inline-block;width:6px;height:6px;background:var(--g2);
-  border-radius:50%;margin-left:5px;vertical-align:middle;
-  animation:livePulse 1.8s ease-in-out infinite}
-@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
-
-/* ─── RESPONSIVE ─── */
-@media(max-width:700px){
-  .idx-grid{grid-template-columns:repeat(2,1fr)}
-  .score-layout{flex-direction:column}
-  .score-left{width:100%;flex-direction:row;padding-top:0}
-  .pf-summary{grid-template-columns:repeat(2,1fr)}
-  .chrome-url{display:none}
-  .cap-title{font-size:15px}
-  .cap-sub{display:none}
-}
-@media(max-width:480px){
-  .mock-sidebar{display:none}
-  .pf-summary{grid-template-columns:1fr 1fr}
-}
+.ctrl-time{font-family:var(--fm);font-size:11px;color:rgba(255,255,255,.35);min-width:32px;text-align:right}
 </style>
 </head>
 <body>
 
+<!-- BACKGROUND ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+<div class="orb orb4"></div>
+
 <!-- PAGE NAV -->
 <nav class="page-nav">
-  <a href="./about.html" class="page-logo"><div class="logo-dot"></div>Fin<span>Edge</span></a>
-  <a href="./about.html" class="page-back">← Torna alla home</a>
+  <div class="page-logo">Fin<span>Edge</span></div>
+  <a href="/" class="page-back">&#8592; Torna alla home</a>
 </nav>
 
-<!-- DEMO OUTER -->
-<div class="demo-outer">
-
-  <!-- BROWSER FRAME -->
-  <div class="browser">
-    <!-- Chrome bar -->
-    <div class="browser-chrome">
-      <div class="chrome-dots">
-        <div class="chrome-dot"></div>
-        <div class="chrome-dot"></div>
-        <div class="chrome-dot"></div>
-      </div>
-      <div class="chrome-url">finedge.it/dashboard</div>
+<!-- BROWSER FRAME -->
+<div class="browser-wrap" id="browserWrap">
+  <div class="browser-chrome">
+    <div class="traffic">
+      <div class="tl-dot r"></div>
+      <div class="tl-dot y"></div>
+      <div class="tl-dot g"></div>
     </div>
-
-    <!-- SCENES -->
-    <div class="scenes" id="scenes">
-
-      <!-- ══════════════════════════════
-           SCENE 1: DASHBOARD
-      ══════════════════════════════ -->
-      <div class="scene active" id="s1">
-        <div class="mock-shell">
-          <div class="mock-sidebar">
-            <div class="mock-sico active">📊</div>
-            <div class="mock-sico">💼</div>
-            <div class="mock-sico">🔍</div>
-            <div class="mock-sico">📰</div>
-            <div class="mock-sico">🧮</div>
-          </div>
-          <div class="mock-main">
-            <div class="mock-topbar">
-              <div class="mock-tab active">Mercati</div>
-              <div class="mock-tab">Watchlist</div>
-              <div class="mock-tab">Portafoglio</div>
-            </div>
-            <div class="mock-content">
-              <div class="section-label">Mercati globali <span class="live-dot"></span></div>
-              <div class="idx-grid">
-                <div class="idx-card up" id="s1-idx1">
-                  <div class="idx-name">S&amp;P 500</div>
-                  <div class="idx-val">5,642.18</div>
-                  <div class="idx-chg up">▲ +0.82%</div>
-                </div>
-                <div class="idx-card up" id="s1-idx2">
-                  <div class="idx-name">NASDAQ</div>
-                  <div class="idx-val">17,891.45</div>
-                  <div class="idx-chg up">▲ +1.24%</div>
-                </div>
-                <div class="idx-card up" id="s1-idx3">
-                  <div class="idx-name">BTC/USD</div>
-                  <div class="idx-val">68,420.00</div>
-                  <div class="idx-chg up">▲ +2.10%</div>
-                </div>
-                <div class="idx-card dn" id="s1-idx4">
-                  <div class="idx-name">EUR/USD</div>
-                  <div class="idx-val">1.0842</div>
-                  <div class="idx-chg dn">▼ -0.15%</div>
-                </div>
-              </div>
-              <div class="section-label" style="margin-top:4px">Watchlist</div>
-              <table class="mock-tbl">
-                <thead>
-                  <tr>
-                    <th class="mock-th">Ticker</th>
-                    <th class="mock-th">Nome</th>
-                    <th class="mock-th">Prezzo</th>
-                    <th class="mock-th">Variaz.</th>
-                    <th class="mock-th">Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="anim-row" id="s1-r1"><td class="mock-td"><span class="ticker">NVDA</span></td><td class="mock-td" style="color:var(--t2);font-size:11px">NVIDIA Corp.</td><td class="mock-td"><span class="price-val">$875.40</span></td><td class="mock-td"><span class="chg-up">▲ +3.2%</span></td><td class="mock-td"><span class="s-badge s-green">91</span></td></tr>
-                  <tr class="anim-row" id="s1-r2"><td class="mock-td"><span class="ticker">MSFT</span></td><td class="mock-td" style="color:var(--t2);font-size:11px">Microsoft Corp.</td><td class="mock-td"><span class="price-val">$415.32</span></td><td class="mock-td"><span class="chg-up">▲ +1.8%</span></td><td class="mock-td"><span class="s-badge s-green">85</span></td></tr>
-                  <tr class="anim-row" id="s1-r3"><td class="mock-td"><span class="ticker">AAPL</span></td><td class="mock-td" style="color:var(--t2);font-size:11px">Apple Inc.</td><td class="mock-td"><span class="price-val">$184.67</span></td><td class="mock-td"><span class="chg-dn">▼ -0.4%</span></td><td class="mock-td"><span class="s-badge s-blue">78</span></td></tr>
-                  <tr class="anim-row" id="s1-r4"><td class="mock-td"><span class="ticker">AMZN</span></td><td class="mock-td" style="color:var(--t2);font-size:11px">Amazon.com Inc.</td><td class="mock-td"><span class="price-val">$184.15</span></td><td class="mock-td"><span class="chg-up">▲ +0.6%</span></td><td class="mock-td"><span class="s-badge s-amber">72</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="scene-caption">
-          <div class="cap-inner">
-            <div class="cap-tag">01 / 05 — Dashboard</div>
-            <div class="cap-title">Tutti i mercati, in un colpo d'occhio</div>
-            <div class="cap-sub">Azioni, indici, crypto e valute aggiornati in tempo reale — con FinEdge Score sempre visibile</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════════════════════
-           SCENE 2: FINEDGE SCORE
-      ══════════════════════════════ -->
-      <div class="scene" id="s2">
-        <div class="mock-shell">
-          <div class="mock-sidebar">
-            <div class="mock-sico">📊</div>
-            <div class="mock-sico">💼</div>
-            <div class="mock-sico active">🔍</div>
-            <div class="mock-sico">📰</div>
-            <div class="mock-sico">🧮</div>
-          </div>
-          <div class="mock-main">
-            <div class="mock-topbar">
-              <div class="mock-tab">Mercati</div>
-              <div class="mock-tab active">Analisi</div>
-              <div class="mock-tab">Notizie</div>
-            </div>
-            <div class="mock-content">
-              <div class="stock-header">
-                <div>
-                  <div class="stock-ticker">AAPL · NASDAQ</div>
-                  <div class="stock-name">Apple Inc.</div>
-                </div>
-                <div style="text-align:right">
-                  <div class="stock-price">$184.67</div>
-                  <div class="stock-chg-neg">▼ -0.42% oggi</div>
-                </div>
-              </div>
-              <div class="score-layout">
-                <div class="score-left">
-                  <div class="score-circle-wrap">
-                    <svg class="score-svg" viewBox="0 0 130 130">
-                      <circle class="score-track" cx="65" cy="65" r="55"/>
-                      <circle class="score-arc" id="scoreArc" cx="65" cy="65" r="55" stroke="#1A56C4"/>
-                    </svg>
-                    <div class="score-num-wrap">
-                      <div class="score-num" id="scoreNum">0</div>
-                      <div class="score-denom">/100</div>
-                    </div>
-                  </div>
-                  <div class="score-label good" id="scoreLabel">BUONO</div>
-                </div>
-                <div class="score-right">
-                  <div class="score-dims">
-                    <div class="dim-row">
-                      <div class="dim-name">Valutazione</div>
-                      <div class="dim-bar-wrap"><div class="dim-bar-fill" id="d1" style="background:#1A56C4;width:0%"></div></div>
-                      <div class="dim-val">72%</div>
-                    </div>
-                    <div class="dim-row">
-                      <div class="dim-name">Redditività</div>
-                      <div class="dim-bar-wrap"><div class="dim-bar-fill" id="d2" style="background:#059669;width:0%"></div></div>
-                      <div class="dim-val">92%</div>
-                    </div>
-                    <div class="dim-row">
-                      <div class="dim-name">Momentum</div>
-                      <div class="dim-bar-wrap"><div class="dim-bar-fill" id="d3" style="background:#7C3AED;width:0%"></div></div>
-                      <div class="dim-val">75%</div>
-                    </div>
-                    <div class="dim-row">
-                      <div class="dim-name">Consensus</div>
-                      <div class="dim-bar-wrap"><div class="dim-bar-fill" id="d4" style="background:#0891B2;width:0%"></div></div>
-                      <div class="dim-val">80%</div>
-                    </div>
-                    <div class="dim-row">
-                      <div class="dim-name">Stabilità</div>
-                      <div class="dim-bar-wrap"><div class="dim-bar-fill" id="d5" style="background:#D97706;width:0%"></div></div>
-                      <div class="dim-val">60%</div>
-                    </div>
-                  </div>
-                  <div class="pt-card">
-                    <div>
-                      <div class="pt-label">FinEdge Target</div>
-                      <div class="pt-val">$215.40</div>
-                    </div>
-                    <div class="pt-up">▲ +16.6% potenziale</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="scene-caption">
-          <div class="cap-inner">
-            <div class="cap-tag">02 / 05 — FinEdge Score</div>
-            <div class="cap-title">Un voto da 0 a 100 su ogni titolo</div>
-            <div class="cap-sub">Valutazione, redditività, momentum, consensus e stabilità — tutto in un solo numero</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════════════════════
-           SCENE 3: PORTFOLIO
-      ══════════════════════════════ -->
-      <div class="scene" id="s3">
-        <div class="mock-shell">
-          <div class="mock-sidebar">
-            <div class="mock-sico">📊</div>
-            <div class="mock-sico active">💼</div>
-            <div class="mock-sico">🔍</div>
-            <div class="mock-sico">📰</div>
-            <div class="mock-sico">🧮</div>
-          </div>
-          <div class="mock-main">
-            <div class="mock-topbar">
-              <div class="mock-tab active">Portafoglio</div>
-              <div class="mock-tab">Storico</div>
-              <div class="mock-tab">Simulatore</div>
-            </div>
-            <div class="mock-content">
-              <div class="pf-summary">
-                <div class="pf-card">
-                  <div class="pf-card-label">Valore totale</div>
-                  <div class="pf-card-val" id="pf-total">€0</div>
-                </div>
-                <div class="pf-card">
-                  <div class="pf-card-label">Guadagno netto</div>
-                  <div class="pf-card-val green" id="pf-gain">+€0</div>
-                </div>
-                <div class="pf-card">
-                  <div class="pf-card-label">Rendimento</div>
-                  <div class="pf-card-val green" id="pf-pct">+0%</div>
-                </div>
-              </div>
-              <table class="mock-tbl">
-                <thead>
-                  <tr>
-                    <th class="mock-th">Titolo</th>
-                    <th class="mock-th">Qtà</th>
-                    <th class="mock-th">P.M. Carico</th>
-                    <th class="mock-th">Prezzo att.</th>
-                    <th class="mock-th">P&amp;L</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="anim-row" id="pf-r1"><td class="mock-td"><span class="ticker">NVDA</span></td><td class="mock-td" style="font-family:var(--fm)">5</td><td class="mock-td" style="font-family:var(--fm);color:var(--t2)">$650.00</td><td class="mock-td"><span class="price-val">$875.40</span></td><td class="mock-td"><span class="chg-up">+€1.127 (+34.7%)</span></td></tr>
-                  <tr class="anim-row" id="pf-r2"><td class="mock-td"><span class="ticker">MSFT</span></td><td class="mock-td" style="font-family:var(--fm)">10</td><td class="mock-td" style="font-family:var(--fm);color:var(--t2)">$372.00</td><td class="mock-td"><span class="price-val">$415.32</span></td><td class="mock-td"><span class="chg-up">+€433 (+11.6%)</span></td></tr>
-                  <tr class="anim-row" id="pf-r3"><td class="mock-td"><span class="ticker">AAPL</span></td><td class="mock-td" style="font-family:var(--fm)">15</td><td class="mock-td" style="font-family:var(--fm);color:var(--t2)">$188.00</td><td class="mock-td"><span class="price-val">$184.67</span></td><td class="mock-td"><span class="chg-dn">-€50 (-1.8%)</span></td></tr>
-                  <tr class="anim-row" id="pf-r4"><td class="mock-td"><span class="ticker">AMZN</span></td><td class="mock-td" style="font-family:var(--fm)">8</td><td class="mock-td" style="font-family:var(--fm);color:var(--t2)">$178.00</td><td class="mock-td"><span class="price-val">$184.15</span></td><td class="mock-td"><span class="chg-up">+€49 (+3.5%)</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="scene-caption">
-          <div class="cap-inner">
-            <div class="cap-tag">03 / 05 — Portafoglio</div>
-            <div class="cap-title">Il tuo portafoglio in tempo reale</div>
-            <div class="cap-sub">Inserisci i titoli che possiedi e monitora guadagni, perdite e rendimento complessivo</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════════════════════
-           SCENE 4: SCREENER
-      ══════════════════════════════ -->
-      <div class="scene" id="s4">
-        <div class="mock-shell">
-          <div class="mock-sidebar">
-            <div class="mock-sico">📊</div>
-            <div class="mock-sico">💼</div>
-            <div class="mock-sico active">🔍</div>
-            <div class="mock-sico">📰</div>
-            <div class="mock-sico">🧮</div>
-          </div>
-          <div class="mock-main">
-            <div class="mock-topbar">
-              <div class="mock-tab active">Screener</div>
-              <div class="mock-tab">Confronto</div>
-            </div>
-            <div class="mock-content">
-              <div class="filter-bar">
-                <div class="filter-chip">Score ≥ 75 <span class="x">✕</span></div>
-                <div class="filter-chip">Settore: Tech <span class="x">✕</span></div>
-                <div class="filter-chip">P/E &lt; 40 <span class="x">✕</span></div>
-                <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-left:4px">5 risultati trovati</div>
-              </div>
-              <table class="mock-tbl">
-                <thead>
-                  <tr>
-                    <th class="mock-th">Ticker</th>
-                    <th class="mock-th">P/E</th>
-                    <th class="mock-th">ROE</th>
-                    <th class="mock-th">Variaz.</th>
-                    <th class="mock-th">Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr class="anim-row" id="sc-r1"><td class="mock-td"><span class="ticker">NVDA</span></td><td class="mock-td" style="font-family:var(--fm);font-size:11px">35.2x</td><td class="mock-td" style="font-family:var(--fm);font-size:11px;color:var(--g2)">85%</td><td class="mock-td"><span class="chg-up">▲ +3.2%</span></td><td class="mock-td"><span class="s-badge s-green">91</span></td></tr>
-                  <tr class="anim-row" id="sc-r2"><td class="mock-td"><span class="ticker">MSFT</span></td><td class="mock-td" style="font-family:var(--fm);font-size:11px">32.1x</td><td class="mock-td" style="font-family:var(--fm);font-size:11px;color:var(--g2)">42%</td><td class="mock-td"><span class="chg-up">▲ +1.8%</span></td><td class="mock-td"><span class="s-badge s-green">85</span></td></tr>
-                  <tr class="anim-row" id="sc-r3"><td class="mock-td"><span class="ticker">META</span></td><td class="mock-td" style="font-family:var(--fm);font-size:11px">24.8x</td><td class="mock-td" style="font-family:var(--fm);font-size:11px;color:var(--g2)">31%</td><td class="mock-td"><span class="chg-up">▲ +0.9%</span></td><td class="mock-td"><span class="s-badge s-green">82</span></td></tr>
-                  <tr class="anim-row" id="sc-r4"><td class="mock-td"><span class="ticker">AAPL</span></td><td class="mock-td" style="font-family:var(--fm);font-size:11px">28.4x</td><td class="mock-td" style="font-family:var(--fm);font-size:11px;color:var(--g2)">147%</td><td class="mock-td"><span class="chg-dn">▼ -0.4%</span></td><td class="mock-td"><span class="s-badge s-blue">78</span></td></tr>
-                  <tr class="anim-row" id="sc-r5"><td class="mock-td"><span class="ticker">GOOGL</span></td><td class="mock-td" style="font-family:var(--fm);font-size:11px">22.3x</td><td class="mock-td" style="font-family:var(--fm);font-size:11px;color:var(--g2)">28%</td><td class="mock-td"><span class="chg-dn">▼ -0.2%</span></td><td class="mock-td"><span class="s-badge s-blue">75</span></td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div class="scene-caption">
-          <div class="cap-inner">
-            <div class="cap-tag">04 / 05 — Screener</div>
-            <div class="cap-title">Trova le migliori opportunità</div>
-            <div class="cap-sub">Filtra per Score, settore, P/E, ROE e decine di altri parametri — risultati istantanei</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- ══════════════════════════════
-           SCENE 5: AI ANALYSIS
-      ══════════════════════════════ -->
-      <div class="scene" id="s5">
-        <div class="mock-shell">
-          <div class="mock-sidebar">
-            <div class="mock-sico">📊</div>
-            <div class="mock-sico">💼</div>
-            <div class="mock-sico active">🔍</div>
-            <div class="mock-sico">📰</div>
-            <div class="mock-sico">🧮</div>
-          </div>
-          <div class="mock-main">
-            <div class="mock-topbar">
-              <div class="mock-tab">Mercati</div>
-              <div class="mock-tab active">Analisi</div>
-              <div class="mock-tab">Notizie</div>
-            </div>
-            <div class="mock-content">
-              <div class="ai-header">
-                <div class="ai-badge"><div class="ai-pulse"></div>FinEdge AI</div>
-                <div class="ai-ticker-label">Analisi di AAPL · Apple Inc.</div>
-              </div>
-              <div class="ai-box">
-                <div class="ai-text" id="ai-text"></div>
-              </div>
-              <div class="ai-sections">
-                <div class="ai-sec"><div class="ai-sec-dot" style="background:#1A56C4"></div><div class="ai-sec-label">Valutazione</div><div class="ai-sec-bar"><div class="ai-sec-fill" id="ai-b1" style="background:#1A56C4;width:0%"></div></div><span style="font-family:var(--fm);font-size:10px;color:var(--t2);margin-left:8px">Neutrale</span></div>
-                <div class="ai-sec"><div class="ai-sec-dot" style="background:#059669"></div><div class="ai-sec-label">Fondamentali</div><div class="ai-sec-bar"><div class="ai-sec-fill" id="ai-b2" style="background:#059669;width:0%"></div></div><span style="font-family:var(--fm);font-size:10px;color:var(--g2);margin-left:8px">Solidi</span></div>
-                <div class="ai-sec"><div class="ai-sec-dot" style="background:#D97706"></div><div class="ai-sec-label">Momentum</div><div class="ai-sec-bar"><div class="ai-sec-fill" id="ai-b3" style="background:#D97706;width:0%"></div></div><span style="font-family:var(--fm);font-size:10px;color:var(--o2);margin-left:8px">In attesa</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="scene-caption">
-          <div class="cap-inner">
-            <div class="cap-tag">05 / 05 — FinEdge AI</div>
-            <div class="cap-title">Analisi completa in 10 secondi</div>
-            <div class="cap-sub">L'intelligenza artificiale analizza fondamentali, momentum e sentiment — in italiano, senza paywall</div>
-          </div>
-        </div>
-      </div>
-
-    </div><!-- /scenes -->
-  </div><!-- /browser -->
-
-  <!-- CONTROLS -->
-  <div class="controls">
-    <button class="ctrl-btn" id="btn-prev" title="Precedente">‹</button>
-    <button class="ctrl-btn" id="btn-play" title="Pausa">⏸</button>
-    <button class="ctrl-btn" id="btn-next" title="Successiva">›</button>
-    <div class="progress-wrap" id="progress-wrap">
-      <div class="progress-fill" id="progress-fill"></div>
-      <div class="progress-thumb" id="progress-thumb"></div>
+    <div class="url-bar">
+      <span class="url-lock">&#128274;</span>
+      finedge.it/dashboard
     </div>
-    <div class="scene-dots" id="scene-dots">
-      <div class="scene-dot active" data-i="0"></div>
-      <div class="scene-dot" data-i="1"></div>
-      <div class="scene-dot" data-i="2"></div>
-      <div class="scene-dot" data-i="3"></div>
-      <div class="scene-dot" data-i="4"></div>
-    </div>
-    <div class="ctrl-time" id="ctrl-time">0:00</div>
   </div>
 
-</div><!-- /demo-outer -->
+  <div class="browser-body">
+    <!-- PERSISTENT HEADER -->
+    <div class="site-header">
+      <nav class="site-nav">
+        <div class="logo">
+          <div class="logo-dot"></div>
+          Fin<span class="logo-fade">Edge</span>
+        </div>
+        <div class="nav-items">
+          <button class="nav-btn active" id="navMercati">Mercati</button>
+          <button class="nav-btn" id="navScreener">Screener</button>
+          <button class="nav-btn" id="navPortfolio">Portafoglio</button>
+          <button class="nav-btn">News</button>
+          <button class="nav-btn">Simulatore</button>
+        </div>
+        <div class="nav-time" id="navTime">14:32:18</div>
+      </nav>
+
+      <div class="hours-bar">
+        <div class="hb-ex">
+          <span class="hb-flag">&#127482;&#127480;</span>
+          <span class="hb-name">NYSE</span>
+          <span class="hb-dot open"></span>
+          <span class="hb-st open">APERTO</span>
+          <span class="hb-time">14:32</span>
+        </div>
+        <div class="hb-ex">
+          <span class="hb-flag">&#127466;&#127482;</span>
+          <span class="hb-name">EURONEXT</span>
+          <span class="hb-dot open"></span>
+          <span class="hb-st open">APERTO</span>
+          <span class="hb-time">20:32</span>
+        </div>
+        <div class="hb-ex">
+          <span class="hb-flag">&#127468;&#127463;</span>
+          <span class="hb-name">LSE</span>
+          <span class="hb-dot open"></span>
+          <span class="hb-st open">APERTO</span>
+          <span class="hb-time">19:32</span>
+        </div>
+        <div class="hb-ex">
+          <span class="hb-flag">&#127471;&#127477;</span>
+          <span class="hb-name">TSE</span>
+          <span class="hb-dot closed"></span>
+          <span class="hb-st closed">CHIUSO</span>
+          <span class="hb-time">23:32</span>
+        </div>
+      </div>
+
+      <div class="tape">
+        <div class="tape-track">
+          <div class="ti"><span class="ti-sym">SPY</span><span class="ti-p">$562.18</span><span class="ti-c up">+0.8%</span></div>
+          <div class="ti"><span class="ti-sym">QQQ</span><span class="ti-p">$447.23</span><span class="ti-c up">+1.2%</span></div>
+          <div class="ti"><span class="ti-sym">AAPL</span><span class="ti-p">$184.67</span><span class="ti-c down">-0.4%</span></div>
+          <div class="ti"><span class="ti-sym">MSFT</span><span class="ti-p">$415.32</span><span class="ti-c up">+1.8%</span></div>
+          <div class="ti"><span class="ti-sym">NVDA</span><span class="ti-p">$875.40</span><span class="ti-c up">+3.2%</span></div>
+          <div class="ti"><span class="ti-sym">AMZN</span><span class="ti-p">$184.15</span><span class="ti-c up">+0.6%</span></div>
+          <div class="ti"><span class="ti-sym">TSLA</span><span class="ti-p">$242.80</span><span class="ti-c up">+2.1%</span></div>
+          <div class="ti"><span class="ti-sym">BTC-USD</span><span class="ti-p">$68,420</span><span class="ti-c up">+2.1%</span></div>
+          <!-- duplicate for seamless loop -->
+          <div class="ti"><span class="ti-sym">SPY</span><span class="ti-p">$562.18</span><span class="ti-c up">+0.8%</span></div>
+          <div class="ti"><span class="ti-sym">QQQ</span><span class="ti-p">$447.23</span><span class="ti-c up">+1.2%</span></div>
+          <div class="ti"><span class="ti-sym">AAPL</span><span class="ti-p">$184.67</span><span class="ti-c down">-0.4%</span></div>
+          <div class="ti"><span class="ti-sym">MSFT</span><span class="ti-p">$415.32</span><span class="ti-c up">+1.8%</span></div>
+          <div class="ti"><span class="ti-sym">NVDA</span><span class="ti-p">$875.40</span><span class="ti-c up">+3.2%</span></div>
+          <div class="ti"><span class="ti-sym">AMZN</span><span class="ti-p">$184.15</span><span class="ti-c up">+0.6%</span></div>
+          <div class="ti"><span class="ti-sym">TSLA</span><span class="ti-p">$242.80</span><span class="ti-c up">+2.1%</span></div>
+          <div class="ti"><span class="ti-sym">BTC-USD</span><span class="ti-p">$68,420</span><span class="ti-c up">+2.1%</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT AREA -->
+    <div class="content-area" id="contentArea">
+
+      <!-- TRANSITION OVERLAY -->
+      <div class="trans-overlay" id="transOverlay">
+        <div class="trans-title" id="transTitle"></div>
+        <div class="trans-line"></div>
+      </div>
+
+      <!-- ======= SCENE 1: DASHBOARD ======= -->
+      <div class="scene active" id="scene0">
+        <div class="pg-title">Mercati Globali</div>
+        <div class="pg-sub">Panoramica dei mercati in tempo reale &middot; Aggiornato 14:32:18</div>
+
+        <div class="idx-grid">
+          <div class="idx-card">
+            <div class="idx-label">S&amp;P 500</div>
+            <div class="idx-val">5,642.18</div>
+            <span class="badge up">&#9650; +0.82%</span>
+          </div>
+          <div class="idx-card">
+            <div class="idx-label">NASDAQ</div>
+            <div class="idx-val">17,891.45</div>
+            <span class="badge up">&#9650; +1.24%</span>
+          </div>
+          <div class="idx-card">
+            <div class="idx-label">BTC/USD</div>
+            <div class="idx-val">68,420</div>
+            <span class="badge up">&#9650; +2.10%</span>
+          </div>
+          <div class="idx-card">
+            <div class="idx-label">EUR/USD</div>
+            <div class="idx-val">1.0842</div>
+            <span class="badge dn">&#9660; -0.15%</span>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="section-label">Top Movers</div>
+            <div class="mover-item" id="mv0">
+              <div><div class="mv-sym">NVDA</div><div class="mv-name">NVIDIA Corporation</div></div>
+              <div style="text-align:right">
+                <div class="mv-price">$875.40</div>
+                <span class="badge up" style="font-size:10px">+3.2%</span>
+              </div>
+            </div>
+            <div class="mover-item" id="mv1">
+              <div><div class="mv-sym">MSFT</div><div class="mv-name">Microsoft</div></div>
+              <div style="text-align:right">
+                <div class="mv-price">$415.32</div>
+                <span class="badge up" style="font-size:10px">+1.8%</span>
+              </div>
+            </div>
+            <div class="mover-item" id="mv2">
+              <div><div class="mv-sym">AAPL</div><div class="mv-name">Apple Inc.</div></div>
+              <div style="text-align:right">
+                <div class="mv-price">$184.67</div>
+                <span class="badge dn" style="font-size:10px">-0.4%</span>
+              </div>
+            </div>
+            <div class="mover-item" id="mv3">
+              <div><div class="mv-sym">AMZN</div><div class="mv-name">Amazon</div></div>
+              <div style="text-align:right">
+                <div class="mv-price">$184.15</div>
+                <span class="badge up" style="font-size:10px">+0.6%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+              <div>
+                <div style="font-size:13px;font-weight:600;color:var(--t)">Volatilità</div>
+                <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px">VIX INDEX</div>
+              </div>
+            </div>
+            <div class="vix-num">18.4</div>
+            <div class="vix-desc">BASSA VOLATILIT&#192;</div>
+            <div class="vix-bar-wrap">
+              <div class="vix-bar"></div>
+              <div class="vix-needle"></div>
+            </div>
+            <div class="vix-zones">
+              <span>Bassa</span><span>Media</span><span>Alta</span><span>Estrema</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCENE 2: FINEDGE SCORE ======= -->
+      <div class="scene" id="scene1">
+        <div class="stock-hdr">
+          <span class="stock-ticker">AAPL</span>
+          <span class="stock-name">Apple Inc.</span>
+          <span class="stock-price">$184.67</span>
+          <span class="stock-chg">&#9660; -0.42%</span>
+        </div>
+        <div class="score-layout">
+          <div class="score-card">
+            <div class="score-svg-wrap">
+              <svg width="140" height="140" viewBox="0 0 140 140" style="overflow:visible">
+                <!-- Pulse ring -->
+                <circle id="scorePulseRing" cx="70" cy="70" r="63" fill="none"
+                  stroke="#1A56C4" stroke-width="5" stroke-opacity="0"/>
+                <!-- Track -->
+                <circle cx="70" cy="70" r="55" fill="none" stroke="#EEF2F8" stroke-width="10"/>
+                <!-- Arc -->
+                <circle id="scoreArc" cx="70" cy="70" r="55" fill="none"
+                  stroke="#1A56C4" stroke-width="10"
+                  stroke-linecap="round"
+                  stroke-dasharray="345.4"
+                  stroke-dashoffset="345.4"
+                  transform="rotate(-90 70 70)"
+                  style="transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)"/>
+              </svg>
+              <div class="score-center">
+                <div class="score-num" id="scoreNum">0</div>
+                <div class="score-denom">/100</div>
+              </div>
+            </div>
+            <span class="score-badge">BUONO</span>
+          </div>
+
+          <div class="dim-card">
+            <div class="dim-title">FinEdge Score &mdash; 5 dimensioni</div>
+            <div class="dim-row">
+              <span class="dim-label">Valutazione</span>
+              <div class="dim-track"><div class="dim-fill" id="dim0" style="background:#1A56C4"></div></div>
+              <span class="dim-val">72</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">Redditivit&#224;</span>
+              <div class="dim-track"><div class="dim-fill" id="dim1" style="background:#059669"></div></div>
+              <span class="dim-val">92</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">Momentum</span>
+              <div class="dim-track"><div class="dim-fill" id="dim2" style="background:#7C3AED"></div></div>
+              <span class="dim-val">75</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">Consensus</span>
+              <div class="dim-track"><div class="dim-fill" id="dim3" style="background:#0891B2"></div></div>
+              <span class="dim-val">80</span>
+            </div>
+            <div class="dim-row">
+              <span class="dim-label">Stabilit&#224;</span>
+              <div class="dim-track"><div class="dim-fill" id="dim4" style="background:#D97706"></div></div>
+              <span class="dim-val">60</span>
+            </div>
+            <div class="target-card">
+              <div>
+                <div class="target-lbl">FinEdge Target</div>
+                <div class="target-sub">Consensus analisti</div>
+              </div>
+              <div style="text-align:right">
+                <div class="target-price">$215.40</div>
+                <div class="target-up">&#9650; +16.6% potenziale</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= SCENE 3: PORTFOLIO ======= -->
+      <div class="scene" id="scene2">
+        <div class="pg-title">Il mio Portafoglio</div>
+        <div class="pg-sub">Performance in tempo reale</div>
+
+        <div class="port-summary">
+          <div class="port-kpi hero">
+            <div class="port-kpi-lbl">Valore totale</div>
+            <div class="port-kpi-val" id="portVal">&#8364;0</div>
+            <div style="font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.55);margin-top:3px">4 posizioni aperte</div>
+          </div>
+          <div class="port-kpi">
+            <div class="port-kpi-lbl">Guadagno netto</div>
+            <div class="port-kpi-val" id="portGain" style="color:#059669">+&#8364;0</div>
+            <div class="port-kpi-sub" id="portGainSub">conteggio...</div>
+          </div>
+          <div class="port-kpi">
+            <div class="port-kpi-lbl">Rendimento</div>
+            <div class="port-kpi-val" style="color:#059669">+13.4%</div>
+            <div class="port-kpi-sub">Da inizio anno</div>
+          </div>
+        </div>
+
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Titolo</th><th>Qt&#224;</th><th>P.M. Carico</th><th>Prezzo Att.</th><th>P&amp;L</th><th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tbl-row" id="prow0">
+                <td><span class="sym-bold">NVDA</span></td>
+                <td>5 azioni</td><td>$650</td><td>$875.40</td>
+                <td><span style="color:#059669">+&#8364;1.127 <span style="font-size:10px;opacity:.75">(+34.7%)</span></span></td>
+                <td><span class="pill green">91</span></td>
+              </tr>
+              <tr class="tbl-row" id="prow1">
+                <td><span class="sym-bold">MSFT</span></td>
+                <td>10 azioni</td><td>$372</td><td>$415.32</td>
+                <td><span style="color:#059669">+&#8364;433 <span style="font-size:10px;opacity:.75">(+11.6%)</span></span></td>
+                <td><span class="pill blue">85</span></td>
+              </tr>
+              <tr class="tbl-row" id="prow2">
+                <td><span class="sym-bold">AAPL</span></td>
+                <td>15 azioni</td><td>$188</td><td>$184.67</td>
+                <td><span style="color:#DC2626">-&#8364;50 <span style="font-size:10px;opacity:.75">(-1.8%)</span></span></td>
+                <td><span class="pill blue">78</span></td>
+              </tr>
+              <tr class="tbl-row" id="prow3">
+                <td><span class="sym-bold">AMZN</span></td>
+                <td>8 azioni</td><td>$178</td><td>$184.15</td>
+                <td><span style="color:#059669">+&#8364;49 <span style="font-size:10px;opacity:.75">(+3.5%)</span></span></td>
+                <td><span class="pill amber">72</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======= SCENE 4: SCREENER ======= -->
+      <div class="scene" id="scene3">
+        <div class="pg-title">Screener</div>
+        <div class="pg-sub">Trova i titoli con i migliori fondamentali</div>
+
+        <div class="filter-bar">
+          <select class="fsel"><option>Score &#8805; 75</option></select>
+          <select class="fsel"><option>Settore: Tech</option></select>
+          <select class="fsel"><option>P/E &lt; 40</option></select>
+          <button class="sc-btn">Cerca</button>
+          <span class="fbadge">Score &#8805; 75</span>
+          <span class="fbadge">Settore: Tech</span>
+          <span class="fbadge">P/E &lt; 40</span>
+          <span class="sc-cnt">5 risultati</span>
+        </div>
+
+        <div class="tbl-wrap">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Ticker</th><th>Nome</th><th>Prezzo</th><th>Var%</th><th>P/E</th><th>ROE</th><th>Score</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="tbl-row" id="srow0">
+                <td><span class="sym-link">NVDA</span></td>
+                <td>NVIDIA Corp.</td><td>$875.40</td>
+                <td><span style="color:#059669">+3.2%</span></td>
+                <td>35.2x</td><td>85%</td><td><span class="pill green">91</span></td>
+              </tr>
+              <tr class="tbl-row" id="srow1">
+                <td><span class="sym-link">MSFT</span></td>
+                <td>Microsoft</td><td>$415.32</td>
+                <td><span style="color:#059669">+1.8%</span></td>
+                <td>32.1x</td><td>42%</td><td><span class="pill green">85</span></td>
+              </tr>
+              <tr class="tbl-row" id="srow2">
+                <td><span class="sym-link">META</span></td>
+                <td>Meta Platforms</td><td>$501.80</td>
+                <td><span style="color:#059669">+0.9%</span></td>
+                <td>24.8x</td><td>31%</td><td><span class="pill green">82</span></td>
+              </tr>
+              <tr class="tbl-row" id="srow3">
+                <td><span class="sym-link">AAPL</span></td>
+                <td>Apple Inc.</td><td>$184.67</td>
+                <td><span style="color:#DC2626">-0.4%</span></td>
+                <td>28.4x</td><td>147%</td><td><span class="pill blue">78</span></td>
+              </tr>
+              <tr class="tbl-row" id="srow4">
+                <td><span class="sym-link">GOOGL</span></td>
+                <td>Alphabet</td><td>$168.23</td>
+                <td><span style="color:#DC2626">-0.2%</span></td>
+                <td>22.3x</td><td>28%</td><td><span class="pill blue">75</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======= SCENE 5: AI ANALYSIS ======= -->
+      <div class="scene" id="scene4">
+        <div class="ai-scene-hdr">
+          <span class="ai-badge">&#10022; FinEdge AI</span>
+          <span class="ai-who">AAPL &middot; Apple Inc.</span>
+        </div>
+        <div class="pg-sub">Analisi generata in tempo reale</div>
+
+        <div class="ai-card">
+          <div class="ai-tag">
+            <svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="6" fill="#7C3AED" opacity=".15"/><circle cx="6" cy="6" r="3" fill="#7C3AED"/></svg>
+            <span class="ai-tag-lbl">ANALISI AI</span>
+          </div>
+          <div class="ai-text" id="aiText"></div>
+        </div>
+
+        <div class="card">
+          <div class="section-label" style="margin-bottom:10px">Indicatori chiave</div>
+          <div class="ind-row">
+            <span class="ind-label">Fondamentali</span>
+            <div class="ind-track"><div class="ind-fill" id="ind0" style="background:#059669"></div></div>
+            <span class="ind-status" style="color:#059669">Solidi</span>
+          </div>
+          <div class="ind-row">
+            <span class="ind-label">Valutazione</span>
+            <div class="ind-track"><div class="ind-fill" id="ind1" style="background:#1A56C4"></div></div>
+            <span class="ind-status" style="color:#1A56C4">Neutrale</span>
+          </div>
+          <div class="ind-row">
+            <span class="ind-label">Momentum</span>
+            <div class="ind-track"><div class="ind-fill" id="ind2" style="background:#D97706"></div></div>
+            <span class="ind-status" style="color:#D97706">In attesa</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content-area -->
+  </div><!-- /browser-body -->
+</div><!-- /browser-wrap -->
+
+<!-- CAPTION -->
+<div class="caption-wrap">
+  <div class="caption-title" id="captionTitle">Dashboard globale</div>
+  <div class="caption-sub" id="captionSub">Azioni, indici e crypto &mdash; tutto aggiornato in tempo reale</div>
+</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="prog-wrap" id="progWrap">
+    <div class="prog-fill" id="progFill"></div>
+  </div>
+  <div class="ctrl-row">
+    <button class="ctrl-btn" id="btnPrev">&#8249;</button>
+    <button class="ctrl-btn play" id="btnPlay">&#9646;&#9646;</button>
+    <button class="ctrl-btn" id="btnNext">&#8250;</button>
+    <div class="dots" id="dotsWrap">
+      <button class="dot-btn active" data-i="0"></button>
+      <button class="dot-btn" data-i="1"></button>
+      <button class="dot-btn" data-i="2"></button>
+      <button class="dot-btn" data-i="3"></button>
+      <button class="dot-btn" data-i="4"></button>
+    </div>
+    <span class="ctrl-time" id="ctrlTime">0:00</span>
+  </div>
+</div>
 
 <script>
-/* ═══ SCENE CONTROLLER ═══ */
-const DURATIONS=[5200,5500,4800,4500,5500]; // ms per scene
-const TOTAL=DURATIONS.reduce((a,b)=>a+b,0);
-let current=0, paused=false, elapsed=0, lastTick=null, raf=null;
-let sceneStart=0; // elapsed at start of current scene
+/* ============================================================
+   FINEDGE DEMO ENGINE
+   ============================================================ */
 
-const scenes=document.querySelectorAll('.scene');
-const dots=document.querySelectorAll('.scene-dot');
-const fill=document.getElementById('progress-fill');
-const thumb=document.getElementById('progress-thumb');
-const timeEl=document.getElementById('ctrl-time');
-const btnPlay=document.getElementById('btn-play');
+const DURATIONS  = [5500, 5500, 4500, 4500, 5500];
+const TOTAL_MS   = DURATIONS.reduce((a,b)=>a+b,0);
 
-function goToScene(idx,reset=true){
-  scenes[current].classList.remove('active');
-  dots[current].classList.remove('active');
-  current=idx;
-  scenes[current].classList.add('active');
-  dots[current].classList.add('active');
-  if(reset){
-    sceneStart=elapsed;
-    triggerScene(current);
+const CAPTIONS = [
+  { title:'Dashboard globale',     sub:'Azioni, indici e crypto \u2014 tutto aggiornato in tempo reale' },
+  { title:'FinEdge Score',         sub:'Un voto da 0 a 100 calcolato su 5 dimensioni fondamentali' },
+  { title:'Portafoglio live',      sub:'Monitora guadagni e perdite in tempo reale, con Score su ogni posizione' },
+  { title:'Screener intelligente', sub:'Filtra per Score, settore, P/E, ROE e decine di altri parametri' },
+  { title:'FinEdge AI',            sub:'Analisi completa in 10 secondi \u2014 in italiano, senza paywall' },
+];
+
+const SCENE_NAMES = ['Dashboard','FinEdge Score','Portafoglio','Screener','Analisi AI'];
+const NAV_IDS     = ['navMercati','navMercati','navPortfolio','navScreener','navMercati'];
+
+let curScene   = 0;
+let isPlaying  = true;
+let globalMs   = 0;
+let lastTs     = null;
+let rafId      = null;
+
+// Timer handles
+let twTimeout   = null;
+let scoreRaf    = null;
+let pendingIds  = [];   // setTimeout ids
+
+/* ---- helpers ---- */
+function easeOut(t){ return 1 - Math.pow(1-t,3); }
+
+function clearTimers(){
+  if(twTimeout)  clearTimeout(twTimeout);
+  twTimeout = null;
+  if(scoreRaf)   cancelAnimationFrame(scoreRaf);
+  scoreRaf = null;
+  pendingIds.forEach(id => clearTimeout(id));
+  pendingIds = [];
+}
+
+function later(fn, ms){
+  const id = setTimeout(fn, ms);
+  pendingIds.push(id);
+  return id;
+}
+
+function countUp(el, target, durationMs, prefix, suffix){
+  const t0 = performance.now();
+  function tick(now){
+    const p = Math.min((now - t0)/durationMs, 1);
+    const v = Math.round(easeOut(p)*target);
+    el.textContent = prefix + v.toLocaleString('it-IT') + suffix;
+    if(p < 1){
+      const id = requestAnimationFrame(tick);
+      pendingIds.push(id);
+    }
   }
+  const id = requestAnimationFrame(tick);
+  pendingIds.push(id);
 }
 
-function nextScene(){
-  const next=(current+1)%scenes.length;
-  if(next===0){elapsed=0;sceneStart=0;}
-  goToScene(next);
+/* ---- nav state ---- */
+function setNav(btnId){
+  ['navMercati','navScreener','navPortfolio'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.toggle('active', id === btnId);
+  });
 }
 
-function tick(ts){
-  if(paused){lastTick=null;return;}
-  if(lastTick!==null) elapsed+=ts-lastTick;
-  lastTick=ts;
-
-  // Progress
-  const pct=Math.min((elapsed%TOTAL)/TOTAL*100,100);
-  fill.style.width=pct+'%';
-  thumb.style.left=pct+'%';
-
-  // Time display
-  const sec=Math.floor(elapsed/1000)%60;
-  const min=Math.floor(elapsed/60000);
-  timeEl.textContent=min+':'+(sec<10?'0':'')+sec;
-
-  // Scene advance
-  const sceneElapsed=elapsed-sceneStart;
-  if(sceneElapsed>=DURATIONS[current]) nextScene();
-
-  raf=requestAnimationFrame(tick);
-}
-
-function play(){paused=false;btnPlay.textContent='⏸';lastTick=null;raf=requestAnimationFrame(tick);}
-function pause(){paused=true;btnPlay.textContent='▶';if(raf)cancelAnimationFrame(raf);}
-
-btnPlay.addEventListener('click',()=>paused?play():pause());
-document.getElementById('btn-prev').addEventListener('click',()=>{
-  sceneStart=elapsed;
-  goToScene((current-1+scenes.length)%scenes.length);
-});
-document.getElementById('btn-next').addEventListener('click',()=>{
-  sceneStart=elapsed;
-  nextScene();
-});
-dots.forEach(d=>d.addEventListener('click',()=>{
-  sceneStart=elapsed;
-  goToScene(+d.dataset.i);
-}));
-
-/* ═══ SCENE ANIMATIONS ═══ */
-function triggerScene(i){
-  // Reset all scene-specific elements
-  resetAll();
-  const delay=ms=>new Promise(r=>setTimeout(r,ms));
-
-  if(i===0) animScene1();
-  if(i===1) animScene2();
-  if(i===2) animScene3();
-  if(i===3) animScene4();
-  if(i===4) animScene5();
-}
-
+/* ---- scene switching ---- */
 function resetAll(){
-  // Scene 1 rows
-  ['s1-r1','s1-r2','s1-r3','s1-r4'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el){el.classList.remove('show');}
-  });
-  // Scene 2 score
-  const arc=document.getElementById('scoreArc');
-  if(arc)arc.style.strokeDashoffset='345';
-  const sn=document.getElementById('scoreNum');
-  if(sn)sn.textContent='0';
-  ['d1','d2','d3','d4','d5'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.style.width='0%';
-  });
-  // Scene 3
-  ['pf-r1','pf-r2','pf-r3','pf-r4'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.classList.remove('show');
-  });
-  const pt=document.getElementById('pf-total');
-  if(pt)pt.textContent='€0';
-  const pg=document.getElementById('pf-gain');
-  if(pg)pg.textContent='+€0';
-  const pp=document.getElementById('pf-pct');
-  if(pp)pp.textContent='+0%';
-  // Scene 4
-  ['sc-r1','sc-r2','sc-r3','sc-r4','sc-r5'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.classList.remove('show');
-  });
-  // Scene 5
-  const at=document.getElementById('ai-text');
-  if(at)at.innerHTML='';
-  ['ai-b1','ai-b2','ai-b3'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.style.width='0%';
-  });
-}
+  clearTimers();
 
-/* Scene 1 */
-function animScene1(){
-  const rows=['s1-r1','s1-r2','s1-r3','s1-r4'];
-  rows.forEach((id,i)=>{
-    setTimeout(()=>{
-      const el=document.getElementById(id);
-      if(el)el.classList.add('show');
-    },300+i*180);
-  });
-}
-
-/* Scene 2: Score */
-function animScene2(){
-  const target=78;
-  const circumference=2*Math.PI*55; // ~345.4
-  const arc=document.getElementById('scoreArc');
-  const numEl=document.getElementById('scoreNum');
-  if(!arc||!numEl)return;
-
-  const dur=1500,start=performance.now();
-  function step(now){
-    const p=Math.min((now-start)/dur,1);
-    const ease=1-Math.pow(1-p,3);
-    const val=Math.round(target*ease);
-    numEl.textContent=val;
-    const offset=circumference-(circumference*(val/100));
-    arc.style.strokeDashoffset=offset;
-    // Color by value
-    if(val>=80)arc.style.stroke='#34D399';
-    else if(val>=60)arc.style.stroke='#1A56C4';
-    else arc.style.stroke='#D97706';
-    if(p<1)requestAnimationFrame(step);
+  // movers
+  for(let i=0;i<4;i++){
+    const el = document.getElementById('mv'+i);
+    if(el){ el.classList.remove('in'); }
   }
-  requestAnimationFrame(step);
+  // score arc
+  const arc = document.getElementById('scoreArc');
+  if(arc) arc.style.strokeDashoffset = '345.4';
+  const sn = document.getElementById('scoreNum');
+  if(sn) sn.textContent = '0';
+  const pr = document.getElementById('scorePulseRing');
+  if(pr){ pr.setAttribute('stroke-opacity','0'); pr.classList.remove('pulse-anim'); }
+  // dim bars
+  for(let i=0;i<5;i++){
+    const el = document.getElementById('dim'+i);
+    if(el) el.style.width='0%';
+  }
+  // portfolio kpis
+  const pv = document.getElementById('portVal');
+  if(pv) pv.textContent = '\u20AC0';
+  const pg = document.getElementById('portGain');
+  if(pg) pg.textContent = '+\u20AC0';
+  const pgs = document.getElementById('portGainSub');
+  if(pgs) pgs.textContent = 'conteggio...';
+  // tbl rows
+  ['prow0','prow1','prow2','prow3','srow0','srow1','srow2','srow3','srow4'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.classList.remove('in');
+  });
+  // ai text
+  const at = document.getElementById('aiText');
+  if(at) at.innerHTML = '';
+  // ind bars
+  for(let i=0;i<3;i++){
+    const el = document.getElementById('ind'+i);
+    if(el) el.style.width='0%';
+  }
+}
 
-  // Bars
-  const bars=[
-    {id:'d1',w:72,delay:400},
-    {id:'d2',w:92,delay:550},
-    {id:'d3',w:75,delay:700},
-    {id:'d4',w:80,delay:850},
-    {id:'d5',w:60,delay:1000},
-  ];
-  bars.forEach(b=>{
-    setTimeout(()=>{
-      const el=document.getElementById(b.id);
-      if(el)el.style.width=b.w+'%';
-    },b.delay);
+function triggerScene(i){
+  resetAll();
+  setNav(NAV_IDS[i]);
+  document.getElementById('captionTitle').textContent = CAPTIONS[i].title;
+  document.getElementById('captionSub').textContent   = CAPTIONS[i].sub;
+
+  // activate scene panel
+  document.querySelectorAll('.scene').forEach((s,idx)=> s.classList.toggle('active', idx===i));
+
+  // dots
+  document.querySelectorAll('.dot-btn').forEach((d,idx)=> d.classList.toggle('active', idx===i));
+
+  // Ken Burns reset → subtle zoom
+  const bw = document.getElementById('browserWrap');
+  bw.classList.remove('ken');
+  requestAnimationFrame(()=> requestAnimationFrame(()=> bw.classList.add('ken')));
+
+  if(i===0) runScene0();
+  else if(i===1) runScene1();
+  else if(i===2) runScene2();
+  else if(i===3) runScene3();
+  else if(i===4) runScene4();
+}
+
+/* ---- Scene animations ---- */
+function runScene0(){
+  [0,1,2,3].forEach(idx=>{
+    later(()=>{
+      const el = document.getElementById('mv'+idx);
+      if(el) el.classList.add('in');
+    }, 180 + idx*155);
   });
 }
 
-/* Scene 3: Portfolio */
-function animScene3(){
-  // Count up totals
-  animCount('pf-total',0,13240,'€',0,1000);
-  animCount('pf-gain',0,1559,'+€',0,1200);
-  setTimeout(()=>{
-    const el=document.getElementById('pf-pct');
-    if(el)el.textContent='+13.4%';
-  },800);
+function runScene1(){
+  // Score counter + arc
+  const arc = document.getElementById('scoreArc');
+  const sn  = document.getElementById('scoreNum');
+  const CIRC= 345.4, TARGET=78, DUR=1500;
+  const t0  = performance.now();
 
-  const rows=['pf-r1','pf-r2','pf-r3','pf-r4'];
-  rows.forEach((id,i)=>{
-    setTimeout(()=>{
-      const el=document.getElementById(id);
-      if(el)el.classList.add('show');
-    },200+i*200);
+  function animScore(now){
+    const p = Math.min((now-t0)/DUR, 1);
+    const e = easeOut(p);
+    sn.textContent = Math.round(e*TARGET);
+    arc.style.strokeDashoffset = String(CIRC - e*(CIRC*TARGET/100));
+    if(p<1){
+      scoreRaf = requestAnimationFrame(animScore);
+    } else {
+      // pulse ring
+      const pr = document.getElementById('scorePulseRing');
+      if(pr){
+        pr.setAttribute('stroke-opacity','0.5');
+        pr.classList.add('pulse-anim');
+      }
+    }
+  }
+  scoreRaf = requestAnimationFrame(animScore);
+
+  // dim bars
+  const dimVals = [72,92,75,80,60];
+  dimVals.forEach((val,idx)=>{
+    later(()=>{
+      const el = document.getElementById('dim'+idx);
+      if(el) el.style.width = val+'%';
+    }, 350 + idx*100);
   });
 }
 
-/* Scene 4: Screener */
-function animScene4(){
-  const rows=['sc-r1','sc-r2','sc-r3','sc-r4','sc-r5'];
-  rows.forEach((id,i)=>{
-    setTimeout(()=>{
-      const el=document.getElementById(id);
-      if(el)el.classList.add('show');
-    },200+i*200);
+function runScene2(){
+  // count-up portfolio
+  later(()=>{
+    const pv = document.getElementById('portVal');
+    const pg = document.getElementById('portGain');
+    const pgs= document.getElementById('portGainSub');
+    if(pv) countUp(pv, 13240, 1000, '\u20AC', '');
+    later(()=>{
+      if(pg)  countUp(pg,  1559,  800, '+\u20AC', '');
+      if(pgs) pgs.textContent = 'vs. investito';
+    }, 180);
+  }, 50);
+
+  ['prow0','prow1','prow2','prow3'].forEach((id,idx)=>{
+    later(()=>{
+      const el = document.getElementById(id);
+      if(el) el.classList.add('in');
+    }, 380 + idx*160);
   });
 }
 
-/* Scene 5: AI */
-const AI_TEXT=`AAPL presenta fondamentali solidi con un ROE del 147% — tra i più alti del settore tecnologico. Il P/E di 28.4x risulta in linea con la media storica della società. Il consensus degli analisti rimane positivo con un target medio a $215, che implica un potenziale di rialzo del +16.6% rispetto ai prezzi attuali.\n\nIl recente pullback (-0.4% nella sessione odierna) non altera il quadro fondamentale di lungo periodo. L'azienda mantiene una posizione di cassa robusta e continua a distribuire dividendi in crescita. Il beta di 1.22 segnala una volatilità moderatamente superiore al mercato.`;
-let aiTyping=null;
-function animScene5(){
-  const el=document.getElementById('ai-text');
-  if(!el)return;
+function runScene3(){
+  ['srow0','srow1','srow2','srow3','srow4'].forEach((id,idx)=>{
+    later(()=>{
+      const el = document.getElementById(id);
+      if(el) el.classList.add('in');
+    }, 180 + idx*140);
+  });
+}
+
+function runScene4(){
+  const at = document.getElementById('aiText');
+  const full = [
+    "Apple Inc. presenta fondamentali eccezionali con un ROE del 147%, tra i pi\u00F9 elevati del settore tecnologico globale. Il P/E di 28.4x risulta in linea con la media storica della societ\u00E0 e non suggerisce sopravvalutazione significativa.",
+    "",
+    "Il consensus degli analisti rimane costruttivo: 28 raccomandazioni Buy, 8 Hold, 2 Sell, con un target medio a $215 che implica un potenziale di rialzo del +16.6%. Il FinEdge Score di 78/100 riflette solidi fondamentali bilanciati da un momentum tecnico in fase di consolidamento dopo il recente -0.4%."
+  ].join('\n');
+
   let i=0;
-  if(aiTyping)clearInterval(aiTyping);
-  el.innerHTML='<span class="ai-cursor"></span>';
-  aiTyping=setInterval(()=>{
-    if(i>=AI_TEXT.length){clearInterval(aiTyping);return;}
-    const char=AI_TEXT[i];
-    el.innerHTML=AI_TEXT.substring(0,i+1).replace(/\n/g,'<br>')+'<span class="ai-cursor"></span>';
-    i++;
-  },22);
-
-  // Animate bars
-  setTimeout(()=>{document.getElementById('ai-b1').style.width='58%';},600);
-  setTimeout(()=>{document.getElementById('ai-b2').style.width='88%';},900);
-  setTimeout(()=>{document.getElementById('ai-b3').style.width='45%';},1200);
-}
-
-/* Utility: animate counter */
-function animCount(id,from,to,prefix,decimals,dur){
-  const el=document.getElementById(id);if(!el)return;
-  const start=performance.now();
-  function step(now){
-    const p=Math.min((now-start)/dur,1);
-    const ease=1-Math.pow(1-p,3);
-    const val=from+(to-from)*ease;
-    const fmt=val>=1000?Math.round(val).toLocaleString('it-IT'):val.toFixed(decimals);
-    el.textContent=prefix+fmt;
-    if(p<1)requestAnimationFrame(step);
+  function typeNext(){
+    if(i < full.length){
+      const ch = full[i];
+      if(ch==='\n'){
+        at.innerHTML = at.innerHTML.replace('<span class="ai-cursor"></span>','') + '<br>';
+      } else {
+        at.innerHTML = at.innerHTML.replace('<span class="ai-cursor"></span>','') + ch + '<span class="ai-cursor"></span>';
+      }
+      i++;
+      twTimeout = setTimeout(typeNext, 22);
+    } else {
+      at.innerHTML = at.innerHTML.replace('<span class="ai-cursor"></span>','');
+      // indicator bars
+      const indVals = [88,58,45];
+      indVals.forEach((val,idx)=>{
+        later(()=>{
+          const el = document.getElementById('ind'+idx);
+          if(el) el.style.width = val+'%';
+        }, 150 + idx*160);
+      });
+    }
   }
-  requestAnimationFrame(step);
+  twTimeout = setTimeout(typeNext, 300);
 }
 
-/* ═══ START ═══ */
+/* ---- Transition crossfade ---- */
+function doTransition(nextIdx, cb){
+  const ov = document.getElementById('transOverlay');
+  const tt = document.getElementById('transTitle');
+  tt.textContent = SCENE_NAMES[nextIdx];
+  ov.classList.add('show');
+  setTimeout(()=>{
+    cb();
+    setTimeout(()=> ov.classList.remove('show'), 260);
+  }, 220);
+}
+
+/* ---- Progress & time ---- */
+function sceneStartMs(idx){
+  let t=0;
+  for(let i=0;i<idx;i++) t+=DURATIONS[i];
+  return t;
+}
+
+function findScene(ms){
+  let c=0;
+  for(let i=0;i<DURATIONS.length;i++){
+    if(ms < c+DURATIONS[i]) return i;
+    c+=DURATIONS[i];
+  }
+  return DURATIONS.length-1;
+}
+
+function fmtTime(ms){
+  const s = Math.floor(ms/1000);
+  return Math.floor(s/60)+':'+(s%60<10?'0':'')+(s%60);
+}
+
+/* ---- RAF loop ---- */
+function loop(ts){
+  if(!lastTs) lastTs=ts;
+  const delta = ts-lastTs;
+  lastTs=ts;
+
+  if(isPlaying){
+    globalMs += delta;
+    if(globalMs >= TOTAL_MS){ globalMs=0; }
+
+    const target = findScene(globalMs);
+    if(target !== curScene){
+      const next = target;
+      doTransition(next, ()=>{
+        curScene = next;
+        triggerScene(curScene);
+      });
+    }
+
+    // progress bar
+    document.getElementById('progFill').style.width = (globalMs/TOTAL_MS*100)+'%';
+    document.getElementById('ctrlTime').textContent = fmtTime(globalMs);
+  }
+
+  rafId = requestAnimationFrame(loop);
+}
+
+/* ---- Controls ---- */
+document.getElementById('btnPlay').addEventListener('click', ()=>{
+  isPlaying = !isPlaying;
+  document.getElementById('btnPlay').innerHTML = isPlaying ? '&#9646;&#9646;' : '&#9654;';
+  if(isPlaying) lastTs=null;
+});
+
+document.getElementById('btnPrev').addEventListener('click', ()=>{
+  const prev = (curScene-1+DURATIONS.length)%DURATIONS.length;
+  globalMs = sceneStartMs(prev);
+  lastTs=null;
+  doTransition(prev, ()=>{ curScene=prev; triggerScene(curScene); });
+});
+
+document.getElementById('btnNext').addEventListener('click', ()=>{
+  const next = (curScene+1)%DURATIONS.length;
+  globalMs = sceneStartMs(next);
+  lastTs=null;
+  doTransition(next, ()=>{ curScene=next; triggerScene(curScene); });
+});
+
+document.querySelectorAll('.dot-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const i = parseInt(btn.getAttribute('data-i'));
+    globalMs = sceneStartMs(i);
+    lastTs=null;
+    doTransition(i, ()=>{ curScene=i; triggerScene(curScene); });
+  });
+});
+
+document.getElementById('progWrap').addEventListener('click', (e)=>{
+  const rect = e.currentTarget.getBoundingClientRect();
+  const pct  = (e.clientX - rect.left)/rect.width;
+  globalMs   = Math.round(pct * TOTAL_MS);
+  lastTs=null;
+  const target = findScene(globalMs);
+  doTransition(target, ()=>{ curScene=target; triggerScene(curScene); });
+});
+
+document.addEventListener('keydown', (e)=>{
+  if(e.code==='Space')      { e.preventDefault(); document.getElementById('btnPlay').click(); }
+  else if(e.code==='ArrowLeft')  document.getElementById('btnPrev').click();
+  else if(e.code==='ArrowRight') document.getElementById('btnNext').click();
+});
+
+/* ---- Clock ---- */
+function updateClock(){
+  const n=new Date();
+  const p=v=>String(v).padStart(2,'0');
+  document.getElementById('navTime').textContent = p(n.getHours())+':'+p(n.getMinutes())+':'+p(n.getSeconds());
+}
+setInterval(updateClock,1000);
+updateClock();
+
+/* ---- Boot ---- */
 triggerScene(0);
-play();
+rafId = requestAnimationFrame(loop);
 </script>
 </body>
 </html>
