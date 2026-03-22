@@ -2451,7 +2451,7 @@ async function loadMarketScreener(reset=true){
   }
 
   // Mostra subito i titoli (senza prezzi) poi aggiorna con i dati Yahoo
-  dynamicStocks=isAll?[...dynamicStocks,...stocks]:stocks;
+  dynamicStocks=stocks; // sempre sostituisce, mai append (evita duplicati)
   screenerHasMore=false;
   renderMarketStocks();
 
