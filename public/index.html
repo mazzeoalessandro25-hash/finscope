@@ -2452,8 +2452,11 @@ async function loadMarketScreener(reset=true){
     return;
   }
 
+  // Se nel frattempo l'utente ha cambiato indice, ignora questo caricamento
+  if(loadId!==_screenerLoadId) return;
+
   // Mostra subito i titoli (senza prezzi) poi aggiorna con i dati Yahoo
-  dynamicStocks=stocks; // sempre sostituisce, mai append (evita duplicati)
+  dynamicStocks=stocks;
   screenerHasMore=false;
   renderMarketStocks();
 
