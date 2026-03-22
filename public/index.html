@@ -2445,7 +2445,7 @@ async function loadMarketScreener(reset=true){
     if(!r.ok) throw new Error(data.error||'Errore '+r.status);
     stocks=data.stocks||[];
   }catch(e){
-    body.innerHTML=`<tr><td colspan="15"><div class="sc-market-err">⚠ ${e.message}<br><span style="font-size:10px;color:var(--t3)">Verifica FMP_API_KEY su Vercel → Settings → Environment Variables</span></div></td></tr>`;
+    body.innerHTML=`<tr><td colspan="13"><div class="sc-market-err">⚠ ${e.message}</div></td></tr>`;
     if(loadBtn){loadBtn.disabled=false;loadBtn.textContent='Riprova';}
     return;
   }
