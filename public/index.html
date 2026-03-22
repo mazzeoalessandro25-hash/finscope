@@ -2413,6 +2413,7 @@ function onFilterChange(){
 }
 
 async function loadMarketScreener(reset=true){
+  const loadId=++_screenerLoadId; // ogni chiamata ha un ID unico
   if(reset){ dynamicStocks=[];screenerPage=0; }
   const body=document.getElementById('sc-body');
   const isAll=currentIndex==='all';
