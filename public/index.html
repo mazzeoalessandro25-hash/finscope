@@ -2500,8 +2500,8 @@ function renderMarketStocks(){
   list=[...list].sort((a,b)=>{
     if(sortKey==='s') return(a.s>b.s?1:-1)*sortDir;
     if(sortKey==='n') return(a.n>b.n?1:-1)*sortDir;
-    const av=sortKey==='price'?a.price||0:sortKey==='chg'?a.chg||0:sortKey==='pe'?a.pe||0:sortKey==='mktcap'?a.marketCap||0:sortKey==='div'?(a.divAnnual&&a.price?a.divAnnual/a.price*100:0):0;
-    const bv=sortKey==='price'?b.price||0:sortKey==='chg'?b.chg||0:sortKey==='pe'?b.pe||0:sortKey==='mktcap'?b.marketCap||0:sortKey==='div'?(b.divAnnual&&b.price?b.divAnnual/b.price*100:0):0;
+    const av=sortKey==='price'?a.price||0:sortKey==='chg'?a.chg||0:sortKey==='pe'?a.pe||0:sortKey==='mktcap'?a.marketCap||0:sortKey==='score'?calcStockScore(a)||0:0;
+    const bv=sortKey==='price'?b.price||0:sortKey==='chg'?b.chg||0:sortKey==='pe'?b.pe||0:sortKey==='mktcap'?b.marketCap||0:sortKey==='score'?calcStockScore(b)||0:0;
     return(av>bv?1:-1)*sortDir;
   });
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
