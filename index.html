@@ -1312,13 +1312,22 @@ async function loadCrypto(){
 /* ── SCREENER ── */
 let scSparkData={};
 async function loadScreener(){
-  document.getElementById('sc-body').innerHTML='<tr><td colspan="10" class="ld">Caricamento prezzi reali...</td></tr>';
+  document.getElementById('sc-body').innerHTML='<tr><td colspan="15" class="ld">Caricamento prezzi reali...</td></tr>';
+  // Fetch quote + sparkline in parallelo per tutti i titoli
+  // Summary (P/E, mktcap, dividend) caricato in background senza bloccare la tabella
   await Promise.all(STOCKS.map(async s=>{
     const [d,spark]=await Promise.all([api(s.s),fetchSparkData(s.s)]);
     if(d)scData[s.s]=d;
     if(spark.length)scSparkData[s.s]=spark;
   }));
   applyF();
+  renderScreenerWatchlist();
+  renderAlerts();
+  // Carica summary in background e aggiorna la tabella quando pronto
+  Promise.all(STOCKS.map(async s=>{
+    const sd=await api(s.s,'summary');
+    if(sd)scSummaryData[s.s]=sd;
+  })).then(()=>{ applyF(); });
 }
 function applyF(){
   const sq=(document.getElementById('fq').value||'').toUpperCase();
