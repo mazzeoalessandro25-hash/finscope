@@ -1340,24 +1340,43 @@ function applyF(){
     let av=a[sortKey]||0,bv=b[sortKey]||0;
     if(sortKey==='price'){av=scData[a.s]?.price||0;bv=scData[b.s]?.price||0;}
     if(sortKey==='chg'){const da=scData[a.s],db=scData[b.s];av=da?chgPct(da.price,da.prev)||0:0;bv=db?chgPct(db.price,db.prev)||0:0;}
+    if(sortKey==='pe'){av=scSummaryData[a.s]?.pe||0;bv=scSummaryData[b.s]?.pe||0;}
+    if(sortKey==='mktcap'){av=scSummaryData[a.s]?.marketCap||0;bv=scSummaryData[b.s]?.marketCap||0;}
+    if(sortKey==='div'){av=scSummaryData[a.s]?.dividend||0;bv=scSummaryData[b.s]?.dividend||0;}
     return(av>bv?1:-1)*sortDir;
   });
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
-  if(!list.length){body.innerHTML='<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
+  if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:20px;color:var(--t3);font-size:12px">Nessun risultato</td></tr>';return;}
   const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺'};
   body.innerHTML=list.map(s=>{
-    const d=scData[s.s];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+    const d=scData[s.s];
+    const sd=scSummaryData[s.s];
+    const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
     const spId='sc-sp-'+s.s.replace(/[^a-z0-9]/gi,'');
+    // Dati fondamentali (da summary, con fallback --)
+    const pe=sd?.pe?fmt(sd.pe,1):'—';
+    const mktcap=sd?.marketCap?fmtLg(sd.marketCap):'—';
+    const div=sd?.dividend>0?fmt(sd.dividend*100,2)+'%':'—';
+    // Valuta in base al mercato
+    const cur=s.mkt==='US'?'$':s.s.endsWith('.L')?'£':'€';
+    // Prezzo formattato
+    const priceStr=d?cur+fmt(d.price,d.price>=1000?0:2):'—';
     return`<tr onclick="openFA('${s.s}')">
       <td onclick="event.stopPropagation()"><input type="checkbox" class="cmp-cb" ${cmpList.includes(s.s)?'checked':''} onchange="toggleCmp('${s.s}',this)"/></td>
       <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${watchlist.includes(s.s)?'active':''}">★</button></td>
-      <td style="font-weight:600">${s.s}</td><td style="color:var(--t2)">${s.n}</td>
-      <td>${flags[s.mkt]||''}</td><td style="color:var(--t3);font-size:11px">${s.sec}</td>
+      <td onclick="event.stopPropagation()">${logoHtml(s.s,s.n)}</td>
+      <td style="font-weight:600">${s.s}</td>
+      <td style="color:var(--t2)">${s.n}</td>
+      <td>${flags[s.mkt]||''}</td>
+      <td style="color:var(--t3);font-size:11px">${s.sec}</td>
       <td><span class="tag ${s.t}">${s.t}</span></td>
-      <td>${d?'$'+fmt(d.price,2):'—'}</td>
+      <td style="font-weight:600">${priceStr}</td>
       <td class="${up?'up':'down'}">${chgStr(c)}</td>
-      <td><svg id="${spId}" width="72" height="30"></svg></td>
+      <td style="color:var(--t2)">${pe}</td>
+      <td style="color:var(--t2)">${mktcap}</td>
+      <td class="${sd?.dividend>0?'up':''}">${div}</td>
+      <td><svg id="${spId}" width="60" height="30"></svg></td>
       <td><div class="sbar"><div class="strack"><div class="sfill" style="width:${Math.round(s.score*.44)}px"></div></div><span style="font-size:11px;color:var(--t2)">${s.score}</span></div></td>
     </tr>`;
   }).join('');
