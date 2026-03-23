@@ -2297,10 +2297,26 @@ async function removeAlertForCard(idx){
   renderWlaWatchlist();
 }
 
+function syncScreenerStars(){
+  document.querySelectorAll('.star-btn').forEach(btn=>{
+    const td=btn.closest('td');
+    if(!td)return;
+    const row=td.closest('tr');
+    if(!row)return;
+    // ricava il ticker dall'attributo onclick della cella
+    const onclick=td.getAttribute('onclick')||'';
+    const m=onclick.match(/toggleWl\('([^']+)'/);
+    if(!m)return;
+    const sym=m[1];
+    btn.classList.toggle('active',watchlist.includes(sym));
+  });
+}
+
 async function removeFromWlaWatchlist(sym){
   watchlist=watchlist.filter(s=>s!==sym);
   localStorage.setItem('fs_watchlist',JSON.stringify(watchlist));
   await saveWatchlist();
+  syncScreenerStars();
   renderWlaWatchlist();
 }
 
