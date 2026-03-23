@@ -2684,6 +2684,7 @@ async function loadMarketScreener(reset=true){
   if(loadBtn){loadBtn.disabled=!screenerHasMore;loadBtn.textContent=screenerHasMore?'Mostra altri 50':'Fine risultati';}
   if(typeof renderScreenerWatchlist==='function') renderScreenerWatchlist();
   if(typeof renderAlerts==='function') renderAlerts();
+  if(typeof renderScreenerAlertList==='function') renderScreenerAlertList();
 }
 
 async function loadMoreScreener(){ await loadMarketScreener(false); }
