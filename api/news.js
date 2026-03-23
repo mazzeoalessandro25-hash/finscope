@@ -1,14 +1,14 @@
 /**
  * /api/news.js
  * Aggregatore multi-fonte: RSS + Finnhub + Yahoo Finance
- * con filtraggio per parole chiave per categoria.
  *
  * ?category=mercati|italia|usa|commodities|forex|crypto|macro
  * ?symbol=AAPL   → news azienda specifica
  * ?q=AAPL+MSFT   → ricerca libera (portfolio)
+ * ?debug=1       → mostra conteggio articoli per fonte
  */
 
-const RSS_TIMEOUT = 5000;
+const RSS_TIMEOUT = 6000;
 
 // ─── RSS parsing ──────────────────────────────────────────────
 function extractTag(xml, tag) {
@@ -50,32 +50,48 @@ function parseRSS(xml, source, specific) {
   }
   return items;
 }
-async function fetchRSS(url, name, specific = false) {
-  try {
-    const r = await fetch(url, {
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; FinScope/1.0)', 'Accept': 'application/rss+xml,application/xml,text/xml,*/*' },
-      signal: AbortSignal.timeout(RSS_TIMEOUT),
-    });
-    if (!r.ok) return [];
-    return parseRSS(await r.text(), name, specific);
-  } catch { return []; }
+
+// Tenta URL in sequenza, restituisce il primo che funziona
+async function fetchRSS(urls, name, specific = false) {
+  const urlList = Array.isArray(urls) ? urls : [urls];
+  for (const url of urlList) {
+    try {
+      const r = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'application/rss+xml, application/xml, text/xml, application/atom+xml, */*',
+          'Accept-Language': 'it-IT,it;q=0.9,en;q=0.8',
+          'Cache-Control': 'no-cache',
+        },
+        signal: AbortSignal.timeout(RSS_TIMEOUT),
+      });
+      if (!r.ok) continue;
+      const xml = await r.text();
+      const items = parseRSS(xml, name, specific);
+      if (items.length > 0) return { items, url, ok: true };
+    } catch { /* prova URL successivo */ }
+  }
+  return { items: [], url: urlList[0], ok: false };
 }
 
 // ─── Finnhub ──────────────────────────────────────────────────
 async function fetchFinnhubGeneral(category, token) {
-  if (!token) return [];
+  if (!token) return { items: [], ok: false };
   try {
     const r = await fetch(
       `https://finnhub.io/api/v1/news?category=${encodeURIComponent(category)}&token=${token}`,
       { signal: AbortSignal.timeout(5000) }
     );
-    if (!r.ok) return [];
+    if (!r.ok) return { items: [], ok: false };
     const data = await r.json();
-    return (Array.isArray(data) ? data : []).slice(0, 12).map(n => ({
-      title: n.headline, link: n.url, publisher: n.source, time: n.datetime, thumbnail: n.image || null, _specific: false,
+    const items = (Array.isArray(data) ? data : []).slice(0, 15).map(n => ({
+      title: n.headline, link: n.url, publisher: n.source, time: n.datetime,
+      thumbnail: n.image || null, _specific: false,
     }));
-  } catch { return []; }
+    return { items, ok: true };
+  } catch { return { items: [], ok: false }; }
 }
+
 async function fetchFinnhubCompany(symbol, token) {
   if (!token) return [];
   try {
@@ -88,32 +104,45 @@ async function fetchFinnhubCompany(symbol, token) {
     if (!r.ok) return [];
     const data = await r.json();
     return (Array.isArray(data) ? data : []).slice(0, 8).map(n => ({
-      title: n.headline, link: n.url, publisher: n.source, time: n.datetime, thumbnail: n.image || null, _specific: true,
+      title: n.headline, link: n.url, publisher: n.source, time: n.datetime,
+      thumbnail: n.image || null, _specific: true,
     }));
   } catch { return []; }
 }
 
-// ─── Yahoo ────────────────────────────────────────────────────
-async function fetchYahooSearch(query, count = 10, specific = false) {
+// ─── Yahoo (più query per aumentare il volume) ────────────────
+async function fetchYahooSearch(query, count = 15, specific = false) {
   try {
     const r = await fetch(
       `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&newsCount=${count}&quotesCount=0`,
       { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
     );
-    if (!r.ok) return [];
+    if (!r.ok) return { items: [], ok: false };
     const data = await r.json();
-    return (data?.news || []).map(n => ({
-      title: n.title, link: n.link, publisher: n.publisher, time: n.providerPublishTime,
-      thumbnail: n.thumbnail?.resolutions?.[0]?.url || null, _specific: specific,
+    const items = (data?.news || []).map(n => ({
+      title: n.title, link: n.link, publisher: n.publisher || 'Yahoo Finance',
+      time: n.providerPublishTime, thumbnail: n.thumbnail?.resolutions?.[0]?.url || null,
+      _specific: specific,
     }));
-  } catch { return []; }
+    return { items, ok: items.length > 0 };
+  } catch { return { items: [], ok: false }; }
+}
+
+// Esegue più query Yahoo e unisce i risultati
+async function fetchYahooMulti(queries, countEach = 10, specific = false) {
+  const results = await Promise.all(queries.map(q => fetchYahooSearch(q, countEach, specific)));
+  return {
+    items: results.flatMap(r => r.items),
+    ok: results.some(r => r.ok),
+    perQuery: results.map((r, i) => ({ query: queries[i], count: r.items.length })),
+  };
 }
 
 // ─── Keyword filter ───────────────────────────────────────────
 function filterByKeywords(articles, keywords) {
   if (!keywords) return articles;
   return articles.filter(a => {
-    if (a._specific) return true; // fonti specifiche passano sempre
+    if (a._specific) return true;
     const text = (a.title + ' ' + (a.publisher || '')).toLowerCase();
     return keywords.some(kw => text.includes(kw));
   });
@@ -131,139 +160,106 @@ function deduplicate(articles) {
 }
 
 // ─── Category config ──────────────────────────────────────────
-// specific:true → fonte già tematica, gli articoli passano senza filtro keyword
-// keywords → parole chiave per filtrare le fonti generiche (CNBC, Finnhub general, Yahoo)
 const CATEGORIES = {
   mercati: {
     rss: [
-      { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC',           specific: false },
-      { url: 'https://www.ilsole24ore.com/rss/mercati.xml',           name: 'Il Sole 24 Ore', specific: true  },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+      { urls: ['https://www.ilsole24ore.com/rss/mercati.xml', 'https://www.ilsole24ore.com/rss/home.xml'], name: 'Il Sole 24 Ore', specific: true },
     ],
     finnhub: 'general',
-    yahoo: 'stock market finance borsa indici',
-    keywords: null, // nessun filtro: tab mercati è catch-all
+    yahooQueries: ['stock market finance', 'borsa mercati finanziari', 'wall street nasdaq'],
+    keywords: null,
   },
   italia: {
     rss: [
-      { url: 'https://www.ilsole24ore.com/rss/mercati.xml',       name: 'Il Sole 24 Ore', specific: true },
-      { url: 'https://www.ansa.it/sito/notizie/economia/rss.xml', name: 'ANSA',           specific: true },
+      { urls: ['https://www.ilsole24ore.com/rss/mercati.xml', 'https://www.ilsole24ore.com/rss/home.xml'], name: 'Il Sole 24 Ore', specific: true },
+      { urls: ['https://www.ansa.it/sito/notizie/economia/rss.xml', 'https://www.ansa.it/sito/notizie/economia/borse/rss.xml'], name: 'ANSA', specific: true },
     ],
     finnhub: null,
-    yahoo: 'borsa italiana ftse mib piazza affari',
+    yahooQueries: ['FTSE MIB borsa italiana', 'piazza affari milano', 'azioni italiane economia italia'],
     keywords: [
-      // indici
       'ftse mib','ftse-mib','mib','piazza affari','borsa italiana','borsa di milano',
-      // paesi/lingua
       'italia','italian','italy',
-      // aziende blue chip italiane
       'unicredit','intesa sanpaolo','eni','enel','ferrari','stellantis','mediobanca',
       'generali','cdp','poste italiane','tim','telecom italia','leonardo','saipem',
-      'prysmian','tenaris','moncler','luxottica','campari','fca','iveco','fineco',
-      'banca mps','ubi banca','banco bpm','azimut','nexi','inwit',
-      // istituzioni italiane
-      'banca d\'italia','bankitalia','consob','cassa depositi',
+      'prysmian','tenaris','moncler','campari','fca','iveco','fineco',
+      'banca mps','banco bpm','azimut','nexi','inwit','banca d\'italia','consob',
     ],
   },
   usa: {
     rss: [
-      { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
     ],
     finnhub: 'general',
-    yahoo: 'S&P 500 nasdaq dow jones wall street NYSE',
+    yahooQueries: ['S&P 500 stock market', 'nasdaq dow jones wall street', 'US economy federal reserve earnings'],
     keywords: [
-      // indici
       's&p 500','s&p500','sp500','nasdaq','nasdaq 100','dow jones','djia','russell 2000',
       'nyse','wall street','new york stock',
-      // macro USA
       'fed','federal reserve','treasury','sec','us economy','american economy',
-      // mega cap
       'apple','microsoft','nvidia','alphabet','google','amazon','meta','tesla',
       'berkshire','jpmorgan','visa','mastercard','exxon','chevron','unitedhealth',
-      // temi
-      'us stock','earnings','quarterly results','ipo usa',
+      'us stock','earnings','quarterly results',
     ],
   },
   commodities: {
     rss: [
-      { url: 'https://www.cnbc.com/id/100727362/device/rss/rss.html', name: 'CNBC Commodities', specific: true },
+      { urls: ['https://www.cnbc.com/id/100727362/device/rss/rss.html'], name: 'CNBC Commodities', specific: true },
     ],
     finnhub: 'general',
-    yahoo: 'gold oil crude commodities silver copper energy',
+    yahooQueries: ['gold silver oil commodities', 'crude oil brent wti opec', 'copper natural gas energy prices'],
     keywords: [
-      // metalli
       'gold','silver','copper','platinum','palladium','zinc','nickel','aluminium','aluminum',
       'oro','argento','rame','platino',
-      // energia
       'oil','crude','brent','wti','natural gas','lng','opec','petroleum','petrolio','gas naturale',
-      // agricolo
       'wheat','corn','soybean','grain','coffee','cocoa','sugar','cotton','frumento',
-      // generici
       'commodity','commodities','materie prime','raw material','futures',
     ],
   },
   forex: {
     rss: [
-      { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
     ],
     finnhub: 'forex',
-    yahoo: 'forex euro dollar pound yen exchange rate currency',
+    yahooQueries: ['forex euro dollar exchange rate', 'currency pound yen franc', 'foreign exchange bce ecb'],
     keywords: [
-      // coppie e valute
       'eur/usd','gbp/usd','usd/jpy','usd/chf','aud/usd','usd/cad','eur/gbp','eur/jpy',
-      'dollar','euro','pound','yen','franc','yuan','renminbi','lira','peso','ruble',
-      'dollaro','valuta','cambio',
-      // generici
+      'dollar','euro','pound','yen','franc','yuan','renminbi','dollaro','valuta','cambio',
       'forex','fx','currency','exchange rate','foreign exchange',
-      // banche centrali (rilevanti per forex)
-      'bce','ecb','bank of england','boe','bank of japan','boj','fed rate','interest rate',
+      'bce','ecb','bank of england','boe','bank of japan','boj',
       'usd','eur','gbp','chf','cad','aud','nzd','jpy',
     ],
   },
   crypto: {
     rss: [
-      { url: 'https://www.coindesk.com/arc/outboundfeeds/rss/', name: 'CoinDesk',     specific: true },
-      { url: 'https://cointelegraph.com/rss',                   name: 'CoinTelegraph', specific: true },
+      { urls: ['https://www.coindesk.com/arc/outboundfeeds/rss/'], name: 'CoinDesk', specific: true },
+      { urls: ['https://cointelegraph.com/rss'], name: 'CoinTelegraph', specific: true },
     ],
     finnhub: 'crypto',
-    yahoo: 'bitcoin ethereum crypto blockchain altcoin',
+    yahooQueries: ['bitcoin ethereum crypto', 'blockchain defi altcoin', 'binance coinbase crypto market'],
     keywords: [
-      // indici crypto
-      'crypto index','fear and greed','crypto market cap','total market',
-      // coin principali
+      'crypto index','fear and greed','crypto market cap',
       'bitcoin','btc','ethereum','eth','solana','sol','ripple','xrp','cardano','ada',
       'avalanche','avax','polygon','matic','chainlink','link','polkadot','dot',
-      'binance','bnb','tron','trx','litecoin','ltc','uniswap','uni',
-      // stablecoin
-      'usdt','usdc','tether','dai','stablecoin',
-      // generici
-      'crypto','cryptocurrency','blockchain','defi','nft','web3','mining','token',
-      'altcoin','coinbase','binance exchange','kraken','wallet','ledger',
-      'dao','metaverse','layer 2','layer2','zk rollup',
+      'binance','bnb','tron','litecoin','ltc','uniswap',
+      'usdt','usdc','tether','stablecoin',
+      'crypto','cryptocurrency','blockchain','defi','nft','web3','mining','token','altcoin',
     ],
   },
   macro: {
     rss: [
-      { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC',           specific: false },
-      { url: 'https://www.ilsole24ore.com/rss/economia.xml',          name: 'Il Sole 24 Ore', specific: true  },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+      { urls: ['https://www.ilsole24ore.com/rss/economia.xml', 'https://www.ilsole24ore.com/rss/home.xml'], name: 'Il Sole 24 Ore', specific: true },
     ],
     finnhub: 'general',
-    yahoo: 'bce fed inflazione tassi interesse recessione pil macro',
+    yahooQueries: ['inflation interest rate central bank', 'fed bce ecb monetary policy', 'gdp recession economy growth'],
     keywords: [
-      // banche centrali
-      'fed','federal reserve','bce','ecb','bank of england','boj','bank of japan',
-      'bank of canada','rba','snb','banca centrale',
-      // indicatori
+      'fed','federal reserve','bce','ecb','bank of england','boj','bank of japan','banca centrale',
       'inflation','inflazione','interest rate','tassi','gdp','pil','cpi','pce',
-      'unemployment','disoccupazione','jobs report','nonfarm','payroll','pmi',
-      'ism','retail sales','consumer confidence','housing','trade balance',
-      // politica fiscale
-      'recession','recessione','stagflation','debt','debito','deficit','surplus',
+      'unemployment','disoccupazione','jobs report','nonfarm','payroll','pmi','ism',
+      'recession','recessione','stagflation','debt','debito','deficit',
       'fiscal','bilancio','budget','treasury','spread btp','btp','bund',
-      // politica monetaria
-      'quantitative easing','qe','quantitative tightening','qt','tapering',
-      'rate hike','rate cut','pivot','forward guidance','monetary policy',
-      'liquidity','reverse repo',
-      // indici globali rilevanti per macro
+      'quantitative easing','qe','quantitative tightening','tapering',
+      'rate hike','rate cut','monetary policy','forward guidance',
       'vix','volatility index','dxy','dollar index',
     ],
   },
@@ -272,48 +268,63 @@ const CATEGORIES = {
 // ─── Handler ──────────────────────────────────────────────────
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60');
+  res.setHeader('Cache-Control', 's-maxage=180, stale-while-revalidate=60');
 
-  const { category = 'mercati', symbol, q } = req.query;
+  const { category = 'mercati', symbol, q, debug } = req.query;
   const finnhubKey = process.env.FINNHUB_KEY || '';
+  const isDebug = debug === '1';
 
   let articles = [];
+  const debugInfo = {};
 
   // ── Portfolio / ricerca libera ──
   if (q) {
+    const sym = q.split(/[\s+,]/)[0].trim().toUpperCase();
     const [yahoo, fh] = await Promise.all([
       fetchYahooSearch(q, 20, false),
-      (() => {
-        const sym = q.split(/[\s+,]/)[0].trim().toUpperCase();
-        return sym ? fetchFinnhubCompany(sym, finnhubKey) : Promise.resolve([]);
-      })(),
+      sym ? fetchFinnhubCompany(sym, finnhubKey) : Promise.resolve([]),
     ]);
-    articles = [...yahoo, ...fh];
+    articles = [...yahoo.items, ...fh];
   }
   // ── Titolo singolo ──
   else if (symbol) {
+    const sym = symbol.replace(/\.[A-Z0-9]+$/, '');
     const [yahoo, fh] = await Promise.all([
-      fetchYahooSearch(symbol, 8, true),
-      fetchFinnhubCompany(symbol, finnhubKey),
+      fetchYahooSearch(symbol, 10, true),
+      fetchFinnhubCompany(sym, finnhubKey),
     ]);
-    articles = [...yahoo, ...fh];
+    articles = [...yahoo.items, ...fh];
   }
   // ── Categoria ──
   else {
     const cfg = CATEGORIES[category] || CATEGORIES.mercati;
-    const results = await Promise.all([
-      ...cfg.rss.map(s => fetchRSS(s.url, s.name, s.specific)),
-      cfg.finnhub ? fetchFinnhubGeneral(cfg.finnhub, finnhubKey) : Promise.resolve([]),
-      fetchYahooSearch(cfg.yahoo, 8, false),
+
+    const [rssResults, finnhubResult, yahooResult] = await Promise.all([
+      Promise.all(cfg.rss.map(s => fetchRSS(s.urls, s.name, s.specific))),
+      cfg.finnhub ? fetchFinnhubGeneral(cfg.finnhub, finnhubKey) : Promise.resolve({ items: [], ok: false }),
+      fetchYahooMulti(cfg.yahooQueries, 12),
     ]);
-    articles = filterByKeywords(results.flat(), cfg.keywords);
+
+    if (isDebug) {
+      debugInfo.rss = rssResults.map((r, i) => ({ name: cfg.rss[i].name, count: r.items.length, ok: r.ok, url: r.url }));
+      debugInfo.finnhub = { count: finnhubResult.items.length, ok: finnhubResult.ok };
+      debugInfo.yahoo = { count: yahooResult.items.length, ok: yahooResult.ok, perQuery: yahooResult.perQuery };
+    }
+
+    const raw = [...rssResults.flatMap(r => r.items), ...finnhubResult.items, ...yahooResult.items];
+    articles = filterByKeywords(raw, cfg.keywords);
+
+    if (isDebug) {
+      debugInfo.beforeFilter = raw.length;
+      debugInfo.afterFilter = articles.length;
+    }
   }
 
   const news = deduplicate(articles)
     .filter(a => a.title && a.link)
     .sort((a, b) => (b.time || 0) - (a.time || 0))
-    .map(({ _specific, ...rest }) => rest) // rimuovi campo interno
-    .slice(0, 20);
+    .map(({ _specific, ...rest }) => rest)
+    .slice(0, 30);
 
-  return res.json({ news });
+  return res.json(isDebug ? { news, debug: debugInfo } : { news });
 }
