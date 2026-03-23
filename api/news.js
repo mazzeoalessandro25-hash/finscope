@@ -129,9 +129,9 @@ async function fetchYahooSearch(query, count = 15, specific = false) {
 }
 
 // Esegue più query Yahoo e unisce i risultati
-// Le query di categoria sono già tematiche → specific:true per bypassare il filtro keyword
+// specific:false → il filtro keyword viene applicato per rimuovere articoli non pertinenti
 async function fetchYahooMulti(queries, countEach = 10) {
-  const results = await Promise.all(queries.map(q => fetchYahooSearch(q, countEach, true)));
+  const results = await Promise.all(queries.map(q => fetchYahooSearch(q, countEach, false)));
   return {
     items: results.flatMap(r => r.items),
     ok: results.some(r => r.ok),
