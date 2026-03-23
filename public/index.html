@@ -2212,6 +2212,93 @@ async function removeAlertFromScreener(idx){
   renderAlerts();
 }
 
+/* ── WATCHLIST & ALERT PAGE ── */
+function openWlaPage(tab){
+  showPage('alerts',null);
+  const btn=document.getElementById('wla-tab-'+tab+'-btn');
+  if(btn)switchWlaTab(tab,btn);
+}
+
+function switchWlaTab(tab,btn){
+  document.querySelectorAll('#page-alerts .sc-tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  document.getElementById('wla-tab-wl').style.display=tab==='wl'?'block':'none';
+  document.getElementById('wla-tab-al').style.display=tab==='al'?'block':'none';
+  if(tab==='wl')renderWlaWatchlist();
+  if(tab==='al'){renderAlerts();checkAlerts();}
+}
+
+async function renderWlaWatchlist(){
+  const el=document.getElementById('wla-wl-list');
+  if(!el)return;
+  // Aggiorna badge
+  const badge=document.getElementById('wla-wl-badge');
+  if(badge){badge.textContent=watchlist.length;badge.style.display=watchlist.length?'inline':'none';}
+  // Aggiorna contatore barra screener
+  updateScQuickCounts();
+  if(!watchlist.length){
+    el.innerHTML='<div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nello Screener</div>';
+    return;
+  }
+  el.innerHTML='<div class="ld">Caricamento prezzi...</div>';
+  const quotes=await Promise.all(watchlist.map(s=>api(s)));
+  const sparks=typeof fetchSparkData==='function'?await Promise.all(watchlist.map(s=>fetchSparkData(s))):[];
+  const stockInfo=s=>STOCKS.find(x=>x.s===s);
+  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">'+watchlist.map((sym,i)=>{
+    const d=quotes[i];
+    const info=stockInfo(sym);
+    const c=d?chgPct(d.price,d.prev):null;
+    const up=c==null||c>=0;
+    const spId='wla-sp-'+sym.replace(/[^a-z0-9]/gi,'');
+    return`<div class="wl-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${logoHtmlSm(sym,info?.n||sym)}
+          <div>
+            <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${sym}</div>
+            ${info?`<div style="font-size:11px;color:var(--t3)">${info.n}</div>`:''}
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="wl-card-price">${d?'$'+fmt(d.price,d.price<10?4:2):'—'}</div>
+          <span class="wl-card-chg ${up?'up':'down'}">${chgStr(c)}</span>
+        </div>
+      </div>
+      <svg class="spark" id="${spId}" width="100%" height="36" style="display:block;margin:8px 0"></svg>
+      <div class="wl-card-btns">
+        <button class="wl-card-btn" onclick="openFA('${sym}')">Analizza</button>
+        <button class="wl-card-btn del" onclick="removeFromWlaWatchlist('${sym}')">Rimuovi</button>
+      </div>
+    </div>`;
+  }).join('')+'</div>';
+  requestAnimationFrame(()=>{
+    watchlist.forEach((sym,i)=>{
+      const spId='wla-sp-'+sym.replace(/[^a-z0-9]/gi,'');
+      const d=quotes[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+      if(sparks[i]&&sparks[i].length&&typeof drawSparkline==='function')drawSparkline(spId,sparks[i],up);
+    });
+  });
+}
+
+async function removeFromWlaWatchlist(sym){
+  watchlist=watchlist.filter(s=>s!==sym);
+  localStorage.setItem('fs_watchlist',JSON.stringify(watchlist));
+  await saveWatchlist();
+  renderWlaWatchlist();
+}
+
+function updateScQuickCounts(){
+  const wlCnt=document.getElementById('sc-wl-cnt');
+  const alCnt=document.getElementById('sc-al-cnt');
+  if(wlCnt){wlCnt.textContent=watchlist.length;wlCnt.style.display=watchlist.length?'inline':'none';}
+  if(alCnt){alCnt.textContent=alerts.length;alCnt.style.display=alerts.length?'inline':'none';}
+  // Aggiorna badge nella pagina wl-alerts
+  const wlBadge=document.getElementById('wla-wl-badge');
+  const alBadge=document.getElementById('wla-al-badge');
+  if(wlBadge){wlBadge.textContent=watchlist.length;wlBadge.style.display=watchlist.length?'inline':'none';}
+  if(alBadge){alBadge.textContent=alerts.length;alBadge.style.display=alerts.length?'inline':'none';}
+}
+
 /* ── NAV ── */
 // ─── Mobile nav drawer ───
 function toggleMobileNav(){
