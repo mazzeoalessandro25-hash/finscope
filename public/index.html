@@ -2326,13 +2326,7 @@ function showPage(id,btn){
   if(id==='screener'&&dynamicStocks.length===0)loadScreener();
   if(id==='screener'){updateScQuickCounts&&updateScQuickCounts();}
   if(id==='portafoglio')showPortfolioState();
-  if(id==='alerts'){
-    updateScQuickCounts&&updateScQuickCounts();
-    // Mostra il tab che era attivo o default watchlist
-    const wlTab=document.getElementById('wla-tab-wl');
-    if(wlTab&&wlTab.style.display!=='none')renderWlaWatchlist&&renderWlaWatchlist();
-    else{renderAlerts();checkAlerts();}
-  }
+  if(id==='alerts'){renderWlaWatchlist&&renderWlaWatchlist();checkAlerts&&checkAlerts();}
   if(id==='macro')loadMacroDashboard();
 }
 
