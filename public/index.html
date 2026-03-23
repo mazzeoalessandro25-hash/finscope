@@ -2438,12 +2438,10 @@ async function loadMarketScreener(reset=true){
   let url;
   if(isAll){
     const params=new URLSearchParams({limit:50});
-    const sector=document.getElementById('fs').value;
-    const country=document.getElementById('sc-country').value;
-    const mktcapMin=document.getElementById('sc-mktcap-min').value;
-    if(sector)   params.set('sector',sector);
-    if(country)  params.set('country',country);
-    if(mktcapMin)params.set('marketCapMin',mktcapMin);
+    const sector=document.getElementById('fs')?.value||'';
+    const country=document.getElementById('sc-country')?.value||'';
+    if(sector)  params.set('sector',sector);
+    if(country) params.set('country',country);
     url='/api/screener?'+params.toString();
   } else {
     const params=new URLSearchParams({index:currentIndex});
