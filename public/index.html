@@ -1774,45 +1774,15 @@ html.dark .auth-box{background:#1e293b}
 </div>
 
 
-<!-- ═══ WATCHLIST & ALERT ═══ -->
+<!-- ═══ WATCHLIST ═══ -->
 <div class="page" id="page-alerts">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:3px">
     <button onclick="showPage('screener',document.getElementById('nb-screener'))" style="background:none;border:1px solid var(--bd);color:var(--t2);padding:5px 12px;border-radius:7px;font-size:12px;font-family:var(--ff);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s" onmouseover="this.style.borderColor='rgba(26,86,196,.4)';this.style.color='var(--b)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--t2)'">← Screener</button>
-    <div class="pg-title" style="margin-bottom:0">Watchlist &amp; Alert</div>
+    <div class="pg-title" style="margin-bottom:0">Watchlist</div>
   </div>
-  <div class="pg-sub">I tuoi titoli monitorati e le soglie di prezzo impostate</div>
-
-  <div class="sc-tabs" style="margin-bottom:20px">
-    <button class="sc-tab active" id="wla-tab-wl-btn" onclick="switchWlaTab('wl',this)">★ Watchlist <span id="wla-wl-badge" style="font-size:10px;background:var(--b);color:#fff;border-radius:100px;padding:1px 6px;margin-left:4px;display:none"></span></button>
-    <button class="sc-tab" id="wla-tab-al-btn" onclick="switchWlaTab('al',this)">🔔 Alert Prezzi <span id="wla-al-badge" style="font-size:10px;background:var(--b);color:#fff;border-radius:100px;padding:1px 6px;margin-left:4px;display:none"></span></button>
-  </div>
-
-  <!-- Tab Watchlist -->
-  <div id="wla-tab-wl">
-    <div id="wla-wl-list"><div class="ld">Caricamento watchlist...</div></div>
-  </div>
-
-  <!-- Tab Alert -->
-  <div id="wla-tab-al" style="display:none">
-    <div id="alert-triggered-banners"></div>
-    <div class="card" style="margin-bottom:16px">
-      <div class="ch"><div><div class="ct">Aggiungi Alert</div><div class="cs">Inserisci ticker, prezzo obiettivo e condizione</div></div></div>
-      <div class="alert-inp-row">
-        <input class="port-inp" id="al-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:120px;text-transform:uppercase"/>
-        <input class="port-inp" id="al-price" type="number" placeholder="Prezzo obiettivo" min="0" step="any" style="width:150px"/>
-        <select class="fsel" id="al-cond">
-          <option value="above">Sopra (above)</option>
-          <option value="below">Sotto (below)</option>
-        </select>
-        <input class="port-inp" id="al-label" type="text" placeholder="Nota (opz.)" style="width:140px"/>
-        <button class="port-btn" onclick="addAlert()">+ Aggiungi Alert</button>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ch"><div><div class="ct">Alert attivi</div><div class="cs" id="alerts-count">—</div></div></div>
-      <div id="alerts-list"><div class="ld">Nessun alert configurato</div></div>
-    </div>
-  </div>
+  <div class="pg-sub">I tuoi titoli monitorati · Imposta alert di prezzo direttamente da ogni card</div>
+  <div id="alert-triggered-banners"></div>
+  <div id="wla-wl-list"><div class="ld">Caricamento watchlist...</div></div>
 </div>
 
 <!-- ═══ MACRO DASHBOARD ═══ -->
