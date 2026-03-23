@@ -172,12 +172,9 @@ const CATEGORIES = {
     keywords: null,
   },
   italia: {
-    rss: [
-      { urls: ['https://www.ilsole24ore.com/rss/mercati.xml', 'https://www.ilsole24ore.com/rss/home.xml'], name: 'Il Sole 24 Ore', specific: true },
-      { urls: ['https://www.ansa.it/sito/notizie/economia/rss.xml', 'https://www.ansa.it/sito/notizie/economia/borse/rss.xml'], name: 'ANSA', specific: true },
-    ],
+    rss: [],
     finnhub: null,
-    yahooQueries: ['FTSE MIB borsa italiana', 'piazza affari milano', 'azioni italiane economia italia'],
+    yahooQueries: ['FTSE MIB Italian stock market', 'Italy economy stocks ENI ENEL Unicredit', 'Italian shares Ferrari Stellantis Leonardo', 'piazza affari borsa milano'],
     keywords: [
       'ftse mib','ftse-mib','mib','piazza affari','borsa italiana','borsa di milano',
       'italia','italian','italy',
