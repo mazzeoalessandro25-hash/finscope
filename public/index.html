@@ -628,6 +628,30 @@ html.dark .auth-tab{color:#8FAFC8}
 .wl-card-btn.del{background:var(--r2);border-color:rgba(220,38,38,.2);color:var(--r)}
 .wl-card-btn.del:hover{background:var(--r);color:#fff}
 
+/* ═══ LOGHI AZIENDE ═══ */
+.sc-logo{width:32px;height:32px;border-radius:8px;object-fit:contain;background:var(--s2);padding:2px;flex-shrink:0;display:inline-block;vertical-align:middle}
+.logo-av{width:32px;height:32px;border-radius:8px;display:none;align-items:center;justify-content:center;font-family:var(--fm);font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+.wl-logo{width:28px;height:28px;border-radius:6px;object-fit:contain;background:var(--s2);padding:2px;flex-shrink:0;display:inline-block;vertical-align:middle}
+.logo-av-sm{width:28px;height:28px;border-radius:6px;display:none;align-items:center;justify-content:center;font-family:var(--fm);font-size:9px;font-weight:700;color:#fff;flex-shrink:0}
+html.dark .sc-logo,html.dark .wl-logo{background:#334155}
+
+/* ═══ SCREENER BOTTOM PANEL (Watchlist + Alert) ═══ */
+.sc-panel{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px;margin-top:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.sc-tabs{display:flex;gap:4px;background:var(--s2);border-radius:9px;padding:3px;width:fit-content;margin-bottom:16px}
+.sc-tab{padding:7px 20px;border:none;background:none;border-radius:7px;font-family:var(--ff);font-size:13px;font-weight:500;cursor:pointer;color:var(--t2);transition:all .15s}
+.sc-tab.active{background:var(--card);color:var(--t);box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.sc-wl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.sc-wl-row{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;border:1px solid var(--bd);cursor:pointer;transition:all .12s;background:var(--s2)}
+.sc-wl-row:hover{border-color:rgba(26,86,196,.35);background:var(--b3)}
+.sc-wl-sym{font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t);min-width:60px}
+.sc-wl-name{font-size:11px;color:var(--t3);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-wl-price{font-family:var(--fm);font-size:12px;color:var(--t);min-width:58px;text-align:right}
+.sc-wl-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0;transition:color .15s;line-height:1}
+.sc-wl-del:hover{color:var(--r)}
+html.dark .sc-panel{background:#1e293b;border-color:#334155}
+html.dark .sc-tab.active{background:#334155}
+html.dark .sc-wl-row{background:#0f172a;border-color:#334155}
+
 /* ═══ FEATURE 4: DARK MODE (html.dark) ═══ */
 html.dark{--s:#1e293b;--s2:#0f172a;--bd:#334155;--t:#f1f5f9;--t2:#cbd5e1;--t3:#64748b}
 html.dark body{background:#0f172a;color:#f1f5f9}
