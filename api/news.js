@@ -245,10 +245,9 @@ const CATEGORIES = {
   macro: {
     rss: [
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
-      { urls: ['https://www.ilsole24ore.com/rss/economia.xml', 'https://www.ilsole24ore.com/rss/home.xml'], name: 'Il Sole 24 Ore', specific: true },
     ],
     finnhub: 'general',
-    yahooQueries: ['inflation interest rate central bank', 'fed bce ecb monetary policy', 'gdp recession economy growth'],
+    yahooQueries: ['inflation interest rate central bank', 'fed ecb monetary policy rates', 'gdp recession economy growth'],
     keywords: [
       'fed','federal reserve','bce','ecb','bank of england','boj','bank of japan','banca centrale',
       'inflation','inflazione','interest rate','tassi','gdp','pil','cpi','pce',
