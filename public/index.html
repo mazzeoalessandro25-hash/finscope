@@ -2304,6 +2304,52 @@ async function removeFromWlaWatchlist(sym){
   renderWlaWatchlist();
 }
 
+function wlaAddSuggest(val){
+  const list=document.getElementById('wla-sugg-list');
+  if(!list)return;
+  const q=val.trim().toUpperCase();
+  if(!q){list.style.display='none';return;}
+  const matches=(typeof STOCKS!=='undefined'?STOCKS:[])
+    .filter(s=>s.s.toUpperCase().startsWith(q)||(s.n&&s.n.toUpperCase().includes(q)))
+    .slice(0,8);
+  if(!matches.length){list.style.display='none';return;}
+  list.innerHTML=matches.map(s=>`
+    <div onclick="wlaPickSugg('${s.s}')" style="display:flex;align-items:center;gap:10px;padding:8px 12px;cursor:pointer;transition:background .12s"
+      onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+      <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t);min-width:52px">${s.s}</div>
+      <div style="font-size:11px;color:var(--t3);overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${s.n||''}</div>
+    </div>`).join('');
+  list.style.display='block';
+}
+
+function wlaPickSugg(sym){
+  const inp=document.getElementById('wla-add-inp');
+  if(inp)inp.value=sym;
+  const list=document.getElementById('wla-sugg-list');
+  if(list)list.style.display='none';
+}
+
+async function addTickerFromWla(){
+  const inp=document.getElementById('wla-add-inp');
+  const msg=document.getElementById('wla-add-msg');
+  if(!inp)return;
+  const sym=inp.value.trim().toUpperCase();
+  if(!sym){if(msg){msg.textContent='Inserisci un ticker valido.';msg.style.display='block';}return;}
+  if(watchlist.includes(sym)){
+    if(msg){msg.textContent=sym+' è già nella watchlist.';msg.style.display='block';}
+    setTimeout(()=>{if(msg)msg.style.display='none';},2500);
+    return;
+  }
+  watchlist.push(sym);
+  localStorage.setItem('fs_watchlist',JSON.stringify(watchlist));
+  await saveWatchlist();
+  inp.value='';
+  if(msg)msg.style.display='none';
+  const list=document.getElementById('wla-sugg-list');
+  if(list)list.style.display='none';
+  renderWlaWatchlist();
+}
+
 function updateScQuickCounts(){
   const wlCnt=document.getElementById('sc-wl-cnt');
   if(wlCnt){wlCnt.textContent=watchlist.length;wlCnt.style.display=watchlist.length?'inline':'none';}
