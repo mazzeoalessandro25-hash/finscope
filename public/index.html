@@ -2331,9 +2331,15 @@ function showPage(id,btn){
   if(mobBtn)mobBtn.classList.add('active');
   if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati finanziari');
   if(id==='screener'&&dynamicStocks.length===0)loadScreener();
-  if(id==='screener'&&dynamicStocks.length>0){renderScreenerWatchlist&&renderScreenerWatchlist();renderAlerts&&renderAlerts();}
+  if(id==='screener'){updateScQuickCounts&&updateScQuickCounts();}
   if(id==='portafoglio')showPortfolioState();
-  if(id==='alerts'){renderAlerts();checkAlerts();}
+  if(id==='alerts'){
+    updateScQuickCounts&&updateScQuickCounts();
+    // Mostra il tab che era attivo o default watchlist
+    const wlTab=document.getElementById('wla-tab-wl');
+    if(wlTab&&wlTab.style.display!=='none')renderWlaWatchlist&&renderWlaWatchlist();
+    else{renderAlerts();checkAlerts();}
+  }
   if(id==='macro')loadMacroDashboard();
 }
 
