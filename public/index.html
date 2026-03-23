@@ -2181,65 +2181,77 @@ async function removeAlertFromScreener(idx){
   renderAlerts();
 }
 
-/* ── WATCHLIST & ALERT PAGE ── */
-function openWlaPage(tab){
+/* ── WATCHLIST PAGE ── */
+function openWlaPage(){
   showPage('alerts',null);
-  const btn=document.getElementById('wla-tab-'+tab+'-btn');
-  if(btn)switchWlaTab(tab,btn);
-}
-
-function switchWlaTab(tab,btn){
-  document.querySelectorAll('#page-alerts .sc-tab').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  document.getElementById('wla-tab-wl').style.display=tab==='wl'?'block':'none';
-  document.getElementById('wla-tab-al').style.display=tab==='al'?'block':'none';
-  if(tab==='wl')renderWlaWatchlist();
-  if(tab==='al'){renderAlerts();checkAlerts();}
+  renderWlaWatchlist();
 }
 
 async function renderWlaWatchlist(){
   const el=document.getElementById('wla-wl-list');
   if(!el)return;
-  // Aggiorna badge
-  const badge=document.getElementById('wla-wl-badge');
-  if(badge){badge.textContent=watchlist.length;badge.style.display=watchlist.length?'inline':'none';}
-  // Aggiorna contatore barra screener
   updateScQuickCounts();
   if(!watchlist.length){
     el.innerHTML='<div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nello Screener</div>';
     return;
   }
-  el.innerHTML='<div class="ld">Caricamento prezzi...</div>';
+  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">Caricamento prezzi...</div>';
   const quotes=await Promise.all(watchlist.map(s=>api(s)));
   const sparks=typeof fetchSparkData==='function'?await Promise.all(watchlist.map(s=>fetchSparkData(s))):[];
   const stockInfo=s=>STOCKS.find(x=>x.s===s);
-  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">'+watchlist.map((sym,i)=>{
-    const d=quotes[i];
-    const info=stockInfo(sym);
-    const c=d?chgPct(d.price,d.prev):null;
-    const up=c==null||c>=0;
-    const spId='wla-sp-'+sym.replace(/[^a-z0-9]/gi,'');
-    return`<div class="wl-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
-        <div style="display:flex;align-items:center;gap:8px">
-          ${logoHtmlSm(sym,info?.n||sym)}
-          <div>
-            <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${sym}</div>
-            ${info?`<div style="font-size:11px;color:var(--t3)">${info.n}</div>`:''}
+
+  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px">'+
+    watchlist.map((sym,i)=>{
+      const d=quotes[i];
+      const info=stockInfo(sym);
+      const c=d?chgPct(d.price,d.prev):null;
+      const up=c==null||c>=0;
+      const spId='wla-sp-'+sym.replace(/[^a-z0-9]/gi,'');
+      const sid=sym.replace(/[^a-z0-9]/gi,'');
+      const cur=typeof stockCur==='function'?stockCur(sym):'$';
+      // Alert esistenti per questo ticker
+      const symAlerts=alerts.map((a,idx)=>({...a,idx})).filter(a=>a.sym===sym);
+      const alertsHtml=symAlerts.length
+        ? symAlerts.map(a=>`
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+              <span style="font-size:10px;font-family:var(--fm);color:var(--t2);flex:1">
+                🔔 ${a.condition==='above'?'↑ Sopra':'↓ Sotto'} ${cur}${fmt(a.target,2)}${a.label?' · '+a.label:''}
+              </span>
+              <button onclick="removeAlertForCard(${a.idx})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px;padding:0 2px;line-height:1" title="Rimuovi alert">✕</button>
+            </div>`).join('')
+        : '';
+      return`<div class="wl-card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px">
+            ${logoHtmlSm(sym,info?.n||sym)}
+            <div>
+              <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${sym}</div>
+              ${info?`<div style="font-size:11px;color:var(--t3)">${info.n}</div>`:''}
+            </div>
+          </div>
+          <div style="text-align:right;flex-shrink:0">
+            <div class="wl-card-price">${d?cur+fmt(d.price,d.price<10?4:2):'—'}</div>
+            <span class="wl-card-chg ${up?'up':'down'}">${chgStr(c)}</span>
           </div>
         </div>
-        <div style="text-align:right">
-          <div class="wl-card-price">${d?'$'+fmt(d.price,d.price<10?4:2):'—'}</div>
-          <span class="wl-card-chg ${up?'up':'down'}">${chgStr(c)}</span>
+        <svg class="spark" id="${spId}" width="100%" height="32" style="display:block;margin:8px 0 6px"></svg>
+        ${alertsHtml?`<div style="margin-bottom:8px;padding:6px 8px;background:var(--s2);border-radius:7px;border:1px solid var(--bd)">${alertsHtml}</div>`:''}
+        <div style="display:flex;gap:5px;align-items:center;margin-bottom:10px">
+          <select id="al-cond-${sid}" style="font-family:var(--fm);font-size:11px;padding:4px 6px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--t);cursor:pointer;flex-shrink:0">
+            <option value="above">↑ Sopra</option>
+            <option value="below">↓ Sotto</option>
+          </select>
+          <input id="al-inp-${sid}" type="number" placeholder="${d?fmt(d.price,2):'prezzo'}" min="0" step="any"
+            style="font-family:var(--fm);font-size:11px;padding:4px 7px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--t);width:0;flex:1;min-width:0"/>
+          <button onclick="addAlertForCard('${sym}')" style="background:var(--b);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-family:var(--ff);font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">+ Alert</button>
         </div>
-      </div>
-      <svg class="spark" id="${spId}" width="100%" height="36" style="display:block;margin:8px 0"></svg>
-      <div class="wl-card-btns">
-        <button class="wl-card-btn" onclick="openFA('${sym}')">Analizza</button>
-        <button class="wl-card-btn del" onclick="removeFromWlaWatchlist('${sym}')">Rimuovi</button>
-      </div>
-    </div>`;
-  }).join('')+'</div>';
+        <div class="wl-card-btns">
+          <button class="wl-card-btn" onclick="openFA('${sym}')">Analizza</button>
+          <button class="wl-card-btn del" onclick="removeFromWlaWatchlist('${sym}')">Rimuovi</button>
+        </div>
+      </div>`;
+    }).join('')+'</div>';
+
   requestAnimationFrame(()=>{
     watchlist.forEach((sym,i)=>{
       const spId='wla-sp-'+sym.replace(/[^a-z0-9]/gi,'');
@@ -2247,6 +2259,25 @@ async function renderWlaWatchlist(){
       if(sparks[i]&&sparks[i].length&&typeof drawSparkline==='function')drawSparkline(spId,sparks[i],up);
     });
   });
+}
+
+async function addAlertForCard(sym){
+  if(!currentUser){openAuthModal();return;}
+  const sid=sym.replace(/[^a-z0-9]/gi,'');
+  const target=parseFloat(document.getElementById('al-inp-'+sid)?.value);
+  const condition=document.getElementById('al-cond-'+sid)?.value||'above';
+  if(!target||target<=0)return;
+  alerts.push({sym,target,condition,label:'',addedAt:Date.now()});
+  await saveAlerts();
+  updateScQuickCounts();
+  renderWlaWatchlist();
+}
+
+async function removeAlertForCard(idx){
+  alerts.splice(idx,1);
+  await saveAlerts();
+  updateScQuickCounts();
+  renderWlaWatchlist();
 }
 
 async function removeFromWlaWatchlist(sym){
@@ -2258,14 +2289,7 @@ async function removeFromWlaWatchlist(sym){
 
 function updateScQuickCounts(){
   const wlCnt=document.getElementById('sc-wl-cnt');
-  const alCnt=document.getElementById('sc-al-cnt');
   if(wlCnt){wlCnt.textContent=watchlist.length;wlCnt.style.display=watchlist.length?'inline':'none';}
-  if(alCnt){alCnt.textContent=alerts.length;alCnt.style.display=alerts.length?'inline':'none';}
-  // Aggiorna badge nella pagina wl-alerts
-  const wlBadge=document.getElementById('wla-wl-badge');
-  const alBadge=document.getElementById('wla-al-badge');
-  if(wlBadge){wlBadge.textContent=watchlist.length;wlBadge.style.display=watchlist.length?'inline':'none';}
-  if(alBadge){alBadge.textContent=alerts.length;alBadge.style.display=alerts.length?'inline':'none';}
 }
 
 /* ── NAV ── */
