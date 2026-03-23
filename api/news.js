@@ -140,7 +140,7 @@ const CATEGORIES = {
       { url: 'https://www.ilsole24ore.com/rss/mercati.xml',           name: 'Il Sole 24 Ore', specific: true  },
     ],
     finnhub: 'general',
-    yahoo: 'stock market finance borsa',
+    yahoo: 'stock market finance borsa indici',
     keywords: null, // nessun filtro: tab mercati è catch-all
   },
   italia: {
@@ -151,9 +151,17 @@ const CATEGORIES = {
     finnhub: null,
     yahoo: 'borsa italiana ftse mib piazza affari',
     keywords: [
-      'italia','italian','ftse mib','mib','piazza affari','unicredit','intesa',
-      'eni','enel','ferrari','stellantis','mediobanca','generali','banca d\'italia',
-      'cdp','poste','tim','leonardo','telecom','fca',
+      // indici
+      'ftse mib','ftse-mib','mib','piazza affari','borsa italiana','borsa di milano',
+      // paesi/lingua
+      'italia','italian','italy',
+      // aziende blue chip italiane
+      'unicredit','intesa sanpaolo','eni','enel','ferrari','stellantis','mediobanca',
+      'generali','cdp','poste italiane','tim','telecom italia','leonardo','saipem',
+      'prysmian','tenaris','moncler','luxottica','campari','fca','iveco','fineco',
+      'banca mps','ubi banca','banco bpm','azimut','nexi','inwit',
+      // istituzioni italiane
+      'banca d\'italia','bankitalia','consob','cassa depositi',
     ],
   },
   usa: {
@@ -161,11 +169,18 @@ const CATEGORIES = {
       { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC', specific: false },
     ],
     finnhub: 'general',
-    yahoo: 'S&P 500 nasdaq dow jones wall street',
+    yahoo: 'S&P 500 nasdaq dow jones wall street NYSE',
     keywords: [
-      's&p','sp500','nasdaq','dow jones','wall street','nyse','fed','federal reserve',
-      'sec','treasury','us stock','american','apple','microsoft','nvidia','google',
-      'amazon','meta','tesla','earnings','us economy',
+      // indici
+      's&p 500','s&p500','sp500','nasdaq','nasdaq 100','dow jones','djia','russell 2000',
+      'nyse','wall street','new york stock',
+      // macro USA
+      'fed','federal reserve','treasury','sec','us economy','american economy',
+      // mega cap
+      'apple','microsoft','nvidia','alphabet','google','amazon','meta','tesla',
+      'berkshire','jpmorgan','visa','mastercard','exxon','chevron','unitedhealth',
+      // temi
+      'us stock','earnings','quarterly results','ipo usa',
     ],
   },
   commodities: {
@@ -173,11 +188,17 @@ const CATEGORIES = {
       { url: 'https://www.cnbc.com/id/100727362/device/rss/rss.html', name: 'CNBC Commodities', specific: true },
     ],
     finnhub: 'general',
-    yahoo: 'gold oil crude commodities silver copper',
+    yahoo: 'gold oil crude commodities silver copper energy',
     keywords: [
-      'gold','silver','oil','crude','brent','wti','copper','platinum','palladium',
-      'natural gas','commodity','commodities','oro','petrolio','rame','materie prime',
-      'wheat','corn','soybean','agricol',
+      // metalli
+      'gold','silver','copper','platinum','palladium','zinc','nickel','aluminium','aluminum',
+      'oro','argento','rame','platino',
+      // energia
+      'oil','crude','brent','wti','natural gas','lng','opec','petroleum','petrolio','gas naturale',
+      // agricolo
+      'wheat','corn','soybean','grain','coffee','cocoa','sugar','cotton','frumento',
+      // generici
+      'commodity','commodities','materie prime','raw material','futures',
     ],
   },
   forex: {
@@ -185,11 +206,17 @@ const CATEGORIES = {
       { url: 'https://www.cnbc.com/id/100003114/device/rss/rss.html', name: 'CNBC', specific: false },
     ],
     finnhub: 'forex',
-    yahoo: 'forex euro dollar exchange rate currency',
+    yahoo: 'forex euro dollar pound yen exchange rate currency',
     keywords: [
-      'forex','currency','exchange rate','eur/usd','gbp/usd','usd/jpy','dollar','euro',
-      'pound','yen','franc','yuan','dollaro','valuta','cambio','bce','ecb rate',
-      'eurodollar','usd','eur','gbp','chf','cad','aud',
+      // coppie e valute
+      'eur/usd','gbp/usd','usd/jpy','usd/chf','aud/usd','usd/cad','eur/gbp','eur/jpy',
+      'dollar','euro','pound','yen','franc','yuan','renminbi','lira','peso','ruble',
+      'dollaro','valuta','cambio',
+      // generici
+      'forex','fx','currency','exchange rate','foreign exchange',
+      // banche centrali (rilevanti per forex)
+      'bce','ecb','bank of england','boe','bank of japan','boj','fed rate','interest rate',
+      'usd','eur','gbp','chf','cad','aud','nzd','jpy',
     ],
   },
   crypto: {
