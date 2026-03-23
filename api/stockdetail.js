@@ -1,17 +1,48 @@
 import { fetchQuoteSummary, fetchYahooQuote } from './_lib/yahoo.js';
 
 async function fetchNews(symbol) {
-  try {
-    const r = await fetch(
-      `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(symbol)}&newsCount=6&quotesCount=0`,
-      { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
-    );
-    if (!r.ok) return [];
-    const data = await r.json();
-    return (data?.news || []).slice(0, 5).map(n => ({
-      title: n.title, publisher: n.publisher, link: n.link, time: n.providerPublishTime,
-    }));
-  } catch (_) { return []; }
+  const yahooFetch = async () => {
+    try {
+      const r = await fetch(
+        `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(symbol)}&newsCount=6&quotesCount=0`,
+        { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
+      );
+      if (!r.ok) return [];
+      const data = await r.json();
+      return (data?.news || []).slice(0, 5).map(n => ({
+        title: n.title, publisher: n.publisher, link: n.link, time: n.providerPublishTime, thumbnail: n.thumbnail?.resolutions?.[0]?.url || null,
+      }));
+    } catch { return []; }
+  };
+
+  const finnhubFetch = async () => {
+    const token = process.env.FINNHUB_KEY || '';
+    if (!token) return [];
+    try {
+      const to   = new Date().toISOString().slice(0, 10);
+      const from = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
+      // strip exchange suffix for Finnhub (it only accepts plain US tickers)
+      const sym  = symbol.replace(/\.[A-Z0-9]+$/, '');
+      const r = await fetch(
+        `https://finnhub.io/api/v1/company-news?symbol=${encodeURIComponent(sym)}&from=${from}&to=${to}&token=${token}`,
+        { signal: AbortSignal.timeout(5000) }
+      );
+      if (!r.ok) return [];
+      const data = await r.json();
+      return (Array.isArray(data) ? data : []).slice(0, 5).map(n => ({
+        title: n.headline, publisher: n.source, link: n.url, time: n.datetime, thumbnail: n.image || null,
+      }));
+    } catch { return []; }
+  };
+
+  const [yahoo, finnhub] = await Promise.all([yahooFetch(), finnhubFetch()]);
+  // merge & deduplicate by title prefix
+  const seen = new Set();
+  return [...yahoo, ...finnhub].filter(a => {
+    const key = (a.title || '').slice(0, 60).toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key); return true;
+  }).slice(0, 6);
 }
 
 
