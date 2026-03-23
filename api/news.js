@@ -165,10 +165,9 @@ const CATEGORIES = {
   mercati: {
     rss: [
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
-      { urls: ['https://www.ilsole24ore.com/rss/mercati.xml', 'https://www.ilsole24ore.com/rss/home.xml'], name: 'Il Sole 24 Ore', specific: true },
     ],
     finnhub: 'general',
-    yahooQueries: ['stock market finance', 'borsa mercati finanziari', 'wall street nasdaq'],
+    yahooQueries: ['stock market finance today', 'global markets stocks bonds', 'wall street nasdaq dow jones'],
     keywords: null,
   },
   italia: {
