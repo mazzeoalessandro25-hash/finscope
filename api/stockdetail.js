@@ -1,48 +1,84 @@
 import { fetchQuoteSummary, fetchYahooQuote } from './_lib/yahoo.js';
 
-async function fetchNews(symbol) {
+// Costruisce parole chiave dal ticker e dal nome azienda per filtrare i risultati
+function buildCompanyKeywords(symbol, companyName) {
+  const baseSym = symbol.replace(/\.[A-Z0-9]+$/, '').toLowerCase(); // es. "eni" da "ENI.MI"
+  const keywords = new Set([baseSym]);
+
+  if (companyName) {
+    // Aggiunge ogni parola del nome > 3 caratteri (esclude "Inc", "SpA", "Corp", ecc.)
+    const stopwords = new Set(['inc','corp','plc','spa','nv','ltd','llc','the','and','group','holding','holdings','sa','ag','se']);
+    companyName.toLowerCase().split(/[\s,.\-&]+/).forEach(w => {
+      if (w.length > 3 && !stopwords.has(w)) keywords.add(w);
+    });
+  }
+  return [...keywords];
+}
+
+function articleMatchesCompany(article, keywords) {
+  const text = ((article.title || '') + ' ' + (article.publisher || '')).toLowerCase();
+  return keywords.some(kw => text.includes(kw));
+}
+
+async function fetchNews(symbol, companyName) {
+  const keywords = buildCompanyKeywords(symbol, companyName);
+  const baseSym  = symbol.replace(/\.[A-Z0-9]+$/, '');
+
+  // Yahoo Finance: cerca per ticker base + nome azienda
   const yahooFetch = async () => {
     try {
-      const r = await fetch(
-        `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(symbol)}&newsCount=6&quotesCount=0`,
-        { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
-      );
-      if (!r.ok) return [];
-      const data = await r.json();
-      return (data?.news || []).slice(0, 5).map(n => ({
-        title: n.title, publisher: n.publisher, link: n.link, time: n.providerPublishTime, thumbnail: n.thumbnail?.resolutions?.[0]?.url || null,
+      // Prima query: ticker puro (es. "AAPL", "ENI")
+      // Seconda query: nome azienda (es. "Apple", "Ferrari")
+      const queries = [baseSym, companyName].filter(Boolean);
+      const results = await Promise.all(queries.map(async q => {
+        const r = await fetch(
+          `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&newsCount=8&quotesCount=0`,
+          { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
+        );
+        if (!r.ok) return [];
+        const data = await r.json();
+        return (data?.news || []).map(n => ({
+          title: n.title, publisher: n.publisher, link: n.link,
+          time: n.providerPublishTime, thumbnail: n.thumbnail?.resolutions?.[0]?.url || null,
+        }));
       }));
+      // Filtra: tiene solo articoli che menzionano il ticker o il nome azienda nel titolo
+      return results.flat().filter(a => articleMatchesCompany(a, keywords));
     } catch { return []; }
   };
 
+  // Finnhub: company-news è già specifico per ticker
   const finnhubFetch = async () => {
     const token = process.env.FINNHUB_KEY || '';
     if (!token) return [];
     try {
       const to   = new Date().toISOString().slice(0, 10);
-      const from = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
-      // strip exchange suffix for Finnhub (it only accepts plain US tickers)
-      const sym  = symbol.replace(/\.[A-Z0-9]+$/, '');
+      const from = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10); // ultimi 14gg
       const r = await fetch(
-        `https://finnhub.io/api/v1/company-news?symbol=${encodeURIComponent(sym)}&from=${from}&to=${to}&token=${token}`,
+        `https://finnhub.io/api/v1/company-news?symbol=${encodeURIComponent(baseSym)}&from=${from}&to=${to}&token=${token}`,
         { signal: AbortSignal.timeout(5000) }
       );
       if (!r.ok) return [];
       const data = await r.json();
-      return (Array.isArray(data) ? data : []).slice(0, 5).map(n => ({
+      return (Array.isArray(data) ? data : []).slice(0, 8).map(n => ({
         title: n.headline, publisher: n.source, link: n.url, time: n.datetime, thumbnail: n.image || null,
       }));
     } catch { return []; }
   };
 
   const [yahoo, finnhub] = await Promise.all([yahooFetch(), finnhubFetch()]);
-  // merge & deduplicate by title prefix
+
+  // Merge, deduplication, ordinamento per data
   const seen = new Set();
-  return [...yahoo, ...finnhub].filter(a => {
-    const key = (a.title || '').slice(0, 60).toLowerCase();
-    if (seen.has(key)) return false;
-    seen.add(key); return true;
-  }).slice(0, 6);
+  return [...finnhub, ...yahoo]  // Finnhub prima (più preciso)
+    .filter(a => {
+      if (!a?.title || !a?.link) return false;
+      const key = a.title.slice(0, 60).toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key); return true;
+    })
+    .sort((a, b) => (b.time || 0) - (a.time || 0))
+    .slice(0, 6);
 }
 
 
