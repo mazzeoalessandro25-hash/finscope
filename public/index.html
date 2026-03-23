@@ -1781,6 +1781,23 @@ html.dark .auth-box{background:#1e293b}
   </div>
   <div class="pg-sub">I tuoi titoli monitorati · Imposta alert di prezzo direttamente da ogni card</div>
   <div id="alert-triggered-banners"></div>
+  <!-- Add ticker bar -->
+  <div style="position:relative;margin-bottom:18px">
+    <div style="display:flex;gap:8px;align-items:center">
+      <div style="position:relative;flex:1;max-width:360px">
+        <input id="wla-add-inp" type="text" placeholder="Aggiungi ticker (es. AAPL, MSFT…)"
+          autocomplete="off"
+          style="width:100%;font-family:var(--ff);font-size:13px;padding:9px 14px;border:1.5px solid var(--bd);border-radius:10px;background:var(--card);color:var(--t);outline:none;box-sizing:border-box;transition:border-color .15s"
+          oninput="wlaAddSuggest(this.value)"
+          onkeydown="if(event.key==='Enter'){addTickerFromWla();event.preventDefault()}"
+          onfocus="this.style.borderColor='var(--b)'"
+          onblur="setTimeout(()=>{document.getElementById('wla-sugg-list')&&(document.getElementById('wla-sugg-list').style.display='none')},200)"/>
+        <div id="wla-sugg-list" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1.5px solid var(--bd);border-radius:10px;max-height:220px;overflow-y:auto;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.15)"></div>
+      </div>
+      <button onclick="addTickerFromWla()" style="background:var(--b);color:#fff;border:none;padding:9px 18px;border-radius:10px;font-size:13px;font-family:var(--ff);font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">+ Aggiungi</button>
+    </div>
+    <div id="wla-add-msg" style="font-size:11px;color:#DC2626;margin-top:5px;display:none"></div>
+  </div>
   <div id="wla-wl-list"><div class="ld">Caricamento watchlist...</div></div>
 </div>
 
