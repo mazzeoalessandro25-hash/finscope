@@ -2464,14 +2464,30 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 
 /* ── CHART HELPERS ── */
+function getLWChartTheme(){
+  const dark=document.documentElement.classList.contains('dark');
+  return dark
+    ?{bg:'#0f172a',text:'#94a3b8',grid:'rgba(51,65,85,.6)',border:'#334155'}
+    :{bg:'#ffffff',text:'#4A6080',grid:'rgba(216,226,239,.5)',border:'#D8E2EF'};
+}
+function applyLWChartTheme(chart){
+  const t=getLWChartTheme();
+  chart.applyOptions({
+    layout:{background:{color:t.bg},textColor:t.text},
+    grid:{vertLines:{color:t.grid},horzLines:{color:t.grid}},
+    rightPriceScale:{borderColor:t.border},
+    timeScale:{borderColor:t.border},
+  });
+}
 function buildLWChart(container,type,pts){
+  const t=getLWChartTheme();
   const chart=LightweightCharts.createChart(container,{
     width:container.clientWidth,height:container.clientHeight||280,
-    layout:{background:{color:'#ffffff'},textColor:'#4A6080'},
-    grid:{vertLines:{color:'rgba(216,226,239,.5)'},horzLines:{color:'rgba(216,226,239,.5)'}},
+    layout:{background:{color:t.bg},textColor:t.text},
+    grid:{vertLines:{color:t.grid},horzLines:{color:t.grid}},
     crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
-    rightPriceScale:{borderColor:'#D8E2EF'},
-    timeScale:{borderColor:'#D8E2EF',timeVisible:false},
+    rightPriceScale:{borderColor:t.border},
+    timeScale:{borderColor:t.border,timeVisible:false},
     handleScroll:true,handleScale:true,
   });
   if(type==='candle'){
