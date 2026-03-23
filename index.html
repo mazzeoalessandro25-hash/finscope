@@ -777,9 +777,11 @@ body.dark .sd-item:hover{background:var(--s3)}
 
   <!-- WATCHLIST + ALERT PANEL integrati nello Screener -->
   <div class="sc-panel" id="sc-bottom-panel">
-    <div class="sc-tabs">
-      <button class="sc-tab active" id="sct-wl" onclick="switchScTab('wl',this)">★ Watchlist</button>
-      <button class="sc-tab" id="sct-al" onclick="switchScTab('al',this)">🔔 Alert Prezzi</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0">
+      <div class="sc-tabs">
+        <button class="sc-tab active" id="sct-wl" onclick="switchScTab('wl',this)">★ Watchlist <span id="sc-wl-badge" style="font-size:10px;background:var(--b);color:#fff;border-radius:100px;padding:1px 6px;margin-left:4px;display:none"></span></button>
+        <button class="sc-tab" id="sct-al" onclick="switchScTab('al',this)">🔔 Alert Prezzi <span id="sc-al-badge" style="font-size:10px;background:var(--b);color:#fff;border-radius:100px;padding:1px 6px;margin-left:4px;display:none"></span></button>
+      </div>
     </div>
     <!-- Tab Watchlist -->
     <div id="sc-tab-wl">
