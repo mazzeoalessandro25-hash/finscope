@@ -2410,9 +2410,10 @@ function setScreenerIndex(idx, btn){
   document.querySelectorAll('.sc-idx-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const isAll=idx==='all';
-  document.getElementById('sc-country').style.display    = isAll?'':'none';
-  document.getElementById('sc-mktcap-min').style.display = isAll?'':'none';
-  document.getElementById('sc-load-wrap').style.display  = isAll?'block':'none';
+  const elCountry=document.getElementById('sc-country');
+  if(elCountry) elCountry.style.display=isAll?'':'none';
+  const elLoadWrap=document.getElementById('sc-load-wrap');
+  if(elLoadWrap) elLoadWrap.style.display=isAll?'block':'none';
   const thSpark=document.getElementById('sc-th-spark');
   if(thSpark) thSpark.style.display='none';
   hideSearchDropdown();
