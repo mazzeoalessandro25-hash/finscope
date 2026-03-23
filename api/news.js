@@ -128,14 +128,22 @@ async function fetchYahooSearch(query, count = 15, specific = false) {
   } catch { return { items: [], ok: false }; }
 }
 
-// Esegue più query Yahoo e unisce i risultati
-// specific:false → il filtro keyword viene applicato per rimuovere articoli non pertinenti
+// Query generiche con filtro keyword applicato
 async function fetchYahooMulti(queries, countEach = 10) {
   const results = await Promise.all(queries.map(q => fetchYahooSearch(q, countEach, false)));
   return {
     items: results.flatMap(r => r.items),
     ok: results.some(r => r.ok),
     perQuery: results.map((r, i) => ({ query: queries[i], count: r.items.length })),
+  };
+}
+
+// Cerca news per ticker specifici → risultati già pertinenti, bypass filtro keyword
+async function fetchYahooByTickers(tickers, countEach = 4) {
+  const results = await Promise.all(tickers.map(t => fetchYahooSearch(t, countEach, true)));
+  return {
+    items: results.flatMap(r => r.items),
+    ok: results.some(r => r.ok),
   };
 }
 
