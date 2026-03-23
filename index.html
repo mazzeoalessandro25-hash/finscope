@@ -2405,7 +2405,8 @@ async function renderPortfolio(){
     else{totalUSD_inv+=invested;if(curVal)totalUSD_val+=curVal;}
 
     return`<div class="port-item" onclick="openModal('${item.sym}','${item.sym}')">
-      <div>
+      ${logoHtmlSm(item.sym,item.sym)}
+      <div style="flex:1">
         <div class="port-sym">${item.sym} <span style="font-size:10px;font-weight:400;color:var(--t3);background:var(--b3);padding:1px 6px;border-radius:3px">${cur}</span> <span style="font-weight:400;color:var(--t3)">${item.qty} pz</span></div>
         <div class="port-info">Acquisto: ${sym}${fmt(item.buyPrice,2)} · Investito: ${sym}${fmt(invested,2)}</div>
       </div>
