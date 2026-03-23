@@ -4213,12 +4213,14 @@ async function addAlert(){
   document.getElementById('al-label').value='';
   await saveAlerts();
   renderAlerts();
+  updateScQuickCounts&&updateScQuickCounts();
 }
 
 async function removeAlert(idx){
   alerts.splice(idx,1);
   await saveAlerts();
   renderAlerts();
+  updateScQuickCounts&&updateScQuickCounts();
 }
 
 function renderAlerts(){
