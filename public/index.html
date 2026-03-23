@@ -3156,15 +3156,20 @@ async function runFA(){
 }
 
 /* ── NEWS ── */
-async function loadNews(q,btn){
+async function loadNews(category,btn){
   if(btn){document.querySelectorAll('.nf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-  const grid=document.getElementById('news-grid');grid.innerHTML='<div class="ld">Caricamento...</div>';
-  const data=await api(encodeURIComponent(q),'news');
-  if(!data?.news?.length){grid.innerHTML='<div class="ld">Nessuna notizia disponibile</div>';return;}
-  grid.innerHTML=data.news.map(n=>{
-    const dt=n.time?new Date(n.time*1000).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-    return`<a class="news-item" href="${n.link}" target="_blank" rel="noopener"><div class="n-pub">${n.publisher||''}</div><div class="n-title">${n.title}</div><div class="n-time">${dt}</div></a>`;
-  }).join('');
+  const grid=document.getElementById('news-grid');
+  grid.innerHTML='<div class="ld">Caricamento...</div>';
+  try{
+    const r=await fetch('/api/news?category='+encodeURIComponent(category));
+    const data=await r.json();
+    if(!data?.news?.length){grid.innerHTML='<div class="ld">Nessuna notizia disponibile</div>';return;}
+    grid.innerHTML=data.news.map(n=>{
+      const dt=n.time?new Date(n.time*1000).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+      const thumb=n.thumbnail?`<div style="width:100%;height:140px;background:url('${n.thumbnail}') center/cover no-repeat;border-radius:8px;margin-bottom:10px;flex-shrink:0"></div>`:'';
+      return`<a class="news-item" href="${n.link}" target="_blank" rel="noopener">${thumb}<div class="n-pub">${n.publisher||''}</div><div class="n-title">${n.title}</div><div class="n-time">${dt}</div></a>`;
+    }).join('');
+  }catch{grid.innerHTML='<div class="ld">Errore caricamento notizie</div>';}
 }
 
 /* ══════════════════════════════════════════
