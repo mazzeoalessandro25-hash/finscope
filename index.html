@@ -2103,7 +2103,7 @@ async function runCompare(){
   document.getElementById('cmp-result').innerHTML=`
     <div class="tbl-wrap" style="margin-bottom:12px">
       <table class="cmp-tbl">
-        <thead><tr><th>Metrica</th>${results.map(r=>`<th>${r.sym}</th>`).join('')}</tr></thead>
+        <thead><tr><th>Metrica</th>${results.map(r=>`<th><div style="display:flex;align-items:center;gap:6px;justify-content:center">${logoHtmlSm(r.sym,r.sym)}<span>${r.sym}</span></div></th>`).join('')}</tr></thead>
         <tbody>
           ${metrics.map(({k,fn})=>`<tr><td class="metric-lbl">${k}</td>${results.map(r=>`<td>${fn(r)}</td>`).join('')}</tr>`).join('')}
         </tbody>
