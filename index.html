@@ -1758,6 +1758,9 @@ function renderAlerts(){
   const el=document.getElementById('sc-al-content');
   if(!el)return;
   checkAlerts();
+  // Aggiorna badge
+  const alBadge=document.getElementById('sc-al-badge');
+  if(alBadge){alBadge.textContent=alerts.length;alBadge.style.display=alerts.length?'inline':'none';}
   if(!alerts.length){
     el.innerHTML='<div class="ld">Nessun alert impostato · Inserisci ticker, condizione e prezzo target sopra</div>';
     return;
