@@ -225,11 +225,20 @@ const CATEGORIES = {
       { url: 'https://cointelegraph.com/rss',                   name: 'CoinTelegraph', specific: true },
     ],
     finnhub: 'crypto',
-    yahoo: 'bitcoin ethereum crypto blockchain',
+    yahoo: 'bitcoin ethereum crypto blockchain altcoin',
     keywords: [
-      'bitcoin','ethereum','crypto','blockchain','btc','eth','defi','nft','altcoin',
-      'binance','coinbase','solana','ripple','xrp','stablecoin','web3','mining','token',
-      'dao','metaverse','polygon','cardano','avalanche',
+      // indici crypto
+      'crypto index','fear and greed','crypto market cap','total market',
+      // coin principali
+      'bitcoin','btc','ethereum','eth','solana','sol','ripple','xrp','cardano','ada',
+      'avalanche','avax','polygon','matic','chainlink','link','polkadot','dot',
+      'binance','bnb','tron','trx','litecoin','ltc','uniswap','uni',
+      // stablecoin
+      'usdt','usdc','tether','dai','stablecoin',
+      // generici
+      'crypto','cryptocurrency','blockchain','defi','nft','web3','mining','token',
+      'altcoin','coinbase','binance exchange','kraken','wallet','ledger',
+      'dao','metaverse','layer 2','layer2','zk rollup',
     ],
   },
   macro: {
@@ -238,12 +247,24 @@ const CATEGORIES = {
       { url: 'https://www.ilsole24ore.com/rss/economia.xml',          name: 'Il Sole 24 Ore', specific: true  },
     ],
     finnhub: 'general',
-    yahoo: 'bce fed inflazione tassi interesse recessione macro',
+    yahoo: 'bce fed inflazione tassi interesse recessione pil macro',
     keywords: [
-      'inflation','inflazione','bce','ecb','fed','federal reserve','interest rate','tassi',
-      'gdp','pil','recession','recessione','cpi','jobs','unemployment','disoccupazione',
-      'growth','crescita','debt','debito','deficit','fiscal','bilancio','banca centrale',
-      'quantitative','qe','tightening','monetary policy',
+      // banche centrali
+      'fed','federal reserve','bce','ecb','bank of england','boj','bank of japan',
+      'bank of canada','rba','snb','banca centrale',
+      // indicatori
+      'inflation','inflazione','interest rate','tassi','gdp','pil','cpi','pce',
+      'unemployment','disoccupazione','jobs report','nonfarm','payroll','pmi',
+      'ism','retail sales','consumer confidence','housing','trade balance',
+      // politica fiscale
+      'recession','recessione','stagflation','debt','debito','deficit','surplus',
+      'fiscal','bilancio','budget','treasury','spread btp','btp','bund',
+      // politica monetaria
+      'quantitative easing','qe','quantitative tightening','qt','tapering',
+      'rate hike','rate cut','pivot','forward guidance','monetary policy',
+      'liquidity','reverse repo',
+      // indici globali rilevanti per macro
+      'vix','volatility index','dxy','dollar index',
     ],
   },
 };
