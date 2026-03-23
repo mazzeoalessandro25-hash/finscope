@@ -181,19 +181,21 @@ const CATEGORIES = {
   italia: {
     rss: [],
     finnhub: null,
-    yahooQueries: ['FTSE MIB Italian stock market', 'Italy economy stocks ENI ENEL Unicredit', 'Italian shares Ferrari Stellantis Leonardo', 'piazza affari borsa milano'],
+    // Ticker Yahoo Finance delle principali blue chip italiane → news precise per azienda
+    yahooTickers: [
+      'ENI.MI','ENEL.MI','UCG.MI','ISP.MI','RACE','STLAM.MI',
+      'MB.MI','G.MI','LDO.MI','PRY.MI','MONC.MI','CPR.MI',
+      'FBK.MI','NEXI.MI','INW.MI','BAMI.MI','AZM.MI',
+    ],
+    yahooQueries: ['FTSE MIB Italy', 'Italy economy GDP'],
     keywords: [
-      // indici
-      'ftse mib','ftse-mib','italian stock','milan stock','italy stock',
-      // paese
-      'italy','italian','italia',
-      // blue chip italiane (nomi come appaiono in inglese su Yahoo Finance)
-      'eni','enel','ferrari','stellantis','unicredit','intesa sanpaolo','intesa-sanpaolo',
+      'ftse mib','italian stock','milan stock','italy stock',
+      'italy','italian',
+      'eni','enel','ferrari','stellantis','unicredit','intesa sanpaolo',
       'mediobanca','generali','leonardo','saipem','prysmian','tenaris','moncler',
       'campari','fineco','nexi','inwit','iveco','telecom italia','tim spa',
-      'banco bpm','banco-bpm','banca mps','monte dei paschi','azimut','poste italiane',
-      // istituzioni
-      'bank of italy','banca d\'italia','consob',
+      'banco bpm','banca mps','monte dei paschi','azimut','poste italiane',
+      'bank of italy','consob',
     ],
   },
   usa: {
