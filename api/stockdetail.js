@@ -1,15 +1,53 @@
 import { fetchQuoteSummary, fetchYahooQuote } from './_lib/yahoo.js';
 
-async function fetchNews(symbol, companyName) {
-  const baseSym = symbol.replace(/\.[A-Z0-9]+$/, ''); // "ENI" da "ENI.MI"
+// Parole comuni inglesi che NON devono essere usate come keyword di ricerca
+const COMMON_WORDS = new Set([
+  'race','air','gold','silver','oil','gas','power','energy','water','fire','core',
+  'play','move','view','link','open','next','plus','prime','edge','peak','base',
+  'nova','apex','axis','cash','cash','star','blue','green','black','white','red',
+]);
 
-  // ── 1. Finnhub company-news (fonte più affidabile: esplicitamente per ticker) ──
+function buildNewsKeywords(baseSym, companyName) {
+  const stopwords = new Set([
+    'inc','corp','plc','spa','nv','ltd','llc','the','and','group','holding','holdings',
+    'sa','ag','se','co','bv','asa','ab','oyj','srl','sas','snc','spa','scpa',
+  ]);
+  const keywords = [];
+
+  // Ticker solo se non è una parola comune e ha almeno 4 caratteri
+  if (baseSym.length >= 4 && !COMMON_WORDS.has(baseSym.toLowerCase())) {
+    keywords.push(baseSym.toLowerCase());
+  }
+
+  // Parole significative del nome azienda (più affidabili del ticker)
+  if (companyName) {
+    companyName.toLowerCase().split(/[\s,.\-&()]+/).forEach(w => {
+      if (w.length >= 4 && !stopwords.has(w) && !COMMON_WORDS.has(w)) {
+        keywords.push(w);
+      }
+    });
+  }
+
+  return [...new Set(keywords)]; // deduplicati
+}
+
+async function fetchNews(symbol, companyName) {
+  const baseSym  = symbol.replace(/\.[A-Z0-9]+$/, ''); // "RACE" da "RACE.MI"
+  const keywords = buildNewsKeywords(baseSym, companyName);
+
+  // Query di ricerca: preferisce il nome azienda al ticker se il ticker è ambiguo
+  // Es: "RACE.MI" → cerca "Ferrari" non "RACE"
+  const searchQuery = (COMMON_WORDS.has(baseSym.toLowerCase()) && companyName)
+    ? companyName.split(/[\s,]/)[0]  // prima parola del nome es. "Ferrari"
+    : baseSym;
+
+  // ── 1. Finnhub company-news (ticker-specifico, fonte più affidabile) ──
   const finnhubFetch = async () => {
     const token = process.env.FINNHUB_KEY || '';
     if (!token) return [];
     try {
       const to   = new Date().toISOString().slice(0, 10);
-      const from = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10); // 30gg per avere abbastanza risultati
+      const from = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
       const r = await fetch(
         `https://finnhub.io/api/v1/company-news?symbol=${encodeURIComponent(baseSym)}&from=${from}&to=${to}&token=${token}`,
         { signal: AbortSignal.timeout(5000) }
@@ -22,51 +60,22 @@ async function fetchNews(symbol, companyName) {
     } catch { return []; }
   };
 
-  // ── 2. Yahoo Finance endpoint simbolo-specifico (più preciso della ricerca generica) ──
+  // ── 2. Yahoo Finance: cerca per nome azienda o ticker con filtro rigoroso ──
   const yahooFetch = async () => {
     try {
-      // Endpoint che restituisce news taggate con il simbolo specifico su Yahoo Finance
       const r = await fetch(
-        `https://query2.finance.yahoo.com/v1/finance/news?symbols=${encodeURIComponent(symbol)}&count=8`,
-        { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
-      );
-      if (r.ok) {
-        const data = await r.json();
-        const items = (data?.items?.result || data?.news || []);
-        if (items.length > 0) {
-          return items.slice(0, 8).map(n => ({
-            title: n.title || n.headline,
-            publisher: n.publisher || n.source,
-            link: n.link || n.url,
-            time: n.providerPublishTime || n.datetime,
-            thumbnail: n.thumbnail?.resolutions?.[0]?.url || n.image || null,
-          }));
-        }
-      }
-    } catch { /* fallback */ }
-
-    // Fallback: ricerca per ticker con filtro stretto sul titolo
-    try {
-      const r = await fetch(
-        `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(baseSym)}&newsCount=10&quotesCount=0`,
+        `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(searchQuery)}&newsCount=12&quotesCount=0`,
         { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
       );
       if (!r.ok) return [];
       const data = await r.json();
 
-      // Costruisce keyword rigorose: ticker esatto + parole significative del nome azienda
-      const stopwords = new Set(['inc','corp','plc','spa','nv','ltd','llc','the','and','group','holding','holdings','sa','ag','se','co']);
-      const keywords = new Set([baseSym.toLowerCase()]);
-      if (companyName) {
-        companyName.toLowerCase().split(/[\s,.\-&()]+/).forEach(w => {
-          if (w.length >= 4 && !stopwords.has(w)) keywords.add(w);
-        });
-      }
-      // Filtra: il titolo deve contenere il ticker ESATTO o una parola chiave del nome
+      if (!keywords.length) return []; // nessuna keyword → non possiamo filtrare in sicurezza
+
+      // Filtra: il titolo deve contenere almeno una keyword come parola intera
       return (data?.news || []).filter(n => {
         const title = (n.title || '').toLowerCase();
-        return [...keywords].some(kw => {
-          // Matching preciso: cerca keyword come parola intera (non sottostringa)
+        return keywords.some(kw => {
           const re = new RegExp(`\\b${kw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
           return re.test(title);
         });
@@ -79,7 +88,6 @@ async function fetchNews(symbol, companyName) {
 
   const [finnhub, yahoo] = await Promise.all([finnhubFetch(), yahooFetch()]);
 
-  // Finnhub prima (garantito per ticker), Yahoo dopo — deduplica per titolo
   const seen = new Set();
   return [...finnhub, ...yahoo]
     .filter(a => {
