@@ -4153,14 +4153,15 @@ function renderAlerts(){
   if(cnt)cnt.textContent=alerts.length+' alert attivi';
   el.innerHTML=alerts.map((a,i)=>`
     <div class="alert-item">
-      <div>
+      ${logoHtmlSm(a.sym,a.sym)}
+      <div style="flex:1;min-width:0">
         <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${a.sym}</div>
         <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">
           ${a.condition==='above'?'↑ Sopra':'↓ Sotto'} $${fmt(a.target,2)}
           ${a.label?'· '+a.label:''}
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
         <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString('it-IT')}</span>
         <button class="port-del" onclick="removeAlert(${i})" title="Rimuovi alert">✕</button>
       </div>
