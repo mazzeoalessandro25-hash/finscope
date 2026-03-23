@@ -324,12 +324,13 @@ export default async function handler(req, res) {
       debugInfo.yahooTickers = { count: yahooTickerResult.items.length, ok: yahooTickerResult.ok };
     }
 
-    // Ticker news sono già specifici (bypass filtro), query news vengono filtrate per keyword
+    // Tutto passa dal filtro keyword — le keyword includono i nomi delle aziende in inglese
+    const allYahoo = [...yahooTickerResult.items, ...yahooQueryResult.items]
+      .map(a => ({ ...a, _specific: false })); // forza filtro anche su ticker
     const raw = [
       ...rssResults.flatMap(r => r.items),
       ...finnhubResult.items,
-      ...yahooTickerResult.items,            // specific:true → passano sempre
-      ...filterByKeywords(yahooQueryResult.items, cfg.keywords), // filtrate
+      ...filterByKeywords(allYahoo, cfg.keywords),
     ];
     articles = raw;
 
