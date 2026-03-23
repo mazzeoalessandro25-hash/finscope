@@ -2098,6 +2098,131 @@ async function api(sym,type=''){
     if(!r.ok)return null;const d=await r.json();return d.error?null:d;}catch{return null;}
 }
 
+/* ── LOGHI AZIENDE ──
+   Primary: FMP image (ticker senza suffisso borsa)
+   Fallback: avatar testuale con colore hash-based
+*/
+function avatarColor(str){
+  const colors=['#1A56C4','#059669','#D97706','#7C3AED','#DC2626','#0891B2','#65A30D','#DB2777','#0F766E','#B45309'];
+  let h=0;for(let i=0;i<str.length;i++)h=(h*31+str.charCodeAt(i))%colors.length;
+  return colors[Math.abs(h)];
+}
+function cleanTicker(ticker){return ticker.replace(/\.[A-Z0-9]+$/,'');}
+function logoHtml(ticker,name){
+  const clean=cleanTicker(ticker);
+  const src=`https://financialmodelingprep.com/image-stock/${clean}.png`;
+  const initials=clean.slice(0,2).toUpperCase();
+  const color=avatarColor(clean);
+  return`<span style="display:inline-flex;align-items:center;width:32px;height:32px">
+    <img class="sc-logo" src="${src}" alt="${name||ticker}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"/>
+    <span class="logo-av" style="background:${color}">${initials}</span>
+  </span>`;
+}
+function logoHtmlSm(ticker,name){
+  const clean=cleanTicker(ticker);
+  const src=`https://financialmodelingprep.com/image-stock/${clean}.png`;
+  const initials=clean.slice(0,2).toUpperCase();
+  const color=avatarColor(clean);
+  return`<span style="display:inline-flex;align-items:center;width:28px;height:28px;flex-shrink:0">
+    <img class="wl-logo" src="${src}" alt="${name||ticker}"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"/>
+    <span class="logo-av-sm" style="background:${color}">${initials}</span>
+  </span>`;
+}
+
+/* ── SCREENER PANEL: Watchlist + Alert integrati ── */
+function switchScTab(tab,btn){
+  document.querySelectorAll('.sc-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sc-tab-wl').style.display=tab==='wl'?'block':'none';
+  document.getElementById('sc-tab-al').style.display=tab==='al'?'block':'none';
+  if(tab==='wl')renderScreenerWatchlist();
+  if(tab==='al')renderScreenerAlertList();
+}
+
+async function renderScreenerWatchlist(){
+  const el=document.getElementById('sc-wl-content');
+  if(!el)return;
+  const badge=document.getElementById('sc-wl-badge');
+  if(badge){badge.textContent=watchlist.length;badge.style.display=watchlist.length?'inline':'none';}
+  if(!watchlist.length){
+    el.innerHTML='<div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nella tabella sopra</div>';
+    return;
+  }
+  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">Caricamento prezzi...</div>';
+  const quotes=await Promise.all(watchlist.map(s=>api(s)));
+  el.innerHTML=watchlist.map((sym,i)=>{
+    const d=quotes[i];
+    const info=STOCKS.find(x=>x.s===sym);
+    const name=info?.n||sym;
+    const c=d?chgPct(d.price,d.prev):null;
+    const up=c==null||c>=0;
+    const cur=stockCur?stockCur(sym):'$';
+    return`<div class="sc-wl-row" onclick="openFA('${sym}')">
+      ${logoHtmlSm(sym,name)}
+      <span class="sc-wl-sym">${sym}</span>
+      <span class="sc-wl-name">${name}</span>
+      <span class="sc-wl-price">${d?cur+fmt(d.price,d.price>=1000?0:2):'—'}</span>
+      <span style="font-family:var(--fm);font-size:11px;font-weight:600;padding:2px 6px;border-radius:3px" class="${up?'up':'down'}">${chgStr(c)}</span>
+      <button class="sc-wl-del" onclick="event.stopPropagation();removeFromWlScreener('${sym}')" title="Rimuovi dalla watchlist">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function removeFromWlScreener(sym){
+  watchlist=watchlist.filter(s=>s!==sym);
+  localStorage.setItem('fs_watchlist',JSON.stringify(watchlist));
+  saveWatchlist();
+  renderScreenerWatchlist();
+  document.querySelectorAll('#sc-body .star-btn').forEach(btn=>{
+    const tr=btn.closest('tr');
+    if(tr&&tr.getAttribute('onclick')===`openFA('${sym}')`) btn.classList.remove('active');
+  });
+}
+
+function renderScreenerAlertList(){
+  const el=document.getElementById('sc-al-content');
+  if(!el)return;
+  const badge=document.getElementById('sc-al-badge');
+  if(badge){badge.textContent=alerts.length;badge.style.display=alerts.length?'inline':'none';}
+  if(!alerts.length){
+    el.innerHTML='<div class="ld">Nessun alert impostato · Inserisci ticker, prezzo e condizione sopra</div>';
+    return;
+  }
+  el.innerHTML=alerts.map((a,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;background:var(--s2);border:1px solid var(--bd)">
+      ${logoHtmlSm(a.sym,a.sym)}
+      <div style="flex:1;min-width:0">
+        <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t)">${a.sym}</div>
+        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${a.condition==='above'?'↑ Sopra':'↓ Sotto'} $${fmt(a.target,2)}${a.label?' · '+a.label:''}</div>
+      </div>
+      <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString('it-IT')}</span>
+      <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0" onclick="removeAlertFromScreener(${i})" title="Rimuovi alert">✕</button>
+    </div>`).join('');
+}
+
+async function addAlertFromScreener(){
+  if(!currentUser){openAuthModal();return;}
+  const sym=(document.getElementById('sc-al-sym').value||'').toUpperCase().trim();
+  const target=parseFloat(document.getElementById('sc-al-price').value);
+  const condition=document.getElementById('sc-al-cond').value;
+  if(!sym||!target||target<=0)return;
+  alerts.push({sym,target,condition,label:'',addedAt:Date.now()});
+  document.getElementById('sc-al-sym').value='';
+  document.getElementById('sc-al-price').value='';
+  await saveAlerts();
+  renderScreenerAlertList();
+  renderAlerts();
+}
+
+async function removeAlertFromScreener(idx){
+  alerts.splice(idx,1);
+  await saveAlerts();
+  renderScreenerAlertList();
+  renderAlerts();
+}
+
 /* ── NAV ── */
 // ─── Mobile nav drawer ───
 function toggleMobileNav(){
