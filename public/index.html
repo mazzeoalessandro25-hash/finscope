@@ -2374,7 +2374,7 @@ function showPage(id,btn){
   if(btn)btn.classList.add('active');
   const mobBtn=document.getElementById('mob-nb-'+id);
   if(mobBtn)mobBtn.classList.add('active');
-  if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati finanziari');
+  if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati');
   if(id==='screener'&&dynamicStocks.length===0)loadScreener();
   if(id==='screener'){updateScQuickCounts&&updateScQuickCounts();}
   if(id==='portafoglio')showPortfolioState();
