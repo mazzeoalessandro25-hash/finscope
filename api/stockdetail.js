@@ -106,10 +106,13 @@ export default async function handler(req, res) {
 
   res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60');
 
-  const [q, sd, news] = await Promise.all([
-    fetchYahooQuote(symbol),
+  // Quote prima (fast/cached) → nome azienda disponibile per filtrare le news
+  const q = await fetchYahooQuote(symbol);
+  const companyName = q?.longName || q?.shortName || null;
+
+  const [sd, news] = await Promise.all([
     fetchQuoteSummary(symbol),
-    fetchNews(symbol),
+    fetchNews(symbol, companyName),
   ]);
 
   if (!q && !sd) return res.status(404).json({ error: 'no data' });
