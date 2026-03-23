@@ -310,20 +310,28 @@ export default async function handler(req, res) {
   else {
     const cfg = CATEGORIES[category] || CATEGORIES.mercati;
 
-    const [rssResults, finnhubResult, yahooResult] = await Promise.all([
+    const [rssResults, finnhubResult, yahooQueryResult, yahooTickerResult] = await Promise.all([
       Promise.all(cfg.rss.map(s => fetchRSS(s.urls, s.name, s.specific))),
       cfg.finnhub ? fetchFinnhubGeneral(cfg.finnhub, finnhubKey) : Promise.resolve({ items: [], ok: false }),
-      fetchYahooMulti(cfg.yahooQueries, 12),
+      fetchYahooMulti(cfg.yahooQueries, 10),
+      cfg.yahooTickers ? fetchYahooByTickers(cfg.yahooTickers, 4) : Promise.resolve({ items: [], ok: false }),
     ]);
 
     if (isDebug) {
       debugInfo.rss = rssResults.map((r, i) => ({ name: cfg.rss[i].name, count: r.items.length, ok: r.ok, url: r.url }));
       debugInfo.finnhub = { count: finnhubResult.items.length, ok: finnhubResult.ok };
-      debugInfo.yahoo = { count: yahooResult.items.length, ok: yahooResult.ok, perQuery: yahooResult.perQuery };
+      debugInfo.yahooQueries = { count: yahooQueryResult.items.length, ok: yahooQueryResult.ok, perQuery: yahooQueryResult.perQuery };
+      debugInfo.yahooTickers = { count: yahooTickerResult.items.length, ok: yahooTickerResult.ok };
     }
 
-    const raw = [...rssResults.flatMap(r => r.items), ...finnhubResult.items, ...yahooResult.items];
-    articles = filterByKeywords(raw, cfg.keywords);
+    // Ticker news sono già specifici (bypass filtro), query news vengono filtrate per keyword
+    const raw = [
+      ...rssResults.flatMap(r => r.items),
+      ...finnhubResult.items,
+      ...yahooTickerResult.items,            // specific:true → passano sempre
+      ...filterByKeywords(yahooQueryResult.items, cfg.keywords), // filtrate
+    ];
+    articles = raw;
 
     if (isDebug) {
       debugInfo.beforeFilter = raw.length;
