@@ -175,12 +175,17 @@ const CATEGORIES = {
     finnhub: null,
     yahooQueries: ['FTSE MIB Italian stock market', 'Italy economy stocks ENI ENEL Unicredit', 'Italian shares Ferrari Stellantis Leonardo', 'piazza affari borsa milano'],
     keywords: [
-      'ftse mib','ftse-mib','mib','piazza affari','borsa italiana','borsa di milano',
-      'italia','italian','italy',
-      'unicredit','intesa sanpaolo','eni','enel','ferrari','stellantis','mediobanca',
-      'generali','cdp','poste italiane','tim','telecom italia','leonardo','saipem',
-      'prysmian','tenaris','moncler','campari','fca','iveco','fineco',
-      'banca mps','banco bpm','azimut','nexi','inwit','banca d\'italia','consob',
+      // indici
+      'ftse mib','ftse-mib','italian stock','milan stock','italy stock',
+      // paese
+      'italy','italian','italia',
+      // blue chip italiane (nomi come appaiono in inglese su Yahoo Finance)
+      'eni','enel','ferrari','stellantis','unicredit','intesa sanpaolo','intesa-sanpaolo',
+      'mediobanca','generali','leonardo','saipem','prysmian','tenaris','moncler',
+      'campari','fineco','nexi','inwit','iveco','telecom italia','tim spa',
+      'banco bpm','banco-bpm','banca mps','monte dei paschi','azimut','poste italiane',
+      // istituzioni
+      'bank of italy','banca d\'italia','consob',
     ],
   },
   usa: {
