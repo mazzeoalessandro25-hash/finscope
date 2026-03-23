@@ -3889,9 +3889,7 @@ function toggleWl(sym,el){
   localStorage.setItem('fs_wl',JSON.stringify(watchlist));
   el.querySelector('.star-btn').classList.toggle('active',watchlist.includes(sym));
   saveWatchlist();
-  // Aggiorna panel watchlist nello screener se il tab è visibile
-  const wlTab=document.getElementById('sc-tab-wl');
-  if(wlTab&&wlTab.style.display!=='none')renderScreenerWatchlist();
+  updateScQuickCounts&&updateScQuickCounts();
 }
 
 /* ══════════════════════════════════════════
