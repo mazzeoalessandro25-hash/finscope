@@ -6151,11 +6151,11 @@ async function loadPortfolioNews(){
   }
   el.innerHTML='<div class="ld">Caricamento news del portafoglio...</div>';
   const tickers=portfolio.map(p=>p.sym);
-  const query=tickers.map(t=>t.replace('.MI','').replace('.PA','').replace('.DE','')).join(' OR ');
+  const query=tickers.map(t=>t.replace(/\.(MI|PA|DE|L|SW|T|TO)$/,'')).join(' ');
   try{
-    const r=await fetch('/api/news?q='+encodeURIComponent(query)+'&lang=it&count=20');
+    const r=await fetch('/api/news?q='+encodeURIComponent(query));
     const data=await r.json();
-    const articles=data.articles||data.items||data||[];
+    const articles=data.news||[];
     if(!articles.length){
       el.innerHTML='<div class="ld" style="padding:10px">Nessuna news trovata per i titoli in portafoglio</div>';
       return;
@@ -6165,15 +6165,16 @@ async function loadPortfolioNews(){
         News per: ${tickers.join(' · ')}
       </div>
       <div class="news-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;display:grid">
-        ${articles.slice(0,16).map(a=>`
-          <a href="${a.url||a.link}" target="_blank" rel="noopener" style="text-decoration:none" class="news-card">
-            ${a.image||a.urlToImage?`<div class="news-img" style="background-image:url('${a.image||a.urlToImage}')"></div>`:''}
-            <div class="news-body">
-              <div class="news-src">${a.source?.name||a.source||'Fonte'}</div>
-              <div class="news-title">${a.title||''}</div>
-              <div class="news-date">${a.publishedAt||a.date?new Date(a.publishedAt||a.date).toLocaleDateString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}):'—'}</div>
-            </div>
-          </a>`).join('')}
+        ${articles.slice(0,16).map(a=>{
+          const dt=a.time?new Date(a.time*1000).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+          const thumb=a.thumbnail?`<div style="width:100%;height:120px;background:url('${a.thumbnail}') center/cover no-repeat;border-radius:8px;margin-bottom:8px"></div>`:'';
+          return`<a href="${a.link}" target="_blank" rel="noopener" class="news-item">
+            ${thumb}
+            <div class="n-pub">${a.publisher||''}</div>
+            <div class="n-title">${a.title||''}</div>
+            <div class="n-time">${dt}</div>
+          </a>`;
+        }).join('')}
       </div>`;
   }catch(e){
     // Fallback: mostra link di ricerca per ogni ticker
