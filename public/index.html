@@ -4339,10 +4339,13 @@ async function renderWatchlistPort(){
     const up=c==null||c>=0;
     const spId='wl-sp-'+sym.replace(/[^a-z0-9]/gi,'');
     return`<div class="wl-card">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start">
-        <div>
-          <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${sym}</div>
-          ${info?`<div style="font-size:11px;color:var(--t3)">${info.n}</div>`:''}
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div style="display:flex;align-items:center;gap:8px">
+          ${logoHtmlSm(sym,info?.n||sym)}
+          <div>
+            <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${sym}</div>
+            ${info?`<div style="font-size:11px;color:var(--t3)">${info.n}</div>`:''}
+          </div>
         </div>
         <div style="text-align:right">
           <div class="wl-card-price">${d?'$'+fmt(d.price,d.price<10?4:2):'—'}</div>
