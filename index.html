@@ -1672,6 +1672,9 @@ function logoHtmlSm(ticker,name){
 async function renderScreenerWatchlist(){
   const el=document.getElementById('sc-wl-content');
   if(!el)return;
+  // Aggiorna badge
+  const wlBadge=document.getElementById('sc-wl-badge');
+  if(wlBadge){wlBadge.textContent=watchlist.length;wlBadge.style.display=watchlist.length?'inline':'none';}
   if(!watchlist.length){
     el.innerHTML='<div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nella tabella sopra</div>';
     return;
