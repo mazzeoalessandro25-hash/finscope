@@ -1479,15 +1479,16 @@ function showTransition(onDone) {
   }
   requestAnimationFrame(frame);
 
-  /* dissolve + unfold */
+  /* dissolve + redirect — naviga mentre l'overlay è ancora opaco */
   setTimeout(function(){
-    cvs.style.transition='transform .5s cubic-bezier(.4,0,.2,1)';
+    cvs.style.transition='transform .45s cubic-bezier(.4,0,.2,1)';
     cvs.style.transform='rotateX(0deg) rotateY(0deg) scale(1.03)';
+    // Segna che arriva da login, poi naviga subito
+    try{ sessionStorage.setItem('fe_from_login','1'); }catch(e){}
     setTimeout(function(){
-      ov.style.opacity='0';
-      setTimeout(function(){ov.remove();st.remove();if(onDone)onDone();},600);
-    },350);
-  },2400);
+      if(onDone) onDone();
+    }, 200);
+  }, 2400);
 }
 </script>
 </body>
