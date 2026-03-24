@@ -4033,6 +4033,22 @@ async function renderPortfolio(){
   loadDividendTracker();
   loadPortTargets();
   if(_portActiveTab==='performance')loadPortPerf();
+  // Check portfolio alerts
+  checkPortAlertBadges(quotes);
+}
+
+function checkPortAlertBadges(quotes){
+  if(!portfolio.length||!quotes?.length)return;
+  portfolio.forEach((item,i)=>{
+    const q=quotes[i];if(!q?.price)return;
+    const pnlPct=((q.price-item.buyPrice)/item.buyPrice*100);
+    const el=document.getElementById('port-item-'+i);if(!el)return;
+    let badge=el.querySelector('.port-alert-badge');
+    if(pnlPct<=-10){
+      if(!badge){badge=document.createElement('span');badge.className='port-alert-badge';badge.style.cssText='font-size:9px;padding:1px 5px;border-radius:3px;background:#DC2626;color:#fff;font-family:var(--fm);font-weight:700;margin-left:4px';el.querySelector('.port-sym').parentElement.appendChild(badge);}
+      badge.textContent='⚠ -'+Math.abs(Math.round(pnlPct))+'%';
+    } else if(badge){badge.remove();}
+  });
 }
 
 function renderWatchlistPort(){
