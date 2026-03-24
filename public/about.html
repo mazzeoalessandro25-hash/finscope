@@ -1204,10 +1204,8 @@ async function submitAuth(){
       localStorage.setItem(TOKEN_KEY,d.token);
       localStorage.setItem(USER_KEY,JSON.stringify(d.user));
       localStorage.setItem('fs_login_at',Date.now().toString());
-      const displayName=d.user.name||d.user.email;
-      okEl.textContent=authTab==='login'?`Ciao, ${displayName}! Reindirizzamento...`:`Benvenuto in FinEdge, ${displayName}! Reindirizzamento...`;
-      okEl.classList.add('show');
-      setTimeout(()=>{ window.location.href='./index.html'; },1200);
+      closeAuthModal();
+      showTransition(()=>{ window.location.href='./index.html'; });
     }
   }catch(e){
     errEl.textContent='Errore di connessione. Riprova.';
