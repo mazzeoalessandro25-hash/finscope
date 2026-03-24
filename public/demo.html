@@ -592,61 +592,147 @@ body{
 
       <!-- ======= SCENE 3: PORTFOLIO ======= -->
       <div class="scene" id="scene2">
-        <div class="pg-title">Il mio Portafoglio</div>
-        <div class="pg-sub">Performance in tempo reale</div>
+        <div class="pg-title" style="margin-bottom:2px">Il mio Portafoglio</div>
+        <div class="pg-sub" style="margin-bottom:8px">Titoli in portafoglio · Riepilogo allocazione</div>
 
-        <div class="port-summary">
-          <div class="port-kpi hero">
-            <div class="port-kpi-lbl">Valore totale</div>
-            <div class="port-kpi-val" id="portVal">&#8364;0</div>
-            <div style="font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.55);margin-top:3px">4 posizioni aperte</div>
-          </div>
-          <div class="port-kpi">
-            <div class="port-kpi-lbl">Guadagno netto</div>
-            <div class="port-kpi-val" id="portGain" style="color:#059669">+&#8364;0</div>
-            <div class="port-kpi-sub" id="portGainSub">conteggio...</div>
-          </div>
-          <div class="port-kpi">
-            <div class="port-kpi-lbl">Rendimento</div>
-            <div class="port-kpi-val" style="color:#059669">+13.4%</div>
-            <div class="port-kpi-sub">Da inizio anno</div>
-          </div>
-        </div>
+        <div class="port-2col">
+          <!-- Griglia titoli 2 colonne -->
+          <div class="port-cards-grid">
 
-        <div class="tbl-wrap">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Titolo</th><th>Qt&#224;</th><th>P.M. Carico</th><th>Prezzo Att.</th><th>P&amp;L</th><th>Score</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="tbl-row" id="prow0">
-                <td><span class="sym-bold">NVDA</span></td>
-                <td>5 azioni</td><td>$650</td><td>$875.40</td>
-                <td><span style="color:#059669">+&#8364;1.127 <span style="font-size:10px;opacity:.75">(+34.7%)</span></span></td>
-                <td><span class="pill green">91</span></td>
-              </tr>
-              <tr class="tbl-row" id="prow1">
-                <td><span class="sym-bold">MSFT</span></td>
-                <td>10 azioni</td><td>$372</td><td>$415.32</td>
-                <td><span style="color:#059669">+&#8364;433 <span style="font-size:10px;opacity:.75">(+11.6%)</span></span></td>
-                <td><span class="pill blue">85</span></td>
-              </tr>
-              <tr class="tbl-row" id="prow2">
-                <td><span class="sym-bold">AAPL</span></td>
-                <td>15 azioni</td><td>$188</td><td>$184.67</td>
-                <td><span style="color:#DC2626">-&#8364;50 <span style="font-size:10px;opacity:.75">(-1.8%)</span></span></td>
-                <td><span class="pill blue">78</span></td>
-              </tr>
-              <tr class="tbl-row" id="prow3">
-                <td><span class="sym-bold">AMZN</span></td>
-                <td>8 azioni</td><td>$178</td><td>$184.15</td>
-                <td><span style="color:#059669">+&#8364;49 <span style="font-size:10px;opacity:.75">(+3.5%)</span></span></td>
-                <td><span class="pill amber">72</span></td>
-              </tr>
-            </tbody>
-          </table>
+            <div class="port-card tbl-row" id="prow0">
+              <div class="port-card-row1">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="port-logo">NV</div>
+                  <div>
+                    <div class="port-card-sym">NVDA <span style="font-size:9px;background:#EBF1FB;color:#1A56C4;padding:1px 5px;border-radius:3px;font-family:var(--fm)">USD</span></div>
+                    <div class="port-card-name">NVIDIA Corporation</div>
+                  </div>
+                </div>
+                <div class="port-card-price">$875.40<br><span style="font-size:9px;color:var(--t3)">5 × $650</span></div>
+              </div>
+              <div class="port-card-row2">
+                <span class="port-card-pnl" style="color:#059669">+$1,127 &nbsp;+34.7%</span>
+                <svg class="port-card-spark" width="50" height="22" viewBox="0 0 50 22">
+                  <polyline points="0,18 8,14 16,10 24,12 32,6 40,4 50,2" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="port-card tbl-row" id="prow1">
+              <div class="port-card-row1">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="port-logo">MS</div>
+                  <div>
+                    <div class="port-card-sym">MSFT <span style="font-size:9px;background:#EBF1FB;color:#1A56C4;padding:1px 5px;border-radius:3px;font-family:var(--fm)">USD</span></div>
+                    <div class="port-card-name">Microsoft Corp.</div>
+                  </div>
+                </div>
+                <div class="port-card-price">$415.32<br><span style="font-size:9px;color:var(--t3)">10 × $372</span></div>
+              </div>
+              <div class="port-card-row2">
+                <span class="port-card-pnl" style="color:#059669">+$433 &nbsp;+11.6%</span>
+                <svg class="port-card-spark" width="50" height="22" viewBox="0 0 50 22">
+                  <polyline points="0,16 10,13 20,10 28,12 36,8 44,6 50,5" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="port-card tbl-row" id="prow2">
+              <div class="port-card-row1">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="port-logo">AP</div>
+                  <div>
+                    <div class="port-card-sym">AAPL <span style="font-size:9px;background:#EBF1FB;color:#1A56C4;padding:1px 5px;border-radius:3px;font-family:var(--fm)">USD</span></div>
+                    <div class="port-card-name">Apple Inc.</div>
+                  </div>
+                </div>
+                <div class="port-card-price">$184.67<br><span style="font-size:9px;color:var(--t3)">15 × $188</span></div>
+              </div>
+              <div class="port-card-row2">
+                <span class="port-card-pnl" style="color:#DC2626">-$50 &nbsp;-1.8%</span>
+                <svg class="port-card-spark" width="50" height="22" viewBox="0 0 50 22">
+                  <polyline points="0,6 10,8 20,7 28,10 36,12 44,14 50,16" fill="none" stroke="#DC2626" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="port-card tbl-row" id="prow3">
+              <div class="port-card-row1">
+                <div style="display:flex;align-items:center;gap:6px">
+                  <div class="port-logo" style="background:#D1FAE5;color:#047857">EN</div>
+                  <div>
+                    <div class="port-card-sym">ENI.MI <span style="font-size:9px;background:#D1FAE5;color:#047857;padding:1px 5px;border-radius:3px;font-family:var(--fm)">EUR</span></div>
+                    <div class="port-card-name">ENI SpA</div>
+                  </div>
+                </div>
+                <div class="port-card-price">€14.82<br><span style="font-size:9px;color:var(--t3)">100 × €13.10</span></div>
+              </div>
+              <div class="port-card-row2">
+                <span class="port-card-pnl" style="color:#059669">+€172 &nbsp;+13.1%</span>
+                <svg class="port-card-spark" width="50" height="22" viewBox="0 0 50 22">
+                  <polyline points="0,18 10,15 20,12 28,14 36,9 44,7 50,5" fill="none" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Riepilogo con donut -->
+          <div class="riepilogo-box">
+            <div class="riepilogo-lbl">Riepilogo</div>
+
+            <!-- Donut SVG statico -->
+            <div class="donut-wrap">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#EEF2F8" stroke-width="14"/>
+                <!-- NVDA 38% -->
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#1A56C4" stroke-width="14"
+                  stroke-dasharray="301.6" stroke-dashoffset="301.6"
+                  transform="rotate(-90 60 60)"
+                  id="dArc0"/>
+                <!-- MSFT 24% -->
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#059669" stroke-width="14"
+                  stroke-dasharray="301.6" stroke-dashoffset="301.6"
+                  transform="rotate(-90 60 60)"
+                  id="dArc1"/>
+                <!-- AAPL 22% -->
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#D97706" stroke-width="14"
+                  stroke-dasharray="301.6" stroke-dashoffset="301.6"
+                  transform="rotate(-90 60 60)"
+                  id="dArc2"/>
+                <!-- ENI 16% -->
+                <circle cx="60" cy="60" r="48" fill="none" stroke="#7C3AED" stroke-width="14"
+                  stroke-dasharray="301.6" stroke-dashoffset="301.6"
+                  transform="rotate(-90 60 60)"
+                  id="dArc3"/>
+              </svg>
+              <div class="donut-center">
+                <div class="donut-val" id="dVal">€0</div>
+                <div class="donut-pnl" id="dPnl">+€0</div>
+                <div class="donut-sub">valore totale</div>
+              </div>
+            </div>
+
+            <!-- Legenda -->
+            <div class="leg-grid">
+              <div class="leg-row"><div class="leg-dot" style="background:#1A56C4"></div>NVDA 38%</div>
+              <div class="leg-row"><div class="leg-dot" style="background:#059669"></div>MSFT 24%</div>
+              <div class="leg-row"><div class="leg-dot" style="background:#D97706"></div>AAPL 22%</div>
+              <div class="leg-row"><div class="leg-dot" style="background:#7C3AED"></div>ENI 16%</div>
+            </div>
+
+            <!-- Totale portafoglio -->
+            <div class="totale-box">
+              <div class="riepilogo-lbl" style="margin-bottom:6px">TOTALE PORTAFOGLIO</div>
+              <div class="totale-grid">
+                <div><div class="totale-item-val" id="totEur">€0</div><div class="totale-item-lbl">Val. EUR</div></div>
+                <div><div class="totale-item-val" id="totUsd">$0</div><div class="totale-item-lbl">Val. USD</div></div>
+                <div><div class="totale-item-val" style="color:#059669" id="totPnl">+€0</div><div class="totale-item-lbl">P&amp;L</div></div>
+                <div><div class="totale-item-val" style="color:#059669">+13.4%</div><div class="totale-item-lbl">Rend.</div></div>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 
