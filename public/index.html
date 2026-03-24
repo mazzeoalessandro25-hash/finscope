@@ -5595,6 +5595,17 @@ async function _importAutoSearchTickers(total){
   const confirmBtn=document.getElementById('port-import-confirm-btn');
   if(confirmBtn){confirmBtn.disabled=false;confirmBtn.style.opacity='1';}
 }
+function _importPickBestQuote(quotes){
+  if(!quotes.length)return null;
+  // 1. Borsa Italiana
+  const mi=quotes.find(q=>q.symbol.endsWith('.MI'));
+  if(mi)return mi;
+  // 2. Altre borse EU principali
+  const eu=quotes.find(q=>/\.(PA|DE|AS|MC|BR|SW|VI|LS|CO|HE|ST|OL|HK|TO)$/.test(q.symbol));
+  if(eu)return eu;
+  // 3. Prima equity disponibile (US)
+  return quotes[0];
+}
 function _importSymInput(inp,idx){
   const q=(inp.value||'').toUpperCase().trim();
   if(window._portImportParsed[idx])window._portImportParsed[idx].sym=q;
