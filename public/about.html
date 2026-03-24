@@ -1300,149 +1300,209 @@ function showTransition(onDone) {
     '@keyframes fe_blink{0%,100%{opacity:1}50%{opacity:.2}}';
   document.head.appendChild(st);
 
-  /* ── Overlay ── */
+  /* ── Overlay — blu del sito ── */
   var ov = document.createElement('div');
   ov.style.cssText =
     'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;' +
-    'background:#0b1120;display:flex;flex-direction:column;' +
-    'align-items:center;justify-content:center;gap:18px;transition:opacity .4s ease;';
+    'background:#1448A8;display:flex;flex-direction:column;' +
+    'align-items:center;justify-content:center;gap:20px;transition:opacity .55s ease;';
   document.body.appendChild(ov);
 
   /* ── Logo ── */
   var logo = document.createElement('div');
-  logo.innerHTML = 'Fin<span style="color:#4d8ef0">Edge</span>';
+  logo.innerHTML = 'Fin<span style="color:rgba(255,255,255,.55)">Edge</span>';
   logo.style.cssText =
-    'font-size:32px;font-weight:800;color:#fff;letter-spacing:-1px;' +
+    'font-size:30px;font-weight:800;color:#fff;letter-spacing:-0.5px;' +
     'font-family:sans-serif;animation:fe_in .4s ease forwards;';
   ov.appendChild(logo);
 
   /* ── Canvas ── */
   var DPR = window.devicePixelRatio || 1;
-  var W   = Math.min(560, window.innerWidth - 40);
-  var H   = 260;
+  var W   = Math.min(600, window.innerWidth - 32);
+  var H   = 290;
   var cvs = document.createElement('canvas');
   cvs.width  = W * DPR;
   cvs.height = H * DPR;
-  cvs.style.cssText = 'width:' + W + 'px;height:' + H + 'px;border-radius:12px;display:block;';
+  cvs.style.cssText = 'width:' + W + 'px;height:' + H + 'px;border-radius:14px;display:block;';
   ov.appendChild(cvs);
   var ctx = cvs.getContext('2d');
   ctx.scale(DPR, DPR);
 
   /* ── Sottotitolo ── */
   var txt = document.createElement('div');
-  txt.textContent = 'Accesso in corso...';
+  txt.textContent = 'Caricamento dashboard...';
   txt.style.cssText =
-    'font-size:11px;color:rgba(255,255,255,.28);font-family:sans-serif;' +
-    'letter-spacing:.1em;text-transform:uppercase;animation:fe_in .4s ease .15s both;';
+    'font-size:11px;color:rgba(255,255,255,.38);font-family:sans-serif;' +
+    'letter-spacing:.1em;text-transform:uppercase;animation:fe_in .4s ease .2s both;';
   ov.appendChild(txt);
 
-  /* ── Candele: downtrend asimmetrico poi forte reversal ──
-     Downtrend: 9 candele lente, piccole, calano gradualmente
-     Reversal:  1 hammer con long lower wick
-     Uptrend:   5 candele grandi, impulsive, salgono veloce           */
+  /* ── Dati: 9 candele rosse graduali + hammer + 5 verdi impulsive ── */
   var candles = [
-    {o:100,h:101,l:95, c:96},   // -4  piccola
-    {o:96, h:97, l:91, c:92},   // -4
-    {o:92, h:93, l:87, c:88},   // -4
-    {o:88, h:90, l:83, c:84},   // -4
-    {o:84, h:85, l:78, c:79},   // -5
-    {o:79, h:80, l:73, c:74},   // -5
-    {o:74, h:76, l:68, c:69},   // -5  più grande
-    {o:69, h:70, l:62, c:63},   // -6
-    {o:63, h:65, l:55, c:56},   // -7  accelerazione finale
-    {o:56, h:63, l:53, c:62},   // hammer: wick lungo in basso, chiude alto
-    {o:62, h:74, l:60, c:73},   // +11 uptrend inizia
-    {o:73, h:87, l:71, c:86},   // +13
-    {o:86, h:101,l:84, c:100},  // +14
-    {o:100,h:115,l:98, c:114},  // +14 impulsivo
-    {o:114,h:128,l:112,c:127},  // +13 ultimo spike
+    {o:100, h:101.5, l:95.5, c:96.5},
+    {o:96.5,h:97.5,  l:92,   c:93},
+    {o:93,  h:94,    l:88,   c:89},
+    {o:89,  h:90,    l:84,   c:85},
+    {o:85,  h:86,    l:79.5, c:80.5},
+    {o:80.5,h:81.5,  l:75,   c:76},
+    {o:76,  h:77,    l:70,   c:71},
+    {o:71,  h:72.5,  l:64.5, c:65.5},
+    {o:65.5,h:67,    l:58,   c:59},
+    {o:59,  h:66,    l:55,   c:65},   /* hammer — wick lungo sotto */
+    {o:65,  h:77,    l:63,   c:76},   /* +11 */
+    {o:76,  h:91,    l:74,   c:90},   /* +14 */
+    {o:90,  h:106,   l:88,   c:105},  /* +15 */
+    {o:105, h:120,   l:103,  c:119},  /* +14 */
+    {o:119, h:133,   l:117,  c:132},  /* +13 */
   ];
 
-  var N   = candles.length;
-  var PAD = {t:16, r:16, b:16, l:16};
-  var cW  = W - PAD.l - PAD.r;
-  var cH  = H - PAD.t - PAD.b;
-  var GAP = 4;
-  var bW  = Math.floor((cW - GAP * (N - 1)) / N);
+  /* Volume relativo per ogni candela */
+  var vols = [.38,.32,.30,.35,.40,.44,.52,.62,.72, .88, .80,.95,1.0,.85,.70];
 
+  var N    = candles.length;
+  var PAD  = {t:18, r:52, b:12, l:14};
+  var GAP  = 4;
+  var totW = W - PAD.l - PAD.r;
+  var totH = H - PAD.t - PAD.b;
+
+  /* split chart / volume */
+  var chartH = totH * 0.74;
+  var volH   = totH * 0.16;
+  var volTop = PAD.t + chartH + totH * 0.10;
+
+  var bW = Math.floor((totW - GAP * (N - 1)) / N);
+
+  /* scala prezzi */
   var lo = Infinity, hi = -Infinity;
   candles.forEach(function(c){ if(c.l<lo)lo=c.l; if(c.h>hi)hi=c.h; });
-  var range = hi - lo;
-  var margin = range * 0.06;
-  lo -= margin; hi += margin; range = hi - lo;
+  var pr = hi - lo, mg = pr * 0.09;
+  lo -= mg; hi += mg; pr = hi - lo;
 
-  function toY(p){ return PAD.t + cH - ((p - lo) / range) * cH; }
-  function toX(i){ return PAD.l + i * (bW + GAP); }
-  function ease(t){ return t < .5 ? 2*t*t : 1 - Math.pow(-2*t+2,2)/2; }
+  function toY(p){ return PAD.t + chartH - ((p-lo)/pr)*chartH; }
+  function toX(i){ return PAD.l + i*(bW+GAP); }
+  function easeOut(t){ return 1-Math.pow(1-t,2.5); }
 
-  /* Candele rosse più lente, verdi più veloci */
-  var INTERVAL = 115;
-  var GROW_RED = 160;
-  var GROW_GRN = 110;
+  var INTERVAL = 108;   /* ms tra candele */
+  var GROW_RED = 155;   /* ms crescita corpo rosso */
+  var GROW_GRN = 95;    /* ms crescita corpo verde (più scattante) */
 
   var t0 = null;
-  function frame(ts) {
-    if (!t0) t0 = ts;
+
+  function frame(ts){
+    if(!t0) t0 = ts;
     var el = ts - t0;
 
-    /* sfondo canvas */
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = '#0f1e35';
-    ctx.beginPath();
-    if (ctx.roundRect) ctx.roundRect(0,0,W,H,10); else ctx.rect(0,0,W,H);
+    ctx.clearRect(0,0,W,H);
+
+    /* ── Panel scuro sul blu ── */
+    ctx.fillStyle = 'rgba(0,0,0,.28)';
+    if(ctx.roundRect) ctx.roundRect(0,0,W,H,12); else ctx.rect(0,0,W,H);
     ctx.fill();
 
-    var numStarted = Math.min(N, Math.floor(el / INTERVAL) + 1);
+    /* ── Etichetta ticker ── */
+    ctx.fillStyle = 'rgba(255,255,255,.18)';
+    ctx.font = 'bold 11px monospace';
+    ctx.textAlign = 'left';
+    ctx.fillText('FINEDGE', PAD.l+2, PAD.t-5);
 
-    for (var i = 0; i < numStarted; i++) {
+    /* ── Asse prezzi destra ── */
+    ctx.textAlign = 'left';
+    ctx.font = '9px monospace';
+    ctx.fillStyle = 'rgba(255,255,255,.30)';
+    var steps = 4;
+    for(var s=0; s<=steps; s++){
+      var py = PAD.t + chartH - (chartH/steps)*s;
+      var pv = lo + (pr/steps)*s;
+      ctx.fillText(pv.toFixed(0), W-PAD.r+6, py+3);
+      /* tick leggero */
+      ctx.strokeStyle='rgba(255,255,255,.07)';
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.moveTo(PAD.l,py); ctx.lineTo(W-PAD.r,py);
+      ctx.stroke();
+    }
+
+    var numStarted = Math.min(N, Math.floor(el/INTERVAL)+1);
+
+    /* ── Linea close prices ── */
+    if(numStarted>1){
+      ctx.save();
+      ctx.strokeStyle='rgba(255,255,255,.18)';
+      ctx.lineWidth=1;
+      ctx.setLineDash([2,4]);
+      ctx.beginPath();
+      for(var j=0;j<numStarted;j++){
+        var jAge=el-j*INTERVAL;
+        if(jAge<0) break;
+        var jp=easeOut(Math.min(1,jAge/(candles[j].c>=candles[j].o?GROW_GRN:GROW_RED)));
+        if(jp>0.3){
+          var jx=toX(j)+bW/2, jy=toY(candles[j].c);
+          j===0?ctx.moveTo(jx,jy):ctx.lineTo(jx,jy);
+        }
+      }
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    /* ── Candele ── */
+    for(var i=0;i<numStarted;i++){
       var c    = candles[i];
       var isUp = c.c >= c.o;
       var grow = isUp ? GROW_GRN : GROW_RED;
-      var age  = el - i * INTERVAL;
-      var prog = ease(Math.min(1, age / grow));
-
-      /* colori più saturi e professionali */
-      var bodyColor = isUp ? '#16a34a' : '#dc2626';
-      var wickColor = isUp ? '#22c55e' : '#f87171';
+      var age  = el - i*INTERVAL;
+      var prog = easeOut(Math.min(1, age/grow));
 
       var x    = toX(i);
-      var bTop = toY(Math.max(c.o, c.c));
-      var bBot = toY(Math.min(c.o, c.c));
+      var bTop = toY(Math.max(c.o,c.c));
+      var bBot = toY(Math.min(c.o,c.c));
       var wTop = toY(c.h);
       var wBot = toY(c.l);
-
-      var bMid  = (bTop + bBot) / 2;
-      var wMid  = (wTop + wBot) / 2;
-      var halfB = Math.max(1, (bBot - bTop) / 2) * prog;
-      var halfW = ((wBot - wTop) / 2) * prog;
+      var bMid = (bTop+bBot)/2;
+      var wMid = (wTop+wBot)/2;
+      var halfB= Math.max(1,(bBot-bTop)/2)*prog;
+      var halfW= ((wBot-wTop)/2)*prog;
 
       /* wick */
-      ctx.strokeStyle = wickColor;
+      ctx.strokeStyle = isUp ? 'rgba(74,222,128,.75)' : 'rgba(252,165,165,.75)';
       ctx.lineWidth   = 1.5;
       ctx.beginPath();
-      ctx.moveTo(x + bW / 2, wMid - halfW);
-      ctx.lineTo(x + bW / 2, wMid + halfW);
+      ctx.moveTo(x+bW/2, wMid-halfW);
+      ctx.lineTo(x+bW/2, wMid+halfW);
       ctx.stroke();
 
-      /* body con leggero gradiente */
-      var grad = ctx.createLinearGradient(x, bMid - halfB, x, bMid + halfB);
-      grad.addColorStop(0, isUp ? '#22c55e' : '#ef4444');
-      grad.addColorStop(1, isUp ? '#15803d' : '#b91c1c');
-      ctx.fillStyle = grad;
-      ctx.fillRect(x, bMid - halfB, bW, halfB * 2 || 1.5);
+      /* body gradient */
+      var g2 = ctx.createLinearGradient(0, bMid-halfB, 0, bMid+halfB);
+      if(isUp){
+        g2.addColorStop(0,'#4ade80');
+        g2.addColorStop(1,'#15803d');
+      } else {
+        g2.addColorStop(0,'#fca5a5');
+        g2.addColorStop(1,'#b91c1c');
+      }
+      ctx.fillStyle = g2;
+      ctx.fillRect(x, bMid-halfB, bW, halfB*2||1.5);
     }
 
-    if (el < (N - 1) * INTERVAL + Math.max(GROW_RED, GROW_GRN)) {
-      requestAnimationFrame(frame);
+    /* ── Volume bars ── */
+    var maxV = Math.max.apply(null,vols);
+    for(var v=0;v<numStarted;v++){
+      var vAge  = el - v*INTERVAL;
+      var vProg = easeOut(Math.min(1, vAge/(candles[v].c>=candles[v].o?GROW_GRN:GROW_RED)));
+      var vh    = (vols[v]/maxV)*volH*vProg;
+      ctx.fillStyle = candles[v].c>=candles[v].o
+        ? 'rgba(74,222,128,.22)' : 'rgba(252,165,165,.22)';
+      ctx.fillRect(toX(v), volTop+volH-vh, bW, vh||.5);
     }
+
+    if(el < (N-1)*INTERVAL + Math.max(GROW_RED,GROW_GRN))
+      requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
-  /* totale ~3s: animazione ~2s + pausa .6s + fade .4s */
+  /* ── Dissolvenza verso la dashboard (~3s totali) ── */
   setTimeout(function(){
     ov.style.opacity = '0';
-    setTimeout(function(){ if(onDone) onDone(); }, 400);
-  }, 2600);
+    setTimeout(function(){ if(onDone) onDone(); }, 350);
+  }, 2500);
 }
 </script>
 </body>
