@@ -3651,11 +3651,18 @@ async function saveWatchlist(){
 
 async function savePortfolio(){
   localStorage.setItem('fs_portfolio',JSON.stringify(portfolio));
-  if(!currentToken)return;
-  try{await fetch('/api/user?type=portfolio',{
-    method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
-    body:JSON.stringify({portfolio})
-  });}catch{}
+  const statusEl=document.getElementById('port-sync-status');
+  if(statusEl)statusEl.textContent='↑ salvataggio...';
+  if(!currentToken){if(statusEl)statusEl.textContent='💾 locale';return;}
+  try{
+    await fetch('/api/user?type=portfolio',{
+      method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
+      body:JSON.stringify({portfolio})
+    });
+    if(statusEl){statusEl.textContent='✓ sincronizzato';statusEl.style.color='var(--g)';setTimeout(()=>{if(statusEl)statusEl.textContent='';},3000);}
+  }catch(e){
+    if(statusEl){statusEl.textContent='⚠ errore sync';statusEl.style.color='var(--r)';}
+  }
 }
 
 /* ── PORTFOLIO PAGE ── */
