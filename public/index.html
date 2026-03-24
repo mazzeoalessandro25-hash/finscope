@@ -3625,10 +3625,12 @@ async function addPortfolioItem(){
   const currency=isEU?'EUR':'USD';
   const symbol=isEU?'€':'$';
 
-  portfolio.push({sym,qty,buyPrice:price,currency,symbol,addedAt:Date.now()});
+  const buyDate=document.getElementById('port-date').value||new Date().toISOString().split('T')[0];
+  portfolio.push({sym,qty,buyPrice:price,currency,symbol,addedAt:Date.now(),buyDate});
   document.getElementById('port-sym').value='';
   document.getElementById('port-qty').value='';
   document.getElementById('port-price').value='';
+  document.getElementById('port-date').value='';
   await savePortfolio();
   renderPortfolio();
 }
