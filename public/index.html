@@ -3886,11 +3886,8 @@ async function renderPortfolio(){
     const holdStr=holdDays!=null?(holdDays<30?holdDays+'g':(holdDays<365?Math.floor(holdDays/30)+'m':Math.floor(holdDays/365)+'a '+Math.floor((holdDays%365)/30)+'m')):'';
     return`<div class="port-item ${stateClass}" id="port-item-${i}" onclick="openStockDetail('${item.sym}')">
       <div style="display:flex;gap:8px;align-items:center">
-        <!-- Logo + sparkline a sinistra -->
-        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
-          ${logoHtmlSm(item.sym,name)}
-          <svg id="psp-${i}" width="52" height="30" style="flex-shrink:0"></svg>
-        </div>
+        <!-- Logo a sinistra -->
+        <div style="flex-shrink:0">${logoHtmlSm(item.sym,name)}</div>
         <!-- Contenuto a destra -->
         <div style="flex:1;min-width:0">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
@@ -3912,8 +3909,8 @@ async function renderPortfolio(){
               </div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-            <div style="display:flex;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="display:flex;gap:10px;flex-shrink:0">
               <div>
                 <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${up?'up':'down'}">${pnl!=null?(up?'+':'')+csym+fmt(Math.abs(pnl),0):'—'}</div>
                 <div style="font-size:8px;color:var(--t3)">P&amp;L</div>
@@ -3923,7 +3920,8 @@ async function renderPortfolio(){
                 <div style="font-size:8px;color:var(--t3)">Rend.</div>
               </div>
             </div>
-            <div style="flex:1;max-width:110px">
+            <svg id="psp-${i}" width="56" height="28" style="flex-shrink:0"></svg>
+            <div style="flex:1;min-width:40px">
               <div style="display:flex;justify-content:space-between;margin-bottom:2px">
                 <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">peso</div>
                 <div style="font-size:8px;font-family:var(--fm);font-weight:600;color:${barColor}">${weightPct}%</div>
