@@ -5579,7 +5579,7 @@ async function _importAutoSearchTickers(total){
     try{
       const r=await fetch('/api/quote?type=search&q='+encodeURIComponent(q));
       const res=await r.json();
-      const best=(res.quotes||[])[0];
+      const best=_importPickBestQuote(res.quotes||[]);
       if(best&&best.symbol){
         data[i].sym=best.symbol;
         if(inp){inp.value=best.symbol;inp.title=best.name+' ('+best.exchange+')';}
