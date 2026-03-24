@@ -2638,5 +2638,76 @@ function toggleWl(sym,el){
 // Avvia verifica sessione
 verifySession();
 </script>
+
+<!-- ═══ INTRO SCREEN ANIMATION ═══ -->
+<script>
+(function () {
+  'use strict';
+
+  const overlay = document.getElementById('intro-overlay');
+  if (!overlay) return;
+
+  // Evita di mostrare l'intro più di una volta per sessione
+  if (sessionStorage.getItem('fe_intro_done')) {
+    overlay.remove();
+    return;
+  }
+
+  const bars   = Array.from(overlay.querySelectorAll('.intro-bar'));
+  const badges = Array.from(overlay.querySelectorAll('.intro-badge'));
+
+  // Imposta altezze iniziali (valori da data-h) e stile rosso
+  bars.forEach(function (bar) {
+    var h = bar.dataset.h;
+    bar.style.height     = h + 'px';
+    bar.style.background = 'linear-gradient(180deg,#f87171,#dc2626)';
+  });
+
+  // ── Fase 1: barre collassano verso il basso → 8px (0ms, sfalsate 50ms) ──
+  requestAnimationFrame(function () {
+    bars.forEach(function (bar, i) {
+      setTimeout(function () {
+        bar.style.transition = 'height .4s ease';
+        bar.style.height     = '8px';
+      }, i * 50);
+    });
+  });
+
+  // ── Fase 2: barre crescono verso l'alto + colore verde (900ms, sfalsate 55ms) ──
+  setTimeout(function () {
+    bars.forEach(function (bar, i) {
+      setTimeout(function () {
+        bar.style.transition  = 'height .5s cubic-bezier(0.34,1.56,0.64,1), background .3s ease, box-shadow .3s ease';
+        bar.style.height      = bar.dataset.h + 'px';
+        bar.style.background  = 'linear-gradient(180deg,#86efac,#22c55e 60%,#16a34a)';
+        bar.style.boxShadow   = '0 0 10px rgba(34,197,94,0.25)';
+      }, i * 55);
+    });
+  }, 900);
+
+  // ── Fase 3: badge appaiono con opacity + translateY (1750ms, sfalsati 100ms) ──
+  setTimeout(function () {
+    badges.forEach(function (badge, i) {
+      setTimeout(function () {
+        badge.style.transition = 'opacity .4s ease, transform .4s ease';
+        badge.style.opacity    = '1';
+        badge.style.transform  = 'translateY(0)';
+      }, i * 100);
+    });
+  }, 1750);
+
+  // ── Fase 4: uscita — overlay scorre verso l'alto (3200ms) ──
+  setTimeout(function () {
+    overlay.style.transition = 'transform .72s cubic-bezier(0.76,0,0.24,1)';
+    overlay.style.transform  = 'translateY(-100%)';
+
+    // Smonta dopo che l'animazione è completata (~720ms)
+    setTimeout(function () {
+      overlay.remove();
+      sessionStorage.setItem('fe_intro_done', '1');
+    }, 750);
+  }, 3200);
+}());
+</script>
 </body>
 </html>
