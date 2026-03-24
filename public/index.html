@@ -5421,15 +5421,14 @@ function _xlsParseFromHeader(raw,hi){
   for(let r=hi+1;r<raw.length;r++){
     const row=raw[r];
     if(!row||row.every(c=>c===''||c===null))continue;
-    let sym=String(row[si]||'').replace(/"/g,'').trim().toUpperCase();
-    // Prendi solo primo token se la colonna contiene nome lungo
-    sym=sym.split(/\s+/)[0].replace(/[^A-Z0-9.]/g,'');
-    if(!sym||sym.length<2||sym.length>10)continue;
+    const origName=String(row[si]||'').replace(/"/g,'').trim();
+    let sym=origName.toUpperCase().split(/\s+/)[0].replace(/[^A-Z0-9.]/g,'');
+    if(!sym||sym.length<2||sym.length>12)continue;
     const qty=_xlsNum(row[qi]);
     const price=_xlsNum(row[pi]);
     const date=di>=0?_xlsDate(row[di]):'';
     if(isNaN(qty)||isNaN(price)||qty<=0||price<=0)continue;
-    parsed.push({sym,qty,price,date});
+    parsed.push({sym,qty,price,date,origName});
   }
   return parsed;
 }
