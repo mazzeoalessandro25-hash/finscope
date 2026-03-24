@@ -375,8 +375,10 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 .port-inp::placeholder{color:var(--t3)}
 .port-btn{background:var(--b);color:#fff;border:none;padding:7px 14px;border-radius:8px;
   font-weight:600;font-size:12px;cursor:pointer;white-space:nowrap}
+#port-list{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+@media(max-width:640px){#port-list{grid-template-columns:1fr}}
 .port-item{display:block;padding:8px 12px;border-radius:8px;background:var(--card);
-  border:1px solid var(--bd);border-left:3px solid var(--bd);margin-bottom:6px;cursor:pointer;transition:.15s}
+  border:1px solid var(--bd);border-left:3px solid var(--bd);margin-bottom:0;cursor:pointer;transition:.15s}
 .port-item:hover{background:var(--b3);border-color:rgba(26,86,196,.3)}
 .port-item.pos{border-left-color:#059669}
 .port-item.neg{border-left-color:#DC2626}
