@@ -1049,24 +1049,41 @@ function runScene1(){
 }
 
 function runScene2(){
-  // count-up portfolio
-  later(()=>{
-    const pv = document.getElementById('portVal');
-    const pg = document.getElementById('portGain');
-    const pgs= document.getElementById('portGainSub');
-    if(pv) countUp(pv, 13240, 1000, '\u20AC', '');
-    later(()=>{
-      if(pg)  countUp(pg,  1559,  800, '+\u20AC', '');
-      if(pgs) pgs.textContent = 'vs. investito';
-    }, 180);
-  }, 50);
-
+  // Porta le card nel portafoglio
   ['prow0','prow1','prow2','prow3'].forEach((id,idx)=>{
     later(()=>{
       const el = document.getElementById(id);
       if(el) el.classList.add('in');
-    }, 380 + idx*160);
+    }, 200 + idx*150);
   });
+
+  // Anima il donut a fette (CIRC=301.6 per r=48)
+  const CIRC=301.6;
+  // pesi: NVDA 38%, MSFT 24%, AAPL 22%, ENI 16%
+  const slices=[{id:'dArc0',pct:.38,col:'#1A56C4'},{id:'dArc1',pct:.24,col:'#059669'},{id:'dArc2',pct:.22,col:'#D97706'},{id:'dArc3',pct:.16,col:'#7C3AED'}];
+  let offset=0;
+  later(()=>{
+    slices.forEach(s=>{
+      const el=document.getElementById(s.id);
+      if(!el)return;
+      const dashLen=CIRC*s.pct;
+      const gap=CIRC-dashLen;
+      el.style.transition='stroke-dashoffset 0s';
+      el.style.strokeDasharray=dashLen+' '+CIRC;
+      el.style.strokeDashoffset=-offset;
+      el.style.opacity='1';
+      offset+=dashLen;
+    });
+  }, 400);
+
+  // Count-up totale
+  later(()=>{
+    const dv=document.getElementById('dVal'); if(dv) countUp(dv,13240,900,'\u20AC','');
+    const dp=document.getElementById('dPnl'); if(dp) countUp(dp,1702,700,'+\u20AC','');
+    const te=document.getElementById('totEur');if(te) countUp(te,13240,900,'\u20AC','');
+    const tu=document.getElementById('totUsd');if(tu) countUp(tu,14350,900,'$','');
+    const tp=document.getElementById('totPnl');if(tp) countUp(tp,1702,700,'+\u20AC','');
+  }, 550);
 }
 
 function runScene3(){
