@@ -5555,7 +5555,38 @@ function _portShowImportPreview(parsed){
     </tr>`).join('')}</tbody>
   </table>`;
   if(prev)prev.style.display='block';
-  if(cnt)cnt.textContent=`${parsed.length} titoli trovati — modifica i ticker se non riconosciuti`;
+  if(cnt)cnt.textContent=`${parsed.length} titoli trovati — ricerca ticker in corso…`;
+  // Auto-ricerca ticker da nome azienda
+  setTimeout(()=>_importAutoSearchTickers(parsed.length),50);
+}
+async function _importAutoSearchTickers(total){
+  const parsed=window._portImportParsed;
+  if(!parsed)return;
+  let resolved=0;
+  for(let i=0;i<parsed.length;i++){
+    const p=parsed[i];
+    const q=p.origName||p.sym;
+    const inp=document.getElementById('imp-sym-'+i);
+    if(inp){inp.style.background='var(--s2)';inp.placeholder='…';}
+    try{
+      const r=await fetch(`/api/quote?type=search&q=${encodeURIComponent(q)}`);
+      const data=await r.json();
+      const best=data.quotes?.[0];
+      if(best?.symbol){
+        parsed[i].sym=best.symbol;
+        if(inp){
+          inp.value=best.symbol;
+          inp.style.background='rgba(34,197,94,.08)';
+          inp.title=best.name+' ('+best.exchange+')';
+        }
+        resolved++;
+      } else {
+        if(inp)inp.style.background='rgba(220,38,38,.07)';
+      }
+    }catch(e){if(inp)inp.style.background='rgba(220,38,38,.07)';}
+  }
+  const cnt=document.getElementById('port-import-count');
+  if(cnt)cnt.textContent=`${total} titoli trovati — ${resolved} ticker risolti automaticamente`;
 }
 function _importSymInput(inp,idx){
   const q=(inp.value||'').toUpperCase().trim();
