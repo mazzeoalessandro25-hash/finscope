@@ -5523,7 +5523,7 @@ function _portShowImportStatus(msg){
   s.textContent=msg;
 }
 function _portShowImportPreview(parsed){
-  window._portImportParsed=parsed;
+  window._portImportParsed=parsed.map(p=>Object.assign({},p));
   const prev=document.getElementById('port-import-preview');
   const tbl=document.getElementById('port-import-table');
   const cnt=document.getElementById('port-import-count');
@@ -5533,22 +5533,58 @@ function _portShowImportPreview(parsed){
     if(cnt)cnt.textContent='0 titoli trovati';
     return;
   }
-  if(tbl)tbl.innerHTML=`<table style="width:100%;font-size:11px;font-family:var(--fm);border-collapse:collapse">
+  if(tbl)tbl.innerHTML=`
+    <div id="port-import-suggest-box" style="display:none;position:fixed;background:var(--card);border:1px solid var(--bd);border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,.18);z-index:9999;max-height:200px;overflow-y:auto;min-width:220px"></div>
+    <table style="width:100%;font-size:11px;font-family:var(--fm);border-collapse:collapse">
     <thead><tr style="background:var(--s2)">
-      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Ticker</th>
+      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Ticker <span style="font-size:9px;font-weight:400;color:var(--acc)">(modifica se necessario)</span></th>
       <th style="padding:6px 10px;text-align:right;color:var(--t3)">Quantità</th>
       <th style="padding:6px 10px;text-align:right;color:var(--t3)">Prezzo</th>
       <th style="padding:6px 10px;text-align:left;color:var(--t3)">Data</th>
     </tr></thead>
-    <tbody>${parsed.map(p=>`<tr style="border-top:1px solid var(--bd)">
-      <td style="padding:5px 10px;font-weight:700;color:var(--t)">${p.sym}</td>
+    <tbody>${parsed.map((p,i)=>`<tr style="border-top:1px solid var(--bd)">
+      <td style="padding:4px 8px">
+        <input id="imp-sym-${i}" value="${p.sym}"
+          style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:3px 7px;width:95px;text-transform:uppercase;outline:none"
+          oninput="_importSymInput(this,${i})"
+          onblur="setTimeout(()=>{const b=document.getElementById('port-import-suggest-box');if(b)b.style.display='none'},200)"
+          autocomplete="off"/>
+      </td>
       <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.qty}</td>
       <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.price}</td>
       <td style="padding:5px 10px;color:var(--t3)">${p.date||'—'}</td>
     </tr>`).join('')}</tbody>
   </table>`;
   if(prev)prev.style.display='block';
-  if(cnt)cnt.textContent=`${parsed.length} titoli trovati`;
+  if(cnt)cnt.textContent=`${parsed.length} titoli trovati — modifica i ticker se non riconosciuti`;
+}
+function _importSymInput(inp,idx){
+  const q=(inp.value||'').toUpperCase().trim();
+  if(window._portImportParsed[idx])window._portImportParsed[idx].sym=q;
+  const box=document.getElementById('port-import-suggest-box');
+  if(!box||!q||q.length<1){if(box)box.style.display='none';return;}
+  const allS=(window.STOCKS||[]).concat(window.customStocks||[]);
+  const matches=allS.filter(s=>s.s.startsWith(q)||s.n.toUpperCase().includes(q)).slice(0,8);
+  if(!matches.length){box.style.display='none';return;}
+  const rect=inp.getBoundingClientRect();
+  box.style.left=rect.left+'px';
+  box.style.top=(rect.bottom+2)+'px';
+  box.style.width=Math.max(220,rect.width)+'px';
+  box.innerHTML=matches.map(s=>`
+    <div onclick="_importSymSelect(${idx},'${s.s}')"
+      style="padding:7px 10px;cursor:pointer;display:flex;gap:8px;align-items:center"
+      onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+      <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t);min-width:60px">${s.s}</div>
+      <div style="font-size:11px;color:var(--t2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.n}</div>
+    </div>`).join('');
+  box.style.display='block';
+}
+function _importSymSelect(idx,sym){
+  const inp=document.getElementById('imp-sym-'+idx);
+  if(inp)inp.value=sym;
+  if(window._portImportParsed[idx])window._portImportParsed[idx].sym=sym;
+  const box=document.getElementById('port-import-suggest-box');
+  if(box)box.style.display='none';
 }
 function parsePortCSV(text){
   const fmt=document.getElementById('port-import-fmt')?.value||'auto';
