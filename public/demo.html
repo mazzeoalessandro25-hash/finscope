@@ -953,13 +953,17 @@ function resetAll(){
     const el = document.getElementById('dim'+i);
     if(el) el.style.width='0%';
   }
-  // portfolio kpis
-  const pv = document.getElementById('portVal');
-  if(pv) pv.textContent = '\u20AC0';
-  const pg = document.getElementById('portGain');
-  if(pg) pg.textContent = '+\u20AC0';
-  const pgs = document.getElementById('portGainSub');
-  if(pgs) pgs.textContent = 'conteggio...';
+  // portfolio donut/totale reset
+  const dv = document.getElementById('dVal');  if(dv) dv.textContent='\u20AC0';
+  const dp = document.getElementById('dPnl');  if(dp) dp.textContent='+\u20AC0';
+  const te = document.getElementById('totEur');if(te) te.textContent='\u20AC0';
+  const tu = document.getElementById('totUsd');if(tu) tu.textContent='$0';
+  const tp = document.getElementById('totPnl');if(tp) tp.textContent='+\u20AC0';
+  // reset donut arcs
+  ['dArc0','dArc1','dArc2','dArc3'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){el.style.strokeDashoffset='301.6';el.style.transition='none';el.style.transform='rotate(-90deg)';el.setAttribute('transform','rotate(-90 60 60)');}
+  });
   // tbl rows
   ['prow0','prow1','prow2','prow3','srow0','srow1','srow2','srow3','srow4'].forEach(id=>{
     const el = document.getElementById(id);
