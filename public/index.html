@@ -5284,6 +5284,128 @@ async function exportPortfolioCSV(){
   document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
+function openPortImport(){
+  const m=document.getElementById('port-import-modal');
+  if(m){m.style.display='flex';document.getElementById('port-import-preview').style.display='none';}
+}
+function closePortImport(){
+  const m=document.getElementById('port-import-modal');
+  if(m)m.style.display='none';
+  window._portImportParsed=null;
+}
+function handlePortCSVDrop(e){
+  const f=e.dataTransfer?.files?.[0];
+  if(f)readPortCSVFile(f);
+}
+function handlePortCSVFile(input){
+  const f=input.files?.[0];
+  if(f)readPortCSVFile(f);
+  input.value='';
+}
+function readPortCSVFile(file){
+  const r=new FileReader();
+  r.onload=e=>parsePortCSV(e.target.result);
+  r.readAsText(file,'UTF-8');
+}
+function parsePortCSV(text){
+  const fmt=document.getElementById('port-import-fmt')?.value||'auto';
+  const lines=text.split(/\r?\n/).filter(l=>l.trim());
+  let parsed=[];
+  try{
+    if(fmt==='fineco'||fmt==='auto'&&/Titolo|Strumento|ISIN/i.test(lines[0])){
+      const hdr=lines[0].split(';').map(h=>h.trim().toLowerCase());
+      const iSym=hdr.findIndex(h=>h.includes('ticker')||h.includes('titolo'));
+      const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('pezzi'));
+      const iPrice=hdr.findIndex(h=>h.includes('prezzo')||h.includes('price'));
+      const iDate=hdr.findIndex(h=>h.includes('data')||h.includes('date'));
+      for(let i=1;i<lines.length;i++){
+        const cols=lines[i].split(';');
+        const sym=(iSym>=0?cols[iSym]:'').replace(/"/g,'').trim().toUpperCase();
+        const qty=parseFloat((iQty>=0?cols[iQty]:'').replace(',','.'));
+        const price=parseFloat((iPrice>=0?cols[iPrice]:'').replace(',','.'));
+        const date=(iDate>=0?cols[iDate]:'').replace(/"/g,'').trim();
+        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||''});
+      }
+    } else if(fmt==='degiro'||fmt==='auto'&&/Prodotto|Borsa|ISIN/i.test(lines[0])){
+      const hdr=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+      const iSym=hdr.findIndex(h=>h.includes('prodotto')||h.includes('product'));
+      const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('numero'));
+      const iPrice=hdr.findIndex(h=>h.includes('prezzo')||h.includes('price'));
+      const iDate=hdr.findIndex(h=>h.includes('data')||h.includes('date'));
+      for(let i=1;i<lines.length;i++){
+        const cols=lines[i].split(',');
+        const sym=(iSym>=0?cols[iSym]:'').replace(/"/g,'').trim().toUpperCase();
+        const qty=Math.abs(parseFloat((iQty>=0?cols[iQty]:'').replace(',','.')));
+        const price=parseFloat((iPrice>=0?cols[iPrice]:'').replace(',','.'));
+        const date=(iDate>=0?cols[iDate]:'').replace(/"/g,'').trim();
+        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||''});
+      }
+    } else {
+      for(let i=0;i<lines.length;i++){
+        if(i===0&&/sym|tick|titolo/i.test(lines[i]))continue;
+        const sep=lines[i].includes(';')?';':',';
+        const cols=lines[i].split(sep).map(c=>c.replace(/"/g,'').trim());
+        const sym=cols[0]?.toUpperCase();
+        const qty=parseFloat(cols[1]?.replace(',','.'));
+        const price=parseFloat(cols[2]?.replace(',','.'));
+        const date=cols[3]||'';
+        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date});
+      }
+    }
+  }catch(e){parsed=[];}
+
+  window._portImportParsed=parsed;
+  const prev=document.getElementById('port-import-preview');
+  const tbl=document.getElementById('port-import-table');
+  const cnt=document.getElementById('port-import-count');
+  if(!parsed.length){
+    if(tbl)tbl.innerHTML='<div style="padding:12px;color:var(--r);font-size:12px">Nessun dato valido trovato. Controlla il formato del file.</div>';
+    if(prev)prev.style.display='block';
+    if(cnt)cnt.textContent='0 titoli trovati';
+    return;
+  }
+  if(tbl)tbl.innerHTML=`<table style="width:100%;font-size:11px;font-family:var(--fm);border-collapse:collapse">
+    <thead><tr style="background:var(--s2)">
+      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Ticker</th>
+      <th style="padding:6px 10px;text-align:right;color:var(--t3)">Quantità</th>
+      <th style="padding:6px 10px;text-align:right;color:var(--t3)">Prezzo</th>
+      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Data</th>
+    </tr></thead>
+    <tbody>${parsed.map(p=>`<tr style="border-top:1px solid var(--bd)">
+      <td style="padding:5px 10px;font-weight:700;color:var(--t)">${p.sym}</td>
+      <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.qty}</td>
+      <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.price}</td>
+      <td style="padding:5px 10px;color:var(--t3)">${p.date||'—'}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+  if(prev)prev.style.display='block';
+  if(cnt)cnt.textContent=`${parsed.length} titoli trovati`;
+}
+async function confirmPortImport(){
+  const parsed=window._portImportParsed;
+  if(!parsed?.length)return;
+  let added=0;
+  for(const p of parsed){
+    const isEU=p.sym.endsWith('.MI')||p.sym.endsWith('.PA')||p.sym.endsWith('.DE')||p.sym.endsWith('.SW')||p.sym.endsWith('.AS')||p.sym.endsWith('.MC')||p.sym.endsWith('.BR')||p.sym.endsWith('.VI');
+    const currency=isEU?'EUR':'USD';
+    const symbol=isEU?'€':'$';
+    let buyDate=p.date||new Date().toISOString().split('T')[0];
+    if(/^\d{2}\/\d{2}\/\d{4}$/.test(buyDate)){const [d,m,y]=buyDate.split('/');buyDate=`${y}-${m}-${d}`;}
+    portfolio.push({sym:p.sym,qty:p.qty,buyPrice:p.price,currency,symbol,addedAt:Date.now(),buyDate});
+    added++;
+  }
+  await savePortfolio();
+  closePortImport();
+  renderPortfolio();
+  showToast(`${added} titoli importati nel portafoglio`,'#059669');
+}
+function showToast(msg,color='#1A56C4'){
+  let t=document.getElementById('_toast');
+  if(!t){t=document.createElement('div');t.id='_toast';t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 20px;border-radius:10px;font-size:13px;font-family:var(--fm);font-weight:600;color:#fff;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap';document.body.appendChild(t);}
+  t.style.background=color;t.textContent=msg;t.style.opacity='1';
+  clearTimeout(t._to);t._to=setTimeout(()=>{t.style.opacity='0';},2800);
+}
+
 /* ══════════════════════════════════════════
    FEATURE 8: ECONOMIC CALENDAR
 ══════════════════════════════════════════ */
