@@ -6295,124 +6295,71 @@ const _origSs=document.getElementById('ss');
 verifySession();
 </script>
 
-<!-- ═══ INTRO SCREEN ANIMATION ═══ -->
+<!-- ═══ TRANSITION SCREEN ═══ -->
 <script>
 window.playLoginIntro = function (onComplete) {
   if (window._introRunning) return;
   window._introRunning = true;
 
-  var HEIGHTS    = [55, 72, 40, 88, 63, 95, 50, 78, 42, 85, 60, 70, 48];
-  var BADGES_TOP = ['◈ Analizza','⟳ Ottimizza','↗ Scala','◎ Monitora'];
-  var BADGES_BOT = ['⬡ Diversifica','⌁ Hedging','✦ Predici'];
+  /* ── Keyframes ── */
+  var st = document.createElement('style');
+  st.textContent = [
+    '@keyframes _fe_prog{from{width:0}to{width:100%}}',
+    '@keyframes _fe_spin{to{transform:rotate(360deg)}}',
+    '@keyframes _fe_in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}'
+  ].join('');
+  document.head.appendChild(st);
 
-  // Keyframes puntini
-  var kf = document.createElement('style');
-  kf.textContent = '@keyframes _idot{0%,100%{opacity:.2}50%{opacity:1}}';
-  document.head.appendChild(kf);
-
-  // Overlay
+  /* ── Overlay a schermo intero ── */
   var ov = document.createElement('div');
-  ov.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0a0e1a;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 36px),repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 36px)';
+  ov.style.cssText = [
+    'position:fixed','top:0','left:0','width:100%','height:100%',
+    'z-index:9999','background:#0d1525',
+    'display:flex','flex-direction:column','align-items:center','justify-content:center',
+    'gap:32px','transition:opacity .5s ease'
+  ].join(';');
   document.body.appendChild(ov);
 
-  // Wordmark
-  var wm = document.createElement('div');
-  wm.textContent = 'FINANCE · INTELLIGENCE';
-  wm.style.cssText = 'position:absolute;top:36px;font-family:monospace;font-size:11px;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.22);opacity:0;transform:translateY(-12px);transition:opacity .6s ease,transform .6s ease';
-  ov.appendChild(wm);
+  /* ── Logo ── */
+  var logo = document.createElement('div');
+  logo.innerHTML = 'Fin<span style="color:#4d8ef0">Edge</span>';
+  logo.style.cssText = 'font-size:36px;font-weight:800;color:#fff;letter-spacing:-1px;animation:_fe_in .5s ease forwards';
+  ov.appendChild(logo);
 
-  // Container centrale
-  var center = document.createElement('div');
-  center.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:22px';
-  ov.appendChild(center);
+  /* ── Spinner ── */
+  var spinner = document.createElement('div');
+  spinner.style.cssText = [
+    'width:40px','height:40px','border-radius:50%',
+    'border:3px solid rgba(255,255,255,.1)',
+    'border-top-color:#1A56C4',
+    'animation:_fe_spin .8s linear infinite'
+  ].join(';');
+  ov.appendChild(spinner);
 
-  function makeBadge(label) {
-    var b = document.createElement('div');
-    b.textContent = label;
-    b.style.cssText = 'padding:5px 13px;border-radius:100px;border:1px solid rgba(34,197,94,.35);background:rgba(34,197,94,.08);font-family:monospace;font-size:11px;color:rgba(255,255,255,.75);opacity:0;transform:translateY(8px)';
-    return b;
-  }
+  /* ── Barra di progresso ── */
+  var track = document.createElement('div');
+  track.style.cssText = 'width:200px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden';
+  var fill = document.createElement('div');
+  fill.style.cssText = 'height:100%;background:#1A56C4;border-radius:2px;animation:_fe_prog 3.5s ease forwards';
+  track.appendChild(fill);
+  ov.appendChild(track);
 
-  // Badge top
-  var rowTop = document.createElement('div');
-  rowTop.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;justify-content:center';
-  var badgesTop = BADGES_TOP.map(function(l){ var b=makeBadge(l); rowTop.appendChild(b); return b; });
-  center.appendChild(rowTop);
+  /* ── Sottotitolo ── */
+  var sub = document.createElement('div');
+  sub.textContent = 'Caricamento dashboard...';
+  sub.style.cssText = 'font-size:12px;color:rgba(255,255,255,.35);letter-spacing:.05em;animation:_fe_in .5s ease .2s both';
+  ov.appendChild(sub);
 
-  // Grafico
-  var chart = document.createElement('div');
-  chart.style.cssText = 'position:relative;display:flex;align-items:flex-end;height:110px;gap:6px;padding:0 4px';
-  var glow = document.createElement('div');
-  glow.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:320px;height:180px;background:radial-gradient(ellipse,rgba(34,197,94,.18) 0%,transparent 70%);filter:blur(24px);pointer-events:none';
-  chart.appendChild(glow);
-  var bars = HEIGHTS.map(function(h) {
-    var bar = document.createElement('div');
-    bar.style.cssText = 'width:18px;border-radius:3px 3px 0 0;flex-shrink:0;background:linear-gradient(180deg,#f87171,#dc2626);height:'+h+'px';
-    bar._h = h;
-    chart.appendChild(bar);
-    return bar;
-  });
-  center.appendChild(chart);
-
-  // Badge bottom
-  var rowBot = document.createElement('div');
-  rowBot.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;justify-content:center';
-  var badgesBot = BADGES_BOT.map(function(l){ var b=makeBadge(l); rowBot.appendChild(b); return b; });
-  center.appendChild(rowBot);
-
-  // Puntini
-  var dots = document.createElement('div');
-  dots.style.cssText = 'display:flex;gap:8px;align-items:center;margin-top:4px';
-  [0,0.2,0.4].forEach(function(d){
-    var dot = document.createElement('span');
-    dot.style.cssText = 'display:block;width:4px;height:4px;border-radius:50%;background:#fff;animation:_idot 1.2s ease-in-out '+d+'s infinite';
-    dots.appendChild(dot);
-  });
-  center.appendChild(dots);
-
-  // ── Sequenza ──
-  requestAnimationFrame(function(){
-    wm.style.opacity='1'; wm.style.transform='translateY(0)';
-  });
-
-  // Fase 1 — barre collassano
-  bars.forEach(function(bar,i){
-    setTimeout(function(){ bar.style.transition='height .4s ease'; bar.style.height='8px'; }, i*50);
-  });
-
-  // Fase 2 — barre crescono verdi
-  setTimeout(function(){
-    bars.forEach(function(bar,i){
-      setTimeout(function(){
-        bar.style.transition='height .5s cubic-bezier(0.34,1.56,0.64,1),background .3s ease,box-shadow .3s ease';
-        bar.style.height=bar._h+'px';
-        bar.style.background='linear-gradient(180deg,#86efac,#22c55e 60%,#16a34a)';
-        bar.style.boxShadow='0 0 10px rgba(34,197,94,0.25)';
-      }, i*55);
-    });
-  }, 900);
-
-  // Fase 3 — badge appaiono
-  var allBadges = badgesTop.concat(badgesBot);
-  setTimeout(function(){
-    allBadges.forEach(function(b,i){
-      setTimeout(function(){
-        b.style.transition='opacity .4s ease,transform .4s ease';
-        b.style.opacity='1'; b.style.transform='translateY(0)';
-      }, i*100);
-    });
-  }, 1750);
-
-  // Fase 4 — uscita verso l'alto
-  setTimeout(function(){
-    ov.style.transition='transform .72s cubic-bezier(0.76,0,0.24,1)';
-    ov.style.transform='translateY(-100%)';
-    setTimeout(function(){
-      ov.remove(); kf.remove();
-      window._introRunning=false;
-      if(onComplete) onComplete();
-    }, 750);
-  }, 3200);
+  /* ── Uscita dopo 3.8s → fade out ── */
+  setTimeout(function () {
+    ov.style.opacity = '0';
+    setTimeout(function () {
+      ov.remove();
+      st.remove();
+      window._introRunning = false;
+      if (onComplete) onComplete();
+    }, 500);
+  }, 3500);
 };
 </script>
 </body>
