@@ -1366,11 +1366,10 @@ function showTransition(onDone) {
     {o:105,h:120,l:103,c:119},
     {o:119,h:133,l:117,c:132},
   ];
-  var vols = [.38,.32,.30,.35,.40,.44,.52,.62,.72,.88,.80,.95,1.0,.85,.70];
 
-  var N=candles.length, PAD={t:22,r:56,b:14,l:16}, GAP=5;
+  var N=candles.length, PAD={t:20,r:20,b:20,l:20}, GAP=5;
   var totW=W-PAD.l-PAD.r, totH=H-PAD.t-PAD.b;
-  var chartH=totH*.72, volH=totH*.16, volTop=PAD.t+chartH+totH*.12;
+  var chartH=totH;
   var bW=Math.floor((totW-GAP*(N-1))/N);
   var lo=Infinity,hi=-Infinity;
   candles.forEach(function(c){if(c.l<lo)lo=c.l;if(c.h>hi)hi=c.h;});
@@ -1406,52 +1405,7 @@ function showTransition(onDone) {
     if(ctx.roundRect)ctx.roundRect(0,0,W,H,14);else ctx.rect(0,0,W,H);
     ctx.fill();
 
-    /* subtle grid */
-    ctx.strokeStyle='rgba(255,255,255,.04)';
-    ctx.lineWidth=1;
-    ctx.setLineDash([]);
-    for(var g=0;g<=4;g++){
-      var gy=PAD.t+chartH-(chartH/4)*g;
-      ctx.beginPath();ctx.moveTo(PAD.l,gy);ctx.lineTo(W-PAD.r,gy);ctx.stroke();
-    }
-
     var numStarted=Math.min(N,Math.floor(el/INTERVAL)+1);
-
-    /* area fill */
-    if(numStarted>1){
-      ctx.save();
-      var lastC=candles[numStarted-1], isGr=lastC.c>=lastC.o;
-      var ag=ctx.createLinearGradient(0,PAD.t,0,PAD.t+chartH);
-      if(isGr){ag.addColorStop(0,'rgba(74,222,128,.13)');ag.addColorStop(1,'rgba(74,222,128,.01)');}
-      else{ag.addColorStop(0,'rgba(248,113,113,.10)');ag.addColorStop(1,'rgba(248,113,113,.01)');}
-      ctx.beginPath();
-      var fx=toX(0)+bW/2,fy=toY(candles[0].c);
-      ctx.moveTo(fx,fy);
-      for(var j=1;j<numStarted;j++){
-        var ja=el-j*INTERVAL;
-        if(ja<0)break;
-        var jp=easeOut(Math.min(1,ja/(candles[j].c>=candles[j].o?GROW_GRN:GROW_RED)));
-        if(jp>.2)ctx.lineTo(toX(j)+bW/2,toY(candles[j].c));
-      }
-      ctx.lineTo(toX(numStarted-1)+bW/2,PAD.t+chartH);
-      ctx.lineTo(fx,PAD.t+chartH);
-      ctx.closePath();
-      ctx.fillStyle=ag;ctx.fill();ctx.restore();
-    }
-
-    /* glowing close line */
-    if(numStarted>1){
-      ctx.save();
-      ctx.shadowBlur=10;ctx.shadowColor='rgba(180,220,255,.6)';
-      ctx.strokeStyle='rgba(255,255,255,.38)';ctx.lineWidth=1.5;ctx.setLineDash([3,5]);
-      ctx.beginPath();
-      for(var j=0;j<numStarted;j++){
-        var ja=el-j*INTERVAL;if(ja<0)break;
-        var jp=easeOut(Math.min(1,ja/(candles[j].c>=candles[j].o?GROW_GRN:GROW_RED)));
-        if(jp>.3){var jx=toX(j)+bW/2,jy=toY(candles[j].c);j===0?ctx.moveTo(jx,jy):ctx.lineTo(jx,jy);}
-      }
-      ctx.stroke();ctx.restore();
-    }
 
     /* 3D candles */
     for(var i=0;i<numStarted;i++){
@@ -1509,31 +1463,6 @@ function showTransition(onDone) {
       ctx.beginPath();ctx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);ctx.fill();
       ctx.restore();
     }
-
-    /* volume bars glowing */
-    var maxV=Math.max.apply(null,vols);
-    for(var v=0;v<numStarted;v++){
-      var va=el-v*INTERVAL;
-      var vp=easeOut(Math.min(1,va/(candles[v].c>=candles[v].o?GROW_GRN:GROW_RED)));
-      var vh=(vols[v]/maxV)*volH*vp;
-      var uv=candles[v].c>=candles[v].o;
-      ctx.save();ctx.shadowBlur=6;ctx.shadowColor=uv?'rgba(74,222,128,.5)':'rgba(248,113,113,.5)';
-      ctx.fillStyle=uv?'rgba(74,222,128,.32)':'rgba(248,113,113,.28)';
-      ctx.fillRect(toX(v),volTop+volH-vh,bW,vh||.5);ctx.restore();
-    }
-
-    /* price axis */
-    ctx.setLineDash([]);
-    ctx.font='9px monospace';ctx.fillStyle='rgba(255,255,255,.35)';ctx.textAlign='left';
-    for(var s=0;s<=4;s++){
-      var py=PAD.t+chartH-(chartH/4)*s;
-      ctx.fillText((lo+(pr/4)*s).toFixed(0),W-PAD.r+6,py+3);
-    }
-
-    /* ticker label */
-    ctx.save();ctx.shadowBlur=12;ctx.shadowColor='rgba(100,180,255,.6)';
-    ctx.fillStyle='rgba(255,255,255,.28)';ctx.font='bold 11px monospace';ctx.textAlign='left';
-    ctx.fillText('FINEDGE',PAD.l+2,PAD.t-6);ctx.restore();
 
     if(el<(N-1)*INTERVAL+Math.max(GROW_RED,GROW_GRN)+300||particles.length>0)
       requestAnimationFrame(frame);
