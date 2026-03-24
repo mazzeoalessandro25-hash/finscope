@@ -3961,6 +3961,29 @@ async function renderPortfolio(){
     </div>`;
   }
   document.getElementById('port-summary').innerHTML=summaryHtml||'<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
+  // Interactive allocation donut
+  setTimeout(()=>{
+    const dc=document.getElementById('port-alloc-donut');
+    if(!dc)return;
+    const PALETTE=['#1A56C4','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#65A30D','#DC2626'];
+    const top8=holdingEntries.slice(0,8);
+    if(window._portAllocChart){window._portAllocChart.destroy();window._portAllocChart=null;}
+    window._portAllocChart=new Chart(dc.getContext('2d'),{
+      type:'doughnut',
+      data:{
+        labels:top8.map(e=>e[0]),
+        datasets:[{data:top8.map(e=>e[1]),backgroundColor:PALETTE.slice(0,top8.length),borderWidth:0,hoverOffset:4}]
+      },
+      options:{
+        cutout:'68%',
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${grandTotalInv>0?Math.round(ctx.raw/grandTotalInv*100):0}%`}}
+        },
+        animation:{duration:600}
+      }
+    });
+  },50);
   _lastPortQuotes=quotes;
   renderPortAnalysis(portfolio,quotes);
   loadBenchmark();
