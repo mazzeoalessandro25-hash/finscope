@@ -458,6 +458,94 @@ body.dark .sc-tab.active{background:var(--s3)}
 
 body.dark .search-dropdown{background:var(--s1)}
 body.dark .sd-item:hover{background:var(--s3)}
+
+/* ═══ INTRO SCREEN ═══ */
+#intro-overlay{
+  position:fixed;inset:0;z-index:9999;
+  background:#0a0e1a;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  /* Griglia sottile decorativa */
+  background-image:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 36px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 36px);
+}
+
+/* Wordmark in alto */
+.intro-wordmark{
+  font-family:'DM Mono',monospace;
+  font-size:11px;letter-spacing:.35em;text-transform:uppercase;
+  color:rgba(255,255,255,.22);
+  position:absolute;top:36px;left:50%;transform:translateX(-50%) translateY(-12px);
+  white-space:nowrap;
+  opacity:0;
+  animation:introWordIn .6s ease forwards .1s;
+}
+@keyframes introWordIn{
+  to{opacity:1;transform:translateX(-50%) translateY(0)}
+}
+
+/* Area centrale */
+.intro-center{
+  display:flex;flex-direction:column;align-items:center;gap:22px;
+}
+
+/* Bagliore verde radiale dietro il grafico */
+.intro-glow{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:320px;height:180px;
+  background:radial-gradient(ellipse,rgba(34,197,94,.18) 0%,transparent 70%);
+  filter:blur(24px);
+  pointer-events:none;
+}
+
+/* Contenitore grafico (barre + glow) */
+.intro-chart{
+  position:relative;
+  display:flex;align-items:flex-end;
+  height:110px;gap:6px;
+  padding:0 4px;
+}
+
+/* Singola barra */
+.intro-bar{
+  width:18px;border-radius:3px 3px 0 0;flex-shrink:0;
+  background:linear-gradient(180deg,#f87171,#dc2626);
+  /* altezza iniziale impostata inline via JS */
+}
+
+/* Badge a pillola */
+.intro-badges{
+  display:flex;gap:10px;flex-wrap:wrap;justify-content:center;
+}
+.intro-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 13px;border-radius:100px;
+  border:1px solid rgba(34,197,94,.35);
+  background:rgba(34,197,94,.08);
+  font-family:'DM Mono',monospace;
+  font-size:11px;color:rgba(255,255,255,.75);
+  opacity:0;transform:translateY(8px);
+  /* transizione applicata via JS */
+}
+.intro-badge-icon{
+  font-size:12px;color:#4ade80;
+}
+
+/* Puntini pulsanti */
+.intro-dots{
+  display:flex;gap:8px;align-items:center;margin-top:4px;
+}
+.intro-dot{
+  width:4px;height:4px;border-radius:50%;
+  background:#fff;
+  animation:introDotPulse 1.2s ease-in-out infinite;
+}
+.intro-dot:nth-child(2){animation-delay:.2s}
+.intro-dot:nth-child(3){animation-delay:.4s}
+@keyframes introDotPulse{
+  0%,100%{opacity:.2}50%{opacity:1}
+}
 </style>
 </head>
 <body>
