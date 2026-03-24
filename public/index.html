@@ -5573,9 +5573,15 @@ async function _importAutoSearchTickers(total){
   let resolved=0;
   for(let i=0;i<data.length;i++){
     const p=data[i];
-    const q=p.origName||p.sym;
-    const inp=document.getElementById('imp-sym-'+i);
     const ico=document.getElementById('imp-status-'+i);
+    const inp=document.getElementById('imp-sym-'+i);
+    // Se il valore nel file sembra già un ticker, non cercare
+    if(_importLooksTicker(p.origName||p.sym)){
+      if(ico)ico.textContent='✅';
+      resolved++;
+      continue;
+    }
+    const q=p.origName||p.sym;
     try{
       const r=await fetch('/api/quote?type=search&q='+encodeURIComponent(q));
       const res=await r.json();
