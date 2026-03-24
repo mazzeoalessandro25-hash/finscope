@@ -1854,7 +1854,28 @@ html.dark .auth-box{background:#1e293b}
     localStorage.removeItem('fs_user');
     localStorage.removeItem('fs_login_at');
     window.location.replace('./about.html');
+    return;
   }
+  // Se arriviamo dal login, mostra subito overlay scuro che svanisce
+  try{
+    if(sessionStorage.getItem('fe_from_login')){
+      sessionStorage.removeItem('fe_from_login');
+      var ov=document.createElement('div');
+      ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;'+
+        'background:radial-gradient(ellipse at 50% 55%,#1a3a8a 0%,#0b1e55 45%,#060e22 100%);'+
+        'transition:opacity .55s ease;pointer-events:none;';
+      document.documentElement.appendChild(ov);
+      // Fade out appena il DOM è pronto
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          setTimeout(function(){
+            ov.style.opacity='0';
+            setTimeout(function(){ov.remove();},600);
+          },120);
+        });
+      });
+    }
+  }catch(e){}
 })();
 
 const API='/api/quote';
