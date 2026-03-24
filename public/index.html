@@ -2125,26 +2125,66 @@ function avatarColor(str){
   return colors[Math.abs(h)];
 }
 function cleanTicker(ticker){return ticker.replace(/\.[A-Z0-9]+$/,'');}
-function logoHtml(ticker,name){
+/* Mappa ticker EU → US ADR per migliore copertura loghi su FMP */
+const _LOGO_REMAP={
+  // Italiani
+  'ENI':'E','ENEL':'ENLAY','ISP':'ISNPY','UCG':'UNCRY','RACE':'RACE',
+  'STLAM':'STLA','TIT':'TI','LDO':'LDOF','MB':'MDIBY','BPER':'BPERY',
+  'BAMI':'BAMXY','TRN':'TRNIY','PRY':'PRYMY','CPR':'CPRIY','AMP':'AMGLY',
+  'FCA':'STLA','MONC':'MONRY','BMPS':'BMDPY','PIRC':'PCCYY',
+  // Tedeschi / EU
+  'NOVO-B':'NVO','VOW3':'VWAGY','BMW':'BMWYY','DTE':'DTEGY',
+  'ALV':'ALIZY','SIE':'SIEGY','BAYN':'BAYRY','BAS':'BASFY','DBK':'DB',
+  'MC':'LVMUY','OR':'LRLCY','BNP':'BNPQY','AI':'AIQUY',
+  'SAN':'SANUY','BBVA':'BBVA','TEF':'TEF','ASML':'ASML',
+  'SAP':'SAP','PHIA':'PHG','HEIA':'HEINY','UNA':'UN',
+  'ABI':'BUD','SOLB':'SOLVY','UCB':'UCBJY',
+  // UK
+  'SHEL':'SHEL','BP':'BP','HSBA':'HSBC','ULVR':'UL','AZN':'AZN',
+  'GSK':'GSK','RIO':'RIO','BHP':'BHP','VOD':'VOD',
+  // Svizzeri
+  'NESN':'NSRGY','NOVN':'NVS','ROG':'RHHBY','ZURN':'ZURVY','CSGN':'CS',
+};
+function _logoFmpTicker(ticker){
   const clean=cleanTicker(ticker);
-  const src=`https://financialmodelingprep.com/image-stock/${clean}.png`;
+  return _LOGO_REMAP[clean]||clean;
+}
+function _logoOnError(img,ticker,smClass){
+  /* Fallback 1: Clearbit via website memorizzato in scData */
+  const clean=cleanTicker(ticker);
+  const d=window.scData&&(window.scData[ticker]||window.scData[clean]);
+  if(d?.website){
+    const domain=d.website.replace(/^https?:\/\//,'').split('/')[0];
+    img.onerror=()=>{img.style.display='none';img.nextElementSibling&&(img.nextElementSibling.style.display='inline-flex');};
+    img.src=`https://logo.clearbit.com/${domain}`;
+    return;
+  }
+  /* Fallback finale: iniziali colorate */
+  img.style.display='none';
+  if(img.nextElementSibling)img.nextElementSibling.style.display='inline-flex';
+}
+function logoHtml(ticker,name){
+  const fmp=_logoFmpTicker(ticker);
+  const clean=cleanTicker(ticker);
+  const src=`https://financialmodelingprep.com/image-stock/${fmp}.png`;
   const initials=clean.slice(0,2).toUpperCase();
   const color=avatarColor(clean);
   return`<span style="display:inline-flex;align-items:center;width:32px;height:32px">
     <img class="sc-logo" src="${src}" alt="${name||ticker}"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"/>
-    <span class="logo-av" style="background:${color}">${initials}</span>
+      onerror="_logoOnError(this,'${ticker}','sc-logo')"/>
+    <span class="logo-av" style="background:${color};display:none">${initials}</span>
   </span>`;
 }
 function logoHtmlSm(ticker,name){
+  const fmp=_logoFmpTicker(ticker);
   const clean=cleanTicker(ticker);
-  const src=`https://financialmodelingprep.com/image-stock/${clean}.png`;
+  const src=`https://financialmodelingprep.com/image-stock/${fmp}.png`;
   const initials=clean.slice(0,2).toUpperCase();
   const color=avatarColor(clean);
   return`<span style="display:inline-flex;align-items:center;width:28px;height:28px;flex-shrink:0">
     <img class="wl-logo" src="${src}" alt="${name||ticker}"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex'"/>
-    <span class="logo-av-sm" style="background:${color}">${initials}</span>
+      onerror="_logoOnError(this,'${ticker}','wl-logo')"/>
+    <span class="logo-av-sm" style="background:${color};display:none">${initials}</span>
   </span>`;
 }
 
