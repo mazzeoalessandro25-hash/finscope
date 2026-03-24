@@ -1204,7 +1204,6 @@ async function submitAuth(){
       localStorage.setItem(TOKEN_KEY,d.token);
       localStorage.setItem(USER_KEY,JSON.stringify(d.user));
       localStorage.setItem('fs_login_at',Date.now().toString());
-      closeAuthModal();
       showTransition(()=>{ window.location.href='./index.html'; });
     }
   }catch(e){
