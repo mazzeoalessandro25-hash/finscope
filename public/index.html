@@ -5322,17 +5322,159 @@ function closePortImport(){
 }
 function handlePortCSVDrop(e){
   const f=e.dataTransfer?.files?.[0];
-  if(f)readPortCSVFile(f);
+  if(f)routePortFile(f);
 }
 function handlePortCSVFile(input){
   const f=input.files?.[0];
-  if(f)readPortCSVFile(f);
+  if(f)routePortFile(f);
   input.value='';
 }
-function readPortCSVFile(file){
-  const r=new FileReader();
-  r.onload=e=>parsePortCSV(e.target.result);
-  r.readAsText(file,'UTF-8');
+function routePortFile(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(ext==='xlsx'||ext==='xls')readPortExcelFile(file);
+  else if(ext==='pdf')readPortPDFFile(file);
+  else{const r=new FileReader();r.onload=e=>parsePortCSV(e.target.result);r.readAsText(file,'UTF-8');}
+}
+
+/* ── Excel parser (SheetJS CDN on-demand) ── */
+async function readPortExcelFile(file){
+  _portShowImportStatus('Caricamento Excel...');
+  if(!window.XLSX){
+    await new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';
+      s.onload=res;s.onerror=rej;document.head.appendChild(s);
+    });
+  }
+  const buf=await file.arrayBuffer();
+  const wb=XLSX.read(buf,{type:'array'});
+  const ws=wb.Sheets[wb.SheetNames[0]];
+  const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+  // Normalise column names and map to {sym,qty,price,date}
+  const parsed=[];
+  for(const row of rows){
+    const keys=Object.keys(row).map(k=>k.trim().toLowerCase());
+    const get=(...terms)=>{
+      for(const t of terms){
+        const k=Object.keys(row).find(k=>k.trim().toLowerCase().includes(t));
+        if(k&&row[k]!=='')return String(row[k]).replace(/"/g,'').trim();
+      }
+      return '';
+    };
+    const sym=(get('ticker','symbol','titolo','strumento','descrizione')||'').toUpperCase();
+    const qtyRaw=get('quant','qty','pezzi','numero','quantit');
+    const priceRaw=get('prezzo','price','costo','valore unit','nav');
+    const dateRaw=get('data','date');
+    const qty=Math.abs(parseFloat(String(qtyRaw).replace(',','.')));
+    const price=parseFloat(String(priceRaw).replace(',','.'));
+    // date: might be a JS Date serial (Excel) or string
+    let date=dateRaw;
+    if(typeof dateRaw==='number'&&dateRaw>20000){
+      // Excel serial date → JS Date
+      const d=XLSX.SSF.parse_date_code(dateRaw);
+      date=`${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
+    }
+    if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||''});
+  }
+  _portShowImportStatus('');
+  _portShowImportPreview(parsed);
+}
+
+/* ── PDF parser (pdf.js CDN on-demand) ── */
+async function readPortPDFFile(file){
+  _portShowImportStatus('Estrazione testo PDF...');
+  if(!window.pdfjsLib){
+    await new Promise((res,rej)=>{
+      const s=document.createElement('script');
+      s.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';
+      s.onload=()=>{
+        pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+        res();
+      };s.onerror=rej;document.head.appendChild(s);
+    });
+  }
+  const buf=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:buf}).promise;
+  let fullText='';
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+    fullText+=content.items.map(i=>i.str).join(' ')+'\n';
+  }
+  _portShowImportStatus('');
+  parsePortPDFText(fullText);
+}
+
+function parsePortPDFText(text){
+  // Regex: cerca pattern "TICKER  qty  price" nelle righe del PDF
+  // Supporta sia formato italiano (virgola decimale) che internazionale (punto)
+  const lines=text.split(/\n/).map(l=>l.trim()).filter(l=>l.length>3);
+  const parsed=[];
+  // Pattern 1: TICKER.MI  10  12,34  oppure  AAPL  5  150.00
+  const reRow=/\b([A-Z]{1,5}(?:\.[A-Z]{2,3})?)\b.*?(\d[\d,.]*)\s+(?:az(?:ioni)?|pz|n\.?|qty|q\.ty)?\s*(\d{1,6}[.,]\d{1,4})/gi;
+  let m;
+  while((m=reRow.exec(text))!==null){
+    const sym=m[1].toUpperCase();
+    const qty=parseFloat(m[2].replace(',','.'));
+    const price=parseFloat(m[3].replace(',','.'));
+    if(sym.length>=2&&qty>0&&qty<100000&&price>0&&price<1000000)
+      parsed.push({sym,qty,price,date:''});
+  }
+  // Fallback: analisi riga per riga (per estratti conto tabulari)
+  if(!parsed.length){
+    for(const line of lines){
+      const parts=line.split(/\s{2,}|\t/).map(p=>p.trim()).filter(Boolean);
+      if(parts.length<3)continue;
+      const sym=parts[0].replace(/[^A-Z.]/g,'').toUpperCase();
+      const nums=parts.slice(1).map(p=>parseFloat(p.replace(',','.').replace(/[^\d.]/g,''))).filter(n=>n>0&&!isNaN(n));
+      if(sym.length>=2&&sym.length<=7&&nums.length>=2){
+        const qty=nums[0],price=nums[1];
+        if(qty>0&&qty<500000&&price>0&&price<1000000)
+          parsed.push({sym,qty,price,date:''});
+      }
+    }
+  }
+  // Dedup per sym (tieni solo prima occorrenza)
+  const seen=new Set();
+  const unique=parsed.filter(p=>{if(seen.has(p.sym))return false;seen.add(p.sym);return true;});
+  _portShowImportPreview(unique);
+}
+
+function _portShowImportStatus(msg){
+  const drop=document.getElementById('port-import-drop');
+  if(!drop)return;
+  let s=drop.querySelector('.import-status');
+  if(!msg){if(s)s.remove();return;}
+  if(!s){s=document.createElement('div');s.className='import-status';s.style.cssText='margin-top:8px;font-size:11px;color:var(--b);font-family:var(--fm)';drop.appendChild(s);}
+  s.textContent=msg;
+}
+function _portShowImportPreview(parsed){
+  window._portImportParsed=parsed;
+  const prev=document.getElementById('port-import-preview');
+  const tbl=document.getElementById('port-import-table');
+  const cnt=document.getElementById('port-import-count');
+  if(!parsed.length){
+    if(tbl)tbl.innerHTML='<div style="padding:12px;color:var(--r);font-size:12px">Nessun dato valido trovato. Controlla formato o seleziona manualmente il tipo.</div>';
+    if(prev)prev.style.display='block';
+    if(cnt)cnt.textContent='0 titoli trovati';
+    return;
+  }
+  if(tbl)tbl.innerHTML=`<table style="width:100%;font-size:11px;font-family:var(--fm);border-collapse:collapse">
+    <thead><tr style="background:var(--s2)">
+      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Ticker</th>
+      <th style="padding:6px 10px;text-align:right;color:var(--t3)">Quantità</th>
+      <th style="padding:6px 10px;text-align:right;color:var(--t3)">Prezzo</th>
+      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Data</th>
+    </tr></thead>
+    <tbody>${parsed.map(p=>`<tr style="border-top:1px solid var(--bd)">
+      <td style="padding:5px 10px;font-weight:700;color:var(--t)">${p.sym}</td>
+      <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.qty}</td>
+      <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.price}</td>
+      <td style="padding:5px 10px;color:var(--t3)">${p.date||'—'}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+  if(prev)prev.style.display='block';
+  if(cnt)cnt.textContent=`${parsed.length} titoli trovati`;
 }
 function parsePortCSV(text){
   const fmt=document.getElementById('port-import-fmt')?.value||'auto';
