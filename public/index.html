@@ -3691,6 +3691,8 @@ async function savePortEdit(idx){
   if(!qty||!price||qty<=0||price<=0)return;
   portfolio[idx].qty=qty;
   portfolio[idx].buyPrice=price;
+  const dateEl=document.getElementById('pei-date-'+idx);
+  if(dateEl&&dateEl.value)portfolio[idx].buyDate=dateEl.value;
   await savePortfolio();
   renderPortfolio();
 }
