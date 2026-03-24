@@ -3442,10 +3442,16 @@ async function submitAuth(){
       localStorage.setItem('fs_login_at', Date.now().toString());
       currentToken=d.user.id; currentUser=d.user;
       updateNavUser();
-      const displayName=d.user.name||d.user.email;
-      okEl.textContent=authTab==='login'?`Ciao, ${displayName}! Bentornato.`:`Benvenuto in FinEdge, ${displayName}!`;
-      okEl.classList.add('show');
-      setTimeout(()=>{closeAuthModal();loadUserData();},1000);
+      if(authTab==='login'){
+        closeAuthModal();
+        loadUserData();
+        if(typeof playLoginIntro==='function') playLoginIntro(null);
+      } else {
+        const displayName=d.user.name||d.user.email;
+        okEl.textContent=`Benvenuto in FinEdge, ${displayName}!`;
+        okEl.classList.add('show');
+        setTimeout(()=>{closeAuthModal();loadUserData();},1000);
+      }
     }
   }catch(e){
     errEl.textContent='Errore di connessione. Riprova.';
