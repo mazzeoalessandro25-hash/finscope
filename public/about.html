@@ -1294,64 +1294,152 @@ if(savedUser){
 
 <script>
 function showTransition(onDone) {
-  /* Keyframes */
+  /* ── Keyframe entrata logo/testo ── */
   var st = document.createElement('style');
-  st.textContent =
-    '@keyframes fe_spin{to{transform:rotate(360deg)}}' +
-    '@keyframes fe_prog{from{width:0}to{width:100%}}' +
-    '@keyframes fe_in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}';
+  st.textContent = '@keyframes fe_in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}';
   document.head.appendChild(st);
 
-  /* Overlay */
+  /* ── Overlay ── */
   var ov = document.createElement('div');
   ov.style.cssText =
     'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;' +
-    'background:#0d1525;display:flex;flex-direction:column;' +
-    'align-items:center;justify-content:center;gap:28px;transition:opacity .5s ease;';
+    'background:#0b1120;display:flex;flex-direction:column;' +
+    'align-items:center;justify-content:center;gap:20px;transition:opacity .5s ease;';
   document.body.appendChild(ov);
 
-  /* Logo */
+  /* ── Logo ── */
   var logo = document.createElement('div');
   logo.innerHTML = 'Fin<span style="color:#4d8ef0">Edge</span>';
   logo.style.cssText =
-    'font-size:38px;font-weight:800;color:#fff;letter-spacing:-1px;' +
-    'font-family:sans-serif;animation:fe_in .5s ease forwards;';
+    'font-size:34px;font-weight:800;color:#fff;letter-spacing:-1px;' +
+    'font-family:sans-serif;animation:fe_in .45s ease forwards;';
   ov.appendChild(logo);
 
-  /* Spinner */
-  var sp = document.createElement('div');
-  sp.style.cssText =
-    'width:38px;height:38px;border-radius:50%;' +
-    'border:3px solid rgba(255,255,255,.12);border-top-color:#1A56C4;' +
-    'animation:fe_spin .8s linear infinite;';
-  ov.appendChild(sp);
+  /* ── Canvas candlestick ── */
+  var W = Math.min(420, window.innerWidth - 48);
+  var H = 200;
+  var cvs = document.createElement('canvas');
+  cvs.width  = W * (window.devicePixelRatio || 1);
+  cvs.height = H * (window.devicePixelRatio || 1);
+  cvs.style.cssText = 'width:' + W + 'px;height:' + H + 'px;border-radius:10px;display:block;';
+  ov.appendChild(cvs);
+  var ctx = cvs.getContext('2d');
+  ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
 
-  /* Barra progresso */
-  var track = document.createElement('div');
-  track.style.cssText =
-    'width:200px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;';
-  var fill = document.createElement('div');
-  fill.style.cssText =
-    'height:100%;width:0;background:#1A56C4;border-radius:2px;' +
-    'animation:fe_prog 3.5s ease forwards;';
-  track.appendChild(fill);
-  ov.appendChild(track);
-
-  /* Testo */
+  /* ── Testo stato ── */
   var txt = document.createElement('div');
   txt.textContent = 'Accesso in corso...';
   txt.style.cssText =
-    'font-size:12px;color:rgba(255,255,255,.35);font-family:sans-serif;' +
-    'letter-spacing:.05em;animation:fe_in .5s ease .15s both;';
+    'font-size:11px;color:rgba(255,255,255,.3);font-family:sans-serif;' +
+    'letter-spacing:.08em;text-transform:uppercase;animation:fe_in .45s ease .2s both;';
   ov.appendChild(txt);
 
-  /* Dopo 4s: fade out e callback */
+  /* ── Dati candele (downtrend poi reversal) ── */
+  var candles = [
+    // Downtrend rosso
+    {o:100,h:103,l:95, c:96},
+    {o:96, h:98, l:90, c:91},
+    {o:91, h:93, l:85, c:86},
+    {o:86, h:88, l:80, c:81},
+    {o:81, h:84, l:75, c:76},
+    {o:76, h:78, l:70, c:71},
+    {o:71, h:73, l:65, c:66},
+    {o:66, h:69, l:61, c:62},
+    // Reversal + uptrend verde
+    {o:62, h:68, l:60, c:67},
+    {o:67, h:74, l:65, c:73},
+    {o:73, h:81, l:71, c:80},
+    {o:80, h:88, l:78, c:87},
+    {o:87, h:96, l:85, c:95},
+    {o:95, h:104,l:93, c:103},
+  ];
+
+  var N        = candles.length;
+  var PAD      = {t:14, r:14, b:14, l:14};
+  var chartW   = W - PAD.l - PAD.r;
+  var chartH   = H - PAD.t - PAD.b;
+  var GAP      = 3;
+  var cW       = Math.floor((chartW - GAP * (N - 1)) / N);
+
+  /* precomputa min/max per scala Y */
+  var lo = Infinity, hi = -Infinity;
+  candles.forEach(function(c){ if(c.l<lo)lo=c.l; if(c.h>hi)hi=c.h; });
+  var range = hi - lo;
+
+  function toY(p){ return PAD.t + chartH - ((p - lo) / range) * chartH; }
+  function toX(i){ return PAD.l + i * (cW + GAP); }
+
+  var INTERVAL = 220;  // ms tra una candela e la successiva
+  var GROW     = 320;  // ms per disegnare una candela
+
+  function ease(t){ return 1 - Math.pow(1 - t, 2); }
+
+  var t0 = null;
+  function frame(ts) {
+    if (!t0) t0 = ts;
+    var elapsed = ts - t0;
+
+    /* sfondo canvas */
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#0f1e35';
+    ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(0,0,W,H,8) : ctx.rect(0,0,W,H);
+    ctx.fill();
+
+    /* griglie orizzontali sottili */
+    ctx.strokeStyle = 'rgba(255,255,255,.04)';
+    ctx.lineWidth = 1;
+    for (var g = 0; g < 4; g++) {
+      var gy = PAD.t + (chartH / 3) * g;
+      ctx.beginPath(); ctx.moveTo(PAD.l, gy); ctx.lineTo(W - PAD.r, gy); ctx.stroke();
+    }
+
+    /* disegna ogni candela */
+    var numStarted = Math.min(N, Math.floor(elapsed / INTERVAL) + 1);
+    for (var i = 0; i < numStarted; i++) {
+      var c   = candles[i];
+      var age = elapsed - i * INTERVAL;
+      var p   = ease(Math.min(1, age / GROW));
+
+      var isUp  = c.c >= c.o;
+      var color = isUp ? '#22c55e' : '#ef4444';
+      var x     = toX(i);
+
+      var bTop = toY(Math.max(c.o, c.c));
+      var bBot = toY(Math.min(c.o, c.c));
+      var wTop = toY(c.h);
+      var wBot = toY(c.l);
+
+      var bMid  = (bTop + bBot) / 2;
+      var wMid  = (wTop + wBot) / 2;
+      var halfB = Math.max(0.5, (bBot - bTop) / 2) * p;
+      var halfW = ((wBot - wTop) / 2) * p;
+
+      /* wick */
+      ctx.strokeStyle = color;
+      ctx.lineWidth   = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(x + cW / 2, wMid - halfW);
+      ctx.lineTo(x + cW / 2, wMid + halfW);
+      ctx.stroke();
+
+      /* body */
+      ctx.fillStyle = color;
+      ctx.fillRect(x, bMid - halfB, cW, halfB * 2 || 1);
+    }
+
+    /* continua finché l'ultima candela non è completamente disegnata */
+    if (elapsed < (N - 1) * INTERVAL + GROW) {
+      requestAnimationFrame(frame);
+    }
+  }
+  requestAnimationFrame(frame);
+
+  /* ── Fade out dopo 4.2s → redirect ── */
   setTimeout(function () {
     ov.style.opacity = '0';
-    setTimeout(function () {
-      if (onDone) onDone();
-    }, 500);
-  }, 3800);
+    setTimeout(function () { if (onDone) onDone(); }, 500);
+  }, 4200);
 }
 </script>
 </body>
