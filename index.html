@@ -2390,9 +2390,11 @@ async function submitAuth(){
       currentToken=d.token;currentUser=d.user;
       updateNavUser();
       if(isLogin){
-        // Chiudi modal e avvia intro: loadUserData() parte al termine dell'animazione
         closeAuthModal();
-        playLoginIntro(()=>loadUserData());
+        // Carica i dati utente subito in background, non dopo l'animazione
+        loadUserData();
+        // Avvia l'animazione intro (decorativa, non blocca il caricamento)
+        if(typeof playLoginIntro==='function') playLoginIntro(null);
       } else {
         okEl.textContent='Account creato con successo!';
         okEl.classList.add('show');
