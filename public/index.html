@@ -5603,10 +5603,10 @@ async function _importAutoSearchTickers(total){
 }
 function _importPickBestQuote(quotes){
   if(!quotes.length)return null;
-  // Se c'è una quotazione a Milano, è un titolo italiano → prendi .MI
-  const mi=quotes.find(q=>q.symbol.endsWith('.MI'));
+  // Borsa Italiana: sia per suffisso .MI sia per campo exchange MIL/BIT
+  const mi=quotes.find(q=>q.symbol.endsWith('.MI')||q.exchange==='MIL'||q.exchange==='BIT');
   if(mi)return mi;
-  // Altrimenti prendi il primo risultato (Yahoo mette già il più rilevante/liquido)
+  // Altrimenti primo risultato (Yahoo ordina già per rilevanza/liquidità)
   return quotes[0];
 }
 function _importLooksTicker(s){
