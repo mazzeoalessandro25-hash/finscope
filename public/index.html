@@ -3844,44 +3844,53 @@ async function renderPortfolio(){
     const holdDays=item.buyDate?Math.floor((Date.now()-new Date(item.buyDate).getTime())/(86400000)):null;
     const holdStr=holdDays!=null?(holdDays<30?holdDays+'g':(holdDays<365?Math.floor(holdDays/30)+'m':Math.floor(holdDays/365)+'a '+Math.floor((holdDays%365)/30)+'m')):'';
     return`<div class="port-item ${stateClass}" id="port-item-${i}" onclick="openStockDetail('${item.sym}')">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <div style="min-width:0;flex:1">
-          <div style="display:flex;align-items:center;gap:5px">
-            <span class="port-sym">${item.sym}</span>
-            <span style="font-size:9px;color:var(--t3);background:var(--b3);padding:1px 5px;border-radius:3px;font-family:var(--fm)">${cur}</span>
-          </div>
-          <div class="port-name">${name}</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <!-- Logo + sparkline a sinistra -->
+        <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+          ${logoHtmlSm(item.sym,name)}
+          <svg id="psp-${i}" width="52" height="30" style="flex-shrink:0"></svg>
         </div>
-        <svg id="psp-${i}" width="56" height="26" style="flex-shrink:0;margin:0 8px"></svg>
-        <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
-          <div style="text-align:right">
-            <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
-            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}${holdStr?` · ${holdStr}`:''}</div>
+        <!-- Contenuto a destra -->
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+            <div style="min-width:0">
+              <div style="display:flex;align-items:center;gap:4px">
+                <span class="port-sym">${item.sym}</span>
+                <span style="font-size:9px;color:var(--t3);background:var(--b3);padding:1px 4px;border-radius:3px;font-family:var(--fm)">${cur}</span>
+              </div>
+              <div class="port-name">${name}</div>
+            </div>
+            <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
+              <div style="text-align:right">
+                <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
+                <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}${holdStr?` · ${holdStr}`:''}</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <button class="port-del" onclick="event.stopPropagation();togglePortEdit(${i})" title="Modifica" style="color:var(--b)">✎</button>
+                <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
+              </div>
+            </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:2px">
-            <button class="port-del" onclick="event.stopPropagation();togglePortEdit(${i})" title="Modifica" style="color:var(--b)">✎</button>
-            <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
-          </div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <div style="display:flex;gap:12px">
-          <div>
-            <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${up?'up':'down'}">${pnl!=null?(up?'+':'')+csym+fmt(Math.abs(pnl),0):'—'}</div>
-            <div style="font-size:8px;color:var(--t3)">P&amp;L</div>
-          </div>
-          <div>
-            <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${pnlPct!=null?(pnlPct>=0?'up':'down'):''}">${pnlPct!=null?(pnlPct>=0?'+':'')+fmt(pnlPct,1)+'%':'—'}</div>
-            <div style="font-size:8px;color:var(--t3)">Rend.</div>
-          </div>
-        </div>
-        <div style="flex:1;max-width:130px">
-          <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-            <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">peso</div>
-            <div style="font-size:8px;font-family:var(--fm);font-weight:600;color:${barColor}">${weightPct}%</div>
-          </div>
-          <div style="height:3px;background:var(--bd);border-radius:10px;overflow:hidden">
-            <div style="height:3px;width:${weightPct}%;background:${barColor};border-radius:10px;transition:width .6s ease"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <div style="display:flex;gap:10px">
+              <div>
+                <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${up?'up':'down'}">${pnl!=null?(up?'+':'')+csym+fmt(Math.abs(pnl),0):'—'}</div>
+                <div style="font-size:8px;color:var(--t3)">P&amp;L</div>
+              </div>
+              <div>
+                <div style="font-family:var(--fm);font-size:11px;font-weight:600" class="${pnlPct!=null?(pnlPct>=0?'up':'down'):''}">${pnlPct!=null?(pnlPct>=0?'+':'')+fmt(pnlPct,1)+'%':'—'}</div>
+                <div style="font-size:8px;color:var(--t3)">Rend.</div>
+              </div>
+            </div>
+            <div style="flex:1;max-width:110px">
+              <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+                <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">peso</div>
+                <div style="font-size:8px;font-family:var(--fm);font-weight:600;color:${barColor}">${weightPct}%</div>
+              </div>
+              <div style="height:3px;background:var(--bd);border-radius:10px;overflow:hidden">
+                <div style="height:3px;width:${weightPct}%;background:${barColor};border-radius:10px;transition:width .6s ease"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
