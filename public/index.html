@@ -4012,7 +4012,7 @@ async function renderPortfolio(){
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
         <div><div style="font-family:var(--fm);font-size:14px;font-weight:700;color:var(--t)">€${fmt(totalValEUR,0)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Val. EUR</div></div>
         <div><div style="font-family:var(--fm);font-size:14px;font-weight:700;color:var(--t)">$${fmt(totalValUSD,0)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Val. USD</div></div>
-        <div><div style="font-family:var(--fm);font-size:14px;font-weight:700" class="${totalUp?'up':'down'}">${totalUp?'+':''}$${fmt(totalPnlUSD,0)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">P&L</div></div>
+        <div><div style="font-family:var(--fm);font-size:14px;font-weight:700" class="${totalUp?'up':'down'}">${totalUp?'+':''}€${fmt(totalValEUR-totalInvEUR,0)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">P&L</div></div>
         <div><div style="font-family:var(--fm);font-size:14px;font-weight:700" class="${totalUp?'up':'down'}">${totalUp?'+':''}${fmt(totalPnlPct,2)}%</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Rend.</div></div>
       </div>
     </div>`;
