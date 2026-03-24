@@ -3814,6 +3814,7 @@ async function renderPortfolio(){
           <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Modifica:</span>
           <input class="port-inp" id="pei-qty-${i}" type="number" value="${item.qty}" placeholder="Quantità" style="width:75px" onclick="event.stopPropagation()"/>
           <input class="port-inp" id="pei-price-${i}" type="number" value="${item.buyPrice}" placeholder="Prezzo acq." style="width:95px" onclick="event.stopPropagation()"/>
+          <input class="port-inp" id="pei-date-${i}" type="date" value="${item.buyDate||''}" placeholder="Data acquisto" style="width:130px" onclick="event.stopPropagation()"/>
           <button class="port-btn" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();savePortEdit(${i})">Salva</button>
           <button class="port-btn" style="padding:4px 8px;font-size:11px;background:var(--s2);color:var(--t2);border:1px solid var(--bd)" onclick="event.stopPropagation();togglePortEdit(${i})">✕</button>
         </div>
