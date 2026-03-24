@@ -5523,32 +5523,7 @@ function parsePortCSV(text){
     }
   }catch(e){parsed=[];}
 
-  window._portImportParsed=parsed;
-  const prev=document.getElementById('port-import-preview');
-  const tbl=document.getElementById('port-import-table');
-  const cnt=document.getElementById('port-import-count');
-  if(!parsed.length){
-    if(tbl)tbl.innerHTML='<div style="padding:12px;color:var(--r);font-size:12px">Nessun dato valido trovato. Controlla il formato del file.</div>';
-    if(prev)prev.style.display='block';
-    if(cnt)cnt.textContent='0 titoli trovati';
-    return;
-  }
-  if(tbl)tbl.innerHTML=`<table style="width:100%;font-size:11px;font-family:var(--fm);border-collapse:collapse">
-    <thead><tr style="background:var(--s2)">
-      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Ticker</th>
-      <th style="padding:6px 10px;text-align:right;color:var(--t3)">Quantità</th>
-      <th style="padding:6px 10px;text-align:right;color:var(--t3)">Prezzo</th>
-      <th style="padding:6px 10px;text-align:left;color:var(--t3)">Data</th>
-    </tr></thead>
-    <tbody>${parsed.map(p=>`<tr style="border-top:1px solid var(--bd)">
-      <td style="padding:5px 10px;font-weight:700;color:var(--t)">${p.sym}</td>
-      <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.qty}</td>
-      <td style="padding:5px 10px;text-align:right;color:var(--t)">${p.price}</td>
-      <td style="padding:5px 10px;color:var(--t3)">${p.date||'—'}</td>
-    </tr>`).join('')}</tbody>
-  </table>`;
-  if(prev)prev.style.display='block';
-  if(cnt)cnt.textContent=`${parsed.length} titoli trovati`;
+  _portShowImportPreview(parsed);
 }
 async function confirmPortImport(){
   const parsed=window._portImportParsed;
