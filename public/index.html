@@ -3992,8 +3992,7 @@ async function renderPortfolio(){
       <div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t)">${grandTotalInv>0?Math.round(e[1]/grandTotalInv*100):0}%</div>
     </div>`).join('');
     summaryHtml+=`<div style="padding:18px;background:var(--s2);border-radius:10px;border:1px solid var(--bd);margin-bottom:10px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:14px">ALLOCAZIONE PORTAFOGLIO</div>
-      <div style="position:relative;width:160px;height:160px;margin:0 auto 18px">
+      <div style="position:relative;width:200px;height:200px;margin:0 auto 18px">
         <canvas id="port-alloc-donut" width="160" height="160"></canvas>
         <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
           <div style="text-align:center">
