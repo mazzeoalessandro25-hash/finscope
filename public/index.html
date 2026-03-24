@@ -3780,7 +3780,7 @@ async function renderPortfolio(){
         <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
           <div style="text-align:right">
             <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
-            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}</div>
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}${holdStr?` · ${holdStr}`:''}</div>
           </div>
           <div style="display:flex;flex-direction:column;gap:2px">
             <button class="port-del" onclick="event.stopPropagation();togglePortEdit(${i})" title="Modifica" style="color:var(--b)">✎</button>
