@@ -3669,6 +3669,13 @@ function setPortSort(key){
   renderPortfolio();
 }
 
+function togglePortGroup(){
+  _portGrouped=!_portGrouped;
+  const btn=document.getElementById('psort-group');
+  if(btn){btn.classList.toggle('active',_portGrouped);btn.textContent=_portGrouped?'⊞ Per lotto':'⊞ Raggruppa';}
+  renderPortfolio();
+}
+
 function togglePortEdit(idx){
   const el=document.getElementById('port-edit-'+idx);
   if(!el)return;
