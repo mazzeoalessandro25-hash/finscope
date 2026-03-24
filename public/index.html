@@ -5597,14 +5597,15 @@ async function _importAutoSearchTickers(total){
 }
 function _importPickBestQuote(quotes){
   if(!quotes.length)return null;
-  // 1. Borsa Italiana
+  // Se c'è una quotazione a Milano, è un titolo italiano → prendi .MI
   const mi=quotes.find(q=>q.symbol.endsWith('.MI'));
   if(mi)return mi;
-  // 2. Altre borse EU principali
-  const eu=quotes.find(q=>/\.(PA|DE|AS|MC|BR|SW|VI|LS|CO|HE|ST|OL|HK|TO)$/.test(q.symbol));
-  if(eu)return eu;
-  // 3. Prima equity disponibile (US)
+  // Altrimenti prendi il primo risultato (Yahoo mette già il più rilevante/liquido)
   return quotes[0];
+}
+function _importLooksTicker(s){
+  // Già un ticker se: no spazi, solo A-Z 0-9 e al max un punto, lunghezza ≤ 10
+  return /^[A-Z0-9]{1,6}(\.[A-Z]{1,3})?$/.test((s||'').trim().toUpperCase());
 }
 function _importSymInput(inp,idx){
   const q=(inp.value||'').toUpperCase().trim();
