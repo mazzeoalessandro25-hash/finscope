@@ -3765,6 +3765,8 @@ async function renderPortfolio(){
 
     const stateClass=pnl==null?'neu':up?'pos':'neg';
     const barColor=stateClass==='pos'?'#059669':stateClass==='neg'?'#DC2626':'var(--b)';
+    const holdDays=item.buyDate?Math.floor((Date.now()-new Date(item.buyDate).getTime())/(86400000)):null;
+    const holdStr=holdDays!=null?(holdDays<30?holdDays+'g':(holdDays<365?Math.floor(holdDays/30)+'m':Math.floor(holdDays/365)+'a '+Math.floor((holdDays%365)/30)+'m')):'';
     return`<div class="port-item ${stateClass}" id="port-item-${i}" onclick="openStockDetail('${item.sym}')">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
         <div style="min-width:0;flex:1">
