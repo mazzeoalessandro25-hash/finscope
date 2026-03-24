@@ -60,12 +60,12 @@ export default async function handler(req, res) {
     const q = req.query.q || symbol;
     if (!q) return res.status(400).json({ error: 'query required' });
     try {
-      const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=6&newsCount=0&enableFuzzyQuery=true`;
+      const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=10&newsCount=0&enableFuzzyQuery=true`;
       const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' } });
       const data = await r.json();
       const quotes = (data?.quotes || [])
         .filter(x => x.quoteType === 'EQUITY' || x.quoteType === 'ETF')
-        .slice(0, 5)
+        .slice(0, 10)
         .map(x => ({ symbol: x.symbol, name: x.shortname || x.longname || x.symbol, exchange: x.exchange }));
       return res.json({ quotes });
     } catch (e) {
