@@ -1699,9 +1699,13 @@ html.dark .auth-box{background:#1e293b}
       ondragleave="this.style.borderColor='var(--bd)'"
       ondrop="event.preventDefault();this.style.borderColor='var(--bd)';handlePortCSVDrop(event)">
       <div style="font-size:24px;margin-bottom:6px">📂</div>
-      <div style="font-size:13px;color:var(--t2);font-weight:600">Trascina il CSV qui o clicca per selezionare</div>
-      <div style="font-size:11px;color:var(--t3);margin-top:4px">File .csv accettati</div>
-      <input type="file" id="port-import-file" accept=".csv,.txt" style="display:none" onchange="handlePortCSVFile(this)"/>
+      <div style="font-size:13px;color:var(--t2);font-weight:600">Trascina il file qui o clicca per selezionare</div>
+      <div style="display:flex;gap:6px;justify-content:center;margin-top:8px;flex-wrap:wrap">
+        <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:var(--s2);color:var(--t3);font-family:var(--fm)">CSV</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(5,150,69,.12);color:#059645;font-family:var(--fm)">Excel .xlsx</span>
+        <span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(220,38,38,.1);color:#DC2626;font-family:var(--fm)">PDF</span>
+      </div>
+      <input type="file" id="port-import-file" accept=".csv,.txt,.xlsx,.xls,.pdf" style="display:none" onchange="handlePortCSVFile(this)"/>
     </div>
     <div id="port-import-preview" style="display:none">
       <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:6px">ANTEPRIMA IMPORTAZIONE</div>
