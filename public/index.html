@@ -5338,7 +5338,7 @@ function routePortFile(file){
 
 /* ── Excel parser (SheetJS CDN on-demand) ── */
 async function readPortExcelFile(file){
-  _portShowImportStatus('Caricamento Excel...');
+  _portShowImportStatus('Caricamento libreria Excel...');
   if(!window.XLSX){
     await new Promise((res,rej)=>{
       const s=document.createElement('script');
@@ -5346,38 +5346,112 @@ async function readPortExcelFile(file){
       s.onload=res;s.onerror=rej;document.head.appendChild(s);
     });
   }
+  _portShowImportStatus('Analisi file...');
   const buf=await file.arrayBuffer();
-  const wb=XLSX.read(buf,{type:'array'});
-  const ws=wb.Sheets[wb.SheetNames[0]];
-  const rows=XLSX.utils.sheet_to_json(ws,{defval:''});
-  // Normalise column names and map to {sym,qty,price,date}
-  const parsed=[];
-  for(const row of rows){
-    const keys=Object.keys(row).map(k=>k.trim().toLowerCase());
-    const get=(...terms)=>{
-      for(const t of terms){
-        const k=Object.keys(row).find(k=>k.trim().toLowerCase().includes(t));
-        if(k&&row[k]!=='')return String(row[k]).replace(/"/g,'').trim();
-      }
-      return '';
-    };
-    const sym=(get('ticker','symbol','titolo','strumento','descrizione')||'').toUpperCase();
-    const qtyRaw=get('quant','qty','pezzi','numero','quantit');
-    const priceRaw=get('prezzo','price','costo','valore unit','nav');
-    const dateRaw=get('data','date');
-    const qty=Math.abs(parseFloat(String(qtyRaw).replace(',','.')));
-    const price=parseFloat(String(priceRaw).replace(',','.'));
-    // date: might be a JS Date serial (Excel) or string
-    let date=dateRaw;
-    if(typeof dateRaw==='number'&&dateRaw>20000){
-      // Excel serial date → JS Date
-      const d=XLSX.SSF.parse_date_code(dateRaw);
-      date=`${d.y}-${String(d.m).padStart(2,'0')}-${String(d.d).padStart(2,'0')}`;
+  const wb=XLSX.read(buf,{type:'array',cellDates:true,cellText:false});
+
+  let parsed=[];
+  // Prova tutti i fogli, partendo dal primo
+  for(const sheetName of wb.SheetNames){
+    const ws=wb.Sheets[sheetName];
+    if(!ws['!ref'])continue;
+    // Converti in array grezzo di array (header:1)
+    const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+    // Prova diverse righe di intestazione (0..6) per trovare quella con dati
+    for(let hi=0;hi<=Math.min(6,raw.length-2);hi++){
+      const result=_xlsParseFromHeader(raw,hi);
+      if(result.length>0){parsed=result;break;}
     }
-    if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||''});
+    if(parsed.length>0)break;
   }
+
   _portShowImportStatus('');
+  if(!parsed.length){
+    // Mostra debug: prime 5 righe del foglio grezzo
+    const ws=wb.Sheets[wb.SheetNames[0]];
+    const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
+    const preview=raw.slice(0,6).map(r=>r.slice(0,8));
+    _portShowImportDebug(preview,'Colonne non riconosciute automaticamente. Ecco le prime righe del file:');
+    return;
+  }
   _portShowImportPreview(parsed);
+}
+
+/* Numero italiano/internazionale → float */
+function _xlsNum(v){
+  if(v===null||v===undefined||v==='')return NaN;
+  if(typeof v==='number')return Math.abs(v);
+  let s=String(v).trim().replace(/[€$£%\s]/g,'');
+  // formato IT: 1.234,56
+  if(/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(s))s=s.replace(/\./g,'').replace(',','.');
+  else s=s.replace(',','.');
+  return Math.abs(parseFloat(s));
+}
+
+/* Data: gestisce Date JS, ISO, DD/MM/YYYY, DD-MM-YYYY */
+function _xlsDate(v){
+  if(!v)return '';
+  if(v instanceof Date&&!isNaN(v))return v.toISOString().split('T')[0];
+  const s=String(v).trim();
+  // DD/MM/YYYY o DD-MM-YYYY
+  const m=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+  if(m)return `${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;
+  // YYYY-MM-DD già ok
+  if(/^\d{4}-\d{2}-\d{2}/.test(s))return s.slice(0,10);
+  return s;
+}
+
+function _xlsParseFromHeader(raw,hi){
+  const headers=raw[hi].map(h=>String(h||'').trim().toLowerCase());
+  if(headers.filter(h=>h.length>0).length<2)return [];
+
+  const SYM_KW =['ticker','symbol','titolo','strumento','descrizione','prodotto','nome','azione','isin','cod.','codice'];
+  const QTY_KW =['quant','qty','pezzi','numero','n.tit','n °','n.','pz','contratti','lotti'];
+  const PRICE_KW=['prezzo','price','costo medio','corso','carico','p.medio','nav','valore unitario','prezzo medio'];
+  const DATE_KW =['data acq','data oper','data eseg','data comp','date','data'];
+
+  const findCol=kws=>headers.findIndex(h=>kws.some(k=>h.includes(k)));
+  let si=findCol(SYM_KW), qi=findCol(QTY_KW), pi=findCol(PRICE_KW), di=findCol(DATE_KW);
+
+  // Se non troviamo sym ma troviamo qty+price, tenta col 0 come sym
+  if(si<0&&qi>=0&&pi>=0)si=0;
+  if(si<0||qi<0||pi<0)return [];
+
+  const parsed=[];
+  for(let r=hi+1;r<raw.length;r++){
+    const row=raw[r];
+    if(!row||row.every(c=>c===''||c===null))continue;
+    let sym=String(row[si]||'').replace(/"/g,'').trim().toUpperCase();
+    // Prendi solo primo token se la colonna contiene nome lungo
+    sym=sym.split(/\s+/)[0].replace(/[^A-Z0-9.]/g,'');
+    if(!sym||sym.length<2||sym.length>10)continue;
+    const qty=_xlsNum(row[qi]);
+    const price=_xlsNum(row[pi]);
+    const date=di>=0?_xlsDate(row[di]):'';
+    if(isNaN(qty)||isNaN(price)||qty<=0||price<=0)continue;
+    parsed.push({sym,qty,price,date});
+  }
+  return parsed;
+}
+
+function _portShowImportDebug(rows,msg){
+  window._portImportParsed=[];
+  const prev=document.getElementById('port-import-preview');
+  const tbl=document.getElementById('port-import-table');
+  const cnt=document.getElementById('port-import-count');
+  if(tbl){
+    const maxCols=Math.max(...rows.map(r=>r.length));
+    tbl.innerHTML=`<div style="padding:8px 10px;font-size:11px;color:var(--r);background:rgba(220,38,38,.07);border-bottom:1px solid var(--bd)">${msg}</div>
+    <div style="overflow-x:auto"><table style="width:100%;font-size:10px;font-family:var(--fm);border-collapse:collapse">
+      <tbody>${rows.map((r,ri)=>`<tr style="${ri===0?'background:var(--s2);font-weight:700':''}${ri%2===0?'':'background:var(--bg)'}">
+        ${r.map(c=>`<td style="padding:4px 8px;border:1px solid var(--bd);color:var(--t2);white-space:nowrap">${c||''}</td>`).join('')}
+      </tr>`).join('')}
+      </tbody>
+    </table></div>
+    <div style="padding:8px 10px;font-size:11px;color:var(--t3)">💡 Usa il selettore <b>Formato</b> in alto per specificare il tipo, oppure assicurati che le colonne abbiano intestazioni come: <b>Ticker, Quantità, Prezzo, Data</b></div>`;
+  }
+  if(prev)prev.style.display='block';
+  if(cnt)cnt.textContent='0 titoli trovati — vedi debug sopra';
 }
 
 /* ── PDF parser (pdf.js CDN on-demand) ── */
