@@ -1320,21 +1320,19 @@ function showTransition(onDone) {
 
   /* ── Wrapper 3D perspective ── */
   var DPR = window.devicePixelRatio || 1;
-  var W   = Math.min(630, window.innerWidth - 32);
-  var H   = 310;
+  var W   = Math.min(window.innerWidth - 16, 820);
+  var H   = Math.min(window.innerHeight - 180, 400);
   var wrap = document.createElement('div');
-  wrap.style.cssText = 'perspective:1000px;animation:fe_in .5s ease .1s both;';
+  wrap.style.cssText = 'perspective:1200px;animation:fe_in .5s ease .1s both;';
   ov.appendChild(wrap);
 
-  /* ── Canvas ── */
+  /* ── Canvas trasparente ── */
   var cvs = document.createElement('canvas');
   cvs.width  = W * DPR;
   cvs.height = H * DPR;
   cvs.style.cssText =
-    'width:'+W+'px;height:'+H+'px;border-radius:14px;display:block;' +
-    'transform:rotateX(10deg) rotateY(-4deg);transform-origin:50% 50%;' +
-    'box-shadow:0 40px 100px rgba(0,0,0,.75),0 0 70px rgba(20,72,200,.45),' +
-    'inset 0 1px 0 rgba(255,255,255,.12);';
+    'width:'+W+'px;height:'+H+'px;display:block;' +
+    'transform:rotateX(12deg) rotateY(-5deg);transform-origin:50% 50%;';
   wrap.appendChild(cvs);
   var ctx = cvs.getContext('2d');
   ctx.scale(DPR, DPR);
