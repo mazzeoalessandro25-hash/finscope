@@ -2369,6 +2369,7 @@ async function submitAuth(){
   const errEl=document.getElementById('auth-err');
   const okEl=document.getElementById('auth-ok');
   const btn=document.getElementById('auth-submit');
+  const isLogin=authTab==='login';
   errEl.classList.remove('show');okEl.classList.remove('show');
   if(!email||!pwd){errEl.textContent='Inserisci email e password';errEl.classList.add('show');return;}
   btn.disabled=true;btn.textContent='Caricamento...';
@@ -2388,16 +2389,22 @@ async function submitAuth(){
       localStorage.setItem(USER_KEY,JSON.stringify(d.user));
       currentToken=d.token;currentUser=d.user;
       updateNavUser();
-      okEl.textContent=authTab==='login'?'Accesso effettuato!':'Account creato con successo!';
-      okEl.classList.add('show');
-      setTimeout(()=>{closeAuthModal();loadUserData();},1000);
+      if(isLogin){
+        // Chiudi modal e avvia intro: loadUserData() parte al termine dell'animazione
+        closeAuthModal();
+        playLoginIntro(()=>loadUserData());
+      } else {
+        okEl.textContent='Account creato con successo!';
+        okEl.classList.add('show');
+        setTimeout(()=>{closeAuthModal();loadUserData();},1000);
+      }
     }
   }catch(e){
     errEl.textContent='Errore di connessione. Riprova.';
     errEl.classList.add('show');
   }
   btn.disabled=false;
-  btn.textContent=authTab==='login'?'Accedi':'Crea account';
+  btn.textContent=isLogin?'Accedi':'Crea account';
 }
 
 function updateNavUser(){
