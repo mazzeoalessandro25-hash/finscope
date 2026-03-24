@@ -5019,59 +5019,92 @@ async function loadPortTargets(){
    FEATURE 5: PORTFOLIO PERFORMANCE CHART
 ══════════════════════════════════════════ */
 let portPerfCI=null;
-async function loadPortPerf(){
+let _portPerfRange='1mo';
+async function loadPortPerf(range,btn){
+  if(range){
+    _portPerfRange=range==='ytd'?'ytd':range;
+    document.querySelectorAll('#perf-range-btns .port-sort-btn').forEach(b=>b.classList.remove('active'));
+    if(btn)btn.classList.add('active');
+  }
+  const r=_portPerfRange;
+  const apiRange=r==='ytd'?'1y':r;
   const canvas=document.getElementById('portPerfChart');
   if(!canvas||!portfolio.length)return;
-  const [spyData,...portData]=await Promise.all([
-    api('SPY','history&range=1mo'),
-    ...portfolio.map(item=>api(item.sym,'history&range=1mo'))
-  ]);
-  if(!spyData?.points?.length)return;
-  const spyPts=spyData.points;
-  const spyFirst=spyPts[0].close;
-  const spyReturns=spyPts.map(p=>((p.close-spyFirst)/spyFirst*100));
-  const labels=spyPts.map(p=>p.date);
-  // Calculate weighted portfolio returns
-  let totalInvested=0;
-  const weights=portfolio.map(item=>{
-    const inv=item.qty*item.buyPrice;
-    totalInvested+=inv;
-    return inv;
-  });
-  const portReturns=spyPts.map((_,di)=>{
-    let wSum=0;
-    portfolio.forEach((item,pi)=>{
-      const pts=portData[pi]?.points||[];
-      if(!pts.length)return;
-      const first=pts[0].close;
-      const cur=pts[di]?.close||pts[pts.length-1].close;
-      const ret=((cur-first)/first*100);
-      wSum+=ret*(weights[pi]/totalInvested);
-    });
-    return wSum;
-  });
-  if(portPerfCI){portPerfCI.destroy();portPerfCI=null;}
-  const ctx=canvas.getContext('2d');
-  portPerfCI=new Chart(ctx,{
-    type:'line',
-    data:{
-      labels,
-      datasets:[
-        {label:'Portafoglio',data:portReturns,borderColor:'#1A56C4',borderWidth:2,fill:true,
-          backgroundColor:cx=>{const g=cx.chart.ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'rgba(26,86,196,.15)');g.addColorStop(1,'rgba(26,86,196,0)');return g;},
-          tension:.3,pointRadius:0},
-        {label:'S&P 500',data:spyReturns,borderColor:'#8499B0',borderWidth:1.5,borderDash:[4,4],fill:false,tension:.3,pointRadius:0}
-      ]
-    },
-    options:{
-      responsive:true,
-      plugins:{legend:{labels:{color:'var(--t2)',font:{family:'IBM Plex Mono',size:11}}}},
-      scales:{
-        x:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:7,maxRotation:0},grid:{display:false}},
-        y:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:9},callback:v=>(v>=0?'+':'')+v.toFixed(1)+'%'},grid:{color:'rgba(216,226,239,.4)'}}
-      }
+  const benchSym=(document.getElementById('perf-bench-sel')?.value)||'SPY';
+  const sub=document.getElementById('port-perf-sub');
+  if(sub)sub.textContent=`Rendimento ponderato ${r.toUpperCase()} vs ${benchSym}`;
+
+  canvas.parentElement.style.position='relative';
+  let loadDiv=canvas.parentElement.querySelector('.perf-loading');
+  if(!loadDiv){loadDiv=document.createElement('div');loadDiv.className='perf-loading';loadDiv.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:12px;font-size:12px;color:var(--t3);font-family:var(--fm)';loadDiv.textContent='Caricamento...';canvas.parentElement.appendChild(loadDiv);}
+  loadDiv.style.display='flex';
+
+  try{
+    const [benchData,...portData]=await Promise.all([
+      api(benchSym,'history&range='+apiRange),
+      ...portfolio.map(item=>api(item.sym,'history&range='+apiRange))
+    ]);
+    if(!benchData?.points?.length){loadDiv.style.display='none';return;}
+
+    let benchPts=benchData.points;
+    if(r==='ytd'){
+      const jan1=new Date(new Date().getFullYear(),0,1).getTime();
+      benchPts=benchPts.filter(p=>new Date(p.date).getTime()>=jan1);
     }
-  });
+
+    const benchFirst=benchPts[0].close;
+    const benchReturns=benchPts.map(p=>((p.close-benchFirst)/benchFirst*100));
+    const labels=benchPts.map(p=>p.date);
+
+    let totalInvested=0;
+    const weights=portfolio.map(item=>{const inv=item.qty*item.buyPrice;totalInvested+=inv;return inv;});
+    const portReturns=benchPts.map((_,di)=>{
+      let wSum=0;
+      portfolio.forEach((item,pi)=>{
+        let pts=portData[pi]?.points||[];
+        if(r==='ytd'){const jan1=new Date(new Date().getFullYear(),0,1).getTime();pts=pts.filter(p=>new Date(p.date).getTime()>=jan1);}
+        if(!pts.length)return;
+        const first=pts[0].close;
+        const cur=pts[di]?.close||pts[Math.min(di,pts.length-1)].close;
+        wSum+=((cur-first)/first*100)*(weights[pi]/totalInvested);
+      });
+      return wSum;
+    });
+
+    const portFinal=portReturns[portReturns.length-1]||0;
+    const benchFinal=benchReturns[benchReturns.length-1]||0;
+    const alpha=portFinal-benchFinal;
+    if(sub)sub.textContent=`Portfolio: ${portFinal>=0?'+':''}${portFinal.toFixed(2)}% · ${benchSym}: ${benchFinal>=0?'+':''}${benchFinal.toFixed(2)}% · Alpha: ${alpha>=0?'+':''}${alpha.toFixed(2)}%`;
+
+    if(portPerfCI){portPerfCI.destroy();portPerfCI=null;}
+    const ctx=canvas.getContext('2d');
+    const isDark=document.body.classList.contains('dark');
+    portPerfCI=new Chart(ctx,{
+      type:'line',
+      data:{
+        labels,
+        datasets:[
+          {label:'Portafoglio',data:portReturns,borderColor:'#1A56C4',borderWidth:2.5,fill:true,
+            backgroundColor:cx=>{const g=cx.chart.ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'rgba(26,86,196,.18)');g.addColorStop(1,'rgba(26,86,196,0)');return g;},
+            tension:.35,pointRadius:0,pointHoverRadius:4},
+          {label:benchSym,data:benchReturns,borderColor:'#8499B0',borderWidth:1.5,borderDash:[5,5],fill:false,tension:.35,pointRadius:0,pointHoverRadius:4}
+        ]
+      },
+      options:{
+        responsive:true,
+        interaction:{mode:'index',intersect:false},
+        plugins:{
+          legend:{labels:{color:isDark?'#8FAFC8':'#5D7A96',font:{family:'IBM Plex Mono',size:11}}},
+          tooltip:{callbacks:{label:ctx=>(`${ctx.dataset.label}: ${ctx.parsed.y>=0?'+':''}${ctx.parsed.y.toFixed(2)}%`)}}
+        },
+        scales:{
+          x:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8,maxRotation:0},grid:{display:false}},
+          y:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:9},callback:v=>(v>=0?'+':'')+v.toFixed(1)+'%'},grid:{color:isDark?'rgba(35,50,71,.6)':'rgba(216,226,239,.4)'}}
+        }
+      }
+    });
+  }catch(e){console.warn('loadPortPerf error',e);}
+  loadDiv.style.display='none';
 }
 
 /* ══════════════════════════════════════════
