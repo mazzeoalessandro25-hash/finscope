@@ -3900,11 +3900,23 @@ async function renderPortfolio(){
   // Mini donut allocation
   const holdingEntries=portfolio.map((item,i)=>[item.sym,item.qty*item.buyPrice]).sort((a,b)=>b[1]-a[1]);
   if(holdingEntries.length>0){
+    const PALETTE=['#1A56C4','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#65A30D','#DC2626'];
+    const top8=holdingEntries.slice(0,8);
+    const legendRows=top8.map((e,i)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+      <div style="width:7px;height:7px;border-radius:50%;background:${PALETTE[i%PALETTE.length]};flex-shrink:0"></div>
+      <div style="font-size:10px;font-family:var(--fm);color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e[0]}</div>
+      <div style="font-size:10px;font-family:var(--fm);font-weight:600;color:var(--t)">${grandTotalInv>0?Math.round(e[1]/grandTotalInv*100):0}%</div>
+    </div>`).join('');
     summaryHtml+=`<div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:10px">
       <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:8px">ALLOCAZIONE TITOLI</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="flex-shrink:0">${svgDonut(holdingEntries.slice(0,8),null,76,16)}</div>
-        <div style="flex:1">${donutLegend(holdingEntries.slice(0,5),null)}</div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="flex-shrink:0;position:relative;width:80px;height:80px">
+          <canvas id="port-alloc-donut" width="80" height="80"></canvas>
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
+            <div style="text-align:center"><div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${top8.length}</div><div style="font-size:7px;color:var(--t3);font-family:var(--fm)">titoli</div></div>
+          </div>
+        </div>
+        <div style="flex:1">${legendRows}</div>
       </div>
     </div>`;
   }
