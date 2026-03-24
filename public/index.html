@@ -3444,7 +3444,7 @@ async function submitAuth(){
       updateNavUser();
       closeAuthModal();
       loadUserData();
-      if(typeof playLoginIntro==='function') playLoginIntro(null);
+      showTransition(null);
     }
   }catch(e){
     errEl.textContent='Errore di connessione. Riprova.';
