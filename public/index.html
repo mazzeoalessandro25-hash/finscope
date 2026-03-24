@@ -3960,7 +3960,15 @@ async function renderPortfolio(){
   const _heroPnl=_heroValUSD-_heroInvUSD;
   const _heroRend=_heroInvUSD>0?(_heroPnl/_heroInvUSD*100):0;
   const _heroUp=_heroPnl>=0;
-  const allSects=[...new Set(STOCKS.concat(customStocks).filter(s=>portfolio.find(p=>p.sym===s.s)).map(s=>s.sec))];
+  const _stockMap=Object.fromEntries(STOCKS.concat(customStocks).map(s=>[s.s,s]));
+  const allSects=[...new Set(portfolio.map(item=>{
+    // 1. Lista STOCKS predefinita (match esatto ticker)
+    if(_stockMap[item.sym])return _stockMap[item.sym].sec;
+    // 2. scData/scSummary (popolato quando si apre il dettaglio)
+    const sd=scData[item.sym]||scSummary[item.sym];
+    if(sd?.sector)return sd.sector;
+    return null;
+  }).filter(Boolean))];
   const setV=id=>v=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   const setC=id=>(v,cls)=>{const e=document.getElementById(id);if(e){e.textContent=v;if(cls)e.style.color=cls;}};
   _portHeroUSD=_heroValUSD; _portHeroEUR=_heroValEUR;
