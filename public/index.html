@@ -3979,7 +3979,6 @@ async function renderPortfolio(){
   const rateEl = document.getElementById('port-summary-rate');
   if(rateEl) rateEl.textContent = `EUR/USD: ${fmt(eurUsd,4)}`;
 
-  const _isEUR=_portCurrView==='EUR';
   const _totalValDisplay=_isEUR?'€'+fmt(totalValEUR,0):'$'+fmt(totalValUSD,0);
   const _totalPnlDisplay=(_heroUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
   let summaryHtml='';
