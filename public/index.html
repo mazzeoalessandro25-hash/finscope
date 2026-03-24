@@ -1605,7 +1605,25 @@ html.dark .auth-box{background:#1e293b}
 
       <div class="port-tab-panel" id="ptab-performance">
         <div class="card" id="port-perf-card">
-          <div class="ch"><div><div class="ct">Performance Portafoglio</div><div class="cs">Rendimento ponderato 1 mese vs S&P 500</div></div></div>
+          <div class="ch" style="flex-wrap:wrap;gap:8px">
+            <div><div class="ct">Performance Portafoglio</div><div class="cs" id="port-perf-sub">Rendimento ponderato vs benchmark</div></div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
+              <div style="display:flex;gap:3px" id="perf-range-btns">
+                <button class="port-sort-btn" id="prf-ytd" onclick="loadPortPerf('ytd',this)">YTD</button>
+                <button class="port-sort-btn active" id="prf-1mo" onclick="loadPortPerf('1mo',this)">1M</button>
+                <button class="port-sort-btn" id="prf-3mo" onclick="loadPortPerf('3mo',this)">3M</button>
+                <button class="port-sort-btn" id="prf-6mo" onclick="loadPortPerf('6mo',this)">6M</button>
+                <button class="port-sort-btn" id="prf-1y" onclick="loadPortPerf('1y',this)">1A</button>
+              </div>
+              <div style="width:1px;height:16px;background:var(--bd);margin:0 4px"></div>
+              <select id="perf-bench-sel" onchange="loadPortPerf(null,null)" style="background:var(--s2);border:1px solid var(--bd);color:var(--t2);padding:3px 6px;border-radius:5px;font-size:11px;font-family:var(--fm);outline:none">
+                <option value="SPY">S&amp;P 500</option>
+                <option value="QQQ">NASDAQ 100</option>
+                <option value="EWI">FTSE MIB (approx)</option>
+                <option value="GLD">Oro</option>
+              </select>
+            </div>
+          </div>
           <canvas id="portPerfChart" height="80"></canvas>
         </div>
       </div>
