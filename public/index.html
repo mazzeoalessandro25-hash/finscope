@@ -4031,33 +4031,31 @@ async function renderPortfolio(){
       </div>
     </div>`;
   }
-  if(totalUSD_inv>0){
-    const pnl=totalUSD_val-totalUSD_inv;
-    const pct=totalUSD_inv?((pnl/totalUSD_inv)*100):0;
-    const up=pnl>=0;
-    summaryHtml+=`<div style="margin-bottom:8px;padding:8px 10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:5px">USD 🇺🇸</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
-        <div><div style="font-family:var(--fm);font-size:12px;color:var(--t)">$${fmt(totalUSD_inv,0)}</div><div style="font-size:9px;color:var(--t3)">Investito</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px;color:var(--t)">${totalUSD_val?'$'+fmt(totalUSD_val,0):'—'}</div><div style="font-size:9px;color:var(--t3)">Attuale</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px" class="${up?'up':'down'}">${totalUSD_val?(up?'+':'')+'$'+fmt(pnl,0):'—'}</div><div style="font-size:9px;color:var(--t3)">P&L</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px" class="${up?'up':'down'}">${totalUSD_val?(up?'+':'')+fmt(pct,2)+'%':'—'}</div><div style="font-size:9px;color:var(--t3)">Rend.</div></div>
-      </div>
-    </div>`;
-  }
-  if(totalEUR_inv>0){
-    const pnl=totalEUR_val-totalEUR_inv;
-    const pct=totalEUR_inv?((pnl/totalEUR_inv)*100):0;
-    const up=pnl>=0;
-    summaryHtml+=`<div style="padding:8px 10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:5px">EUR 🇪🇺</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
-        <div><div style="font-family:var(--fm);font-size:12px;color:var(--t)">€${fmt(totalEUR_inv,0)}</div><div style="font-size:9px;color:var(--t3)">Investito</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px;color:var(--t)">${totalEUR_val?'€'+fmt(totalEUR_val,0):'—'}</div><div style="font-size:9px;color:var(--t3)">Attuale</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px" class="${up?'up':'down'}">${totalEUR_val?(up?'+':'')+'€'+fmt(pnl,0):'—'}</div><div style="font-size:9px;color:var(--t3)">P&L</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px" class="${up?'up':'down'}">${totalEUR_val?(up?'+':'')+fmt(pct,2)+'%':'—'}</div><div style="font-size:9px;color:var(--t3)">Rend.</div></div>
-      </div>
-    </div>`;
+  if(totalUSD_inv>0||totalEUR_inv>0){
+    const pnlU=totalUSD_val-totalUSD_inv, pctU=totalUSD_inv?(pnlU/totalUSD_inv*100):0, upU=pnlU>=0;
+    const pnlE=totalEUR_val-totalEUR_inv, pctE=totalEUR_inv?(pnlE/totalEUR_inv*100):0, upE=pnlE>=0;
+    const usdBlock=totalUSD_inv>0?`
+      <div style="padding:10px;background:var(--bg);border-radius:7px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:7px">USD 🇺🇸</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t)">$${fmt(totalUSD_inv,0)}</div><div style="font-size:9px;color:var(--t3)">Investito</div></div>
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t)">${totalUSD_val?'$'+fmt(totalUSD_val,0):'—'}</div><div style="font-size:9px;color:var(--t3)">Attuale</div></div>
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${upU?'up':'down'}">${totalUSD_val?(upU?'+':'')+'$'+fmt(pnlU,0):'—'}</div><div style="font-size:9px;color:var(--t3)">P&L</div></div>
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${upU?'up':'down'}">${totalUSD_val?(upU?'+':'')+fmt(pctU,2)+'%':'—'}</div><div style="font-size:9px;color:var(--t3)">Rend.</div></div>
+        </div>
+      </div>`:'';
+    const eurBlock=totalEUR_inv>0?`
+      <div style="padding:10px;background:var(--bg);border-radius:7px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:7px">EUR 🇪🇺</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px">
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t)">€${fmt(totalEUR_inv,0)}</div><div style="font-size:9px;color:var(--t3)">Investito</div></div>
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t)">${totalEUR_val?'€'+fmt(totalEUR_val,0):'—'}</div><div style="font-size:9px;color:var(--t3)">Attuale</div></div>
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${upE?'up':'down'}">${totalEUR_val?(upE?'+':'')+'€'+fmt(pnlE,0):'—'}</div><div style="font-size:9px;color:var(--t3)">P&L</div></div>
+          <div><div style="font-family:var(--fm);font-size:12px;font-weight:600" class="${upE?'up':'down'}">${totalEUR_val?(upE?'+':'')+fmt(pctE,2)+'%':'—'}</div><div style="font-size:9px;color:var(--t3)">Rend.</div></div>
+        </div>
+      </div>`:'';
+    const cols=totalUSD_inv>0&&totalEUR_inv>0?'1fr 1fr':'1fr';
+    summaryHtml+=`<div style="display:grid;grid-template-columns:${cols};gap:8px">${usdBlock}${eurBlock}</div>`;
   }
   document.getElementById('port-summary').innerHTML=summaryHtml||'<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
   // Interactive allocation donut
