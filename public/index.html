@@ -4021,13 +4021,13 @@ async function renderPortfolio(){
   }
   // Totale unificato
   if(totalUSD_inv>0 || totalEUR_inv>0){
-    summaryHtml+=`<div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:10px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:8px">TOTALE PORTAFOGLIO</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
-        <div><div style="font-family:var(--fm);font-size:15px;font-weight:700;color:var(--t)">$${fmt(totalValUSD,0)}</div><div style="font-size:10px;color:var(--t3)">Valore in USD</div></div>
-        <div><div style="font-family:var(--fm);font-size:15px;font-weight:700;color:var(--t)">€${fmt(totalValEUR,0)}</div><div style="font-size:10px;color:var(--t3)">Valore in EUR</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px" class="${totalUp?'up':'down'}">${totalUp?'+':''}$${fmt(totalPnlUSD,0)}</div><div style="font-size:10px;color:var(--t3)">P&L totale</div></div>
-        <div><div style="font-family:var(--fm);font-size:12px" class="${totalUp?'up':'down'}">${totalUp?'+':''}${fmt(totalPnlPct,2)}%</div><div style="font-size:10px;color:var(--t3)">Rendimento</div></div>
+    summaryHtml+=`<div style="padding:14px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:10px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:10px">TOTALE PORTAFOGLIO</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
+        <div><div style="font-family:var(--fm);font-size:14px;font-weight:700;color:var(--t)">$${fmt(totalValUSD,0)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Val. USD</div></div>
+        <div><div style="font-family:var(--fm);font-size:14px;font-weight:700;color:var(--t)">€${fmt(totalValEUR,0)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Val. EUR</div></div>
+        <div><div style="font-family:var(--fm);font-size:14px;font-weight:700" class="${totalUp?'up':'down'}">${totalUp?'+':''}$${fmt(totalPnlUSD,0)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">P&L</div></div>
+        <div><div style="font-family:var(--fm);font-size:14px;font-weight:700" class="${totalUp?'up':'down'}">${totalUp?'+':''}${fmt(totalPnlPct,2)}%</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Rend.</div></div>
       </div>
     </div>`;
   }
