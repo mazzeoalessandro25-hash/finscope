@@ -2163,10 +2163,18 @@ function _logoOnError(img,ticker,smClass){
   img.style.display='none';
   if(img.nextElementSibling)img.nextElementSibling.style.display='inline-flex';
 }
-function logoHtml(ticker,name){
-  const fmp=_logoFmpTicker(ticker);
+/* URL diretti per loghi specifici (override FMP) */
+const _LOGO_URL_OVERRIDE={
+  'RACE':'https://logo.clearbit.com/ferrari.com',
+};
+function _logoSrc(ticker){
   const clean=cleanTicker(ticker);
-  const src=`https://financialmodelingprep.com/image-stock/${fmp}.png`;
+  if(_LOGO_URL_OVERRIDE[clean])return _LOGO_URL_OVERRIDE[clean];
+  return`https://financialmodelingprep.com/image-stock/${_logoFmpTicker(ticker)}.png`;
+}
+function logoHtml(ticker,name){
+  const clean=cleanTicker(ticker);
+  const src=_logoSrc(ticker);
   const initials=clean.slice(0,2).toUpperCase();
   const color=avatarColor(clean);
   return`<span style="display:inline-flex;align-items:center;width:32px;height:32px">
@@ -2176,9 +2184,8 @@ function logoHtml(ticker,name){
   </span>`;
 }
 function logoHtmlSm(ticker,name){
-  const fmp=_logoFmpTicker(ticker);
   const clean=cleanTicker(ticker);
-  const src=`https://financialmodelingprep.com/image-stock/${fmp}.png`;
+  const src=_logoSrc(ticker);
   const initials=clean.slice(0,2).toUpperCase();
   const color=avatarColor(clean);
   return`<span style="display:inline-flex;align-items:center;width:28px;height:28px;flex-shrink:0">
