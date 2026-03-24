@@ -1350,58 +1350,54 @@ function showTransition(onDone) {
   var candles = [
     {o:100,h:101.5,l:95.5,c:96.5},
     {o:96.5,h:97.5,l:92,c:93},
-    {o:93,h:94,l:88,c:89},
-    {o:89,h:90,l:84,c:85},
-    {o:85,h:86,l:79.5,c:80.5},
-    {o:80.5,h:81.5,l:75,c:76},
-    {o:76,h:77,l:70,c:71},
-    {o:71,h:72.5,l:64.5,c:65.5},
-    {o:65.5,h:67,l:58,c:59},
-    {o:59,h:66,l:55,c:65},
-    {o:65,h:77,l:63,c:76},
-    {o:76,h:91,l:74,c:90},
-    {o:90,h:106,l:88,c:105},
-    {o:105,h:120,l:103,c:119},
-    {o:119,h:133,l:117,c:132},
+    {o:93,h:94,l:88.5,c:89.5},
+    {o:89.5,h:90.5,l:85,c:86},
+    {o:86,h:87,l:81.5,c:82.5},
+    {o:82.5,h:83.5,l:78,c:79},
+    {o:79,h:80,l:74.5,c:75.5},
+    {o:75.5,h:76.5,l:71,c:72},
+    {o:72,h:73,l:67.5,c:68.5},
+    {o:68.5,h:69.5,l:64,c:65},
+    {o:65,h:66,l:60.5,c:61.5},
+    {o:61.5,h:62.5,l:57,c:58},
+    {o:58,h:59,l:53.5,c:54.5},
+    {o:54.5,h:55.5,l:50,c:51},
+    {o:51,h:52,l:46.5,c:47.5},
+    {o:47.5,h:48.5,l:43,c:44},
+    {o:44,h:45,l:39.5,c:40.5},
+    {o:40.5,h:41.5,l:36,c:37},
+    {o:37,h:43,l:30,c:42},      /* hammer */
+    {o:42,h:54,l:40,c:53},
+    {o:53,h:67,l:51,c:66},
+    {o:66,h:82,l:64,c:80},
+    {o:80,h:95,l:78,c:93},
+    {o:93,h:107,l:91,c:105},
+    {o:105,h:118,l:103,c:116},
+    {o:116,h:128,l:114,c:126},
+    {o:126,h:137,l:124,c:135},
+    {o:135,h:145,l:133,c:143},
+    {o:143,h:152,l:141,c:150},
   ];
 
-  var N=candles.length, PAD={t:20,r:20,b:20,l:20}, GAP=5;
+  var N=candles.length, PAD={t:16,r:16,b:16,l:16}, GAP=4;
   var totW=W-PAD.l-PAD.r, totH=H-PAD.t-PAD.b;
   var chartH=totH;
   var bW=Math.floor((totW-GAP*(N-1))/N);
   var lo=Infinity,hi=-Infinity;
   candles.forEach(function(c){if(c.l<lo)lo=c.l;if(c.h>hi)hi=c.h;});
-  var pr=hi-lo,mg=pr*.10; lo-=mg; hi+=mg; pr=hi-lo;
+  var pr=hi-lo,mg=pr*.08; lo-=mg; hi+=mg; pr=hi-lo;
 
   function toY(p){return PAD.t+chartH-((p-lo)/pr)*chartH;}
   function toX(i){return PAD.l+i*(bW+GAP);}
   function easeOut(t){return 1-Math.pow(1-t,2.5);}
 
-  /* ── Particles ── */
-  var particles=[], born=[];
-  function spawnPts(cx,cy,col){
-    for(var p=0;p<14;p++){
-      var a=(Math.PI*2/14)*p+(Math.random()-.5)*.4;
-      var sp=1.8+Math.random()*2.8;
-      particles.push({x:cx,y:cy,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
-        life:1,decay:.024+Math.random()*.018,r:1.2+Math.random()*2,col:col});
-    }
-  }
-
-  var INTERVAL=108, GROW_RED=155, GROW_GRN=95, D3=4, t0=null;
+  var INTERVAL=82, GROW_RED=140, GROW_GRN=78, D3=4, t0=null;
 
   function frame(ts){
     if(!t0) t0=ts;
     var el=ts-t0;
 
-    /* bg gradient */
-    var bg=ctx.createRadialGradient(W/2,H*.5,0,W/2,H*.5,W*.75);
-    bg.addColorStop(0,'#162d6e');
-    bg.addColorStop(.55,'#0c1b44');
-    bg.addColorStop(1,'#060c1e');
-    ctx.fillStyle=bg;
-    if(ctx.roundRect)ctx.roundRect(0,0,W,H,14);else ctx.rect(0,0,W,H);
-    ctx.fill();
+    ctx.clearRect(0,0,W,H);
 
     var numStarted=Math.min(N,Math.floor(el/INTERVAL)+1);
 
@@ -1409,7 +1405,6 @@ function showTransition(onDone) {
     for(var i=0;i<numStarted;i++){
       var c=candles[i],isUp=c.c>=c.o,grow=isUp?GROW_GRN:GROW_RED;
       var age=el-i*INTERVAL,prog=easeOut(Math.min(1,age/grow));
-      if(prog>=.99&&!born[i]){born[i]=true;spawnPts(toX(i)+bW/2,toY(c.c),isUp?'rgba(74,222,128,':'rgba(248,113,113,');}
 
       var x=toX(i);
       var bTop=toY(Math.max(c.o,c.c)),bBot=toY(Math.min(c.o,c.c));
@@ -1450,19 +1445,7 @@ function showTransition(onDone) {
       ctx.restore();
     }
 
-    /* particles */
-    for(var p=particles.length-1;p>=0;p--){
-      var pt=particles[p];
-      pt.x+=pt.vx;pt.y+=pt.vy;pt.vy+=.06;pt.life-=pt.decay;
-      if(pt.life<=0){particles.splice(p,1);continue;}
-      ctx.save();ctx.globalAlpha=pt.life;
-      ctx.shadowBlur=8;ctx.shadowColor=pt.col+'0.9)';
-      ctx.fillStyle=pt.col+'1)';
-      ctx.beginPath();ctx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);ctx.fill();
-      ctx.restore();
-    }
-
-    if(el<(N-1)*INTERVAL+Math.max(GROW_RED,GROW_GRN)+300||particles.length>0)
+    if(el<(N-1)*INTERVAL+Math.max(GROW_RED,GROW_GRN)+200)
       requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
