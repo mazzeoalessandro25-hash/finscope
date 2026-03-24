@@ -4063,7 +4063,7 @@ async function renderPortfolio(){
         </div>
       </div>`:'';
     const cols=totalUSD_inv>0&&totalEUR_inv>0?'1fr 1fr':'1fr';
-    summaryHtml+=`<div style="display:grid;grid-template-columns:${cols};gap:8px">${usdBlock}${eurBlock}</div>`;
+    summaryHtml+=`<div style="display:grid;grid-template-columns:${cols};gap:8px">${eurBlock}${usdBlock}</div>`;
   }
   document.getElementById('port-summary').innerHTML=summaryHtml||'<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
   // Interactive allocation donut
