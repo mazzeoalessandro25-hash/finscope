@@ -2687,8 +2687,12 @@ verifySession();
       badge.style.transform  = 'translateY(8px)';
     });
 
-    // Mostra l'overlay
+    // Mostra l'overlay (modifica l'inline style, non la regola CSS)
     overlay.style.display = 'flex';
+
+    // Force reflow: fa leggere al browser lo stato iniziale delle barre
+    // prima che partano le transizioni CSS
+    void overlay.offsetHeight;
 
     // ── Fase 1: barre collassano → 8px (0ms, sfalsate 50ms) ──
     requestAnimationFrame(function () {
