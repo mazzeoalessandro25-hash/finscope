@@ -4860,6 +4860,34 @@ function renderPortAnalysis(portItems, quotes){
       <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:18px">${nSectors}</div></div>
     </div>
 
+    <!-- Radar del portafoglio -->
+    <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Profilo del portafoglio</div>
+      <div style="display:grid;grid-template-columns:160px 1fr;gap:16px;align-items:center">
+        <div style="position:relative">
+          <canvas id="port-radar-chart" width="160" height="160"></canvas>
+        </div>
+        <div>
+          ${(()=>{
+            const dims=[
+              {label:'Crescita',val:Math.round((byType.growth||0)*100)},
+              {label:'Stabilità',val:Math.max(0,Math.round(100-weightedBeta*40))},
+              {label:'Dividendi',val:Math.round(Math.min((avgYield||0)*1000,100))},
+              {label:'Valore',val:Math.round((byType.value||0)*100)},
+              {label:'Momentum',val:Math.min(100,Math.round(((byType.growth||0)*0.6+(byType.value||0)*0.4)*100))},
+            ];
+            return dims.map(d=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <div style="font-size:10px;color:var(--t2);font-family:var(--fm);width:70px;flex-shrink:0">${d.label}</div>
+              <div style="flex:1;height:5px;background:var(--bd);border-radius:10px;overflow:hidden">
+                <div style="height:5px;width:${d.val}%;background:#1A56C4;border-radius:10px;transition:width .6s"></div>
+              </div>
+              <div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t);width:28px;text-align:right">${d.val}</div>
+            </div>`).join('');
+          })()}
+        </div>
+      </div>
+    </div>
+
     <!-- 3 grafici a ciambella compatti -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
       <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px">
