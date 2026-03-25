@@ -1059,22 +1059,6 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 const TOKEN_KEY='fs_token', USER_KEY='fs_user';
 let authTab='register';
 
-// ─── Auto-redirect se già loggato ───
-(function(){
-  var t=localStorage.getItem('fs_token');
-  var u=localStorage.getItem('fs_user');
-  var at=localStorage.getItem('fs_login_at');
-  if(t&&u){
-    // Controlla scadenza (30 giorni)
-    if(at&&Date.now()-parseInt(at)>30*24*3600*1000){
-      localStorage.removeItem('fs_token');
-      localStorage.removeItem('fs_user');
-      localStorage.removeItem('fs_login_at');
-      return;
-    }
-    window.location.replace('./index.html');
-  }
-})();
 
 // ─── Scroll Reveal ───
 const revealObs=new IntersectionObserver(entries=>{
