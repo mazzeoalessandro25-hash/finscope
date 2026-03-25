@@ -6718,6 +6718,15 @@ function renderRebalancing(){
       <div id="reb-new-money-result"></div>
     </div>
 
+    ${_rebAlerts.length>0?`
+    <div style="margin-bottom:12px;padding:10px 14px;background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;display:flex;align-items:flex-start;gap:8px">
+      <div style="font-size:14px;flex-shrink:0">⚠</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:#92400E;font-family:var(--fm);margin-bottom:3px">Alert ribilanciamento — ${_rebAlerts.length} posizione${_rebAlerts.length>1?'i':''} fuori target</div>
+        <div style="font-size:10px;color:#92400E;font-family:var(--fm)">${_rebAlerts.map(it=>{const curPct=totalVal>0?(it.val/totalVal*100):0;const tPct=_rebTargets[it.sym]||0;const diff=curPct-tPct;return`${it.sym}: ${fmt(curPct,1)}% vs target ${fmt(tPct,0)}% (${diff>=0?'+':''}${fmt(diff,1)}%)`;}).join(' · ')}</div>
+      </div>
+    </div>`:''}
+
     <!-- Azioni rapide -->
     <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
       <button class="sc-btn" style="font-size:11px;padding:6px 14px" onclick="
