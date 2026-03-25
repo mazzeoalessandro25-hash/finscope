@@ -5243,6 +5243,11 @@ async function loadPortTargets(){
           <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:${r.gainFromBuy==null?'var(--t3)':r.gainFromBuy>=0?'var(--g)':'var(--r)'}">${r.gainFromBuy!=null?(r.gainFromBuy>=0?'+':'')+r.cur+fmt(r.gainFromBuy,0):'—'}</div>
           <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.gainFromBuyPct!=null?(r.gainFromBuyPct>=0?'+':'')+fmt(r.gainFromBuyPct,1)+'% dal costo':''}</div>
         </div>
+        <div style="text-align:right">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:1px">Break-even netto</div>
+          <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${r.breakEvenPct>=0?'var(--g)':'var(--r)'}">${r.cur}${fmt(r.breakEvenNet,0)}</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.breakEvenPct>=0?'+':''}${fmt(r.breakEvenPct,1)}% netto</div>
+        </div>
       </div>`;
     }).join('')}
     <div style="margin-top:12px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ Proiezione a ~12 mesi basata sui prezzi target medi degli analisti · Non garantisce rendimenti futuri · Per titoli senza copertura analitica il dato non è disponibile</div>
