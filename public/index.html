@@ -1558,20 +1558,19 @@ html.dark .auth-box{background:#1e293b}
   <button class="port-tab" id="ptab-btn-gestione" onclick="switchPortTab('gestione')">⚙️ Gestione</button>
 </div>
 
+      <!-- ANALISI: existing analysis content + risk analytics stacked -->
       <div class="port-tab-panel active" id="ptab-analisi">
         <div class="card" id="port-analysis-card">
-          <div class="ch"><div><div class="ct">Analisi & Bilanciamento</div><div class="cs">Composizione, rischio e profilo investitore</div></div></div>
+          <div class="ch"><div><div class="ct">Analisi & Profilo</div><div class="cs">Composizione, radar del portafoglio e segnali per titolo</div></div></div>
           <div id="port-analysis-content"><div class="ld" style="padding:10px">Aggiungi titoli per vedere l'analisi</div></div>
         </div>
-      </div>
-
-      <div class="port-tab-panel" id="ptab-prospetto">
-        <div class="card" id="port-targets-card">
-          <div class="ch"><div><div class="ct">Prospetto Valore Futuro</div><div class="cs">Proiezione a 12 mesi basata sui prezzi target degli analisti</div></div></div>
-          <div id="port-targets-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+        <div class="card" style="margin-top:10px" id="risk-card">
+          <div class="ch"><div><div class="ct">Risk Analytics</div><div class="cs">Sharpe · VaR 95% · Max Drawdown · Volatilità · Correlazione</div></div></div>
+          <div id="risk-content"><div class="ld" style="padding:10px">Caricamento metriche di rischio...</div></div>
         </div>
       </div>
 
+      <!-- PERFORMANCE: chart + benchmark bars below -->
       <div class="port-tab-panel" id="ptab-performance">
         <div class="card" id="port-perf-card">
           <div class="ch" style="flex-wrap:wrap;gap:8px">
@@ -1595,47 +1594,41 @@ html.dark .auth-box{background:#1e293b}
           </div>
           <canvas id="portPerfChart" height="80"></canvas>
         </div>
-      </div>
-
-      <div class="port-tab-panel" id="ptab-benchmark">
-        <div class="card" id="bench-card">
-          <div class="ch"><div><div class="ct">vs Benchmark</div><div class="cs">Performance vs indici (1 mese)</div></div></div>
+        <div class="card" style="margin-top:10px" id="bench-card">
+          <div class="ch"><div><div class="ct">vs Benchmark</div><div class="cs">Confronto diretto con i principali indici (1 mese)</div></div></div>
           <div id="bench-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
         </div>
       </div>
 
-      <div class="port-tab-panel" id="ptab-dividendi">
+      <!-- OBIETTIVI: price targets + break-even after tax -->
+      <div class="port-tab-panel" id="ptab-obiettivi">
+        <div class="card" id="port-targets-card">
+          <div class="ch"><div><div class="ct">Obiettivi & Price Target</div><div class="cs">Proiezione a 12 mesi · Break-even netto imposte (26%)</div></div></div>
+          <div id="port-targets-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+        </div>
+      </div>
+
+      <!-- REDDITO & FISCO: dividend tracker + tax dashboard stacked -->
+      <div class="port-tab-panel" id="ptab-reddito">
         <div class="card" id="div-tracker-card">
-          <div class="ch"><div><div class="ct">Dividend Tracker</div><div class="cs">Reddito stimato da dividendi + DRIP Simulator</div></div></div>
+          <div class="ch"><div><div class="ct">Dividend Tracker</div><div class="cs">Reddito stimato da dividendi · DRIP Simulator · Tax Efficiency Score</div></div></div>
           <div id="div-tracker-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
         </div>
-      </div>
-
-      <div class="port-tab-panel" id="ptab-risk">
-        <div class="card" id="risk-card">
-          <div class="ch"><div><div class="ct">Risk Analytics</div><div class="cs">Sharpe · VaR 95% · Max Drawdown · Volatilità · Correlazione — dati 3 mesi</div></div></div>
-          <div id="risk-content"><div class="ld" style="padding:10px">Seleziona questa tab per calcolare le metriche di rischio</div></div>
-        </div>
-      </div>
-
-      <div class="port-tab-panel" id="ptab-rebalancing">
-        <div class="card" id="rebalancing-card">
-          <div class="ch"><div><div class="ct">Rebalancing Tool</div><div class="cs">Definisci i target e calcola gli ordini di ribilanciamento</div></div></div>
-          <div id="rebalancing-content"><div class="ld" style="padding:10px">Seleziona questa tab per il rebalancing</div></div>
-        </div>
-      </div>
-
-      <div class="port-tab-panel" id="ptab-fisco">
-        <div class="card" id="fisco-card">
+        <div class="card" style="margin-top:10px" id="fisco-card">
           <div class="ch"><div><div class="ct">Dashboard Fiscale</div><div class="cs">Plus/minusvalenze · Imposta 26% · Tax-loss harvesting (Italia)</div></div></div>
-          <div id="fisco-content"><div class="ld" style="padding:10px">Seleziona questa tab per la situazione fiscale</div></div>
+          <div id="fisco-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
         </div>
       </div>
 
-      <div class="port-tab-panel" id="ptab-portnews">
-        <div class="card" id="portnews-card">
-          <div class="ch"><div><div class="ct">News del Portafoglio</div><div class="cs">Ultime notizie solo per i titoli che possiedi</div></div></div>
-          <div id="portnews-content"><div class="ld" style="padding:10px">Seleziona questa tab per caricare le news del portafoglio</div></div>
+      <!-- GESTIONE: rebalancing with alerts + portfolio news -->
+      <div class="port-tab-panel" id="ptab-gestione">
+        <div class="card" id="rebalancing-card">
+          <div class="ch"><div><div class="ct">Rebalancing Tool</div><div class="cs">Target allocazione · Alert automatico ±5% · Ordini suggeriti</div></div></div>
+          <div id="rebalancing-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="portnews-card">
+          <div class="ch"><div><div class="ct">News del Portafoglio</div><div class="cs">Ultime notizie per i titoli che possiedi</div></div></div>
+          <div id="portnews-content"><div class="ld" style="padding:10px">Caricamento news...</div></div>
         </div>
       </div>
     </div>
