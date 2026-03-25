@@ -5179,9 +5179,14 @@ async function loadPortTargets(){
     const gainFromBuy=targetVal!=null?targetVal-invested:null;
     const gainFromBuyPct=gainFromBuy!=null&&invested>0?(gainFromBuy/invested*100):null;
     const cur=item.currency==='EUR'?'€':'$';
+    // Break-even after tax (26% capital gains tax Italy)
+    const TAX_RATE=0.26;
+    const taxOnGain=curVal>invested?(curVal-invested)*TAX_RATE:0;
+    const breakEvenNet=curVal-taxOnGain; // net after paying tax on current gain
+    const breakEvenPct=invested>0?((breakEvenNet-invested)/invested*100):0;
     totalInv+=invested;totalCurVal+=curVal;
     if(targetVal!=null){totalTargetVal+=targetVal;coverageCount++;}
-    return{item,curPrice,target,targetHigh,targetLow,numAnalysts,rec,curVal,targetVal,upside,gainFromBuy,gainFromBuyPct,cur,invested};
+    return{item,curPrice,target,targetHigh,targetLow,numAnalysts,rec,curVal,targetVal,upside,gainFromBuy,gainFromBuyPct,cur,invested,breakEvenNet,breakEvenPct};
   });
 
   const totalUpside=totalCurVal>0&&totalTargetVal>0?((totalTargetVal-totalCurVal)/totalCurVal*100):null;
