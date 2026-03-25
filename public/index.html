@@ -6627,6 +6627,13 @@ function renderRebalancing(){
     portfolio.forEach((item,i)=>{_rebTargets[item.sym]=i<portfolio.length-1?eq:100-eq*(portfolio.length-1);});
   }
 
+  // Check for items that need rebalancing (±5% threshold)
+  const _rebAlerts=items.filter(item=>{
+    const curPct=totalVal>0?(item.val/totalVal*100):0;
+    const tPct=_rebTargets[item.sym]||0;
+    return Math.abs(curPct-tPct)>=5&&tPct>0;
+  });
+
   const totalTarget=portfolio.reduce((s,item)=>s+(_rebTargets[item.sym]||0),0);
   const orders=items.map(item=>{
     const tPct=(_rebTargets[item.sym]||0)/100;
