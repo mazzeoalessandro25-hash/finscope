@@ -5231,15 +5231,35 @@ function renderPortAnalysis(portItems, quotes){
       dctx.beginPath();
       [[0.065,0.05],[0.09,0.075],[0.115,0.105],[0.155,0.135],[0.20,0.158],[0.250,0.172]].forEach(([v,r],i)=>i===0?dctx.moveTo(xS(v),yS(r)):dctx.lineTo(xS(v),yS(r)));
       dctx.strokeStyle='rgba(255,255,255,0.12)';dctx.lineWidth=1.5;dctx.setLineDash([4,4]);dctx.stroke();dctx.setLineDash([]);
-      // Famous portfolios
+      // Famous portfolios — dots + leader lines + labels
       famousPortfolios.forEach(p=>{
         const px=xS(p.vol),py=yS(p.ret);
+        const lx=px+(p.ldx||0),ly=py+(p.ldy||0);
+        // dot fill
         dctx.beginPath();dctx.arc(px,py,7,0,Math.PI*2);
         dctx.fillStyle=p.color+'28';dctx.fill();
+        // dot stroke
         dctx.beginPath();dctx.arc(px,py,7,0,Math.PI*2);
         dctx.strokeStyle=p.color;dctx.lineWidth=2;dctx.stroke();
-        dctx.font='bold 9px IBM Plex Mono,monospace';dctx.fillStyle=p.color;dctx.textAlign='center';
-        dctx.fillText(p.name,px,py-11);
+        // leader line
+        const llen=Math.sqrt((lx-px)**2+(ly-py)**2);
+        if(llen>12){
+          const ux=(lx-px)/llen,uy=(ly-py)/llen;
+          dctx.beginPath();
+          dctx.moveTo(px+ux*8,py+uy*8);
+          dctx.lineTo(lx-ux*2,ly-uy*2);
+          dctx.strokeStyle=p.color+'80';dctx.lineWidth=1;dctx.stroke();
+        }
+        // label background
+        dctx.font='bold 9px IBM Plex Mono,monospace';
+        dctx.textAlign=p.align||'center';
+        const tw=dctx.measureText(p.name).width;
+        const bx=p.align==='right'?lx-tw-4:p.align==='left'?lx-2:lx-tw/2-2;
+        dctx.fillStyle='rgba(10,20,50,0.75)';
+        dctx.fillRect(bx,ly-11,tw+4,13);
+        // label text
+        dctx.fillStyle=p.color;
+        dctx.fillText(p.name,lx,ly);
       });
       // Your portfolio (diamond)
       const dpx=Math.max(xS(minVol)+16,Math.min(xS(dnaPortVol),xS(maxVol)-16));
