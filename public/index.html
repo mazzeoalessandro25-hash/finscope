@@ -4882,6 +4882,17 @@ function renderPortAnalysis(portItems, quotes){
     </div>`;
   }
 
+  // ── Portfolio DNA ──
+  const famousPortfolios=[
+    {name:'All-Weather',ret:0.074,vol:0.072,color:'#10B981',desc:'Ray Dalio'},
+    {name:'60/40',ret:0.085,vol:0.095,color:'#3B82F6',desc:'Bilanciato classico'},
+    {name:'100% S&P500',ret:0.120,vol:0.160,color:'#F59E0B',desc:'Solo azionario USA'},
+    {name:'Berkshire',ret:0.130,vol:0.175,color:'#8B5CF6',desc:'Warren Buffett'},
+    {name:'Growth Aggr.',ret:0.155,vol:0.240,color:'#EF4444',desc:'Alto rischio'},
+  ];
+  const dnaPortRet=(byType.growth||0)*0.15+(byType.value||0)*0.09+(byType.dividend||0)*0.07;
+  const dnaPortVol=Math.max(0.06,0.08+weightedBeta*0.08);
+
   el.innerHTML=`
     <!-- KPI rapidi -->
     <div class="port-kpi-row">
