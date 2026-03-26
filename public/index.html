@@ -5102,6 +5102,42 @@ function renderPortAnalysis(portItems, quotes){
       })()}
       <div style="margin-top:6px;font-size:10px;color:var(--t3);font-family:var(--fm)">⚠ Segnali basati su metriche quantitative · Non costituisce consulenza finanziaria (MiFID II)</div>
     </div>
+
+    <!-- Portfolio DNA -->
+    <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">🧬 Portfolio DNA — Frontiera Rischio/Rendimento</div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:12px">Dove si posiziona il tuo portafoglio rispetto ai benchmark più famosi della storia. Il punto ideale è in alto a sinistra (alto rendimento, bassa volatilità).</div>
+      <canvas id="dna-canvas" width="500" height="260" style="width:100%;height:260px;border-radius:8px;background:var(--s2)"></canvas>
+      <div style="display:flex;gap:12px;margin-top:8px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#10B981"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">All-Weather</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#3B82F6"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">60/40</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#F59E0B"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">100% S&P500</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#8B5CF6"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">Berkshire</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#EF4444"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">Growth Aggr.</span></div>
+        <div style="display:flex;align-items:center;gap:4px"><div style="width:11px;height:11px;background:#1A56C4;transform:rotate(45deg)"></div><span style="font-size:9px;color:#1A56C4;font-family:var(--fm);font-weight:700">Il tuo portafoglio</span></div>
+      </div>
+    </div>
+
+    <!-- What-If Optimizer -->
+    <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">⚡ What-If Optimizer</div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:12px">Simula la sostituzione di un titolo con un altro e vedi come cambia il profilo del portafoglio in tempo reale.</div>
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px">
+        <div style="flex:1;min-width:120px">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">RIMUOVI TICKER</div>
+          <select id="whatif-old" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px">
+            ${portItems.map(item=>`<option value="${item.sym}">${item.sym}</option>`).join('')}
+          </select>
+        </div>
+        <div style="font-size:14px;color:var(--t3);padding-bottom:8px">→</div>
+        <div style="flex:1;min-width:120px">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">AGGIUNGI TICKER</div>
+          <input id="whatif-new" placeholder="es. GOOGL" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px;box-sizing:border-box" />
+        </div>
+        <button onclick="runWhatIf()" style="padding:8px 18px;background:var(--b);color:#fff;border:none;border-radius:6px;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0">Analizza</button>
+      </div>
+      <div id="whatif-result"></div>
+    </div>
   `;
 
   // Draw radar chart
