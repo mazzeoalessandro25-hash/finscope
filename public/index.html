@@ -6664,6 +6664,59 @@ async function loadRiskMetrics(){
   const vCol=annVol*100>30?'var(--r)':annVol*100>15?'var(--o)':'var(--g)';
   const vLbl=annVol*100>30?'Alta':annVol*100>15?'Media':'Bassa';
 
+  // ── Monte Carlo Simulation ──
+  const MC_SIMS=5000,MC_DAYS=252,MC_STEPS=20;
+  const mcMu=_mean(portRets),mcSigma=_std(portRets);
+  const mcFinals=[],allMcPaths=[];
+  for(let s=0;s<MC_SIMS;s++){
+    let v=1;const path=[1];
+    for(let d=1;d<=MC_DAYS;d++){
+      const u1=Math.random()||1e-10,u2=Math.random()||1e-10;
+      const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
+      v*=(1+mcMu+mcSigma*z);
+      if(d%(MC_DAYS/MC_STEPS)===0)path.push(v);
+    }
+    mcFinals.push(v);allMcPaths.push(path);
+  }
+  mcFinals.sort((a,b)=>a-b);
+  const mcPaths={p10:[],p25:[],p50:[],p75:[],p90:[]};
+  for(let step=0;step<=MC_STEPS;step++){
+    const vals=[...allMcPaths.map(p=>p[Math.min(step,p.length-1)])].sort((a,b)=>a-b);
+    mcPaths.p10.push(vals[Math.floor(MC_SIMS*0.10)]);
+    mcPaths.p25.push(vals[Math.floor(MC_SIMS*0.25)]);
+    mcPaths.p50.push(vals[Math.floor(MC_SIMS*0.50)]);
+    mcPaths.p75.push(vals[Math.floor(MC_SIMS*0.75)]);
+    mcPaths.p90.push(vals[Math.floor(MC_SIMS*0.90)]);
+  }
+  const mcP10=mcFinals[Math.floor(MC_SIMS*0.10)];
+  const mcP50=mcFinals[Math.floor(MC_SIMS*0.50)];
+  const mcP90=mcFinals[Math.floor(MC_SIMS*0.90)];
+  const mcPLoss=mcFinals.filter(v=>v<1).length/MC_SIMS*100;
+  const mcPGain20=mcFinals.filter(v=>v>=1.20).length/MC_SIMS*100;
+
+  // ── Opportunity Cost vs SPY ──
+  const oppCostData=portfolio.map((item,pi)=>{
+    const r=stockRets[pi];
+    const len=Math.min(r.length,spyRets.length);
+    if(len<5)return{sym:item.sym,stockRet:0,spyRet:0,diff:0,costUSD:0,len:0};
+    const sr2=r.slice(0,len).reduce((acc,x)=>acc*(1+x),1)-1;
+    const spy2=spyRets.slice(0,len).reduce((acc,x)=>acc*(1+x),1)-1;
+    const diff=sr2-spy2;
+    const invested=item.qty*item.buyPrice;
+    return{sym:item.sym,stockRet:sr2,spyRet:spy2,diff,costUSD:diff*invested,len};
+  }).sort((a,b)=>b.costUSD-a.costUSD);
+  const totalOppCost=oppCostData.reduce((s,x)=>s+x.costUSD,0);
+
+  // ── Crisis Correlation ──
+  const crisisCorrM=corrM.map(row=>row.map(v=>{
+    if(v===null)return null;
+    if(v>=1)return 1;
+    return Math.min(0.96,v+0.28+(1-v)*0.15);
+  }));
+  const avgNormalCorr=(()=>{let s=0,c=0;corrM.forEach((row,a)=>row.forEach((v,b)=>{if(a!==b&&v!==null){s+=v;c++;}}));return c>0?s/c:0;})();
+  const avgCrisisCorr=(()=>{let s=0,c=0;crisisCorrM.forEach((row,a)=>row.forEach((v,b)=>{if(a!==b&&v!==null){s+=v;c++;}}));return c>0?s/c:0;})();
+  const divLoss=avgNormalCorr<1?((avgCrisisCorr-avgNormalCorr)/Math.max(0.001,1-avgNormalCorr)*100):0;
+
   el.innerHTML=`
     <!-- 5 KPI principali -->
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
