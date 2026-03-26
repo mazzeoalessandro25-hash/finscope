@@ -5195,6 +5195,60 @@ function renderPortAnalysis(portItems, quotes){
       const lr=R+14;
       ctx.fillText(d.label,cx+lr*Math.cos(a),cy+lr*Math.sin(a)+3);
     });
+    // ── Draw Portfolio DNA chart ──
+    const dc=document.getElementById('dna-canvas');
+    if(dc){
+      const DW=dc.clientWidth||500,DH=dc.clientHeight||260;
+      dc.width=DW*window.devicePixelRatio;dc.height=DH*window.devicePixelRatio;
+      const dctx=dc.getContext('2d');dctx.scale(window.devicePixelRatio,window.devicePixelRatio);
+      const dp={t:20,r:20,b:40,l:56};
+      const diw=DW-dp.l-dp.r,dih=DH-dp.t-dp.b;
+      const allVols=[0.04,...famousPortfolios.map(p=>p.vol),dnaPortVol];
+      const allRets=[0.01,...famousPortfolios.map(p=>p.ret),dnaPortRet];
+      const minVol=0,maxVol=Math.max(...allVols)*1.15;
+      const minRet=0,maxRet=Math.max(...allRets)*1.20;
+      const xS=v=>dp.l+(v-minVol)/(maxVol-minVol)*diw;
+      const yS=v=>dp.t+dih-(v-minRet)/(maxRet-minRet)*dih;
+      // Grid
+      [0.05,0.10,0.15,0.20,0.25].filter(v=>v<=maxVol).forEach(v=>{
+        dctx.beginPath();dctx.moveTo(xS(v),dp.t);dctx.lineTo(xS(v),dp.t+dih);
+        dctx.strokeStyle='rgba(200,210,225,0.12)';dctx.lineWidth=1;dctx.stroke();
+        dctx.font='9px IBM Plex Mono,monospace';dctx.fillStyle='rgba(132,153,176,0.7)';dctx.textAlign='center';
+        dctx.fillText(fmt(v*100,0)+'%',xS(v),dp.t+dih+14);
+      });
+      [0.02,0.05,0.08,0.11,0.14].filter(v=>v<=maxRet).forEach(v=>{
+        dctx.beginPath();dctx.moveTo(dp.l,yS(v));dctx.lineTo(dp.l+diw,yS(v));
+        dctx.strokeStyle='rgba(200,210,225,0.12)';dctx.lineWidth=1;dctx.stroke();
+        dctx.font='9px IBM Plex Mono,monospace';dctx.fillStyle='rgba(132,153,176,0.7)';dctx.textAlign='right';
+        dctx.fillText(fmt(v*100,0)+'%',dp.l-5,yS(v)+3);
+      });
+      // Axis labels
+      dctx.fillStyle='rgba(132,153,176,0.7)';dctx.font='9px IBM Plex Mono,monospace';
+      dctx.textAlign='center';dctx.fillText('Volatilità annua →',dp.l+diw/2,DH-4);
+      dctx.save();dctx.translate(12,dp.t+dih/2);dctx.rotate(-Math.PI/2);
+      dctx.fillText('Rendimento atteso →',0,0);dctx.restore();
+      // Efficient frontier (approximate dashed curve)
+      dctx.beginPath();
+      [[0.065,0.05],[0.09,0.075],[0.115,0.105],[0.155,0.135],[0.20,0.158],[0.250,0.172]].forEach(([v,r],i)=>i===0?dctx.moveTo(xS(v),yS(r)):dctx.lineTo(xS(v),yS(r)));
+      dctx.strokeStyle='rgba(255,255,255,0.12)';dctx.lineWidth=1.5;dctx.setLineDash([4,4]);dctx.stroke();dctx.setLineDash([]);
+      // Famous portfolios
+      famousPortfolios.forEach(p=>{
+        const px=xS(p.vol),py=yS(p.ret);
+        dctx.beginPath();dctx.arc(px,py,7,0,Math.PI*2);
+        dctx.fillStyle=p.color+'28';dctx.fill();
+        dctx.beginPath();dctx.arc(px,py,7,0,Math.PI*2);
+        dctx.strokeStyle=p.color;dctx.lineWidth=2;dctx.stroke();
+        dctx.font='bold 9px IBM Plex Mono,monospace';dctx.fillStyle=p.color;dctx.textAlign='center';
+        dctx.fillText(p.name,px,py-11);
+      });
+      // Your portfolio (diamond)
+      const dpx=Math.max(xS(minVol)+16,Math.min(xS(dnaPortVol),xS(maxVol)-16));
+      const dpy=Math.max(yS(maxRet)+12,Math.min(yS(dnaPortRet),yS(minRet)-12));
+      dctx.save();dctx.translate(dpx,dpy);dctx.rotate(Math.PI/4);
+      dctx.fillStyle='#1A56C4';dctx.fillRect(-6,-6,12,12);dctx.restore();
+      dctx.font='bold 10px IBM Plex Mono,monospace';dctx.fillStyle='#1A56C4';dctx.textAlign='center';
+      dctx.fillText('Il tuo portafoglio',dpx,dpy+20);
+    }
   });
 }
 
