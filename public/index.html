@@ -6772,6 +6772,57 @@ async function loadRiskMetrics(){
       <strong>$${fmt(var95Abs,0)}</strong>. Il restante 5% dei giorni (≈1 ogni 20) potrebbe registrare perdite superiori.
     </div>
 
+    <!-- Monte Carlo -->
+    <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">🎲 Simulazione Monte Carlo — 5.000 scenari, 1 anno</div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:12px">Distribuzione probabilistica del valore del portafoglio nei prossimi 12 mesi, basata su rendimento e volatilità storici degli ultimi 3 mesi.</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+        <div class="rb"><div class="rl">SCENARIO PESSIMISTA (10°)</div><div class="rv2 down" style="font-size:17px">${mcP10>=1?'+':''}${fmt((mcP10-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP10,0)}</div></div>
+        <div class="rb"><div class="rl">SCENARIO MEDIANO (50°)</div><div class="rv2 ${mcP50>=1?'g':'down'}" style="font-size:17px">${mcP50>=1?'+':''}${fmt((mcP50-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP50,0)}</div></div>
+        <div class="rb"><div class="rl">SCENARIO OTTIMISTA (90°)</div><div class="rv2 g" style="font-size:17px">+${fmt((mcP90-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP90,0)}</div></div>
+        <div class="rb"><div class="rl">PROB. PERDITA</div><div class="rv2 down" style="font-size:17px">${fmt(mcPLoss,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">prob. chiudere in rosso</div></div>
+      </div>
+      <canvas id="mc-canvas" width="600" height="180" style="width:100%;height:180px;border-radius:8px;background:var(--s2)"></canvas>
+      <div style="display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;align-items:center">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:8px;background:rgba(16,185,129,0.15);border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">10°–90° percentile</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:8px;background:rgba(16,185,129,0.35);border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">25°–75° percentile</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:3px;background:#10B981;border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">Mediana</span></div>
+        <div style="margin-left:auto;font-size:9px;color:var(--t3);font-family:var(--fm)">Prob. +20%: <strong>${fmt(mcPGain20,1)}%</strong></div>
+      </div>
+    </div>
+
+    <!-- Opportunity Cost -->
+    <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">💸 Costo di Opportunità vs. S&P 500 (3 mesi)</div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:10px">Quanto avresti guadagnato (o perso) comprando SPY invece di ogni singola posizione nello stesso periodo.</div>
+      <div style="padding:10px 14px;background:${totalOppCost>=0?'rgba(16,185,129,0.08)':'rgba(239,68,68,0.08)'};border-radius:8px;border:1px solid ${totalOppCost>=0?'rgba(16,185,129,0.3)':'rgba(239,68,68,0.3)'};margin-bottom:12px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:11px;font-family:var(--fm);color:var(--t2)">${totalOppCost>=0?'✓ Il tuo portafoglio ha <strong>sovraperformato</strong> l\'S&P 500 di':'⚠ Il tuo portafoglio ha <strong>sottoperformato</strong> l\'S&P 500 di'}</div>
+        <div style="font-family:var(--fm);font-size:16px;font-weight:700;color:${totalOppCost>=0?'var(--g)':'var(--r)'};">${totalOppCost>=0?'+':''}$${fmt(Math.abs(totalOppCost),0)}</div>
+      </div>
+      ${oppCostData.map(x=>{
+        if(x.len<5)return'';
+        const beating=x.diff>=0;
+        const barMax=Math.max(...oppCostData.map(o=>Math.abs(o.diff)),0.01);
+        const barW=Math.round(Math.abs(x.diff)/barMax*100);
+        return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:8px 10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+          <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);width:64px;flex-shrink:0">${x.sym}</div>
+          <div style="flex:1">
+            <div style="display:flex;gap:6px;font-size:10px;font-family:var(--fm);margin-bottom:4px">
+              <span style="color:${x.stockRet>=0?'var(--g)':'var(--r)'}">${x.stockRet>=0?'+':''}${fmt(x.stockRet*100,1)}% tuo</span>
+              <span style="color:var(--t3)">vs</span>
+              <span style="color:var(--t2)">${x.spyRet>=0?'+':''}${fmt(x.spyRet*100,1)}% SPY</span>
+            </div>
+            <div style="height:4px;background:var(--bd);border-radius:10px;overflow:hidden">
+              <div style="height:4px;width:${barW}%;background:${beating?'#10B981':'#EF4444'};border-radius:10px"></div>
+            </div>
+          </div>
+          <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:${beating?'var(--g)':'var(--r)'};width:80px;text-align:right">${beating?'+':''}$${fmt(x.costUSD,0)}</div>
+          <div style="padding:2px 7px;border-radius:6px;font-size:9px;font-family:var(--fm);font-weight:700;background:${beating?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)'};color:${beating?'#10B981':'#EF4444'};flex-shrink:0;white-space:nowrap">${beating?'BEATING':'LAGGING'}</div>
+        </div>`;
+      }).join('')}
+      <div style="margin-top:4px;font-size:10px;color:var(--t3);font-family:var(--fm)">Calcolo basato sugli ultimi 3 mesi · Non tiene conto dei costi di transazione</div>
+    </div>
+
     <!-- Volatilità per titolo -->
     <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Volatilità per titolo (annualizzata, 3 mesi)</div>
     <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
