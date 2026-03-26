@@ -5253,6 +5253,88 @@ function renderPortAnalysis(portItems, quotes){
 }
 
 /* ══════════════════════════════════════════
+   WHAT-IF OPTIMIZER
+══════════════════════════════════════════ */
+async function runWhatIf(){
+  const oldSym=(document.getElementById('whatif-old')?.value||'').trim().toUpperCase();
+  const newSym=(document.getElementById('whatif-new')?.value||'').trim().toUpperCase();
+  const el=document.getElementById('whatif-result');
+  if(!el)return;
+  if(!oldSym||!newSym){el.innerHTML='<div style="font-size:11px;color:var(--r);font-family:var(--fm)">Inserisci entrambi i ticker.</div>';return;}
+  if(oldSym===newSym){el.innerHTML='<div style="font-size:11px;color:var(--o);font-family:var(--fm)">I ticker devono essere diversi.</div>';return;}
+  const pos=portfolio.find(p=>p.sym===oldSym);
+  if(!pos){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">${oldSym} non è nel portafoglio.</div>`;return;}
+  el.innerHTML='<div class="ld" style="padding:8px">Analisi in corso...</div>';
+  try{
+    const [newQ,newSum]=await Promise.all([api(newSym),api(newSym,'summary')]);
+    if(!newQ?.price){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">Ticker ${newSym} non trovato o non disponibile.</div>`;return;}
+    const allS2=STOCKS.concat(customStocks);
+    const totalInv2=portfolio.reduce((s,item)=>s+item.qty*item.buyPrice,0);
+    const posWeight=totalInv2>0?(pos.qty*pos.buyPrice)/totalInv2:0;
+    // Current weighted beta & yield
+    const curBeta=_lastPortQuotes.length===portfolio.length
+      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const b=q?.beta??(scSummary[item.sym]||scData[item.sym])?.beta??1;return s+b*(item.qty*item.buyPrice);},0)/totalInv2
+      :1;
+    const curYield=_lastPortQuotes.length===portfolio.length
+      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const y=q?.divYield??(scSummary[item.sym]||scData[item.sym])?.dividend??0;return s+y*(item.qty*item.buyPrice);},0)/totalInv2
+      :0;
+    const oldQ=_lastPortQuotes[portfolio.indexOf(pos)];
+    const oldBeta=oldQ?.beta??(scSummary[oldSym]||scData[oldSym])?.beta??1;
+    const oldYieldVal=(scSummary[oldSym]||scData[oldSym])?.dividend??oldQ?.divYield??0;
+    const newBetaVal=newQ?.beta??newSum?.beta??1;
+    const newYieldVal=newSum?.dividend??0;
+    const newPortBeta=curBeta-(oldBeta*posWeight)+(newBetaVal*posWeight);
+    const newPortYield=curYield-(oldYieldVal*posWeight)+(newYieldVal*posWeight);
+    const betaDiff=newPortBeta-curBeta;
+    const yieldDiff=newPortYield-curYield;
+    const newPE=newSum?.pe??null;
+    const newTarget=newSum?.targetPrice??null;
+    const newUpside=newTarget&&newQ.price>0?((newTarget-newQ.price)/newQ.price*100):null;
+    const newInfo=allS2.find(s=>s.s===newSym)||{};
+    el.innerHTML=`
+    <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:12px">Risultato simulazione: rimpiazzo <span style="color:var(--r)">${oldSym}</span> con <span style="color:var(--g)">${newSym}</span></div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
+        <div class="rb">
+          <div class="rl">BETA PORTAFOGLIO</div>
+          <div style="display:flex;align-items:baseline;gap:5px;margin-top:4px">
+            <span style="font-size:13px;font-family:var(--fm);font-weight:700;color:var(--t)">${fmt(curBeta,2)}</span>
+            <span style="font-size:10px;color:var(--t3)">→</span>
+            <span style="font-size:15px;font-family:var(--fm);font-weight:700;color:${Math.abs(betaDiff)<0.05?'var(--t)':betaDiff<0?'var(--g)':'var(--r)'}">${fmt(newPortBeta,2)}</span>
+          </div>
+          <div style="font-size:9px;font-family:var(--fm);color:${betaDiff<0?'var(--g)':'var(--r)'};margin-top:2px">${betaDiff>=0?'+':''}${fmt(betaDiff,2)} beta</div>
+        </div>
+        <div class="rb">
+          <div class="rl">YIELD MEDIO</div>
+          <div style="display:flex;align-items:baseline;gap:5px;margin-top:4px">
+            <span style="font-size:13px;font-family:var(--fm);font-weight:700;color:var(--t)">${fmt(curYield*100,2)}%</span>
+            <span style="font-size:10px;color:var(--t3)">→</span>
+            <span style="font-size:15px;font-family:var(--fm);font-weight:700;color:${yieldDiff>=0?'var(--g)':'var(--r)'}">${fmt(newPortYield*100,2)}%</span>
+          </div>
+          <div style="font-size:9px;font-family:var(--fm);color:${yieldDiff>=0?'var(--g)':'var(--r)'};margin-top:2px">${yieldDiff>=0?'+':''}${fmt(yieldDiff*100,2)}% yield</div>
+        </div>
+        <div class="rb">
+          <div class="rl">${newSym} — P/E · BETA</div>
+          <div style="font-size:15px;font-family:var(--fm);font-weight:700;color:var(--t);margin-top:4px">${newPE?fmt(newPE,1):'—'} · ${fmt(newBetaVal,2)}</div>
+          <div style="font-size:9px;font-family:var(--fm);color:var(--t3);margin-top:2px">P/E · beta titolo</div>
+        </div>
+      </div>
+      ${newUpside!==null?`<div style="padding:8px 12px;background:${newUpside>=10?'rgba(16,185,129,0.1)':newUpside>=-5?'rgba(245,158,11,0.1)':'rgba(239,68,68,0.1)'};border-radius:6px;margin-bottom:8px">
+        <span style="font-size:11px;font-family:var(--fm);color:var(--t2)">Target analisti su ${newSym}: </span>
+        <span style="font-size:12px;font-family:var(--fm);font-weight:700;color:${newUpside>=10?'var(--g)':newUpside>=-5?'var(--o)':'var(--r)'}">${newUpside>=0?'+':''}${fmt(newUpside,1)}%</span>
+        <span style="font-size:10px;color:var(--t3)"> (target $${fmt(newTarget,2)} · prezzo attuale $${fmt(newQ.price,2)})</span>
+      </div>`:''}
+      <div style="padding:8px 12px;background:var(--b3);border-radius:6px;display:flex;gap:16px;flex-wrap:wrap">
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Tipo: <strong style="color:var(--t)">${newInfo.t||'growth'}</strong></span>
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Settore: <strong style="color:var(--t)">${newInfo.sec||newSum?.sector||'—'}</strong></span>
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Mercato: <strong style="color:var(--t)">${newInfo.mkt||'US'}</strong></span>
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Prezzo: <strong style="color:var(--t)">$${fmt(newQ.price,2)}</strong></span>
+      </div>
+    </div>`;
+  }catch(e){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">Errore: ${e.message}</div>`;}
+}
+
+/* ══════════════════════════════════════════
    DARK MODE
 ══════════════════════════════════════════ */
 function toggleDark(){
