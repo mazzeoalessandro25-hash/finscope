@@ -6907,6 +6907,57 @@ async function loadRiskMetrics(){
   `;
 }
 
+  // Draw Monte Carlo fan chart
+  requestAnimationFrame(()=>{
+    const mc=document.getElementById('mc-canvas');
+    if(!mc)return;
+    const W=mc.clientWidth||600,H=mc.clientHeight||180;
+    mc.width=W*window.devicePixelRatio;mc.height=H*window.devicePixelRatio;
+    const ctx=mc.getContext('2d');ctx.scale(window.devicePixelRatio,window.devicePixelRatio);
+    const pad={t:12,r:16,b:28,l:52};
+    const iw=W-pad.l-pad.r,ih=H-pad.t-pad.b;
+    const allVals=[...mcPaths.p10,...mcPaths.p90];
+    const rawMin=Math.min(...allVals),rawMax=Math.max(...allVals);
+    const minV=rawMin*0.97,maxV=rawMax*1.03;
+    const xScale=i=>pad.l+i/MC_STEPS*iw;
+    const yScale=v=>pad.t+ih-(v-minV)/(maxV-minV)*ih;
+    // Fill bands
+    const fillBand=(upper,lower,color)=>{
+      ctx.beginPath();
+      upper.forEach((v,i)=>i===0?ctx.moveTo(xScale(i),yScale(v)):ctx.lineTo(xScale(i),yScale(v)));
+      for(let i=lower.length-1;i>=0;i--)ctx.lineTo(xScale(i),yScale(lower[i]));
+      ctx.closePath();ctx.fillStyle=color;ctx.fill();
+    };
+    fillBand(mcPaths.p90,mcPaths.p10,'rgba(16,185,129,0.10)');
+    fillBand(mcPaths.p75,mcPaths.p25,'rgba(16,185,129,0.22)');
+    // Median line
+    ctx.beginPath();
+    mcPaths.p50.forEach((v,i)=>i===0?ctx.moveTo(xScale(i),yScale(v)):ctx.lineTo(xScale(i),yScale(v)));
+    ctx.strokeStyle='#10B981';ctx.lineWidth=2;ctx.stroke();
+    // Break-even baseline
+    const baseY=yScale(1);
+    if(baseY>=pad.t&&baseY<=pad.t+ih){
+      ctx.beginPath();ctx.moveTo(pad.l,baseY);ctx.lineTo(W-pad.r,baseY);
+      ctx.strokeStyle='rgba(239,68,68,0.5)';ctx.lineWidth=1;ctx.setLineDash([4,4]);ctx.stroke();ctx.setLineDash([]);
+      ctx.font='9px IBM Plex Mono,monospace';ctx.fillStyle='rgba(239,68,68,0.8)';ctx.textAlign='left';
+      ctx.fillText('break-even',pad.l+3,baseY-3);
+    }
+    // Y axis labels
+    ctx.fillStyle='rgba(132,153,176,0.8)';ctx.font='9px IBM Plex Mono,monospace';ctx.textAlign='right';
+    [minV,1,maxV].forEach(v=>{
+      const y=yScale(v);
+      if(y>=pad.t&&y<=pad.t+ih)ctx.fillText(`${v>=1?'+':''}${fmt((v-1)*100,0)}%`,pad.l-4,y+3);
+    });
+    // X axis labels
+    ctx.textAlign='center';
+    [0,5,10,15,20].forEach(i=>{
+      const month=Math.round(i/MC_STEPS*12);
+      ctx.fillStyle='rgba(132,153,176,0.8)';
+      ctx.fillText(month===0?'oggi':month+'m',xScale(i),H-pad.b+14);
+    });
+  });
+}
+
 /* ══════════════════════════════════════════
    REBALANCING TOOL
 ══════════════════════════════════════════ */
