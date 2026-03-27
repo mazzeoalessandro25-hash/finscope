@@ -4274,6 +4274,347 @@ async function renderPortfolio(){
   }
 }
 
+// ══════════════════════════════════════════════════════
+// NEW 3-COL PORTFOLIO FUNCTIONS
+// ══════════════════════════════════════════════════════
+
+const KNOWN_ETF=['SPY','QQQ','IWM','EFA','EEM','VTI','VOO','VEA','VWO','AGG','BND','GLD','SLV','USO','XLF','XLK','XLE','XLV','XLI','XLU','XLP','XLY','XLB','XLRE','XLC','ARKK','ARKG','ARKW','ARKF','ARKQ','TQQQ','SQQQ','UVXY','VXX','TLT','IEF','SHY','HYG','LQD','MBB','MINT','NEAR','BNDX','VXUS','VNQ','IYR','SCHD','DGRO','VYM','HDV','DVY','NOBL','SPHD','SPYD','SPLV','USMV','QUAL','MTUM','VLUE','SIZE','VIG','SDY','DTD','FVD','OUSA','DGRW','RDIV'];
+const KNOWN_CRYPTO_SUFFIX=['-USD','-EUR','-USDT','-BTC'];
+
+function detectPortCat(sym){
+  if(!sym)return'stock';
+  if(sym.endsWith('=F'))return'commodity';
+  if(KNOWN_CRYPTO_SUFFIX.some(s=>sym.endsWith(s)))return'crypto';
+  if(KNOWN_ETF.includes(sym.toUpperCase()))return'etf';
+  return'stock';
+}
+
+function getPortCurrency(sym){
+  const isEU=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||
+    sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||
+    sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L');
+  return isEU?{code:'EUR',sym:'€'}:{code:'USD',sym:'$'};
+}
+
+function portFmtPrice(p){
+  if(p==null)return'—';
+  if(p<0.01)return p.toFixed(6);
+  if(p<1)return p.toFixed(4);
+  if(p<10)return p.toFixed(3);
+  return p.toFixed(2);
+}
+
+function setPortCat(cat,btn){
+  portCatFilter=cat;
+  document.querySelectorAll('.port-cat-tab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  // Re-render list with filter
+  const el=document.getElementById('port-list');
+  if(!el)return;
+  el.querySelectorAll('.port-asset-item').forEach(item=>{
+    const itemCat=item.dataset.cat||'stock';
+    item.style.display=(cat==='all'||itemCat===cat)?'':'none';
+  });
+}
+
+function renderPortKpiBar(items,quotes,eurUsd){
+  if(!items.length){
+    ['pkpi-total','pkpi-pnl','pkpi-count','pkpi-best'].forEach(id=>{
+      const e=document.getElementById(id);if(e)e.textContent='—';
+    });
+    return;
+  }
+  const eu=eurUsd||1.08;
+  let totalVal=0,totalInv=0,bestPct=-Infinity,bestSym='';
+  items.forEach((item,i)=>{
+    const q=quotes[i];
+    const cur=getPortCurrency(item.sym);
+    const price=q?.price??item.buyPrice;
+    const val=item.qty*price;
+    const inv=item.qty*item.buyPrice;
+    const mult=cur.code==='EUR'?eu:1;
+    totalVal+=val*mult;totalInv+=inv*mult;
+    const pct=inv>0?((price-item.buyPrice)/item.buyPrice*100):0;
+    if(pct>bestPct){bestPct=pct;bestSym=item.sym;}
+  });
+  const pnl=totalVal-totalInv;
+  const pnlPct=totalInv>0?(pnl/totalInv*100):0;
+  const up=pnl>=0;
+  const setT=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const setC=(id,v,c)=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.color=c||'';}};
+  setT('pkpi-total','$'+fmt(totalVal,0));
+  setT('pkpi-total-sub','inv. $'+fmt(totalInv,0));
+  setC('pkpi-pnl',(up?'+':'')+fmt(pnl,0)+' ('+fmt(pnlPct,1)+'%)',up?'var(--g)':'var(--r)');
+  setT('pkpi-count',items.length+' titol'+(items.length===1?'o':'i'));
+  setC('pkpi-best',bestSym,bestPct>=0?'var(--g)':'var(--r)');
+  setT('pkpi-best-sub',(bestPct>=0?'+':'')+fmt(bestPct,1)+'%');
+}
+
+function selectPortAsset(idx,silent){
+  const item=portfolio[idx];
+  if(!item)return;
+  portSelectedSym=item.sym;
+  // Highlight selected
+  document.querySelectorAll('.port-asset-item').forEach(el=>el.classList.remove('selected'));
+  const el=document.getElementById('port-item-'+idx);
+  if(el)el.classList.add('selected');
+  // Show panel
+  const empty=document.getElementById('port-panel-empty');
+  const panel=document.getElementById('port-panel-analysis');
+  if(empty)empty.style.display='none';
+  if(panel)panel.style.display='';
+  // Header
+  const q=portQuotes[idx]||null;
+  updatePortAnalysisHeader(item,q,idx);
+  // Chart
+  if(!silent){loadPortChart(item.sym,portChartRange);}
+  // Metrics + news
+  loadPortMetrics(item.sym);
+  loadPortNews(item.sym);
+}
+
+function updatePortAnalysisHeader(item,q,idx){
+  const cur=getPortCurrency(item.sym);
+  const price=q?.price??item.buyPrice;
+  const chgAbs=q?.prev?price-q.prev:null;
+  const chgPct_=chgAbs!=null&&q?.prev?(chgAbs/q.prev*100):null;
+  const up=chgAbs==null||chgAbs>=0;
+  const name=item.name||portNameCache[item.sym]||q?.name||item.sym;
+  const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  const setCol=(id,v,c)=>{const e=document.getElementById(id);if(e){e.textContent=v;e.style.color=c||'var(--t)';}};
+  setEl('port-analysis-name',name);
+  setEl('port-analysis-sym',item.sym+' · '+(item.cat||detectPortCat(item.sym)).toUpperCase());
+  setCol('port-analysis-price',cur.sym+portFmtPrice(price));
+  setCol('port-analysis-chg',chgPct_!=null?(up?'+':'')+chgPct_.toFixed(2)+'%':'—',up?'var(--g)':'var(--r)');
+  // Logo
+  const logo=document.getElementById('port-analysis-logo');
+  if(logo){
+    logo.src=`https://logo.clearbit.com/${(name||item.sym).replace(/ /g,'').toLowerCase()}.com`;
+    logo.style.display='';
+    logo.onerror=()=>{logo.style.display='none';};
+  }
+  // Position summary
+  const inv=item.qty*item.buyPrice;
+  const val=item.qty*price;
+  const pnl_=val-inv;
+  const pnlPct_=inv>0?(pnl_/inv*100):0;
+  const posEl=document.getElementById('port-analysis-pos');
+  if(posEl)posEl.innerHTML=`
+    <div class="port-pos-item"><div class="port-pos-lbl">Qtà</div><div class="port-pos-val">${item.qty}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">Prezzo acq.</div><div class="port-pos-val">${cur.sym}${fmt(item.buyPrice,2)}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">Valore</div><div class="port-pos-val">${cur.sym}${fmt(val,0)}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">P&L</div><div class="port-pos-val" style="color:${pnl_>=0?'var(--g)':'var(--r)'}">${pnl_>=0?'+':''}${cur.sym}${fmt(Math.abs(pnl_),0)} (${pnlPct_>=0?'+':''}${fmt(pnlPct_,1)}%)</div></div>
+  `;
+}
+
+async function loadPortChart(sym,range){
+  const el=document.getElementById('port-chart');
+  if(!el)return;
+  el.innerHTML='<div class="ld" style="padding:20px;text-align:center">Caricamento...</div>';
+  if(portChart){try{portChart.remove();}catch(e){}portChart=null;}
+  try{
+    const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=history&range=${range}`);
+    const d=await r.json();
+    const pts=d?.points||[];
+    if(!pts.length){el.innerHTML='<div class="ld" style="padding:20px;text-align:center">Nessun dato disponibile</div>';return;}
+    el.innerHTML='';
+    const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+    const chart=LightweightCharts.createChart(el,{
+      width:el.clientWidth||600,height:260,
+      layout:{background:{color:isDark?'#1e293b':'#f8fafc'},textColor:isDark?'#94a3b8':'#475569'},
+      grid:{vertLines:{color:isDark?'#334155':'#e2e8f0'},horzLines:{color:isDark?'#334155':'#e2e8f0'}},
+      rightPriceScale:{borderColor:isDark?'#334155':'#cbd5e1'},
+      timeScale:{borderColor:isDark?'#334155':'#cbd5e1',timeVisible:true,secondsVisible:false},
+    });
+    let series;
+    if(portChartType==='candle'){
+      series=chart.addCandlestickSeries({upColor:'#059669',downColor:'#DC2626',borderUpColor:'#059669',borderDownColor:'#DC2626',wickUpColor:'#059669',wickDownColor:'#DC2626'});
+      series.setData(pts.map(p=>({time:p.time,open:p.open,high:p.high,low:p.low,close:p.close})).filter(p=>p.open&&p.close));
+    } else {
+      series=chart.addLineSeries({color:'#1A56C4',lineWidth:2,crosshairMarkerVisible:true,lastValueVisible:true,priceLineVisible:false});
+      series.setData(pts.map(p=>({time:p.time,value:p.close})).filter(p=>p.value));
+    }
+    chart.timeScale().fitContent();
+    portChart=chart;
+    const ro=new ResizeObserver(()=>{if(el.clientWidth)chart.applyOptions({width:el.clientWidth});});
+    ro.observe(el);
+  }catch(e){el.innerHTML='<div class="ld" style="padding:20px;text-align:center">Errore caricamento</div>';}
+}
+
+function setPortChartType(type,btn){
+  portChartType=type;
+  document.querySelectorAll('.port-type-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(portSelectedSym)loadPortChart(portSelectedSym,portChartRange);
+}
+
+function setPortRange(range,btn){
+  portChartRange=range;
+  document.querySelectorAll('.port-range-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(portSelectedSym)loadPortChart(portSelectedSym,portChartRange);
+}
+
+async function loadPortMetrics(sym){
+  const el=document.getElementById('port-metrics');
+  if(!el)return;
+  el.innerHTML='<div class="ld" style="padding:10px;text-align:center;font-size:11px">Caricamento metriche...</div>';
+  try{
+    const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=summary`);
+    const d=await r.json();
+    if(d.error){el.innerHTML='';return;}
+    const metrics=[
+      {lbl:'P/E',val:d.pe!=null?d.pe.toFixed(1):'—'},
+      {lbl:'P/E Fwd',val:d.forwardPE!=null?d.forwardPE.toFixed(1):'—'},
+      {lbl:'P/Book',val:d.pb!=null?d.pb.toFixed(2):'—'},
+      {lbl:'Beta',val:d.beta!=null?d.beta.toFixed(2):'—'},
+      {lbl:'52W Max',val:d.week52High!=null?'$'+fmt(d.week52High,2):'—'},
+      {lbl:'52W Min',val:d.week52Low!=null?'$'+fmt(d.week52Low,2):'—'},
+      {lbl:'Div Yield',val:d.dividend!=null?(d.dividend*100).toFixed(2)+'%':'—'},
+      {lbl:'Mkt Cap',val:d.marketCap!=null?fmtBig(d.marketCap):'—'},
+      {lbl:'ROE',val:d.roe!=null?(d.roe*100).toFixed(1)+'%':'—'},
+    ];
+    el.innerHTML=metrics.map(m=>`<div class="port-metric"><div class="port-pos-lbl">${m.lbl}</div><div class="port-pos-val">${m.val}</div></div>`).join('');
+  }catch(e){el.innerHTML='';}
+}
+
+async function loadPortNews(sym){
+  const el=document.getElementById('port-news');
+  if(!el)return;
+  el.innerHTML='<div class="ld" style="padding:8px;font-size:11px">Caricamento news...</div>';
+  try{
+    const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=news`);
+    const d=await r.json();
+    const news=(d?.news||[]).slice(0,3);
+    if(!news.length){el.innerHTML='';return;}
+    el.innerHTML='<div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.6px;margin-bottom:8px">ULTIME NEWS</div>'+
+      news.map(n=>`
+      <div class="port-news-mini" onclick="window.open('${n.link||'#'}','_blank')" style="cursor:pointer">
+        ${n.thumbnail?`<img src="${n.thumbnail}" style="width:44px;height:44px;object-fit:cover;border-radius:6px;flex-shrink:0" onerror="this.style.display='none'"/>`:''}
+        <div style="min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--t);line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${n.title}</div>
+          <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px">${n.publisher||''}</div>
+        </div>
+      </div>`).join('');
+  }catch(e){el.innerHTML='';}
+}
+
+function setPortAllocView(view,btn){
+  portAllocView=view;
+  document.getElementById('palloc-cat')?.classList.toggle('active',view==='cat');
+  document.getElementById('palloc-pos')?.classList.toggle('active',view==='pos');
+  renderPortAlloc(portfolio,portQuotes);
+}
+
+function renderPortAlloc(items,quotes){
+  const canvas=document.getElementById('port-alloc-chart');
+  const legend=document.getElementById('port-alloc-legend');
+  if(!canvas||!legend)return;
+  const PALETTE=['#1A56C4','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#65A30D','#DC2626','#F59E0B','#10B981'];
+  let labels=[],values=[];
+  if(portAllocView==='cat'){
+    const cats={stock:0,etf:0,crypto:0,commodity:0};
+    items.forEach((item,i)=>{
+      const q=quotes[i];const price=q?.price??item.buyPrice;
+      const cat=item.cat||detectPortCat(item.sym);
+      cats[cat]=(cats[cat]||0)+item.qty*price;
+    });
+    Object.entries(cats).filter(([,v])=>v>0).forEach(([k,v])=>{labels.push(k.charAt(0).toUpperCase()+k.slice(1));values.push(v);});
+  } else {
+    const sorted=[...items.map((item,i)=>({sym:item.sym,val:item.qty*(quotes[i]?.price??item.buyPrice)}))].sort((a,b)=>b.val-a.val).slice(0,8);
+    sorted.forEach(e=>{labels.push(e.sym);values.push(e.val);});
+  }
+  const total=values.reduce((a,b)=>a+b,0);
+  if(portAllocCI){portAllocCI.destroy();portAllocCI=null;}
+  if(!values.length)return;
+  portAllocCI=new Chart(canvas.getContext('2d'),{
+    type:'doughnut',
+    data:{labels,datasets:[{data:values,backgroundColor:PALETTE.slice(0,values.length),borderWidth:0,hoverOffset:4}]},
+    options:{cutout:'70%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${total>0?Math.round(ctx.raw/total*100):0}%`}}},animation:{duration:400}}
+  });
+  legend.innerHTML=labels.map((l,i)=>`<div class="port-alloc-row"><div style="width:8px;height:8px;border-radius:50%;background:${PALETTE[i]};flex-shrink:0"></div><div style="font-size:10px;font-family:var(--fm);color:var(--t2);flex:1">${l}</div><div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t)">${total>0?Math.round(values[i]/total*100):0}%</div></div>`).join('');
+}
+
+function renderPortRisk(items,quotes){
+  const el=document.getElementById('port-risk');
+  if(!el)return;
+  if(!items.length){el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Aggiungi titoli</div>';return;}
+  let usdVal=0,eurVal=0,bestSym='',bestPct=-Infinity,worstSym='',worstPct=Infinity;
+  const cats={};
+  items.forEach((item,i)=>{
+    const q=quotes[i];const price=q?.price??item.buyPrice;
+    const val=item.qty*price;const cur=getPortCurrency(item.sym);
+    if(cur.code==='EUR')eurVal+=val;else usdVal+=val;
+    const pct=item.buyPrice>0?((price-item.buyPrice)/item.buyPrice*100):0;
+    if(pct>bestPct){bestPct=pct;bestSym=item.sym;}
+    if(pct<worstPct){worstPct=pct;worstSym=item.sym;}
+    const cat=item.cat||detectPortCat(item.sym);
+    cats[cat]=(cats[cat]||0)+1;
+  });
+  const total=usdVal+eurVal;
+  const usdPct=total>0?Math.round(usdVal/total*100):0;
+  const eurPct=total>0?Math.round(eurVal/total*100):0;
+  const divers=Object.keys(cats).length;
+  el.innerHTML=`
+    <div class="port-risk-item"><span class="port-pos-lbl">Esposizione USD</span><span class="port-pos-val">${usdPct}%</span></div>
+    <div class="port-risk-item"><span class="port-pos-lbl">Esposizione EUR</span><span class="port-pos-val">${eurPct}%</span></div>
+    <div class="port-risk-item"><span class="port-pos-lbl">Categorie</span><span class="port-pos-val">${divers} tipi</span></div>
+    <div class="port-risk-item"><span class="port-pos-lbl">Migliore</span><span class="port-pos-val" style="color:var(--g)">${bestSym} ${bestPct>=0?'+':''}${fmt(bestPct,1)}%</span></div>
+    <div class="port-risk-item"><span class="port-pos-lbl">Peggiore</span><span class="port-pos-val" style="color:var(--r)">${worstSym} ${worstPct>=0?'+':''}${fmt(worstPct,1)}%</span></div>
+  `;
+}
+
+// ── Autocomplete search for add form ──
+function onPortSearchInput(){
+  clearTimeout(portSearchDelay);
+  const val=(document.getElementById('port-search')?.value||'').trim();
+  if(val.length<2){hidePortDropdown();return;}
+  portSearchDelay=setTimeout(()=>fetchPortSuggestions(val),300);
+}
+
+function onPortSearchKey(e){
+  if(e.key==='Enter'){
+    const val=(document.getElementById('port-search')?.value||'').toUpperCase().trim();
+    if(val)portSelectManual(val);
+    hidePortDropdown();
+  }
+  if(e.key==='Escape')hidePortDropdown();
+}
+
+async function fetchPortSuggestions(q){
+  try{
+    const r=await fetch(`/api/quote?type=search&q=${encodeURIComponent(q)}`);
+    const d=await r.json();
+    const items=d?.quotes||[];
+    const dd=document.getElementById('port-dd');
+    if(!dd)return;
+    if(!items.length){dd.style.display='none';return;}
+    dd.innerHTML=items.map(x=>`<div class="port-dd-item" onmousedown="portSelectTicker('${x.symbol}','${(x.name||x.symbol).replace(/'/g,"\\'")}')"><span style="font-weight:700;font-family:var(--fm)">${x.symbol}</span> <span style="color:var(--t3);font-size:11px">${x.name||''}</span></div>`).join('');
+    dd.style.display='block';
+  }catch(e){hidePortDropdown();}
+}
+
+function portSelectTicker(sym,name){
+  const inp=document.getElementById('port-search');
+  if(inp)inp.value=sym;
+  portNameCache[sym]=name;
+  hidePortDropdown();
+  document.getElementById('port-qty')?.focus();
+}
+
+function portSelectManual(sym){
+  portNameCache[sym]=portNameCache[sym]||sym;
+}
+
+function hidePortDropdown(){
+  const dd=document.getElementById('port-dd');
+  if(dd)dd.style.display='none';
+}
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#port-search')&&!e.target.closest('#port-dd'))hidePortDropdown();
+});
+
 function checkPortAlertBadges(quotes){
   if(!portfolio.length||!quotes?.length)return;
   portfolio.forEach((item,i)=>{
