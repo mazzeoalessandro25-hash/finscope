@@ -4187,6 +4187,22 @@ async function renderPortfolio(){
   setS('psb-count', portfolio.length+'');
   setS('psb-rate', fmt(eurUsd,4));
 
+  // ── Variazione giornaliera portafoglio ──
+  let dailyPnlUSD=0;
+  const dailyItems=portfolio.map((item,i)=>{
+    const q=quotes[i];
+    if(!q||!q.prev||!q.price)return null;
+    const fx=(item.currency==='EUR')?eurUsd:1;
+    const chgPct=(q.price-q.prev)/q.prev*100;
+    const chgUSD=item.qty*(q.price-q.prev)*fx;
+    dailyPnlUSD+=chgUSD;
+    return{sym:item.sym,name:item.name||q.name||item.sym,chgPct,chgUSD,price:q.price,prev:q.prev};
+  }).filter(Boolean);
+  const dailyValBefore=totalValUSD-dailyPnlUSD;
+  const dailyPnlPct=dailyValBefore>0?(dailyPnlUSD/dailyValBefore*100):0;
+  const dailyUp=dailyPnlUSD>=0;
+  setS('psb-oggi',(dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
+
   const _totalValDisplay=_isEUR?'€'+fmt(totalValEUR,0):'$'+fmt(totalValUSD,0);
   const _totalPnlDisplay=(_heroUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
   const holdingEntries=portfolio.map((item,i)=>[item.sym,item.qty*item.buyPrice]).sort((a,b)=>b[1]-a[1]);
