@@ -4512,98 +4512,140 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   const absUSD = Math.abs(totalChgUSD).toFixed(0);
   const date = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
 
-  // ── Contesto macro: indici + news ──
-  const fmtIdx=(d)=>{
-    if(!d?.price||!d?.prev) return null;
-    const chg=(d.price-d.prev)/d.prev*100;
-    return `${chg>=0?'+':''}${chg.toFixed(2)}%`;
-  };
+  // ── Dati indici ──
   const sp=indicesMap['^GSPC'], nq=indicesMap['^IXIC'], dj=indicesMap['^DJI'];
   const gc=indicesMap['GC=F'], cl=indicesMap['CL=F'];
-  const spStr=fmtIdx(sp), nqStr=fmtIdx(nq), djStr=fmtIdx(dj);
-  const gcStr=fmtIdx(gc), clStr=fmtIdx(cl);
+  const idxChg=d=>d?.price&&d?.prev?(d.price-d.prev)/d.prev*100:null;
+  const spC=idxChg(sp), nqC=idxChg(nq), djC=idxChg(dj), gcC=idxChg(gc), clC=idxChg(cl);
+  const equityVals=[spC,nqC,djC].filter(v=>v!=null);
+  const avgIdx=equityVals.length?equityVals.reduce((a,b)=>a+b,0)/equityVals.length:0;
+  const s=v=>`${v>=0?'+':''}${v.toFixed(2)}%`;
 
-  let indicesLine='';
-  const idxParts=[];
-  if(spStr) idxParts.push(`S&P 500 ${spStr}`);
-  if(nqStr) idxParts.push(`Nasdaq ${nqStr}`);
-  if(djStr) idxParts.push(`Dow Jones ${djStr}`);
-  if(gcStr) idxParts.push(`Oro ${gcStr}`);
-  if(clStr) idxParts.push(`Petrolio ${clStr}`);
-  if(idxParts.length) indicesLine=`Sui principali mercati: ${idxParts.join(', ')}. `;
+  // ── SEZIONE 1: Contesto di mercato (più articolato) ──
+  let macro='';
 
-  // Sentiment mercato dal confronto indici
-  const idxVals=[sp,nq,dj].filter(Boolean).map(d=>(d.price-d.prev)/d.prev*100);
-  const avgIdx=idxVals.length?idxVals.reduce((a,b)=>a+b,0)/idxVals.length:0;
-  let mktSentiment='';
-  if(idxVals.length){
-    if(avgIdx>1) mktSentiment='Giornata di risk-on sui mercati globali, con gli indici principali in deciso rialzo. ';
-    else if(avgIdx>0.2) mktSentiment='Seduta moderatamente positiva per i mercati azionari. ';
-    else if(avgIdx>-0.2) mktSentiment='Mercati incerti nella seduta odierna, senza una direzione definita. ';
-    else if(avgIdx>-1) mktSentiment='Pressioni ribassiste sui mercati azionari nel corso della giornata. ';
-    else mktSentiment='Giornata di risk-off con vendite diffuse sui mercati globali. ';
+  // Sentimento generale
+  if(equityVals.length){
+    if(avgIdx>1.5)       macro+='La seduta odierna si è caratterizzata per un forte ottimismo sui mercati azionari globali, con tutti i principali indici in deciso rialzo. ';
+    else if(avgIdx>0.5)  macro+='I mercati azionari hanno archiviato una seduta positiva, con acquisti diffusi su più settori. ';
+    else if(avgIdx>0.1)  macro+='Giornata leggermente costruttiva sui mercati, con gli indici azionari che hanno chiuso in moderato progresso. ';
+    else if(avgIdx>-0.1) macro+='Una seduta priva di direttive chiare: i mercati hanno oscillato attorno alla parità senza trovare un catalizzatore convincente. ';
+    else if(avgIdx>-0.5) macro+='Seduta in rosso per i mercati azionari, con pressioni di vendita che hanno prevalso nel corso della giornata. ';
+    else if(avgIdx>-1.5) macro+='I mercati hanno accusato un calo significativo, con gli investitori che hanno preferito ridurre l\'esposizione al rischio. ';
+    else                  macro+='Giornata di forte risk-off sui mercati globali: le vendite sono state generalizzate e gli indici principali hanno subito perdite rilevanti. ';
   }
 
-  // Notizie macro
-  let macroNewsText='';
-  if(macroNews.length>0){
-    macroNewsText='Le notizie principali di giornata: ';
-    macroNewsText+=macroNews.slice(0,3).map(n=>`"${n.title}"`).join('; ')+'. ';
+  // Divergenza Nasdaq vs S&P (tech vs mercato ampio)
+  if(spC!=null && nqC!=null){
+    const diff=nqC-spC;
+    if(diff>0.6)       macro+=`Il comparto tecnologico ha guidato i rialzi, con il Nasdaq (${s(nqC)}) che ha sovraperformato l'S&P 500 (${s(spC)}). `;
+    else if(diff<-0.6) macro+=`Il settore tech ha mostrato debolezza relativa: il Nasdaq (${s(nqC)}) ha sottoperformato rispetto all'S&P 500 (${s(spC)}). `;
+    else if(equityVals.length>=2) macro+=`L'S&P 500 (${s(spC)}) e il Nasdaq (${s(nqC)}) si sono mossi in modo coerente, senza divergenze settoriali evidenti. `;
   }
 
-  const macroSection=`${mktSentiment}${indicesLine}${macroNewsText}`.trim();
-
-  // ── Andamento portafoglio ──
-  let mood;
-  if(Math.abs(totalChgPct)<0.3) mood='chiuso sostanzialmente stabile';
-  else if(up) mood=totalChgPct>1.5?'chiuso in decisa progressione':'avanzato moderatamente';
-  else mood=totalChgPct<-1.5?'subito una netta flessione':'ceduto leggermente';
-
-  let overallText=`Il portafoglio ha ${mood} con una variazione di ${up?'+':'−'}${absPct}% (${up?'+':'−'}$${absUSD}). `;
-  if(nUp===tot) overallText+=`Tutti i ${tot} titoli hanno terminato in positivo.`;
-  else if(nDown===tot) overallText+=`Tutti i ${tot} titoli hanno chiuso in territorio negativo.`;
-  else overallText+=`${nUp} titol${nUp===1?'o':'i'} in rialzo e ${nDown} in ribasso su ${tot} posizioni.`;
-
-  // Coerenza con mercato
-  if(idxVals.length){
-    if(up && avgIdx<-0.3) overallText+=' Il portafoglio ha mostrato resilienza rispetto al mercato generale.';
-    else if(!up && avgIdx>0.3) overallText+=' Il portafoglio ha sottoperformato il mercato nella seduta odierna.';
+  // Oro e Petrolio: lettura macro
+  if(gcC!=null || clC!=null){
+    let commodityLine='';
+    if(gcC!=null && clC!=null){
+      if(gcC>0.5 && avgIdx<0)    commodityLine=`L'oro ha guadagnato terreno (${s(gcC)}), confermando la tendenza difensiva degli investitori in una giornata difficile per gli azionari. `;
+      else if(gcC>0.5 && avgIdx>0) commodityLine=`Interessante la performance dell'oro (${s(gcC)}) che sale anche in una giornata positiva per le azioni, segnale di attenzione verso i rischi geopolitici o inflattivi. `;
+      else if(gcC<-0.5 && avgIdx>0.5) commodityLine=`Il calo dell'oro (${s(gcC)}) in parallelo al rialzo azionario riflette un riduzione dell'avversione al rischio. `;
+      if(clC>1)       commodityLine+=`Il petrolio ha accelerato (${s(clC)}), un fattore che potrebbe pesare sui costi aziendali e alimentare preoccupazioni inflazionistiche. `;
+      else if(clC<-1) commodityLine+=`Il petrolio è sceso (${s(clC)}), una notizia positiva sul fronte dell'inflazione energetica. `;
+    } else if(gcC!=null){
+      if(Math.abs(gcC)>0.4) commodityLine=`L'oro ha registrato una variazione di ${s(gcC)}, movimento da tenere in considerazione nel quadro macro complessivo. `;
+    } else if(clC!=null){
+      if(Math.abs(clC)>0.8) commodityLine=`Il petrolio si è mosso di ${s(clC)} nella giornata, con potenziali implicazioni sulle aspettative di inflazione. `;
+    }
+    macro+=commodityLine;
   }
 
-  // ── Titoli in evidenza ──
+  // ── SEZIONE 2: Il tuo portafoglio ──
+  let portText='';
+
+  // Apertura: variazione assoluta e relativa
+  if(Math.abs(totalChgPct)<0.3)
+    portText+=`Il portafoglio ha chiuso la giornata pressoché invariato (${up?'+':'−'}${absPct}%), con movimenti limitati che non hanno alterato in modo significativo il valore complessivo. `;
+  else if(up)
+    portText+=totalChgPct>1.5
+      ? `Giornata decisamente positiva per il portafoglio, che ha guadagnato il ${absPct}% equivalente a +$${absUSD}. `
+      : `Il portafoglio ha chiuso in rialzo del ${absPct}% (+$${absUSD}), capitalizzando il tono positivo della seduta. `;
+  else
+    portText+=totalChgPct<-1.5
+      ? `Il portafoglio ha subito una flessione del ${absPct}% (−$${absUSD}), una delle sedute più negative del periodo recente. `
+      : `Giornata di correzione per il portafoglio, che cede il ${absPct}% (−$${absUSD}). `;
+
+  // Ampiezza: quanti titoli su/giù
+  if(nUp===tot)       portText+=`La performance è stata ampiamente condivisa: tutti i ${tot} titoli in portafoglio hanno terminato in verde. `;
+  else if(nDown===tot) portText+=`La pressione è stata uniforme: nessun titolo è riuscito a chiudere in positivo nella seduta odierna. `;
+  else {
+    const dom=nUp>nDown?'maggioranza':'minoranza';
+    portText+=`La ${dom} dei titoli ha chiuso in positivo: ${nUp} in rialzo e ${nDown} in ribasso su ${tot} posizioni. `;
+  }
+
+  // Confronto col mercato
+  if(equityVals.length){
+    const diff=totalChgPct-avgIdx;
+    if(diff>0.5)       portText+=`Il portafoglio ha sovraperformato il mercato di circa ${diff.toFixed(1)} punti percentuali, un risultato che evidenzia una buona selezione dei titoli nella giornata. `;
+    else if(diff<-0.5) portText+=`Il portafoglio ha sottoperformato rispetto agli indici generali di circa ${Math.abs(diff).toFixed(1)} punti percentuali. `;
+    else               portText+=`Il portafoglio si è mosso sostanzialmente in linea con l'andamento generale del mercato. `;
+  }
+
+  // ── SEZIONE 3: Titoli in evidenza (più testo per asset) ──
   let evidenzaText='';
   const discussed=new Set();
-  const commentAsset=(a)=>{
+  const commentAsset=(a,role)=>{
     if(!a||discussed.has(a.sym)) return '';
     discussed.add(a.sym);
     const assetUp=a.chgPct>=0;
     const chgStr=`${assetUp?'+':''}${a.chgPct.toFixed(2)}%`;
     const usdStr=`${a.chgUSD>=0?'+':''}$${Math.abs(a.chgUSD).toFixed(0)}`;
-    const name=a.name&&a.name!==a.sym?a.name:a.sym;
-    let line=`<strong>${a.sym}</strong> (${name}): ${chgStr} (${usdStr})`;
+    const name=a.name&&a.name!==a.sym?`${a.sym} (${a.name})`:`<strong>${a.sym}</strong>`;
     const news=newsMap[a.sym]||[];
-    if(news[0]) line+=`. "${news[0].title}"`;
-    if(news[1]) line+=`. "${news[1].title}"`;
-    return line+'. ';
+
+    let line=`<strong>${a.sym}</strong>`;
+    if(a.name&&a.name!==a.sym) line+=` — ${a.name}`;
+    line+=`: ${chgStr} (${usdStr}). `;
+
+    // Interpretazione della variazione
+    if(role==='best'){
+      if(a.chgPct>3)       line+=`Una performance eccellente che ha dato un contributo determinante al risultato del portafoglio. `;
+      else if(a.chgPct>1)  line+=`Un buon contributo alla performance giornaliera complessiva. `;
+      else                  line+=`Ha chiuso in leggero rialzo, contribuendo positivamente al portafoglio. `;
+    } else if(role==='worst'){
+      if(a.chgPct<-3)      line+=`Una flessione rilevante che ha pesato in modo significativo sul portafoglio. `;
+      else if(a.chgPct<-1) line+=`Ha frenato la performance complessiva con un calo moderato. `;
+      else                  line+=`Piccolo passo indietro nella seduta odierna. `;
+    }
+
+    // Notizie specifiche del titolo
+    if(news[0]) line+=`In evidenza: "${news[0].title}". `;
+    if(news[1]) line+=`Inoltre: "${news[1].title}". `;
+
+    return line;
   };
-  evidenzaText+=commentAsset(best);
-  if(worst&&worst.sym!==best?.sym&&Math.abs(worst.chgPct)>0.3) evidenzaText+=commentAsset(worst);
-  const third=sorted.find(a=>!discussed.has(a.sym)&&Math.abs(a.chgPct)>0.5);
-  if(third) evidenzaText+=commentAsset(third);
 
-  // ── Sintesi ──
-  let sintesi;
-  if(Math.abs(totalChgPct)<0.3) sintesi='Una seduta interlocutoria: il portafoglio non registra variazioni significative.';
-  else if(up) sintesi=totalChgPct>1?'Giornata decisamente positiva per il portafoglio.':'Il portafoglio chiude in territorio positivo, in linea con il tono generale dei mercati.';
-  else sintesi=totalChgPct<-1?'Seduta difficile: le perdite sono rilevanti e richiedono attenzione.':'Leggero arretramento del portafoglio, in una giornata senza grandi direttive.';
+  evidenzaText+=commentAsset(best,'best');
+  if(worst&&worst.sym!==best?.sym&&Math.abs(worst.chgPct)>0.2) evidenzaText+=commentAsset(worst,'worst');
+  const third=sorted.find(a=>!discussed.has(a.sym)&&Math.abs(a.chgPct)>0.4);
+  if(third) evidenzaText+=commentAsset(third,'other');
 
-  // Sentiment dal confronto indici (va nel testo portafoglio, non più sezione separata)
-  const mktCtx = mktSentiment ? mktSentiment.trim() : '';
+  // ── SEZIONE 4: Sintesi finale ──
+  let sintesi='';
+  if(Math.abs(totalChgPct)<0.3){
+    sintesi='Una seduta interlocutoria che non sposta gli equilibri del portafoglio. In giornate come questa è normale attendere un catalizzatore che dia direttiva ai mercati.';
+  } else if(up){
+    if(totalChgPct>1.5) sintesi=`Una delle migliori sedute recenti per il portafoglio. ${avgIdx>0?'Il rialzo di mercato ha sostenuto i titoli in posizione.':'La sovraperformance rispetto al mercato generale è un segnale incoraggiante sulla qualità del portafoglio.'}`;
+    else sintesi=`Il portafoglio chiude positivo in una giornata ${avgIdx>0?'favorevole per i mercati':'in cui non tutti i titoli hanno trovato la spinta del mercato'}. I fondamentali restano il fattore chiave da monitorare nel medio periodo.`;
+  } else {
+    if(totalChgPct<-1.5) sintesi=`Una seduta difficile da digerire. ${avgIdx<0?'Il sell-off è stato generalizzato sui mercati: si tratta di una correzione che va letta nel contesto di più lungo periodo.':'La sottoperformance rispetto al mercato richiede una riflessione sulla composizione del portafoglio.'}`;
+    else sintesi=`Leggera correzione per il portafoglio. ${avgIdx<0?'Il ribasso è in linea con il tono generale dei mercati e non genera preoccupazioni particolari.':'Vale la pena monitorare i titoli che hanno mostrato maggiore debolezza relativa.'}`;
+  }
 
   return [
-    mktCtx ? `**Contesto di mercato**\n${mktCtx}` : '',
-    `**Il tuo portafoglio**\n${overallText}`,
-    evidenzaText ? `**Titoli in evidenza**\n${evidenzaText}` : '',
+    macro.trim() ? `**Contesto di mercato**\n${macro.trim()}` : '',
+    `**Il tuo portafoglio**\n${portText.trim()}`,
+    evidenzaText.trim() ? `**Titoli in evidenza**\n${evidenzaText.trim()}` : '',
     `**Sintesi**\n${sintesi}`
   ].filter(Boolean).join('\n\n');
 }
