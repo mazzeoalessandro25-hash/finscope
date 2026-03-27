@@ -4054,6 +4054,7 @@ async function renderPortfolio(){
     const barColor=stateClass==='pos'?'#059669':stateClass==='neg'?'#DC2626':'var(--b)';
     const holdDays=item.buyDate?Math.floor((Date.now()-new Date(item.buyDate).getTime())/(86400000)):null;
     const holdStr=holdDays!=null?(holdDays<30?holdDays+'g':(holdDays<365?Math.floor(holdDays/30)+'m':Math.floor(holdDays/365)+'a '+Math.floor((holdDays%365)/30)+'m')):'';
+    const dateDisplay=item.buyDate?new Date(item.buyDate).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'}):'';
     const itemCat=item.cat||detectPortCat(item.sym);
     return`<div class="port-item ${stateClass}" id="port-item-${i}" data-cat="${itemCat}" onclick="selectPortAsset(${i})" style="cursor:pointer">
       <div style="display:flex;gap:8px;align-items:center">
