@@ -4057,12 +4057,13 @@ async function renderPortfolio(){
     const dateDisplay=item.buyDate?new Date(item.buyDate).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'}):'';
     const itemCat=item.cat||detectPortCat(item.sym);
     return`<div class="port-item ${stateClass}" id="port-item-${i}" data-cat="${itemCat}" onclick="selectPortAsset(${i})" style="cursor:pointer">
-      <div style="display:flex;gap:8px;align-items:center">
-        <!-- Logo a sinistra -->
-        <div style="flex-shrink:0">${logoHtmlSm(item.sym,name)}</div>
-        <!-- Contenuto a destra -->
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <!-- Logo -->
+        <div style="flex-shrink:0;margin-top:2px">${logoHtmlSm(item.sym,name)}</div>
+        <!-- Contenuto -->
         <div style="flex:1;min-width:0">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+          <!-- Riga 1: ticker + badge + prezzo attuale + bottoni -->
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px">
             <div style="min-width:0">
               <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
                 <span class="port-sym">${item.sym}</span>
@@ -4073,8 +4074,8 @@ async function renderPortfolio(){
             </div>
             <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
               <div style="text-align:right">
-                <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
-                <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}${holdStr?` · ${holdStr}`:''}</div>
+                <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(curPrice,curPrice<10?3:2):'N/D'}</div>
+                <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}</div>
               </div>
               <div style="display:flex;flex-direction:column;gap:2px">
                 <button class="port-del" onclick="event.stopPropagation();togglePortEdit(${i})" title="Modifica" style="color:var(--b)">✎</button>
@@ -4082,6 +4083,12 @@ async function renderPortfolio(){
               </div>
             </div>
           </div>
+          <!-- Riga 2: data acquisto + durata -->
+          ${dateDisplay?`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
+            <span class="port-date-badge">📅 ${dateDisplay}</span>
+            ${holdStr?`<span style="font-size:9px;color:var(--t3);font-family:var(--fm)">· detenuto da ${holdStr}</span>`:''}
+          </div>`:''}
+          <!-- Riga 3: P&L + rendimento + sparkline + peso -->
           <div style="display:flex;align-items:center;gap:8px">
             <div style="display:flex;gap:10px;flex-shrink:0">
               <div>
