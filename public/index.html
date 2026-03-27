@@ -4308,10 +4308,9 @@ function setPortCat(cat,btn){
   portCatFilter=cat;
   document.querySelectorAll('.port-cat-tab').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
-  // Re-render list with filter
   const el=document.getElementById('port-list');
   if(!el)return;
-  el.querySelectorAll('.port-asset-item').forEach(item=>{
+  el.querySelectorAll('.port-item').forEach(item=>{
     const itemCat=item.dataset.cat||'stock';
     item.style.display=(cat==='all'||itemCat===cat)?'':'none';
   });
