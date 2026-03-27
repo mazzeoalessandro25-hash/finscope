@@ -4416,6 +4416,16 @@ function selectPortAsset(idx,silent){
   loadPortNews(item.sym);
 }
 
+function showPortOverview(){
+  portSelectedSym=null;
+  document.querySelectorAll('.port-item').forEach(el=>el.classList.remove('selected'));
+  const overview=document.getElementById('port-panel-overview');
+  const panel=document.getElementById('port-panel-analysis');
+  if(overview)overview.style.display='';
+  if(panel)panel.style.display='none';
+  if(portChart){try{portChart.remove();}catch(e){}portChart=null;}
+}
+
 function updatePortAnalysisHeader(item,q,idx){
   const cur=getPortCurrency(item.sym);
   const price=q?.price??item.buyPrice;
