@@ -63,10 +63,12 @@ export default async function handler(req, res) {
       const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(q)}&quotesCount=10&newsCount=0&enableFuzzyQuery=true`;
       const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' } });
       const data = await r.json();
+      const ALLOWED = ['EQUITY','ETF','CRYPTOCURRENCY','FUTURE','MUTUALFUND'];
+      const TYPE_MAP = { EQUITY:'stock', ETF:'etf', CRYPTOCURRENCY:'crypto', FUTURE:'commodity', MUTUALFUND:'etf' };
       const quotes = (data?.quotes || [])
-        .filter(x => x.quoteType === 'EQUITY' || x.quoteType === 'ETF')
+        .filter(x => ALLOWED.includes(x.quoteType))
         .slice(0, 10)
-        .map(x => ({ symbol: x.symbol, name: x.shortname || x.longname || x.symbol, exchange: x.exchange }));
+        .map(x => ({ symbol: x.symbol, name: x.shortname || x.longname || x.symbol, exchange: x.exchange, cat: TYPE_MAP[x.quoteType]||'stock' }));
       return res.json({ quotes });
     } catch (e) {
       return res.status(500).json({ error: e.message });
