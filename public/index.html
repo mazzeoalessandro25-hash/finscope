@@ -3615,7 +3615,7 @@ let _portGrouped=false;
 let portChart=null, portChartType='candle', portChartRange='1mo';
 let portSelectedSym=null, portQuotes=[], portCatFilter='all';
 let portAllocCI=null, portAllocView='cat', portNameCache={};
-let portSearchDelay=null;
+let portSearchDelay=null, portCatCache={};
 
 function showAuthView(view){
   document.getElementById('auth-main-view').style.display=view==='main'?'':'none';
