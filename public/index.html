@@ -412,6 +412,17 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 .port-hero-val{font-size:20px;font-family:var(--fm);font-weight:700;color:var(--t);line-height:1}
 .port-hero-sub{font-size:11px;font-family:var(--fm);color:var(--t3);margin-top:4px}
 
+/* Barra stats compatta */
+.port-stats-bar{display:flex;align-items:center;gap:0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:0;margin-bottom:14px;overflow:hidden}
+.port-stat-main{padding:14px 20px;background:linear-gradient(135deg,var(--b2),var(--b4));flex-shrink:0}
+.port-stat-val{font-family:var(--fm);font-size:22px;font-weight:800;color:#fff;line-height:1}
+.port-stat-lbl{font-size:10px;color:rgba(255,255,255,.7);font-family:var(--fm);margin-top:3px}
+.port-stat-sep{width:1px;background:var(--bd);align-self:stretch;flex-shrink:0}
+.port-stat-item{padding:12px 20px;flex:1;text-align:center}
+.port-stat-v{font-family:var(--fm);font-size:14px;font-weight:700;color:var(--t)}
+.port-stat-l{font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px}
+@media(max-width:700px){.port-stats-bar{flex-wrap:wrap}.port-stat-main{flex:100%}}
+
 /* ═══ PORTAFOGLIO v2 — 2 COLONNE ═══ */
 /* KPI bar */
 .port-kpi-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
