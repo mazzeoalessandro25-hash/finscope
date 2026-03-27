@@ -2713,141 +2713,509 @@ async function savePortfolio(){
   });}catch{}
 }
 
-/* ── PORTFOLIO PAGE ── */
+/* ══════════════════════════════════════════════════════
+   PORTAFOGLIO v2 — Hub centrale dell'investitore
+   ══════════════════════════════════════════════════════ */
+let portChart=null, portChartType='candle', portChartRange='1mo';
+let portSelectedSym=null;
+let portQuotes={};
+let portCatFilter='all';
+let portSearchDelay=null;
+let portAllocCI=null;
+let portAllocView='cat';
+let portNameCache={};
+
+/* ── Rileva categoria asset dal ticker ── */
+function detectPortCat(sym){
+  if(!sym)return'stock';
+  const s=sym.toUpperCase();
+  if(s.endsWith('=F'))return'commodity';
+  if(/-USD$|-EUR$|-BTC$|-ETH$|-USDT$/.test(s))return'crypto';
+  const ETF=['SPY','QQQ','IVV','VTI','VOO','GLD','SLV','TLT','LQD','HYG','ARKK',
+    'XLF','XLE','XLK','XLV','VNQ','SCHD','JEPI','EEM','VEA','VWO','AGG','BND',
+    'IWDA','VUSA','CSPX','SWRD','ACWI','EIMI','VWRL','VHYL','ISF','XDWD',
+    'EXSA','IQQQ','SPYL','QDVE','ISAC','IUIT','IEGE','IAPD','LCUW','HMCO',
+    'ZPRV','DBZB','DBXD','VWCE','SSAC','EUNL','MEUD','IQQH','IQQQ','XDEW'];
+  if(ETF.includes(s.split('.')[0]))return'etf';
+  return'stock';
+}
+
+/* ── Simbolo valuta dal ticker ── */
+function getPortCurrency(sym){
+  const s=sym||'';
+  const isEU=s.endsWith('.MI')||s.endsWith('.PA')||s.endsWith('.DE')||
+             s.endsWith('.SW')||s.endsWith('.AS')||s.endsWith('.MC')||
+             s.endsWith('.BR')||s.endsWith('.VI')||s.endsWith('.L');
+  return isEU?{code:'EUR',sym:'€'}:{code:'USD',sym:'$'};
+}
+
+/* ── Formato decimali adattativi ── */
+function portFmtPrice(p){
+  if(p==null||isNaN(p))return'—';
+  if(p>=1000)return fmt(p,0);
+  if(p>=10)return fmt(p,2);
+  if(p>=0.01)return fmt(p,4);
+  return fmt(p,6);
+}
+
+/* ── Mostra/nascondi stato autenticazione ── */
 function showPortfolioState(){
   const logMsg=document.getElementById('port-login-msg');
   const content=document.getElementById('port-content');
   const sub=document.getElementById('port-sub');
   if(currentUser){
     logMsg.style.display='none';content.style.display='block';
-    sub.textContent=`${currentUser.email} · ${portfolio.length} titoli`;
+    sub.textContent=`${currentUser.email} · ${portfolio.length} asset`;
     renderPortfolio();
-    renderWatchlistPort();
   } else {
     logMsg.style.display='block';content.style.display='none';
-    sub.textContent='Accedi per salvare e monitorare i tuoi titoli';
+    sub.textContent='Accedi per salvare e monitorare i tuoi asset';
   }
 }
 
+/* ── Aggiungi asset ── */
 async function addPortfolioItem(){
   if(!currentUser){openAuthModal();return;}
-  const sym=(document.getElementById('port-sym').value||'').toUpperCase().trim();
+  const rawSym=(document.getElementById('port-search').value||'').toUpperCase().trim();
   const qty=parseFloat(document.getElementById('port-qty').value);
   const price=parseFloat(document.getElementById('port-price').value);
-  if(!sym||!qty||!price||qty<=0||price<=0)return;
-
-  // Rileva valuta dal ticker
-  const isEU=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||
-              sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||
-              sym.endsWith('.BR')||sym.endsWith('.VI');
-  const currency=isEU?'EUR':'USD';
-  const symbol=isEU?'€':'$';
-
-  portfolio.push({sym,qty,buyPrice:price,currency,symbol,addedAt:Date.now()});
-  document.getElementById('port-sym').value='';
+  // Validazione con feedback visivo
+  let ok=true;
+  ['port-search','port-qty','port-price'].forEach(id=>{
+    const el=document.getElementById(id);
+    const v=el.value.trim();
+    const invalid=!v||(id!=='port-search'&&parseFloat(v)<=0);
+    el.style.borderColor=invalid?'var(--r)':'';
+    if(invalid)ok=false;
+  });
+  if(!ok){setTimeout(()=>['port-search','port-qty','port-price'].forEach(id=>document.getElementById(id).style.borderColor=''),1800);return;}
+  const cur=getPortCurrency(rawSym);
+  const cat=detectPortCat(rawSym);
+  const name=portNameCache[rawSym]||rawSym;
+  portfolio.push({sym:rawSym,qty,buyPrice:price,currency:cur.code,symbol:cur.sym,cat,name,addedAt:Date.now()});
+  document.getElementById('port-search').value='';
   document.getElementById('port-qty').value='';
   document.getElementById('port-price').value='';
+  hidePortDropdown();
   await savePortfolio();
-  renderPortfolio();
+  await renderPortfolio();
 }
 
+/* ── Rimuovi asset ── */
 async function removePortfolioItem(idx){
+  if(portfolio[idx]?.sym===portSelectedSym)portSelectedSym=null;
   portfolio.splice(idx,1);
   await savePortfolio();
-  renderPortfolio();
+  await renderPortfolio();
+  if(!portSelectedSym){
+    document.getElementById('port-panel-empty').style.display='block';
+    document.getElementById('port-panel-analysis').style.display='none';
+    if(portChart){portChart.remove();portChart=null;}
+  }
 }
 
+/* ══ RENDER PRINCIPALE ══ */
 async function renderPortfolio(){
-  const el=document.getElementById('port-list');
   if(!portfolio.length){
-    el.innerHTML='<div class="ld">Nessun titolo aggiunto · Usa il form sopra per aggiungere</div>';
-    document.getElementById('port-summary').innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
+    renderPortKpis([],{});
+    renderPortList([],{});
+    renderPortAlloc([],{});
+    renderPortRisk([],{});
+    renderWatchlistPort();
     return;
   }
-
-  // Fetch prezzi in parallelo
-  const quotes=await Promise.all(portfolio.map(item=>api(item.sym)));
-
-  // Calcola P&L separato per valuta
-  let totalUSD_inv=0, totalUSD_val=0;
-  let totalEUR_inv=0, totalEUR_val=0;
-
-  const rows=portfolio.map((item,i)=>{
-    const d=quotes[i];
-    const sym=item.symbol||'$'; // retrocompatibilità
-    const cur=item.currency||'USD';
-    const curPrice=d?.price||null;
-    const invested=item.qty*item.buyPrice;
-    const curVal=curPrice?item.qty*curPrice:null;
-    const pnl=curVal?curVal-invested:null;
-    const pnlPct=pnl!=null?((pnl/invested)*100):null;
-    const up=pnl==null||pnl>=0;
-
-    if(cur==='EUR'){totalEUR_inv+=invested;if(curVal)totalEUR_val+=curVal;}
-    else{totalUSD_inv+=invested;if(curVal)totalUSD_val+=curVal;}
-
-    return`<div class="port-item" onclick="openModal('${item.sym}','${item.sym}')">
-      ${logoHtmlSm(item.sym,item.sym)}
-      <div style="flex:1">
-        <div class="port-sym">${item.sym} <span style="font-size:10px;font-weight:400;color:var(--t3);background:var(--b3);padding:1px 6px;border-radius:3px">${cur}</span> <span style="font-weight:400;color:var(--t3)">${item.qty} pz</span></div>
-        <div class="port-info">Acquisto: ${sym}${fmt(item.buyPrice,2)} · Investito: ${sym}${fmt(invested,2)}</div>
-      </div>
-      <div style="text-align:right">
-        <div style="font-family:var(--fm);font-size:13px;color:var(--t)">${curPrice?sym+fmt(curPrice,2):'N/D'}</div>
-        <div class="port-pnl ${up?'up':'down'}">${pnl!=null?(up?'+':'')+sym+fmt(pnl,2)+' ('+fmt(pnlPct,2)+'%)':'—'}</div>
-      </div>
-      <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
-    </div>`;
-  });
-
-  el.innerHTML=rows.join('');
-
-  // Riepilogo separato per valuta
-  let summaryHtml='';
-  if(totalUSD_inv>0){
-    const pnl=totalUSD_val-totalUSD_inv;
-    const pct=totalUSD_inv?((pnl/totalUSD_inv)*100):0;
-    const up=pnl>=0;
-    summaryHtml+=`<div style="margin-bottom:10px;padding:10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:6px">PORTAFOGLIO USD 🇺🇸</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">$${fmt(totalUSD_inv,2)}</div><div style="font-size:10px;color:var(--t3)">Investito</div></div>
-        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">${totalUSD_val?'$'+fmt(totalUSD_val,2):'—'}</div><div style="font-size:10px;color:var(--t3)">Valore attuale</div></div>
-        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalUSD_val?(up?'+':'')+'$'+fmt(pnl,2):'—'}</div><div style="font-size:10px;color:var(--t3)">P&L</div></div>
-        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalUSD_val?(up?'+':'')+fmt(pct,2)+'%':'—'}</div><div style="font-size:10px;color:var(--t3)">Rendimento</div></div>
-      </div>
-    </div>`;
+  // Fetch prezzi in parallelo (de-dup ticker)
+  const syms=[...new Set(portfolio.map(i=>i.sym))];
+  const results=await Promise.all(syms.map(s=>api(s)));
+  syms.forEach((s,i)=>{if(results[i])portQuotes[s]=results[i];});
+  renderPortKpis(portfolio,portQuotes);
+  renderPortList(portfolio,portQuotes);
+  renderPortAlloc(portfolio,portQuotes);
+  renderPortRisk(portfolio,portQuotes);
+  renderWatchlistPort();
+  // Aggiorna header se asset già selezionato
+  if(portSelectedSym){
+    const item=portfolio.find(i=>i.sym===portSelectedSym);
+    if(item)updatePortAnalysisHeader(item,portQuotes[item.sym]);
   }
-  if(totalEUR_inv>0){
-    const pnl=totalEUR_val-totalEUR_inv;
-    const pct=totalEUR_inv?((pnl/totalEUR_inv)*100):0;
-    const up=pnl>=0;
-    summaryHtml+=`<div style="padding:10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:6px">PORTAFOGLIO EUR 🇪🇺</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">€${fmt(totalEUR_inv,2)}</div><div style="font-size:10px;color:var(--t3)">Investito</div></div>
-        <div><div style="font-family:var(--fm);font-size:13px;color:var(--t)">${totalEUR_val?'€'+fmt(totalEUR_val,2):'—'}</div><div style="font-size:10px;color:var(--t3)">Valore attuale</div></div>
-        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalEUR_val?(up?'+':'')+'€'+fmt(pnl,2):'—'}</div><div style="font-size:10px;color:var(--t3)">P&L</div></div>
-        <div><div style="font-family:var(--fm);font-size:13px" class="${up?'up':'down'}">${totalEUR_val?(up?'+':'')+fmt(pct,2)+'%':'—'}</div><div style="font-size:10px;color:var(--t3)">Rendimento</div></div>
-      </div>
-    </div>`;
-  }
-  document.getElementById('port-summary').innerHTML=summaryHtml||'<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
 }
 
+/* ── KPI BAR ── */
+function renderPortKpis(items,quotes){
+  const els={
+    total:document.getElementById('pkpi-total'),
+    totalSub:document.getElementById('pkpi-total-sub'),
+    pnl:document.getElementById('pkpi-pnl'),
+    pnlSub:document.getElementById('pkpi-pnl-sub'),
+    count:document.getElementById('pkpi-count'),
+    countSub:document.getElementById('pkpi-count-sub'),
+    best:document.getElementById('pkpi-best'),
+    bestSub:document.getElementById('pkpi-best-sub'),
+  };
+  if(!items.length){
+    Object.values(els).forEach(e=>{if(e)e.textContent='—';});
+    Object.values(els).forEach(e=>{if(e)e.style.color='';});
+    return;
+  }
+  let totalUSDinv=0,totalUSDval=0,totalEURinv=0,totalEURval=0;
+  let bestSym='—',bestPct=-Infinity,worstSym='—',worstPct=Infinity;
+  const cats={stock:0,etf:0,crypto:0,commodity:0};
+  items.forEach(item=>{
+    const q=quotes[item.sym];
+    const inv=item.qty*item.buyPrice;
+    const val=q?.price?item.qty*q.price:inv;
+    const pct=q?.price?((val-inv)/inv*100):0;
+    const cur=item.currency||'USD';
+    if(cur==='EUR'){totalEURinv+=inv;totalEURval+=val;}
+    else{totalUSDinv+=inv;totalUSDval+=val;}
+    if(pct>bestPct){bestPct=pct;bestSym=item.sym;}
+    if(pct<worstPct){worstPct=pct;worstSym=item.sym;}
+    const cat=item.cat||detectPortCat(item.sym);
+    cats[cat]=(cats[cat]||0)+1;
+  });
+  const totalInv=totalUSDinv+totalEURinv;
+  const totalVal=totalUSDval+totalEURval;
+  const pnl=totalVal-totalInv;
+  const pnlPct=totalInv?((pnl/totalInv)*100):0;
+  const up=pnl>=0;
+  // Valore totale
+  let valStr='';
+  if(totalUSDval>0)valStr+='$'+fmt(totalUSDval,0);
+  if(totalEURval>0)valStr+=(valStr?' · ':'')+' €'+fmt(totalEURval,0);
+  els.total.textContent=valStr||'—';
+  els.total.style.color='var(--t)';
+  els.totalSub.textContent='Investito: '+(totalUSDinv>0?'$'+fmt(totalUSDinv,0):'')+(totalEURinv>0?' €'+fmt(totalEURinv,0):'');
+  // P&L
+  els.pnl.textContent=(up?'+':'')+fmt(pnlPct,2)+'%';
+  els.pnl.style.color=up?'var(--g)':'var(--r)';
+  els.pnlSub.textContent=(up?'+':'')+fmt(pnl,0)+' (totale combinato)';
+  // Conteggio
+  els.count.textContent=items.length+'';
+  els.count.style.color='var(--t)';
+  const catParts=Object.entries(cats).filter(([,v])=>v>0).map(([k,v])=>v+' '+{stock:'AZ',etf:'ETF',crypto:'CR',commodity:'CM'}[k]);
+  els.countSub.textContent=catParts.join(' · ')||'—';
+  // Miglior titolo
+  if(bestSym!=='—'){
+    els.best.textContent=bestSym;
+    els.best.style.color='var(--g)';
+    els.bestSub.textContent='+'+(bestPct>0?fmt(bestPct,2):'0.00')+'%';
+  }
+}
+
+/* ── LISTA ASSET (colonna sx) ── */
+function renderPortList(items,quotes){
+  const el=document.getElementById('port-list');
+  const filtered=portCatFilter==='all'?items:items.filter(i=>(i.cat||detectPortCat(i.sym))===portCatFilter);
+  if(!filtered.length){
+    el.innerHTML='<div class="ld">'+(items.length?'Nessun asset in questa categoria · Cambia filtro':'Aggiungi il tuo primo asset sopra')+'</div>';
+    return;
+  }
+  el.innerHTML=filtered.map(item=>{
+    const realIdx=portfolio.indexOf(item);
+    const q=quotes[item.sym];
+    const inv=item.qty*item.buyPrice;
+    const curPrice=q?.price||null;
+    const val=curPrice?item.qty*curPrice:null;
+    const pnl=val!=null?val-inv:null;
+    const pnlPct=pnl!=null?((pnl/inv)*100):null;
+    const up=pnl==null||pnl>=0;
+    const symbol=item.symbol||'$';
+    const cat=item.cat||detectPortCat(item.sym);
+    const name=item.name||q?.name||item.sym;
+    const isSelected=item.sym===portSelectedSym;
+    const catLabel={stock:'AZ',etf:'ETF',crypto:'CR',commodity:'CM'}[cat]||'?';
+    return`<div class="port-asset-item${isSelected?' selected':''}" onclick="selectPortAsset(${realIdx})">
+      ${logoHtmlSm(item.sym,name)}
+      <div class="port-asset-main">
+        <div style="display:flex;align-items:center;gap:4px">
+          <span class="port-asset-sym">${item.sym}</span>
+          <span class="port-cat-badge ${cat}">${catLabel}</span>
+        </div>
+        <div class="port-asset-name">${item.qty} pz · ${symbol}${fmt(item.buyPrice,2)}</div>
+      </div>
+      <div class="port-asset-price-col">
+        <div class="port-asset-cur">${curPrice?symbol+portFmtPrice(curPrice):'—'}</div>
+        <div class="port-asset-pnl ${up?'up':'down'}">${pnlPct!=null?(up?'+':'')+fmt(pnlPct,2)+'%':'—'}</div>
+      </div>
+      <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:12px;padding:2px 4px;flex-shrink:0;line-height:1;border-radius:4px;transition:all .15s"
+        onmouseover="this.style.background='var(--r2)';this.style.color='var(--r)'"
+        onmouseout="this.style.background='';this.style.color='var(--t3)'"
+        onclick="event.stopPropagation();removePortfolioItem(${realIdx})" title="Rimuovi">✕</button>
+    </div>`;
+  }).join('');
+}
+
+/* ── SELEZIONE ASSET → apre pannello analisi ── */
+async function selectPortAsset(idx){
+  const item=portfolio[idx];
+  if(!item)return;
+  portSelectedSym=item.sym;
+  // Aggiorna selected class nella lista
+  renderPortList(portfolio,portQuotes);
+  // Mostra pannello analisi
+  document.getElementById('port-panel-empty').style.display='none';
+  document.getElementById('port-panel-analysis').style.display='block';
+  // Header
+  const q=portQuotes[item.sym];
+  updatePortAnalysisHeader(item,q);
+  // Resetta range buttons (attiva 1M di default se primo click)
+  const activeRange=document.querySelector('.port-range-btn.active');
+  if(!activeRange){document.querySelectorAll('.port-range-btn')[2]?.classList.add('active');}
+  // Carica grafico
+  await loadPortChart(item.sym,portChartRange);
+  // Metriche + news in parallelo
+  loadPortMetrics(item.sym);
+  loadPortNews(item.sym);
+}
+
+/* ── Header pannello analisi ── */
+function updatePortAnalysisHeader(item,q){
+  const symbol=item.symbol||'$';
+  const curPrice=q?.price||null;
+  const inv=item.qty*item.buyPrice;
+  const val=curPrice?item.qty*curPrice:null;
+  const pnl=val!=null?val-inv:null;
+  const pnlPct=pnl!=null?((pnl/inv)*100):null;
+  const pnlUp=pnl==null||pnl>=0;
+  const chg=q?chgPct(q.price,q.prev):null;
+  const chgUp=chg==null||chg>=0;
+  const name=item.name||q?.name||item.sym;
+  const cat=item.cat||detectPortCat(item.sym);
+  document.getElementById('port-analysis-logo').innerHTML=logoHtml(item.sym,name);
+  document.getElementById('port-analysis-name').textContent=name;
+  document.getElementById('port-analysis-sym').textContent=item.sym+' · '+cat.toUpperCase();
+  document.getElementById('port-analysis-price').textContent=curPrice?symbol+portFmtPrice(curPrice):'—';
+  const chgEl=document.getElementById('port-analysis-chg');
+  chgEl.textContent=chgStr(chg)+(q?.dayHigh?'  H: '+portFmtPrice(q.dayHigh)+'  L: '+portFmtPrice(q.dayLow):'');
+  chgEl.className='port-analysis-chg '+(chgUp?'up':'down');
+  chgEl.style.background=chgUp?'var(--g2)':'var(--r2)';
+  // Riepilogo posizione
+  document.getElementById('port-analysis-pos').innerHTML=`
+    <div class="port-pos-item"><div class="port-pos-lbl">QUANTITÀ</div><div class="port-pos-val">${item.qty}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">PREZZO MEDIO</div><div class="port-pos-val">${symbol}${fmt(item.buyPrice,2)}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">INVESTITO</div><div class="port-pos-val">${symbol}${fmt(inv,2)}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">VALORE</div><div class="port-pos-val">${val?symbol+fmt(val,2):'—'}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">P&L $</div><div class="port-pos-val ${pnlUp?'up':'down'}">${pnl!=null?(pnlUp?'+':'')+symbol+fmt(pnl,2):'—'}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">P&L %</div><div class="port-pos-val ${pnlUp?'up':'down'}">${pnlPct!=null?(pnlUp?'+':'')+fmt(pnlPct,2)+'%':'—'}</div></div>`;
+}
+
+/* ── Grafico con Lightweight Charts ── */
+async function loadPortChart(sym,range){
+  const container=document.getElementById('port-chart');
+  container.innerHTML='<div class="ld" style="height:100%;display:flex;align-items:center;justify-content:center">Caricamento grafico…</div>';
+  if(portChart){portChart.remove();portChart=null;}
+  const data=await api(sym,'history&range='+range);
+  if(!data?.points?.length){container.innerHTML='<div class="ld" style="height:100%;display:flex;align-items:center;justify-content:center">Dati non disponibili</div>';return;}
+  container.innerHTML='';
+  // Dark mode aware colors
+  const isDark=document.body.classList.contains('dark');
+  const bgColor=isDark?'#111E30':'#ffffff';
+  const textColor=isDark?'#8FAFC8':'#4A6080';
+  const gridColor=isDark?'rgba(35,50,71,.8)':'rgba(216,226,239,.5)';
+  const borderColor=isDark?'#233247':'#D8E2EF';
+  const lwChart=LightweightCharts.createChart(container,{
+    width:container.clientWidth,height:container.clientHeight||268,
+    layout:{background:{color:bgColor},textColor},
+    grid:{vertLines:{color:gridColor},horzLines:{color:gridColor}},
+    crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
+    rightPriceScale:{borderColor},
+    timeScale:{borderColor,timeVisible:false},
+    handleScroll:true,handleScale:true,
+  });
+  if(portChartType==='candle'){
+    const series=lwChart.addCandlestickSeries({
+      upColor:'#059669',downColor:'#DC2626',
+      borderUpColor:'#059669',borderDownColor:'#DC2626',
+      wickUpColor:'#059669',wickDownColor:'#DC2626',
+    });
+    series.setData(data.points.filter(p=>p.open&&p.high&&p.low&&p.close).map(p=>({
+      time:p.time,open:+p.open.toFixed(6),high:+p.high.toFixed(6),
+      low:+p.low.toFixed(6),close:+p.close.toFixed(6)
+    })));
+  } else {
+    const series=lwChart.addAreaSeries({
+      lineColor:'#1A56C4',topColor:'rgba(26,86,196,.15)',bottomColor:'rgba(26,86,196,0)',lineWidth:2,
+    });
+    series.setData(data.points.map(p=>({time:p.time,value:+p.close.toFixed(6)})));
+  }
+  lwChart.timeScale().fitContent();
+  new ResizeObserver(()=>{if(lwChart)lwChart.applyOptions({width:container.clientWidth});}).observe(container);
+  portChart=lwChart;
+}
+
+function setPortChartType(type,btn){
+  portChartType=type;
+  document.querySelectorAll('#pct-candle,#pct-line').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(portSelectedSym)loadPortChart(portSelectedSym,portChartRange);
+}
+
+function setPortRange(range,btn){
+  portChartRange=range;
+  document.querySelectorAll('.port-range-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  if(portSelectedSym)loadPortChart(portSelectedSym,portChartRange);
+}
+
+/* ── Metriche fondamentali ── */
+async function loadPortMetrics(sym){
+  const el=document.getElementById('port-metrics');
+  el.innerHTML='<div class="ld" style="grid-column:1/-1;padding:12px">Caricamento metriche…</div>';
+  const sd=await api(sym,'summary');
+  if(!sd){el.innerHTML='';return;}
+  const metricsData=[
+    {l:'P/E',v:sd.pe!=null?fmt(sd.pe,1):'—'},
+    {l:'P/E Fwd',v:sd.forwardPE!=null?fmt(sd.forwardPE,1):'—'},
+    {l:'P/Book',v:sd.pb!=null?fmt(sd.pb,2):'—'},
+    {l:'Beta',v:sd.beta!=null?fmt(sd.beta,2):'—'},
+    {l:'52W Max',v:sd.week52High?portFmtPrice(sd.week52High):'—'},
+    {l:'52W Min',v:sd.week52Low?portFmtPrice(sd.week52Low):'—'},
+    {l:'Div Yield',v:sd.dividend?fmt(sd.dividend*100,2)+'%':'—'},
+    {l:'Mkt Cap',v:sd.marketCap?fmtLg(sd.marketCap):'—'},
+    {l:'ROE',v:sd.roe!=null?fmt(sd.roe*100,1)+'%':'—'},
+  ];
+  el.innerHTML=metricsData.map(m=>`<div class="port-metric">
+    <div class="port-metric-lbl">${m.l}</div>
+    <div class="port-metric-val">${m.v}</div>
+  </div>`).join('');
+}
+
+/* ── News correlate all'asset ── */
+async function loadPortNews(sym){
+  const el=document.getElementById('port-news');
+  el.innerHTML='<div class="port-news-section"><div class="port-news-hdr">NEWS</div><div class="ld" style="padding:6px 0">Caricamento…</div></div>';
+  const data=await api(sym,'news');
+  if(!data?.news?.length){el.innerHTML='';return;}
+  const timeAgo=t=>{if(!t)return'';const d=Math.floor((Date.now()/1000-t)/60);if(d<60)return d+'m fa';if(d<1440)return Math.floor(d/60)+'h fa';return Math.floor(d/1440)+'g fa';};
+  el.innerHTML=`<div class="port-news-section">
+    <div class="port-news-hdr">NEWS · ${sym}</div>
+    ${data.news.slice(0,3).map(n=>`
+      <a class="port-news-mini" href="${n.link||'#'}" target="_blank" rel="noopener noreferrer">
+        ${n.thumbnail?`<img class="port-news-mini-img" src="${n.thumbnail}" alt="" loading="lazy" onerror="this.style.display='none'"/>`:''}
+        <div style="flex:1;min-width:0">
+          <div class="port-news-mini-pub">${n.publisher||'—'}</div>
+          <div class="port-news-mini-title">${n.title}</div>
+          <div class="port-news-mini-time">${timeAgo(n.time)}</div>
+        </div>
+      </a>`).join('')}
+  </div>`;
+}
+
+/* ── Grafico allocazione ── */
+function setPortAllocView(view,btn){
+  portAllocView=view;
+  document.querySelectorAll('#pat-cat,#pat-pos').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPortAlloc(portfolio,portQuotes);
+}
+
+function renderPortAlloc(items,quotes){
+  const canvas=document.getElementById('port-alloc-chart');
+  const legend=document.getElementById('port-alloc-legend');
+  if(!canvas)return;
+  if(portAllocCI){portAllocCI.destroy();portAllocCI=null;}
+  if(!items.length){
+    if(legend)legend.innerHTML='<div class="ld" style="padding:6px 0">Aggiungi asset per l\'allocazione</div>';
+    return;
+  }
+  const CAT_COLORS={stock:'#1A56C4',etf:'#059669',crypto:'#7C3AED',commodity:'#D97706'};
+  const CAT_LABELS={stock:'Azioni',etf:'ETF',crypto:'Crypto',commodity:'Commodities'};
+  const POS_COLORS=['#1A56C4','#059669','#7C3AED','#D97706','#0891B2','#DB2777'];
+  let labels=[],data=[],colors=[];
+  if(portAllocView==='cat'){
+    const bycat={stock:0,etf:0,crypto:0,commodity:0};
+    items.forEach(i=>{
+      const q=quotes[i.sym];
+      const val=q?.price?i.qty*q.price:i.qty*i.buyPrice;
+      const cat=i.cat||detectPortCat(i.sym);
+      bycat[cat]=(bycat[cat]||0)+val;
+    });
+    Object.entries(bycat).filter(([,v])=>v>0).forEach(([cat,val])=>{
+      labels.push(CAT_LABELS[cat]);data.push(val);colors.push(CAT_COLORS[cat]);
+    });
+  } else {
+    items.map(i=>{
+      const q=quotes[i.sym];
+      return{sym:i.sym,val:q?.price?i.qty*q.price:i.qty*i.buyPrice};
+    }).sort((a,b)=>b.val-a.val).slice(0,6).forEach((p,i)=>{
+      labels.push(p.sym);data.push(p.val);colors.push(POS_COLORS[i%POS_COLORS.length]);
+    });
+  }
+  if(!data.length)return;
+  const ctx=canvas.getContext('2d');
+  portAllocCI=new Chart(ctx,{
+    type:'doughnut',
+    data:{labels,datasets:[{data,backgroundColor:colors,borderColor:'rgba(255,255,255,.6)',borderWidth:2}]},
+    options:{responsive:true,cutout:'68%',
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const t=data.reduce((a,b)=>a+b,0);return' '+(c.raw/t*100).toFixed(1)+'%';}}}}
+    }
+  });
+  const total=data.reduce((a,b)=>a+b,0);
+  legend.innerHTML=labels.map((l,i)=>`<div class="port-alloc-row">
+    <div class="port-alloc-dot" style="background:${colors[i]}"></div>
+    <span class="port-alloc-name">${l}</span>
+    <span class="port-alloc-pct">${total?(data[i]/total*100).toFixed(1)+'%':'—'}</span>
+  </div>`).join('');
+}
+
+/* ── Metriche di rischio (colonna dx) ── */
+function renderPortRisk(items,quotes){
+  const el=document.getElementById('port-risk');
+  if(!items.length){el.innerHTML='<div class="ld" style="padding:4px 0">Aggiungi asset per le metriche</div>';return;}
+  let totalInv=0,totalVal=0;
+  const cats={stock:0,etf:0,crypto:0,commodity:0};
+  const currencies={USD:0,EUR:0};
+  let topAsset=null,topVal=0,maxPnlSym='—',maxPnlPct=-Infinity,minPnlSym='—',minPnlPct=Infinity;
+  items.forEach(i=>{
+    const q=quotes[i.sym];
+    const inv=i.qty*i.buyPrice;
+    const val=q?.price?i.qty*q.price:inv;
+    const pct=((val-inv)/inv*100);
+    totalInv+=inv;totalVal+=val;
+    const cat=i.cat||detectPortCat(i.sym);
+    cats[cat]=(cats[cat]||0)+val;
+    const cur=i.currency||'USD';
+    currencies[cur]=(currencies[cur]||0)+val;
+    if(val>topVal){topVal=val;topAsset=i.sym;}
+    if(pct>maxPnlPct){maxPnlPct=pct;maxPnlSym=i.sym;}
+    if(pct<minPnlPct){minPnlPct=pct;minPnlSym=i.sym;}
+  });
+  const topWeight=totalVal?(topVal/totalVal*100):0;
+  const numCats=Object.values(cats).filter(v=>v>0).length;
+  const divInfo=numCats===1?{t:'Concentrato',c:'var(--r)'}:numCats===2?{t:'Moderata',c:'var(--o)'}:{t:'Diversificato',c:'var(--g)'};
+  const usdPct=totalVal?(currencies.USD||0)/totalVal*100:0;
+  const eurPct=totalVal?(currencies.EUR||0)/totalVal*100:0;
+  el.innerHTML=`
+    <div class="port-risk-item"><span class="port-risk-lbl">Asset top</span><span class="port-risk-val">${topAsset} (${fmt(topWeight,1)}%)</span></div>
+    <div class="port-risk-item"><span class="port-risk-lbl">Diversificazione</span><span class="port-risk-val" style="color:${divInfo.c}">${divInfo.t}</span></div>
+    <div class="port-risk-item"><span class="port-risk-lbl">Esposizione USD</span><span class="port-risk-val">${fmt(usdPct,1)}%</span></div>
+    <div class="port-risk-item"><span class="port-risk-lbl">Esposizione EUR</span><span class="port-risk-val">${fmt(eurPct,1)}%</span></div>
+    <div class="port-risk-item"><span class="port-risk-lbl">Migliore (+%)</span><span class="port-risk-val up">${maxPnlSym} ${maxPnlPct>-Infinity?'+'+(fmt(maxPnlPct,1))+'%':''}</span></div>
+    <div class="port-risk-item"><span class="port-risk-lbl">Peggiore (-%)</span><span class="port-risk-val ${minPnlPct<0?'down':''}">${minPnlSym} ${minPnlPct<Infinity?fmt(minPnlPct,1)+'%':''}</span></div>
+    <div class="port-risk-item"><span class="port-risk-lbl">Asset totali</span><span class="port-risk-val">${items.length}</span></div>`;
+}
+
+/* ── Watchlist nel portafoglio ── */
 function renderWatchlistPort(){
   const el=document.getElementById('wl-list-port');
+  if(!el)return;
   if(!watchlist.length){
-    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Aggiungi titoli allo screener con ★</div>';
+    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Nessun titolo · Aggiungi con ★ nello Screener</div>';
     return;
   }
   el.innerHTML=watchlist.map(sym=>{
     const stock=STOCKS.find(x=>x.s===sym);
     const name=stock?.n||sym;
-    return`<div class="port-item" style="margin-bottom:6px;gap:10px" onclick="openModal('${sym}','${sym} — ${name}')">
+    return`<div class="port-wl-item" onclick="openModal('${sym}','${sym} — ${name}')">
       ${logoHtmlSm(sym,name)}
-      <div style="flex:1"><div class="port-sym">${sym}</div><div style="font-size:10px;color:var(--t3)">${name}</div></div>
-      <button class="port-del" onclick="event.stopPropagation();removeFromWatchlist('${sym}')" title="Rimuovi">✕</button>
+      <div style="flex:1;min-width:0">
+        <div class="port-asset-sym">${sym}</div>
+        <div class="port-asset-name">${name}</div>
+      </div>
+      <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:12px;padding:2px 4px;flex-shrink:0;line-height:1;border-radius:4px;transition:all .15s"
+        onmouseover="this.style.background='var(--r2)';this.style.color='var(--r)'"
+        onmouseout="this.style.background='';this.style.color='var(--t3)'"
+        onclick="event.stopPropagation();removeFromWatchlist('${sym}')" title="Rimuovi">✕</button>
     </div>`;
   }).join('');
 }
@@ -2858,7 +3226,80 @@ async function removeFromWatchlist(sym){
   renderWatchlistPort();
 }
 
-// Override toggleWl per sync con server e aggiornamento panel screener
+/* ── Filtro per categoria ── */
+function setPortCat(cat,btn){
+  portCatFilter=cat;
+  document.querySelectorAll('.port-cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPortList(portfolio,portQuotes);
+}
+
+/* ── Autocomplete ricerca asset ── */
+function onPortSearchInput(){
+  const q=(document.getElementById('port-search').value||'').trim();
+  if(q.length<2){hidePortDropdown();return;}
+  clearTimeout(portSearchDelay);
+  portSearchDelay=setTimeout(()=>fetchPortSuggestions(q),280);
+}
+
+function onPortSearchKey(e){
+  if(e.key==='Escape'){hidePortDropdown();return;}
+  if(e.key==='Enter'){
+    hidePortDropdown();
+    const v=(document.getElementById('port-search').value||'').trim();
+    if(v)document.getElementById('port-qty').focus();
+  }
+}
+
+async function fetchPortSuggestions(q){
+  const dd=document.getElementById('port-dd');
+  dd.innerHTML='<div class="sd-hint">Ricerca in corso…</div>';
+  dd.classList.add('open');
+  try{
+    const r=await fetch('/api/screener?q='+encodeURIComponent(q));
+    const data=await r.json();
+    if(!data.quotes?.length){
+      const upper=q.toUpperCase();
+      dd.innerHTML=`<div class="sd-item" onclick="portSelectManual('${upper}')">
+        ${logoHtmlSm(upper,upper)}
+        <span class="sd-sym">${upper}</span>
+        <span class="sd-name" style="color:var(--t3)">Inserimento manuale (crypto, ETF, futures…)</span>
+      </div><div class="sd-hint" style="padding:8px 14px">Suggerimenti: BTC-USD · ETH-USD · GC=F · BZ=F</div>`;
+      return;
+    }
+    dd.innerHTML=data.quotes.map(item=>`
+      <div class="sd-item" onclick="portSelectTicker('${item.symbol}','${(item.name||'').replace(/['"]/g,'')}')">
+        ${logoHtmlSm(item.symbol,item.name||item.symbol)}
+        <span class="sd-sym">${item.symbol}</span>
+        <span class="sd-name">${item.name||item.symbol}</span>
+        <span class="sd-ex">${item.exchange||''}</span>
+      </div>`).join('');
+  }catch{dd.innerHTML='<div class="sd-hint">Errore di rete</div>';}
+}
+
+function portSelectTicker(sym,name){
+  document.getElementById('port-search').value=sym;
+  if(name)portNameCache[sym]=name;
+  hidePortDropdown();
+  document.getElementById('port-qty').focus();
+}
+
+function portSelectManual(sym){
+  document.getElementById('port-search').value=sym;
+  hidePortDropdown();
+  document.getElementById('port-qty').focus();
+}
+
+function hidePortDropdown(){
+  const dd=document.getElementById('port-dd');
+  if(dd){dd.classList.remove('open');dd.innerHTML='';}
+}
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.port-search-wrap'))hidePortDropdown();
+});
+
+// Override toggleWl per sync server + aggiornamento panel
 const _origToggleWl=toggleWl;
 function toggleWl(sym,el){
   const i=watchlist.indexOf(sym);
@@ -2866,10 +3307,8 @@ function toggleWl(sym,el){
   localStorage.setItem('fs_wl',JSON.stringify(watchlist));
   el.querySelector('.star-btn').classList.toggle('active',watchlist.includes(sym));
   saveWatchlist();
-  // Aggiorna watchlist panel nello screener (se attiva)
   const wlTab=document.getElementById('sc-tab-wl');
   if(wlTab&&wlTab.style.display!=='none')renderScreenerWatchlist();
-  // Aggiorna watchlist nel portafoglio (se visibile)
   if(currentUser)renderWatchlistPort();
 }
 
