@@ -3873,21 +3873,27 @@ function showPortfolioState(){
 
 async function addPortfolioItem(){
   if(!currentUser){openAuthModal();return;}
-  const sym=(document.getElementById('port-sym').value||'').toUpperCase().trim();
+  const searchEl=document.getElementById('port-search');
+  const sym=(searchEl?.value||'').toUpperCase().trim();
   const qty=parseFloat(document.getElementById('port-qty').value);
   const price=parseFloat(document.getElementById('port-price').value);
-  if(!sym||!qty||!price||qty<=0||price<=0)return;
+  if(!sym){if(searchEl)searchEl.style.border='1px solid var(--r)';return;}
+  if(!qty||!price||qty<=0||price<=0)return;
+  if(searchEl)searchEl.style.border='';
 
   // Rileva valuta dal ticker
   const isEU=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||
               sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||
-              sym.endsWith('.BR')||sym.endsWith('.VI');
+              sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L');
   const currency=isEU?'EUR':'USD';
-  const symbol=isEU?'€':'$';
+  const csym=isEU?'€':'$';
+  const cat=detectPortCat(sym);
+  const name=portNameCache[sym]||sym;
 
   const buyDate=document.getElementById('port-date').value||new Date().toISOString().split('T')[0];
-  portfolio.push({sym,qty,buyPrice:price,currency,symbol,addedAt:Date.now(),buyDate});
-  document.getElementById('port-sym').value='';
+  portfolio.push({sym,qty,buyPrice:price,currency,symbol:csym,cat,name,addedAt:Date.now(),buyDate});
+  if(searchEl)searchEl.value='';
+  hidePortDropdown();
   document.getElementById('port-qty').value='';
   document.getElementById('port-price').value='';
   document.getElementById('port-date').value='';
