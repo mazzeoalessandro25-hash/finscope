@@ -4441,61 +4441,139 @@ function selectPortAsset(idx,silent){
   loadPortNews(item.sym);
 }
 
-// ── Analisi giornaliera AI ──
-let _portDailyCache = null; // { dateKey, analysis }
+// ── Analisi giornaliera (notizie + template JS, zero API key) ──
 
 async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValUSD, force=false){
   const el = document.getElementById('port-daily-text');
   if(!el) return;
   const today = new Date().toISOString().slice(0,10);
-  const key = today + '_' + assets.map(a=>a.sym).sort().join(',');
-  // Cache giornaliera in sessionStorage
+  const key = today+'_'+assets.map(a=>a.sym).sort().join(',');
   const cached = !force && sessionStorage.getItem('portDaily_'+key);
-  if(cached){
-    renderPortDailyText(el, cached);
-    return;
-  }
-  el.innerHTML='<div class="ld" style="padding:8px 0">Generazione analisi in corso…</div>';
-  try{
-    const r = await fetch('/api/analyze',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        type:'portfolio_daily',
-        assets: assets.map(a=>({sym:a.sym, name:a.name, chgPct:a.chgPct, chgUSD:a.chgUSD})),
-        totalChgUSD, totalChgPct, totalValUSD,
-        date: new Date().toLocaleDateString('it-IT')
-      })
-    });
-    const data = await r.json();
-    if(data.analysis){
-      sessionStorage.setItem('portDaily_'+key, data.analysis);
-      renderPortDailyText(el, data.analysis);
-    } else {
-      el.innerHTML=`<span style="color:var(--r);font-size:11px">${data.error||'Errore analisi'}</span>`;
+  if(cached){ renderPortDailyText(el, cached); return; }
+  el.innerHTML='<div class="ld" style="padding:8px 0">Raccolta notizie in corso…</div>';
+
+  // Prendi i top 3 mover (per valore assoluto di variazione %)
+  const sorted=[...assets].sort((a,b)=>Math.abs(b.chgPct)-Math.abs(a.chgPct));
+  const topMovers=sorted.slice(0,3);
+
+  // Fetch notizie per ciascun top mover + notizie generali mercato (in parallelo)
+  const newsResults = await Promise.all([
+    ...topMovers.map(a=>
+      fetch(`/api/quote?type=news&symbol=${encodeURIComponent(a.sym)}`)
+        .then(r=>r.json()).then(d=>({sym:a.sym, news:(d.news||[]).slice(0,2)}))
+        .catch(()=>({sym:a.sym,news:[]}))
+    ),
+    fetch(`/api/quote?type=news&symbol=stock+market+today`)
+      .then(r=>r.json()).then(d=>({sym:'__market__', news:(d.news||[]).slice(0,2)}))
+      .catch(()=>({sym:'__market__',news:[]}))
+  ]);
+
+  const newsMap={};
+  newsResults.forEach(r=>{ newsMap[r.sym]=r.news; });
+
+  const text = buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap);
+  sessionStorage.setItem('portDaily_'+key, text);
+  renderPortDailyText(el, text);
+}
+
+function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap){
+  const up = totalChgUSD >= 0;
+  const sorted = [...assets].sort((a,b)=>b.chgPct-a.chgPct);
+  const best = sorted[0];
+  const worst = sorted[sorted.length-1];
+  const nUp = assets.filter(a=>a.chgPct>=0).length;
+  const nDown = assets.filter(a=>a.chgPct<0).length;
+  const tot = assets.length;
+  const absPct = Math.abs(totalChgPct).toFixed(2);
+  const absUSD = Math.abs(totalChgUSD).toFixed(0);
+  const date = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+
+  // ── Andamento complessivo ──
+  let mood;
+  if(Math.abs(totalChgPct)<0.3) mood='sostanzialmente stabile';
+  else if(up) mood=totalChgPct>1.5?'in decisa progressione':'in moderato rialzo';
+  else mood=totalChgPct<-1.5?'in netta flessione':'in leggero calo';
+
+  let overallText = `Il portafoglio ha chiuso ${date} ${mood}, con una variazione di ${up?'+':'−'}${absPct}% (${up?'+':'−'}$${absUSD}). `;
+  if(nUp===tot) overallText+=`Tutti i ${tot} titoli hanno terminato in positivo.`;
+  else if(nDown===tot) overallText+=`Tutti i ${tot} titoli hanno chiuso in territorio negativo.`;
+  else overallText+=`${nUp} titol${nUp===1?'o':'i'} in rialzo e ${nDown} in ribasso su ${tot} in portafoglio.`;
+
+  // ── Titoli in evidenza ──
+  let evidenzaText = '';
+  const discussed = new Set();
+
+  const commentAsset = (a, role) => {
+    if(!a || discussed.has(a.sym)) return '';
+    discussed.add(a.sym);
+    const assetUp = a.chgPct >= 0;
+    const sign = assetUp ? '+' : '';
+    const chgStr = `${sign}${a.chgPct.toFixed(2)}%`;
+    const usdStr = `${a.chgUSD>=0?'+':''}$${Math.abs(a.chgUSD).toFixed(0)}`;
+    const name = a.name && a.name!==a.sym ? a.name : a.sym;
+
+    let line = `<strong>${a.sym}</strong> (${name}) ha ${assetUp?'guadagnato':'perso'} ${chgStr} (${usdStr})`;
+
+    // Aggiungi notizia rilevante se disponibile
+    const news = newsMap[a.sym] || [];
+    if(news.length>0){
+      const headline = news[0].title;
+      line += `. In evidenza: "${headline}"`;
+      if(news[1]) line += `. Inoltre: "${news[1].title}"`;
     }
-  } catch(e){
-    el.innerHTML=`<span style="color:var(--r);font-size:11px">Errore: ${e.message}</span>`;
+    line += '. ';
+    return line;
+  };
+
+  if(best && worst && best.sym !== worst.sym){
+    // Miglior performer
+    evidenzaText += commentAsset(best, 'best');
+    // Peggior performer (solo se si è mosso abbastanza)
+    if(Math.abs(worst.chgPct)>0.3) evidenzaText += commentAsset(worst, 'worst');
+    // Terzo titolo rilevante se esiste
+    const third = sorted.find(a=>!discussed.has(a.sym) && Math.abs(a.chgPct)>0.5);
+    if(third) evidenzaText += commentAsset(third, 'other');
+  } else if(best){
+    evidenzaText += commentAsset(best, 'best');
   }
+
+  // ── Notizie di mercato generali ──
+  let marketText = '';
+  const mNews = newsMap['__market__'] || [];
+  if(mNews.length>0){
+    marketText = `Sul mercato: "${mNews[0].title}"`;
+    if(mNews[1]) marketText += `. "${mNews[1].title}"`;
+    marketText += '.';
+  }
+
+  // ── Sintesi finale ──
+  let sintesi;
+  if(Math.abs(totalChgPct)<0.3) sintesi='Una seduta interlocutoria senza variazioni significative per il portafoglio.';
+  else if(up) sintesi=`Una seduta positiva: il portafoglio ${totalChgPct>1?'guadagna terreno in modo consistente':'avanza con cautela'}.`;
+  else sintesi=`Una seduta difficile: il portafoglio ${totalChgPct<-1?'accusa una perdita rilevante':'cede moderatamente rispetto alla chiusura precedente'}.`;
+
+  return [
+    `**Andamento complessivo**\n${overallText}`,
+    evidenzaText ? `**Titoli in evidenza**\n${evidenzaText}` : '',
+    marketText ? `**Dal mercato**\n${marketText}` : '',
+    `**Sintesi**\n${sintesi}`
+  ].filter(Boolean).join('\n\n');
 }
 
 function renderPortDailyText(el, text){
-  // Converte **grassetto** in <strong>
   const html = text
-    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--t);font-size:11px;display:block;margin-top:8px;margin-bottom:2px">$1</strong>')
-    .replace(/\n/g,'<br>');
-  el.innerHTML = html;
+    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--t);font-size:11px;display:block;margin-top:8px;margin-bottom:3px;letter-spacing:.3px">$1</strong>')
+    .replace(/\n/g,' ');
+  el.innerHTML=`<div class="port-daily-text">${html}</div>`;
 }
 
 function refreshPortDailyAnalysis(){
-  // Cancella cache e ricarica
-  const keys = Object.keys(sessionStorage).filter(k=>k.startsWith('portDaily_'));
+  const keys=Object.keys(sessionStorage).filter(k=>k.startsWith('portDaily_'));
   keys.forEach(k=>sessionStorage.removeItem(k));
   if(portQuotes.length && portfolio.length){
-    // Ricalcola dailyItems dal cache attuale
-    const eurUsd = _lastFxRate || 1.08;
+    const eurUsd=_lastFxRate||1.08;
     let totalChgUSD=0;
-    const assets = portfolio.map((item,i)=>{
+    const assets=portfolio.map((item,i)=>{
       const q=portQuotes[i];
       if(!q||!q.prev||!q.price)return null;
       const fx=(item.currency==='EUR')?eurUsd:1;
@@ -4504,9 +4582,9 @@ function refreshPortDailyAnalysis(){
       totalChgUSD+=chgUSD;
       return{sym:item.sym,name:item.name||q.name||item.sym,chgPct,chgUSD};
     }).filter(Boolean);
-    const totalValUSD = _portHeroUSD || 0;
-    const totalChgPct = (totalValUSD-totalChgUSD)>0?(totalChgUSD/(totalValUSD-totalChgUSD)*100):0;
-    loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValUSD, true);
+    const totalValUSD=_portHeroUSD||0;
+    const totalChgPct=(totalValUSD-totalChgUSD)>0?(totalChgUSD/(totalValUSD-totalChgUSD)*100):0;
+    loadPortDailyAnalysis(assets,totalChgUSD,totalChgPct,totalValUSD,true);
   }
 }
 
