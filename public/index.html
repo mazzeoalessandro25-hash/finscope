@@ -4574,32 +4574,49 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   // ── SEZIONE 2: Il tuo portafoglio ──
   let portText='';
 
-  // Apertura: variazione assoluta e relativa
+  // Apertura: variazione con interpretazione calibrata
   if(Math.abs(totalChgPct)<0.3)
-    portText+=`Il portafoglio ha chiuso la giornata pressoché invariato (${up?'+':'−'}${absPct}%), con movimenti limitati che non hanno alterato in modo significativo il valore complessivo. `;
+    portText+=`Il portafoglio ha chiuso la giornata pressoché invariato (${up?'+':'−'}${absPct}%, ${up?'+':'−'}$${absUSD}). In assenza di movimenti rilevanti, il valore complessivo rimane stabile: queste sedute di transizione sono normali e spesso precedono fasi più direzionali. `;
   else if(up)
-    portText+=totalChgPct>1.5
-      ? `Giornata decisamente positiva per il portafoglio, che ha guadagnato il ${absPct}% equivalente a +$${absUSD}. `
-      : `Il portafoglio ha chiuso in rialzo del ${absPct}% (+$${absUSD}), capitalizzando il tono positivo della seduta. `;
+    portText+=totalChgPct>2
+      ? `Una seduta eccellente per il portafoglio, che ha guadagnato il ${absPct}% corrispondente a +$${absUSD}. Movimenti di questa entità su base giornaliera non sono frequenti e riflettono una combinazione favorevole di titoli in posizione. `
+      : totalChgPct>1
+        ? `Il portafoglio ha messo a segno una buona performance giornaliera: +${absPct}% pari a +$${absUSD}. Un risultato che rafforza il valore complessivo e conferma la bontà delle posizioni aperte. `
+        : `Il portafoglio chiude in territorio positivo con un progresso del ${absPct}% (+$${absUSD}). Un guadagno moderato ma coerente con il tono della seduta. `;
   else
-    portText+=totalChgPct<-1.5
-      ? `Il portafoglio ha subito una flessione del ${absPct}% (−$${absUSD}), una delle sedute più negative del periodo recente. `
-      : `Giornata di correzione per il portafoglio, che cede il ${absPct}% (−$${absUSD}). `;
+    portText+=totalChgPct<-2
+      ? `Giornata difficile per il portafoglio, che subisce una flessione del ${absPct}% (−$${absUSD}). Perdite di questa entità in una singola seduta meritano attenzione, anche se è importante contestualizzarle nel trend di medio periodo prima di trarre conclusioni affrettate. `
+      : totalChgPct<-1
+        ? `Il portafoglio registra un calo del ${absPct}% (−$${absUSD}) nella seduta odierna. Una correzione moderata che, se non accompagnata da un deterioramento dei fondamentali, rientra nella normale volatilità di mercato. `
+        : `Leggera correzione per il portafoglio: −${absPct}% (−$${absUSD}). Un movimento contenuto che non altera in modo sostanziale il quadro complessivo. `;
 
-  // Ampiezza: quanti titoli su/giù
-  if(nUp===tot)       portText+=`La performance è stata ampiamente condivisa: tutti i ${tot} titoli in portafoglio hanno terminato in verde. `;
-  else if(nDown===tot) portText+=`La pressione è stata uniforme: nessun titolo è riuscito a chiudere in positivo nella seduta odierna. `;
-  else {
-    const dom=nUp>nDown?'maggioranza':'minoranza';
-    portText+=`La ${dom} dei titoli ha chiuso in positivo: ${nUp} in rialzo e ${nDown} in ribasso su ${tot} posizioni. `;
+  // Ampiezza della performance: quanti titoli hanno partecipato
+  if(nUp===tot)
+    portText+=`La performance è stata trasversale: tutti i ${tot} titoli in portafoglio hanno chiuso in verde, un segnale di forza ampia e non concentrata su un singolo nome. `;
+  else if(nDown===tot)
+    portText+=`Giornata uniforme in negativo: nessuna posizione è riuscita a portarsi in territorio positivo. Un'ampiezza così negativa suggerisce che la pressione di vendita ha coinvolto l'intero portafoglio, indipendentemente dalle caratteristiche dei singoli titoli. `;
+  else if(nUp>nDown)
+    portText+=`${nUp} posizioni su ${tot} hanno terminato in rialzo, a testimonianza di una performance ampiamente condivisa anche se non universale. `;
+  else
+    portText+=`Solo ${nUp} posizion${nUp===1?'e':'i'} su ${tot} ha chiuso in positivo: la debolezza è stata diffusa, con ${nDown} titoli in calo a pesare sul risultato complessivo. `;
+
+  // Concentrazione: quanto ha pesato il titolo migliore/peggiore
+  if(best && tot>1){
+    const bestShare=totalChgUSD!==0?Math.abs(best.chgUSD/totalChgUSD*100):0;
+    if(bestShare>60 && up)
+      portText+=`Vale la pena notare che la maggior parte del guadagno odierno è riconducibile a ${best.sym}, che da solo ha generato circa il ${Math.round(bestShare)}% della variazione positiva: una concentrazione elevata che evidenzia la dipendenza del risultato da un singolo nome. `;
+    else if(bestShare>60 && !up && worst)
+      portText+=`Il risultato negativo è fortemente influenzato da ${worst.sym}, che ha pesato per circa il ${Math.round(Math.abs(worst.chgUSD/totalChgUSD*100))}% sulla perdita complessiva. `;
   }
 
-  // Confronto col mercato
+  // Confronto col mercato con lettura più dettagliata
   if(equityVals.length){
     const diff=totalChgPct-avgIdx;
-    if(diff>0.5)       portText+=`Il portafoglio ha sovraperformato il mercato di circa ${diff.toFixed(1)} punti percentuali, un risultato che evidenzia una buona selezione dei titoli nella giornata. `;
-    else if(diff<-0.5) portText+=`Il portafoglio ha sottoperformato rispetto agli indici generali di circa ${Math.abs(diff).toFixed(1)} punti percentuali. `;
-    else               portText+=`Il portafoglio si è mosso sostanzialmente in linea con l'andamento generale del mercato. `;
+    if(diff>1)         portText+=`Rispetto al mercato generale, il portafoglio ha sovraperformato di circa ${diff.toFixed(1)} punti percentuali: una differenza rilevante che premia la scelta dei titoli effettuata. `;
+    else if(diff>0.3)  portText+=`Il portafoglio ha fatto leggermente meglio del mercato generale (differenziale di ${diff.toFixed(1)}%), segnale di una composizione efficace per la giornata. `;
+    else if(diff>-0.3) portText+=`La performance del portafoglio è risultata allineata all'andamento generale degli indici, senza divergenze significative. `;
+    else if(diff>-1)   portText+=`Il portafoglio ha leggermente sottoperformato il mercato di ${Math.abs(diff).toFixed(1)} punti percentuali: una divergenza contenuta, ma da monitorare se dovesse persistere nelle prossime sedute. `;
+    else               portText+=`Il portafoglio ha sottoperformato il mercato in modo marcato (−${Math.abs(diff).toFixed(1)}% rispetto agli indici): vale la pena analizzare quali posizioni hanno generato questa divergenza negativa. `;
   }
 
   // ── SEZIONE 3: Titoli in evidenza (più testo per asset) ──
