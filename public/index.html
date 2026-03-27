@@ -4597,8 +4597,11 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   else if(up) sintesi=totalChgPct>1?'Giornata decisamente positiva per il portafoglio.':'Il portafoglio chiude in territorio positivo, in linea con il tono generale dei mercati.';
   else sintesi=totalChgPct<-1?'Seduta difficile: le perdite sono rilevanti e richiedono attenzione.':'Leggero arretramento del portafoglio, in una giornata senza grandi direttive.';
 
+  // Sentiment dal confronto indici (va nel testo portafoglio, non più sezione separata)
+  const mktCtx = mktSentiment ? mktSentiment.trim() : '';
+
   return [
-    macroSection ? `**Mercati oggi**\n${macroSection}` : '',
+    mktCtx ? `**Contesto di mercato**\n${mktCtx}` : '',
     `**Il tuo portafoglio**\n${overallText}`,
     evidenzaText ? `**Titoli in evidenza**\n${evidenzaText}` : '',
     `**Sintesi**\n${sintesi}`
