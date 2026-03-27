@@ -4440,6 +4440,75 @@ function selectPortAsset(idx,silent){
   loadPortNews(item.sym);
 }
 
+// ── Analisi giornaliera AI ──
+let _portDailyCache = null; // { dateKey, analysis }
+
+async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValUSD, force=false){
+  const el = document.getElementById('port-daily-text');
+  if(!el) return;
+  const today = new Date().toISOString().slice(0,10);
+  const key = today + '_' + assets.map(a=>a.sym).sort().join(',');
+  // Cache giornaliera in sessionStorage
+  const cached = !force && sessionStorage.getItem('portDaily_'+key);
+  if(cached){
+    renderPortDailyText(el, cached);
+    return;
+  }
+  el.innerHTML='<div class="ld" style="padding:8px 0">Generazione analisi in corso…</div>';
+  try{
+    const r = await fetch('/api/analyze',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        type:'portfolio_daily',
+        assets: assets.map(a=>({sym:a.sym, name:a.name, chgPct:a.chgPct, chgUSD:a.chgUSD})),
+        totalChgUSD, totalChgPct, totalValUSD,
+        date: new Date().toLocaleDateString('it-IT')
+      })
+    });
+    const data = await r.json();
+    if(data.analysis){
+      sessionStorage.setItem('portDaily_'+key, data.analysis);
+      renderPortDailyText(el, data.analysis);
+    } else {
+      el.innerHTML=`<span style="color:var(--r);font-size:11px">${data.error||'Errore analisi'}</span>`;
+    }
+  } catch(e){
+    el.innerHTML=`<span style="color:var(--r);font-size:11px">Errore: ${e.message}</span>`;
+  }
+}
+
+function renderPortDailyText(el, text){
+  // Converte **grassetto** in <strong>
+  const html = text
+    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--t);font-size:11px;display:block;margin-top:8px;margin-bottom:2px">$1</strong>')
+    .replace(/\n/g,'<br>');
+  el.innerHTML = html;
+}
+
+function refreshPortDailyAnalysis(){
+  // Cancella cache e ricarica
+  const keys = Object.keys(sessionStorage).filter(k=>k.startsWith('portDaily_'));
+  keys.forEach(k=>sessionStorage.removeItem(k));
+  if(portQuotes.length && portfolio.length){
+    // Ricalcola dailyItems dal cache attuale
+    const eurUsd = _lastFxRate || 1.08;
+    let totalChgUSD=0;
+    const assets = portfolio.map((item,i)=>{
+      const q=portQuotes[i];
+      if(!q||!q.prev||!q.price)return null;
+      const fx=(item.currency==='EUR')?eurUsd:1;
+      const chgPct=(q.price-q.prev)/q.prev*100;
+      const chgUSD=item.qty*(q.price-q.prev)*fx;
+      totalChgUSD+=chgUSD;
+      return{sym:item.sym,name:item.name||q.name||item.sym,chgPct,chgUSD};
+    }).filter(Boolean);
+    const totalValUSD = _portHeroUSD || 0;
+    const totalChgPct = (totalValUSD-totalChgUSD)>0?(totalChgUSD/(totalValUSD-totalChgUSD)*100):0;
+    loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValUSD, true);
+  }
+}
+
 function showPortOverview(){
   portSelectedSym=null;
   document.querySelectorAll('.port-item').forEach(el=>el.classList.remove('selected'));
