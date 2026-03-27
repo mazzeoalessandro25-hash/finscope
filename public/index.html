@@ -3619,6 +3619,11 @@ let currentToken=null;
 let authTab='login';
 let portfolio=[];
 let _portGrouped=false;
+// New 3-col portfolio globals
+let portChart=null, portChartType='candle', portChartRange='1mo';
+let portSelectedSym=null, portQuotes=[], portCatFilter='all';
+let portAllocCI=null, portAllocView='cat', portNameCache={};
+let portSearchDelay=null;
 
 function showAuthView(view){
   document.getElementById('auth-main-view').style.display=view==='main'?'':'none';
