@@ -4272,14 +4272,24 @@ async function renderPortfolio(){
 // NEW 3-COL PORTFOLIO FUNCTIONS
 // ══════════════════════════════════════════════════════
 
-const KNOWN_ETF=['SPY','QQQ','IWM','EFA','EEM','VTI','VOO','VEA','VWO','AGG','BND','GLD','SLV','USO','XLF','XLK','XLE','XLV','XLI','XLU','XLP','XLY','XLB','XLRE','XLC','ARKK','ARKG','ARKW','ARKF','ARKQ','TQQQ','SQQQ','UVXY','VXX','TLT','IEF','SHY','HYG','LQD','MBB','MINT','NEAR','BNDX','VXUS','VNQ','IYR','SCHD','DGRO','VYM','HDV','DVY','NOBL','SPHD','SPYD','SPLV','USMV','QUAL','MTUM','VLUE','SIZE','VIG','SDY','DTD','FVD','OUSA','DGRW','RDIV'];
-const KNOWN_CRYPTO_SUFFIX=['-USD','-EUR','-USDT','-BTC'];
+const KNOWN_ETF=new Set(['SPY','QQQ','IWM','EFA','EEM','VTI','VOO','VEA','VWO','AGG','BND','GLD','SLV','USO','XLF','XLK','XLE','XLV','XLI','XLU','XLP','XLY','XLB','XLRE','XLC','ARKK','ARKG','ARKW','ARKF','ARKQ','TQQQ','SQQQ','UVXY','VXX','TLT','IEF','SHY','HYG','LQD','MBB','MINT','NEAR','BNDX','VXUS','VNQ','IYR','SCHD','DGRO','VYM','HDV','DVY','NOBL','SPHD','SPYD','SPLV','USMV','QUAL','MTUM','VLUE','SIZE','VIG','SDY','DTD','FVD','OUSA','DGRW','RDIV','IWDA','VWCE','CSPX','EQQQ','XDWD','SWRD','IUIT','IUSA','EXSA','VUSA','VUAA','VHYL','IDVY','XDEW','QDVE','SMEA','IEEM','EMIM','XMEM','VFEM','XDPD','SPXS','SOXS','SOXL','LABU','LABD','FNGU','FNGD','BULZ','BERZ','WEBL','WEBS','TPVG','BOIL','KOLD']);
+const KNOWN_CRYPTO_SUFFIX=['-USD','-EUR','-USDT','-BTC','-ETH'];
+const KNOWN_CRYPTO_PREFIX=['BTC','ETH','BNB','SOL','ADA','XRP','DOT','AVAX','MATIC','LINK','LTC','BCH','UNI','ATOM','ALGO'];
 
 function detectPortCat(sym){
   if(!sym)return'stock';
-  if(sym.endsWith('=F'))return'commodity';
-  if(KNOWN_CRYPTO_SUFFIX.some(s=>sym.endsWith(s)))return'crypto';
-  if(KNOWN_ETF.includes(sym.toUpperCase()))return'etf';
+  const s=sym.toUpperCase();
+  // Commodity: suffisso =F (Yahoo Finance futures)
+  if(s.endsWith('=F')||s.endsWith('=X'))return'commodity';
+  // Crypto: suffisso noto
+  if(KNOWN_CRYPTO_SUFFIX.some(sfx=>s.endsWith(sfx)))return'crypto';
+  // Crypto: prefisso noto senza suffisso (es. BTC, ETH da exchange)
+  if(KNOWN_CRYPTO_PREFIX.some(pfx=>s===pfx||s.startsWith(pfx+'-')))return'crypto';
+  // ETF: lista o ticker con suffisso europeo tipico degli ETF
+  if(KNOWN_ETF.has(s))return'etf';
+  // Ticker europei che spesso sono ETF (es. IWDA.AS, VWCE.DE)
+  const base=s.split('.')[0];
+  if(KNOWN_ETF.has(base))return'etf';
   return'stock';
 }
 
