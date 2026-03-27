@@ -4401,10 +4401,10 @@ function selectPortAsset(idx,silent){
   document.querySelectorAll('.port-item').forEach(el=>el.classList.remove('selected'));
   const el=document.getElementById('port-item-'+idx);
   if(el)el.classList.add('selected');
-  // Show panel
-  const empty=document.getElementById('port-panel-empty');
+  // Show analysis, hide overview
+  const overview=document.getElementById('port-panel-overview');
   const panel=document.getElementById('port-panel-analysis');
-  if(empty)empty.style.display='none';
+  if(overview)overview.style.display='none';
   if(panel)panel.style.display='';
   // Header
   const q=portQuotes[idx]||null;
