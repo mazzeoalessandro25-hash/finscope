@@ -11,6 +11,48 @@ export default async function handler(req, res) {
   const KEY = process.env.ANTHROPIC_API_KEY;
   if (!KEY) return res.status(503).json({ error: 'AI non configurata. Aggiungi ANTHROPIC_API_KEY nelle env vars di Vercel.' });
 
+  // ── PORTFOLIO DAILY ANALYSIS ──
+  if (req.body?.type === 'portfolio_daily') {
+    const { assets, totalChgUSD, totalChgPct, totalValUSD, date } = req.body;
+    if (!assets?.length) return res.status(400).json({ error: 'assets richiesti' });
+
+    const sorted = [...assets].sort((a, b) => b.chgPct - a.chgPct);
+    const assetLines = sorted.map(a =>
+      `- ${a.sym} (${a.name}): ${a.chgPct >= 0 ? '+' : ''}${a.chgPct.toFixed(2)}% (${a.chgUSD >= 0 ? '+' : ''}$${a.chgUSD.toFixed(0)})`
+    ).join('\n');
+
+    const portLine = `${totalChgPct >= 0 ? '+' : ''}${totalChgPct.toFixed(2)}% (${totalChgUSD >= 0 ? '+' : ''}$${totalChgUSD.toFixed(0)}) su valore totale $${totalValUSD?.toFixed(0) || '?'}`;
+
+    const prompt = `Sei un analista finanziario personale. Oggi il portafoglio ha avuto questa performance giornaliera:
+
+PORTAFOGLIO COMPLESSIVO: ${portLine}
+DATA: ${date || new Date().toLocaleDateString('it-IT')}
+
+PERFORMANCE PER TITOLO (dal migliore al peggiore):
+${assetLines}
+
+Scrivi un'analisi giornaliera in italiano, massimo 180 parole. Struttura la risposta così:
+
+**Andamento complessivo** — 1-2 frasi sul portafoglio nel suo insieme oggi (positivo/negativo/misto, entità della variazione)
+**Titoli in evidenza** — commenta i 2-3 titoli più rilevanti (miglior e peggior performer), spiegando cosa significano queste variazioni per il portafoglio
+**Sintesi** — 1 frase conclusiva sull'andamento generale della giornata
+
+Usa solo i dati numerici forniti. Non inventare notizie o cause esterne. Tono professionale e diretto.`;
+
+    try {
+      const r = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'x-api-key': KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' },
+        body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 400, messages: [{ role: 'user', content: prompt }] })
+      });
+      if (!r.ok) { const err = await r.json(); return res.status(500).json({ error: err.error?.message || r.status }); }
+      const data = await r.json();
+      return res.json({ analysis: data.content?.[0]?.text || '', date });
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  }
+
   const { ticker, qd, sd } = req.body;
   if (!ticker) return res.status(400).json({ error: 'Ticker richiesto' });
 
