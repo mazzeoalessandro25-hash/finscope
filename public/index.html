@@ -4521,41 +4521,52 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   const avgIdx=equityVals.length?equityVals.reduce((a,b)=>a+b,0)/equityVals.length:0;
   const s=v=>`${v>=0?'+':''}${v.toFixed(2)}%`;
 
-  // ── SEZIONE 1: Contesto di mercato (più articolato) ──
+  // ── SEZIONE 1: Contesto di mercato ──
   let macro='';
 
-  // Sentimento generale
+  // Sentimento generale con lettura più ampia
   if(equityVals.length){
-    if(avgIdx>1.5)       macro+='La seduta odierna si è caratterizzata per un forte ottimismo sui mercati azionari globali, con tutti i principali indici in deciso rialzo. ';
-    else if(avgIdx>0.5)  macro+='I mercati azionari hanno archiviato una seduta positiva, con acquisti diffusi su più settori. ';
-    else if(avgIdx>0.1)  macro+='Giornata leggermente costruttiva sui mercati, con gli indici azionari che hanno chiuso in moderato progresso. ';
-    else if(avgIdx>-0.1) macro+='Una seduta priva di direttive chiare: i mercati hanno oscillato attorno alla parità senza trovare un catalizzatore convincente. ';
-    else if(avgIdx>-0.5) macro+='Seduta in rosso per i mercati azionari, con pressioni di vendita che hanno prevalso nel corso della giornata. ';
-    else if(avgIdx>-1.5) macro+='I mercati hanno accusato un calo significativo, con gli investitori che hanno preferito ridurre l\'esposizione al rischio. ';
-    else                  macro+='Giornata di forte risk-off sui mercati globali: le vendite sono state generalizzate e gli indici principali hanno subito perdite rilevanti. ';
+    if(avgIdx>1.5)       macro+='La seduta odierna è stata chiaramente dominata dagli acquirenti: i principali indici azionari hanno messo a segno guadagni consistenti, con un sentiment di mercato decisamente orientato al rischio. Giornate di questo tipo riflettono solitamente una combinazione di dati macro favorevoli, aspettative positive sugli utili aziendali o una riduzione delle tensioni geopolitiche. ';
+    else if(avgIdx>0.5)  macro+='I mercati azionari hanno archiviato una seduta positiva, con acquisti prevalenti su più fronti. Il tono complessivo è stato costruttivo, anche se la progressione è rimasta contenuta rispetto ai movimenti più marcati visti in altre sedute. In queste fasi di rialzo moderato il mercato tende a consolidare i livelli raggiunti senza prendere posizioni direzionali troppo nette. ';
+    else if(avgIdx>0.1)  macro+='Una giornata moderatamente positiva, senza grandi accelerazioni ma con il mercato che ha mantenuto un bias rialzista. In assenza di catalizzatori forti, gli investitori hanno preferito muoversi con cautela, consolidando le posizioni esistenti piuttosto che aprirne di nuove. ';
+    else if(avgIdx>-0.1) macro+='I mercati hanno navigato in acque incerte nella seduta odierna, chiudendo sostanzialmente invariati. L\'assenza di una direzione definita suggerisce un momento di equilibrio tra compratori e venditori, tipico delle fasi di attesa prima di dati macroeconomici rilevanti o di decisioni delle banche centrali. ';
+    else if(avgIdx>-0.5) macro+='Seduta in rosso per i mercati azionari, con pressioni di vendita che hanno prevalso durante la giornata. La correzione, pur limitata, riflette un aumento dell\'incertezza degli investitori. In queste fasi è normale osservare una rotazione verso asset più difensivi o una riduzione temporanea dell\'esposizione al rischio. ';
+    else if(avgIdx>-1.5) macro+='I mercati hanno accusato un calo significativo nella seduta odierna, con gli investitori che hanno preferito alleggerire le posizioni. Movimenti di questa entità segnalano solitamente una reazione a notizie specifiche o a un deterioramento del sentiment generale: vale la pena monitorare il flusso di notizie nelle prossime ore per capire se si tratta di una correzione tecnica o di un cambio di tendenza. ';
+    else                  macro+='Giornata da dimenticare per i mercati globali: le vendite sono state generalizzate e intense, con tutti i principali indici che hanno chiuso con perdite rilevanti. In queste sessioni di forte risk-off gli investitori tendono a liquidare le posizioni più rischiose e a rifugiarsi in asset sicuri come oro, dollaro e obbligazioni governative. È importante non farsi prendere dall\'emotività e leggere il movimento nel contesto del trend di più lungo periodo. ';
   }
 
-  // Divergenza Nasdaq vs S&P (tech vs mercato ampio)
+  // Divergenza Nasdaq vs S&P: tech vs mercato ampio
   if(spC!=null && nqC!=null){
     const diff=nqC-spC;
-    if(diff>0.6)       macro+=`Il comparto tecnologico ha guidato i rialzi, con il Nasdaq (${s(nqC)}) che ha sovraperformato l'S&P 500 (${s(spC)}). `;
-    else if(diff<-0.6) macro+=`Il settore tech ha mostrato debolezza relativa: il Nasdaq (${s(nqC)}) ha sottoperformato rispetto all'S&P 500 (${s(spC)}). `;
-    else if(equityVals.length>=2) macro+=`L'S&P 500 (${s(spC)}) e il Nasdaq (${s(nqC)}) si sono mossi in modo coerente, senza divergenze settoriali evidenti. `;
+    if(diff>0.8)       macro+=`Si nota una chiara leadership del comparto tecnologico: il Nasdaq (${s(nqC)}) ha sovraperformato l'S&P 500 (${s(spC)}) di circa ${Math.abs(diff).toFixed(1)} punti percentuali, segnalando un appetite per i titoli growth e tech in particolare. `;
+    else if(diff>0.3)  macro+=`Il settore tecnologico ha mostrato una certa forza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) leggermente meglio dell'S&P 500 (${s(spC)}). `;
+    else if(diff<-0.8) macro+=`Interessante la divergenza tra indici: il Nasdaq (${s(nqC)}) ha sottoperformato in modo marcato rispetto all'S&P 500 (${s(spC)}), suggerendo pressioni specifiche sui titoli tecnologici o una rotazione verso settori più ciclici e value. `;
+    else if(diff<-0.3) macro+=`Il tech ha mostrato una leggera debolezza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) in ritardo sull'S&P 500 (${s(spC)}). `;
+    else if(equityVals.length>=2) macro+=`S&P 500 (${s(spC)}) e Nasdaq (${s(nqC)}) si sono mossi in modo coerente, senza divergenze significative tra i vari comparti di mercato. `;
   }
 
-  // Oro e Petrolio: lettura macro
+  // Dow Jones: cicliche vs tech
+  if(djC!=null && nqC!=null && spC!=null){
+    const diffDJ=djC-nqC;
+    if(diffDJ>0.8) macro+=`Il Dow Jones (${s(djC)}) ha guidato i rialzi rispetto al Nasdaq, segnale di una preferenza degli investitori per i settori industriali e finanziari rispetto al tech. `;
+    else if(diffDJ<-0.8) macro+=`Le blue chip industriali del Dow Jones (${s(djC)}) hanno faticato più del tech, una dinamica che spesso accompagna fasi di mercato a forte componente speculativa o di crescita. `;
+  }
+
+  // Oro e Petrolio: lettura macro approfondita
   if(gcC!=null || clC!=null){
     let commodityLine='';
-    if(gcC!=null && clC!=null){
-      if(gcC>0.5 && avgIdx<0)    commodityLine=`L'oro ha guadagnato terreno (${s(gcC)}), confermando la tendenza difensiva degli investitori in una giornata difficile per gli azionari. `;
-      else if(gcC>0.5 && avgIdx>0) commodityLine=`Interessante la performance dell'oro (${s(gcC)}) che sale anche in una giornata positiva per le azioni, segnale di attenzione verso i rischi geopolitici o inflattivi. `;
-      else if(gcC<-0.5 && avgIdx>0.5) commodityLine=`Il calo dell'oro (${s(gcC)}) in parallelo al rialzo azionario riflette un riduzione dell'avversione al rischio. `;
-      if(clC>1)       commodityLine+=`Il petrolio ha accelerato (${s(clC)}), un fattore che potrebbe pesare sui costi aziendali e alimentare preoccupazioni inflazionistiche. `;
-      else if(clC<-1) commodityLine+=`Il petrolio è sceso (${s(clC)}), una notizia positiva sul fronte dell'inflazione energetica. `;
-    } else if(gcC!=null){
-      if(Math.abs(gcC)>0.4) commodityLine=`L'oro ha registrato una variazione di ${s(gcC)}, movimento da tenere in considerazione nel quadro macro complessivo. `;
-    } else if(clC!=null){
-      if(Math.abs(clC)>0.8) commodityLine=`Il petrolio si è mosso di ${s(clC)} nella giornata, con potenziali implicazioni sulle aspettative di inflazione. `;
+    if(gcC!=null){
+      if(gcC>1 && avgIdx<0)       commodityLine=`L'oro ha registrato un apprezzamento rilevante (${s(gcC)}), confermando la sua natura di bene rifugio in una giornata difficile per gli azionari: quando gli investitori hanno paura, l'oro sale. `;
+      else if(gcC>0.5 && avgIdx<0) commodityLine=`Il rialzo dell'oro (${s(gcC)}) in una giornata negativa per le azioni riflette una classica rotazione difensiva. Gli investitori cercano protezione in asset percepiti come sicuri. `;
+      else if(gcC>0.5 && avgIdx>0) commodityLine=`Degno di nota il rialzo dell'oro (${s(gcC)}) anche in una giornata positiva per le azioni: questo movimento inusuale potrebbe segnalare preoccupazioni sottostanti legate all'inflazione o a rischi geopolitici non ancora pienamente prezzati dal mercato. `;
+      else if(gcC<-0.5 && avgIdx>0.5) commodityLine=`L'oro ha ceduto terreno (${s(gcC)}) mentre le azioni salivano: una dinamica classica di risk-on, con il capitale che scorre dagli asset rifugio verso quelli più rischiosi. `;
+      else if(Math.abs(gcC)>0.3) commodityLine=`L'oro si è mosso di ${s(gcC)}, un dato da tenere d'occhio come indicatore del sentiment macro complessivo. `;
+    }
+    if(clC!=null){
+      if(clC>1.5)       commodityLine+=`Il petrolio ha avuto un'accelerazione decisa (${s(clC)}): un rialzo energetico di questa portata può alimentare timori inflazionistici e comprimere i margini delle aziende più energivore. `;
+      else if(clC>0.5)  commodityLine+=`Il petrolio è salito moderatamente (${s(clC)}), segnalando aspettative di domanda sostenuta o tensioni sull'offerta. `;
+      else if(clC<-1.5) commodityLine+=`Il petrolio ha perso quota in modo significativo (${s(clC)}): una buona notizia per il fronte inflazionistico, che potrebbe ridurre la pressione sui costi energetici e allentare la stretta sulle politiche monetarie. `;
+      else if(clC<-0.5) commodityLine+=`Il petrolio ha ceduto (${s(clC)}), contribuendo a un quadro macro leggermente più favorevole sul versante dell'inflazione. `;
     }
     macro+=commodityLine;
   }
