@@ -4248,6 +4248,7 @@ async function renderPortfolio(){
     });
   },50);
   _lastPortQuotes=quotes;
+  portQuotes=quotes;
   renderPortAnalysis(portfolio,quotes);
   loadBenchmark();
   loadDividendTracker();
@@ -4255,6 +4256,17 @@ async function renderPortfolio(){
   if(_portActiveTab==='performance')loadPortPerf();
   // Check portfolio alerts
   checkPortAlertBadges(quotes);
+  // New 3-col renderers
+  renderPortKpiBar(portfolio,quotes,eurUsd);
+  renderPortAlloc(portfolio,quotes);
+  renderPortRisk(portfolio,quotes);
+  renderWatchlistPort();
+  // Restore selected asset if any
+  if(portSelectedSym){
+    const idx=portfolio.findIndex(p=>p.sym===portSelectedSym);
+    if(idx>=0)selectPortAsset(idx,true);
+    else portSelectedSym=null;
+  }
 }
 
 function checkPortAlertBadges(quotes){
