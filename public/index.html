@@ -1676,6 +1676,36 @@ html.dark .auth-box{background:#1e293b}
 
       </div>
 
+      <!-- RIGHT: Add form + category tabs + asset list -->
+      <div class="port-left">
+        <div class="port-add-form">
+          <div class="port-search-wrap" style="position:relative">
+            <input class="port-search-inp" id="port-search" type="text"
+              placeholder="Cerca ticker o nome..." autocomplete="off"
+              oninput="onPortSearchInput()" onkeydown="onPortSearchKey(event)"/>
+            <div id="port-dd" class="port-dd"></div>
+          </div>
+          <div class="port-add-row2">
+            <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any"/>
+            <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acq." min="0" step="any"/>
+            <input class="port-inp" id="port-date" type="date" title="Data acquisto"/>
+            <button class="port-add-btn" onclick="addPortfolioItem()">＋ Aggiungi</button>
+          </div>
+        </div>
+        <div class="port-cat-bar" id="port-cat-bar">
+          <button class="port-cat-tab active" onclick="setPortCat('all',this)">Tutti</button>
+          <button class="port-cat-tab" onclick="setPortCat('stock',this)">Azioni</button>
+          <button class="port-cat-tab" onclick="setPortCat('etf',this)">ETF</button>
+          <button class="port-cat-tab" onclick="setPortCat('crypto',this)">Crypto</button>
+          <button class="port-cat-tab" onclick="setPortCat('commodity',this)">Comm.</button>
+        </div>
+        <div id="port-list"><div class="ld" style="padding:20px;text-align:center">Nessun titolo aggiunto</div></div>
+        <div style="display:flex;gap:6px;margin-top:2px">
+          <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioCSV()">⬇ Esporta CSV</button>
+          <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()">⬆ Importa CSV</button>
+        </div>
+      </div>
+
     </div><!-- end port-2col -->
 
     <!-- Legacy hidden elements for backward compatibility -->
