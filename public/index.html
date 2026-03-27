@@ -4495,8 +4495,9 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   indicesResults.forEach(d=>{ indicesMap[d.sym]=d; });
 
   const text = buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews, indicesMap);
-  sessionStorage.setItem('portDaily_'+key, text);
-  renderPortDailyText(el, text);
+  const payload = JSON.stringify({ text, macroNews, indicesMap });
+  sessionStorage.setItem('portDaily_'+key, payload);
+  renderPortDailyText(el, payload);
 }
 
 function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}){
