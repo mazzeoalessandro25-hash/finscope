@@ -4285,13 +4285,14 @@ function checkPortAlertBadges(quotes){
 
 function renderWatchlistPort(){
   const el=document.getElementById('wl-list-port');
+  if(!el)return;
   if(!watchlist.length){
-    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Aggiungi titoli allo screener con ★</div>';
+    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:8px 0">Aggiungi titoli allo screener con ★</div>';
     return;
   }
   el.innerHTML=watchlist.map(sym=>`
-    <div class="port-item" style="margin-bottom:6px" onclick="openModal('${sym}','${sym}')">
-      <div class="port-sym">${sym}</div>
+    <div class="port-wl-item" onclick="openModal('${sym}','${sym}')">
+      <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${sym}</span>
       <button class="port-del" onclick="event.stopPropagation();removeFromWatchlist('${sym}')" title="Rimuovi">✕</button>
     </div>`).join('');
 }
