@@ -410,16 +410,16 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 .port-hero-val{font-size:20px;font-family:var(--fm);font-weight:700;color:var(--t);line-height:1}
 .port-hero-sub{font-size:11px;font-family:var(--fm);color:var(--t3);margin-top:4px}
 
-/* ═══ PORTAFOGLIO v2 — 3-COLONNE ═══ */
-.port-3col{display:grid;grid-template-columns:290px 1fr 240px;gap:14px;align-items:start;margin-bottom:14px}
+/* ═══ PORTAFOGLIO v2 — 2 COLONNE ═══ */
+.port-2col{display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start;margin-bottom:14px}
 .port-left{display:flex;flex-direction:column;gap:10px}
 .port-center{display:flex;flex-direction:column;gap:10px;min-width:0}
-.port-right{display:flex;flex-direction:column;gap:10px}
-/* Override list layout per colonna sx */
-.port-left #port-list{display:flex;flex-direction:column;gap:0}
-.port-left .port-item{border-radius:0;margin-bottom:0;border-left-width:3px}
-.port-left .port-item:first-child{border-radius:8px 8px 0 0}
-.port-left .port-item:last-child{border-radius:0 0 8px 8px}
+/* Lista asset: colonna singola scrollabile */
+.port-left #port-list{display:flex;flex-direction:column;gap:0;max-height:560px;overflow-y:auto;background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;overflow-y:auto}
+.port-left .port-item{border-radius:0;margin-bottom:0;border-left-width:3px;border-top:none;border-right:none;border-bottom:1px solid var(--bd);padding:10px 12px}
+.port-left .port-item:first-child{border-radius:12px 12px 0 0}
+.port-left .port-item:last-child{border-radius:0 0 12px 12px;border-bottom:none}
+@media(max-width:900px){.port-2col{grid-template-columns:1fr}}
 .port-add-form{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .port-search-wrap{position:relative;margin-bottom:8px}
 .port-search-inp{width:100%;background:var(--s2);border:1px solid var(--bd);color:var(--t);padding:8px 11px;border-radius:8px;font-family:var(--fm);font-size:13px;outline:none;transition:all .15s}
