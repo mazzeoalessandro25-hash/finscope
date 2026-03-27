@@ -4174,6 +4174,15 @@ async function renderPortfolio(){
   // Aggiorna tasso di cambio nel sottotitolo
   const rateEl = document.getElementById('port-summary-rate');
   if(rateEl) rateEl.textContent = `EUR/USD: ${fmt(eurUsd,4)}`;
+  // Aggiorna barra stats compatta
+  const sb=document.getElementById('port-stats-bar');
+  if(sb)sb.style.display='flex';
+  const setS=(id,v,c)=>{const e=document.getElementById(id);if(e){e.textContent=v;if(c)e.style.color=c;}};
+  setS('psb-value','$'+fmt(totalValUSD,0));
+  setS('psb-pnl',(totalUp?'+':'')+fmt(totalPnlUSD,0), totalUp?'var(--g)':'var(--r)');
+  setS('psb-rend',(totalUp?'+':'')+fmt(totalPnlPct,1)+'%', totalUp?'var(--g)':'var(--r)');
+  setS('psb-count', portfolio.length+'');
+  setS('psb-rate', fmt(eurUsd,4));
 
   const _totalValDisplay=_isEUR?'€'+fmt(totalValEUR,0):'$'+fmt(totalValUSD,0);
   const _totalPnlDisplay=(_heroUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
