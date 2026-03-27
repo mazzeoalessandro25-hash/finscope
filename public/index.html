@@ -4471,7 +4471,7 @@ async function loadPortMetrics(sym){
       {lbl:'52W Max',val:d.week52High!=null?'$'+fmt(d.week52High,2):'—'},
       {lbl:'52W Min',val:d.week52Low!=null?'$'+fmt(d.week52Low,2):'—'},
       {lbl:'Div Yield',val:d.dividend!=null?(d.dividend*100).toFixed(2)+'%':'—'},
-      {lbl:'Mkt Cap',val:d.marketCap!=null?fmtBig(d.marketCap):'—'},
+      {lbl:'Mkt Cap',val:d.marketCap!=null?(d.marketCap>=1e12?'$'+(d.marketCap/1e12).toFixed(1)+'T':d.marketCap>=1e9?'$'+(d.marketCap/1e9).toFixed(1)+'B':d.marketCap>=1e6?'$'+(d.marketCap/1e6).toFixed(0)+'M':'—'):'—'},
       {lbl:'ROE',val:d.roe!=null?(d.roe*100).toFixed(1)+'%':'—'},
     ];
     el.innerHTML=metrics.map(m=>`<div class="port-metric"><div class="port-pos-lbl">${m.lbl}</div><div class="port-pos-val">${m.val}</div></div>`).join('');
