@@ -4581,15 +4581,22 @@ async function fetchPortSuggestions(q){
     const dd=document.getElementById('port-dd');
     if(!dd)return;
     if(!items.length){dd.style.display='none';return;}
-    dd.innerHTML=items.map(x=>`<div class="port-dd-item" onmousedown="portSelectTicker('${x.symbol}','${(x.name||x.symbol).replace(/'/g,"\\'")}')"><span style="font-weight:700;font-family:var(--fm)">${x.symbol}</span> <span style="color:var(--t3);font-size:11px">${x.name||''}</span></div>`).join('');
+    const catLabel={stock:'Azione',etf:'ETF',crypto:'Crypto',commodity:'Commodity'};
+    const catColor={stock:'var(--b)',etf:'#047857',crypto:'#7C3AED',commodity:'#92400E'};
+    dd.innerHTML=items.map(x=>`<div class="port-dd-item" onmousedown="portSelectTicker('${x.symbol}','${(x.name||x.symbol).replace(/'/g,"\\'")}','${x.cat||'stock'}')">
+      <span style="font-weight:700;font-family:var(--fm);color:var(--t)">${x.symbol}</span>
+      <span style="color:var(--t3);font-size:11px;margin-left:6px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.name||''}</span>
+      <span style="font-size:9px;font-family:var(--fm);font-weight:600;color:${catColor[x.cat]||'var(--b)'};flex-shrink:0;margin-left:6px">${catLabel[x.cat]||''}</span>
+    </div>`).join('');
     dd.style.display='block';
   }catch(e){hidePortDropdown();}
 }
 
-function portSelectTicker(sym,name){
+function portSelectTicker(sym,name,cat){
   const inp=document.getElementById('port-search');
   if(inp)inp.value=sym;
   portNameCache[sym]=name;
+  if(cat)portCatCache[sym]=cat;
   hidePortDropdown();
   document.getElementById('port-qty')?.focus();
 }
