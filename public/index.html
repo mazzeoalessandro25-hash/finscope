@@ -4176,28 +4176,56 @@ async function renderPortfolio(){
     </div>`).join('');
 
   const summaryHtml=holdingEntries.length>0?`
-    <div style="display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start">
-      <!-- Donut -->
-      <div>
-        <div style="position:relative;width:200px;height:200px;margin:0 auto 16px">
-          <canvas id="port-alloc-donut" width="200" height="200"></canvas>
+    <div style="display:grid;grid-template-columns:240px 1fr 1fr;gap:28px;align-items:start">
+
+      <!-- Colonna 1: Donut -->
+      <div style="display:flex;flex-direction:column;align-items:center">
+        <div style="position:relative;width:220px;height:220px">
+          <canvas id="port-alloc-donut" width="220" height="220"></canvas>
           <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="text-align:center;padding:0 20px">
-              <div style="font-size:16px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.2">${_totalValDisplay}</div>
-              <div style="font-size:11px;font-family:var(--fm);margin-top:3px" class="${_heroUp?'up':'down'}">${_totalPnlDisplay}</div>
+            <div style="text-align:center;padding:0 30px">
+              <div style="font-size:18px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.2">${_totalValDisplay}</div>
+              <div style="font-size:12px;font-family:var(--fm);margin-top:4px" class="${_heroUp?'up':'down'}">${_totalPnlDisplay}</div>
               <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:2px">valore totale</div>
             </div>
           </div>
         </div>
-        <div>${legendRows}</div>
+        <div style="margin-top:12px;width:100%">${legendRows}</div>
       </div>
-      <!-- Stats -->
+
+      <!-- Colonna 2: Totali e P&L -->
       <div>
-        <div style="font-size:10px;font-family:var(--fm);color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">Riepilogo</div>
-        ${statsHtml}
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">Valori</div>
+        ${statRow('Valore (USD)', '$'+fmt(totalValUSD,0))}
+        ${statRow('Valore (EUR)', '€'+fmt(totalValEUR,0))}
+        ${statRow('Investito', '$'+fmt(totalInvUSD,0))}
+        ${statRow('P&L totale', (totalUp?'+':'')+fmt(totalPnlUSD,0), totalUp?'var(--g)':'var(--r)')}
+        ${statRow('Rendimento', (totalUp?'+':'')+fmt(totalPnlPct,1)+'%', totalUp?'var(--g)':'var(--r)')}
+        ${statRow('N° titoli', portfolio.length+'')}
+        ${statRow('Cambio EUR/USD', fmt(eurUsd,4))}
       </div>
+
+      <!-- Colonna 3: Dettaglio valute -->
+      <div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">Per valuta</div>
+        ${totalUSD_inv>0?`
+          <div style="margin-bottom:12px">
+            <div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t);margin-bottom:6px">🇺🇸 USD</div>
+            ${statRow('Investito','$'+fmt(totalUSD_inv,0))}
+            ${statRow('Attuale', totalUSD_val?'$'+fmt(totalUSD_val,0):'—')}
+            ${statRow('P&L', (upU?'+':'')+fmt(pnlU,0)+' ('+fmt(pctU,1)+'%)', upU?'var(--g)':'var(--r)')}
+          </div>`:''}
+        ${totalEUR_inv>0?`
+          <div>
+            <div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t);margin-bottom:6px">🇪🇺 EUR</div>
+            ${statRow('Investito','€'+fmt(totalEUR_inv,0))}
+            ${statRow('Attuale', totalEUR_val?'€'+fmt(totalEUR_val,0):'—')}
+            ${statRow('P&L', (upE?'+':'')+fmt(pnlE,0)+' ('+fmt(pctE,1)+'%)', upE?'var(--g)':'var(--r)')}
+          </div>`:''}
+      </div>
+
     </div>`
-    :'<div class="ld" style="padding:10px">Aggiungi titoli per vedere il riepilogo</div>';
+    :'<div class="ld" style="padding:20px;text-align:center">Aggiungi titoli per vedere il riepilogo</div>';
 
   document.getElementById('port-summary').innerHTML=summaryHtml;
   // Interactive allocation donut
