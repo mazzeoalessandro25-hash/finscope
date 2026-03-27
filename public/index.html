@@ -1643,14 +1643,20 @@ html.dark .auth-box{background:#1e293b}
         </div>
       </div>
 
-      <!-- RIGHT: Analysis panel -->
+      <!-- RIGHT: Overview (default) + Analysis (on click) -->
       <div class="port-center">
-        <div class="port-empty-panel" id="port-panel-empty">
-          <div style="font-size:48px;margin-bottom:14px">📊</div>
-          <div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:8px">Seleziona un asset</div>
-          <div style="font-size:13px;color:var(--t2)">Clicca su un titolo dalla lista per vedere l'analisi dettagliata</div>
+
+        <!-- OVERVIEW: donut + stats — visibile per default -->
+        <div id="port-panel-overview" class="port-analysis-card">
+          <div id="port-summary"><div class="ld" style="padding:20px;text-align:center">Aggiungi titoli per vedere il riepilogo</div></div>
+          <span id="port-summary-rate" style="display:none"></span>
         </div>
+
+        <!-- ANALYSIS: mostrato quando si clicca un asset -->
         <div class="port-analysis-card" id="port-panel-analysis" style="display:none">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+            <button onclick="showPortOverview()" style="background:none;border:none;color:var(--b);font-size:12px;font-family:var(--fm);cursor:pointer;padding:0;display:flex;align-items:center;gap:4px">← Panoramica</button>
+          </div>
           <div class="port-analysis-hdr">
             <img id="port-analysis-logo" src="" alt="" style="width:40px;height:40px;border-radius:10px;object-fit:cover;display:none"/>
             <div style="flex:1;min-width:0">
@@ -1677,10 +1683,11 @@ html.dark .auth-box{background:#1e293b}
               <button class="port-range-btn" onclick="setPortRange('1y',this)">1A</button>
             </div>
           </div>
-          <div id="port-chart" style="height:300px;border-radius:10px;overflow:hidden;background:var(--s2)"></div>
+          <div id="port-chart" style="height:280px;border-radius:10px;overflow:hidden;background:var(--s2)"></div>
           <div class="port-metrics-grid" id="port-metrics"></div>
           <div class="port-news-section" id="port-news"></div>
         </div>
+
       </div>
 
     </div><!-- end port-2col -->
