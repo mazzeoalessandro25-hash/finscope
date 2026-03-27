@@ -3884,7 +3884,7 @@ async function addPortfolioItem(){
               sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L');
   const currency=isEU?'EUR':'USD';
   const csym=isEU?'€':'$';
-  const cat=detectPortCat(sym);
+  const cat=portCatCache[sym]||detectPortCat(sym);
   const name=portNameCache[sym]||sym;
 
   const buyDate=document.getElementById('port-date').value||new Date().toISOString().split('T')[0];
