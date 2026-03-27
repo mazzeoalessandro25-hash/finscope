@@ -4499,7 +4499,7 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   renderPortDailyText(el, text);
 }
 
-function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap){
+function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}){
   const up = totalChgUSD >= 0;
   const sorted = [...assets].sort((a,b)=>b.chgPct-a.chgPct);
   const best = sorted[0];
@@ -4511,74 +4511,95 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap){
   const absUSD = Math.abs(totalChgUSD).toFixed(0);
   const date = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
 
-  // ── Andamento complessivo ──
-  let mood;
-  if(Math.abs(totalChgPct)<0.3) mood='sostanzialmente stabile';
-  else if(up) mood=totalChgPct>1.5?'in decisa progressione':'in moderato rialzo';
-  else mood=totalChgPct<-1.5?'in netta flessione':'in leggero calo';
+  // ── Contesto macro: indici + news ──
+  const fmtIdx=(d)=>{
+    if(!d?.price||!d?.prev) return null;
+    const chg=(d.price-d.prev)/d.prev*100;
+    return `${chg>=0?'+':''}${chg.toFixed(2)}%`;
+  };
+  const sp=indicesMap['^GSPC'], nq=indicesMap['^IXIC'], dj=indicesMap['^DJI'];
+  const gc=indicesMap['GC=F'], cl=indicesMap['CL=F'];
+  const spStr=fmtIdx(sp), nqStr=fmtIdx(nq), djStr=fmtIdx(dj);
+  const gcStr=fmtIdx(gc), clStr=fmtIdx(cl);
 
-  let overallText = `Il portafoglio ha chiuso ${date} ${mood}, con una variazione di ${up?'+':'−'}${absPct}% (${up?'+':'−'}$${absUSD}). `;
+  let indicesLine='';
+  const idxParts=[];
+  if(spStr) idxParts.push(`S&P 500 ${spStr}`);
+  if(nqStr) idxParts.push(`Nasdaq ${nqStr}`);
+  if(djStr) idxParts.push(`Dow Jones ${djStr}`);
+  if(gcStr) idxParts.push(`Oro ${gcStr}`);
+  if(clStr) idxParts.push(`Petrolio ${clStr}`);
+  if(idxParts.length) indicesLine=`Sui principali mercati: ${idxParts.join(', ')}. `;
+
+  // Sentiment mercato dal confronto indici
+  const idxVals=[sp,nq,dj].filter(Boolean).map(d=>(d.price-d.prev)/d.prev*100);
+  const avgIdx=idxVals.length?idxVals.reduce((a,b)=>a+b,0)/idxVals.length:0;
+  let mktSentiment='';
+  if(idxVals.length){
+    if(avgIdx>1) mktSentiment='Giornata di risk-on sui mercati globali, con gli indici principali in deciso rialzo. ';
+    else if(avgIdx>0.2) mktSentiment='Seduta moderatamente positiva per i mercati azionari. ';
+    else if(avgIdx>-0.2) mktSentiment='Mercati incerti nella seduta odierna, senza una direzione definita. ';
+    else if(avgIdx>-1) mktSentiment='Pressioni ribassiste sui mercati azionari nel corso della giornata. ';
+    else mktSentiment='Giornata di risk-off con vendite diffuse sui mercati globali. ';
+  }
+
+  // Notizie macro
+  let macroNewsText='';
+  if(macroNews.length>0){
+    macroNewsText='Le notizie principali di giornata: ';
+    macroNewsText+=macroNews.slice(0,3).map(n=>`"${n.title}"`).join('; ')+'. ';
+  }
+
+  const macroSection=`${mktSentiment}${indicesLine}${macroNewsText}`.trim();
+
+  // ── Andamento portafoglio ──
+  let mood;
+  if(Math.abs(totalChgPct)<0.3) mood='chiuso sostanzialmente stabile';
+  else if(up) mood=totalChgPct>1.5?'chiuso in decisa progressione':'avanzato moderatamente';
+  else mood=totalChgPct<-1.5?'subito una netta flessione':'ceduto leggermente';
+
+  let overallText=`Il portafoglio ha ${mood} con una variazione di ${up?'+':'−'}${absPct}% (${up?'+':'−'}$${absUSD}). `;
   if(nUp===tot) overallText+=`Tutti i ${tot} titoli hanno terminato in positivo.`;
   else if(nDown===tot) overallText+=`Tutti i ${tot} titoli hanno chiuso in territorio negativo.`;
-  else overallText+=`${nUp} titol${nUp===1?'o':'i'} in rialzo e ${nDown} in ribasso su ${tot} in portafoglio.`;
+  else overallText+=`${nUp} titol${nUp===1?'o':'i'} in rialzo e ${nDown} in ribasso su ${tot} posizioni.`;
+
+  // Coerenza con mercato
+  if(idxVals.length){
+    if(up && avgIdx<-0.3) overallText+=' Il portafoglio ha mostrato resilienza rispetto al mercato generale.';
+    else if(!up && avgIdx>0.3) overallText+=' Il portafoglio ha sottoperformato il mercato nella seduta odierna.';
+  }
 
   // ── Titoli in evidenza ──
-  let evidenzaText = '';
-  const discussed = new Set();
-
-  const commentAsset = (a, role) => {
-    if(!a || discussed.has(a.sym)) return '';
+  let evidenzaText='';
+  const discussed=new Set();
+  const commentAsset=(a)=>{
+    if(!a||discussed.has(a.sym)) return '';
     discussed.add(a.sym);
-    const assetUp = a.chgPct >= 0;
-    const sign = assetUp ? '+' : '';
-    const chgStr = `${sign}${a.chgPct.toFixed(2)}%`;
-    const usdStr = `${a.chgUSD>=0?'+':''}$${Math.abs(a.chgUSD).toFixed(0)}`;
-    const name = a.name && a.name!==a.sym ? a.name : a.sym;
-
-    let line = `<strong>${a.sym}</strong> (${name}) ha ${assetUp?'guadagnato':'perso'} ${chgStr} (${usdStr})`;
-
-    // Aggiungi notizia rilevante se disponibile
-    const news = newsMap[a.sym] || [];
-    if(news.length>0){
-      const headline = news[0].title;
-      line += `. In evidenza: "${headline}"`;
-      if(news[1]) line += `. Inoltre: "${news[1].title}"`;
-    }
-    line += '. ';
-    return line;
+    const assetUp=a.chgPct>=0;
+    const chgStr=`${assetUp?'+':''}${a.chgPct.toFixed(2)}%`;
+    const usdStr=`${a.chgUSD>=0?'+':''}$${Math.abs(a.chgUSD).toFixed(0)}`;
+    const name=a.name&&a.name!==a.sym?a.name:a.sym;
+    let line=`<strong>${a.sym}</strong> (${name}): ${chgStr} (${usdStr})`;
+    const news=newsMap[a.sym]||[];
+    if(news[0]) line+=`. "${news[0].title}"`;
+    if(news[1]) line+=`. "${news[1].title}"`;
+    return line+'. ';
   };
+  evidenzaText+=commentAsset(best);
+  if(worst&&worst.sym!==best?.sym&&Math.abs(worst.chgPct)>0.3) evidenzaText+=commentAsset(worst);
+  const third=sorted.find(a=>!discussed.has(a.sym)&&Math.abs(a.chgPct)>0.5);
+  if(third) evidenzaText+=commentAsset(third);
 
-  if(best && worst && best.sym !== worst.sym){
-    // Miglior performer
-    evidenzaText += commentAsset(best, 'best');
-    // Peggior performer (solo se si è mosso abbastanza)
-    if(Math.abs(worst.chgPct)>0.3) evidenzaText += commentAsset(worst, 'worst');
-    // Terzo titolo rilevante se esiste
-    const third = sorted.find(a=>!discussed.has(a.sym) && Math.abs(a.chgPct)>0.5);
-    if(third) evidenzaText += commentAsset(third, 'other');
-  } else if(best){
-    evidenzaText += commentAsset(best, 'best');
-  }
-
-  // ── Notizie di mercato generali ──
-  let marketText = '';
-  const mNews = newsMap['__market__'] || [];
-  if(mNews.length>0){
-    marketText = `Sul mercato: "${mNews[0].title}"`;
-    if(mNews[1]) marketText += `. "${mNews[1].title}"`;
-    marketText += '.';
-  }
-
-  // ── Sintesi finale ──
+  // ── Sintesi ──
   let sintesi;
-  if(Math.abs(totalChgPct)<0.3) sintesi='Una seduta interlocutoria senza variazioni significative per il portafoglio.';
-  else if(up) sintesi=`Una seduta positiva: il portafoglio ${totalChgPct>1?'guadagna terreno in modo consistente':'avanza con cautela'}.`;
-  else sintesi=`Una seduta difficile: il portafoglio ${totalChgPct<-1?'accusa una perdita rilevante':'cede moderatamente rispetto alla chiusura precedente'}.`;
+  if(Math.abs(totalChgPct)<0.3) sintesi='Una seduta interlocutoria: il portafoglio non registra variazioni significative.';
+  else if(up) sintesi=totalChgPct>1?'Giornata decisamente positiva per il portafoglio.':'Il portafoglio chiude in territorio positivo, in linea con il tono generale dei mercati.';
+  else sintesi=totalChgPct<-1?'Seduta difficile: le perdite sono rilevanti e richiedono attenzione.':'Leggero arretramento del portafoglio, in una giornata senza grandi direttive.';
 
   return [
-    `**Andamento complessivo**\n${overallText}`,
+    macroSection ? `**Mercati oggi**\n${macroSection}` : '',
+    `**Il tuo portafoglio**\n${overallText}`,
     evidenzaText ? `**Titoli in evidenza**\n${evidenzaText}` : '',
-    marketText ? `**Dal mercato**\n${marketText}` : '',
     `**Sintesi**\n${sintesi}`
   ].filter(Boolean).join('\n\n');
 }
