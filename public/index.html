@@ -1714,13 +1714,20 @@ html.dark .auth-box{background:#1e293b}
   <button class="port-tab" id="ptab-btn-gestione" onclick="switchPortTab('gestione')">⚙️ Gestione</button>
 </div>
 
-      <!-- ANALISI: existing analysis content + risk analytics stacked -->
+      <!-- ANALISI: riepilogo + analisi + risk -->
       <div class="port-tab-panel active" id="ptab-analisi">
-        <div class="card" id="port-analysis-card">
+        <!-- Riepilogo allocazione -->
+        <div class="card" style="margin-bottom:10px">
+          <div class="ch">
+            <div><div class="ct">Riepilogo Portafoglio</div><div class="cs">Allocazione · Valori totali · Confronto valute <span id="port-summary-rate" style="font-family:var(--fm);font-size:10px;color:var(--t3)"></span></div></div>
+          </div>
+          <div id="port-summary"><div class="ld" style="padding:8px 0">Caricamento...</div></div>
+        </div>
+        <div class="card" style="margin-bottom:10px" id="port-analysis-card">
           <div class="ch"><div><div class="ct">Analisi & Profilo</div><div class="cs">Composizione, radar del portafoglio e segnali per titolo</div></div></div>
           <div id="port-analysis-content"><div class="ld" style="padding:10px">Aggiungi titoli per vedere l'analisi</div></div>
         </div>
-        <div class="card" style="margin-top:10px" id="risk-card">
+        <div class="card" id="risk-card">
           <div class="ch"><div><div class="ct">Risk Analytics</div><div class="cs">Sharpe · VaR 95% · Max Drawdown · Volatilità · Correlazione</div></div></div>
           <div id="risk-content"><div class="ld" style="padding:10px">Caricamento metriche di rischio...</div></div>
         </div>
