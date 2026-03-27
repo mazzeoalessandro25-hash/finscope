@@ -4354,7 +4354,7 @@ function selectPortAsset(idx,silent){
   if(!item)return;
   portSelectedSym=item.sym;
   // Highlight selected
-  document.querySelectorAll('.port-asset-item').forEach(el=>el.classList.remove('selected'));
+  document.querySelectorAll('.port-item').forEach(el=>el.classList.remove('selected'));
   const el=document.getElementById('port-item-'+idx);
   if(el)el.classList.add('selected');
   // Show panel
