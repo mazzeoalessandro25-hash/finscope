@@ -4290,7 +4290,8 @@ async function renderPortfolio(){
           ${totalEUR_inv>0?statRow('🇪🇺 EUR P&L',(upE?'+':'')+fmt(pnlE,0)+' ('+fmt(pctE,1)+'%)',upE?'var(--g)':'var(--r)'):''}
         </div>
       </div>
-    </div>`
+    </div>
+    ${dailySection}`
     :'<div style="padding:30px;text-align:center;color:var(--t3)"><div style="font-size:32px;margin-bottom:10px">📊</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Nessun titolo</div><div style="font-size:11px">Aggiungi il primo asset dalla lista</div></div>';
 
   document.getElementById('port-summary').innerHTML=summaryHtml;
