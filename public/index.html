@@ -4452,26 +4452,49 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   if(cached){ renderPortDailyText(el, cached); return; }
   el.innerHTML='<div class="ld" style="padding:8px 0">Raccolta notizie in corso…</div>';
 
-  // Prendi i top 3 mover (per valore assoluto di variazione %)
   const sorted=[...assets].sort((a,b)=>Math.abs(b.chgPct)-Math.abs(a.chgPct));
   const topMovers=sorted.slice(0,3);
 
-  // Fetch notizie per ciascun top mover + notizie generali mercato (in parallelo)
-  const newsResults = await Promise.all([
-    ...topMovers.map(a=>
+  // Fetch parallelo: notizie asset + macro mercato + quotazioni indici
+  const [newsResults, indicesResults, macroNewsResults] = await Promise.all([
+    // Notizie per i top mover
+    Promise.all(topMovers.map(a=>
       fetch(`/api/quote?type=news&symbol=${encodeURIComponent(a.sym)}`)
         .then(r=>r.json()).then(d=>({sym:a.sym, news:(d.news||[]).slice(0,2)}))
         .catch(()=>({sym:a.sym,news:[]}))
-    ),
-    fetch(`/api/quote?type=news&symbol=stock+market+today`)
-      .then(r=>r.json()).then(d=>({sym:'__market__', news:(d.news||[]).slice(0,2)}))
-      .catch(()=>({sym:'__market__',news:[]}))
+    )),
+    // Quotazioni indici principali
+    Promise.all(['^GSPC','^IXIC','^DJI','GC=F','CL=F'].map(idx=>
+      fetch(`/api/quote?symbol=${encodeURIComponent(idx)}`)
+        .then(r=>r.json()).then(d=>({sym:idx,...d}))
+        .catch(()=>({sym:idx}))
+    )),
+    // News macro: mercato + economia + Fed
+    Promise.all([
+      'stock market today S&P 500 Nasdaq',
+      'Federal Reserve inflation economy',
+      'mercati finanziari borsa oggi'
+    ].map(q=>
+      fetch(`/api/quote?type=news&symbol=${encodeURIComponent(q)}`)
+        .then(r=>r.json()).then(d=>(d.news||[]).slice(0,2))
+        .catch(()=>[])
+    ))
   ]);
 
   const newsMap={};
   newsResults.forEach(r=>{ newsMap[r.sym]=r.news; });
 
-  const text = buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap);
+  // Deduplica notizie macro per titolo
+  const seenTitles=new Set();
+  const macroNews=macroNewsResults.flat().filter(n=>{
+    if(seenTitles.has(n.title)) return false;
+    seenTitles.add(n.title); return true;
+  }).slice(0,5);
+
+  const indicesMap={};
+  indicesResults.forEach(d=>{ indicesMap[d.sym]=d; });
+
+  const text = buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews, indicesMap);
   sessionStorage.setItem('portDaily_'+key, text);
   renderPortDailyText(el, text);
 }
