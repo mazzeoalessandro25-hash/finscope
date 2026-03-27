@@ -1601,8 +1601,8 @@ html.dark .auth-box{background:#1e293b}
       </div>
     </div>
 
-    <!-- ── 3-COLUMN LAYOUT ── -->
-    <div class="port-3col">
+    <!-- ── 2-COLUMN LAYOUT ── -->
+    <div class="port-2col">
 
       <!-- LEFT: Add form + category tabs + asset list -->
       <div class="port-left">
@@ -1627,25 +1627,23 @@ html.dark .auth-box{background:#1e293b}
           <button class="port-cat-tab" onclick="setPortCat('crypto',this)">Crypto</button>
           <button class="port-cat-tab" onclick="setPortCat('commodity',this)">Comm.</button>
         </div>
-        <div class="port-list-wrap" id="port-list">
-          <div class="ld">Nessun titolo aggiunto</div>
-        </div>
-        <div style="display:flex;gap:6px;margin-top:8px">
-          <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioCSV()">⬇ CSV</button>
-          <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()">⬆ Importa</button>
+        <div id="port-list"><div class="ld" style="padding:20px;text-align:center">Nessun titolo aggiunto</div></div>
+        <div style="display:flex;gap:6px;margin-top:2px">
+          <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioCSV()">⬇ Esporta CSV</button>
+          <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()">⬆ Importa CSV</button>
         </div>
       </div>
 
-      <!-- CENTER: Inline analysis panel -->
+      <!-- RIGHT: Analysis panel -->
       <div class="port-center">
         <div class="port-empty-panel" id="port-panel-empty">
-          <div style="font-size:40px;margin-bottom:12px">📊</div>
-          <div style="font-size:15px;font-weight:600;color:var(--t);margin-bottom:6px">Seleziona un asset</div>
-          <div style="font-size:12px;color:var(--t2)">Clicca su un titolo dalla lista per vedere l'analisi dettagliata</div>
+          <div style="font-size:48px;margin-bottom:14px">📊</div>
+          <div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:8px">Seleziona un asset</div>
+          <div style="font-size:13px;color:var(--t2)">Clicca su un titolo dalla lista per vedere l'analisi dettagliata</div>
         </div>
         <div class="port-analysis-card" id="port-panel-analysis" style="display:none">
           <div class="port-analysis-hdr">
-            <img id="port-analysis-logo" src="" alt="" style="width:36px;height:36px;border-radius:8px;object-fit:cover;display:none"/>
+            <img id="port-analysis-logo" src="" alt="" style="width:40px;height:40px;border-radius:10px;object-fit:cover;display:none"/>
             <div style="flex:1;min-width:0">
               <div class="port-analysis-name" id="port-analysis-name">—</div>
               <div class="port-analysis-sym-lbl" id="port-analysis-sym">—</div>
@@ -1670,36 +1668,13 @@ html.dark .auth-box{background:#1e293b}
               <button class="port-range-btn" onclick="setPortRange('1y',this)">1A</button>
             </div>
           </div>
-          <div id="port-chart" style="height:260px;border-radius:8px;overflow:hidden;background:var(--s2)"></div>
+          <div id="port-chart" style="height:300px;border-radius:10px;overflow:hidden;background:var(--s2)"></div>
           <div class="port-metrics-grid" id="port-metrics"></div>
           <div class="port-news-section" id="port-news"></div>
         </div>
       </div>
 
-      <!-- RIGHT: Allocation + Risk + Watchlist -->
-      <div class="port-right">
-        <div class="port-right-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-            <div class="ct" style="font-size:13px">Allocazione</div>
-            <div style="display:flex;gap:4px">
-              <button class="port-sort-btn active" id="palloc-cat" onclick="setPortAllocView('cat',this)" style="font-size:10px;padding:2px 7px">Categoria</button>
-              <button class="port-sort-btn" id="palloc-pos" onclick="setPortAllocView('pos',this)" style="font-size:10px;padding:2px 7px">Posizione</button>
-            </div>
-          </div>
-          <canvas id="port-alloc-chart" height="150"></canvas>
-          <div id="port-alloc-legend" class="port-alloc-legend"></div>
-        </div>
-        <div class="port-right-card">
-          <div class="ct" style="font-size:13px;margin-bottom:10px">Panoramica Rischio</div>
-          <div id="port-risk"></div>
-        </div>
-        <div class="port-right-card">
-          <div class="ct" style="font-size:13px;margin-bottom:10px">Watchlist</div>
-          <div id="wl-list-port"></div>
-        </div>
-      </div>
-
-    </div><!-- end port-3col -->
+    </div><!-- end port-2col -->
 
     <!-- Legacy hidden elements for backward compatibility -->
     <div style="display:none">
