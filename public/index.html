@@ -4203,6 +4203,30 @@ async function renderPortfolio(){
   const dailyUp=dailyPnlUSD>=0;
   setS('psb-oggi',(dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
 
+  // ── Sezione giornata di oggi ──
+  const dailySorted=[...dailyItems].sort((a,b)=>b.chgPct-a.chgPct);
+  const maxAbsChg=Math.max(...dailySorted.map(d=>Math.abs(d.chgPct)),0.01);
+  const dailySection=dailyItems.length>0?`
+    <div style="margin-top:12px;border-top:1px solid var(--bd);padding-top:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">📅 Giornata di oggi</div>
+        <div style="font-family:var(--fm);font-size:11px;font-weight:700;${dailyUp?'color:var(--g)':'color:var(--r)'}">${dailyUp?'+':''}${fmt(dailyPnlUSD,0)} USD (${dailyUp?'+':''}${fmt(dailyPnlPct,1)}%)</div>
+      </div>
+      ${dailySorted.map(d=>{
+        const up=d.chgPct>=0;
+        const barW=Math.round(Math.abs(d.chgPct)/maxAbsChg*100);
+        const chgUSDStr=(d.chgUSD>=0?'+':'')+fmt(d.chgUSD,0);
+        return`<div style="display:flex;align-items:center;gap:6px;padding:3px 0">
+          <div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t);width:54px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${d.name}">${d.sym}</div>
+          <div style="flex:1;height:5px;background:var(--bd);border-radius:3px;overflow:hidden">
+            <div style="height:5px;width:${barW}%;background:${up?'#059669':'#DC2626'};border-radius:3px;transition:width .5s ease"></div>
+          </div>
+          <div style="font-size:10px;font-family:var(--fm);font-weight:700;${up?'color:#059669':'color:#DC2626'};width:38px;text-align:right;flex-shrink:0">${up?'+':''}${fmt(d.chgPct,2)}%</div>
+          <div style="font-size:9px;font-family:var(--fm);color:var(--t3);width:44px;text-align:right;flex-shrink:0">${chgUSDStr}</div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
   const _totalValDisplay=_isEUR?'€'+fmt(totalValEUR,0):'$'+fmt(totalValUSD,0);
   const _totalPnlDisplay=(_heroUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
   const holdingEntries=portfolio.map((item,i)=>[item.sym,item.qty*item.buyPrice]).sort((a,b)=>b[1]-a[1]);
