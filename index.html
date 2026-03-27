@@ -1053,7 +1053,7 @@ body.dark .sd-item:hover{background:var(--s3)}
 <!-- ═══ PORTAFOGLIO ═══ -->
 <div class="page" id="page-portafoglio">
   <div class="pg-title">Il mio portafoglio</div>
-  <div class="pg-sub" id="port-sub">Accedi per salvare e monitorare i tuoi titoli</div>
+  <div class="pg-sub" id="port-sub">Accedi per salvare e monitorare i tuoi asset</div>
 
   <div id="port-login-msg" style="display:none;text-align:center;padding:48px 20px">
     <div style="font-size:40px;margin-bottom:16px">🔒</div>
@@ -1063,37 +1063,168 @@ body.dark .sd-item:hover{background:var(--s3)}
   </div>
 
   <div id="port-content" style="display:none">
-    <!-- Aggiungi titolo -->
-    <div class="card" style="margin-bottom:16px">
-      <div class="ch"><div><div class="ct">Aggiungi titolo</div><div class="cs">Inserisci ticker, quantità e prezzo di acquisto</div></div></div>
-      <div class="port-add-row">
-        <input class="port-inp" id="port-sym" type="text" placeholder="Ticker (es. AAPL)" style="width:120px;text-transform:uppercase"/>
-        <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any" style="width:100px"/>
-        <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acquisto $" min="0" step="any" style="width:150px"/>
-        <button class="port-btn" onclick="addPortfolioItem()">+ Aggiungi</button>
+
+    <!-- KPI BAR -->
+    <div class="port-kpi-bar">
+      <div class="port-kpi">
+        <div class="port-kpi-lbl">VALORE TOTALE</div>
+        <div class="port-kpi-val" id="pkpi-total">—</div>
+        <div class="port-kpi-sub" id="pkpi-total-sub">—</div>
+      </div>
+      <div class="port-kpi">
+        <div class="port-kpi-lbl">P&amp;L TOTALE</div>
+        <div class="port-kpi-val" id="pkpi-pnl">—</div>
+        <div class="port-kpi-sub" id="pkpi-pnl-sub">—</div>
+      </div>
+      <div class="port-kpi">
+        <div class="port-kpi-lbl">ASSET IN PORTAFOGLIO</div>
+        <div class="port-kpi-val" id="pkpi-count">—</div>
+        <div class="port-kpi-sub" id="pkpi-count-sub">—</div>
+      </div>
+      <div class="port-kpi">
+        <div class="port-kpi-lbl">MIGLIOR POSIZIONE</div>
+        <div class="port-kpi-val" id="pkpi-best">—</div>
+        <div class="port-kpi-sub" id="pkpi-best-sub">—</div>
       </div>
     </div>
 
-    <!-- Lista titoli + riepilogo -->
-    <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
-      <div class="card">
-        <div class="ch"><div><div class="ct">Titoli in portafoglio</div><div class="cs">Prezzi live · clicca per grafico</div></div></div>
-        <div id="port-list"><div class="ld">Nessun titolo aggiunto</div></div>
-      </div>
-      <div class="card">
-        <div class="ch"><div><div class="ct">Riepilogo</div></div></div>
-        <div id="port-summary">
-          <div class="ld" style="padding:10px">Caricamento...</div>
+    <!-- 3-COLONNE -->
+    <div class="port-3col">
+
+      <!-- ── SINISTRA: Lista asset ── -->
+      <div class="port-left">
+
+        <!-- Form aggiungi -->
+        <div class="port-add-form">
+          <div style="font-size:11px;font-weight:700;color:var(--t);margin-bottom:10px;letter-spacing:.2px">+ Aggiungi asset</div>
+          <div class="port-search-wrap">
+            <input class="port-search-inp" id="port-search" type="text" placeholder="Cerca ticker o nome azienda…" autocomplete="off"
+              oninput="onPortSearchInput()" onkeydown="onPortSearchKey(event)" style="text-transform:uppercase"/>
+            <div class="port-dd" id="port-dd"></div>
+          </div>
+          <div class="port-add-row2">
+            <div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">QUANTITÀ</div>
+              <input class="port-search-inp" id="port-qty" type="number" placeholder="0" min="0.0001" step="any"/>
+            </div>
+            <div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">PREZZO €/$</div>
+              <input class="port-search-inp" id="port-price" type="number" placeholder="0.00" min="0" step="any"/>
+            </div>
+          </div>
+          <button class="port-add-btn" onclick="addPortfolioItem()">+ Aggiungi al portafoglio</button>
+          <div style="font-size:10px;color:var(--t3);margin-top:7px;font-family:var(--fm)">Crypto: BTC-USD · Commodities: GC=F, BZ=F</div>
         </div>
+
+        <!-- Filtro categoria -->
+        <div class="port-cat-bar" id="port-cat-bar">
+          <button class="port-cat-tab active" onclick="setPortCat('all',this)">Tutti</button>
+          <button class="port-cat-tab" onclick="setPortCat('stock',this)">Azioni</button>
+          <button class="port-cat-tab" onclick="setPortCat('etf',this)">ETF</button>
+          <button class="port-cat-tab" onclick="setPortCat('crypto',this)">Crypto</button>
+          <button class="port-cat-tab" onclick="setPortCat('commodity',this)">Comm.</button>
+        </div>
+
+        <!-- Lista asset -->
+        <div class="port-list-wrap" id="port-list">
+          <div class="ld">Nessun asset aggiunto</div>
+        </div>
+      </div>
+
+      <!-- ── CENTRO: Pannello analisi ── -->
+      <div class="port-center">
+
+        <!-- Empty state -->
+        <div class="port-analysis-card" id="port-panel-empty">
+          <div class="port-empty-panel">
+            <div style="font-size:40px;margin-bottom:12px;opacity:.35">📊</div>
+            <div style="font-size:14px;font-weight:700;color:var(--t);margin-bottom:6px">Seleziona un asset</div>
+            <div style="font-size:12px;color:var(--t3);text-align:center;max-width:220px;line-height:1.5">Clicca su un titolo nella lista per vedere l'analisi dettagliata con grafico, metriche e notizie</div>
+          </div>
+        </div>
+
+        <!-- Pannello analisi (visibile dopo selezione) -->
+        <div id="port-panel-analysis" style="display:none">
+          <div class="port-analysis-card">
+
+            <!-- Header: logo + nome + prezzo + variazione -->
+            <div class="port-analysis-hdr">
+              <div id="port-analysis-logo"></div>
+              <div class="port-analysis-info">
+                <div class="port-analysis-name" id="port-analysis-name">—</div>
+                <div class="port-analysis-sym-lbl" id="port-analysis-sym">—</div>
+              </div>
+              <div style="text-align:right;flex-shrink:0">
+                <div class="port-analysis-price" id="port-analysis-price">—</div>
+                <div><span class="port-analysis-chg" id="port-analysis-chg">—</span></div>
+              </div>
+            </div>
+
+            <!-- Riepilogo posizione -->
+            <div class="port-pos-grid" id="port-analysis-pos"></div>
+
+            <!-- Controlli grafico -->
+            <div class="port-chart-ctrls">
+              <div class="port-chart-type-btns">
+                <button class="port-type-btn active" id="pct-candle" onclick="setPortChartType('candle',this)">🕯 Candele</button>
+                <button class="port-type-btn" id="pct-line" onclick="setPortChartType('line',this)">📈 Linea</button>
+              </div>
+              <div class="port-ranges">
+                <button class="port-range-btn" onclick="setPortRange('1d',this)">1G</button>
+                <button class="port-range-btn" onclick="setPortRange('5d',this)">5G</button>
+                <button class="port-range-btn active" onclick="setPortRange('1mo',this)">1M</button>
+                <button class="port-range-btn" onclick="setPortRange('3mo',this)">3M</button>
+                <button class="port-range-btn" onclick="setPortRange('6mo',this)">6M</button>
+                <button class="port-range-btn" onclick="setPortRange('1y',this)">1A</button>
+                <button class="port-range-btn" onclick="setPortRange('5y',this)">5A</button>
+              </div>
+            </div>
+
+            <!-- Grafico -->
+            <div id="port-chart" style="height:268px"></div>
+
+            <!-- Metriche fondamentali -->
+            <div class="port-metrics-grid" id="port-metrics"></div>
+
+            <!-- News correlate -->
+            <div class="port-news-section" id="port-news"></div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ── DESTRA: Allocazione + Metriche + Watchlist ── -->
+      <div class="port-right">
+
+        <!-- Allocazione portafoglio -->
+        <div class="port-right-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+            <div class="ct">Allocazione</div>
+            <div style="display:flex;gap:3px;background:var(--s2);border-radius:7px;padding:2px;border:1px solid var(--bd)">
+              <button class="port-type-btn active" id="pat-cat" onclick="setPortAllocView('cat',this)" style="font-size:9px;padding:3px 8px">Tipo</button>
+              <button class="port-type-btn" id="pat-pos" onclick="setPortAllocView('pos',this)" style="font-size:9px;padding:3px 8px">Top 6</button>
+            </div>
+          </div>
+          <canvas id="port-alloc-chart" height="150"></canvas>
+          <div class="port-alloc-legend" id="port-alloc-legend"></div>
+        </div>
+
+        <!-- Panoramica rischio -->
+        <div class="port-right-card">
+          <div class="ct" style="margin-bottom:12px">Panoramica</div>
+          <div id="port-risk"><div class="ld" style="padding:4px 0">Aggiungi asset</div></div>
+        </div>
+
         <!-- Watchlist -->
-        <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
-          <div class="ct" style="margin-bottom:12px">Watchlist</div>
-          <div id="wl-list-port"><div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Nessun titolo in watchlist</div></div>
+        <div class="port-right-card">
+          <div class="ct" style="margin-bottom:10px">★ Watchlist</div>
+          <div id="wl-list-port"><div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Nessun titolo · Aggiungi tramite ★ nello Screener</div></div>
         </div>
+
       </div>
-    </div>
-  </div>
-</div>
+    </div><!-- fine port-3col -->
+  </div><!-- fine port-content -->
+</div><!-- fine page-portafoglio -->
 
 <!-- ═══ SIMULATORE ═══ -->
 <div class="page" id="page-simulatore">
