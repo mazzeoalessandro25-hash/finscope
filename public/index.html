@@ -4712,7 +4712,7 @@ function renderPortDailyText(el, payload){
   let text='', macroNews=[], indicesMap={}, newsMap={};
   try{
     const p=JSON.parse(payload);
-    text=p.text||''; macroNews=p.macroNews||[]; indicesMap=p.indicesMap||{};
+    text=p.text||''; macroNews=p.macroNews||[]; indicesMap=p.indicesMap||{}; newsMap=p.newsMap||{};
   } catch(e){ text=payload; }
 
   // ── Barra indici ──
