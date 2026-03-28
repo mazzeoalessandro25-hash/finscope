@@ -3438,8 +3438,8 @@ function renderMarketStocks(){
     const mktcap=s.marketCap?fmtLg(s.marketCap):'—';
     const logo=typeof logoHtml==='function'?logoHtml(s.s,s.n):'';
     const sc=calcStockScore(s);
-    const scStr=sc!=null?sc:'—';
-    const scColor=sc==null?'var(--t3)':sc>=70?'#10B981':sc>=45?'#F59E0B':'#EF4444';
+    const scStr=sc==='load'?'⟳':sc!=null?sc:'—';
+    const scColor=sc==='load'||sc==null?'var(--t3)':sc>=70?'#10B981':sc>=45?'#F59E0B':'#EF4444';
     return`<tr onclick="openFA('${s.s}')">
       <td onclick="event.stopPropagation();toggleWl('${s.s}',this)"><button class="star-btn ${typeof watchlist!=='undefined'&&watchlist.includes(s.s)?'active':''}">★</button></td>
       <td onclick="event.stopPropagation()">${logo}</td>
