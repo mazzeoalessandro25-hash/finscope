@@ -4532,6 +4532,7 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   const payload = JSON.stringify({ text, macroNews, indicesMap, newsMap });
   sessionStorage.setItem('portDaily_'+key, payload);
   renderPortDailyText(el, payload);
+  schedulePortDailyRefresh();
 }
 
 function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}){
