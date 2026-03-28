@@ -4325,9 +4325,10 @@ async function renderPortfolio(){
     <div style="position:relative;width:180px;height:180px;margin:0 auto 14px">
       <canvas id="port-alloc-donut" width="180" height="180"></canvas>
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-        <div style="text-align:center;padding:0 26px">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Valore totale</div>
-          <div style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">${_totalValDisplay}</div>
+        <div style="text-align:center;padding:0 22px">
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px">Valore totale</div>
+          <div style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">€${fmt(totalValEUR,0)}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">≈ $${fmt(totalValUSD,0)}</div>
           <div style="font-size:10px;font-family:var(--fm);font-weight:600;margin-top:3px" class="${_heroUp?'up':'down'}">${_heroUp?'+':''}${_totalPnlDisplay}</div>
           <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">${_heroUp?'▲':'▼'} ${fmt(Math.abs(totalPnlPct),1)}%</div>
         </div>
