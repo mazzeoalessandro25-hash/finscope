@@ -795,25 +795,15 @@ export default async function handler(req, res) {
     }
 
     // ── INDICE SPECIFICO ──────────────────────────────────────────────────────
+    // Restituisce solo la lista statica — i prezzi vengono caricati dal frontend
+    // a chunk via /api/screener?symbols=... per evitare timeout Vercel
     if (index && index !== 'all') {
-      res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=1800');
+      res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
 
       const constituents = INDEX_DATA[index];
       if (!constituents) return res.status(400).json({ error: 'Indice non supportato: ' + index });
 
-      // Fetch prezzi via yahoo-finance2 (gestisce crumb/cookie automaticamente)
-      const qMap = await yahooQuote(constituents.map(s => s.s));
-      const stocks = constituents.map(s => ({
-        ...s,
-        price:     qMap[s.s]?.price     ?? null,
-        prev:      qMap[s.s]?.prev      ?? null,
-        chg:       qMap[s.s]?.chg       ?? null,
-        pe:        qMap[s.s]?.pe        ?? null,
-        marketCap: qMap[s.s]?.marketCap ?? null,
-        volume:    qMap[s.s]?.volume    ?? null,
-        divAnnual: qMap[s.s]?.divAnnual ?? null,
-      }));
-      return res.json({ stocks, total: stocks.length, source: 'yahoo', index });
+      return res.json({ stocks: constituents, total: constituents.length, source: 'static', index });
     }
 
     // ── TUTTI (screener generico) ─────────────────────────────────────────────
