@@ -4078,6 +4078,8 @@ async function renderPortfolio(){
     if(cur==='EUR'){totalEUR_inv+=invested;if(curVal!=null)totalEUR_val+=curVal;}
     else{totalUSD_inv+=invested;if(curVal!=null)totalUSD_val+=curVal;}
 
+    const dayChgPct=(curPrice!=null&&d?.prev)?((curPrice-d.prev)/d.prev*100):null;
+    const dayUp=dayChgPct==null||dayChgPct>=0;
     const stateClass=pnl==null?'neu':up?'pos':'neg';
     const barColor=stateClass==='pos'?'#059669':stateClass==='neg'?'#DC2626':'var(--b)';
     const holdDays=item.buyDate?Math.floor((Date.now()-new Date(item.buyDate).getTime())/(86400000)):null;
