@@ -1035,7 +1035,7 @@ html.dark .auth-box{background:#1e293b}
     </div>
     <div class="sd-top">
       <div class="sd-section">
-        <div class="cc-row" style="margin-bottom:12px">
+        <div class="cc-row" style="margin-bottom:6px">
           <button class="chart-type-btn active" id="sd-btn-candle" onclick="setSdType('candle',this)">Candele</button>
           <button class="chart-type-btn" id="sd-btn-line" onclick="setSdType('line',this)">Linea</button>
           <div style="width:1px;height:14px;background:var(--bd);margin:0 4px"></div>
@@ -1046,7 +1046,17 @@ html.dark .auth-box{background:#1e293b}
           <button class="cc-btn" onclick="loadSdChart(null,'1y',this)">1A</button>
           <button class="cc-btn" onclick="loadSdChart(null,'5y',this)">5A</button>
         </div>
-        <div id="sd-chart" style="width:100%;height:310px"></div>
+        <div class="cc-row" style="margin-bottom:10px;gap:4px">
+          <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;align-self:center;margin-right:2px;white-space:nowrap">Indicatori</span>
+          <button class="cc-btn" id="sd-ind-sma20" onclick="toggleSdInd('sma20',this)" title="Media Mobile Semplice 20 periodi" style="color:#f59e0b">SMA20</button>
+          <button class="cc-btn" id="sd-ind-sma50" onclick="toggleSdInd('sma50',this)" title="Media Mobile Semplice 50 periodi" style="color:#8b5cf6">SMA50</button>
+          <button class="cc-btn" id="sd-ind-ema20" onclick="toggleSdInd('ema20',this)" title="Media Mobile Esponenziale 20 periodi" style="color:#06b6d4">EMA20</button>
+          <button class="cc-btn" id="sd-ind-bb" onclick="toggleSdInd('bb',this)" title="Bande di Bollinger (20,2)" style="color:#6366f1">BB</button>
+          <button class="cc-btn" id="sd-ind-rsi" onclick="toggleSdInd('rsi',this)" title="Relative Strength Index 14 periodi" style="color:#8b5cf6">RSI14</button>
+        </div>
+        <div id="sd-chart" style="width:100%;height:300px"></div>
+        <div id="sd-rsi-chart" style="display:none;width:100%;height:80px;margin-top:3px;border-top:1px solid var(--bd)"></div>
+        <div id="sd-tech-signals" style="display:none;margin-top:10px"></div>
       </div>
       <!-- Dati chiave -->
       <div class="sd-section">
