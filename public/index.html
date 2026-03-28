@@ -1966,6 +1966,86 @@ html.dark .auth-box{background:#1e293b}
   </div>
 </div>
 
+<!-- ═══ BACKTEST ═══ -->
+<div class="page" id="page-backtest">
+  <div class="pg-title">Backtesting Strategico</div>
+  <div class="pg-sub">Testa strategie di trading su dati storici reali · Buy &amp; Hold · SMA Crossover · RSI Mean Reversion</div>
+  <div class="bt-layout">
+    <!-- LEFT: Parametri -->
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="ch"><div><div class="ct">Parametri</div><div class="cs">Configura il backtest</div></div></div>
+        <!-- Symbol -->
+        <div class="fg" style="position:relative">
+          <label>TITOLO / ETF</label>
+          <input type="text" id="bt-sym-inp" placeholder="Es: AAPL, MSFT, SPY…" oninput="btSearchSym(this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+          <div id="bt-sym-dd" class="port-dd" style="display:none;max-height:180px;overflow-y:auto"></div>
+        </div>
+        <div id="bt-sym-badge" style="display:none;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;margin-top:-6px;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
+        <!-- Periodo -->
+        <div class="fg">
+          <label>PERIODO STORICO</label>
+          <div style="display:flex;gap:6px">
+            <button class="cc-btn" id="bt-p-1y" onclick="btSetPeriod('1y',this)">1A</button>
+            <button class="cc-btn" id="bt-p-2y" onclick="btSetPeriod('2y',this)">2A</button>
+            <button class="cc-btn active" id="bt-p-5y" onclick="btSetPeriod('5y',this)">5A</button>
+            <button class="cc-btn" id="bt-p-10y" onclick="btSetPeriod('max',this)">Max</button>
+          </div>
+        </div>
+        <!-- Strategia -->
+        <div class="fg">
+          <label>STRATEGIA</label>
+          <select id="bt-strategy" onchange="btUpdateStratInfo()" style="width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--t);font-family:var(--fm);font-size:13px">
+            <option value="buyhold">📈 Buy &amp; Hold</option>
+            <option value="sma_cross">〜 Incrocio SMA (20/50)</option>
+            <option value="rsi_rev">↕ RSI Mean Reversion (14)</option>
+          </select>
+        </div>
+        <div id="bt-strat-info" style="background:var(--s2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.65;margin-bottom:6px">
+          Acquista il titolo al primo giorno del periodo e mantieni fino alla fine. Strategia benchmark di riferimento.
+        </div>
+        <!-- Capitale -->
+        <div class="fg">
+          <label>CAPITALE INIZIALE (€)</label>
+          <input type="number" id="bt-capital" value="10000" min="100" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--t);font-family:var(--fm);font-size:13px"/>
+        </div>
+        <button onclick="executeBacktest()" style="width:100%;padding:12px;background:var(--b);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fm);letter-spacing:.3px">▶ Esegui Backtest</button>
+        <div id="bt-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--t3);font-family:var(--fm)">⏳ Caricamento dati storici…</div>
+        <div id="bt-error" style="display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-radius:8px;padding:10px 12px;font-size:11px;color:#dc2626;font-family:var(--fm);margin-top:8px"></div>
+      </div>
+    </div>
+    <!-- RIGHT: Risultati -->
+    <div id="bt-results-col" style="display:none;flex-direction:column;gap:14px">
+      <div class="card">
+        <div class="ch"><div>
+          <div class="ct" id="bt-res-title">Risultati</div>
+          <div class="cs" id="bt-res-sub">—</div>
+        </div></div>
+        <div class="bt-kpi-grid">
+          <div class="bt-kpi"><div class="bt-kpi-lbl">Rendimento Totale</div><div class="bt-kpi-val" id="bt-kpi-ret">—</div></div>
+          <div class="bt-kpi"><div class="bt-kpi-lbl">Valore Finale</div><div class="bt-kpi-val" id="bt-kpi-val">—</div></div>
+          <div class="bt-kpi"><div class="bt-kpi-lbl">N° Operazioni</div><div class="bt-kpi-val" id="bt-kpi-trades">—</div></div>
+          <div class="bt-kpi"><div class="bt-kpi-lbl">Max Drawdown</div><div class="bt-kpi-val" id="bt-kpi-dd">—</div></div>
+        </div>
+        <div id="bt-chart" style="width:100%;height:260px"></div>
+        <div id="bt-vs-bh" style="display:none;margin-top:10px;padding:8px 12px;background:var(--s2);border-radius:8px;font-size:11px;font-family:var(--fm);color:var(--t2)"></div>
+      </div>
+      <div class="card" id="bt-trades-card" style="display:none">
+        <div class="ch"><div>
+          <div class="ct">Log Operazioni</div>
+          <div class="cs" id="bt-trades-count">—</div>
+        </div></div>
+        <div style="overflow-x:auto;max-height:300px;overflow-y:auto">
+          <table class="bt-trades-tbl">
+            <thead><tr><th>#</th><th>Tipo</th><th>Data</th><th>Prezzo</th><th>Valore portafoglio</th><th>P&amp;L operaz.</th></tr></thead>
+            <tbody id="bt-trades-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ NEWS ═══ -->
 <div class="page" id="page-news">
   <div class="pg-title">News Mercati</div>
