@@ -3240,17 +3240,9 @@ async function loadMarketScreener(reset=true){
 
   let url;
   if(isAll){
-    const params=new URLSearchParams({limit:50});
-    const sector=document.getElementById('fs')?.value||'';
-    const country=document.getElementById('sc-country')?.value||'';
-    if(sector)  params.set('sector',sector);
-    if(country) params.set('country',country);
-    url='/api/screener?'+params.toString();
+    url='/api/screener?limit=999';
   } else {
-    const params=new URLSearchParams({index:currentIndex});
-    const sector=document.getElementById('fs').value;
-    if(sector) params.set('sector',sector);
-    url='/api/screener?'+params.toString();
+    url='/api/screener?index='+encodeURIComponent(currentIndex);
   }
 
   let stocks=[];
