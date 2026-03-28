@@ -4483,7 +4483,7 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   const today = new Date().toISOString().slice(0,10);
   const key = today+'_'+assets.map(a=>a.sym).sort().join(',');
   const cached = !force && sessionStorage.getItem('portDaily_'+key);
-  if(cached){ renderPortDailyText(el, cached); return; }
+  if(cached){ renderPortDailyText(el, cached); schedulePortDailyRefresh(); return; }
   el.innerHTML='<div class="ld" style="padding:8px 0">Raccolta notizie in corso…</div>';
 
   const sorted=[...assets].sort((a,b)=>Math.abs(b.chgPct)-Math.abs(a.chgPct));
