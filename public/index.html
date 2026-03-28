@@ -3266,7 +3266,7 @@ async function loadMarketScreener(reset=true){
   screenerHasMore=false;
   renderMarketStocks();
 
-  if(stocks.length>0 && stocks[0].price==null){
+  if(stocks.length>0){
     const CHUNK=25; // 25 simboli per request → 1 chiamata YF per chunk sul server
     const CONCURRENT=3; // 3 richieste frontend parallele
     const chunks=[];
