@@ -4236,19 +4236,13 @@ async function renderPortfolio(){
   const dailyPnlPct=dailyValBefore>0?(dailyPnlUSD/dailyValBefore*100):0;
   const dailyUp=dailyPnlUSD>=0;
   setS('psb-oggi',(dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
+  // Aggiorna anche il badge nella card full-width
+  setS('psb-oggi-inline',(dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
+  // Mostra la card full-width giornata
+  const dailyOuter=document.getElementById('port-daily-outer');
+  if(dailyOuter&&dailyItems.length>0) dailyOuter.style.display='block';
 
-  // ── Sezione giornata di oggi (placeholder — testo AI caricato dopo) ──
-  const dailySection=dailyItems.length>0?`
-    <div style="margin-top:12px;border-top:1px solid var(--bd);padding-top:10px" id="port-daily-wrap">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">📅 Giornata di oggi</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="font-family:var(--fm);font-size:11px;font-weight:700;${dailyUp?'color:#059669':'color:#DC2626'}">${dailyUp?'+':''}${fmt(dailyPnlUSD,0)} USD (${dailyUp?'+':''}${fmt(dailyPnlPct,1)}%)</div>
-          <button onclick="refreshPortDailyAnalysis()" style="background:none;border:none;cursor:pointer;color:var(--t3);font-size:11px;padding:0" title="Aggiorna analisi">↻</button>
-        </div>
-      </div>
-      <div id="port-daily-text" style="font-size:12px;color:var(--t2);line-height:1.6"><div class="ld" style="padding:8px 0">Generazione analisi in corso…</div></div>
-    </div>` : '';
+  const dailySection='';
 
   const _totalValDisplay=_isEUR?'€'+fmt(totalValEUR,0):'$'+fmt(totalValUSD,0);
   const _totalPnlDisplay=(_heroUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
