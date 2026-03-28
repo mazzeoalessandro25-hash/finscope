@@ -4320,15 +4320,22 @@ async function renderPortfolio(){
       </div>
     </div>
     <!-- Legenda -->
-    <div style="margin-bottom:10px">${legendRows}</div>
-    <!-- Divider -->
-    <div style="height:1px;background:var(--bd);margin-bottom:10px"></div>
-    <!-- Stats KPI griglia 2 col -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:0">
-      ${kpiBox('Capitale','$'+fmt(totalInvUSD,0))}
-      ${kpiBox('Guadagno',(totalUp?'+':'')+fmt(totalPnlUSD,0)+'<br><span style="font-size:10px;font-weight:600">'+(totalUp?'+':'')+fmt(Math.abs(totalPnlPct),1)+'%</span>',totalUp?'var(--g)':'var(--r)')}
-      ${totalEUR_inv>0?kpiBox('P&L EUR',(upE?'+':'')+fmt(pnlE,0)+'<br><span style="font-size:10px;font-weight:600">'+(upE?'+':'')+fmt(Math.abs(pctE),1)+'%</span>',upE?'var(--g)':'var(--r)'):''}
-      ${totalUSD_inv>0&&totalEUR_inv>0?kpiBox('P&L USD',(upU?'+':'')+fmt(pnlU,0)+'<br><span style="font-size:10px;font-weight:600">'+(upU?'+':'')+fmt(Math.abs(pctU),1)+'%</span>',upU?'var(--g)':'var(--r)'):''}
+    <div style="margin-bottom:12px">${legendRows}</div>
+    <!-- Stat rows -->
+    <div style="display:flex;flex-direction:column">
+      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Riepilogo portafoglio</div>
+      ${statRow('Valore attuale', _totalValDisplay)}
+      ${statRow('Capitale investito', '$'+fmt(totalInvUSD,0))}
+      ${statRow('Guadagno totale', (totalUp?'+':'')+fmt(totalPnlUSD,0)+' ('+( totalUp?'+':'')+fmt(Math.abs(totalPnlPct),1)+'%)', totalUp?'var(--g)':'var(--r)')}
+      <div style="height:1px;background:var(--bd);margin:6px 0"></div>
+      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Oggi</div>
+      ${statRow('Variazione oggi', (dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(Math.abs(dailyPnlPct),1)+'%)', dailyUp?'var(--g)':'var(--r)')}
+      ${statRow('Titoli in portafoglio', portfolio.length+' asset')}
+      ${statRow('Cambio EUR/USD', fmt(eurUsd,4))}
+      ${totalEUR_inv>0&&totalUSD_inv>0?`<div style="height:1px;background:var(--bd);margin:6px 0"></div>
+      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Per valuta</div>
+      ${statRow('P&L USD', (upU?'+':'')+fmt(pnlU,0)+' ('+(upU?'+':'')+fmt(Math.abs(pctU),1)+'%)', upU?'var(--g)':'var(--r)')}
+      ${statRow('P&L EUR', (upE?'+':'')+fmt(pnlE,0)+' ('+(upE?'+':'')+fmt(Math.abs(pctE),1)+'%)', upE?'var(--g)':'var(--r)')}`:''}
     </div>
     ${dailySection}`
     :'<div style="padding:30px;text-align:center;color:var(--t3)"><div style="font-size:32px;margin-bottom:10px">📊</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Nessun titolo</div><div style="font-size:11px">Aggiungi il primo asset dalla lista</div></div>';
