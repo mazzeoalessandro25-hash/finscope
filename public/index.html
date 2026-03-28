@@ -4749,10 +4749,10 @@ function renderPortDailyText(el, payload){
     const chg=(d.price-d.prev)/d.prev*100;
     const up=chg>=0;
     const sign=up?'+':'';
-    return `<div style="display:flex;flex-direction:column;align-items:center;background:${up?'rgba(5,150,105,.08)':'rgba(220,38,38,.08)'};border:1px solid ${up?'rgba(5,150,105,.2)':'rgba(220,38,38,.2)'};border-radius:8px;padding:5px 8px;min-width:56px">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">${label}</div>
-      <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:${up?'#059669':'#DC2626'}">${sign}${chg.toFixed(2)}%</div>
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${d.price?.toFixed(sym==='GC=F'||sym==='CL=F'?1:0)||''}</div>
+    return `<div style="display:flex;flex-direction:column;align-items:center;background:${up?'rgba(5,150,105,.08)':'rgba(220,38,38,.08)'};border:1px solid ${up?'rgba(5,150,105,.2)':'rgba(220,38,38,.2)'};border-radius:8px;padding:6px 10px;min-width:60px">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);font-weight:600;margin-bottom:3px">${label}</div>
+      <div style="font-family:var(--fm);font-size:13px;font-weight:800;color:${up?'#059669':'#DC2626'}">${sign}${chg.toFixed(2)}%</div>
+      <div style="font-size:10px;color:var(--t2);font-family:var(--fm);margin-top:1px">${d.price?.toLocaleString('it-IT',{maximumFractionDigits:sym==='GC=F'||sym==='CL=F'?1:0})||''}</div>
     </div>`;
   }).filter(Boolean).join('');
 
