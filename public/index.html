@@ -3391,7 +3391,7 @@ function renderMarketStocks(){
     if(capF==='large'&&!(s.marketCap!=null&&s.marketCap>10e9)) return false;
     if(capF==='mid'&&!(s.marketCap!=null&&s.marketCap>2e9)) return false;
     if(capF==='small'&&!(s.marketCap!=null&&s.marketCap<=2e9)) return false;
-    if(scoreF>0&&!(calcStockScore(s)>=scoreF)) return false;
+    if(scoreF>0){const _sc=calcStockScore(s);if(_sc!=='load'&&!(_sc>=scoreF)) return false;}
     return true;
   });
   list=[...list].sort((a,b)=>{
