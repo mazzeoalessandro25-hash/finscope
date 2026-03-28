@@ -7182,6 +7182,7 @@ async function renderCalendar(){
    STOCK DETAIL OVERLAY
 ══════════════════════════════════════════ */
 let sdSym='', sdRange='1mo', sdType='candle', sdChartInst=null, sdPriceTimer=null;
+let sdLastValData=null, sdLastFundData=null;
 
 function openStockDetail(sym){
   sdSym=sym; sdRange='1mo'; sdType='candle';
