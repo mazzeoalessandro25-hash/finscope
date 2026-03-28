@@ -4749,11 +4749,30 @@ function renderPortDailyText(el, payload){
       return `<div style="font-size:12px;color:var(--t2);line-height:1.6;margin-top:8px">${block}</div>`;
     }).join('');
 
+  // ── Notizie per asset (colonna destra) ──
+  const assetNewsHtml=Object.entries(newsMap).filter(([sym,news])=>news.length>0).map(([sym,news])=>{
+    const items=news.slice(0,2).map(n=>{
+      const ago=n.time?_timeAgo(n.time):'';
+      return `<a href="${n.link||'#'}" target="_blank" rel="noopener" style="display:flex;gap:8px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--bd);text-decoration:none">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:9px;color:var(--b);font-family:var(--fm);font-weight:700;text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px">${n.publisher||''}</div>
+          <div style="font-size:11px;color:var(--t);line-height:1.4;font-weight:500">${n.title}</div>
+          ${ago?`<div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:2px">${ago}</div>`:''}
+        </div>
+        ${n.thumbnail?`<img src="${n.thumbnail}" style="width:52px;height:40px;border-radius:6px;object-fit:cover;flex-shrink:0" onerror="this.style.display='none'"/>`:''}
+      </a>`;
+    }).join('');
+    return `<div style="margin-bottom:12px">
+      <div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t);margin-bottom:4px">${sym}</div>
+      ${items}
+    </div>`;
+  }).join('');
+
   el.innerHTML=`
     ${idxBadges?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">${idxBadges}</div>`:''}
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start">
       <div>${analysisHtml}</div>
-      <div id="port-daily-news-col"></div>
+      <div>${assetNewsHtml?`<div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Notizie titoli in evidenza</div>${assetNewsHtml}`:''}</div>
     </div>`;
 }
 
