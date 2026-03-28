@@ -7186,6 +7186,9 @@ let sdLastValData=null, sdLastFundData=null;
 
 function openStockDetail(sym){
   sdSym=sym; sdRange='1mo'; sdType='candle';
+  sdLastValData=null; sdLastFundData=null;
+  const _scoreSec=document.getElementById('sd-score-section');
+  if(_scoreSec)_scoreSec.style.display='none';
   const overlay=document.getElementById('stock-detail-overlay');
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
