@@ -3322,41 +3322,49 @@ function _scSummWrite(sym,d){
   try{localStorage.setItem('sc_summ_'+sym,JSON.stringify({d,ts:Date.now()}));}catch{}
 }
 
+let _scSummPending=new Set(); // simboli con fetch in corso
+
 async function loadScreenerSummaries(symbols,loadId){
-  // 1. Ripristina dalla cache: aggiornamento immediato dello score
+  // 1. Ripristina dalla cache: score immediato per chi ce l'ha
   symbols.forEach(sym=>{
     if(!scData[sym]){
       const c=_scSummRead(sym);
       if(c){scData[sym]=c;scSummary[sym]=c;}
     }
   });
-  renderMarketStocks();
 
-  // 2. Fetch dei simboli senza dati (o con cache scaduta)
+  // 2. Identifica simboli da fetchare e mettili in pending
   const toFetch=symbols.filter(sym=>!scData[sym]);
+  toFetch.forEach(sym=>_scSummPending.add(sym));
+  renderMarketStocks();
   if(!toFetch.length)return;
 
+  // 3. Fetch in batch da 3 — rimuove dal pending man mano
   const BATCH=3;
   for(let i=0;i<toFetch.length;i+=BATCH){
-    if(loadId!==_screenerLoadId)return; // utente ha cambiato indice
-    await Promise.all(toFetch.slice(i,i+BATCH).map(async sym=>{
+    if(loadId!==_screenerLoadId){_scSummPending.clear();return;}
+    const batch=toFetch.slice(i,i+BATCH);
+    await Promise.all(batch.map(async sym=>{
       try{
         const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=summary`);
-        if(!r.ok)return;
-        const d=await r.json();
-        if(d&&!d.error){scData[sym]=d;scSummary[sym]=d;_scSummWrite(sym,d);}
-      }catch{}
+        if(r.ok){
+          const d=await r.json();
+          if(d&&!d.error){scData[sym]=d;scSummary[sym]=d;_scSummWrite(sym,d);}
+        }
+      }catch{}finally{_scSummPending.delete(sym);}
     }));
-    if(loadId!==_screenerLoadId)return;
+    if(loadId!==_screenerLoadId){_scSummPending.clear();return;}
     renderMarketStocks();
   }
 }
 // ──────────────────────────────────────────────────────────────────────────
 
 // ─── OVERALL SCORE per titolo (0–100) ─────────────────────────────────────
+// Restituisce: numero = score completo, 'load' = in attesa fondamentali, null = nessun dato
 function calcStockScore(s){
   if(!s.price) return null;
-  const sd=scData[s.s]||scSummary[s.s]||s;
+  const sd=scData[s.s]||scSummary[s.s];
+  if(!sd) return _scSummPending.has(s.s)?'load':null;
   return calcFinEdgeScore(sd,{price:s.price}).total;
 }
 // ──────────────────────────────────────────────────────────────────────────
