@@ -3346,7 +3346,7 @@ async function loadScreenerSummaries(symbols,loadId){
     const batch=toFetch.slice(i,i+BATCH);
     await Promise.all(batch.map(async sym=>{
       try{
-        const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=summary`);
+        const r=await fetch(`/api/stockdetail?symbol=${encodeURIComponent(sym)}&nonews=1`);
         if(r.ok){
           const d=await r.json();
           if(d&&!d.error){scData[sym]=d;scSummary[sym]=d;_scSummWrite(sym,d);}
