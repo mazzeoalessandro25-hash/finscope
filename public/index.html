@@ -3274,8 +3274,8 @@ async function loadMarketScreener(reset=true){
   renderMarketStocks();
 
   if(stocks.length>0 && stocks[0].price==null){
-    const CHUNK=60; // chunk piccoli per ridurre il carico su Yahoo
-    const CONCURRENT=2; // max 2 richieste parallele dal frontend
+    const CHUNK=25; // 25 simboli per request → 1 chiamata YF per chunk sul server
+    const CONCURRENT=3; // 3 richieste frontend parallele
     const chunks=[];
     for(let i=0;i<dynamicStocks.length;i+=CHUNK) chunks.push(dynamicStocks.slice(i,i+CHUNK));
     const qMap={};
