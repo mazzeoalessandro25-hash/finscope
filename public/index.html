@@ -4339,8 +4339,8 @@ async function renderPortfolio(){
     <!-- Stat rows -->
     <div style="display:flex;flex-direction:column">
       <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Riepilogo portafoglio</div>
-      ${statRow('Valore attuale', _totalValDisplay)}
-      ${statRow('Capitale investito', '$'+fmt(totalInvUSD,0))}
+      ${statRow('Valore attuale', `€${fmt(totalValEUR,0)} <span style="font-size:10px;color:var(--t3);font-weight:400">≈ $${fmt(totalValUSD,0)}</span>`)}
+      ${statRow('Capitale investito', `€${fmt(totalInvEUR,0)} <span style="font-size:10px;color:var(--t3);font-weight:400">≈ $${fmt(totalInvUSD,0)}</span>`)}
       ${statRow('Guadagno totale', (totalUp?'+':'')+fmt(totalPnlUSD,0)+' ('+( totalUp?'+':'')+fmt(Math.abs(totalPnlPct),1)+'%)', totalUp?'var(--g)':'var(--r)')}
       <div style="height:1px;background:var(--bd);margin:6px 0"></div>
       <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Oggi</div>
