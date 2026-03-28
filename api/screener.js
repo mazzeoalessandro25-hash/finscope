@@ -705,12 +705,16 @@ const INDEX_DATA = {
 /* ─────────────────────────────────────────────────────────
    BULK QUOTE via Yahoo Finance (gratuito, no key)
    ───────────────────────────────────────────────────────── */
-const YF_FIELDS = ['regularMarketPrice','regularMarketPreviousClose','regularMarketChangePercent',
-                   'trailingPE','marketCap','regularMarketVolume','trailingAnnualDividendRate'];
+const _timeout = (ms) => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms));
 
 async function fetchChunk(chunk) {
   try {
-    const results = await yf.quote(chunk, { fields: YF_FIELDS });
+    // Niente `fields` option: causa errori in yahoo-finance2 v3
+    // Timeout esplicito per evitare hang su Vercel (10s limit)
+    const results = await Promise.race([
+      yf.quote(chunk),
+      _timeout(7000),
+    ]);
     const arr = Array.isArray(results) ? results : [results];
     const m = {};
     arr.forEach(q => {
