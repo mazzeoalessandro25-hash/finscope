@@ -1632,8 +1632,12 @@ html.dark .auth-box{background:#1e293b}
     <div id="port-daily-outer" style="display:none;margin-bottom:14px">
       <div class="port-analysis-card" style="padding:18px 20px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:.2px">📅 Giornata di oggi</div>
-          <div style="display:flex;align-items:center;gap:10px">
+          <div>
+            <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:.2px">📅 Giornata di oggi</div>
+            <div id="port-daily-date-lbl" style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div id="port-daily-refresh-badge" style="display:none;font-size:9px;color:var(--b);font-family:var(--fm);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:4px;padding:2px 7px;white-space:nowrap">↻ Auto-refresh ogni 15 min</div>
             <div id="psb-oggi-inline" style="font-family:var(--fm);font-size:12px;font-weight:700"></div>
             <button onclick="refreshPortDailyAnalysis()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)">↻ Aggiorna</button>
           </div>
