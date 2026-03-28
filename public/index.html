@@ -3305,12 +3305,55 @@ async function loadMarketScreener(reset=true){
 
 async function loadMoreScreener(){ await loadMarketScreener(false); }
 
+// ─── SCREENER SUMMARY CACHE (fondamentali completi, TTL 24h) ───────────────
+const SC_SUMM_TTL=24*3600*1000;
+function _scSummRead(sym){
+  try{
+    const raw=localStorage.getItem('sc_summ_'+sym);
+    if(!raw)return null;
+    const {d,ts}=JSON.parse(raw);
+    if(Date.now()-ts>SC_SUMM_TTL){localStorage.removeItem('sc_summ_'+sym);return null;}
+    return d;
+  }catch{return null;}
+}
+function _scSummWrite(sym,d){
+  try{localStorage.setItem('sc_summ_'+sym,JSON.stringify({d,ts:Date.now()}));}catch{}
+}
+
+async function loadScreenerSummaries(symbols,loadId){
+  // 1. Ripristina dalla cache: aggiornamento immediato dello score
+  symbols.forEach(sym=>{
+    if(!scData[sym]){
+      const c=_scSummRead(sym);
+      if(c){scData[sym]=c;scSummary[sym]=c;}
+    }
+  });
+  renderMarketStocks();
+
+  // 2. Fetch dei simboli senza dati (o con cache scaduta)
+  const toFetch=symbols.filter(sym=>!scData[sym]);
+  if(!toFetch.length)return;
+
+  const BATCH=3;
+  for(let i=0;i<toFetch.length;i+=BATCH){
+    if(loadId!==_screenerLoadId)return; // utente ha cambiato indice
+    await Promise.all(toFetch.slice(i,i+BATCH).map(async sym=>{
+      try{
+        const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=summary`);
+        if(!r.ok)return;
+        const d=await r.json();
+        if(d&&!d.error){scData[sym]=d;scSummary[sym]=d;_scSummWrite(sym,d);}
+      }catch{}
+    }));
+    if(loadId!==_screenerLoadId)return;
+    renderMarketStocks();
+  }
+}
+// ──────────────────────────────────────────────────────────────────────────
+
 // ─── OVERALL SCORE per titolo (0–100) ─────────────────────────────────────
-// Modifica questa funzione per personalizzare il calcolo del punteggio.
-// Parametri disponibili: s.pe, s.marketCap, s.chg, s.price, s.divAnnual, s.beta
 function calcStockScore(s){
   if(!s.price) return null;
-  // Usa i dati di summary se già caricati (titolo già aperto), altrimenti i dati parziali dello screener
   const sd=scData[s.s]||scSummary[s.s]||s;
   return calcFinEdgeScore(sd,{price:s.price}).total;
 }
