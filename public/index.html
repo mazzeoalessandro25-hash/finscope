@@ -1693,10 +1693,23 @@ html.dark .auth-box{background:#1e293b}
                 <div id="port-dd" class="port-dd"></div>
               </div>
               <div class="port-add-row2">
-                <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any"/>
-                <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acq." min="0" step="any"/>
-                <input class="port-inp" id="port-date" type="date" title="Data acquisto"/>
-                <button class="port-add-btn" onclick="addPortfolioItem()">＋ Aggiungi</button>
+                <div>
+                  <div class="port-inp-lbl">Quantità</div>
+                  <input class="port-inp" id="port-qty" type="number" placeholder="es. 10" min="0.0001" step="any" style="width:100%;box-sizing:border-box"/>
+                </div>
+                <div>
+                  <div class="port-inp-lbl">Prezzo acquisto</div>
+                  <input class="port-inp" id="port-price" type="number" placeholder="es. 150.00" min="0" step="any" style="width:100%;box-sizing:border-box"/>
+                </div>
+              </div>
+              <div class="port-add-row3">
+                <div>
+                  <div class="port-inp-lbl">Data acquisto</div>
+                  <input class="port-inp" id="port-date" type="date" style="width:100%;box-sizing:border-box"/>
+                </div>
+                <div style="display:flex;align-items:flex-end">
+                  <button class="port-add-btn" onclick="addPortfolioItem()" style="white-space:nowrap;padding:8px 18px">＋ Aggiungi</button>
+                </div>
               </div>
             </div>
           </div>
