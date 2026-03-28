@@ -4709,7 +4709,7 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
 }
 
 function renderPortDailyText(el, payload){
-  let text='', macroNews=[], indicesMap={};
+  let text='', macroNews=[], indicesMap={}, newsMap={};
   try{
     const p=JSON.parse(payload);
     text=p.text||''; macroNews=p.macroNews||[]; indicesMap=p.indicesMap||{};
