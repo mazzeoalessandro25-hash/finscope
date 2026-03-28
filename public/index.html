@@ -1642,42 +1642,6 @@ html.dark .auth-box{background:#1e293b}
           <span id="port-summary-rate" style="display:none"></span>
         </div>
 
-        <!-- ANALYSIS: mostrato quando si clicca un asset -->
-        <div class="port-analysis-card" id="port-panel-analysis" style="display:none">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
-            <button onclick="showPortOverview()" style="background:none;border:none;color:var(--b);font-size:12px;font-family:var(--fm);cursor:pointer;padding:0;display:flex;align-items:center;gap:4px">← Panoramica</button>
-          </div>
-          <div class="port-analysis-hdr">
-            <img id="port-analysis-logo" src="" alt="" style="width:40px;height:40px;border-radius:10px;object-fit:cover;display:none"/>
-            <div style="flex:1;min-width:0">
-              <div class="port-analysis-name" id="port-analysis-name">—</div>
-              <div class="port-analysis-sym-lbl" id="port-analysis-sym">—</div>
-            </div>
-            <div style="text-align:right">
-              <div class="port-analysis-price" id="port-analysis-price">—</div>
-              <div class="port-analysis-chg" id="port-analysis-chg">—</div>
-            </div>
-          </div>
-          <div class="port-pos-grid" id="port-analysis-pos"></div>
-          <div class="port-chart-ctrls">
-            <div class="port-chart-type-btns">
-              <button class="port-type-btn active" id="pct-candle" onclick="setPortChartType('candle',this)">🕯 Candele</button>
-              <button class="port-type-btn" id="pct-line" onclick="setPortChartType('line',this)">📈 Linea</button>
-            </div>
-            <div class="port-ranges">
-              <button class="port-range-btn active" onclick="setPortRange('1d',this)">1G</button>
-              <button class="port-range-btn" onclick="setPortRange('5d',this)">5G</button>
-              <button class="port-range-btn" onclick="setPortRange('1mo',this)">1M</button>
-              <button class="port-range-btn" onclick="setPortRange('3mo',this)">3M</button>
-              <button class="port-range-btn" onclick="setPortRange('6mo',this)">6M</button>
-              <button class="port-range-btn" onclick="setPortRange('1y',this)">1A</button>
-            </div>
-          </div>
-          <div id="port-chart" style="height:280px;border-radius:10px;overflow:hidden;background:var(--s2)"></div>
-          <div class="port-metrics-grid" id="port-metrics"></div>
-          <div class="port-news-section" id="port-news"></div>
-        </div>
-
       </div>
 
       <!-- COL 2: lista titoli (1fr) -->
