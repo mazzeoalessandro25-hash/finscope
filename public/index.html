@@ -1716,6 +1716,22 @@ html.dark .auth-box{background:#1e293b}
 
     </div><!-- end port-2col -->
 
+    <!-- ── GIORNATA DI OGGI — full width ── -->
+    <div id="port-daily-outer" style="display:none;margin-bottom:14px">
+      <div class="port-analysis-card" style="padding:18px 20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:.2px">📅 Giornata di oggi</div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div id="psb-oggi-inline" style="font-family:var(--fm);font-size:12px;font-weight:700"></div>
+            <button onclick="refreshPortDailyAnalysis()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)" title="Aggiorna analisi">↻ Aggiorna</button>
+          </div>
+        </div>
+        <div id="port-daily-text" style="font-size:12px;color:var(--t2);line-height:1.6">
+          <div class="ld" style="padding:8px 0">Raccolta notizie in corso…</div>
+        </div>
+      </div>
+    </div>
+
     <!-- Legacy hidden elements for backward compatibility -->
     <div style="display:none">
       <div id="port-add-panel"></div>
