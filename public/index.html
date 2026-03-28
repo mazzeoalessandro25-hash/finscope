@@ -4261,7 +4261,7 @@ async function renderPortfolio(){
 
   // ── Legenda donut — griglia 2 colonne ──
   const top8=holdingEntries.slice(0,8);
-  const legendRows=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 12px">
+  const legendRows=`<div style="display:flex;flex-direction:column;gap:2px">
     ${top8.map((e,idx)=>`
       <div style="display:flex;align-items:center;gap:5px;padding:3px 0;min-width:0">
         <div style="width:8px;height:8px;border-radius:50%;background:${PALETTE[idx%PALETTE.length]};flex-shrink:0"></div>
