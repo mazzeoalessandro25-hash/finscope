@@ -7312,6 +7312,11 @@ async function loadSdChart(sym,range,btn){
   const container=document.getElementById('sd-chart');
   if(sdChartInst){sdChartInst.remove();sdChartInst=null;}
   sdChartInst=buildLWChart(container,sdType,pts);
+  sdLastPts=pts;
+  sdIndSeries={};
+  if(sdRsiInst){sdRsiInst.remove();sdRsiInst=null;const rd=document.getElementById('sd-rsi-chart');if(rd)rd.style.display='none';}
+  renderSdTechOverlays(null);
+  renderSdTechSignals();
 }
 
 function timeAgo(ts){
