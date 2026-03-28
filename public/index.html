@@ -3311,15 +3311,15 @@ async function loadMoreScreener(){ await loadMarketScreener(false); }
 const SC_SUMM_TTL=24*3600*1000;
 function _scSummRead(sym){
   try{
-    const raw=localStorage.getItem('sc_summ_'+sym);
+    const raw=localStorage.getItem('sc_summ2_'+sym);
     if(!raw)return null;
     const {d,ts}=JSON.parse(raw);
-    if(Date.now()-ts>SC_SUMM_TTL){localStorage.removeItem('sc_summ_'+sym);return null;}
+    if(Date.now()-ts>SC_SUMM_TTL){localStorage.removeItem('sc_summ2_'+sym);return null;}
     return d;
   }catch{return null;}
 }
 function _scSummWrite(sym,d){
-  try{localStorage.setItem('sc_summ_'+sym,JSON.stringify({d,ts:Date.now()}));}catch{}
+  try{localStorage.setItem('sc_summ2_'+sym,JSON.stringify({d,ts:Date.now()}));}catch{}
 }
 
 let _scSummPending=new Set(); // simboli con fetch in corso
