@@ -7460,6 +7460,62 @@ function renderFundamentals(d, cur){
       newsList.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessuna notizia recente.</div>';
     }
   }
+  sdLastFundData=d;
+  renderSdFinEdgeScore();
+}
+
+function renderSdFinEdgeScore(){
+  const sec=document.getElementById('sd-score-section');
+  const wrap=document.getElementById('sd-score-wrap');
+  if(!sec||!wrap||!sdLastValData)return;
+  const merged={...sdLastValData,...(sdLastFundData||{})};
+  const fss=calcFinEdgeScore(merged,{price:merged.price});
+  if(fss.total==null){sec.style.display='none';return;}
+  const sc=fss.total;
+  const scCol=sc>=70?'var(--g)':sc>=45?'var(--o)':'var(--r)';
+  const ratings=[
+    {min:85,label:'Eccellente',bg:'rgba(5,150,105,.15)',color:'#059669'},
+    {min:70,label:'Buono',bg:'rgba(16,185,129,.12)',color:'#10b981'},
+    {min:50,label:'Neutro',bg:'rgba(245,158,11,.12)',color:'#d97706'},
+    {min:35,label:'Debole',bg:'rgba(239,68,68,.12)',color:'#ef4444'},
+    {min:0, label:'Critico',bg:'rgba(185,28,28,.15)',color:'#b91c1c'},
+  ];
+  const rating=ratings.find(r=>sc>=r.min)||ratings[ratings.length-1];
+  const dimLabels2={valutazione:'Valutazione',redditivita:'Redditività',momentum:'Momentum',consensus:'Consensus',stabilita:'Stabilità'};
+  const dimMax2={valutazione:25,redditivita:25,momentum:20,consensus:20,stabilita:10};
+  const dimTips={valutazione:'P/E + P/B vs benchmark',redditivita:'ROE, EPS, margini operativi',momentum:'Posizione range 52 settimane',consensus:'Raccomandazione analisti',stabilita:'Beta — volatilità di mercato'};
+  const dims=Object.entries(fss.details).map(([k,v])=>{
+    const max=dimMax2[k]||10;
+    const pct=Math.round(v/max*100);
+    const col=pct>=70?'var(--g)':pct>=45?'var(--o)':'var(--r)';
+    return `<div style="text-align:center;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px 4px" title="${dimTips[k]||''}">
+      <div style="font-family:var(--fm);font-size:16px;font-weight:800;color:${col};line-height:1">${v}</div>
+      <div style="font-size:9px;color:var(--t3);margin-top:1px;font-family:var(--fm)">/${max}</div>
+      <div style="height:3px;background:var(--bd);border-radius:2px;margin:6px 6px 4px">
+        <div style="height:3px;border-radius:2px;width:${pct}%;background:${col}"></div>
+      </div>
+      <div style="font-size:9px;color:var(--t2);line-height:1.25">${dimLabels2[k]||k}</div>
+    </div>`;
+  }).join('');
+  wrap.innerHTML=`
+    <div style="background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:16px 18px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px">FINEDGE SCORE ✦ Metrica proprietaria</div>
+          <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+            <span style="font-family:var(--fm);font-size:38px;font-weight:800;color:${scCol};line-height:1">${sc}</span>
+            <span style="font-size:13px;color:var(--t3);font-family:var(--fm)">/100</span>
+            <span style="padding:4px 11px;border-radius:6px;font-size:11px;font-weight:700;background:${rating.bg};color:${rating.color};font-family:var(--fm)">${rating.label}</span>
+          </div>
+        </div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-align:right;margin-top:4px;line-height:1.5">Score su 5 dimensioni<br>Analisi proprietaria</div>
+      </div>
+      <div style="height:6px;background:var(--bd);border-radius:3px;margin-bottom:16px;overflow:hidden">
+        <div style="height:6px;border-radius:3px;width:${sc}%;background:${scCol}"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">${dims}</div>
+    </div>`;
+  sec.style.display='block';
 }
 
 async function translateDescription(sym, text){
