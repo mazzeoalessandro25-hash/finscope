@@ -802,7 +802,7 @@ export default async function handler(req, res) {
     // Restituisce solo la lista statica — i prezzi vengono caricati dal frontend
     // a chunk via /api/screener?symbols=... per evitare timeout Vercel
     if (index && index !== 'all') {
-      res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate=3600');
+      res.setHeader('Cache-Control', 'no-store');
 
       const constituents = INDEX_DATA[index];
       if (!constituents) return res.status(400).json({ error: 'Indice non supportato: ' + index });
