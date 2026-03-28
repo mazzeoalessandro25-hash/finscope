@@ -4278,36 +4278,28 @@ async function renderPortfolio(){
     </div>`;
 
   const summaryHtml=holdingEntries.length>0?`
-    <!-- Layout: donut sx + dati dx -->
-    <div style="display:flex;gap:18px;align-items:flex-start">
-      <!-- Donut sx -->
-      <div style="flex-shrink:0">
-        <div style="position:relative;width:240px;height:240px">
-          <canvas id="port-alloc-donut" width="240" height="240"></canvas>
-          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-            <div style="text-align:center;padding:0 36px">
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Valore totale</div>
-              <div style="font-size:17px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">${_totalValDisplay}</div>
-              <div style="font-size:11px;font-family:var(--fm);font-weight:600;margin-top:4px" class="${_heroUp?'up':'down'}">${_heroUp?'+':''}${_totalPnlDisplay}</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:2px">${_heroUp?'▲':'▼'} ${fmt(Math.abs(totalPnlPct),1)}%</div>
-            </div>
-          </div>
+    <!-- Donut centrato nella sidebar -->
+    <div style="position:relative;width:180px;height:180px;margin:0 auto 14px">
+      <canvas id="port-alloc-donut" width="180" height="180"></canvas>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
+        <div style="text-align:center;padding:0 26px">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Valore totale</div>
+          <div style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">${_totalValDisplay}</div>
+          <div style="font-size:10px;font-family:var(--fm);font-weight:600;margin-top:3px" class="${_heroUp?'up':'down'}">${_heroUp?'+':''}${_totalPnlDisplay}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">${_heroUp?'▲':'▼'} ${fmt(Math.abs(totalPnlPct),1)}%</div>
         </div>
       </div>
-      <!-- Dati dx -->
-      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px">
-        <!-- Legenda 2 col -->
-        <div>${legendRows}</div>
-        <!-- Divider -->
-        <div style="height:1px;background:var(--bd)"></div>
-        <!-- Stats KPI griglia -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
-          ${kpiBox('Investito','$'+fmt(totalInvUSD,0))}
-          ${kpiBox('P&L totale',(totalUp?'+':'')+fmt(totalPnlUSD,0),totalUp?'var(--g)':'var(--r)')}
-          ${totalEUR_inv>0?kpiBox('🇪🇺 EUR P&L',(upE?'+':'')+fmt(pnlE,0)+' ('+fmt(pctE,1)+'%)',upE?'var(--g)':'var(--r)'):''}
-          ${totalUSD_inv>0&&totalEUR_inv>0?kpiBox('🇺🇸 USD P&L',(upU?'+':'')+fmt(pnlU,0)+' ('+fmt(pctU,1)+'%)',upU?'var(--g)':'var(--r)'):''}
-        </div>
-      </div>
+    </div>
+    <!-- Legenda -->
+    <div style="margin-bottom:10px">${legendRows}</div>
+    <!-- Divider -->
+    <div style="height:1px;background:var(--bd);margin-bottom:10px"></div>
+    <!-- Stats KPI griglia 2 col -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:0">
+      ${kpiBox('Investito','$'+fmt(totalInvUSD,0))}
+      ${kpiBox('P&L totale',(totalUp?'+':'')+fmt(totalPnlUSD,0),totalUp?'var(--g)':'var(--r)')}
+      ${totalEUR_inv>0?kpiBox('🇪🇺 EUR P&L',(upE?'+':'')+fmt(pnlE,0)+' ('+fmt(pctE,1)+'%)',upE?'var(--g)':'var(--r)'):''}
+      ${totalUSD_inv>0&&totalEUR_inv>0?kpiBox('🇺🇸 USD P&L',(upU?'+':'')+fmt(pnlU,0)+' ('+fmt(pctU,1)+'%)',upU?'var(--g)':'var(--r)'):''}
     </div>
     ${dailySection}`
     :'<div style="padding:30px;text-align:center;color:var(--t3)"><div style="font-size:32px;margin-bottom:10px">📊</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Nessun titolo</div><div style="font-size:11px">Aggiungi il primo asset dalla lista</div></div>';
