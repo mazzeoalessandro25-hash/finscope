@@ -4750,8 +4750,11 @@ function renderPortDailyText(el, payload){
     }).join('');
 
   el.innerHTML=`
-    ${idxBadges?`<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">${idxBadges}</div>`:''}
-    <div>${analysisHtml}</div>`;
+    ${idxBadges?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">${idxBadges}</div>`:''}
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+      <div>${analysisHtml}</div>
+      <div id="port-daily-news-col"></div>
+    </div>`;
 }
 
 function _timeAgo(ts){
