@@ -7398,6 +7398,8 @@ function renderValuation(d, cur){
   sdSet('sdm-float',d.floatShares?fmtLg(d.floatShares):'—');
   const badge=document.getElementById('sd-val-badge');
   if(badge)badge.textContent='Aggiornato: '+new Date(d._ts||Date.now()).toLocaleDateString('it-IT');
+  sdLastValData=d;
+  renderSdFinEdgeScore();
 }
 
 // Applica i dati fondamentali (bilancio) all'UI
