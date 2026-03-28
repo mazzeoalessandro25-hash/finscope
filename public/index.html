@@ -7543,6 +7543,206 @@ function renderSdFinEdgeScore(){
   sec.style.display='block';
 }
 
+/* ══════════════════════════════════════════
+   ANALISI TECNICA AVANZATA — Feature 2
+══════════════════════════════════════════ */
+function calcSMA(closes,period){
+  const res=[];
+  for(let i=period-1;i<closes.length;i++){
+    let s=0;for(let j=i-period+1;j<=i;j++)s+=closes[j];
+    res.push({idx:i,value:+(s/period).toFixed(4)});
+  }
+  return res;
+}
+function calcEMA(closes,period){
+  if(closes.length<period)return[];
+  const k=2/(period+1);
+  let ema=closes.slice(0,period).reduce((a,b)=>a+b,0)/period;
+  const res=[{idx:period-1,value:+ema.toFixed(4)}];
+  for(let i=period;i<closes.length;i++){ema=closes[i]*k+ema*(1-k);res.push({idx:i,value:+ema.toFixed(4)});}
+  return res;
+}
+function calcBB(closes,period=20,mult=2){
+  const res=[];
+  for(let i=period-1;i<closes.length;i++){
+    const sl=closes.slice(i-period+1,i+1);
+    const avg=sl.reduce((a,b)=>a+b,0)/period;
+    const std=Math.sqrt(sl.reduce((a,b)=>a+(b-avg)**2,0)/period);
+    res.push({idx:i,upper:+(avg+mult*std).toFixed(4),middle:+avg.toFixed(4),lower:+(avg-mult*std).toFixed(4)});
+  }
+  return res;
+}
+function calcRSI(closes,period=14){
+  if(closes.length<period+1)return[];
+  let ag=0,al=0;
+  for(let i=1;i<=period;i++){const d=closes[i]-closes[i-1];d>=0?ag+=d:al-=d;}
+  ag/=period;al/=period;
+  const rsiVal=(al===0)?100:+(100-100/(1+ag/al)).toFixed(2);
+  const res=[{idx:period,value:rsiVal}];
+  for(let i=period+1;i<closes.length;i++){
+    const d=closes[i]-closes[i-1];
+    const g=d>=0?d:0,l=d<0?-d:0;
+    ag=(ag*(period-1)+g)/period;al=(al*(period-1)+l)/period;
+    res.push({idx:i,value:al===0?100:+(100-100/(1+ag/al)).toFixed(2)});
+  }
+  return res;
+}
+
+function toggleSdInd(key,btn){
+  btn.classList.toggle('active');
+  if(sdIndicators.has(key)){
+    sdIndicators.delete(key);
+    if(key==='rsi'){
+      const rd=document.getElementById('sd-rsi-chart');
+      if(rd)rd.style.display='none';
+      if(sdRsiInst){sdRsiInst.remove();sdRsiInst=null;}
+      delete sdIndSeries[key];
+    } else if(sdIndSeries[key]){
+      const arr=Array.isArray(sdIndSeries[key])?sdIndSeries[key]:[sdIndSeries[key]];
+      arr.forEach(s=>{try{if(sdChartInst)sdChartInst.removeSeries(s);}catch(_){}});
+      delete sdIndSeries[key];
+    }
+  } else {
+    sdIndicators.add(key);
+    renderSdTechOverlays(key);
+  }
+  renderSdTechSignals();
+}
+
+function renderSdTechOverlays(onlyKey){
+  if(!sdChartInst||!sdLastPts||!sdLastPts.length)return;
+  const pts=sdLastPts;
+  const closes=pts.map(p=>+p.close);
+  const keys=onlyKey?[onlyKey]:[...sdIndicators];
+  keys.forEach(key=>{
+    if(sdIndSeries[key])return;
+    if(key==='sma20'){
+      const d=calcSMA(closes,20);
+      if(!d.length)return;
+      const s=sdChartInst.addLineSeries({color:'#f59e0b',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      s.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
+      sdIndSeries[key]=s;
+    } else if(key==='sma50'){
+      const d=calcSMA(closes,50);
+      if(!d.length)return;
+      const s=sdChartInst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      s.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
+      sdIndSeries[key]=s;
+    } else if(key==='ema20'){
+      const d=calcEMA(closes,20);
+      if(!d.length)return;
+      const s=sdChartInst.addLineSeries({color:'#06b6d4',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      s.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
+      sdIndSeries[key]=s;
+    } else if(key==='bb'){
+      const d=calcBB(closes,20);
+      if(!d.length)return;
+      const [upS,midS,loS]=[
+        sdChartInst.addLineSeries({color:'rgba(99,102,241,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
+        sdChartInst.addLineSeries({color:'rgba(99,102,241,.85)',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
+        sdChartInst.addLineSeries({color:'rgba(99,102,241,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
+      ];
+      upS.setData(d.map(r=>({time:pts[r.idx].time,value:r.upper})));
+      midS.setData(d.map(r=>({time:pts[r.idx].time,value:r.middle})));
+      loS.setData(d.map(r=>({time:pts[r.idx].time,value:r.lower})));
+      sdIndSeries[key]=[upS,midS,loS];
+    } else if(key==='rsi'){
+      const d=calcRSI(closes,14);
+      if(!d.length)return;
+      const rd=document.getElementById('sd-rsi-chart');
+      if(!rd)return;
+      rd.style.display='block';
+      if(sdRsiInst){sdRsiInst.remove();}
+      const theme=getLWChartTheme();
+      sdRsiInst=LightweightCharts.createChart(rd,{
+        width:rd.clientWidth,height:80,
+        layout:{background:{color:theme.bg},textColor:theme.text},
+        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
+        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
+        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
+        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
+        handleScroll:false,handleScale:false,
+      });
+      const rsiS=sdRsiInst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
+      const lwData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      rsiS.setData(lwData);
+      if(lwData.length>=2){
+        const t0=lwData[0].time,tN=lwData[lwData.length-1].time;
+        const obS=sdRsiInst.addLineSeries({color:'rgba(220,38,38,.4)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false});
+        const osS=sdRsiInst.addLineSeries({color:'rgba(5,150,105,.4)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false});
+        obS.setData([{time:t0,value:70},{time:tN,value:70}]);
+        osS.setData([{time:t0,value:30},{time:tN,value:30}]);
+      }
+      sdRsiInst.timeScale().fitContent();
+      new ResizeObserver(()=>{if(sdRsiInst)sdRsiInst.applyOptions({width:rd.clientWidth});}).observe(rd);
+      sdIndSeries[key]='rsi_active';
+    }
+  });
+}
+
+function renderSdTechSignals(){
+  const el=document.getElementById('sd-tech-signals');
+  if(!el||!sdLastPts||!sdLastPts.length||!sdIndicators.size){if(el)el.style.display='none';return;}
+  const pts=sdLastPts;
+  const closes=pts.map(p=>+p.close);
+  const lastPrice=closes[closes.length-1];
+  const signals=[];
+
+  if(sdIndicators.has('sma20')||sdIndicators.has('sma50')){
+    const s20=sdIndicators.has('sma20')?calcSMA(closes,20):null;
+    const s50=sdIndicators.has('sma50')?calcSMA(closes,50):null;
+    const last20=s20?.length?s20[s20.length-1].value:null;
+    const last50=s50?.length?s50[s50.length-1].value:null;
+    const prev20=s20?.length>1?s20[s20.length-2].value:null;
+    const prev50=s50?.length>1?s50[s50.length-2].value:null;
+    if(last20&&last50&&prev20&&prev50){
+      if(prev20<prev50&&last20>last50)signals.push({label:'Golden Cross',text:'SMA20 ha superato SMA50 — segnale rialzista forte',type:'bull'});
+      else if(prev20>prev50&&last20<last50)signals.push({label:'Death Cross',text:'SMA20 ha incrociato sotto SMA50 — segnale ribassista',type:'bear'});
+      else signals.push({label:'Trend',text:last20>last50?'SMA20 > SMA50 — Uptrend confermato':'SMA20 < SMA50 — Downtrend in corso',type:last20>last50?'bull':'bear'});
+    } else if(last20){
+      signals.push({label:'SMA20',text:lastPrice>last20?'Prezzo sopra la media mobile — momentum positivo':'Prezzo sotto la media mobile',type:lastPrice>last20?'bull':'bear'});
+    }
+  }
+  if(sdIndicators.has('rsi')){
+    const rsiData=calcRSI(closes,14);
+    if(rsiData.length){
+      const rsi=rsiData[rsiData.length-1].value;
+      signals.push({
+        label:`RSI ${rsi.toFixed(0)}`,
+        text:rsi>=70?'Ipercomprato — possibile correzione':rsi<=30?'Ipervenduto — possibile rimbalzo':rsi>50?'Momentum positivo':'Momentum negativo',
+        type:rsi>=70?'bear':rsi<=30?'bull':rsi>50?'bull':'bear'
+      });
+    }
+  }
+  if(sdIndicators.has('bb')){
+    const bbData=calcBB(closes,20);
+    if(bbData.length){
+      const bb=bbData[bbData.length-1];
+      const bw=+((bb.upper-bb.lower)/bb.middle*100).toFixed(1);
+      const pos=+((lastPrice-bb.lower)/(bb.upper-bb.lower)*100).toFixed(0);
+      const type=lastPrice>=bb.upper?'bear':lastPrice<=bb.lower?'bull':'neutral';
+      signals.push({label:'BB',text:lastPrice>=bb.upper?`Prezzo al limite superiore (largh. ${bw}%)`:lastPrice<=bb.lower?`Prezzo al limite inferiore (largh. ${bw}%)`:`Posizione ${pos}% nel canale (largh. ${bw}%)`,type});
+    }
+  }
+  if(sdIndicators.has('ema20')){
+    const ema=calcEMA(closes,20);
+    if(ema.length){
+      const last=ema[ema.length-1].value;
+      signals.push({label:'EMA20',text:lastPrice>last?'Prezzo sopra EMA — trend positivo':'Prezzo sotto EMA — pressione ribassista',type:lastPrice>last?'bull':'bear'});
+    }
+  }
+
+  el.style.display='block';
+  el.innerHTML=`<div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px">Segnali tecnici</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px">${signals.map(s=>{
+      const[bg,col,icon]=s.type==='bull'?['rgba(5,150,105,.1)','#059669','▲']:s.type==='bear'?['rgba(220,38,38,.1)','#dc2626','▼']:['var(--s2)','var(--t3)','●'];
+      return `<div style="display:inline-flex;align-items:center;gap:5px;background:${bg};border:1px solid ${col}33;border-radius:6px;padding:4px 9px">
+        <span style="color:${col};font-size:10px;font-weight:700;white-space:nowrap">${icon} ${s.label}</span>
+        <span style="font-size:10px;color:var(--t2);font-family:var(--fm)">${s.text}</span>
+      </div>`;
+    }).join('')}</div>`;
+}
+
 async function translateDescription(sym, text){
   if(!text||text.length<20)return;
   const chunks=[];
