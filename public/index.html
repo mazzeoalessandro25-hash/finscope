@@ -2059,6 +2059,91 @@ html.dark .auth-box{background:#1e293b}
   </div>
 </div>
 
+<!-- ═══ COMPARATORE ETF ═══ -->
+<div class="page" id="page-comparatore">
+  <div class="pg-title">Comparatore ETF &amp; Titoli</div>
+  <div class="pg-sub">Confronta la performance di fino a 3 titoli o ETF con grafico normalizzato (base 100)</div>
+  <div class="cmp-layout">
+    <!-- LEFT: Selezione -->
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="ch"><div><div class="ct">Titoli da confrontare</div><div class="cs">Aggiungi fino a 3 simboli</div></div></div>
+        <!-- Slot 1 -->
+        <div class="cmp-slot">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <div style="width:10px;height:10px;border-radius:50%;background:#1A56C4;flex-shrink:0"></div>
+            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Titolo 1</span>
+          </div>
+          <div style="position:relative">
+            <input type="text" id="cmp-inp-0" placeholder="Cerca simbolo…" oninput="cmpSearch(0,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+            <div id="cmp-dd-0" class="port-dd" style="display:none;max-height:160px;overflow-y:auto;z-index:99"></div>
+          </div>
+          <div id="cmp-badge-0" style="display:none;margin-top:7px;font-size:11px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
+        </div>
+        <!-- Slot 2 -->
+        <div class="cmp-slot">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <div style="width:10px;height:10px;border-radius:50%;background:#059669;flex-shrink:0"></div>
+            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Titolo 2</span>
+          </div>
+          <div style="position:relative">
+            <input type="text" id="cmp-inp-1" placeholder="Cerca simbolo…" oninput="cmpSearch(1,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+            <div id="cmp-dd-1" class="port-dd" style="display:none;max-height:160px;overflow-y:auto;z-index:99"></div>
+          </div>
+          <div id="cmp-badge-1" style="display:none;margin-top:7px;font-size:11px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
+        </div>
+        <!-- Slot 3 -->
+        <div class="cmp-slot" style="margin-bottom:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div>
+            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Titolo 3 <span style="font-weight:400">(opzionale)</span></span>
+          </div>
+          <div style="position:relative">
+            <input type="text" id="cmp-inp-2" placeholder="Cerca simbolo…" oninput="cmpSearch(2,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+            <div id="cmp-dd-2" class="port-dd" style="display:none;max-height:160px;overflow-y:auto;z-index:99"></div>
+          </div>
+          <div id="cmp-badge-2" style="display:none;margin-top:7px;font-size:11px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <div class="ch"><div><div class="ct">Periodo</div></div></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="cc-btn" id="cmp-p-1mo" onclick="cmpSetPeriod('1mo',this)">1M</button>
+          <button class="cc-btn" id="cmp-p-3mo" onclick="cmpSetPeriod('3mo',this)">3M</button>
+          <button class="cc-btn" id="cmp-p-6mo" onclick="cmpSetPeriod('6mo',this)">6M</button>
+          <button class="cc-btn active" id="cmp-p-1y" onclick="cmpSetPeriod('1y',this)">1A</button>
+          <button class="cc-btn" id="cmp-p-3y" onclick="cmpSetPeriod('3y',this)">3A</button>
+          <button class="cc-btn" id="cmp-p-5y" onclick="cmpSetPeriod('5y',this)">5A</button>
+        </div>
+      </div>
+      <button onclick="executeCompare()" style="width:100%;padding:12px;background:var(--b);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fm);letter-spacing:.3px">⚖ Confronta</button>
+      <div id="cmp-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--t3);font-family:var(--fm)">⏳ Caricamento dati…</div>
+      <div id="cmp-error" style="display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-radius:8px;padding:10px 12px;font-size:11px;color:#dc2626;font-family:var(--fm);margin-top:8px"></div>
+    </div>
+    <!-- RIGHT: Risultati -->
+    <div id="cmp-results-col" style="display:none;flex-direction:column;gap:14px">
+      <!-- Grafico normalizzato -->
+      <div class="card">
+        <div class="ch" style="margin-bottom:14px">
+          <div><div class="ct">Performance normalizzata</div><div class="cs" id="cmp-chart-sub">Base 100 · Performance relativa nel periodo</div></div>
+        </div>
+        <div id="cmp-legend" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px"></div>
+        <div id="cmp-chart" style="width:100%;height:300px"></div>
+      </div>
+      <!-- Tabella metriche -->
+      <div class="card" id="cmp-metrics-card">
+        <div class="ch"><div><div class="ct">Metriche a confronto</div><div class="cs">Dati fondamentali e di mercato</div></div></div>
+        <div style="overflow-x:auto">
+          <table class="cmp-tbl" id="cmp-metrics-table">
+            <thead id="cmp-tbl-head"></thead>
+            <tbody id="cmp-tbl-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ NEWS ═══ -->
 <div class="page" id="page-news">
   <div class="pg-title">News Mercati</div>
