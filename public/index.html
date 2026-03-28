@@ -4772,6 +4772,16 @@ function refreshPortDailyAnalysis(){
   }
 }
 
+function togglePortAddForm(){
+  const wrap=document.getElementById('port-add-form-wrap');
+  const btn=document.getElementById('port-add-toggle');
+  if(!wrap)return;
+  const open=wrap.style.display==='none'||wrap.style.display==='';
+  wrap.style.display=open?'block':'none';
+  if(btn)btn.textContent=open?'✕ Chiudi':'＋ Aggiungi titolo';
+  if(open)setTimeout(()=>document.getElementById('port-search')?.focus(),50);
+}
+
 function showPortOverview(){
   portSelectedSym=null;
   document.querySelectorAll('.port-item').forEach(el=>el.classList.remove('selected'));
