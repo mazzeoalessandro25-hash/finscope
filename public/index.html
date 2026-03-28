@@ -4787,6 +4787,32 @@ function _timeAgo(ts){
   return Math.floor(diff/1440)+'g fa';
 }
 
+let _portDailyRefreshTimer = null;
+
+function schedulePortDailyRefresh() {
+  if (_portDailyRefreshTimer) { clearInterval(_portDailyRefreshTimer); _portDailyRefreshTimer = null; }
+  const now = new Date();
+  const utcH = now.getUTCHours();
+  const dateLbl = document.getElementById('port-daily-date-lbl');
+  const badge   = document.getElementById('port-daily-refresh-badge');
+  const dateStr = now.toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  // US market: ~13:30–20:00 UTC | After-hours: 20:00–00:00 UTC
+  if (utcH >= 20) {
+    // After-hours: earnings reports period — refresh every 15 min
+    if (dateLbl) dateLbl.textContent = dateStr + ' · After-hours USA attivo';
+    if (badge)   { badge.style.display='inline'; badge.textContent='↻ Auto-refresh ogni 15 min (after-hours)'; }
+    _portDailyRefreshTimer = setInterval(() => refreshPortDailyAnalysis(), 15 * 60 * 1000);
+  } else if (utcH >= 13) {
+    // Market open
+    if (dateLbl) dateLbl.textContent = dateStr + ' · Mercato USA aperto';
+    if (badge)   badge.style.display='none';
+  } else {
+    // Pre-market / Europe hours
+    if (dateLbl) dateLbl.textContent = dateStr + ' · Aggiornata alla chiusura USA (20:00 UTC)';
+    if (badge)   badge.style.display='none';
+  }
+}
+
 function refreshPortDailyAnalysis(){
   const keys=Object.keys(sessionStorage).filter(k=>k.startsWith('portDaily_'));
   keys.forEach(k=>sessionStorage.removeItem(k));
