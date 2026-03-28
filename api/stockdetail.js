@@ -131,7 +131,7 @@ export default async function handler(req, res) {
 
   const [sd, news] = await Promise.all([
     fetchQuoteSummary(symbol),
-    fetchNews(symbol, companyName),
+    nonews === '1' ? Promise.resolve([]) : fetchNews(symbol, companyName),
   ]);
 
   if (!q && !sd) return res.status(404).json({ error: 'no data' });
