@@ -105,7 +105,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const { symbol, priceonly } = req.query;
+  const { symbol, priceonly, nonews } = req.query;
   if (!symbol) return res.status(400).json({ error: 'symbol required' });
 
   // ── Solo prezzo (auto-refresh 30s) ──
