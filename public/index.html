@@ -3364,6 +3364,7 @@ function calcStockScore(s){
 function renderMarketStocks(){
   const q=(document.getElementById('fq').value||'').toUpperCase();
   const sec=document.getElementById('fs').value;
+  const cntryF=document.getElementById('sc-country')?.value||'';
   const chgF=document.getElementById('sc-chg-f')?.value||'';
   const peF=document.getElementById('sc-pe-f')?.value||'';
   const capF=document.getElementById('sc-cap-f')?.value||'';
@@ -3371,6 +3372,7 @@ function renderMarketStocks(){
   let list=dynamicStocks.filter(s=>{
     if(q&&!s.s.includes(q)&&!s.n.toUpperCase().includes(q)) return false;
     if(sec&&s.sec!==sec) return false;
+    if(cntryF&&s.mkt!==cntryF) return false;
     if(chgF==='pos'&&!(s.chg!=null&&s.chg>=0)) return false;
     if(chgF==='neg'&&!(s.chg!=null&&s.chg<0)) return false;
     if(chgF==='gt2'&&!(s.chg!=null&&s.chg>2)) return false;
