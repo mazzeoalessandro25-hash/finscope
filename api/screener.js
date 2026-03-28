@@ -786,7 +786,7 @@ export default async function handler(req, res) {
 
     // ── BULK QUOTE ────────────────────────────────────────────────────────────
     if (symbols) {
-      res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60');
+      res.setHeader('Cache-Control', 'no-store');
       const symList = symbols.split(',').filter(Boolean);
       const qMap = await yahooQuote(symList);
 
