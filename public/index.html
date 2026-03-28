@@ -4451,23 +4451,10 @@ function selectPortAsset(idx,silent){
   const item=portfolio[idx];
   if(!item)return;
   portSelectedSym=item.sym;
-  // Highlight selected
+  // Highlight selected item in list only
   document.querySelectorAll('.port-item').forEach(el=>el.classList.remove('selected'));
   const el=document.getElementById('port-item-'+idx);
   if(el)el.classList.add('selected');
-  // Show analysis, hide overview
-  const overview=document.getElementById('port-panel-overview');
-  const panel=document.getElementById('port-panel-analysis');
-  if(overview)overview.style.display='none';
-  if(panel)panel.style.display='';
-  // Header
-  const q=portQuotes[idx]||null;
-  updatePortAnalysisHeader(item,q,idx);
-  // Chart
-  if(!silent){loadPortChart(item.sym,portChartRange);}
-  // Metrics + news
-  loadPortMetrics(item.sym);
-  loadPortNews(item.sym);
 }
 
 // ── Analisi giornaliera (notizie + template JS, zero API key) ──
