@@ -3228,6 +3228,7 @@ function onFilterChange(){
   if(currentIndex==='all'){ dynamicStocks=[];screenerPage=0;loadMarketScreener(true); }
   else renderMarketStocks();
 }
+function onCountryChange(){ renderMarketStocks(); }
 
 async function loadMarketScreener(reset=true){
   const loadId=++_screenerLoadId; // ogni chiamata ha un ID unico
