@@ -4273,15 +4273,29 @@ async function renderPortfolio(){
     ${totalEUR_inv>0?statRow('EUR — P&L', (upE?'+':'')+fmt(pnlE,0)+' ('+fmt(pctE,1)+'%)', upE?'var(--g)':'var(--r)'):''}
   `;
 
-  // ── Legenda donut — griglia 2 colonne ──
+  // ── Legenda donut ──
   const top8=holdingEntries.slice(0,8);
-  const legendRows=`<div style="display:flex;flex-direction:column;gap:2px">
-    ${top8.map((e,idx)=>`
-      <div style="display:flex;align-items:center;gap:5px;padding:3px 0;min-width:0">
+  // Mappa valore corrente per holding (per % peso attuale)
+  const curValMap={};
+  portfolio.forEach((item,i)=>{ const q=quotes[i]; const fx=(item.currency==='EUR')?eurUsd:1; curValMap[item.sym]=(curValMap[item.sym]||0)+item.qty*(q?.price||item.buyPrice)*fx; });
+  // Mappa variazione giornaliera per holding
+  const dailyChgMap={};
+  dailyItems.forEach(d=>{ dailyChgMap[d.sym]=d.chgPct; });
+
+  const legendRows=`<div style="display:flex;flex-direction:column;gap:0">
+    ${top8.map((e,idx)=>{
+      const sym=e[0];
+      const cvPct=totalValUSD>0?Math.round((curValMap[sym]||0)/totalValUSD*100):0;
+      const dc=dailyChgMap[sym];
+      const dcUp=dc!=null&&dc>=0;
+      return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bd);min-width:0">
         <div style="width:8px;height:8px;border-radius:50%;background:${PALETTE[idx%PALETTE.length]};flex-shrink:0"></div>
-        <div style="font-size:11px;color:var(--t2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e[0]}</div>
-        <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t);flex-shrink:0">${grandTotalInv>0?Math.round(e[1]/grandTotalInv*100):0}%</div>
-      </div>`).join('')}
+        <div style="font-size:11px;font-weight:600;color:var(--t);flex-shrink:0">${sym}</div>
+        ${dc!=null?`<div style="font-size:9px;font-family:var(--fm);font-weight:600;color:${dcUp?'var(--g)':'var(--r)'};flex-shrink:0">${dcUp?'+':''}${dc.toFixed(1)}%</div>`:''}
+        <div style="flex:1"></div>
+        <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t);flex-shrink:0">${cvPct}%</div>
+      </div>`;
+    }).join('')}
   </div>`;
 
   // ── Stats — griglia 2 colonne ──
