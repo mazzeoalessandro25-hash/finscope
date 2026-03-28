@@ -1628,30 +1628,10 @@ html.dark .auth-box{background:#1e293b}
       </div>
     </div>
 
-    <!-- ── GIORNATA DI OGGI — full width ── -->
-    <div id="port-daily-outer" style="display:none;margin-bottom:14px">
-      <div class="port-analysis-card" style="padding:18px 20px">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          <div>
-            <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:.2px">📅 Giornata di oggi</div>
-            <div id="port-daily-date-lbl" style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px"></div>
-          </div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div id="port-daily-refresh-badge" style="display:none;font-size:9px;color:var(--b);font-family:var(--fm);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:4px;padding:2px 7px;white-space:nowrap">↻ Auto-refresh ogni 15 min</div>
-            <div id="psb-oggi-inline" style="font-family:var(--fm);font-size:12px;font-weight:700"></div>
-            <button onclick="refreshPortDailyAnalysis()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)">↻ Aggiorna</button>
-          </div>
-        </div>
-        <div id="port-daily-text" style="font-size:12px;color:var(--t2);line-height:1.6">
-          <div class="ld" style="padding:8px 0">Raccolta notizie in corso…</div>
-        </div>
-      </div>
-    </div>
+    <!-- ── TOP: donut sinistra | giornata destra ── -->
+    <div class="port-2col" style="margin-bottom:14px">
 
-    <!-- ── 2-COLUMN LAYOUT ── -->
-    <div class="port-2col">
-
-      <!-- LEFT sidebar: Overview (default) + Analysis (on click) -->
+      <!-- LEFT: donut + overview (fisso 320px) -->
       <div class="port-center">
 
         <!-- OVERVIEW: donut + stats -->
@@ -1698,43 +1678,63 @@ html.dark .auth-box{background:#1e293b}
 
       </div>
 
-      <!-- RIGHT: lista titoli (elemento principale) -->
-      <div class="port-left">
-        <!-- Bottone toggle form -->
-        <div style="position:relative">
-          <button class="port-add-toggle" id="port-add-toggle" onclick="togglePortAddForm()">＋ Aggiungi titolo</button>
-          <div id="port-add-form-wrap" style="display:none;margin-top:7px">
-            <div class="port-add-form">
-              <div class="port-search-wrap" style="position:relative">
-                <input class="port-search-inp" id="port-search" type="text"
-                  placeholder="Cerca ticker o nome..." autocomplete="off"
-                  oninput="onPortSearchInput()" onkeydown="onPortSearchKey(event)"/>
-                <div id="port-dd" class="port-dd"></div>
-              </div>
-              <div class="port-add-row2">
-                <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any"/>
-                <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acq." min="0" step="any"/>
-                <input class="port-inp" id="port-date" type="date" title="Data acquisto"/>
-                <button class="port-add-btn" onclick="addPortfolioItem()">＋ Aggiungi</button>
-              </div>
+      <!-- RIGHT: giornata di oggi (1fr) -->
+      <div id="port-daily-outer" style="display:none">
+        <div class="port-analysis-card" style="padding:18px 20px;height:100%;box-sizing:border-box">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+            <div>
+              <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:.2px">📅 Giornata di oggi</div>
+              <div id="port-daily-date-lbl" style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <div id="port-daily-refresh-badge" style="display:none;font-size:9px;color:var(--b);font-family:var(--fm);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:4px;padding:2px 7px;white-space:nowrap">↻ Auto-refresh ogni 15 min</div>
+              <div id="psb-oggi-inline" style="font-family:var(--fm);font-size:12px;font-weight:700"></div>
+              <button onclick="refreshPortDailyAnalysis()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)">↻ Aggiorna</button>
             </div>
           </div>
-        </div>
-        <div class="port-cat-bar" id="port-cat-bar">
-          <button class="port-cat-tab active" onclick="setPortCat('all',this)">Tutti</button>
-          <button class="port-cat-tab" onclick="setPortCat('stock',this)">Azioni</button>
-          <button class="port-cat-tab" onclick="setPortCat('etf',this)">ETF</button>
-          <button class="port-cat-tab" onclick="setPortCat('crypto',this)">Crypto</button>
-          <button class="port-cat-tab" onclick="setPortCat('commodity',this)">Comm.</button>
-        </div>
-        <div id="port-list"><div class="ld" style="padding:20px;text-align:center">Nessun titolo aggiunto</div></div>
-        <div style="display:flex;gap:6px;margin-top:2px">
-          <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioCSV()">⬇ Esporta CSV</button>
-          <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()">⬆ Importa CSV</button>
+          <div id="port-daily-text" style="font-size:12px;color:var(--t2);line-height:1.6">
+            <div class="ld" style="padding:8px 0">Raccolta notizie in corso…</div>
+          </div>
         </div>
       </div>
 
-    </div><!-- end port-2col -->
+    </div><!-- end port-2col top -->
+
+    <!-- ── BOTTOM: lista titoli (full width) ── -->
+    <div class="port-left">
+      <!-- Bottone toggle form -->
+      <div style="position:relative">
+        <button class="port-add-toggle" id="port-add-toggle" onclick="togglePortAddForm()">＋ Aggiungi titolo</button>
+        <div id="port-add-form-wrap" style="display:none;margin-top:7px">
+          <div class="port-add-form">
+            <div class="port-search-wrap" style="position:relative">
+              <input class="port-search-inp" id="port-search" type="text"
+                placeholder="Cerca ticker o nome..." autocomplete="off"
+                oninput="onPortSearchInput()" onkeydown="onPortSearchKey(event)"/>
+              <div id="port-dd" class="port-dd"></div>
+            </div>
+            <div class="port-add-row2">
+              <input class="port-inp" id="port-qty" type="number" placeholder="Quantità" min="0.0001" step="any"/>
+              <input class="port-inp" id="port-price" type="number" placeholder="Prezzo acq." min="0" step="any"/>
+              <input class="port-inp" id="port-date" type="date" title="Data acquisto"/>
+              <button class="port-add-btn" onclick="addPortfolioItem()">＋ Aggiungi</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="port-cat-bar" id="port-cat-bar">
+        <button class="port-cat-tab active" onclick="setPortCat('all',this)">Tutti</button>
+        <button class="port-cat-tab" onclick="setPortCat('stock',this)">Azioni</button>
+        <button class="port-cat-tab" onclick="setPortCat('etf',this)">ETF</button>
+        <button class="port-cat-tab" onclick="setPortCat('crypto',this)">Crypto</button>
+        <button class="port-cat-tab" onclick="setPortCat('commodity',this)">Comm.</button>
+      </div>
+      <div id="port-list"><div class="ld" style="padding:20px;text-align:center">Nessun titolo aggiunto</div></div>
+      <div style="display:flex;gap:6px;margin-top:2px">
+        <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioCSV()">⬇ Esporta CSV</button>
+        <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()">⬆ Importa CSV</button>
+      </div>
+    </div>
 
     <!-- Legacy hidden elements for backward compatibility -->
     <div style="display:none">
