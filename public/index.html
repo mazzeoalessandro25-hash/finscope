@@ -5979,8 +5979,8 @@ async function loadDividendTracker(){
   portfolio.forEach((item,i)=>{
     const sd=summaries[i];
     const q=quotes[i];
-    // Cerca dividend yield da più fonti
-    const divYield=sd?.dividend??q?.divYield??q?.trailingAnnualDividendYield??0;
+    // Cerca dividend yield da più fonti (dividendYield = forward annualizzato, più affidabile)
+    const divYield=sd?.dividend??q?.divYield??0;
     if(divYield<=0)return;
     const isEUR=item.currency==='EUR';
     const curSym=isEUR?'€':'$';
