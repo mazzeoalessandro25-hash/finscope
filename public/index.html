@@ -6265,25 +6265,25 @@ function renderPortAnalysis(portItems, quotes){
     </div>
 
     <!-- 3 grafici a ciambella compatti -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Tipo</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="flex-shrink:0">${svgDonut(typeEntries,typePal,80,16)}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bd)">
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px">
+        <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Tipo</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex-shrink:0">${svgDonut(typeEntries,typePal,62,12)}</div>
           <div style="flex:1">${donutLegend(typeEntries,typePal)}</div>
         </div>
       </div>
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Area geografica</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="flex-shrink:0">${svgDonut(mktEntries,null,80,16)}</div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px">
+        <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Area geografica</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex-shrink:0">${svgDonut(mktEntries,null,62,12)}</div>
           <div style="flex:1">${donutLegend(mktEntries)}</div>
         </div>
       </div>
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Settori</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div style="flex-shrink:0">${svgDonut(secEntries.slice(0,8),null,80,16)}</div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px">
+        <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Settori</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div style="flex-shrink:0">${svgDonut(secEntries.slice(0,8),null,62,12)}</div>
           <div style="flex:1">${donutLegend(secEntries.slice(0,8))}</div>
         </div>
       </div>
