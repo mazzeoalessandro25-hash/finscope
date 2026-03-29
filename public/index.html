@@ -4642,8 +4642,8 @@ async function renderPortfolio(){
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
         <span style="font-size:11px;color:var(--t2);font-family:var(--fm)">🇪🇺 EUR</span>
         <div style="text-align:right">
-          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">€${fmt(totalValEUR,0)}</div>
-          <div style="font-size:10px;font-family:var(--fm);color:${upE?'var(--g)':'var(--r)'};">${upE?'+':'−'}€${fmt(Math.abs(pnlE),0)} (${fmt(Math.abs(pctE),1)}%)</div>
+          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">€${fmt(totalValEUR,2)}</div>
+          <div style="font-size:10px;font-family:var(--fm);color:${upE?'var(--g)':'var(--r)'};">${upE?'+':'−'}€${fmt(Math.abs(pnlE),2)} (${fmt(Math.abs(pctE),1)}%)</div>
         </div>
       </div>
       <div style="height:1px;background:var(--bd);margin:5px 0"></div>
