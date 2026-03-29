@@ -3215,13 +3215,14 @@ function setScreenerIndex(idx, btn){
   btn.classList.add('active');
   const isAll=idx==='all';
   const elCountry=document.getElementById('sc-country');
-  if(elCountry) elCountry.style.display='';
+  if(elCountry) elCountry.style.display=idx==='etf'?'none':'';
   const elLoadWrap=document.getElementById('sc-load-wrap');
   if(elLoadWrap) elLoadWrap.style.display=isAll?'block':'none';
   const thSpark=document.getElementById('sc-th-spark');
   if(thSpark) thSpark.style.display='none';
   hideSearchDropdown();
   dynamicStocks=[];screenerPage=0;
+  if(idx==='etf'){ loadETFScreener(); return; }
   loadMarketScreener(true);
 }
 
