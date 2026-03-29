@@ -6873,152 +6873,192 @@ async function exportPortfolioPDF(){
   const quotesMap={};
   portfolio.forEach((item,i)=>{quotesMap[item.sym]=quoteArr[i];});
 
-  const doc=new jsPDF({orientation:'portrait',unit:'pt',format:'a4'});
-  const W=doc.internal.pageSize.getWidth();
-  const H=doc.internal.pageSize.getHeight();
+  // Landscape A4 per avere spazio sufficiente alle colonne
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const W=297, H=210;
+  const ML=14, MR=14; // margini sinistra/destra
+  const CW=W-ML-MR;   // larghezza contenuto = 269mm
   const BLUE=[20,72,168];
   const DARK=[18,22,34];
-  const GRAY=[100,110,130];
-  const LGRAY=[230,234,240];
-  const GREEN=[34,197,94];
-  const RED=[239,68,68];
+  const GRAY=[110,120,140];
+  const LGRAY=[225,229,237];
+  const GREEN=[22,163,74];
+  const RED=[220,38,38];
   const now=new Date();
   const dateStr=now.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
   const timeStr=now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
 
-  // ── HEADER ──
-  doc.setFillColor(...BLUE);
-  doc.rect(0,0,W,64,'F');
+  // ── HEADER BAND ──
+  doc.setFillColor(BLUE[0],BLUE[1],BLUE[2]);
+  doc.rect(0,0,W,18,'F');
+
   doc.setTextColor(255,255,255);
-  doc.setFontSize(22);
+  doc.setFontSize(13);
   doc.setFont('helvetica','bold');
-  doc.text('FinEdge',36,30);
+  doc.text('FinEdge',ML,11.5);
+
+  doc.setFontSize(7.5);
+  doc.setFont('helvetica','normal');
+  doc.setTextColor(180,205,255);
+  doc.text('Dashboard Mercati Finanziari',ML+26,11.5);
+
   doc.setFontSize(9);
-  doc.setFont('helvetica','normal');
-  doc.setTextColor(180,200,255);
-  doc.text('Dashboard Mercati Finanziari',36,44);
-  doc.setFontSize(11);
   doc.setFont('helvetica','bold');
   doc.setTextColor(255,255,255);
-  doc.text('REPORT PORTAFOGLIO',W-36,28,{align:'right'});
-  doc.setFontSize(8);
+  doc.text('REPORT PORTAFOGLIO',W-MR,8,{align:'right'});
+  doc.setFontSize(7);
   doc.setFont('helvetica','normal');
-  doc.setTextColor(180,200,255);
-  doc.text(dateStr+' · '+timeStr,W-36,42,{align:'right'});
+  doc.setTextColor(180,205,255);
+  doc.text(dateStr+' · '+timeStr,W-MR,13.5,{align:'right'});
 
-  let y=82;
-
-  // ── KPI ──
+  // ── KPI STRIP ──
   let totalUSDinv=0,totalUSDval=0,totalEURinv=0,totalEURval=0;
-  let bestSym='—',bestPct=-Infinity;
+  let bestSym='—',bestPct=-Infinity,worstSym='—',worstPct=Infinity;
   portfolio.forEach(item=>{
     const q=quotesMap[item.sym];
     const inv=item.qty*item.buyPrice;
-    const val=q?.price?item.qty*q.price:inv;
-    const pct=q?.price?((val-inv)/inv*100):0;
+    const val=q&&q.price?item.qty*q.price:inv;
+    const pct=q&&q.price?((val-inv)/inv*100):0;
     const cur=item.currency||'USD';
     if(cur==='EUR'){totalEURinv+=inv;totalEURval+=val;}
     else{totalUSDinv+=inv;totalUSDval+=val;}
     if(pct>bestPct){bestPct=pct;bestSym=item.sym;}
+    if(pct<worstPct){worstPct=pct;worstSym=item.sym;}
   });
   const totalInv=totalUSDinv+totalEURinv;
   const totalVal=totalUSDval+totalEURval;
   const pnlTot=totalVal-totalInv;
   const pnlPctTot=totalInv?((pnlTot/totalInv)*100):0;
   const up=pnlTot>=0;
-  const kpis=[
-    {label:'VALORE TOTALE',val:(totalUSDval>0?'$'+totalUSDval.toFixed(0):'')+((totalUSDval>0&&totalEURval>0)?' · ':'')+( totalEURval>0?'€'+totalEURval.toFixed(0):''),color:DARK},
-    {label:'P&L TOTALE',val:(up?'+':'')+pnlPctTot.toFixed(2)+'%',color:up?GREEN:RED},
-    {label:'ASSET',val:String(portfolio.length),color:DARK},
-    {label:'MIGLIOR POS.',val:bestSym+(bestPct>-Infinity&&bestPct>0?' +'+bestPct.toFixed(2)+'%':''),color:GREEN},
-  ];
-  const kpiW=(W-72)/4;
-  kpis.forEach((k,i)=>{
-    const x=36+i*kpiW;
-    doc.setFillColor(245,247,252);
-    doc.roundedRect(x,y,kpiW-8,48,4,4,'F');
-    doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(...GRAY);
-    doc.text(k.label,x+10,y+16);
-    doc.setFontSize(13);doc.setFont('helvetica','bold');doc.setTextColor(...k.color);
-    doc.text(k.val,x+10,y+36);
-  });
-  y+=64;
 
-  // ── TITOLO TABELLA ──
-  doc.setFontSize(10);doc.setFont('helvetica','bold');doc.setTextColor(...DARK);
-  doc.text('Posizioni',36,y+4);
-  doc.setDrawColor(...LGRAY);doc.setLineWidth(0.5);
-  doc.line(36,y+9,W-36,y+9);
-  y+=18;
+  const valStr=(totalUSDval>0?'$ '+totalUSDval.toFixed(0):'')+
+               (totalUSDval>0&&totalEURval>0?' + ':'')+
+               (totalEURval>0?'€ '+totalEURval.toFixed(0):'');
+  const kpis=[
+    {lbl:'VALORE TOTALE',  val:valStr||'—',              color:DARK},
+    {lbl:'P&L TOTALE',     val:(up?'+':'')+pnlPctTot.toFixed(2)+'%', color:up?GREEN:RED},
+    {lbl:'INVESTITO',      val:(totalUSDinv>0?'$ '+totalUSDinv.toFixed(0):'')+(totalEURinv>0?' €'+totalEURinv.toFixed(0):''), color:GRAY},
+    {lbl:'N. ASSET',       val:String(portfolio.length), color:DARK},
+    {lbl:'MIGLIOR POS.',   val:bestSym+(bestPct>0?' +'+bestPct.toFixed(1)+'%':''), color:GREEN},
+    {lbl:'PEGGIOR POS.',   val:worstSym+(worstPct<0?' '+worstPct.toFixed(1)+'%':''), color:RED},
+  ];
+  const kpiBw=CW/kpis.length;
+  const kpiY=20;
+  kpis.forEach((k,i)=>{
+    const x=ML+i*kpiBw;
+    doc.setFillColor(245,247,252);
+    doc.rect(x,kpiY,kpiBw-1,14,'F');
+    doc.setFontSize(5.5);
+    doc.setFont('helvetica','bold');
+    doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
+    doc.text(k.lbl,x+2,kpiY+4.5);
+    doc.setFontSize(9);
+    doc.setFont('helvetica','bold');
+    doc.setTextColor(k.color[0],k.color[1],k.color[2]);
+    doc.text(String(k.val),x+2,kpiY+11.5);
+  });
+
+  // ── SEPARATORE + TITOLO TABELLA ──
+  const tblTitleY=36;
+  doc.setFontSize(8);
+  doc.setFont('helvetica','bold');
+  doc.setTextColor(DARK[0],DARK[1],DARK[2]);
+  doc.text('Posizioni in portafoglio',ML,tblTitleY);
+  doc.setDrawColor(LGRAY[0],LGRAY[1],LGRAY[2]);
+  doc.setLineWidth(0.3);
+  doc.line(ML,tblTitleY+1.5,W-MR,tblTitleY+1.5);
 
   // ── TABELLA ──
   const rows=portfolio.map(item=>{
     const q=quotesMap[item.sym];
     const inv=item.qty*item.buyPrice;
-    const curPrice=q?.price||null;
+    const curPrice=q&&q.price?q.price:null;
     const val=curPrice?item.qty*curPrice:null;
     const pnlItem=val!=null?val-inv:null;
     const pnlPctItem=pnlItem!=null?((pnlItem/inv)*100):null;
-    const sym=item.symbol||'$';
+    const s=item.symbol||'$';
     const catMap={stock:'Azione',etf:'ETF',crypto:'Crypto',commodity:'Commodity'};
-    const cat=catMap[item.cat]||item.cat||'—';
+    const cat=catMap[item.cat]||'—';
     return[
       item.sym,
-      (item.name||q?.name||item.sym).substring(0,22),
+      (item.name||(q&&q.name)||item.sym).substring(0,30),
       cat,
       String(item.qty),
-      sym+item.buyPrice.toFixed(2),
-      curPrice?sym+curPrice.toFixed(2):'—',
-      val!=null?sym+val.toFixed(2):'—',
+      s+item.buyPrice.toFixed(2),
+      curPrice?s+curPrice.toFixed(2):'—',
+      val!=null?s+val.toFixed(2):'—',
       pnlItem!=null?(pnlItem>=0?'+':'')+pnlItem.toFixed(2):'—',
       pnlPctItem!=null?(pnlPctItem>=0?'+':'')+pnlPctItem.toFixed(2)+'%':'—',
     ];
   });
 
   doc.autoTable({
-    startY:y,
-    head:[['Ticker','Nome','Tipo','Qtà','P.Acquisto','P.Attuale','Valore','P&L','Rend.%']],
+    startY:tblTitleY+3,
+    head:[['TICKER','NOME','TIPO','QTÀ','P. ACQUISTO','P. ATTUALE','VALORE','P&L','REND. %']],
     body:rows,
-    margin:{left:36,right:36},
-    styles:{font:'helvetica',fontSize:8,cellPadding:5,textColor:DARK,lineColor:LGRAY,lineWidth:0.4},
-    headStyles:{fillColor:BLUE,textColor:[255,255,255],fontStyle:'bold',fontSize:8},
-    alternateRowStyles:{fillColor:[245,247,252]},
+    margin:{left:ML,right:MR},
+    tableWidth:'auto',
+    styles:{
+      font:'helvetica',
+      fontSize:8,
+      cellPadding:{top:3,bottom:3,left:3,right:3},
+      textColor:[DARK[0],DARK[1],DARK[2]],
+      lineColor:[LGRAY[0],LGRAY[1],LGRAY[2]],
+      lineWidth:0.25,
+      overflow:'ellipsize',
+    },
+    headStyles:{
+      fillColor:[BLUE[0],BLUE[1],BLUE[2]],
+      textColor:[255,255,255],
+      fontStyle:'bold',
+      fontSize:7,
+      halign:'center',
+    },
+    alternateRowStyles:{fillColor:[248,250,253]},
     columnStyles:{
-      0:{fontStyle:'bold',cellWidth:42},
-      1:{cellWidth:90},
-      2:{cellWidth:52},
-      3:{cellWidth:32,halign:'right'},
-      4:{cellWidth:52,halign:'right'},
-      5:{cellWidth:52,halign:'right'},
-      6:{cellWidth:52,halign:'right'},
-      7:{cellWidth:44,halign:'right'},
-      8:{cellWidth:44,halign:'right'},
+      0:{fontStyle:'bold', cellWidth:18, halign:'left'},
+      1:{cellWidth:52,     halign:'left'},
+      2:{cellWidth:18,     halign:'center'},
+      3:{cellWidth:14,     halign:'right'},
+      4:{cellWidth:26,     halign:'right'},
+      5:{cellWidth:26,     halign:'right'},
+      6:{cellWidth:26,     halign:'right'},
+      7:{cellWidth:24,     halign:'right'},
+      8:{cellWidth:24,     halign:'right'},
     },
     didParseCell(data){
-      if(data.section==='body'&&rows[data.row.index]){
-        const pnlStr=rows[data.row.index][7];
-        const rendStr=rows[data.row.index][8];
-        if(data.column.index===7&&pnlStr!=='—'){data.cell.styles.textColor=pnlStr.startsWith('+')?GREEN:RED;data.cell.styles.fontStyle='bold';}
-        if(data.column.index===8&&rendStr!=='—'){data.cell.styles.textColor=rendStr.startsWith('+')?GREEN:RED;data.cell.styles.fontStyle='bold';}
+      if(data.section!=='body') return;
+      const row=rows[data.row.index];
+      if(!row) return;
+      if(data.column.index===7&&row[7]!=='—'){
+        data.cell.styles.textColor=row[7].startsWith('+')?[GREEN[0],GREEN[1],GREEN[2]]:[RED[0],RED[1],RED[2]];
+        data.cell.styles.fontStyle='bold';
+      }
+      if(data.column.index===8&&row[8]!=='—'){
+        data.cell.styles.textColor=row[8].startsWith('+')?[GREEN[0],GREEN[1],GREEN[2]]:[RED[0],RED[1],RED[2]];
+        data.cell.styles.fontStyle='bold';
       }
     },
   });
 
-  const afterTable=doc.lastAutoTable.finalY+16;
+  const afterY=doc.lastAutoTable.finalY;
 
   // ── DISCLAIMER ──
-  const footerY=Math.max(afterTable,H-60);
-  doc.setDrawColor(...LGRAY);doc.setLineWidth(0.4);
-  doc.line(36,footerY,W-36,footerY);
-  doc.setFontSize(7);doc.setFont('helvetica','italic');doc.setTextColor(...GRAY);
-  const disc='Il presente documento è generato automaticamente da FinEdge a scopo informativo e non costituisce in alcun modo un consiglio finanziario, un\'offerta o una sollecitazione all\'investimento.';
-  doc.text(doc.splitTextToSize(disc,W-72),36,footerY+12);
+  const discY=Math.max(afterY+6, H-18);
+  doc.setDrawColor(LGRAY[0],LGRAY[1],LGRAY[2]);
+  doc.setLineWidth(0.25);
+  doc.line(ML,discY,W-MR,discY);
+  doc.setFontSize(6);
+  doc.setFont('helvetica','italic');
+  doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
+  const disc='Il presente documento è generato automaticamente da FinEdge a scopo esclusivamente informativo e non costituisce in alcun modo un consiglio finanziario, un\'offerta o una sollecitazione all\'investimento. I dati mostrati potrebbero non essere aggiornati in tempo reale.';
+  doc.text(doc.splitTextToSize(disc,CW-40),ML,discY+3.5);
 
-  // ── FOOTER ──
-  doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...BLUE);
-  doc.text('FinEdge',36,H-16);
-  doc.setFont('helvetica','normal');doc.setTextColor(...GRAY);
-  doc.text('finedge.app',W-36,H-16,{align:'right'});
+  // ── FOOTER BRAND ──
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(6.5);
+  doc.setTextColor(BLUE[0],BLUE[1],BLUE[2]);
+  doc.text('FinEdge',W-MR,discY+3.5,{align:'right'});
 
   doc.save('portafoglio-finedge-'+now.toISOString().slice(0,10)+'.pdf');
 }
