@@ -189,5 +189,23 @@ export default async function handler(req, res) {
     employees:         sd?.assetProfile?.fullTimeEmployees ?? null,
     website:           sd?.assetProfile?.website ?? null,
     news,
+    ...(isETF ? {
+      etf: {
+        ter:            sd?.defaultKeyStatistics?.annualReportExpenseRatio ?? null,
+        aum:            sd?.defaultKeyStatistics?.totalAssets ?? null,
+        inceptionDate:  sd?.defaultKeyStatistics?.fundInceptionDate ?? null,
+        ytdReturn:      sd?.defaultKeyStatistics?.ytdReturn ?? null,
+        beta3Year:      sd?.defaultKeyStatistics?.beta3Year ?? null,
+        category:       etfSd?.fundProfile?.categoryName ?? null,
+        legalType:      etfSd?.fundProfile?.legalType ?? null,
+        fundFamily:     etfSd?.fundProfile?.fundFamily ?? null,
+        holdings:       (etfSd?.topHoldings?.holdings ?? []).slice(0, 10),
+        sectorWeightings: etfSd?.topHoldings?.sectorWeightings ?? [],
+        equityHoldings: etfSd?.topHoldings?.equityHoldings ?? null,
+        stockPosition:  etfSd?.topHoldings?.stockPosition ?? null,
+        bondPosition:   etfSd?.topHoldings?.bondPosition ?? null,
+        cashPosition:   etfSd?.topHoldings?.cashPosition ?? null,
+      },
+    } : {}),
   });
 }
