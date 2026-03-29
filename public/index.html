@@ -4368,7 +4368,8 @@ function switchPortTab(name){
   if(name==='analisi'){loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
   if(name==='obiettivi'){loadPortTargets();renderPersonalTargets();renderPortGoal();}
   if(name==='reddito'){loadDividendTracker();renderTaxDashboard();}
-  if(name==='gestione'){renderRebalancing();loadPortfolioNews();renderTransactionHistory();renderPriceAlerts();}
+  if(name==='gestione'){renderRebalancing();renderTransactionHistory();renderPriceAlerts();}
+  if(name==='news'){loadPortfolioNews();}
 }
 
 function setPortSort(key){
