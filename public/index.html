@@ -5974,7 +5974,7 @@ async function loadDividendTracker(){
     :await Promise.all(portfolio.map(item=>api(item.sym)));
   const fxRate=_lastFxRate||1.08; // USD→EUR
   const rows=[];
-  let totalAnnualEUR=0; // tutto convertito in EUR
+  let totalAnnualEUR=0,totalNetEUR=0; // tutto convertito in EUR
   let totalWeightedYield=0,totalInvestedEUR=0;
   portfolio.forEach((item,i)=>{
     const sd=summaries[i];
