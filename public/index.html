@@ -4618,8 +4618,8 @@ async function renderPortfolio(){
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
         <div style="text-align:center;padding:0 18px">
           <div style="font-size:7px;color:var(--t3);font-family:var(--fm);letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;opacity:.7">Valore totale</div>
-          <div style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">€${fmt(totalValEUR,0)}</div>
-          <div style="font-size:10px;font-family:var(--fm);font-weight:700;margin-top:3px;color:${totalUp?'var(--g)':'var(--r)'}">${totalUp?'+':''}€${fmt(pnlEUR,0)}</div>
+          <div style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">€${fmt(totalValEUR,2)}</div>
+          <div style="font-size:10px;font-family:var(--fm);font-weight:700;margin-top:3px;color:${totalUp?'var(--g)':'var(--r)'}">${totalUp?'+':''}€${fmt(pnlEUR,2)}</div>
         </div>
       </div>
     </div>
