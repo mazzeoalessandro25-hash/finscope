@@ -6415,7 +6415,7 @@ function renderPortAnalysis(portItems, quotes){
                 <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:${sigCol}">${sig}</span>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
-                ${score!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score <span style="color:${score>=70?'var(--g)':score<45?'var(--r)':'var(--o)';font-weight:600}">${score}</span></div>`:''}
+                ${score!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score <span style="font-weight:600;color:${score>=70?'var(--g)':score<45?'var(--r)':'var(--o)'}">${score}</span></div>`:''}
                 ${upside!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Upside <span style="color:${upside>=0?'var(--g)':'var(--r)'};font-weight:600">${upside>=0?'+':''}${fmt(upside,1)}%</span></div>`:''}
                 <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">P&L <span style="color:${pnlPct>=0?'var(--g)':'var(--r)'};font-weight:600">${pnlPct>=0?'+':''}${fmt(pnlPct,1)}%</span></div>
                 <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Beta <span style="font-weight:600;color:var(--t)">${fmt(beta,2)}</span></div>
