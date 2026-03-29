@@ -4615,33 +4615,49 @@ async function renderPortfolio(){
       <div style="font-family:var(--fm);font-size:13px;font-weight:700;${cls?'color:'+cls:'color:var(--t)'}">${val}</div>
     </div>`;
 
+  const pnlEUR = totalValEUR - totalInvEUR;
   const summaryHtml=holdingEntries.length>0?`
     <!-- Donut centrato nella sidebar -->
     <div style="position:relative;width:180px;height:180px;margin:0 auto 14px">
       <canvas id="port-alloc-donut" width="180" height="180"></canvas>
       <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
-        <div style="text-align:center;padding:0 22px">
-          <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px">Valore totale</div>
-          <div style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">€${fmt(totalValEUR,0)}</div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">≈ $${fmt(totalValUSD,0)}</div>
-          <div style="font-size:10px;font-family:var(--fm);font-weight:600;margin-top:3px" class="${_heroUp?'up':'down'}">${_heroUp?'+':''}${_totalPnlDisplay}</div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">${_heroUp?'▲':'▼'} ${fmt(Math.abs(totalPnlPct),1)}%</div>
+        <div style="text-align:center;padding:0 20px">
+          <div style="font-size:16px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.1">€${fmt(totalValEUR,0)}</div>
+          <div style="font-size:11px;font-family:var(--fm);font-weight:700;margin-top:4px;color:${totalUp?'var(--g)':'var(--r)'}">${totalUp?'+':''}€${fmt(pnlEUR,0)}</div>
         </div>
       </div>
     </div>
     <!-- Legenda -->
-    <div style="margin-bottom:12px">${legendRows}</div>
-    <!-- Stat rows -->
-    <div style="display:flex;flex-direction:column">
-      ${statRow('Valore (EUR)', `<span style="font-size:13px;font-weight:700">€${fmt(totalValEUR,0)}</span>`)}
-      ${statRow('', `<span style="font-size:10px;color:var(--t3)">≈ $${fmt(totalValUSD,0)}</span>`)}
-      ${statRow('Capitale investito', `€${fmt(totalInvEUR,0)} <span style="font-size:10px;color:var(--t3);font-weight:400">/ $${fmt(totalInvUSD,0)}</span>`)}
-      ${statRow('Guadagno totale', `€${fmt(Math.abs(totalValEUR-totalInvEUR),0)} <span style="font-size:10px;font-weight:600;color:${totalUp?'var(--g)':'var(--r)'}">${totalUp?'+':'-'}${fmt(Math.abs(totalPnlPct),1)}%</span>`, totalUp?'var(--g)':'var(--r)')}
-      ${totalEUR_inv>0&&totalUSD_inv>0?`
-      <div style="height:1px;background:var(--bd);margin:6px 0"></div>
-      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Breakdown valuta</div>
-      ${statRow('P&L EUR', (upE?'+':'−')+'€'+fmt(Math.abs(pnlE),0)+' ('+fmt(Math.abs(pctE),1)+'%)', upE?'var(--g)':'var(--r)')}
-      ${statRow('P&L USD', (upU?'+':'−')+'$'+fmt(Math.abs(pnlU),0)+' ('+fmt(Math.abs(pctU),1)+'%)', upU?'var(--g)':'var(--r)')}`:''}
+    <div style="margin-bottom:14px">${legendRows}</div>
+    <!-- Blocchi info -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Capitale investito</div>
+        <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">€${fmt(totalInvEUR,0)}</div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Guadagno totale</div>
+        <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${totalUp?'var(--g)':'var(--r)'}">€${fmt(pnlEUR,0)} <span style="font-size:10px">${totalUp?'+':''}${fmt(totalPnlPct,1)}%</span></div>
+      </div>
+    </div>
+    <!-- Breakdown valuta -->
+    <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Breakdown valuta</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+        <span style="font-size:11px;color:var(--t2);font-family:var(--fm)">🇪🇺 EUR</span>
+        <div style="text-align:right">
+          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">€${fmt(totalValEUR,0)}</div>
+          <div style="font-size:10px;font-family:var(--fm);color:${upE?'var(--g)':'var(--r)'};">${upE?'+':'−'}€${fmt(Math.abs(pnlE),0)} (${fmt(Math.abs(pctE),1)}%)</div>
+        </div>
+      </div>
+      <div style="height:1px;background:var(--bd);margin:5px 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:11px;color:var(--t2);font-family:var(--fm)">🇺🇸 USD</span>
+        <div style="text-align:right">
+          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">$${fmt(totalValUSD,0)}</div>
+          <div style="font-size:10px;font-family:var(--fm);color:${upU?'var(--g)':'var(--r)'};">${upU?'+':'−'}$${fmt(Math.abs(pnlU),0)} (${fmt(Math.abs(pctU),1)}%)</div>
+        </div>
+      </div>
     </div>
     ${dailySection}`
     :'<div style="padding:30px;text-align:center;color:var(--t3)"><div style="font-size:32px;margin-bottom:10px">📊</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Nessun titolo</div><div style="font-size:11px">Aggiungi il primo asset dalla lista</div></div>';
