@@ -8485,7 +8485,7 @@ async function loadSdData(sym){
     quickRatio:d.quickRatio, employees:d.employees,
     sector:d.sector, industry:d.industry,
     description:d.description, website:d.website,
-    news:d.news, _ts:Date.now(),
+    news:d.news, etf:d.etf||null, _ts:Date.now(),
   };
 
   if(!cachedVal)  { sdCacheSet(sym,'val',valData);   renderValuation(valData,cur); }
