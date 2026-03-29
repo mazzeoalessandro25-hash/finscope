@@ -5972,42 +5972,42 @@ async function loadDividendTracker(){
   const quotes=_lastPortQuotes.length===portfolio.length
     ?_lastPortQuotes
     :await Promise.all(portfolio.map(item=>api(item.sym)));
+  const fxRate=_lastFxRate||1.08; // USD→EUR
   const rows=[];
-  let totalAnnualUSD=0,totalAnnualEUR=0;
-  let totalWeightedYield=0,totalInvested=0;
+  let totalAnnualEUR=0; // tutto convertito in EUR
+  let totalWeightedYield=0,totalInvestedEUR=0;
   portfolio.forEach((item,i)=>{
     const sd=summaries[i];
     const q=quotes[i];
-    // dividend = trailingAnnualDividendYield come decimale (es. 0.015 = 1.5%)
-    const divYield=sd?.dividend??0;
+    // Cerca dividend yield da più fonti
+    const divYield=sd?.dividend??q?.divYield??q?.trailingAnnualDividendYield??0;
     if(divYield<=0)return;
     const isEUR=item.currency==='EUR';
     const curSym=isEUR?'€':'$';
     const curPrice=q?.price??item.buyPrice;
-    const curVal=item.qty*curPrice;
-    const annualIncome=curVal*divYield;
-    const quarterly=annualIncome/4;
-    // Ritenuta alla fonte: US 15% (trattato IT-US) + 26% italiana sul netto
-    // EU: solo 26% italiana. Effettivo: US → ×0.85×0.74=×0.629 | EU → ×0.74
+    const curVal=item.qty*curPrice;                      // nella valuta originale
+    const curValEUR=isEUR?curVal:curVal/fxRate;          // in EUR
+    const annualIncome=curVal*divYield;                  // nella valuta originale
+    const annualIncomeEUR=isEUR?annualIncome:annualIncome/fxRate;
+    // Ritenuta alla fonte: US 15% (trattato IT-US) + 26% italiana = 37.1% eff.
+    // EU: solo 26% italiana.
     const withholdFactor=isEUR?0.74:0.629;
     const annualNet=annualIncome*withholdFactor;
-    if(isEUR)totalAnnualEUR+=annualIncome;else totalAnnualUSD+=annualIncome;
-    totalWeightedYield+=divYield*curVal;
-    totalInvested+=curVal;
-    rows.push({sym:item.sym,qty:item.qty,divYield,annualIncome,annualNet,quarterly,curVal,currency:item.currency,curSym,withholdFactor});
+    const annualNetEUR=annualIncomeEUR*withholdFactor;
+    totalAnnualEUR+=annualIncomeEUR;
+    totalWeightedYield+=divYield*curValEUR;
+    totalInvestedEUR+=curValEUR;
+    rows.push({sym:item.sym,qty:item.qty,divYield,annualIncome,annualNet,annualIncomeEUR,annualNetEUR,curVal,curValEUR,currency:item.currency,curSym,withholdFactor});
   });
   if(!rows.length){
     el.innerHTML='<div class="ld" style="padding:10px">Nessun titolo con dividendi nel portafoglio · I dati vengono dai summary Yahoo Finance</div>';return;
   }
-  const avgYield=totalInvested>0?totalWeightedYield/totalInvested:0;
-  // Calendario mensile stimato: distribuzione trimestrale uniforme per tutti i titoli
-  // Q1 = gen/feb/mar, Q2 = apr/mag/giu, Q3 = lug/ago/set, Q4 = ott/nov/dic
-  // Stima: ogni titolo paga ~ugualmente in mese 2,5,8,11 (tipico pagamento US)
+  const avgYield=totalInvestedEUR>0?totalWeightedYield/totalInvestedEUR:0;
+  // Calendario mensile (tutto in EUR per il grafico)
   const monthlyIncome=Array(12).fill(0);
   rows.forEach(r=>{
-    // mesi di pagamento stimati (indici 0-based)
-    const months=r.currency==='EUR'?[2,8]:[1,4,7,10]; // EU semi-annuale, US trimestrale
-    months.forEach(m=>{ monthlyIncome[m]+=r.annualIncome/months.length; });
+    const months=r.currency==='EUR'?[2,8]:[1,4,7,10];
+    months.forEach(m=>{ monthlyIncome[m]+=r.annualIncomeEUR/months.length; });
   });
   const maxMonth=Math.max(...monthlyIncome);
   const monthNames=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
@@ -6015,15 +6015,16 @@ async function loadDividendTracker(){
 
   el.innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-      ${totalAnnualUSD>0?`<div class="rb"><div class="rl">REDDITO ANNUALE USD</div><div class="rv2 g">$${fmt(totalAnnualUSD,2)}</div></div>`:''}
-      ${totalAnnualEUR>0?`<div class="rb"><div class="rl">REDDITO ANNUALE EUR</div><div class="rv2 g">€${fmt(totalAnnualEUR,2)}</div></div>`:''}
-      <div class="rb"><div class="rl">YIELD MEDIO PORTAFOGLIO</div><div class="rv2 a">${fmt(avgYield*100,2)}%</div></div>
-      ${totalAnnualUSD>0?`<div class="rb"><div class="rl">MENSILE STIMATO USD</div><div class="rv2 b">$${fmt(totalAnnualUSD/12,2)}</div></div>`:''}
-      ${totalAnnualEUR>0?`<div class="rb"><div class="rl">MENSILE STIMATO EUR</div><div class="rv2 b">€${fmt(totalAnnualEUR/12,2)}</div></div>`:''}
+      <div class="rb"><div class="rl">REDDITO ANNUALE LORDO</div><div class="rv2 g">€${fmt(totalAnnualEUR,2)}</div></div>
+      <div class="rb"><div class="rl">REDDITO ANNUALE NETTO</div><div class="rv2 g">€${fmt(totalAnnualEUR*(rows.reduce((s,r)=>s+r.annualIncomeEUR*r.withholdFactor,0)/Math.max(totalAnnualEUR,0.01)),2)}</div></div>
+      <div class="rb"><div class="rl">YIELD MEDIO</div><div class="rv2 a">${fmt(avgYield*100,2)}%</div></div>
+      <div class="rb"><div class="rl">MENSILE STIMATO LORDO</div><div class="rv2 b">€${fmt(totalAnnualEUR/12,2)}</div></div>
+      <div class="rb"><div class="rl">TRIMESTRALE STIMATO</div><div class="rv2 b">€${fmt(totalAnnualEUR/4,2)}</div></div>
+      <div class="rb"><div class="rl">TITOLI CON DIVIDENDI</div><div class="rv2 b">${rows.length}</div></div>
     </div>
 
     <!-- Calendario mensile -->
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Calendario dividendi stimato</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Calendario dividendi stimato (€)</div>
     <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:4px">
       ${monthlyIncome.map((v,i)=>{
         const h=maxMonth>0?Math.round(v/maxMonth*52)+4:4;
@@ -6049,42 +6050,40 @@ async function loadDividendTracker(){
         <div style="font-size:9px;color:var(--t3)">yield lordo</div>
       </div>
       <div style="text-align:right">
-        <div style="color:var(--t);font-weight:600;font-family:var(--fm);font-size:12px">${r.curSym}${fmt(r.annualIncome,2)}/a lordo</div>
-        <div style="font-size:10px;color:var(--g);font-family:var(--fm);font-weight:600">${r.curSym}${fmt(r.annualNet,2)}/a netto</div>
+        <div style="color:var(--t);font-weight:600;font-family:var(--fm);font-size:12px">${r.curSym}${fmt(r.annualIncome,2)}/a lordo${r.currency!=='EUR'?` <span style="color:var(--t3);font-size:9px">(€${fmt(r.annualIncomeEUR,2)})</span>`:''}</div>
+        <div style="font-size:10px;color:var(--g);font-family:var(--fm);font-weight:600">${r.curSym}${fmt(r.annualNet,2)}/a netto${r.currency!=='EUR'?` <span style="color:var(--t3);font-size:9px">(€${fmt(r.annualNetEUR,2)})</span>`:''}</div>
         <div style="font-size:9px;color:var(--t3)">eff. ${fmt((1-r.withholdFactor)*100,0)}% tasse</div>
       </div>
     </div>`).join('')}
     <div style="margin-top:8px;padding:10px;background:var(--s2);border-radius:8px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.7">
-      Lordo → Netto: <strong>Azioni US</strong>: ritenuta USA 15% (trattato IT-US) + 26% italiana = 37.1% effettivo. <strong>Azioni EU/IT</strong>: solo 26% italiana. Stime indicative, non sostituiscono consulenza fiscale.
+      Lordo → Netto: <strong>Azioni US</strong>: ritenuta USA 15% (trattato IT-US) + 26% italiana = 37.1% effettivo. <strong>Azioni EU/IT</strong>: solo 26% italiana. I totali sono in €, convertiti a cambio ${fmt(fxRate,4)} $/€. Stime indicative.
     </div>`;
 
-  // ── DRIP Simulator ──
-  const portVal=portfolio.reduce((s,item,i)=>s+item.qty*(quotes[i]?.price??item.buyPrice),0);
-  if((totalAnnualUSD>0||totalAnnualEUR>0)&&portVal>0){
-    const totalAnnual=totalAnnualUSD+(totalAnnualEUR>0?totalAnnualEUR/(_lastFxRate||1.08):0);
-    const yld=portVal>0?totalAnnual/portVal:0;
-    const BASE_RET=0.07; // 7% rendimento azionario annuo assunto
-    const scenarios=[
-      {years:10,label:'10 anni'},
-      {years:20,label:'20 anni'},
-      {years:30,label:'30 anni'},
-    ];
+  // ── DRIP Simulator (tutto in EUR) ──
+  const portValEUR=portfolio.reduce((s,item,i)=>{
+    const p=quotes[i]?.price??item.buyPrice;
+    return s+item.qty*p*(item.currency==='EUR'?1:1/fxRate);
+  },0);
+  if(totalAnnualEUR>0&&portValEUR>0){
+    const yld=totalAnnualEUR/portValEUR;
+    const BASE_RET=0.07;
+    const scenarios=[{years:10,label:'10 anni'},{years:20,label:'20 anni'},{years:30,label:'30 anni'}];
     const dripRows=scenarios.map(sc=>{
-      const withDrip=portVal*Math.pow(1+BASE_RET+yld,sc.years);
-      const withoutDrip=portVal*Math.pow(1+BASE_RET,sc.years)+totalAnnual*sc.years; // dividendi cash non reinvestiti
+      const withDrip=portValEUR*Math.pow(1+BASE_RET+yld,sc.years);
+      const withoutDrip=portValEUR*Math.pow(1+BASE_RET,sc.years)+totalAnnualEUR*sc.years;
       const bonus=withDrip-withoutDrip;
-      const growthPct=(withDrip/portVal-1)*100;
+      const growthPct=(withDrip/portValEUR-1)*100;
       return`<div class="drip-card">
         <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">${sc.label} · DRIP</div>
-        <div class="drip-val">$${fmtLg(withDrip)}</div>
+        <div class="drip-val">€${fmtLg(withDrip)}</div>
         <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px">+${fmt(growthPct,0)}% vs oggi</div>
-        <div style="font-size:9px;color:var(--b);font-family:var(--fm);margin-top:4px;padding-top:4px;border-top:1px solid var(--bd)">+$${fmtLg(bonus)} grazie al DRIP</div>
+        <div style="font-size:9px;color:var(--b);font-family:var(--fm);margin-top:4px;padding-top:4px;border-top:1px solid var(--bd)">+€${fmtLg(bonus)} grazie al DRIP</div>
       </div>`;
     }).join('');
     el.innerHTML+=`
     <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
       <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">DRIP Simulator — Reinvestimento automatico dividendi</div>
-      <div style="font-size:11px;color:var(--t2);font-family:var(--fm);margin-bottom:12px">Yield attuale <strong>${fmt(yld*100,2)}%</strong> · Rendimento azionario assunto 7%/anno · Confronto con dividendi ricevuti come cash</div>
+      <div style="font-size:11px;color:var(--t2);font-family:var(--fm);margin-bottom:12px">Yield attuale <strong>${fmt(yld*100,2)}%</strong> · Rendimento azionario assunto 7%/anno · Valori in €</div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">${dripRows}</div>
       <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Simulazione illustrativa: assume yield costante e rendimento azionario del 7%/anno. Non considera la tassazione dei dividendi (26% Italia). Solo scopo educativo.</div>
     </div>`;
