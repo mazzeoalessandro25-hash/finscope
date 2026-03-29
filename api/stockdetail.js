@@ -1,4 +1,4 @@
-import { fetchQuoteSummary, fetchYahooQuote } from './_lib/yahoo.js';
+import { fetchQuoteSummary, fetchYahooQuote, fetchETFData } from './_lib/yahoo.js';
 
 // Parole comuni inglesi che NON devono essere usate come keyword di ricerca
 const COMMON_WORDS = new Set([
