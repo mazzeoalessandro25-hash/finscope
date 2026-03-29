@@ -4400,6 +4400,8 @@ function togglePortAdd(){
 }
 
 async function removePortfolioItem(idx){
+  const item=portfolio[idx];
+  if(item)_logTransaction('sell',item.sym,item.qty,item.buyPrice,item.currency);
   portfolio.splice(idx,1);
   await savePortfolio();
   renderPortfolio();
