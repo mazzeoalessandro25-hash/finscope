@@ -115,7 +115,7 @@ export default async function handler(req, res) {
         ps:               d.summaryDetail?.priceToSalesTrailing12Months ?? null,
         roe:              d.financialData?.returnOnEquity ?? null,
         roa:              d.financialData?.returnOnAssets ?? null,
-        dividend:         d.summaryDetail?.trailingAnnualDividendYield ?? d.summaryDetail?.dividendYield ?? null,
+        dividend:         d.summaryDetail?.dividendYield ?? null,
         targetPrice:      d.financialData?.targetMeanPrice ?? null,
         rec:              d.financialData?.recommendationKey ?? null,
         marketCap:        d.summaryDetail?.marketCap ?? null,
