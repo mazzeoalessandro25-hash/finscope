@@ -10211,13 +10211,17 @@ function exportTaxCSV(){
   const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
   if(!quotes||!portfolio.length){alert('Carica prima i dati del portafoglio');return;}
   const TAX=0.26;
-  const rows=[['Titolo','Quantità','Prezzo acquisto','Valuta','Prezzo attuale','Valore investito','Valore attuale','P&L','P&L %','Tipo','Imposta stimata (26%)']];
+  const fxRate=_lastFxRate||1.08;
+  const rows=[['Titolo','Quantità','Prezzo acquisto','Valuta','Prezzo attuale (orig.)','Prezzo attuale (€)','Costo totale (€)','Valore attuale (€)','P&L (€)','P&L %','Tipo','Imposta stimata 26% (€)']];
   portfolio.forEach((item,i)=>{
     const q=quotes[i];const p=q?.price??item.buyPrice;
+    const isEUR=item.currency==='EUR';
+    const toEUR=isEUR?1:1/fxRate;
     const inv=item.qty*item.buyPrice;const val=item.qty*p;
     const pnl=val-inv;const pnlPct=inv>0?(pnl/inv*100):0;
-    const isGain=pnl>=0;const tax=isGain?pnl*TAX:0;
-    rows.push([item.sym,item.qty,item.buyPrice,item.currency||'USD',p.toFixed(4),inv.toFixed(2),val.toFixed(2),pnl.toFixed(2),pnlPct.toFixed(2),isGain?'Plusvalenza':'Minusvalenza',tax.toFixed(2)]);
+    const pnlEUR=pnl*toEUR;const invEUR=inv*toEUR;const valEUR=val*toEUR;
+    const isGain=pnlEUR>=0;const taxEUR=isGain?pnlEUR*TAX:0;
+    rows.push([item.sym,item.qty,item.buyPrice,item.currency||'USD',p.toFixed(4),(p*toEUR).toFixed(4),invEUR.toFixed(2),valEUR.toFixed(2),pnlEUR.toFixed(2),pnlPct.toFixed(2),isGain?'Plusvalenza':'Minusvalenza',taxEUR.toFixed(2)]);
   });
   const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
