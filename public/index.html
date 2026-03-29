@@ -5995,6 +5995,7 @@ async function loadDividendTracker(){
     const annualNet=annualIncome*withholdFactor;
     const annualNetEUR=annualIncomeEUR*withholdFactor;
     totalAnnualEUR+=annualIncomeEUR;
+    totalNetEUR+=annualNetEUR;
     totalWeightedYield+=divYield*curValEUR;
     totalInvestedEUR+=curValEUR;
     rows.push({sym:item.sym,qty:item.qty,divYield,annualIncome,annualNet,annualIncomeEUR,annualNetEUR,curVal,curValEUR,currency:item.currency,curSym,withholdFactor});
