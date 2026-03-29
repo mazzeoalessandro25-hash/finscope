@@ -9752,6 +9752,505 @@ const _origSs=document.getElementById('ss');
 
 // Avvia verifica sessione
 verifySession();
+
+/* ══════════════════════════════════════════
+   STRESS TEST
+══════════════════════════════════════════ */
+function renderStressTest(){
+  const el=document.getElementById('stress-content');
+  if(!el)return;
+  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  if(!quotes){el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';return;}
+  const eurUsd=_lastFxRate||1.08;
+  let totalValUSD=0;
+  const items=portfolio.map((item,i)=>{
+    const q=quotes[i];const price=q?.price??item.buyPrice;
+    const fx=(item.currency==='EUR')?eurUsd:1;
+    const val=item.qty*price*fx;totalValUSD+=val;
+    const beta=q?.beta??(scSummary[item.sym]||scData[item.sym])?.beta??1.0;
+    return{sym:item.sym,val,beta};
+  });
+  const portfolioBeta=totalValUSD>0?items.reduce((s,it)=>s+it.beta*(it.val/totalValUSD),0):1;
+  const totalValEUR=totalValUSD/eurUsd;
+  const scenarios=[
+    {label:'Crash (-30%)',market:-30,color:'#7F0000'},
+    {label:'Bear (-20%)',market:-20,color:'#DC2626'},
+    {label:'Correzione (-10%)',market:-10,color:'#F59E0B'},
+    {label:'Neutro (0%)',market:0,color:'#8499B0'},
+    {label:'Rally (+10%)',market:10,color:'#10B981'},
+    {label:'Bull (+20%)',market:20,color:'#059669'},
+    {label:'Euforia (+30%)',market:30,color:'#065F46'},
+  ];
+  el.innerHTML=`
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+      <div class="rb" style="flex:1;min-width:120px"><div class="rl">BETA PORTAFOGLIO</div><div class="rv2 a" style="font-size:20px">${portfolioBeta.toFixed(2)}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${portfolioBeta>1.2?'Alta sensibilità':portfolioBeta<0.8?'Bassa sensibilità':'Sensibilità moderata'}</div></div>
+      <div class="rb" style="flex:1;min-width:120px"><div class="rl">VALORE ATTUALE</div><div class="rv2 b" style="font-size:20px">€${fmt(totalValEUR,0)}</div></div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Scenari di mercato</div>
+    ${scenarios.map(s=>{
+      const portChange=portfolioBeta*s.market;
+      const newValEUR=totalValEUR*(1+portChange/100);
+      const deltaEUR=newValEUR-totalValEUR;
+      const barW=Math.min(Math.abs(portChange)/45*100,100);
+      const isPos=portChange>=0;
+      return`<div style="display:grid;grid-template-columns:150px 55px 1fr 110px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)">
+        <div style="font-size:11px;color:var(--t2)">${s.label}</div>
+        <div style="font-size:11px;font-weight:700;font-family:var(--fm);color:${s.color}">${s.market>=0?'+':''}${s.market}%</div>
+        <div style="background:var(--s2);border-radius:4px;height:8px;overflow:hidden">
+          <div style="height:8px;width:${barW}%;background:${s.color};border-radius:4px;${!isPos?'margin-left:auto':''}"></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;font-weight:700;font-family:var(--fm);color:${isPos?'var(--g)':'var(--r)'}">${isPos?'+':''}${fmt(portChange,1)}% → €${fmt(newValEUR,0)}</div>
+          <div style="font-size:10px;font-family:var(--fm);color:${isPos?'var(--g)':'var(--r)'}">${deltaEUR>=0?'+':''}€${fmt(Math.abs(deltaEUR),0)}</div>
+        </div>
+      </div>`;
+    }).join('')}
+    <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">⚠ Stima basata sul beta ponderato. I rendimenti reali dipendono dalla correlazione effettiva dei titoli col mercato.</div>`;
+}
+
+/* ══════════════════════════════════════════
+   MATRICE DI CORRELAZIONE
+══════════════════════════════════════════ */
+async function renderCorrelationMatrix(){
+  const el=document.getElementById('corr-content');
+  if(!el)return;
+  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
+  const uniqueSyms=[...new Set(portfolio.map(p=>p.sym))];
+  if(uniqueSyms.length<2){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi almeno 2 titoli diversi per vedere la matrice di correlazione</div>';return;}
+  el.innerHTML='<div class="ld" style="padding:10px">Caricamento dati storici (3 mesi)...</div>';
+  try{
+    const histData=await Promise.all(uniqueSyms.map(sym=>api(sym,'history&range=3mo')));
+    const returns={};
+    uniqueSyms.forEach((sym,i)=>{
+      const pts=histData[i]?.points||[];
+      if(pts.length<10){returns[sym]=null;return;}
+      const rets=[];
+      for(let j=1;j<pts.length;j++){const p=pts[j-1].close,c=pts[j].close;if(p>0)rets.push((c-p)/p);}
+      returns[sym]=rets.length>=5?rets:null;
+    });
+    const syms=uniqueSyms.filter(s=>returns[s]!==null);
+    if(syms.length<2){el.innerHTML='<div class="ld" style="padding:10px">Dati storici insufficienti per calcolare le correlazioni</div>';return;}
+    function pearson(a,b){
+      const n=Math.min(a.length,b.length);if(n<5)return null;
+      const ax=a.slice(-n),bx=b.slice(-n);
+      const ma=ax.reduce((s,v)=>s+v,0)/n,mb=bx.reduce((s,v)=>s+v,0)/n;
+      let num=0,da=0,db=0;
+      for(let i=0;i<n;i++){const da_=ax[i]-ma,db_=bx[i]-mb;num+=da_*db_;da+=da_*da_;db+=db_*db_;}
+      const denom=Math.sqrt(da*db);return denom>0?num/denom:null;
+    }
+    function corrBg(r){
+      if(r===null)return'var(--s2)';
+      if(r===1)return'var(--b)';
+      if(r>0)return`rgba(5,150,105,${0.1+0.65*Math.abs(r)})`;
+      return`rgba(220,38,38,${0.1+0.65*Math.abs(r)})`;
+    }
+    const matrix=syms.map(a=>syms.map(b=>a===b?1.0:pearson(returns[a],returns[b])));
+    const shortSym=s=>s.replace(/\.[A-Z0-9]+$/,'');
+    el.innerHTML=`
+      <div style="overflow-x:auto">
+        <table style="border-collapse:separate;border-spacing:3px;width:100%">
+          <thead><tr>
+            <th style="padding:4px 8px;font-size:10px;color:var(--t3);font-family:var(--fm);text-align:left"></th>
+            ${syms.map(s=>`<th style="padding:4px 6px;font-size:10px;font-family:var(--fm);color:var(--t2);text-align:center;min-width:50px">${shortSym(s)}</th>`).join('')}
+          </tr></thead>
+          <tbody>${syms.map((sym,i)=>`
+            <tr>
+              <td style="padding:4px 8px;font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t2);white-space:nowrap">${shortSym(sym)}</td>
+              ${matrix[i].map((r,j)=>{
+                const bg=corrBg(r);const col=i===j?'#fff':'var(--t)';
+                const val=r===null?'N/D':r.toFixed(2);
+                return`<td style="padding:6px;text-align:center;background:${bg};font-size:10px;font-family:var(--fm);font-weight:700;color:${col};border-radius:5px">${val}</td>`;
+              }).join('')}
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:14px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:rgba(5,150,105,.75)"></div><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Correlazione positiva</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:rgba(220,38,38,.75)"></div><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Correlazione negativa</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:var(--s2);border:1px solid var(--bd)"></div><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Dati insufficienti</span></div>
+      </div>`;
+  }catch(e){el.innerHTML='<div class="ld" style="padding:10px">Errore caricamento dati storici</div>';}
+}
+
+/* ══════════════════════════════════════════
+   CAGR / RENDIMENTI PER TITOLO
+══════════════════════════════════════════ */
+function renderPortPerfSummary(){
+  const el=document.getElementById('port-cagr-content');
+  if(!el)return;
+  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  if(!quotes){el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';return;}
+  const now=Date.now();
+  const rows=portfolio.map((item,i)=>{
+    const q=quotes[i];const curPrice=q?.price??item.buyPrice;
+    const invested=item.qty*item.buyPrice;const curVal=item.qty*curPrice;
+    const pnl=curVal-invested;const pnlPct=invested>0?(pnl/invested*100):0;
+    const buyDate=item.buyDate?new Date(item.buyDate):null;
+    const holdDays=buyDate?Math.floor((now-buyDate.getTime())/86400000):null;
+    const holdYears=holdDays?holdDays/365:null;
+    const cagr=(holdYears&&holdYears>0.05&&invested>0&&curVal>0)?(Math.pow(curVal/invested,1/holdYears)-1)*100:null;
+    const cur=item.currency==='EUR'?'€':'$';
+    return{sym:item.sym,pnlPct,cagr,holdDays,cur};
+  }).sort((a,b)=>b.pnlPct-a.pnlPct);
+  const best=rows[0],worst=rows[rows.length-1];
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <div class="rb"><div class="rl">MIGLIOR RENDIMENTO</div><div class="rv2 g">${best?.sym||'—'} <span style="font-size:11px">${best?(best.pnlPct>=0?'+':'')+fmt(best.pnlPct,1)+'%':''}</span></div></div>
+      <div class="rb"><div class="rl">PEGGIOR RENDIMENTO</div><div class="rv2 down">${worst?.sym||'—'} <span style="font-size:11px">${worst?(worst.pnlPct>=0?'+':'')+fmt(worst.pnlPct,1)+'%':''}</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:65px 1fr 75px 75px 75px;gap:8px;padding:0 0 6px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--bd);margin-bottom:2px">
+      <div>Titolo</div><div>Barra</div><div style="text-align:right">P&L %</div><div style="text-align:right">CAGR</div><div style="text-align:right">Detenuto</div>
+    </div>
+    ${rows.map(r=>{
+      const isPos=r.pnlPct>=0;
+      const barW=Math.min(Math.abs(r.pnlPct)/50*100,100);
+      const holdStr=r.holdDays!=null?(r.holdDays<30?r.holdDays+'g':r.holdDays<365?Math.floor(r.holdDays/30)+'m':Math.floor(r.holdDays/365)+'a '+Math.floor((r.holdDays%365)/30)+'m'):'—';
+      return`<div style="display:grid;grid-template-columns:65px 1fr 75px 75px 75px;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)">
+        <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${r.sym.replace(/\.[A-Z0-9]+$/,'')}</div>
+        <div style="background:var(--s2);border-radius:3px;height:7px;overflow:hidden"><div style="height:7px;width:${barW}%;background:${isPos?'var(--g)':'var(--r)'};border-radius:3px"></div></div>
+        <div style="text-align:right;font-family:var(--fm);font-size:11px;font-weight:700;color:${isPos?'var(--g)':'var(--r)'}">${isPos?'+':''}${fmt(r.pnlPct,2)}%</div>
+        <div style="text-align:right;font-family:var(--fm);font-size:11px;color:${r.cagr==null?'var(--t3)':r.cagr>=0?'var(--g)':'var(--r)'}">${r.cagr!=null?(r.cagr>=0?'+':'')+fmt(r.cagr,1)+'%':'—'}</div>
+        <div style="text-align:right;font-family:var(--fm);font-size:10px;color:var(--t3)">${holdStr}</div>
+      </div>`;
+    }).join('')}`;
+}
+
+/* ══════════════════════════════════════════
+   TARGET PERSONALI PER TITOLO
+══════════════════════════════════════════ */
+function _loadPersonalTargets(){try{const s=localStorage.getItem('fs_personal_targets');return s?JSON.parse(s):{};}}
+function _savePersonalTargets(obj){localStorage.setItem('fs_personal_targets',JSON.stringify(obj));}
+
+function renderPersonalTargets(){
+  const el=document.getElementById('personal-targets-content');
+  if(!el)return;
+  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  const targets=_loadPersonalTargets();
+  const uniqueSyms=[...new Set(portfolio.map(p=>p.sym))];
+  el.innerHTML=`
+    <div style="margin-bottom:12px;font-size:11px;color:var(--t2)">Imposta un prezzo obiettivo personale per ogni titolo. Indipendente dai target degli analisti.</div>
+    ${uniqueSyms.map(sym=>{
+      const item=portfolio.find(p=>p.sym===sym);
+      const i=portfolio.indexOf(item);
+      const q=quotes?quotes[i]:null;
+      const curPrice=q?.price??item?.buyPrice??0;
+      const cur=item?.currency==='EUR'?'€':'$';
+      const myTarget=targets[sym]?.price||null;
+      const upside=myTarget&&curPrice?(((myTarget-curPrice)/curPrice)*100):null;
+      const progress=myTarget&&curPrice?(curPrice/myTarget*100):null;
+      const barW=progress?Math.min(progress,100):0;
+      const barColor=upside==null?'var(--bd)':upside>=0?'var(--b)':'var(--g)';
+      return`<div style="padding:10px 0;border-bottom:1px solid var(--bd)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+          <div>
+            <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${sym}</div>
+            <div style="font-size:11px;color:var(--t3)">Attuale: ${cur}${fmt(curPrice,curPrice<10?3:2)}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:3px">Target personale</div>
+              <input type="number" id="ptgt-${sym.replace(/\./g,'_')}" value="${myTarget||''}" placeholder="Prezzo obiettivo"
+                style="background:var(--s2);border:1px solid var(--bd);color:var(--t);padding:5px 8px;border-radius:6px;font-size:11px;font-family:var(--fm);outline:none;width:130px"
+                onchange="savePersonalTarget('${sym}',this.value)"/>
+            </div>
+            ${myTarget?`<div style="text-align:right">
+              <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${upside>=0?'var(--g)':'var(--r)'}">${upside>=0?'+':''}${fmt(upside,1)}%</div>
+              <div style="font-size:9px;color:var(--t3)">${upside>=0?'distanza':'già sopra'}</div>
+            </div>`:''}
+          </div>
+        </div>
+        ${myTarget?`<div style="margin-top:8px">
+          <div style="background:var(--s2);border-radius:5px;height:6px;overflow:hidden">
+            <div style="height:6px;width:${barW}%;background:${barColor};border-radius:5px;transition:.4s"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:9px;color:var(--t3);font-family:var(--fm)">
+            <span>${cur}${fmt(curPrice,curPrice<10?3:2)}</span><span>Target: ${cur}${fmt(myTarget,myTarget<10?3:2)}</span>
+          </div>
+        </div>`:''}
+      </div>`;
+    }).join('')}
+    <div style="margin-top:10px;font-size:10px;color:var(--t3)">I target vengono salvati localmente nel browser. Modificali direttamente nel campo e premi Invio o Tab.</div>`;
+}
+
+function savePersonalTarget(sym,val){
+  const targets=_loadPersonalTargets();
+  const price=parseFloat(val);
+  if(!isNaN(price)&&price>0)targets[sym]={price,updatedAt:Date.now()};
+  else delete targets[sym];
+  _savePersonalTargets(targets);
+  renderPersonalTargets();
+}
+
+/* ══════════════════════════════════════════
+   OBIETTIVO PORTAFOGLIO
+══════════════════════════════════════════ */
+function _loadPortGoal(){try{const s=localStorage.getItem('fs_port_goal');return s?JSON.parse(s):null;}catch{return null;}}
+function _savePortGoal(obj){localStorage.setItem('fs_port_goal',JSON.stringify(obj));}
+
+function renderPortGoal(){
+  const el=document.getElementById('port-goal-content');
+  if(!el)return;
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  const eurUsd=_lastFxRate||1.08;
+  const goal=_loadPortGoal();
+  let totalValEUR=0;
+  if(quotes&&portfolio.length){
+    portfolio.forEach((item,i)=>{
+      const q=quotes[i];const price=q?.price??item.buyPrice;
+      const val=item.qty*price;
+      if(item.currency==='EUR')totalValEUR+=val;else totalValEUR+=val/eurUsd;
+    });
+  }
+  let projHtml='';
+  if(goal){
+    const{targetValue,targetDate,annualReturn}=goal;
+    const progress=targetValue>0?Math.min(totalValEUR/targetValue*100,100):0;
+    const remaining=Math.max(0,targetValue-totalValEUR);
+    const today=new Date();const target=new Date(targetDate);
+    const daysLeft=Math.max(0,Math.floor((target-today)/86400000));
+    const rate=(annualReturn||8)/100;
+    const projectedVal=totalValEUR>0?totalValEUR*Math.pow(1+rate,daysLeft/365):0;
+    const willReach=projectedVal>=targetValue;
+    const barColor=progress>=100?'var(--g)':progress>=70?'var(--o)':'var(--b)';
+    projHtml=`
+      <div style="margin-bottom:14px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px">
+          <div>
+            <div style="font-size:22px;font-weight:800;color:var(--t);font-family:var(--fm)">€${fmt(totalValEUR,0)}</div>
+            <div style="font-size:11px;color:var(--t3)">di €${fmt(targetValue,0)} obiettivo</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:24px;font-weight:800;color:${barColor};font-family:var(--fm)">${fmt(progress,1)}%</div>
+            <div style="font-size:10px;color:var(--t3)">${daysLeft>0?daysLeft+' giorni rimanenti':'Scaduto'}</div>
+          </div>
+        </div>
+        <div style="background:var(--s2);border-radius:8px;height:12px;overflow:hidden;border:1px solid var(--bd)">
+          <div style="height:12px;width:${progress}%;background:${barColor};border-radius:8px;transition:.5s"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--t3);font-family:var(--fm)">
+          <span>Manca: €${fmt(remaining,0)}</span>
+          <span>${new Date(targetDate).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})}</span>
+        </div>
+      </div>
+      <div style="padding:10px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);margin-bottom:14px">
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">Proiezione con rendimento ${annualReturn||8}% annuo</div>
+        <div style="font-size:14px;font-weight:700;font-family:var(--fm);color:${willReach?'var(--g)':'var(--r)'}">
+          ${willReach?'✓ Raggiungerai l\'obiettivo':'⚠ Proiezione insufficiente con questo tasso'}
+        </div>
+        <div style="font-size:11px;color:var(--t2);margin-top:2px">Valore proiettato: <strong>€${fmt(projectedVal,0)}</strong> entro ${new Date(targetDate).toLocaleDateString('it-IT',{month:'short',year:'numeric'})}</div>
+      </div>`;
+  }
+  el.innerHTML=`
+    ${projHtml}
+    <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--t);margin-bottom:10px">${goal?'Modifica obiettivo':'Configura il tuo obiettivo'}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
+        <div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Valore target (€)</div>
+          <input type="number" id="goal-value" value="${goal?.targetValue||''}" placeholder="es. 100000" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 9px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Data obiettivo</div>
+          <input type="date" id="goal-date" value="${goal?.targetDate||''}" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 9px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Rendimento atteso %/a</div>
+          <input type="number" id="goal-rate" value="${goal?.annualReturn||8}" placeholder="es. 8" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 9px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="savePortGoal()" style="background:var(--b);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-family:var(--fm);font-weight:600;cursor:pointer">${goal?'Aggiorna':'Salva obiettivo'}</button>
+        ${goal?`<button onclick="deletePortGoal()" style="background:var(--r2);color:var(--r);border:1px solid var(--r);border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--fm);cursor:pointer">Elimina</button>`:''}
+      </div>
+    </div>`;
+}
+function savePortGoal(){
+  const val=parseFloat(document.getElementById('goal-value')?.value);
+  const date=document.getElementById('goal-date')?.value;
+  const rate=parseFloat(document.getElementById('goal-rate')?.value)||8;
+  if(!val||!date){return;}
+  _savePortGoal({targetValue:val,targetDate:date,annualReturn:rate});
+  renderPortGoal();
+}
+function deletePortGoal(){localStorage.removeItem('fs_port_goal');renderPortGoal();}
+
+/* ══════════════════════════════════════════
+   EXPORT CSV FISCALE
+══════════════════════════════════════════ */
+function exportTaxCSV(){
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  if(!quotes||!portfolio.length){alert('Carica prima i dati del portafoglio');return;}
+  const TAX=0.26;
+  const rows=[['Titolo','Quantità','Prezzo acquisto','Valuta','Prezzo attuale','Valore investito','Valore attuale','P&L','P&L %','Tipo','Imposta stimata (26%)']];
+  portfolio.forEach((item,i)=>{
+    const q=quotes[i];const p=q?.price??item.buyPrice;
+    const inv=item.qty*item.buyPrice;const val=item.qty*p;
+    const pnl=val-inv;const pnlPct=inv>0?(pnl/inv*100):0;
+    const isGain=pnl>=0;const tax=isGain?pnl*TAX:0;
+    rows.push([item.sym,item.qty,item.buyPrice,item.currency||'USD',p.toFixed(4),inv.toFixed(2),val.toFixed(2),pnl.toFixed(2),pnlPct.toFixed(2),isGain?'Plusvalenza':'Minusvalenza',tax.toFixed(2)]);
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=`riepilogo_fiscale_${new Date().toISOString().slice(0,10)}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+/* ══════════════════════════════════════════
+   STORICO TRANSAZIONI
+══════════════════════════════════════════ */
+let _transactions=[];
+function _loadTransactions(){try{const s=localStorage.getItem('fs_transactions');_transactions=s?JSON.parse(s):[];}catch{_transactions=[];}}
+function _saveTransactions(){localStorage.setItem('fs_transactions',JSON.stringify(_transactions.slice(0,200)));}
+function _logTransaction(action,sym,qty,price,currency){
+  try{
+    _loadTransactions();
+    _transactions.unshift({date:new Date().toISOString(),action,sym,qty,price:+price,total:qty*price,currency:currency||'USD'});
+    _saveTransactions();
+  }catch(e){}
+}
+
+function renderTransactionHistory(){
+  const el=document.getElementById('tx-history-content');
+  if(!el)return;
+  _loadTransactions();
+  if(!_transactions.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Nessuna transazione registrata · Le prossime modifiche al portafoglio verranno registrate qui automaticamente</div>';
+    return;
+  }
+  const aLabel={buy:'ACQ',sell:'VEND',edit:'MOD'};
+  const aBg={buy:'var(--g2)',sell:'var(--r2)',edit:'var(--o2)'};
+  const aCol={buy:'var(--g)',sell:'var(--r)',edit:'var(--o)'};
+  el.innerHTML=`
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+      <button onclick="clearTransactionHistory()" style="background:var(--s2);border:1px solid var(--bd);color:var(--t3);padding:5px 12px;border-radius:6px;font-size:10px;font-family:var(--fm);cursor:pointer">Cancella storico</button>
+    </div>
+    <div style="display:grid;grid-template-columns:90px 44px 80px 80px 70px 90px;gap:6px;padding:0 0 6px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--bd);margin-bottom:4px">
+      <div>Data</div><div>Tipo</div><div>Titolo</div><div style="text-align:right">Prezzo</div><div style="text-align:right">Qtà</div><div style="text-align:right">Totale</div>
+    </div>
+    ${_transactions.slice(0,50).map(tx=>{
+      const d=new Date(tx.date).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'});
+      const t=new Date(tx.date).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      const cur=tx.currency==='EUR'?'€':'$';
+      return`<div style="display:grid;grid-template-columns:90px 44px 80px 80px 70px 90px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)">
+        <div><div style="font-size:10px;font-family:var(--fm);color:var(--t2)">${d}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${t}</div></div>
+        <div><span style="font-size:9px;font-family:var(--fm);font-weight:700;color:${aCol[tx.action]||'var(--t2)'};background:${aBg[tx.action]||'var(--s2)'};padding:2px 5px;border-radius:4px">${aLabel[tx.action]||tx.action.toUpperCase()}</span></div>
+        <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${tx.sym}</div>
+        <div style="text-align:right;font-family:var(--fm);font-size:11px;color:var(--t2)">${cur}${fmt(tx.price,tx.price<10?3:2)}</div>
+        <div style="text-align:right;font-family:var(--fm);font-size:11px;color:var(--t2)">${tx.qty}</div>
+        <div style="text-align:right;font-family:var(--fm);font-size:11px;font-weight:600;color:var(--t)">${cur}${fmt(tx.total,0)}</div>
+      </div>`;
+    }).join('')}
+    ${_transactions.length>50?`<div style="padding:8px 0;font-size:10px;color:var(--t3);font-family:var(--fm);text-align:center">Ultime 50 di ${_transactions.length} transazioni</div>`:''}`;
+}
+function clearTransactionHistory(){
+  if(!confirm('Cancellare tutto lo storico transazioni?'))return;
+  _transactions=[];_saveTransactions();renderTransactionHistory();
+}
+
+/* ══════════════════════════════════════════
+   PRICE ALERT
+══════════════════════════════════════════ */
+let _priceAlerts=[];
+function _loadPriceAlerts(){try{const s=localStorage.getItem('fs_price_alerts');_priceAlerts=s?JSON.parse(s):[];}catch{_priceAlerts=[];}}
+function _savePriceAlerts(){localStorage.setItem('fs_price_alerts',JSON.stringify(_priceAlerts));}
+
+function checkPriceAlerts(quotes){
+  if(!quotes||!portfolio.length)return;
+  _loadPriceAlerts();
+  let changed=false;
+  _priceAlerts.forEach(alert=>{
+    if(alert.triggered)return;
+    const idx=portfolio.findIndex(p=>p.sym===alert.sym);
+    if(idx<0||!quotes[idx])return;
+    const price=quotes[idx].price;if(!price)return;
+    if((alert.direction==='above'&&price>=alert.targetPrice)||(alert.direction==='below'&&price<=alert.targetPrice)){
+      alert.triggered=true;alert.triggeredAt=Date.now();alert.triggeredPrice=price;changed=true;
+    }
+  });
+  if(changed)_savePriceAlerts();
+}
+
+function renderPriceAlerts(){
+  const el=document.getElementById('price-alerts-content');
+  if(!el)return;
+  _loadPriceAlerts();
+  const uniqueSyms=[...new Set(portfolio.map(p=>p.sym))];
+  const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
+  const triggered=_priceAlerts.filter(a=>a.triggered);
+  const active=_priceAlerts.filter(a=>!a.triggered);
+  el.innerHTML=`
+    ${triggered.length?`<div style="margin-bottom:14px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">🔔 Alert raggiunti (${triggered.length})</div>
+      ${_priceAlerts.map((a,i)=>{
+        if(!a.triggered)return'';
+        const item=portfolio.find(p=>p.sym===a.sym);
+        const cur=item?.currency==='EUR'?'€':'$';
+        return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:rgba(5,150,105,.08);border:1px solid var(--g);border-radius:8px;margin-bottom:6px">
+          <div><span style="font-family:var(--fm);font-weight:700;color:var(--t)">${a.sym}</span>
+          <span style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-left:8px">${a.direction==='above'?'≥':'≤'} ${cur}${fmt(a.targetPrice,a.targetPrice<10?3:2)} · raggiunto a ${cur}${fmt(a.triggeredPrice||0,3)}</span></div>
+          <button onclick="dismissAlert(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">✕</button>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+    ${active.length?`<div style="margin-bottom:14px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Alert attivi (${active.length})</div>
+      ${_priceAlerts.map((a,i)=>{
+        if(a.triggered)return'';
+        const item=portfolio.find(p=>p.sym===a.sym);
+        const idx=portfolio.indexOf(item);
+        const curPrice=quotes?quotes[idx]?.price??null:null;
+        const cur=item?.currency==='EUR'?'€':'$';
+        return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;margin-bottom:6px">
+          <div><span style="font-family:var(--fm);font-weight:700;color:var(--t)">${a.sym}</span>
+          <span style="font-size:10px;font-family:var(--fm);color:${a.direction==='above'?'var(--g)':'var(--r)'};margin-left:6px">${a.direction==='above'?'↑ sopra':'↓ sotto'} ${cur}${fmt(a.targetPrice,a.targetPrice<10?3:2)}</span>
+          ${curPrice?`<span style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-left:8px">ora: ${cur}${fmt(curPrice,curPrice<10?3:2)}</span>`:''}
+          </div>
+          <button onclick="deleteAlert(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">✕</button>
+        </div>`;
+      }).join('')}
+    </div>`:''}
+    <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px">
+      <div style="font-size:11px;font-weight:700;color:var(--t);margin-bottom:10px">Nuovo alert</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
+        <div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Titolo</div>
+          <select id="alert-sym" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none">
+            ${uniqueSyms.map(s=>`<option value="${s}">${s}</option>`).join('')}
+          </select>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Condizione</div>
+          <select id="alert-dir" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none">
+            <option value="above">Sale sopra</option><option value="below">Scende sotto</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Prezzo</div>
+          <input type="number" id="alert-price" placeholder="es. 150.00" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
+        </div>
+        <button onclick="addPriceAlert()" style="background:var(--b);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--fm);font-weight:600;cursor:pointer;white-space:nowrap">+ Aggiungi</button>
+      </div>
+    </div>
+    ${!_priceAlerts.length?'<div style="margin-top:10px;font-size:11px;color:var(--t3);text-align:center">Nessun alert configurato · Gli alert vengono verificati ad ogni aggiornamento del portafoglio</div>':''}`;
+}
+function addPriceAlert(){
+  const sym=document.getElementById('alert-sym')?.value;
+  const dir=document.getElementById('alert-dir')?.value;
+  const price=parseFloat(document.getElementById('alert-price')?.value);
+  if(!sym||!dir||!price||isNaN(price))return;
+  _loadPriceAlerts();
+  _priceAlerts.push({sym,direction:dir,targetPrice:price,createdAt:Date.now(),triggered:false});
+  _savePriceAlerts();
+  const inp=document.getElementById('alert-price');if(inp)inp.value='';
+  renderPriceAlerts();
+}
+function dismissAlert(idx){_loadPriceAlerts();_priceAlerts.splice(idx,1);_savePriceAlerts();renderPriceAlerts();}
+function deleteAlert(idx){_loadPriceAlerts();_priceAlerts.splice(idx,1);_savePriceAlerts();renderPriceAlerts();}
 </script>
 
 <!-- ═══ TRANSITION SCREEN ═══ -->
