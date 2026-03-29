@@ -7903,6 +7903,93 @@ function closeStockDetail(){
   sdSym='';
 }
 
+async function loadWyckoffAnalysis(sym){
+  const el=document.getElementById('sd-wyckoff-content');
+  if(!el)return;
+  try{
+    const data=await api(sym,'history&range=3mo');
+    if(sdSym!==sym)return; // utente ha cambiato pagina
+    if(!data||!Array.isArray(data)||data.length<20){
+      el.innerHTML='<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Dati storici insufficienti per l\'analisi Wyckoff.</div>';
+      return;
+    }
+
+    // Calcola OBV
+    const pts=data.filter(d=>d.close!=null&&d.volume!=null).sort((a,b)=>a.time-b.time);
+    const obv=[];
+    let cumObv=0;
+    for(let i=0;i<pts.length;i++){
+      if(i===0){obv.push(0);continue;}
+      const dir=pts[i].close>pts[i-1].close?1:pts[i].close<pts[i-1].close?-1:0;
+      cumObv+=dir*pts[i].volume;
+      obv.push(cumObv);
+    }
+
+    // Normalizza prezzo e OBV in range 0–100 per confronto visivo
+    const prices=pts.map(p=>p.close);
+    const minP=Math.min(...prices),maxP=Math.max(...prices);
+    const minO=Math.min(...obv),maxO=Math.max(...obv);
+    const normP=prices.map(p=>maxP>minP?(p-minP)/(maxP-minP)*100:50);
+    const normO=obv.map(o=>maxO>minO?(o-minO)/(maxO-minO)*100:50);
+
+    // Rileva divergenza — confronta ultimi 20 punti
+    const n=Math.min(20,pts.length);
+    const recentP=normP.slice(-n);
+    const recentO=normO.slice(-n);
+    const pTrend=recentP[recentP.length-1]-recentP[0];
+    const oTrend=recentO[recentO.length-1]-recentO[0];
+    let phase,phaseCol,divergence;
+    if(pTrend<-5&&oTrend>5){phase='Accumulazione';phaseCol='#10B981';divergence='Divergenza rialzista: prezzo in calo ma OBV in salita';}
+    else if(pTrend>5&&oTrend<-5){phase='Distribuzione';phaseCol='#EF4444';divergence='Divergenza ribassista: prezzo in salita ma OBV in calo';}
+    else if(pTrend>3&&oTrend>3){phase='Markup';phaseCol='#1A56C4';divergence='Trend confermato: prezzo e OBV in salita';}
+    else if(pTrend<-3&&oTrend<-3){phase='Markdown';phaseCol='#F59E0B';divergence='Trend confermato: prezzo e OBV in discesa';}
+    else{phase='Laterale';phaseCol='#6B7280';divergence='Nessuna divergenza significativa rilevata';}
+
+    // Costruisci SVG con due linee sovrapposte
+    const W=520,H=100,pad=8;
+    const plotW=W-pad*2;
+    function polyline(vals,col){
+      const step=plotW/(vals.length-1);
+      const pts2=vals.map((v,i)=>`${(pad+i*step).toFixed(1)},${(H-pad-(v/100)*(H-pad*2)).toFixed(1)}`).join(' ');
+      return`<polyline points="${pts2}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>`;
+    }
+    const svgChart=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:90px;display:block">
+      <rect width="${W}" height="${H}" fill="var(--s2)" rx="4"/>
+      ${[25,50,75].map(y=>`<line x1="${pad}" y1="${H-pad-(y/100)*(H-pad*2)}" x2="${W-pad}" y2="${H-pad-(y/100)*(H-pad*2)}" stroke="var(--bd)" stroke-width="0.5" stroke-dasharray="3,3"/>`).join('')}
+      ${polyline(normP,'#1A56C4')}
+      ${polyline(normO,'#10B981')}
+      <text x="${pad+2}" y="11" font-size="8" fill="#1A56C4" font-family="IBM Plex Mono">PREZZO</text>
+      <text x="${pad+52}" y="11" font-size="8" fill="#10B981" font-family="IBM Plex Mono">OBV</text>
+    </svg>`;
+
+    el.innerHTML=`
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <div style="padding:4px 12px;background:${phaseCol}22;border:1px solid ${phaseCol}55;border-radius:20px;font-size:11px;font-weight:700;font-family:var(--fm);color:${phaseCol}">${phase}</div>
+        <div style="font-size:11px;color:var(--t2);font-family:var(--fm)">${divergence}</div>
+      </div>
+      ${svgChart}
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
+        <div style="padding:8px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;text-align:center">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend Prezzo</div>
+          <div style="font-size:13px;font-weight:700;font-family:var(--fm);color:${pTrend>3?'var(--g)':pTrend<-3?'var(--r)':'var(--t)'};margin-top:3px">${pTrend>3?'▲ Rialzista':pTrend<-3?'▼ Ribassista':'→ Laterale'}</div>
+        </div>
+        <div style="padding:8px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;text-align:center">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend OBV</div>
+          <div style="font-size:13px;font-weight:700;font-family:var(--fm);color:${oTrend>3?'var(--g)':oTrend<-3?'var(--r)':'var(--t)'};margin-top:3px">${oTrend>3?'▲ Accumulaz.':oTrend<-3?'▼ Distribuz.':'→ Neutrale'}</div>
+        </div>
+        <div style="padding:8px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;text-align:center">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Candele (3m)</div>
+          <div style="font-size:13px;font-weight:700;font-family:var(--fm);color:var(--t);margin-top:3px">${pts.length}</div>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:9px;color:var(--t3);font-family:var(--fm)">⚠ Analisi automatica basata su OBV (On-Balance Volume) · Solo scopo informativo</div>
+    `;
+  }catch(e){
+    if(document.getElementById('sd-wyckoff-content')===el)
+      el.innerHTML='<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Analisi Wyckoff non disponibile.</div>';
+  }
+}
+
 async function refreshSdPrice(sym){
   try{
     const r=await fetch(`/api/stockdetail?symbol=${encodeURIComponent(sym)}&priceonly=1`);
