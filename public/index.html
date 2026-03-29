@@ -4627,24 +4627,35 @@ async function renderPortfolio(){
 
   const top8Total=top8.reduce((s,e)=>s+e[1],0);
   const altroUSD=holdingTotalUSD-top8Total;
+  // Costruisce l'array di voci da mostrare in legenda
+  const legendEntries=top8.map((e,idx)=>({sym:e[0],valUSD:e[1],color:PALETTE[idx%PALETTE.length],isOther:false}));
+  if(altroUSD>0.5) legendEntries.push({sym:'Altro',valUSD:altroUSD,color:'var(--bd)',isOther:true});
+  // Largest-remainder method: garantisce che le percentuali visualizzate sommino esattamente a 100.0%
+  const rawPcts=legendEntries.map(e=>holdingTotalUSD>0?e.valUSD/holdingTotalUSD*100:0);
+  const floorPcts=rawPcts.map(p=>Math.floor(p*10)/10);
+  const remainders=rawPcts.map((p,i)=>p-floorPcts[i]);
+  const sumFloors=floorPcts.reduce((a,b)=>a+b,0);
+  const tenthsToAdd=Math.round((100-sumFloors)*10);
+  const sortedIdx=remainders.map((_,i)=>i).sort((a,b)=>remainders[b]-remainders[a]);
+  const finalPcts=[...floorPcts];
+  for(let k=0;k<tenthsToAdd&&k<sortedIdx.length;k++) finalPcts[sortedIdx[k]]=Math.round((finalPcts[sortedIdx[k]]+0.1)*10)/10;
   const legendRows=`<div style="display:flex;flex-direction:column;gap:0">
-    ${top8.map((e,idx)=>{
-      const sym=e[0];
-      const cvPct=holdingTotalUSD>0?((holdingCurMap[sym]||0)/holdingTotalUSD*100).toFixed(1):'0.0';
-      const cvEUR=(holdingCurMap[sym]||0)/eurUsd;
+    ${legendEntries.map((e,idx)=>{
+      const pct=finalPcts[idx].toFixed(1);
+      const valEUR=e.valUSD/eurUsd;
+      if(e.isOther) return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;min-width:0">
+        <div style="width:8px;height:8px;border-radius:50%;background:var(--bd);flex-shrink:0"></div>
+        <div style="font-size:11px;color:var(--t3);flex:1">Altro</div>
+        <div style="font-size:10px;font-family:var(--fm);color:var(--t3);flex-shrink:0">€${fmt(valEUR,2)}</div>
+        <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t3);flex-shrink:0;min-width:28px;text-align:right">${pct}%</div>
+      </div>`;
       return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bd);min-width:0">
-        <div style="width:8px;height:8px;border-radius:50%;background:${PALETTE[idx%PALETTE.length]};flex-shrink:0"></div>
-        <div style="font-size:11px;font-weight:600;color:var(--t);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sym}</div>
-        <div style="font-size:10px;font-family:var(--fm);color:var(--t3);flex-shrink:0">€${fmt(cvEUR,2)}</div>
-        <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t);flex-shrink:0;min-width:28px;text-align:right">${cvPct}%</div>
+        <div style="width:8px;height:8px;border-radius:50%;background:${e.color};flex-shrink:0"></div>
+        <div style="font-size:11px;font-weight:600;color:var(--t);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.sym}</div>
+        <div style="font-size:10px;font-family:var(--fm);color:var(--t3);flex-shrink:0">€${fmt(valEUR,2)}</div>
+        <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t);flex-shrink:0;min-width:28px;text-align:right">${pct}%</div>
       </div>`;
     }).join('')}
-    ${altroUSD>0.5?`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;min-width:0">
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--bd);flex-shrink:0"></div>
-      <div style="font-size:11px;color:var(--t3);flex:1">Altro</div>
-      <div style="font-size:10px;font-family:var(--fm);color:var(--t3);flex-shrink:0">€${fmt(altroUSD/eurUsd,2)}</div>
-      <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t3);flex-shrink:0;min-width:28px;text-align:right">${holdingTotalUSD>0?(altroUSD/holdingTotalUSD*100).toFixed(1):'0.0'}%</div>
-    </div>`:''}
   </div>`;
 
   // ── Stats — griglia 2 colonne ──
