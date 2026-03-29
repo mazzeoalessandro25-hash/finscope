@@ -10040,7 +10040,7 @@ function renderPortPerfSummary(){
 /* ══════════════════════════════════════════
    TARGET PERSONALI PER TITOLO
 ══════════════════════════════════════════ */
-function _loadPersonalTargets(){try{const s=localStorage.getItem('fs_personal_targets');return s?JSON.parse(s):{};}}
+function _loadPersonalTargets(){try{const s=localStorage.getItem('fs_personal_targets');return s?JSON.parse(s):{};}catch{return{};}}
 function _savePersonalTargets(obj){localStorage.setItem('fs_personal_targets',JSON.stringify(obj));}
 
 function renderPersonalTargets(){
