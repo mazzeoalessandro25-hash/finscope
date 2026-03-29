@@ -6061,69 +6061,12 @@ async function loadDividendTracker(){
       </div>
     </div>`).join('')}
     <div style="margin-top:8px;padding:10px;background:var(--s2);border-radius:8px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.7">
-      Lordo → Netto: <strong>Azioni US</strong>: ritenuta USA 15% (trattato IT-US) + 26% italiana = 37.1% effettivo. <strong>Azioni EU/IT</strong>: solo 26% italiana. I totali sono in €, convertiti a cambio ${fmt(fxRate,4)} $/€. Stime indicative.
+      <strong>Tassazione dividendi (Italia):</strong><br>
+      · Azioni <strong>italiane (.MI)</strong>: ritenuta 26% applicata dall'intermediario — fattore netto 0.74<br>
+      · Azioni <strong>UK (.L)</strong>: 0% ritenuta UK + 26% IT — fattore netto 0.74<br>
+      · Azioni <strong>USA, EU (DE/FR/DK/NL/CH…)</strong>: 15% ritenuta alla fonte (trattato IT) + 26% IT = 37.1% eff. — fattore netto 0.629<br>
+      I totali sono in €, convertiti a cambio ${fmt(fxRate,4)} $/€. Stime indicative — consulta un commercialista per la tua situazione specifica.
     </div>`;
-
-  // ── DRIP Simulator (tutto in EUR) ──
-  const portValEUR=portfolio.reduce((s,item,i)=>{
-    const p=quotes[i]?.price??item.buyPrice;
-    return s+item.qty*p*(item.currency==='EUR'?1:1/fxRate);
-  },0);
-  if(totalAnnualEUR>0&&portValEUR>0){
-    const yld=totalAnnualEUR/portValEUR;
-    const BASE_RET=0.07;
-    const scenarios=[{years:10,label:'10 anni'},{years:20,label:'20 anni'},{years:30,label:'30 anni'}];
-    const dripRows=scenarios.map(sc=>{
-      const withDrip=portValEUR*Math.pow(1+BASE_RET+yld,sc.years);
-      const withoutDrip=portValEUR*Math.pow(1+BASE_RET,sc.years)+totalAnnualEUR*sc.years;
-      const bonus=withDrip-withoutDrip;
-      const growthPct=(withDrip/portValEUR-1)*100;
-      return`<div class="drip-card">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">${sc.label} · DRIP</div>
-        <div class="drip-val">€${fmtLg(withDrip)}</div>
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px">+${fmt(growthPct,0)}% vs oggi</div>
-        <div style="font-size:9px;color:var(--b);font-family:var(--fm);margin-top:4px;padding-top:4px;border-top:1px solid var(--bd)">+€${fmtLg(bonus)} grazie al DRIP</div>
-      </div>`;
-    }).join('');
-    el.innerHTML+=`
-    <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">DRIP Simulator — Reinvestimento automatico dividendi</div>
-      <div style="font-size:11px;color:var(--t2);font-family:var(--fm);margin-bottom:12px">Yield attuale <strong>${fmt(yld*100,2)}%</strong> · Rendimento azionario assunto 7%/anno · Valori in €</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">${dripRows}</div>
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Simulazione illustrativa: assume yield costante e rendimento azionario del 7%/anno. Non considera la tassazione dei dividendi (26% Italia). Solo scopo educativo.</div>
-    </div>`;
-  }
-
-  // ── Tax Efficiency Score ──
-  if(rows.length>0){
-    const TAX_RATE=0.26;
-    const totalGross=totalAnnualUSD+totalAnnualEUR;
-    const totalNet=totalGross*(1-TAX_RATE);
-    const taxDrag=totalGross*TAX_RATE;
-    // Score: 100 = massima efficienza fiscale (tutti ETF accumulazione), 0 = inefficiente
-    // Approssimazione: titoli EUR con dividendi bassi = più efficienti
-    const effScore=Math.max(0,Math.min(100,Math.round(100-avgYield*100*8)));
-    const scoreColor=effScore>=70?'var(--g)':effScore>=40?'var(--o)':'var(--r)';
-    el.innerHTML+=`
-    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Tax Efficiency Score</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
-        <div class="rb">
-          <div class="rl">SCORE EFFICIENZA</div>
-          <div class="rv2" style="color:${scoreColor};font-size:22px">${effScore}<span style="font-size:12px">/100</span></div>
-        </div>
-        <div class="rb">
-          <div class="rl">REDDITO NETTO (26%)</div>
-          <div class="rv2 g">${totalAnnualEUR>0?'€':'$'}${fmt(totalNet,2)}/anno</div>
-        </div>
-        <div class="rb">
-          <div class="rl">IMPOSTA STIMATA</div>
-          <div class="rv2 down">${totalAnnualEUR>0?'€':'$'}${fmt(taxDrag,2)}/anno</div>
-        </div>
-      </div>
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score basato su yield medio del portafoglio · Aliquota ritenuta alla fonte 26% (Italia) · Per ottimizzare considera ETF ad accumulazione</div>
-    </div>`;
-  }
 }
 
 /* ══════════════════════════════════════════
