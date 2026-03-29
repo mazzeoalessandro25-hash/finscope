@@ -6381,55 +6381,50 @@ function renderPortAnalysis(portItems, quotes){
       <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Simulazione lineare ponderata per beta · Solo scopo informativo</div>
     </div>
 
-    <!-- Segnale di Acquisto -->
-    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:16px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Segnale di acquisto — analisi per titolo</div>
-      ${(()=>{
-        return portItems.map((item,i)=>{
-          const q=quotes[i];
-          const sd=scSummary[item.sym]||scData[item.sym];
-          if(!q&&!sd)return`<div style="display:flex;align-items:center;gap:8px;padding:8px;background:var(--s2);border-radius:8px;margin-bottom:6px;font-family:var(--fm);font-size:11px;color:var(--t3)">${item.sym} — dati non ancora disponibili</div>`;
-          const fss=sd?calcFinEdgeScore(sd,q):null;
-          const score=fss?.total??null;
-          const curP=q?.price??item.buyPrice;
-          const target=q?.target||(sd?.target)||null;
-          const upside=target&&curP>0?((target-curP)/curP*100):null;
-          const pe=sd?.pe||null;
-          const beta=q?.beta??sd?.beta??1.0;
+    <!-- Segnale di Acquisto — tabella compatta -->
+    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Segnali per titolo</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px">
+        ${(()=>{
           const prof2=INVESTOR_PROFILES[selectedProfile];
-          // --- Valutazione segnale ---
-          let signals=[];
-          if(score!==null){if(score>=70)signals.push({c:'ok',t:`Score FinEdge ${score}/100 — segnale positivo`});else if(score>=50)signals.push({c:'warn',t:`Score FinEdge ${score}/100 — area neutrale`});else signals.push({c:'bad',t:`Score FinEdge ${score}/100 — segnale negativo`});}
-          if(upside!==null){if(upside>=10)signals.push({c:'ok',t:`Upside target +${fmt(upside,1)}% — prezzo attuale sotto target analisti`});else if(upside>=-5)signals.push({c:'warn',t:`Upside target ${fmt(upside,1)}% — prezzo vicino al target`});else signals.push({c:'bad',t:`Downside target ${fmt(upside,1)}% — prezzo superiore al target analisti`});}
-          if(beta!==null){const maxB=prof2.maxBeta;if(beta<=maxB)signals.push({c:'ok',t:`Beta ${fmt(beta,2)} — compatibile con profilo ${prof2.name}`});else signals.push({c:'warn',t:`Beta ${fmt(beta,2)} > ${fmt(maxB,2)} — più volatile del tuo profilo`});}
-          const pnlPct=item.buyPrice>0?((curP-item.buyPrice)/item.buyPrice*100):0;
-          if(pnlPct>30)signals.push({c:'warn',t:`+${fmt(pnlPct,1)}% dal tuo acquisto — considera presa parziale di profitto`});
-          else if(pnlPct>0)signals.push({c:'ok',t:`+${fmt(pnlPct,1)}% dal tuo prezzo di acquisto`});
-          else signals.push({c:pnlPct<-20?'bad':'warn',t:`${fmt(pnlPct,1)}% dal tuo prezzo di acquisto`});
-          // Segnale finale
-          const okCount=signals.filter(s=>s.c==='ok').length;
-          const badCount=signals.filter(s=>s.c==='bad').length;
-          let finalSignal,finalColor,finalBg;
-          if(badCount===0&&okCount>=3){finalSignal='COMPRA';finalColor='#065F46';finalBg='#BBFCD8';}
-          else if(badCount===0&&okCount>=2){finalSignal='MANTIENI+';finalColor='#047857';finalBg='#D1FAE5';}
-          else if(badCount<=1&&okCount>=2){finalSignal='NEUTRALE';finalColor='#92400E';finalBg='#FEF3C7';}
-          else if(badCount>=2){finalSignal='ATTENZIONE';finalColor='#B91C1C';finalBg='#FEE2E2';}
-          else{finalSignal='MONITORA';finalColor='#1E40AF';finalBg='#EBF1FB';}
-          return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px;margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-              <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${item.sym}</div>
-              <div style="display:flex;align-items:center;gap:8px">
-                ${curP?`<div style="font-family:var(--fm);font-size:11px;color:var(--t2)">${item.currency==='EUR'?'€':'$'}${fmt(curP,curP<10?3:2)}</div>`:''}
-                <div style="padding:3px 10px;border-radius:6px;font-family:var(--fm);font-size:10px;font-weight:700;background:${finalBg};color:${finalColor}">${finalSignal}</div>
+          return portItems.map((item,i)=>{
+            const q=quotes[i];
+            const sd=scSummary[item.sym]||scData[item.sym];
+            const fss=sd?calcFinEdgeScore(sd,q):null;
+            const score=fss?.total??null;
+            const curP=q?.price??item.buyPrice;
+            const target=q?.target||(sd?.targetPrice)||null;
+            const upside=target&&curP>0?((target-curP)/curP*100):null;
+            const beta=q?.beta??sd?.beta??1.0;
+            const pnlPct=item.buyPrice>0?((curP-item.buyPrice)/item.buyPrice*100):0;
+            // Calcolo segnale
+            let ok=0,bad=0;
+            if(score!=null){score>=70?ok++:score<45?bad++:0;}
+            if(upside!=null){upside>=10?ok++:upside<-5?bad++:0;}
+            if(beta<=prof2.maxBeta)ok++;else bad++;
+            if(pnlPct>0)ok++;else if(pnlPct<-20)bad++;
+            let sig,sigCol,sigBg;
+            if(bad===0&&ok>=3){sig='COMPRA';sigCol='#065F46';sigBg='rgba(5,150,105,.12)';}
+            else if(bad===0&&ok>=2){sig='MANTIENI';sigCol='#047857';sigBg='rgba(16,185,129,.10)';}
+            else if(bad>=2){sig='ATTENZIONE';sigCol='#B91C1C';sigBg='rgba(220,38,38,.10)';}
+            else{sig='NEUTRALE';sigCol='#92400E';sigBg='rgba(245,158,11,.10)';}
+            const cur2=item.currency==='EUR'?'€':'$';
+            return`<div style="background:${sigBg};border:1px solid var(--bd);border-radius:8px;padding:9px 10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+                <span style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${item.sym}</span>
+                <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:${sigCol}">${sig}</span>
               </div>
-            </div>
-            <div style="display:flex;flex-direction:column;gap:3px">
-              ${signals.map(s=>`<div style="font-size:11px;font-family:var(--fm);color:var(--t2);display:flex;gap:6px;align-items:flex-start"><span style="color:${s.c==='ok'?'var(--g)':s.c==='bad'?'var(--r)':'var(--o)'};flex-shrink:0">${s.c==='ok'?'✓':s.c==='bad'?'✗':'○'}</span>${s.t}</div>`).join('')}
-            </div>
-          </div>`;
-        }).join('');
-      })()}
-      <div style="margin-top:6px;font-size:10px;color:var(--t3);font-family:var(--fm)">⚠ Segnali basati su metriche quantitative · Non costituisce consulenza finanziaria (MiFID II)</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+                ${score!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score <span style="color:${score>=70?'var(--g)':score<45?'var(--r)':'var(--o)';font-weight:600}">${score}</span></div>`:''}
+                ${upside!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Upside <span style="color:${upside>=0?'var(--g)':'var(--r)'};font-weight:600">${upside>=0?'+':''}${fmt(upside,1)}%</span></div>`:''}
+                <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">P&L <span style="color:${pnlPct>=0?'var(--g)':'var(--r)'};font-weight:600">${pnlPct>=0?'+':''}${fmt(pnlPct,1)}%</span></div>
+                <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Beta <span style="font-weight:600;color:var(--t)">${fmt(beta,2)}</span></div>
+              </div>
+            </div>`;
+          }).join('');
+        })()}
+      </div>
+      <div style="margin-top:6px;font-size:10px;color:var(--t3);font-family:var(--fm)">⚠ Segnali quantitativi · Non costituisce consulenza finanziaria (MiFID II)</div>
     </div>
 
     <!-- What-If Optimizer -->
