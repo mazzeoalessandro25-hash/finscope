@@ -6333,159 +6333,124 @@ function renderPortAnalysis(portItems, quotes){
   const C2=2*Math.PI*34;
   const dash=score/100*C2;
 
-  // Barre confronto attuale vs target profilo
-  function compRow(label,actual,target){
-    const aW=Math.round(actual*100),tW=Math.round(target*100);
-    const diff=Math.abs(actual-target);
-    const col=diff<0.10?'#10B981':diff<0.20?'#F59E0B':'#EF4444';
-    return`<div style="margin-bottom:7px">
-      <div style="display:flex;justify-content:space-between;font-size:10px;font-family:var(--fm);margin-bottom:3px">
-        <span style="color:var(--t2)">${label}</span>
-        <span><span style="color:${col};font-weight:700">${aW}%</span> <span style="color:var(--t3)">/ target ${tW}%</span></span>
-      </div>
-      <div style="height:5px;background:var(--bd);border-radius:10px;position:relative">
-        <div style="position:absolute;height:5px;left:0;width:${tW}%;background:var(--bd);border-radius:10px"></div>
-        <div style="position:absolute;height:5px;left:0;width:${aW}%;background:${col};border-radius:10px;transition:width .4s"></div>
-      </div>
-    </div>`;
-  }
+  // --- Calcolo segnali acquisto aggregati portafoglio ---
+  let avgPnlPct=0,avgUpside=0,avgFinScore=0,nWithScore=0,nWithUpside=0;
+  portItems.forEach((item,i)=>{
+    const q=quotes[i];
+    const sd2=scSummary[item.sym]||scData[item.sym];
+    const curP=q?.price??item.buyPrice;
+    const pnlPct2=item.buyPrice>0?((curP-item.buyPrice)/item.buyPrice*100):0;
+    const w=totalInv>0?(item.qty*item.buyPrice)/totalInv:1/portItems.length;
+    avgPnlPct+=pnlPct2*w;
+    const fss2=sd2?calcFinEdgeScore(sd2,q):null;
+    if(fss2?.total!=null){avgFinScore+=fss2.total*w;nWithScore++;}
+    const target2=(q?.target||sd2?.targetPrice)||null;
+    if(target2&&curP>0){avgUpside+=((target2-curP)/curP*100)*w;nWithUpside++;}
+  });
+  if(!nWithScore)avgFinScore=50;
 
+  const stabBeta=Math.max(0,Math.min(100,100-(weightedBeta-0.5)*60));
+  const shortScore=Math.max(0,Math.min(100,Math.round(50+avgPnlPct*0.8+stabBeta*0.3-15)));
+  const midScore=Math.max(0,Math.min(100,Math.round(40+avgUpside*0.5+avgFinScore*0.3+avgYield*400)));
+  const longScore=Math.max(0,Math.min(100,Math.round(avgFinScore*0.6+stabBeta*0.2+Math.min(20,avgYield*400))));
+
+  // Assi radar (0–100)
+  const radarReturn=Math.max(0,Math.min(100,Math.round(50+avgPnlPct)));
+  const radarDiversif=Math.min(100,Math.round((nSectors/8*50)+(Math.min(nStocks,15)/15*50)));
+  const radarQuality=Math.max(0,Math.min(100,Math.round(avgFinScore)));
+  const radarMomentum=Math.max(0,Math.min(100,Math.round(50+avgPnlPct*0.6)));
+  const radarStability=Math.max(0,Math.min(100,Math.round(stabBeta)));
+  const radarIncome=Math.max(0,Math.min(100,Math.round(avgYield*1000)));
+
+  // Percentuali colorate sotto i donut (senza legenda laterale)
+  function donutPcts(entries,pal){
+    const total=entries.reduce((s,[,v])=>s+v,0);
+    return entries.map(([label,val],idx)=>{
+      const pct=total>0?Math.round(val/total*100):0;
+      const col=(pal&&pal[idx])||PALETTE[idx%PALETTE.length];
+      return`<div style="display:inline-flex;align-items:center;gap:3px;margin:1px 3px;font-size:9px;font-family:var(--fm)"><span style="width:6px;height:6px;border-radius:50%;background:${col};flex-shrink:0"></span><span style="color:var(--t2)">${label}</span><span style="color:var(--t);font-weight:700">${pct}%</span></div>`;
+    }).join('');
+  }
 
   el.innerHTML=`
     <!-- Selezione profilo investitore -->
-    <div class="port-profile-tabs" style="margin-bottom:12px">
+    <div class="port-profile-tabs" style="margin-bottom:10px">
       ${profKeys.map(k=>{
         const p=INVESTOR_PROFILES[k];
         return`<button class="port-profile-tab${k===selectedProfile?' active':''}" style="${k===selectedProfile?'background:'+p.color+';border-color:'+p.color:''}" onclick="selectedProfile='${k}';renderPortAnalysis(portfolio,_lastPortQuotes)">${p.emoji} ${p.name} <span style="font-size:10px;opacity:.85">${scores[k]}pt</span></button>`;
       }).join('')}
     </div>
 
-    <!-- Punteggio + cosa fare -->
-    <div style="display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;margin-bottom:14px;padding:14px;background:var(--s2);border:1px solid var(--bd);border-radius:10px">
-      <div style="display:flex;flex-direction:column;align-items:center">
-        <svg width="72" height="72" viewBox="0 0 82 82">
-          <circle cx="41" cy="41" r="34" fill="none" stroke="var(--bd)" stroke-width="9"/>
-          <circle cx="41" cy="41" r="34" fill="none" stroke="${scoreColor}" stroke-width="9"
-            stroke-dasharray="${dash.toFixed(1)} ${C2.toFixed(1)}" stroke-linecap="round"
-            transform="rotate(-90 41 41)"/>
-          <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
-        </svg>
-        <div style="font-size:10px;font-family:var(--fm);color:${scoreColor};font-weight:700;margin-top:4px">${score>=75?'Ottimo':score>=50?'Discreto':'Da migliorare'}</div>
-      </div>
-      <div>
-        <div style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px">${prof.emoji} Profilo ${prof.name}</div>
-        ${compRow('Dividendo',byType.dividend||0,prof.types.dividend)}
-        ${compRow('Value',byType.value||0,prof.types.value)}
-        ${compRow('Growth',byType.growth||0,prof.types.growth)}
+    <!-- Profilo compatto inline -->
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:8px">
+      <svg width="34" height="34" viewBox="0 0 82 82" style="flex-shrink:0">
+        <circle cx="41" cy="41" r="34" fill="none" stroke="var(--bd)" stroke-width="9"/>
+        <circle cx="41" cy="41" r="34" fill="none" stroke="${scoreColor}" stroke-width="9"
+          stroke-dasharray="${dash.toFixed(1)} ${C2.toFixed(1)}" stroke-linecap="round"
+          transform="rotate(-90 41 41)"/>
+        <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
+      </svg>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm)">${prof.emoji} ${prof.name} — <span style="color:${scoreColor}">${score>=75?'Ottimo':score>=50?'Discreto':'Da migliorare'}</span></div>
         ${bestMatch!==selectedProfile
-          ?`<div style="font-size:10px;color:var(--b);font-family:var(--fm);margin-top:6px">Miglior match: ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
-          :'<div style="font-size:10px;color:#10B981;font-family:var(--fm);margin-top:6px">✓ Profilo ottimale per questo portafoglio</div>'}
+          ?`<div style="font-size:10px;color:var(--b);font-family:var(--fm);margin-top:2px">Miglior match: ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
+          :'<div style="font-size:10px;color:#10B981;font-family:var(--fm);margin-top:2px">✓ Profilo ottimale per questo portafoglio</div>'}
       </div>
     </div>
 
     <!-- Raccomandazioni -->
-    <div style="margin-bottom:14px">
+    <div style="margin-bottom:12px">
       ${getRecs(selectedProfile).map(r=>`<div class="port-rec ${r.cls}">${r.txt}</div>`).join('')}
     </div>
 
     <!-- KPI rapidi -->
-    <div class="port-kpi-row" style="margin-bottom:14px">
+    <div class="port-kpi-row" style="margin-bottom:12px">
       <div class="rb"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:18px">${nStocks}</div></div>
       <div class="rb"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:18px">${fmt(weightedBeta,2)}</div></div>
       <div class="rb"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:18px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
       <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:18px">${nSectors}</div></div>
     </div>
 
-    <!-- 3 grafici a ciambella compatti -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bd)">
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px">
+    <!-- 3 grafici a ciambella centrati con % sotto -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
         <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Tipo</div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="flex-shrink:0">${svgDonut(typeEntries,typePal,62,12)}</div>
-          <div style="flex:1">${donutLegend(typeEntries,typePal)}</div>
-        </div>
+        <div style="display:flex;justify-content:center">${svgDonut(typeEntries,typePal,66,12)}</div>
+        <div style="margin-top:6px;line-height:1.9">${donutPcts(typeEntries,typePal)}</div>
       </div>
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px">
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
         <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Area geografica</div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="flex-shrink:0">${svgDonut(mktEntries,null,62,12)}</div>
-          <div style="flex:1">${donutLegend(mktEntries)}</div>
-        </div>
+        <div style="display:flex;justify-content:center">${svgDonut(mktEntries,null,66,12)}</div>
+        <div style="margin-top:6px;line-height:1.9">${donutPcts(mktEntries,null)}</div>
       </div>
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px">
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
         <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Settori</div>
-        <div style="display:flex;align-items:center;gap:6px">
-          <div style="flex-shrink:0">${svgDonut(secEntries.slice(0,8),null,62,12)}</div>
-          <div style="flex:1">${donutLegend(secEntries.slice(0,8))}</div>
-        </div>
+        <div style="display:flex;justify-content:center">${svgDonut(secEntries.slice(0,8),null,66,12)}</div>
+        <div style="margin-top:6px;line-height:1.9">${donutPcts(secEntries.slice(0,8),null)}</div>
       </div>
     </div>
 
-    <!-- Contributo P&L per titolo -->
-    <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Contributo P&L per titolo</div>
-      ${(()=>{
-        // Calcola P&L di ogni titolo e la sua contribuzione al portafoglio
-        const portPnlItems=portItems.map((item,i)=>{
-          const q=quotes[i];
-          const curPrice=q?.price??item.buyPrice;
-          const invested=item.qty*item.buyPrice;
-          const curVal=item.qty*curPrice;
-          const pnl=curVal-invested;
-          const pnlPct=invested>0?(pnl/invested*100):0;
-          return{sym:item.sym,pnl,pnlPct,invested,curVal};
-        });
-        const totalPortPnl=portPnlItems.reduce((s,x)=>s+x.pnl,0);
-        const totalPortInv=portPnlItems.reduce((s,x)=>s+x.invested,0);
-        const sorted=[...portPnlItems].sort((a,b)=>b.pnl-a.pnl);
-        const maxAbsPnl=Math.max(...sorted.map(x=>Math.abs(x.pnl)),1);
-        return sorted.map(x=>{
-          const contrib=totalPortInv>0?(x.pnl/totalPortInv*100):0;
-          const barW=Math.round(Math.abs(x.pnl)/maxAbsPnl*100);
-          const up=x.pnl>=0;
-          return`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">
-            <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);width:60px;flex-shrink:0">${x.sym}</div>
-            <div style="flex:1;height:5px;background:var(--bd);border-radius:10px;overflow:hidden">
-              <div style="height:5px;width:${barW}%;background:${up?'#10B981':'#EF4444'};border-radius:10px"></div>
-            </div>
-            <div style="font-family:var(--fm);font-size:11px;color:${up?'var(--g)':'var(--r)'};font-weight:600;width:55px;text-align:right">${up?'+':''}${fmt(x.pnlPct,1)}%</div>
-            <div style="font-family:var(--fm);font-size:10px;color:var(--t3);width:60px;text-align:right">${contrib>=0?'+':''}${fmt(contrib,2)}% port.</div>
-          </div>`;
-        }).join('');
-      })()}
-    </div>
-
-    <!-- Stress Test -->
-    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:16px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Stress Test — Impatto calo mercato</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-        ${[{label:'-10%',drop:.10},{label:'-20%',drop:.20},{label:'-30%',drop:.30},{label:'-50%',drop:.50}].map(sc=>{
-          const totalVal=portItems.reduce((s,item,i)=>{
-            const q=quotes[i];const curPrice=q?.price??item.buyPrice;return s+item.qty*curPrice;
-          },0);
-          const loss=portItems.reduce((s,item,i)=>{
-            const allS2=STOCKS.concat(customStocks);
-            const q=quotes[i];const info=allS2.find(x=>x.s===item.sym)||{};
-            const summ2=scSummary[item.sym]||scData[item.sym];
-            const beta2=q?.beta??summ2?.beta??1.0;
-            const curPrice=q?.price??item.buyPrice;
-            const curVal=item.qty*curPrice;
-            return s+curVal*sc.drop*Math.min(beta2,2.5);
-          },0);
-          const lossP=totalVal>0?(loss/totalVal*100):0;
-          return`<div style="padding:10px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);text-align:center">
-            <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--r)">${sc.label}</div>
-            <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px">mercato</div>
-            <div style="font-size:14px;font-family:var(--fm);font-weight:700;color:var(--r);margin-top:6px">-${fmt(lossP,1)}%</div>
-            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">portafoglio</div>
-          </div>`;
-        }).join('')}
+    <!-- 3 Gauge segnali acquisto portafoglio -->
+    <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Segnale acquisto portafoglio</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;justify-items:center">
+        ${svgGauge(shortScore,'Breve termine','1–3 mesi')}
+        ${svgGauge(midScore,'Medio termine','3–12 mesi')}
+        ${svgGauge(longScore,'Lungo termine','1–3 anni')}
       </div>
-      <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Simulazione lineare ponderata per beta · Solo scopo informativo</div>
+      <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">⚠ Segnali quantitativi aggregati · Non costituisce consulenza finanziaria</div>
     </div>
 
-    <!-- Segnale di Acquisto — tabella compatta -->
-    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px">
+    <!-- Radar Chart profilo portafoglio -->
+    <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Profilo portafoglio — Radar</div>
+      <div style="max-width:260px;margin:0 auto">
+        <canvas id="port-radar-canvas" width="260" height="220"></canvas>
+      </div>
+    </div>
+
+    <!-- Segnali per titolo -->
+    <div style="margin-bottom:14px">
       <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Segnali per titolo</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px">
         ${(()=>{
@@ -6494,15 +6459,14 @@ function renderPortAnalysis(portItems, quotes){
             const q=quotes[i];
             const sd=scSummary[item.sym]||scData[item.sym];
             const fss=sd?calcFinEdgeScore(sd,q):null;
-            const score=fss?.total??null;
+            const fscore=fss?.total??null;
             const curP=q?.price??item.buyPrice;
             const target=q?.target||(sd?.targetPrice)||null;
             const upside=target&&curP>0?((target-curP)/curP*100):null;
             const beta=q?.beta??sd?.beta??1.0;
             const pnlPct=item.buyPrice>0?((curP-item.buyPrice)/item.buyPrice*100):0;
-            // Calcolo segnale
             let ok=0,bad=0;
-            if(score!=null){score>=70?ok++:score<45?bad++:0;}
+            if(fscore!=null){fscore>=70?ok++:fscore<45?bad++:0;}
             if(upside!=null){upside>=10?ok++:upside<-5?bad++:0;}
             if(beta<=prof2.maxBeta)ok++;else bad++;
             if(pnlPct>0)ok++;else if(pnlPct<-20)bad++;
@@ -6511,14 +6475,13 @@ function renderPortAnalysis(portItems, quotes){
             else if(bad===0&&ok>=2){sig='MANTIENI';sigCol='#047857';sigBg='rgba(16,185,129,.10)';}
             else if(bad>=2){sig='ATTENZIONE';sigCol='#B91C1C';sigBg='rgba(220,38,38,.10)';}
             else{sig='NEUTRALE';sigCol='#92400E';sigBg='rgba(245,158,11,.10)';}
-            const cur2=item.currency==='EUR'?'€':'$';
             return`<div style="background:${sigBg};border:1px solid var(--bd);border-radius:8px;padding:9px 10px">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
                 <span style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${item.sym}</span>
                 <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:${sigCol}">${sig}</span>
               </div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
-                ${score!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score <span style="font-weight:600;color:${score>=70?'var(--g)':score<45?'var(--r)':'var(--o)'}">${score}</span></div>`:''}
+                ${fscore!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score <span style="font-weight:600;color:${fscore>=70?'var(--g)':fscore<45?'var(--r)':'var(--o)'}">${fscore}</span></div>`:''}
                 ${upside!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Upside <span style="color:${upside>=0?'var(--g)':'var(--r)'};font-weight:600">${upside>=0?'+':''}${fmt(upside,1)}%</span></div>`:''}
                 <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">P&L <span style="color:${pnlPct>=0?'var(--g)':'var(--r)'};font-weight:600">${pnlPct>=0?'+':''}${fmt(pnlPct,1)}%</span></div>
                 <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Beta <span style="font-weight:600;color:var(--t)">${fmt(beta,2)}</span></div>
@@ -6555,6 +6518,33 @@ function renderPortAnalysis(portItems, quotes){
       </div><!-- /collapsible -->
     </div>
   `;
+
+  // Inizializza radar chart dopo il render
+  setTimeout(()=>{
+    const rc=document.getElementById('port-radar-canvas');
+    if(!rc||!window.Chart)return;
+    if(rc._chartInst){rc._chartInst.destroy();}
+    rc._chartInst=new Chart(rc.getContext('2d'),{
+      type:'radar',
+      data:{
+        labels:['Rendimento','Diversif.','Qualità','Momentum','Stabilità','Reddito'],
+        datasets:[{
+          data:[radarReturn,radarDiversif,radarQuality,radarMomentum,radarStability,radarIncome],
+          backgroundColor:'rgba(26,86,196,.15)',
+          borderColor:'#1A56C4',
+          borderWidth:2,
+          pointBackgroundColor:'#1A56C4',
+          pointRadius:4,
+        }]
+      },
+      options:{
+        responsive:false,
+        scales:{r:{min:0,max:100,ticks:{display:false,stepSize:25},grid:{color:'rgba(128,128,128,.2)'},pointLabels:{font:{size:10,family:'IBM Plex Mono'},color:getComputedStyle(document.documentElement).getPropertyValue('--t2')||'#aaa'}}},
+        plugins:{legend:{display:false}},
+        animation:{duration:400}
+      }
+    });
+  },0);
 
 }
 
