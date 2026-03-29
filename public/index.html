@@ -4620,7 +4620,7 @@ async function renderPortfolio(){
   const legendRows=`<div style="display:flex;flex-direction:column;gap:0">
     ${top8.map((e,idx)=>{
       const sym=e[0];
-      const cvPct=totalValUSD>0?Math.round((curValMap[sym]||0)/totalValUSD*100):0;
+      const cvPct=totalValUSD>0?((curValMap[sym]||0)/totalValUSD*100).toFixed(1):0;
       const cvEUR=(curValMap[sym]||0)/eurUsd;
       return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bd);min-width:0">
         <div style="width:8px;height:8px;border-radius:50%;background:${PALETTE[idx%PALETTE.length]};flex-shrink:0"></div>
