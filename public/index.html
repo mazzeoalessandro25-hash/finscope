@@ -5974,13 +5974,17 @@ async function loadDividendTracker(){
     const isEUR=item.currency==='EUR';
     const curSym=isEUR?'€':'$';
     const curPrice=q?.price??item.buyPrice;
-    const curVal=item.qty*curPrice;   // usa prezzo di mercato corrente
+    const curVal=item.qty*curPrice;
     const annualIncome=curVal*divYield;
     const quarterly=annualIncome/4;
+    // Ritenuta alla fonte: US 15% (trattato IT-US) + 26% italiana sul netto
+    // EU: solo 26% italiana. Effettivo: US → ×0.85×0.74=×0.629 | EU → ×0.74
+    const withholdFactor=isEUR?0.74:0.629;
+    const annualNet=annualIncome*withholdFactor;
     if(isEUR)totalAnnualEUR+=annualIncome;else totalAnnualUSD+=annualIncome;
     totalWeightedYield+=divYield*curVal;
     totalInvested+=curVal;
-    rows.push({sym:item.sym,qty:item.qty,divYield,annualIncome,quarterly,curVal,currency:item.currency,curSym});
+    rows.push({sym:item.sym,qty:item.qty,divYield,annualIncome,annualNet,quarterly,curVal,currency:item.currency,curSym,withholdFactor});
   });
   if(!rows.length){
     el.innerHTML='<div class="ld" style="padding:10px">Nessun titolo con dividendi nel portafoglio · I dati vengono dai summary Yahoo Finance</div>';return;
