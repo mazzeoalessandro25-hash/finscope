@@ -7859,6 +7859,7 @@ function openStockDetail(sym){
   const overlay=document.getElementById('stock-detail-overlay');
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
+  adaptOverlayForAssetType(sym);
   // Reset header
   document.getElementById('sd-sym').textContent=sym;
   document.getElementById('sd-name').textContent='Caricamento...';
