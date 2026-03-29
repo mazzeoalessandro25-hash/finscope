@@ -27,3 +27,14 @@ export async function fetchYahooQuote(symbol) {
     return null;
   }
 }
+
+export async function fetchETFData(symbol) {
+  try {
+    return await Promise.race([
+      yf.quoteSummary(symbol, { modules: ['topHoldings', 'fundProfile'] }),
+      timeout(7000),
+    ]);
+  } catch (_) {
+    return null;
+  }
+}
