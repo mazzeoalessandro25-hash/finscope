@@ -7725,11 +7725,13 @@ function openStockDetail(sym){
   sdSym=sym; sdRange='1mo'; sdType='candle';
   sdLastValData=null; sdLastFundData=null;
   sdIndicators.clear(); sdIndSeries={};
-  sdLastPts=null;
+  sdLastPts=null; sdVolSeries=null;
   if(sdRsiInst){sdRsiInst.remove();sdRsiInst=null;}
   const _rsiDiv=document.getElementById('sd-rsi-chart');if(_rsiDiv)_rsiDiv.style.display='none';
   const _sigDiv=document.getElementById('sd-tech-signals');if(_sigDiv)_sigDiv.style.display='none';
   document.querySelectorAll('[id^="sd-ind-"]').forEach(b=>b.classList.remove('active'));
+  const _indPanel=document.getElementById('sd-ind-panel');if(_indPanel)_indPanel.style.display='none';
+  _updateIndBadge();
   const _scoreSec=document.getElementById('sd-score-section');
   if(_scoreSec)_scoreSec.style.display='none';
   const overlay=document.getElementById('stock-detail-overlay');
