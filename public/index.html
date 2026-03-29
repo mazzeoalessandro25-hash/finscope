@@ -4716,7 +4716,7 @@ async function renderPortfolio(){
         cutout:'68%',
         plugins:{
           legend:{display:false},
-          tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${grandTotalInv>0?Math.round(ctx.raw/grandTotalInv*100):0}%`}}
+          tooltip:{callbacks:{label:ctx=>`${ctx.label}: ${holdingTotalUSD>0?(ctx.raw/holdingTotalUSD*100).toFixed(1):'0'}%`}}
         },
         animation:{duration:600}
       }
