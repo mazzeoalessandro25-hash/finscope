@@ -6973,10 +6973,10 @@ async function exportPortfolioPDF(){
   // Riga totali
   const totRow=[
     'TOTALE','','','','','',
-    (totalUSDval>0?'$ '+fmtN(totalUSDval,0):'')+(totalEURval>0?' €'+fmtN(totalEURval,0):''),
-    (up?'+':'')+fmtN(pnlTot,2),
+    (totalEURval>0?'€ '+fmtN(totalEURval,2):'')+(totalUSDval>0?(totalEURval>0?'  +  ':'')+' $ '+fmtN(totalUSDval,2):''),
+    (pnlEUR_pdf>=0?'+':'')+'€ '+fmtN(Math.abs(pnlEUR_pdf),2),
     (up?'+':'')+fmtN(pnlPctTot,2)+'%',
-    (dailyUp?'+':'')+fmtN(totalDailyUSD,2)+'$',
+    (dailyUp?'+':'')+fmtN(totalDailyUSD/fx,2)+' €',
     '',
   ];
 
