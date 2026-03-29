@@ -4587,7 +4587,16 @@ async function renderPortfolio(){
 
   const _totalValDisplay=_isEUR?'€'+fmt(totalValEUR,0):'$'+fmt(totalValUSD,0);
   const _totalPnlDisplay=(_heroUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
-  const holdingEntries=portfolio.map((item,i)=>[item.sym,item.qty*item.buyPrice]).sort((a,b)=>b[1]-a[1]);
+  // Mappa valore corrente per symbol in USD (deduplicata, con fallback a buyPrice)
+  const holdingCurMap={};
+  portfolio.forEach((item,i)=>{
+    const q=quotes[i];
+    const fx=(item.currency==='EUR')?eurUsd:1;
+    holdingCurMap[item.sym]=(holdingCurMap[item.sym]||0)+item.qty*(q?.price||item.buyPrice)*fx;
+  });
+  // Ordinata per valore corrente in USD — base unica per donut e legenda
+  const holdingEntries=Object.entries(holdingCurMap).sort((a,b)=>b[1]-a[1]);
+  const holdingTotalUSD=holdingEntries.reduce((s,e)=>s+e[1],0);
   const PALETTE=['#1A56C4','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#65A30D','#DC2626'];
 
   // ── Blocchi statistici destra ──
