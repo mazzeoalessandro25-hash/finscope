@@ -3516,6 +3516,110 @@ async function selectSearchTicker(symbol,name,exchange){
 async function loadScreener(){ await loadMarketScreener(true); }
 function applyF(){ renderMarketStocks(); }
 
+/* ── ETF SCREENER ── */
+const ETF_LIST=[
+  // Azionari USA
+  {s:'SPY',     n:'SPDR S&P 500 ETF Trust',                      sec:'Azionario USA',        mkt:'US'},
+  {s:'QQQ',     n:'Invesco QQQ Trust (NASDAQ 100)',               sec:'Azionario USA Tech',   mkt:'US'},
+  {s:'VOO',     n:'Vanguard S&P 500 ETF',                        sec:'Azionario USA',        mkt:'US'},
+  {s:'VTI',     n:'Vanguard Total Stock Market ETF',             sec:'Azionario USA',        mkt:'US'},
+  {s:'IWM',     n:'iShares Russell 2000 ETF',                    sec:'Azionario USA SmallCap',mkt:'US'},
+  {s:'DIA',     n:'SPDR Dow Jones Industrial Average ETF',       sec:'Azionario USA',        mkt:'US'},
+  {s:'RSP',     n:'Invesco S&P 500 Equal Weight ETF',            sec:'Azionario USA',        mkt:'US'},
+  // Azionari Globali / Europa
+  {s:'IWDA.AS', n:'iShares Core MSCI World UCITS ETF',           sec:'Azionario Globale',    mkt:'EU'},
+  {s:'VWCE.DE', n:'Vanguard FTSE All-World UCITS ETF Acc',       sec:'Azionario Globale',    mkt:'EU'},
+  {s:'SWRD.L',  n:'SPDR MSCI World UCITS ETF',                   sec:'Azionario Globale',    mkt:'EU'},
+  {s:'CSPX.L',  n:'iShares Core S&P 500 UCITS ETF',             sec:'Azionario USA',        mkt:'EU'},
+  {s:'EQQQ.L',  n:'Invesco NASDAQ 100 UCITS ETF',               sec:'Azionario USA Tech',   mkt:'EU'},
+  {s:'EFA',     n:'iShares MSCI EAFE ETF',                       sec:'Azionario Int\'l Dev.', mkt:'US'},
+  {s:'VEA',     n:'Vanguard FTSE Developed Markets ETF',         sec:'Azionario Int\'l Dev.', mkt:'US'},
+  {s:'IMAE.MI', n:'iShares Core MSCI EM IMI UCITS ETF',         sec:'Mercati Emergenti',    mkt:'EU'},
+  // Mercati Emergenti
+  {s:'EEM',     n:'iShares MSCI Emerging Markets ETF',           sec:'Mercati Emergenti',    mkt:'US'},
+  {s:'VWO',     n:'Vanguard FTSE Emerging Markets ETF',          sec:'Mercati Emergenti',    mkt:'US'},
+  // Obbligazionari
+  {s:'TLT',     n:'iShares 20+ Year Treasury Bond ETF',         sec:'Obbligazionario Gov.',  mkt:'US'},
+  {s:'IEF',     n:'iShares 7-10 Year Treasury Bond ETF',        sec:'Obbligazionario Gov.',  mkt:'US'},
+  {s:'SHY',     n:'iShares 1-3 Year Treasury Bond ETF',         sec:'Obbligazionario Gov.',  mkt:'US'},
+  {s:'AGG',     n:'iShares Core U.S. Aggregate Bond ETF',       sec:'Obbligazionario Agg.',  mkt:'US'},
+  {s:'BND',     n:'Vanguard Total Bond Market ETF',             sec:'Obbligazionario Agg.',  mkt:'US'},
+  {s:'HYG',     n:'iShares iBoxx $ High Yield Corp Bond ETF',   sec:'High Yield',            mkt:'US'},
+  {s:'LQD',     n:'iShares IG Corporate Bond ETF',              sec:'Obbligazionario Corp.', mkt:'US'},
+  {s:'BNDX',    n:'Vanguard Total International Bond ETF',      sec:'Obbligazionario Int\'l',mkt:'US'},
+  // Settoriali USA (SPDR Select Sectors)
+  {s:'XLK',     n:'Technology Select Sector SPDR Fund',         sec:'Settoriale - Tech',     mkt:'US'},
+  {s:'XLF',     n:'Financial Select Sector SPDR Fund',          sec:'Settoriale - Finanza',  mkt:'US'},
+  {s:'XLV',     n:'Health Care Select Sector SPDR Fund',        sec:'Settoriale - Healthcare',mkt:'US'},
+  {s:'XLE',     n:'Energy Select Sector SPDR Fund',             sec:'Settoriale - Energia',  mkt:'US'},
+  {s:'XLI',     n:'Industrial Select Sector SPDR Fund',         sec:'Settoriale - Industriali',mkt:'US'},
+  {s:'XLU',     n:'Utilities Select Sector SPDR Fund',          sec:'Settoriale - Utilities', mkt:'US'},
+  {s:'XLP',     n:'Consumer Staples Select Sector SPDR Fund',   sec:'Settoriale - Cons. Def.',mkt:'US'},
+  {s:'XLY',     n:'Consumer Discr. Select Sector SPDR Fund',    sec:'Settoriale - Cons. Cyc.',mkt:'US'},
+  {s:'XLRE',    n:'Real Estate Select Sector SPDR Fund',        sec:'Settoriale - Real Estate',mkt:'US'},
+  {s:'XLC',     n:'Communication Services Select Sector SPDR', sec:'Settoriale - Telecom',   mkt:'US'},
+  // Dividendi
+  {s:'SCHD',    n:'Schwab US Dividend Equity ETF',              sec:'Dividendi USA',         mkt:'US'},
+  {s:'VYM',     n:'Vanguard High Dividend Yield ETF',           sec:'Dividendi USA',         mkt:'US'},
+  {s:'DVY',     n:'iShares Select Dividend ETF',                sec:'Dividendi USA',         mkt:'US'},
+  {s:'NOBL',    n:'ProShares S&P 500 Dividend Aristocrats ETF', sec:'Dividendi USA',         mkt:'US'},
+  {s:'VHYL.L',  n:'Vanguard FTSE All-World High Div. UCITS ETF',sec:'Dividendi Globali',     mkt:'EU'},
+  // Tematici / Innovazione
+  {s:'ARKK',    n:'ARK Innovation ETF',                         sec:'Tematico - Innovation', mkt:'US'},
+  {s:'ARKG',    n:'ARK Genomic Revolution ETF',                 sec:'Tematico - Genomics',   mkt:'US'},
+  {s:'ARKW',    n:'ARK Next Generation Internet ETF',           sec:'Tematico - Internet',   mkt:'US'},
+  {s:'BOTZ',    n:'Global X Robotics & AI ETF',                 sec:'Tematico - AI/Robotics',mkt:'US'},
+  {s:'ICLN',    n:'iShares Global Clean Energy ETF',            sec:'Tematico - Clean Energy',mkt:'US'},
+  // Materie Prime
+  {s:'GLD',     n:'SPDR Gold Shares',                           sec:'Commodity - Oro',       mkt:'US'},
+  {s:'SLV',     n:'iShares Silver Trust',                       sec:'Commodity - Argento',   mkt:'US'},
+  {s:'IAU',     n:'iShares Gold Trust',                         sec:'Commodity - Oro',       mkt:'US'},
+  {s:'USO',     n:'United States Oil Fund LP',                  sec:'Commodity - Petrolio',  mkt:'US'},
+  {s:'PDBC',    n:'Invesco Optimum Yield Diversified Commodity',sec:'Commodity - Diversificato',mkt:'US'},
+  // Leveraged / Inverse
+  {s:'TQQQ',    n:'ProShares UltraPro QQQ (3x Long)',           sec:'Leveraged 3x',          mkt:'US'},
+  {s:'SQQQ',    n:'ProShares UltraPro Short QQQ (3x Short)',    sec:'Inverse 3x',            mkt:'US'},
+  {s:'UPRO',    n:'ProShares UltraPro S&P 500 (3x Long)',       sec:'Leveraged 3x',          mkt:'US'},
+  {s:'SPXS',    n:'Direxion Daily S&P 500 Bear 3x Shares',      sec:'Inverse 3x',            mkt:'US'},
+  {s:'SOXL',    n:'Direxion Daily Semiconductor Bull 3x',       sec:'Leveraged 3x',          mkt:'US'},
+];
+
+async function loadETFScreener(){
+  const loadId=++_screenerLoadId;
+  const body=document.getElementById('sc-body');
+  body.innerHTML='<tr><td colspan="12" class="ld">Caricamento ETF…</td></tr>';
+  document.getElementById('sc-cnt').textContent='—';
+
+  // Popola subito con dati statici (senza prezzi)
+  dynamicStocks=ETF_LIST.map(e=>Object.assign({},e));
+  renderMarketStocks();
+
+  // Fetch prezzi live in chunk da /api/screener?symbols=...
+  const CHUNK=25, CONCURRENT=3;
+  const chunks=[];
+  for(let i=0;i<dynamicStocks.length;i+=CHUNK) chunks.push(dynamicStocks.slice(i,i+CHUNK));
+  const qMap={};
+  for(let i=0;i<chunks.length;i+=CONCURRENT){
+    if(loadId!==_screenerLoadId) return;
+    const batch=chunks.slice(i,i+CONCURRENT);
+    const maps=await Promise.all(batch.map(async chunk=>{
+      try{
+        const symStr=chunk.map(s=>s.s).join(',');
+        const r=await fetch('/api/screener?symbols='+encodeURIComponent(symStr));
+        if(!r.ok) return {};
+        const qd=await r.json();
+        const m={};(qd.quotes||[]).forEach(q=>{m[q.s]=q;});return m;
+      }catch{return {};}
+    }));
+    maps.forEach(m=>Object.assign(qMap,m));
+    dynamicStocks.forEach(s=>{
+      const q=qMap[s.s];
+      if(q){s.price=q.price??null;s.prev=q.prev??null;s.chg=q.chg??null;s.pe=q.pe??null;s.marketCap=q.marketCap??null;s.divAnnual=q.divAnnual??null;}
+    });
+    if(loadId===_screenerLoadId) renderMarketStocks();
+  }
+}
+
 function sortTbl(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}renderMarketStocks();}
 function toggleWl(sym,el){
   const i=watchlist.indexOf(sym);if(i===-1)watchlist.push(sym);else watchlist.splice(i,1);
