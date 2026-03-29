@@ -4451,14 +4451,9 @@ async function renderPortfolio(){
               </div>
             </div>
             <svg id="psp-${i}" width="56" height="28" style="flex-shrink:0"></svg>
-            <div style="flex:1;min-width:40px">
-              <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-                <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">peso</div>
-                <div style="font-size:8px;font-family:var(--fm);font-weight:600;color:${barColor}">${weightPct}%</div>
-              </div>
-              <div style="height:3px;background:var(--bd);border-radius:10px;overflow:hidden">
-                <div style="height:3px;width:${weightPct}%;background:${barColor};border-radius:10px;transition:width .6s ease"></div>
-              </div>
+            <div style="flex-shrink:0;text-align:right">
+              <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(item.qty*curPrice,2):'—'}</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.qty>0?item.qty*item.buyPrice/item.qty:item.buyPrice,2)}</div>
             </div>
           </div>
         </div>
