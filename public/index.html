@@ -1176,6 +1176,48 @@ html.dark .auth-box{background:#1e293b}
         </div>
       </div>
     </div>
+    <!-- ══ SEZIONE ETF (visibile solo per ETF) ══ -->
+    <div id="sd-etf-section" style="display:none">
+
+      <!-- Panoramica -->
+      <div class="sd-section" style="margin-bottom:16px">
+        <div class="sd-section-title" style="display:flex;align-items:center">
+          Panoramica ETF
+          <span class="sd-info-btn">i<div class="sd-tip"><b>TER</b>: costo annuo totale del fondo (Total Expense Ratio). Più basso è meglio.<br><b>AUM</b>: patrimonio gestito totale (Assets Under Management).<br><b>Rend. YTD</b>: rendimento dall'inizio dell'anno.<br><b>P/E Pond.</b>: rapporto prezzo/utili medio ponderato delle posizioni.<br><b>Beta 3A</b>: volatilità vs mercato su 3 anni.</div></span>
+        </div>
+        <div class="sd-mg" style="grid-template-columns:repeat(4,1fr)">
+          <div class="sd-m"><div class="sd-m-lbl">TER (Costo Ann.)</div><div class="sd-m-val" id="etfm-ter">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">AUM (Patrimonio)</div><div class="sd-m-val" id="etfm-aum">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Rendimento YTD</div><div class="sd-m-val" id="etfm-ytd">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Beta 3 anni</div><div class="sd-m-val" id="etfm-beta3">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Categoria</div><div class="sd-m-val" id="etfm-cat">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Emittente</div><div class="sd-m-val" id="etfm-family">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Data lancio</div><div class="sd-m-val" id="etfm-inception">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Struttura</div><div class="sd-m-val" id="etfm-type">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/E Pond.</div><div class="sd-m-val" id="etfm-pe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/B Pond.</div><div class="sd-m-val" id="etfm-pb">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">% Azionario</div><div class="sd-m-val" id="etfm-stock-pos">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">% Obbligaz.</div><div class="sd-m-val" id="etfm-bond-pos">—</div></div>
+        </div>
+      </div>
+
+      <!-- Holdings + Settori affiancati -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="sd-section">
+          <div class="sd-section-title">Top 10 Posizioni</div>
+          <div id="sd-etf-holdings" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
+            <div class="ld">Caricamento...</div>
+          </div>
+        </div>
+        <div class="sd-section">
+          <div class="sd-section-title">Allocazione Settoriale</div>
+          <div id="sd-etf-sectors" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
+            <div class="ld">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Notizie + Descrizione -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="sd-bottom-row">
       <div class="sd-desc-card" style="margin-bottom:0">
