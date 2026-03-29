@@ -4625,10 +4625,11 @@ async function renderPortfolio(){
   const dailyChgMap={};
   dailyItems.forEach(d=>{ dailyChgMap[d.sym]=d.chgPct; });
 
+  const top8Total=top8.reduce((s,e)=>s+e[1],0);
+  const altroUSD=holdingTotalUSD-top8Total;
   const legendRows=`<div style="display:flex;flex-direction:column;gap:0">
     ${top8.map((e,idx)=>{
       const sym=e[0];
-      // Percentuale calcolata su holdingTotalUSD — coerente con i dati del donut
       const cvPct=holdingTotalUSD>0?((holdingCurMap[sym]||0)/holdingTotalUSD*100).toFixed(1):'0.0';
       const cvEUR=(holdingCurMap[sym]||0)/eurUsd;
       return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bd);min-width:0">
@@ -4638,6 +4639,12 @@ async function renderPortfolio(){
         <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t);flex-shrink:0;min-width:28px;text-align:right">${cvPct}%</div>
       </div>`;
     }).join('')}
+    ${altroUSD>0.5?`<div style="display:flex;align-items:center;gap:6px;padding:5px 0;min-width:0">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--bd);flex-shrink:0"></div>
+      <div style="font-size:11px;color:var(--t3);flex:1">Altro</div>
+      <div style="font-size:10px;font-family:var(--fm);color:var(--t3);flex-shrink:0">€${fmt(altroUSD/eurUsd,2)}</div>
+      <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t3);flex-shrink:0;min-width:28px;text-align:right">${holdingTotalUSD>0?(altroUSD/holdingTotalUSD*100).toFixed(1):'0.0'}%</div>
+    </div>`:''}
   </div>`;
 
   // ── Stats — griglia 2 colonne ──
