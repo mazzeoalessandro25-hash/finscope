@@ -4621,9 +4621,6 @@ async function renderPortfolio(){
 
   // ── Legenda donut ──
   const top8=holdingEntries.slice(0,8);
-  // Mappa valore corrente per holding (per % peso attuale)
-  const curValMap={};
-  portfolio.forEach((item,i)=>{ const q=quotes[i]; const fx=(item.currency==='EUR')?eurUsd:1; curValMap[item.sym]=(curValMap[item.sym]||0)+item.qty*(q?.price||item.buyPrice)*fx; });
   // Mappa variazione giornaliera per holding
   const dailyChgMap={};
   dailyItems.forEach(d=>{ dailyChgMap[d.sym]=d.chgPct; });
@@ -4631,8 +4628,9 @@ async function renderPortfolio(){
   const legendRows=`<div style="display:flex;flex-direction:column;gap:0">
     ${top8.map((e,idx)=>{
       const sym=e[0];
-      const cvPct=totalValUSD>0?((curValMap[sym]||0)/totalValUSD*100).toFixed(1):0;
-      const cvEUR=(curValMap[sym]||0)/eurUsd;
+      // Percentuale calcolata su holdingTotalUSD — coerente con i dati del donut
+      const cvPct=holdingTotalUSD>0?((holdingCurMap[sym]||0)/holdingTotalUSD*100).toFixed(1):'0.0';
+      const cvEUR=(holdingCurMap[sym]||0)/eurUsd;
       return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bd);min-width:0">
         <div style="width:8px;height:8px;border-radius:50%;background:${PALETTE[idx%PALETTE.length]};flex-shrink:0"></div>
         <div style="font-size:11px;font-weight:600;color:var(--t);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${sym}</div>
