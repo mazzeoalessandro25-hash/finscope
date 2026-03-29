@@ -1077,13 +1077,30 @@ html.dark .auth-box{background:#1e293b}
           <button class="cc-btn" onclick="loadSdChart(null,'1y',this)">1A</button>
           <button class="cc-btn" onclick="loadSdChart(null,'5y',this)">5A</button>
         </div>
-        <div class="cc-row" style="margin-bottom:10px;gap:4px">
-          <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;align-self:center;margin-right:2px;white-space:nowrap">Indicatori</span>
-          <button class="cc-btn" id="sd-ind-sma20" onclick="toggleSdInd('sma20',this)" title="Media Mobile Semplice 20 periodi" style="color:#f59e0b">SMA20</button>
-          <button class="cc-btn" id="sd-ind-sma50" onclick="toggleSdInd('sma50',this)" title="Media Mobile Semplice 50 periodi" style="color:#8b5cf6">SMA50</button>
-          <button class="cc-btn" id="sd-ind-ema20" onclick="toggleSdInd('ema20',this)" title="Media Mobile Esponenziale 20 periodi" style="color:#06b6d4">EMA20</button>
-          <button class="cc-btn" id="sd-ind-bb" onclick="toggleSdInd('bb',this)" title="Bande di Bollinger (20,2)" style="color:#6366f1">BB</button>
-          <button class="cc-btn" id="sd-ind-rsi" onclick="toggleSdInd('rsi',this)" title="Relative Strength Index 14 periodi" style="color:#8b5cf6">RSI14</button>
+        <div class="cc-row" style="margin-bottom:10px;gap:4px;position:relative">
+          <div class="ind-toggle-btn" style="position:relative">
+            <button class="cc-btn" id="sd-ind-toggle" onclick="toggleIndPanel(event)" style="display:flex;align-items:center;gap:5px">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0"><rect x="1" y="2" width="10" height="1.5" rx=".75" fill="currentColor"/><rect x="1" y="5.25" width="7" height="1.5" rx=".75" fill="currentColor"/><rect x="1" y="8.5" width="5" height="1.5" rx=".75" fill="currentColor"/></svg>
+              Indicatori
+            </button>
+            <span class="ind-badge" id="sd-ind-badge">0</span>
+          </div>
+          <div class="ind-panel" id="sd-ind-panel">
+            <div class="ind-panel-cat">Medie Mobili</div>
+            <div class="ind-panel-row">
+              <button class="cc-btn" id="sd-ind-sma20" onclick="toggleSdInd('sma20',this)" style="color:#f59e0b" title="SMA 20 periodi">SMA20</button>
+              <button class="cc-btn" id="sd-ind-sma50" onclick="toggleSdInd('sma50',this)" style="color:#8b5cf6" title="SMA 50 periodi">SMA50</button>
+              <button class="cc-btn" id="sd-ind-ema20" onclick="toggleSdInd('ema20',this)" style="color:#06b6d4" title="EMA 20 periodi">EMA20</button>
+            </div>
+            <div class="ind-panel-cat">Oscillatori</div>
+            <div class="ind-panel-row">
+              <button class="cc-btn" id="sd-ind-rsi" onclick="toggleSdInd('rsi',this)" style="color:#8b5cf6" title="RSI 14 periodi">RSI 14</button>
+            </div>
+            <div class="ind-panel-cat">Volatilità &amp; Bande</div>
+            <div class="ind-panel-row">
+              <button class="cc-btn" id="sd-ind-bb" onclick="toggleSdInd('bb',this)" style="color:#6366f1" title="Bande di Bollinger (20,2)">Bollinger</button>
+            </div>
+          </div>
         </div>
         <div id="sd-chart" style="width:100%;height:300px"></div>
         <div id="sd-rsi-chart" style="display:none;width:100%;height:80px;margin-top:3px;border-top:1px solid var(--bd)"></div>
