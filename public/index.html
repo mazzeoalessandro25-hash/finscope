@@ -8145,6 +8145,7 @@ function renderSdFinEdgeScore(){
   const sec=document.getElementById('sd-score-section');
   const wrap=document.getElementById('sd-score-wrap');
   if(!sec||!wrap||!sdLastValData)return;
+  if(sdSym&&detectPortCat(sdSym)==='etf'){sec.style.display='none';return;}
   const merged={...sdLastValData,...(sdLastFundData||{})};
   const fss=calcFinEdgeScore(merged,{price:merged.price});
   if(fss.total==null){sec.style.display='none';return;}
