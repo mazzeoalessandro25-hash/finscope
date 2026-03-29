@@ -5989,9 +5989,13 @@ async function loadDividendTracker(){
     const curValEUR=isEUR?curVal:curVal/fxRate;          // in EUR
     const annualIncome=curVal*divYield;                  // nella valuta originale
     const annualIncomeEUR=isEUR?annualIncome:annualIncome/fxRate;
-    // Ritenuta alla fonte: US 15% (trattato IT-US) + 26% italiana = 37.1% eff.
-    // EU: solo 26% italiana.
-    const withholdFactor=isEUR?0.74:0.629;
+    // Ritenuta alla fonte (Italia):
+    // .MI = azione italiana → solo 26% IT → 0.74
+    // .L  = azione UK → 0% UK + 26% IT → 0.74
+    // tutto il resto (US, DE, FR, DK, NL, CH, EU…) → 15% trattato + 26% IT = 37.1% → 0.629
+    const sfx=(item.sym.match(/\.([A-Z0-9]+)$/)||[])[1]||'';
+    const withholdFactor=(sfx==='MI')?0.74:(sfx==='L')?0.74:0.629;
+    const taxLabel=(sfx==='MI')?'IT 26%':(sfx==='L')?'UK 0%+IT 26%':'15%+IT 26%';
     const annualNet=annualIncome*withholdFactor;
     const annualNetEUR=annualIncomeEUR*withholdFactor;
     totalAnnualEUR+=annualIncomeEUR;
