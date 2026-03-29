@@ -5350,17 +5350,25 @@ function renderPortAlloc(items,quotes){
   if(!canvas||!legend)return;
   const PALETTE=['#1A56C4','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#65A30D','#DC2626','#F59E0B','#10B981'];
   let labels=[],values=[];
+  const fxRate=_lastFxRate||1.08;
   if(portAllocView==='cat'){
     const cats={stock:0,etf:0,crypto:0,commodity:0};
     items.forEach((item,i)=>{
       const q=quotes[i];const price=q?.price??item.buyPrice;
+      const fx=(item.currency==='EUR')?fxRate:1;
       const cat=item.cat||detectPortCat(item.sym);
-      cats[cat]=(cats[cat]||0)+item.qty*price;
+      cats[cat]=(cats[cat]||0)+item.qty*price*fx;
     });
     Object.entries(cats).filter(([,v])=>v>0).forEach(([k,v])=>{labels.push(k.charAt(0).toUpperCase()+k.slice(1));values.push(v);});
   } else {
-    const sorted=[...items.map((item,i)=>({sym:item.sym,val:item.qty*(quotes[i]?.price??item.buyPrice)}))].sort((a,b)=>b.val-a.val).slice(0,8);
-    sorted.forEach(e=>{labels.push(e.sym);values.push(e.val);});
+    const valMap={};
+    items.forEach((item,i)=>{
+      const price=quotes[i]?.price??item.buyPrice;
+      const fx=(item.currency==='EUR')?fxRate:1;
+      valMap[item.sym]=(valMap[item.sym]||0)+item.qty*price*fx;
+    });
+    const sorted=Object.entries(valMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    sorted.forEach(([sym,val])=>{labels.push(sym);values.push(val);});
   }
   const total=values.reduce((a,b)=>a+b,0);
   if(portAllocCI){portAllocCI.destroy();portAllocCI=null;}
