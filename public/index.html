@@ -9206,63 +9206,73 @@ function renderTaxDashboard(){
   }
 
   const TAX=0.26;
-  let totalGain=0,totalLoss=0,totalInv=0;
+  const fxRate=_lastFxRate||1.08; // USD→EUR
+  let totalGainEUR=0,totalLossEUR=0,totalInvEUR=0;
   const rows=portfolio.map((item,i)=>{
     const q=quotes[i];const p=q?.price??item.buyPrice;
-    const inv=item.qty*item.buyPrice;const val=item.qty*p;
-    const pnl=val-inv;const pnlPct=inv>0?(pnl/inv*100):0;
-    const isGain=pnl>=0;const tax=isGain?pnl*TAX:0;
-    const cur=item.currency==='EUR'?'€':'$';
-    totalInv+=inv;if(pnl>0)totalGain+=pnl;else totalLoss+=Math.abs(pnl);
-    return{sym:item.sym,inv,val,pnl,pnlPct,isGain,tax,cur,p,qty:item.qty};
+    const isEUR=item.currency==='EUR';
+    const toEUR=isEUR?1:1/fxRate;
+    const cur=isEUR?'€':'$';
+    const inv=item.qty*item.buyPrice;
+    const val=item.qty*p;
+    const pnl=val-inv;
+    const pnlEUR=pnl*toEUR;
+    const invEUR=inv*toEUR;
+    const valEUR=val*toEUR;
+    const pnlPct=inv>0?(pnl/inv*100):0;
+    const isGain=pnl>=0;
+    const taxEUR=isGain?pnlEUR*TAX:0;
+    totalInvEUR+=invEUR;
+    if(pnlEUR>0)totalGainEUR+=pnlEUR;else totalLossEUR+=Math.abs(pnlEUR);
+    return{sym:item.sym,inv,val,invEUR,valEUR,pnl,pnlEUR,pnlPct,isGain,taxEUR,cur,isEUR,p,qty:item.qty,toEUR};
   });
 
-  const netGain=totalGain-totalLoss;
-  const taxable=Math.max(0,netGain);
-  const estTax=taxable*TAX;
-  const netAfterTax=netGain-estTax;
-  const sortedRows=[...rows].sort((a,b)=>b.pnl-a.pnl);
-  const hasLoss=rows.some(r=>r.pnl<0);
-  const hasGain=rows.some(r=>r.pnl>0);
+  const netGainEUR=totalGainEUR-totalLossEUR;
+  const taxableEUR=Math.max(0,netGainEUR);
+  const estTaxEUR=taxableEUR*TAX;
+  const netAfterTaxEUR=netGainEUR-estTaxEUR;
+  const sortedRows=[...rows].sort((a,b)=>b.pnlEUR-a.pnlEUR);
+  const hasLoss=rows.some(r=>r.pnlEUR<0);
+  const hasGain=rows.some(r=>r.pnlEUR>0);
 
   el.innerHTML=`
-    <!-- KPI fiscali -->
+    <!-- KPI fiscali in EUR -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
       <div class="rb">
         <div class="rl">PLUSVALENZE LATENTI</div>
-        <div class="rv2 g" style="font-size:18px">+$${fmt(totalGain,0)}</div>
+        <div class="rv2 g" style="font-size:18px">+€${fmt(totalGainEUR,0)}</div>
         <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">se vendessi tutte le posizioni in gain</div>
       </div>
       <div class="rb">
         <div class="rl">MINUSVALENZE LATENTI</div>
-        <div class="rv2 down" style="font-size:18px">-$${fmt(totalLoss,0)}</div>
+        <div class="rv2 down" style="font-size:18px">-€${fmt(totalLossEUR,0)}</div>
         <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">compensabili per 4 anni fiscali</div>
       </div>
       <div class="rb">
         <div class="rl">GUADAGNO NETTO</div>
-        <div class="rv2 ${netGain>=0?'g':'down'}" style="font-size:18px">${netGain>=0?'+':''}$${fmt(netGain,0)}</div>
+        <div class="rv2 ${netGainEUR>=0?'g':'down'}" style="font-size:18px">${netGainEUR>=0?'+':''}€${fmt(netGainEUR,0)}</div>
         <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">plusvalenze − minusvalenze</div>
       </div>
       <div class="rb">
         <div class="rl">IMPOSTA STIMATA 26%</div>
-        <div class="rv2 down" style="font-size:18px">${estTax>0?'$'+fmt(estTax,0):'—'}</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${estTax>0?'se realizzi tutte le plusvalenze':'Nessuna imposta dovuta'}</div>
+        <div class="rv2 down" style="font-size:18px">${estTaxEUR>0?'€'+fmt(estTaxEUR,0):'—'}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${estTaxEUR>0?'se realizzi tutte le plusvalenze':'Nessuna imposta dovuta'}</div>
       </div>
     </div>
 
-    ${estTax>0?`
+    ${estTaxEUR>0?`
     <!-- Barra imposta -->
     <div style="padding:12px 14px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:11px;margin-bottom:6px">
-        <span style="color:var(--t2)">Guadagno netto lordo</span>
-        <span style="font-weight:700;color:var(--t)">$${fmt(netGain,0)}</span>
+        <span style="color:var(--t2)">Guadagno netto (€)</span>
+        <span style="font-weight:700;color:var(--t)">€${fmt(netGainEUR,0)}</span>
       </div>
       <div style="height:12px;background:var(--g);border-radius:10px;overflow:hidden;position:relative">
         <div style="height:12px;width:26%;background:#DC2626;border-radius:0 10px 10px 0;position:absolute;right:0"></div>
       </div>
       <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;margin-top:5px">
-        <span style="color:var(--g)">■ Netto dopo tasse: $${fmt(netAfterTax,0)} (${fmt(100-TAX*100,0)}%)</span>
-        <span style="color:var(--r)">■ Imposta: $${fmt(estTax,0)} (26%)</span>
+        <span style="color:var(--g)">■ Netto dopo tasse: €${fmt(netAfterTaxEUR,0)} (74%)</span>
+        <span style="color:var(--r)">■ Imposta: €${fmt(estTaxEUR,0)} (26%)</span>
       </div>
     </div>`:''}
 
@@ -9271,27 +9281,27 @@ function renderTaxDashboard(){
     <div style="padding:12px 14px;background:var(--o2);border:1px solid #FCD34D;border-radius:8px;border-left:3px solid var(--o);margin-bottom:14px">
       <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:6px">💡 Opportunità Tax-Loss Harvesting</div>
       <div style="font-size:11px;color:#92400E;line-height:1.6;font-family:var(--fm)">
-        Hai <strong>${rows.filter(r=>r.pnl<0).length} posizioni in perdita</strong> (totale -$${fmt(totalLoss,0)}) che puoi realizzare per compensare le plusvalenze.
-        Risparmio fiscale stimato: <strong>$${fmt(Math.min(totalLoss,totalGain)*TAX,0)}</strong>.
+        Hai <strong>${rows.filter(r=>r.pnlEUR<0).length} posizioni in perdita</strong> (totale -€${fmt(totalLossEUR,0)}) che puoi realizzare per compensare le plusvalenze.
+        Risparmio fiscale stimato: <strong>€${fmt(Math.min(totalLossEUR,totalGainEUR)*TAX,0)}</strong>.
         Le minusvalenze sono utilizzabili per i successivi <strong>4 anni fiscali</strong> (Regime Dichiarativo/Amministrato).
       </div>
     </div>`:''}
 
     <!-- Dettaglio per titolo -->
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo (P&amp;L convertito in €)</div>
     ${sortedRows.map(r=>`
     <div class="tax-row">
       <div>
         <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${r.sym}</div>
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">${r.qty} az · ${r.cur}${fmt(r.p,r.p<10?3:2)} · costo ${r.cur}${fmt(r.inv,0)}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">${r.qty} az · ${r.cur}${fmt(r.p,r.p<10?3:2)}${!r.isEUR?` (€${fmt(r.p/fxRate,r.p/fxRate<10?3:2)})`:''}  · costo €${fmt(r.invEUR,0)}</div>
       </div>
       <div><span class="tax-badge ${r.isGain?'gain':'loss'}">${r.isGain?'PLUS':'MINUS'}</span></div>
       <div style="text-align:right">
-        <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${r.isGain?'var(--g)':'var(--r)'}">${r.pnl>=0?'+':''}${r.cur}${fmt(r.pnl,0)}</div>
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${r.pnlPct>=0?'+':''}${fmt(r.pnlPct,1)}%</div>
+        <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${r.isGain?'var(--g)':'var(--r)'}">${r.pnlEUR>=0?'+':''}€${fmt(r.pnlEUR,0)}</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${r.pnlPct>=0?'+':''}${fmt(r.pnlPct,1)}%${!r.isEUR?` · ${r.cur}${fmt(r.pnl,0)}`:''}  </div>
       </div>
       <div style="text-align:right">
-        ${r.isGain?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;color:var(--r)">-${r.cur}${fmt(r.tax,0)} imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">se realizzi oggi</div>`:`<div style="font-family:var(--fm);font-size:11px;color:var(--g)">Nessuna imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">compensazione 4 anni</div>`}
+        ${r.isGain?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;color:var(--r)">-€${fmt(r.taxEUR,0)} imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">se realizzi oggi</div>`:`<div style="font-family:var(--fm);font-size:11px;color:var(--g)">Nessuna imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">compensazione 4 anni</div>`}
       </div>
     </div>`).join('')}
 
