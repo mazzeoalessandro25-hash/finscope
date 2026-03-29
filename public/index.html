@@ -6428,9 +6428,12 @@ function renderPortAnalysis(portItems, quotes){
     </div>
 
     <!-- What-If Optimizer -->
-    <div style="margin-top:20px;border-top:1px solid var(--bd);padding-top:16px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px">⚡ What-If Optimizer</div>
-      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:12px">Simula la sostituzione di un titolo con un altro e vedi come cambia il profilo del portafoglio in tempo reale.</div>
+    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:12px">
+      <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.wi-arrow').textContent=this.nextElementSibling.style.display==='none'?'▸':'▾'" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:0;width:100%">
+        <span style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">⚡ What-If Optimizer</span>
+        <span class="wi-arrow" style="font-size:10px;color:var(--t3);margin-left:auto">▸</span>
+      </button>
+      <div style="display:none;margin-top:10px">
       <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px">
         <div style="flex:1;min-width:120px">
           <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">RIMUOVI TICKER</div>
