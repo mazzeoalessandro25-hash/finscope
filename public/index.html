@@ -6915,14 +6915,21 @@ async function exportPortfolioPDF(){
 
   const fmtN=(v,d=0)=>v==null?'—':v.toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g,',');
 
-  drawKpi(0,'VALORE PORTAFOGLIO (USD)','$ '+fmtN(totalUSDval,0)+(totalEURval>0?' + € '+fmtN(totalEURval,0):''), nPos+' posizioni', DARK);
-  drawKpi(1,'P&L TOTALE',(up?'+':'')+fmtN(pnlPctTot,2)+'%',(up?'+':'')+(pnlUSD>0?'$ ':'')+fmtN(pnlUSD,0)+(pnlEUR>0?' + € '+fmtN(pnlEUR,0):''), up?GREEN:RED);
-  drawKpi(2,'VARIAZIONE GIORNALIERA',(dailyUp?'+':'')+fmtN(totalDailyUSD,2)+' $','', dailyUp?GREEN:RED);
+  const fx=_lastFxRate||1.08;
+  const totalValEUR_pdf=totalEURval+totalUSDval/fx;
+  const totalInvEUR_pdf=totalEURinv+totalUSDinv/fx;
+  const pnlEUR_pdf=totalValEUR_pdf-totalInvEUR_pdf;
+  const valEURstr='€ '+fmtN(totalEURval,2)+(totalUSDval>0?'  +  $ '+fmtN(totalUSDval,2):'');
+  const invEURstr='€ '+fmtN(totalEURinv,2)+(totalUSDinv>0?'  +  $ '+fmtN(totalUSDinv,2):'');
+  const pnlEURstr=(pnlEUR_pdf>=0?'+':'')+'€ '+fmtN(Math.abs(pnlEUR_pdf),2);
+  drawKpi(0,'VALORE TOTALE PORTAFOGLIO',valEURstr, nPos+' posizioni', DARK);
+  drawKpi(1,'P&L TOTALE',pnlEURstr,(up?'+':'')+fmtN(pnlPctTot,2)+'%  ·  equiv. € '+fmtN(pnlEUR_pdf,2), up?GREEN:RED);
+  drawKpi(2,'VARIAZIONE GIORNALIERA',(dailyUp?'+':'')+fmtN(totalDailyUSD/fx,2)+' €','≈ '+(dailyUp?'+':'')+fmtN(totalDailyUSD,2)+' $', dailyUp?GREEN:RED);
   drawKpi(3,'TITOLI',nPos+' totali',nGain+' in guadagno · '+nLoss+' in perdita', DARK);
-  drawKpi(4,'INVESTITO (USD)',(totalUSDinv>0?'$ '+fmtN(totalUSDinv,0):'—')+(totalEURinv>0?' + € '+fmtN(totalEURinv,0):''),'',GRAY);
+  drawKpi(4,'CAPITALE INVESTITO',invEURstr,'', GRAY);
   drawKpi(5,'MIGLIOR POSIZIONE',bestSym,bestPct>-Infinity?(bestPct>=0?'+':'')+bestPct.toFixed(2)+'%':'—',GREEN);
   drawKpi(6,'PEGGIOR POSIZIONE',worstSym,worstPct<Infinity?(worstPct>=0?'+':'')+worstPct.toFixed(2)+'%':'—',RED);
-  drawKpi(7,'EUR/USD',fmtN(_lastFxRate||1.08,4),'tasso corrente',GRAY);
+  drawKpi(7,'EUR/USD',fmtN(fx,4),'tasso corrente',GRAY);
 
   // ── TITOLO TABELLA ──
   const tblTitleY=kpiY+2*(kpiH+kpiGap)+5;
