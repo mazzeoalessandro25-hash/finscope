@@ -6048,7 +6048,7 @@ async function loadDividendTracker(){
     ${rows.map(r=>`<div class="div-row">
       <div>
         <div style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px">${r.sym}</div>
-        <div style="font-size:10px;color:var(--t3)">${r.qty} pz · ${r.currency==='EUR'?'EU (26%)':'US (15%+26%)'}</div>
+        <div style="font-size:10px;color:var(--t3)">${r.qty} pz · ${r.taxLabel}</div>
       </div>
       <div style="text-align:center">
         <div style="color:var(--g);font-weight:700;font-family:var(--fm);font-size:12px">${fmt(r.divYield*100,2)}%</div>
