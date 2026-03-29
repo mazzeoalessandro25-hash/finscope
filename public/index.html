@@ -6208,6 +6208,32 @@ function donutLegend(entries,palette){
     </div>`).join('')+`</div>`;
 }
 
+// Semicerchio gauge (contachilometri) — breve/medio/lungo termine
+function svgGauge(score,label,sublabel){
+  const r=56,cx=80,cy=80;
+  const C2=2*Math.PI*r,Cs=Math.PI*r;
+  const pct=Math.max(0,Math.min(Math.round(score),100));
+  const active=pct/100*Cs;
+  const col=pct>=67?'#10B981':pct>=34?'#F59E0B':'#EF4444';
+  const sig=pct>=67?'COMPRA':pct>=34?'NEUTRALE':'VENDI';
+  const ang=(1-pct/100)*Math.PI;
+  const nx=(cx+48*Math.cos(ang)).toFixed(1);
+  const ny=(cy-48*Math.sin(ang)).toFixed(1);
+  const activeArc=active>1?'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="12" stroke-dasharray="'+active.toFixed(1)+' '+(C2-active).toFixed(1)+'" stroke-linecap="round" transform="rotate(180 '+cx+' '+cy+')"/>':'';
+  return'<div style="text-align:center">'+
+    '<svg width="160" height="88" viewBox="0 0 160 88">'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="none" stroke="var(--bd)" stroke-width="12" stroke-dasharray="'+Cs.toFixed(1)+' '+Cs.toFixed(1)+'" stroke-linecap="round" transform="rotate(180 '+cx+' '+cy+')"/>'+
+    activeArc+
+    '<line x1="'+cx+'" y1="'+cy+'" x2="'+nx+'" y2="'+ny+'" stroke="var(--t)" stroke-width="2.5" stroke-linecap="round"/>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="4" fill="var(--t)"/>'+
+    '<text x="'+cx+'" y="'+(cy-18)+'" text-anchor="middle" font-size="18" font-weight="700" fill="'+col+'" font-family="IBM Plex Mono">'+pct+'</text>'+
+    '</svg>'+
+    '<div style="font-size:11px;font-weight:700;color:'+col+';font-family:var(--fm);margin-top:-6px">'+sig+'</div>'+
+    '<div style="font-size:11px;font-weight:600;color:var(--t);font-family:var(--fm);margin-top:3px">'+label+'</div>'+
+    (sublabel?'<div style="font-size:9px;color:var(--t3);font-family:var(--fm)">'+sublabel+'</div>':'')+
+    '</div>';
+}
+
 function renderPortAnalysis(portItems, quotes){
   const el=document.getElementById('port-analysis-content');
   if(!el)return;
