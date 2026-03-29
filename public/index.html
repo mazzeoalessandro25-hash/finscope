@@ -6032,18 +6032,21 @@ async function loadDividendTracker(){
     ${rows.map(r=>`<div class="div-row">
       <div>
         <div style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px">${r.sym}</div>
-        <div style="font-size:10px;color:var(--t3)">${r.qty} pz · Valore ${r.curSym}${fmt(r.curVal,0)}</div>
+        <div style="font-size:10px;color:var(--t3)">${r.qty} pz · ${r.currency==='EUR'?'EU (26%)':'US (15%+26%)'}</div>
       </div>
       <div style="text-align:center">
         <div style="color:var(--g);font-weight:700;font-family:var(--fm);font-size:12px">${fmt(r.divYield*100,2)}%</div>
-        <div style="font-size:9px;color:var(--t3)">yield</div>
+        <div style="font-size:9px;color:var(--t3)">yield lordo</div>
       </div>
       <div style="text-align:right">
-        <div style="color:var(--t);font-weight:600;font-family:var(--fm);font-size:12px">${r.curSym}${fmt(r.annualIncome,2)}/anno</div>
-        <div style="font-size:10px;color:var(--t3)">${r.curSym}${fmt(r.quarterly,2)}/trimestre</div>
+        <div style="color:var(--t);font-weight:600;font-family:var(--fm);font-size:12px">${r.curSym}${fmt(r.annualIncome,2)}/a lordo</div>
+        <div style="font-size:10px;color:var(--g);font-family:var(--fm);font-weight:600">${r.curSym}${fmt(r.annualNet,2)}/a netto</div>
+        <div style="font-size:9px;color:var(--t3)">eff. ${fmt((1-r.withholdFactor)*100,0)}% tasse</div>
       </div>
     </div>`).join('')}
-    <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Stime basate sul dividend yield attuale e valore di mercato · Mesi di pagamento approssimati · Non garantiti</div>`;
+    <div style="margin-top:8px;padding:10px;background:var(--s2);border-radius:8px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.7">
+      Lordo → Netto: <strong>Azioni US</strong>: ritenuta USA 15% (trattato IT-US) + 26% italiana = 37.1% effettivo. <strong>Azioni EU/IT</strong>: solo 26% italiana. Stime indicative, non sostituiscono consulenza fiscale.
+    </div>`;
 
   // ── DRIP Simulator ──
   const portVal=portfolio.reduce((s,item,i)=>s+item.qty*(quotes[i]?.price??item.buyPrice),0);
