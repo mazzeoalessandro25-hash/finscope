@@ -122,6 +122,12 @@ nav{height:54px;background:var(--b2);
 .sym-sel:focus{border-color:var(--b)}
 .chart-type-btn{background:none;border:1px solid var(--bd);color:var(--t2);font-family:var(--fm);font-size:10px;padding:3px 9px;border-radius:5px;cursor:pointer;transition:all .15s}
 .chart-type-btn.active{background:var(--b3);color:var(--b);border-color:rgba(26,86,196,.3)}
+.ind-panel{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:300;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;box-shadow:0 8px 24px rgba(0,0,0,.14);min-width:210px}
+.ind-panel-cat{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:6px;margin-top:10px}
+.ind-panel-cat:first-child{margin-top:0}
+.ind-panel-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:2px}
+.ind-toggle-btn{position:relative}
+.ind-toggle-btn .ind-badge{display:none;position:absolute;top:-5px;right:-5px;background:var(--b);color:#fff;border-radius:8px;font-size:8px;font-family:var(--fm);font-weight:700;padding:0 4px;line-height:14px;min-width:14px;text-align:center;pointer-events:none}
 
 /* MARKET LIST */
 .mi{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer;transition:background .12s;margin-bottom:2px}
