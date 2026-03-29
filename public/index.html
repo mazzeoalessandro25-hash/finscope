@@ -3165,7 +3165,7 @@ async function loadMovers(){
 function drawSparkline(svgId, pts, up){
   const el=document.getElementById(svgId);
   if(!el||!pts||pts.length<2)return;
-  const W=parseInt(el.getAttribute('width'))||72;
+  const W=el.clientWidth||el.getBoundingClientRect().width||parseInt(el.getAttribute('width'))||72;
   const H=parseInt(el.getAttribute('height'))||36;
   const pad=2;
   const vals=pts.map(p=>p.close).filter(v=>v!=null&&!isNaN(v));
