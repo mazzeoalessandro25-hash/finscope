@@ -4322,6 +4322,7 @@ async function addPortfolioItem(){
 
   const buyDate=document.getElementById('port-date').value||new Date().toISOString().split('T')[0];
   portfolio.push({sym,qty,buyPrice:price,currency,symbol:csym,cat,name,addedAt:Date.now(),buyDate});
+  _logTransaction('buy',sym,qty,price,currency);
   if(searchEl)searchEl.value='';
   hidePortDropdown();
   document.getElementById('port-qty').value='';
