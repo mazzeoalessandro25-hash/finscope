@@ -4557,8 +4557,6 @@ async function renderPortfolio(){
   const dailyValBefore=totalValUSD-dailyPnlUSD;
   const dailyPnlPct=dailyValBefore>0?(dailyPnlUSD/dailyValBefore*100):0;
   const dailyUp=dailyPnlUSD>=0;
-  setS('psb-oggi',(dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
-  // Aggiorna anche il badge nella card full-width
   setS('psb-oggi-inline',(dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
   // Mostra la card full-width giornata
   const dailyOuter=document.getElementById('port-daily-outer');
