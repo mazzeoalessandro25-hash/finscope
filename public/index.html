@@ -7721,6 +7721,130 @@ let sdSym='', sdRange='1mo', sdType='candle', sdChartInst=null, sdPriceTimer=nul
 let sdLastValData=null, sdLastFundData=null;
 let sdIndicators=new Set(), sdIndSeries={}, sdRsiInst=null, sdLastPts=null;
 
+const SECTOR_NAMES_IT={
+  technology:'Tecnologia',financialServices:'Finanziari',healthcare:'Salute',
+  consumerCyclical:'Cons. Ciclici',consumerDefensive:'Cons. Difensivi',
+  industrials:'Industriali',energy:'Energia',communicationServices:'Comunicazioni',
+  utilities:'Utilities',realestate:'Immobiliare',basicMaterials:'Mat. Prime',
+};
+
+function adaptOverlayForAssetType(sym){
+  const isETF=detectPortCat(sym)==='etf';
+  const show=(id,v)=>{const e=document.getElementById(id);if(e)e.style.display=v?'':'none';};
+  show('sd-analyst-section',!isETF);
+  show('sd-funds-section',!isETF);
+  show('sd-row-emp',!isETF);
+  show('sd-row-short',!isETF);
+  const etfSec=document.getElementById('sd-etf-section');
+  if(etfSec)etfSec.style.display=isETF?'block':'none';
+  const ct=document.getElementById('sd-company-title');
+  if(ct)ct.textContent=isETF?"Informazioni sull'ETF":"Sull'azienda";
+  if(isETF){
+    ['etfm-ter','etfm-aum','etfm-ytd','etfm-beta3','etfm-cat','etfm-family',
+     'etfm-inception','etfm-type','etfm-pe','etfm-pb','etfm-stock-pos','etfm-bond-pos'
+    ].forEach(id=>{const e=document.getElementById(id);if(e){e.textContent='···';e.className='sd-m-val';}});
+    const h=document.getElementById('sd-etf-holdings');
+    if(h)h.innerHTML='<div class="ld">Caricamento...</div>';
+    const s=document.getElementById('sd-etf-sectors');
+    if(s)s.innerHTML='<div class="ld">Caricamento...</div>';
+  }
+}
+
+function renderETFData(etf){
+  if(!etf)return;
+  // TER
+  const terEl=document.getElementById('etfm-ter');
+  if(terEl){
+    if(etf.ter!=null){
+      terEl.textContent=(etf.ter*100).toFixed(2)+'%';
+      terEl.className='sd-m-val '+(etf.ter<0.002?'up':etf.ter<0.006?'':'down');
+    }else terEl.textContent='—';
+  }
+  // AUM
+  sdSet('etfm-aum',etf.aum?fmtLg(etf.aum):'—');
+  // YTD
+  const ytdEl=document.getElementById('etfm-ytd');
+  if(ytdEl){
+    if(etf.ytdReturn!=null){
+      const p=etf.ytdReturn*100;
+      ytdEl.textContent=(p>=0?'+':'')+p.toFixed(2)+'%';
+      ytdEl.className='sd-m-val '+(p>=0?'up':'down');
+    }else ytdEl.textContent='—';
+  }
+  // Beta 3Y
+  sdSet('etfm-beta3',etf.beta3Year!=null?fmt(etf.beta3Year,2):'—');
+  // Category / family / type
+  sdSet('etfm-cat',etf.category||'—');
+  sdSet('etfm-family',etf.fundFamily||'—');
+  sdSet('etfm-type',etf.legalType||'ETF');
+  // Inception date
+  if(etf.inceptionDate){
+    try{sdSet('etfm-inception',new Date(etf.inceptionDate).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'}));}
+    catch{sdSet('etfm-inception','—');}
+  }else sdSet('etfm-inception','—');
+  // Equity ratios
+  if(etf.equityHoldings){
+    sdSet('etfm-pe',etf.equityHoldings.priceToEarnings!=null?fmt(etf.equityHoldings.priceToEarnings,1):'—');
+    sdSet('etfm-pb',etf.equityHoldings.priceToBook!=null?fmt(etf.equityHoldings.priceToBook,2):'—');
+  }
+  // Allocation %
+  const pos=(v)=>v!=null?fmt(v*100,1)+'%':'—';
+  sdSet('etfm-stock-pos',pos(etf.stockPosition));
+  sdSet('etfm-bond-pos',pos(etf.bondPosition));
+
+  // ── Top 10 Holdings ──
+  const holdEl=document.getElementById('sd-etf-holdings');
+  if(holdEl){
+    if(etf.holdings&&etf.holdings.length){
+      const maxP=etf.holdings[0]?.holdingPercent||0.01;
+      holdEl.innerHTML=etf.holdings.slice(0,10).map((h,i)=>{
+        const p=h.holdingPercent||0;
+        const bw=Math.min(100,(p/maxP)*100).toFixed(0);
+        return`<div style="display:flex;align-items:center;gap:8px;font-size:11px;line-height:1.3">
+          <span style="color:var(--t3);font-family:var(--fm);width:14px;text-align:right;flex-shrink:0;font-size:10px">${i+1}</span>
+          <span style="font-weight:700;font-family:var(--fm);width:46px;flex-shrink:0;color:var(--t);font-size:11px">${h.symbol||'—'}</span>
+          <span style="color:var(--t2);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${h.holdingName||''}</span>
+          <span style="font-weight:600;color:var(--t);width:38px;text-align:right;flex-shrink:0">${(p*100).toFixed(2)}%</span>
+          <div style="width:64px;height:4px;background:var(--bd);border-radius:2px;flex-shrink:0">
+            <div style="height:100%;width:${bw}%;background:var(--b);border-radius:2px;transition:width .4s"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }else{
+      holdEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati non disponibili per questo ETF.</div>';
+    }
+  }
+
+  // ── Sector Allocation ──
+  const sectEl=document.getElementById('sd-etf-sectors');
+  if(sectEl){
+    if(etf.sectorWeightings&&etf.sectorWeightings.length){
+      const sectors=etf.sectorWeightings
+        .map(s=>{const k=Object.keys(s)[0];return{name:SECTOR_NAMES_IT[k]||k,pct:(s[k]||0)*100};})
+        .filter(s=>s.pct>0.1)
+        .sort((a,b)=>b.pct-a.pct)
+        .slice(0,10);
+      if(sectors.length){
+        const maxP=sectors[0].pct;
+        sectEl.innerHTML=sectors.map(s=>{
+          const bw=Math.min(100,(s.pct/maxP)*100).toFixed(0);
+          return`<div style="display:flex;align-items:center;gap:8px;font-size:11px;line-height:1.3">
+            <span style="color:var(--t2);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name}</span>
+            <span style="font-weight:600;color:var(--t);width:38px;text-align:right;flex-shrink:0">${s.pct.toFixed(1)}%</span>
+            <div style="width:64px;height:4px;background:var(--bd);border-radius:2px;flex-shrink:0">
+              <div style="height:100%;width:${bw}%;background:var(--b);border-radius:2px;transition:width .4s"></div>
+            </div>
+          </div>`;
+        }).join('');
+      }else{
+        sectEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati non disponibili.</div>';
+      }
+    }else{
+      sectEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati non disponibili per questo ETF.</div>';
+    }
+  }
+}
+
 function openStockDetail(sym){
   sdSym=sym; sdRange='1mo'; sdType='candle';
   sdLastValData=null; sdLastFundData=null;
