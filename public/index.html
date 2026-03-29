@@ -1250,12 +1250,12 @@ html.dark .auth-box{background:#1e293b}
     <!-- Notizie + Descrizione -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="sd-bottom-row">
       <div class="sd-desc-card" style="margin-bottom:0">
-        <div class="sd-section-title" id="sd-company-title">Sull'azienda</div>
+        <div class="sd-section-title" style="display:flex;align-items:center" id="sd-company-title">Sull'azienda<span class="sd-info-btn">i<div class="sd-tip">Descrizione del business e attività principale dell'azienda. Include settore, industria e sito web ufficiale.</div></span></div>
         <div class="sd-desc-txt" id="sd-description">Caricamento...</div>
         <div style="margin-top:10px" id="sd-website"></div>
       </div>
       <div class="sd-desc-card" style="margin-bottom:0">
-        <div class="sd-section-title">Ultime notizie</div>
+        <div class="sd-section-title" style="display:flex;align-items:center">Ultime notizie<span class="sd-info-btn">i<div class="sd-tip">Notizie recenti relative all'azienda, aggregate da Finnhub e Yahoo Finance. Filtrate per rilevanza per evitare notizie generiche di mercato.</div></span></div>
         <div id="sd-news-list" style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
           <div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento...</div>
         </div>
