@@ -99,6 +99,12 @@ nav{height:54px;background:var(--b2);
 .ch{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:10px;flex-wrap:wrap}
 .ct{font-size:13px;font-weight:600;color:var(--t)}
 .cs{font-size:11px;color:var(--t3);font-family:var(--fm);margin-top:2px}
+/* INFO TOOLTIP */
+.info-icon{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:var(--bd);color:var(--t3);font-size:9px;font-family:var(--fm);font-weight:700;cursor:help;margin-left:5px;vertical-align:middle;position:relative;flex-shrink:0;line-height:1;border:1px solid var(--bd);transition:background .15s}
+.info-icon:hover{background:var(--b);color:#fff;border-color:var(--b)}
+.info-icon .info-tip{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;min-width:200px;max-width:280px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.5;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.15);pointer-events:none;white-space:normal;text-align:left}
+.info-icon:hover .info-tip{display:block}
+.info-icon .info-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--bd)}
 
 /* DASH GRID */
 .dash-charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
