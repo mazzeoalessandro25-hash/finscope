@@ -4795,12 +4795,6 @@ function selectPortAsset(idx,silent){
 async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValUSD, force=false){
   const el = document.getElementById('port-daily-text');
   if(!el) return;
-  // Non aggiornare il riepilogo nel weekend (mercati chiusi)
-  const dow = new Date().getDay();
-  if(dow === 0 || dow === 6){
-    el.innerHTML=`<div style="text-align:center;padding:20px;color:var(--t3)"><div style="font-size:28px;margin-bottom:8px">🏖️</div><div style="font-size:13px;font-weight:600;color:var(--t);margin-bottom:4px">Mercati chiusi</div><div style="font-size:11px;font-family:var(--fm)">Il riepilogo mercati è disponibile<br>nei giorni feriali (lun–ven)</div></div>`;
-    return;
-  }
   const today = new Date().toISOString().slice(0,10);
   const key = today+'_'+assets.map(a=>a.sym).sort().join(',');
   const cached = !force && sessionStorage.getItem('portDaily_'+key);
