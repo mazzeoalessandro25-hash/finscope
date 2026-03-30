@@ -5073,10 +5073,10 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
         : `Il portafoglio chiude in territorio positivo con un progresso del ${absPct}% (+€${absEUR}). Un guadagno moderato ma coerente con il tono della seduta. `;
   else
     portText+=totalChgPct<-2
-      ? `Giornata difficile per il portafoglio, che subisce una flessione del ${absPct}% (−$${absUSD}). Perdite di questa entità in una singola seduta meritano attenzione, anche se è importante contestualizzarle nel trend di medio periodo prima di trarre conclusioni affrettate. `
+      ? `Giornata difficile per il portafoglio, che subisce una flessione del ${absPct}% (−€${absEUR}). Perdite di questa entità in una singola seduta meritano attenzione, anche se è importante contestualizzarle nel trend di medio periodo prima di trarre conclusioni affrettate. `
       : totalChgPct<-1
-        ? `Il portafoglio registra un calo del ${absPct}% (−$${absUSD}) nella seduta odierna. Una correzione moderata che, se non accompagnata da un deterioramento dei fondamentali, rientra nella normale volatilità di mercato. `
-        : `Leggera correzione per il portafoglio: −${absPct}% (−$${absUSD}). Un movimento contenuto che non altera in modo sostanziale il quadro complessivo. `;
+        ? `Il portafoglio registra un calo del ${absPct}% (−€${absEUR}) nella seduta odierna. Una correzione moderata che, se non accompagnata da un deterioramento dei fondamentali, rientra nella normale volatilità di mercato. `
+        : `Leggera correzione per il portafoglio: −${absPct}% (−€${absEUR}). Un movimento contenuto che non altera in modo sostanziale il quadro complessivo. `;
 
   // Ampiezza della performance: quanti titoli hanno partecipato
   if(nUp===tot)
