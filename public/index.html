@@ -5272,6 +5272,22 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   // ── SEZIONE 1: Contesto di mercato ──
   let macro='';
 
+  // Riga dati chiave indici
+  if(equityVals.length||gcC!=null||clC!=null){
+    const _kdi=[];
+    if(spC!=null&&sp?.price)  _kdi.push(`S&P 500 <strong>${fmt(sp.price,0)} pt</strong> (${s(spC)})`);
+    if(nqC!=null&&nq?.price)  _kdi.push(`Nasdaq <strong>${fmt(nq.price,0)} pt</strong> (${s(nqC)})`);
+    if(djC!=null&&dj?.price)  _kdi.push(`Dow <strong>${fmt(dj.price,0)} pt</strong> (${s(djC)})`);
+    if(gcC!=null&&gc?.price)  _kdi.push(`Oro <strong>$${fmt(gc.price,1)}</strong> (${s(gcC)})`);
+    if(clC!=null&&cl?.price)  _kdi.push(`Petrolio <strong>$${fmt(cl.price,1)}</strong> (${s(clC)})`);
+    if(_kdi.length) macro+=`• ${_kdi.join(' · ')}\n`;
+  }
+  // EUR/USD rate context
+  if(_lastFxRate){
+    const _fxUp=_lastFxRate>1.05;
+    macro+=`• EUR/USD: <strong>${fmt(_lastFxRate,4)}</strong> — ${_fxUp?'Euro forte rispetto al dollaro':'Dollaro in posizione di forza sull\'euro'}\n`;
+  }
+
   // Sentimento generale con lettura più ampia
   if(equityVals.length){
     if(avgIdx>1.5)       macro+='La seduta odierna è stata chiaramente dominata dagli acquirenti: i principali indici azionari hanno messo a segno guadagni consistenti, con un sentiment di mercato decisamente orientato al rischio. Giornate di questo tipo riflettono solitamente una combinazione di dati macro favorevoli, aspettative positive sugli utili aziendali o una riduzione delle tensioni geopolitiche. ';
