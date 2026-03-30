@@ -1456,6 +1456,8 @@ html.dark .auth-box{background:#1e293b}
           <div class="ind-panel-cat">Oscillatori</div>
           <div class="ind-panel-row">
             <button class="cc-btn" id="ch1-ind-rsi" onclick="toggleDashInd(1,'rsi',this)" style="color:#8b5cf6">RSI 14</button>
+            <button class="cc-btn" id="ch1-ind-macd" onclick="toggleDashInd(1,'macd',this)" style="color:#f43f5e">MACD</button>
+            <button class="cc-btn" id="ch1-ind-stoch" onclick="toggleDashInd(1,'stoch',this)" style="color:#0ea5e9">Stoch</button>
           </div>
           <div class="ind-panel-cat">Volatilità &amp; Bande</div>
           <div class="ind-panel-row">
@@ -1465,6 +1467,8 @@ html.dark .auth-box{background:#1e293b}
       </div>
       <div id="dashChart1" style="width:100%;height:300px"></div>
       <div id="dashRsi1" style="display:none;width:100%;height:80px;margin-top:3px;border-top:1px solid var(--bd)"></div>
+      <div id="dashMacd1" style="display:none;width:100%;height:80px;margin-top:3px;border-top:1px solid var(--bd)"></div>
+      <div id="dashStoch1" style="display:none;width:100%;height:70px;margin-top:3px;border-top:1px solid var(--bd)"></div>
     </div>
 
     <!-- Grafico 2 -->
