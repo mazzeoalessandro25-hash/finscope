@@ -6995,62 +6995,90 @@ async function loadPortTargets(){
   // Valuta prevalente: se tutti EUR usa €, altrimenti $
   const mainCur=portfolio.every(it=>it.currency==='EUR')?'€':'$';
 
+  // EUR conversion helper
+  const fxR=_lastFxRate||1.08;
+  const _toEUR=(val,cur)=>val!=null?(cur==='EUR'?val:val/fxR):null;
+  const totalCurValEUR=rows.reduce((s,r)=>s+(_toEUR(r.curVal,r.item.currency)||0),0);
+  const totalTargetValEUR=coverageCount>0?rows.filter(r=>r.targetVal!=null).reduce((s,r)=>s+(_toEUR(r.targetVal,r.item.currency)||0),0):null;
+  const totalInvEUR2=rows.reduce((s,r)=>s+(_toEUR(r.invested,r.item.currency)||0),0);
+  const totalGainEUR=totalTargetValEUR!=null?totalTargetValEUR-totalCurValEUR:null;
+  const totalUpsideEUR=totalCurValEUR>0&&totalGainEUR!=null?(totalGainEUR/totalCurValEUR*100):null;
+  const totalPnlEUR2=totalCurValEUR-totalInvEUR2;
+  const totalPnlPct2=totalInvEUR2>0?(totalPnlEUR2/totalInvEUR2*100):null;
+
   el.innerHTML=`
-    <div class="port-target-summary">
-      <div>
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;letter-spacing:.5px">VALORE ATTUALE</div>
-        <div style="font-size:20px;font-weight:700;color:var(--t);font-family:var(--fm)">${mainCur}${fmt(totalCurVal,0)}</div>
-        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Investito ${mainCur}${fmt(totalInv,0)}</div>
+    <!-- Summary totale in EUR -->
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px 14px">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Valore attuale</div>
+        <div style="font-size:20px;font-weight:700;color:var(--t);font-family:var(--fm)">€${fmt(totalCurValEUR,0)}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px">Investito €${fmt(totalInvEUR2,0)}</div>
+        <div style="font-size:11px;font-family:var(--fm);margin-top:4px;color:${totalPnlEUR2>=0?'var(--g)':'var(--r)'}">P&L ${totalPnlEUR2>=0?'+':''}€${fmt(totalPnlEUR2,0)} (${totalPnlEUR2>=0?'+':''}${fmt(totalPnlPct2||0,1)}%)</div>
       </div>
-      <div style="text-align:center">
-        <div style="font-size:22px;color:var(--t3)">→</div>
-        <div style="font-size:10px;font-family:var(--fm);color:var(--t3)">${coverage}% copertura</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">12 mesi</div>
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:4px">
+        <div style="font-size:24px;color:var(--t3)">→</div>
+        <div style="font-size:11px;font-family:var(--fm);color:var(--t3);font-weight:600">${coverage}% copertura</div>
+        <div style="font-size:10px;font-family:var(--fm);color:var(--t3)">Proiezione 12 mesi</div>
+        ${totalUpsideEUR!=null?`<div style="font-size:12px;font-family:var(--fm);font-weight:700;color:${totalUpsideEUR>=0?'var(--g)':'var(--r)'}">Upside ${totalUpsideEUR>=0?'+':''}${fmt(totalUpsideEUR,1)}%</div>`:''}
       </div>
-      <div style="text-align:right">
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;letter-spacing:.5px">TARGET ANALISTI</div>
-        <div style="font-size:20px;font-weight:700;font-family:var(--fm);color:${totalUpside==null?'var(--t)':totalUpside>=0?'var(--g)':'var(--r)'}">${totalTargetVal>0?mainCur+fmt(totalTargetVal,0):'—'}</div>
-        <div style="font-size:11px;font-family:var(--fm);color:${totalUpside==null?'var(--t3)':totalUpside>=0?'var(--g)':'var(--r)'}">${totalGain!=null?(totalGain>=0?'+':'')+mainCur+fmt(totalGain,0)+' ('+fmt(totalUpside,1)+'%)':'Dati insufficienti'}</div>
+      <div style="background:${totalUpsideEUR==null?'var(--s2)':totalUpsideEUR>=0?'rgba(5,150,105,.07)':'rgba(220,38,38,.07)'};border:1px solid ${totalUpsideEUR==null?'var(--bd)':totalUpsideEUR>=0?'rgba(5,150,105,.25)':'rgba(220,38,38,.25)'};border-radius:8px;padding:12px 14px;text-align:right">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Target analisti (€)</div>
+        <div style="font-size:20px;font-weight:700;font-family:var(--fm);color:${totalUpsideEUR==null?'var(--t)':totalUpsideEUR>=0?'var(--g)':'var(--r)'}">${totalTargetValEUR!=null?'€'+fmt(totalTargetValEUR,0):'—'}</div>
+        <div style="font-size:11px;font-family:var(--fm);margin-top:3px;color:${totalUpsideEUR==null?'var(--t3)':totalUpsideEUR>=0?'var(--g)':'var(--r)'}">${totalGainEUR!=null?(totalGainEUR>=0?'+':'')+'€'+fmt(totalGainEUR,0)+' potenziale':'Dati insufficienti'}</div>
       </div>
     </div>
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo</div>
+
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Dettaglio per titolo</div>
     ${rows.map(r=>{
       const up=r.upside==null||r.upside>=0;
-      const barMax=40; // max % per barra piena
+      const barMax=40;
       const barW=r.upside!=null?Math.min(Math.abs(r.upside)/barMax*100,100):0;
       const barColor=r.upside==null?'var(--bd)':up?'#10B981':'#EF4444';
-      return`<div class="port-target-row">
-        <div>
-          <div style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px">${r.item.sym}</div>
-          ${r.rec?`<div style="font-size:9px;font-family:var(--fm);color:${recColors[r.rec]||'var(--t3)'};margin-top:1px">${recLabels[r.rec]||r.rec}${r.numAnalysts?' · '+r.numAnalysts+' analisti':''}</div>`:''}
+      const curValEUR2=_toEUR(r.curVal,r.item.currency);
+      const targetValEUR2=_toEUR(r.targetVal,r.item.currency);
+      const gainEUR2=targetValEUR2!=null&&curValEUR2!=null?targetValEUR2-curValEUR2:null;
+      const investedEUR2=_toEUR(r.invested,r.item.currency);
+      const gainFromCostEUR=targetValEUR2!=null&&investedEUR2!=null?targetValEUR2-investedEUR2:null;
+      const gainFromCostPct=gainFromCostEUR!=null&&investedEUR2>0?(gainFromCostEUR/investedEUR2*100):null;
+      const showEURcol=r.item.currency!=='EUR'&&curValEUR2!=null;
+      return`<div class="port-target-row" style="display:grid;grid-template-columns:auto 1fr auto auto auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--bd)">
+        <!-- Col 1: Titolo + rec -->
+        <div style="min-width:70px">
+          <div style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:13px">${r.item.sym}</div>
+          ${r.rec?`<div style="font-size:9px;font-family:var(--fm);color:${recColors[r.rec]||'var(--t3)'};margin-top:2px">${recLabels[r.rec]||r.rec}${r.numAnalysts?' · '+r.numAnalysts:''}</div>`:''}
         </div>
-        <div style="display:flex;flex-direction:column;justify-content:center;gap:3px">
-          <div style="display:flex;align-items:center;gap:5px;font-family:var(--fm);font-size:11px">
-            <span style="color:var(--t2)">${r.cur}${r.curPrice?fmt(r.curPrice,r.curPrice<10?3:2):'—'}</span>
-            <span style="color:var(--t3)">→</span>
-            <span style="font-weight:600;color:${r.target==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.target?r.cur+fmt(r.target,r.target<10?3:2):'N/D'}</span>
+        <!-- Col 2: Prezzi + barra -->
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+            <span style="font-family:var(--fm);font-size:11px;color:var(--t2)">${r.cur}${r.curPrice?fmt(r.curPrice,r.curPrice<10?3:2):'—'}</span>
+            <span style="color:var(--t3);font-size:10px">→</span>
+            <span style="font-family:var(--fm);font-size:11px;font-weight:600;color:${r.target==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.target?r.cur+fmt(r.target,r.target<10?3:2):'N/D'}</span>
+            ${showEURcol&&targetValEUR2!=null?`<span style="font-family:var(--fm);font-size:10px;color:var(--t3)">(≈€${fmt(targetValEUR2/r.item.qty,r.target<10?2:0)})</span>`:''}
           </div>
-          <div style="height:4px;background:var(--bd);border-radius:10px;overflow:hidden">
+          <div style="height:4px;background:var(--bd);border-radius:10px;overflow:hidden;max-width:200px">
             <div style="height:4px;width:${barW}%;background:${barColor};border-radius:10px;transition:width .6s"></div>
           </div>
-          ${r.targetLow&&r.targetHigh?`<div style="font-size:8px;color:var(--t3);font-family:var(--fm)">range: ${r.cur}${fmt(r.targetLow,0)}–${r.cur}${fmt(r.targetHigh,0)}</div>`:''}
+          ${r.targetLow&&r.targetHigh?`<div style="font-size:8px;color:var(--t3);font-family:var(--fm);margin-top:2px">Range analisti: ${r.cur}${fmt(r.targetLow,0)} – ${r.cur}${fmt(r.targetHigh,0)}</div>`:''}
         </div>
-        <div style="text-align:right">
-          <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${r.upside==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.upside!=null?(r.upside>=0?'+':'')+fmt(r.upside,1)+'%':'—'}</div>
+        <!-- Col 3: Upside % -->
+        <div style="text-align:right;min-width:50px">
+          <div style="font-family:var(--fm);font-size:14px;font-weight:700;color:${r.upside==null?'var(--t3)':up?'var(--g)':'var(--r)'}">${r.upside!=null?(r.upside>=0?'+':'')+fmt(r.upside,1)+'%':'—'}</div>
           <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">upside</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:${r.gainFromBuy==null?'var(--t3)':r.gainFromBuy>=0?'var(--g)':'var(--r)'}">${r.gainFromBuy!=null?(r.gainFromBuy>=0?'+':'')+r.cur+fmt(r.gainFromBuy,0):'—'}</div>
-          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.gainFromBuyPct!=null?(r.gainFromBuyPct>=0?'+':'')+fmt(r.gainFromBuyPct,1)+'% dal costo':''}</div>
+        <!-- Col 4: Guadagno potenziale in EUR -->
+        <div style="text-align:right;min-width:70px">
+          <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:${gainEUR2==null?'var(--t3)':gainEUR2>=0?'var(--g)':'var(--r)'}">${gainEUR2!=null?(gainEUR2>=0?'+':'')+'€'+fmt(gainEUR2,0):'—'}</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${gainFromCostPct!=null?(gainFromCostPct>=0?'+':'')+fmt(gainFromCostPct,1)+'% dal costo':gainEUR2!=null?'dal prezzo att.':''}</div>
         </div>
-        <div style="text-align:right">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:1px">Break-even netto</div>
-          <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${r.breakEvenPct>=0?'var(--g)':'var(--r)'}">${r.cur}${fmt(r.breakEvenNet,0)}</div>
+        <!-- Col 5: Break-even netto -->
+        <div style="text-align:right;min-width:70px">
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">Break-even netto</div>
+          <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${r.breakEvenPct>=0?'var(--g)':'var(--r)'}">${r.cur}${fmt(r.breakEvenNet/r.item.qty,r.breakEvenNet/r.item.qty<10?3:2)}</div>
           <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.breakEvenPct>=0?'+':''}${fmt(r.breakEvenPct,1)}% netto</div>
         </div>
       </div>`;
     }).join('')}
-    <div style="margin-top:12px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ Proiezione a ~12 mesi basata sui prezzi target medi degli analisti · Non garantisce rendimenti futuri · Per titoli senza copertura analitica il dato non è disponibile</div>
+    <div style="margin-top:14px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ Proiezione a ~12 mesi basata sui prezzi target medi degli analisti · Valori in EUR convertiti al cambio corrente EUR/USD ${fmt(fxR,4)} · Non garantisce rendimenti futuri</div>
   `;
 }
 
