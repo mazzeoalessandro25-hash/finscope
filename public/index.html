@@ -8143,7 +8143,7 @@ async function loadWyckoffAnalysis(sym){
   if(!el)return;
   try{
     const data=await api(sym,'history&range=6mo');
-    if(sdSym!==sym)return; // utente ha cambiato pagina
+    if(sdSym!==sym)return;
     const rawPts=Array.isArray(data)?data:(data?.points||[]);
     if(rawPts.length<20){
       el.innerHTML='<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Dati storici insufficienti per l\'analisi Wyckoff.</div>';
@@ -8152,8 +8152,7 @@ async function loadWyckoffAnalysis(sym){
 
     // Calcola OBV
     const pts=rawPts.filter(d=>d.close!=null&&d.volume!=null).sort((a,b)=>a.time-b.time);
-    const obv=[];
-    let cumObv=0;
+    const obv=[];let cumObv=0;
     for(let i=0;i<pts.length;i++){
       if(i===0){obv.push(0);continue;}
       const dir=pts[i].close>pts[i-1].close?1:pts[i].close<pts[i-1].close?-1:0;
@@ -8161,65 +8160,141 @@ async function loadWyckoffAnalysis(sym){
       obv.push(cumObv);
     }
 
-    // Normalizza prezzo e OBV in range 0–100 per confronto visivo
-    const prices=pts.map(p=>p.close);
+    // Normalizza prezzo e OBV 0–100
+    const prices=pts.map(p=>+p.close);
     const minP=Math.min(...prices),maxP=Math.max(...prices);
     const minO=Math.min(...obv),maxO=Math.max(...obv);
-    const normP=prices.map(p=>maxP>minP?(p-minP)/(maxP-minP)*100:50);
-    const normO=obv.map(o=>maxO>minO?(o-minO)/(maxO-minO)*100:50);
+    const normP=prices.map(p=>maxP>minP?+((p-minP)/(maxP-minP)*100).toFixed(3):50);
+    const normO=obv.map(o=>maxO>minO?+((o-minO)/(maxO-minO)*100).toFixed(3):50);
 
-    // Rileva divergenza — confronta ultimi 20 punti
-    const n=Math.min(20,pts.length);
-    const recentP=normP.slice(-n);
-    const recentO=normO.slice(-n);
+    // Rileva divergenza — ultimi 20 punti
+    const n20=Math.min(20,pts.length);
+    const recentP=normP.slice(-n20),recentO=normO.slice(-n20);
     const pTrend=recentP[recentP.length-1]-recentP[0];
     const oTrend=recentO[recentO.length-1]-recentO[0];
-    let phase,phaseCol,divergence;
-    if(pTrend<-5&&oTrend>5){phase='Accumulazione';phaseCol='#10B981';divergence='Divergenza rialzista: prezzo in calo ma OBV in salita';}
-    else if(pTrend>5&&oTrend<-5){phase='Distribuzione';phaseCol='#EF4444';divergence='Divergenza ribassista: prezzo in salita ma OBV in calo';}
-    else if(pTrend>3&&oTrend>3){phase='Markup';phaseCol='#1A56C4';divergence='Trend confermato: prezzo e OBV in salita';}
-    else if(pTrend<-3&&oTrend<-3){phase='Markdown';phaseCol='#F59E0B';divergence='Trend confermato: prezzo e OBV in discesa';}
-    else{phase='Laterale';phaseCol='#6B7280';divergence='Nessuna divergenza significativa rilevata';}
 
-    // Costruisci SVG con due linee sovrapposte
-    const W=520,H=100,pad=8;
-    const plotW=W-pad*2;
-    function polyline(vals,col){
-      const step=plotW/(vals.length-1);
-      const pts2=vals.map((v,i)=>`${(pad+i*step).toFixed(1)},${(H-pad-(v/100)*(H-pad*2)).toFixed(1)}`).join(' ');
-      return`<polyline points="${pts2}" fill="none" stroke="${col}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" opacity="0.9"/>`;
+    let phase,phaseCol,phaseIcon,verdict;
+    if(pTrend<-5&&oTrend>5){
+      phase='Accumulazione';phaseCol='#10B981';phaseIcon='◎';
+      verdict=`Divergenza <strong>rialzista</strong>: il prezzo scende ma l'OBV sale — possibile fase di accumulazione da parte degli istituzionali.`;
+    } else if(pTrend>5&&oTrend<-5){
+      phase='Distribuzione';phaseCol='#EF4444';phaseIcon='◉';
+      verdict=`Divergenza <strong>ribassista</strong>: il prezzo sale ma l'OBV cala — possibile distribuzione in corso, attenzione a un'inversione.`;
+    } else if(pTrend>3&&oTrend>3){
+      phase='Markup';phaseCol='#1A56C4';phaseIcon='▲';
+      verdict=`Trend <strong>confermato</strong>: prezzo e OBV in salita simultanea — la forza del movimento è supportata dai volumi.`;
+    } else if(pTrend<-3&&oTrend<-3){
+      phase='Markdown';phaseCol='#F59E0B';phaseIcon='▼';
+      verdict=`Trend <strong>ribassista confermato</strong>: prezzo e OBV entrambi in discesa — pressione di vendita persistente.`;
+    } else {
+      phase='Laterale';phaseCol='#6B7280';phaseIcon='→';
+      verdict=`Movimento <strong>laterale</strong>: nessuna divergenza significativa — attesa di un breakout confermato da volume.`;
     }
-    const svgChart=`<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:90px;display:block">
-      <rect width="${W}" height="${H}" fill="var(--s2)" rx="4"/>
-      ${[25,50,75].map(y=>`<line x1="${pad}" y1="${H-pad-(y/100)*(H-pad*2)}" x2="${W-pad}" y2="${H-pad-(y/100)*(H-pad*2)}" stroke="var(--bd)" stroke-width="0.5" stroke-dasharray="3,3"/>`).join('')}
-      ${polyline(normP,'#1A56C4')}
-      ${polyline(normO,'#10B981')}
-      <text x="${pad+2}" y="11" font-size="8" fill="#1A56C4" font-family="IBM Plex Mono">PREZZO</text>
-      <text x="${pad+52}" y="11" font-size="8" fill="#10B981" font-family="IBM Plex Mono">OBV</text>
-    </svg>`;
+
+    // Calcola OBV change % e price change %
+    const pChg=+((prices[prices.length-1]-prices[0])/prices[0]*100).toFixed(1);
+    const oChg=obv[obv.length-1]>0&&obv[0]!==0?+((obv[obv.length-1]-obv[0])/Math.abs(obv[0]||1)*100).toFixed(1):null;
+
+    // Segnali aggiuntivi: SMA20 su normP
+    const sma20=[];
+    for(let i=19;i<normP.length;i++){
+      sma20.push({idx:i,v:+(normP.slice(i-19,i+1).reduce((a,b)=>a+b,0)/20).toFixed(3)});
+    }
+    const lastSma=sma20.length?sma20[sma20.length-1].v:null;
+    const aboveSma=lastSma!==null&&normP[normP.length-1]>lastSma;
 
     el.innerHTML=`
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
-        <div style="padding:4px 12px;background:${phaseCol}22;border:1px solid ${phaseCol}55;border-radius:20px;font-size:11px;font-weight:700;font-family:var(--fm);color:${phaseCol}">${phase}</div>
-        <div style="font-size:11px;color:var(--t2);font-family:var(--fm)">${divergence}</div>
+      <div style="display:grid;grid-template-columns:minmax(200px,38%) 1fr;gap:16px;align-items:start">
+        <!-- COLONNA SINISTRA -->
+        <div style="display:flex;flex-direction:column;gap:10px">
+
+          <!-- Verdict card -->
+          <div style="padding:10px 12px;background:${phaseCol}12;border:1px solid ${phaseCol}44;border-radius:8px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:18px;color:${phaseCol};line-height:1">${phaseIcon}</span>
+              <span style="font-size:13px;font-weight:700;font-family:var(--fm);color:${phaseCol}">${phase}</span>
+            </div>
+            <div style="font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.5">${verdict}</div>
+          </div>
+
+          <!-- Metriche colonna -->
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend Prezzo</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${pTrend>3?'var(--g)':pTrend<-3?'var(--r)':'var(--t)'}">${pTrend>3?'▲ Rialzista':pTrend<-3?'▼ Ribassista':'→ Laterale'} <span style="font-weight:400;font-size:10px">(${pChg>=0?'+':''}${pChg}%)</span></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend OBV</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${oTrend>3?'var(--g)':oTrend<-3?'var(--r)':'var(--t)'}">${oTrend>3?'▲ Accumulaz.':oTrend<-3?'▼ Distribuz.':'→ Neutrale'}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Posiz. vs SMA20</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${aboveSma?'var(--g)':'var(--r)'}">${aboveSma?'▲ Sopra':'▼ Sotto'}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Candele (6m)</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:var(--t)">${pts.length}</span>
+            </div>
+          </div>
+
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);line-height:1.4">⚠ Analisi automatica basata su OBV · Solo scopo informativo</div>
+        </div>
+
+        <!-- COLONNA DESTRA: grafico interattivo -->
+        <div>
+          <div style="display:flex;gap:14px;margin-bottom:6px;align-items:center">
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:#1A56C4;letter-spacing:.5px">── PREZZO (norm.)</span>
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:#10B981;letter-spacing:.5px">── OBV (norm.)</span>
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:rgba(100,116,139,.6);letter-spacing:.5px">── SMA20</span>
+          </div>
+          <div id="sd-wyckoff-chart" style="width:100%;height:200px;border-radius:6px;overflow:hidden"></div>
+        </div>
       </div>
-      ${svgChart}
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px">
-        <div style="padding:8px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;text-align:center">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend Prezzo</div>
-          <div style="font-size:13px;font-weight:700;font-family:var(--fm);color:${pTrend>3?'var(--g)':pTrend<-3?'var(--r)':'var(--t)'};margin-top:3px">${pTrend>3?'▲ Rialzista':pTrend<-3?'▼ Ribassista':'→ Laterale'}</div>
-        </div>
-        <div style="padding:8px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;text-align:center">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend OBV</div>
-          <div style="font-size:13px;font-weight:700;font-family:var(--fm);color:${oTrend>3?'var(--g)':oTrend<-3?'var(--r)':'var(--t)'};margin-top:3px">${oTrend>3?'▲ Accumulaz.':oTrend<-3?'▼ Distribuz.':'→ Neutrale'}</div>
-        </div>
-        <div style="padding:8px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;text-align:center">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Candele (3m)</div>
-          <div style="font-size:13px;font-weight:700;font-family:var(--fm);color:var(--t);margin-top:3px">${pts.length}</div>
-        </div>
-      </div>
-      <div style="margin-top:8px;font-size:9px;color:var(--t3);font-family:var(--fm)">⚠ Analisi automatica basata su OBV (On-Balance Volume) · Solo scopo informativo</div>
     `;
+
+    // Crea grafico LightweightCharts
+    const chartEl=document.getElementById('sd-wyckoff-chart');
+    if(!chartEl)return;
+    if(sdWyckoffChartInst){sdWyckoffChartInst.remove();}
+    const theme=getLWChartTheme();
+    sdWyckoffChartInst=LightweightCharts.createChart(chartEl,{
+      width:chartEl.clientWidth,height:200,
+      layout:{background:{color:theme.bg},textColor:theme.text,fontSize:10},
+      grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
+      rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.06,bottom:.06},visible:true},
+      leftPriceScale:{visible:false},
+      timeScale:{borderColor:theme.border,timeVisible:true,secondsVisible:false},
+      crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
+      handleScroll:true,handleScale:true,
+    });
+
+    // Linea Prezzo normalizzato
+    const priceS=sdWyckoffChartInst.addLineSeries({
+      color:'#1A56C4',lineWidth:2,priceLineVisible:false,lastValueVisible:true,
+      title:'Prezzo',crosshairMarkerVisible:true,crosshairMarkerRadius:4,
+    });
+    // Linea OBV normalizzato
+    const obvS=sdWyckoffChartInst.addLineSeries({
+      color:'#10B981',lineWidth:2,priceLineVisible:false,lastValueVisible:true,
+      title:'OBV',crosshairMarkerVisible:true,crosshairMarkerRadius:4,lineStyle:0,
+    });
+    // SMA20 su normP
+    const sma20S=sdWyckoffChartInst.addLineSeries({
+      color:'rgba(100,116,139,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,
+      lastValueVisible:false,crosshairMarkerVisible:false,title:'',
+    });
+
+    const lwPts=pts.map((p,i)=>({time:p.time,value:normP[i]}));
+    const lwObv=pts.map((p,i)=>({time:p.time,value:normO[i]}));
+    const lwSma=sma20.map(r=>({time:pts[r.idx].time,value:r.v}));
+
+    priceS.setData(lwPts);
+    obvS.setData(lwObv);
+    sma20S.setData(lwSma);
+
+    sdWyckoffChartInst.timeScale().fitContent();
+    new ResizeObserver(()=>{if(sdWyckoffChartInst)sdWyckoffChartInst.applyOptions({width:chartEl.clientWidth});}).observe(chartEl);
+
   }catch(e){
     if(document.getElementById('sd-wyckoff-content')===el)
       el.innerHTML='<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Analisi Wyckoff non disponibile.</div>';
