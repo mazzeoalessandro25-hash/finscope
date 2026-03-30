@@ -8228,6 +8228,8 @@ async function loadSdChart(sym,range,btn){
   sdLastPts=pts;
   sdIndSeries={};
   if(sdRsiInst){sdRsiInst.remove();sdRsiInst=null;const rd=document.getElementById('sd-rsi-chart');if(rd)rd.style.display='none';}
+  if(sdMacdInst){sdMacdInst.remove();sdMacdInst=null;const md=document.getElementById('sd-macd-chart');if(md)md.style.display='none';}
+  if(sdStochInst){sdStochInst.remove();sdStochInst=null;const sd2=document.getElementById('sd-stoch-chart');if(sd2)sd2.style.display='none';}
   renderSdTechOverlays(null);
   renderSdTechSignals();
 }
