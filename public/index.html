@@ -4365,7 +4365,7 @@ function switchPortTab(name){
   if(btn)btn.classList.add('active');
   if(panel)panel.classList.add('active');
   if(name==='performance'){loadPortPerf();loadBenchmark();renderPortPerfSummary();}
-  if(name==='analisi'){loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
+  if(name==='analisi'){try{renderPortAnalysis(portfolio,_lastPortQuotes);}catch(e){}loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
   if(name==='obiettivi'){loadPortTargets();renderPersonalTargets();renderPortGoal();}
   if(name==='reddito'){loadDividendTracker();renderTaxDashboard();}
   if(name==='gestione'){renderRebalancing();renderTransactionHistory();renderPriceAlerts();}
