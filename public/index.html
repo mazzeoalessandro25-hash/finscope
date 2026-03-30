@@ -4792,7 +4792,8 @@ async function renderPortfolio(){
   _lastPortQuotes=quotes;
   portQuotes=quotes;
   checkPriceAlerts(quotes);
-  renderPortAnalysis(portfolio,quotes);
+  try{renderPortAnalysis(portfolio,quotes);}catch(e){const el=document.getElementById('port-analysis-content');if(el)el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">Errore analisi: '+e.message+'</div>';}
+  if(_portActiveTab==='analisi'){loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
   loadBenchmark();
   loadDividendTracker();
   loadPortTargets();
