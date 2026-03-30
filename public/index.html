@@ -3225,6 +3225,16 @@ function toggleDashInd(n,key,btn){
       if(rd)rd.style.display='none';
       if(s.rsiInst){s.rsiInst.remove();s.rsiInst=null;}
       delete s.indSeries[key];
+    } else if(key==='macd'){
+      const md=document.getElementById(`dashMacd${n}`);
+      if(md)md.style.display='none';
+      if(s.macdInst){s.macdInst.remove();s.macdInst=null;}
+      delete s.indSeries[key];
+    } else if(key==='stoch'){
+      const sd=document.getElementById(`dashStoch${n}`);
+      if(sd)sd.style.display='none';
+      if(s.stochInst){s.stochInst.remove();s.stochInst=null;}
+      delete s.indSeries[key];
     } else if(s.indSeries[key]){
       const arr=Array.isArray(s.indSeries[key])?s.indSeries[key]:[s.indSeries[key]];
       arr.forEach(ser=>{try{if(s.inst)s.inst.removeSeries(ser);}catch(_){}});
