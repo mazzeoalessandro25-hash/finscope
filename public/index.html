@@ -5246,7 +5246,7 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   schedulePortDailyRefresh();
 }
 
-function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}){
+function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}, totalValUSD=0){
   const up = totalChgUSD >= 0;
   const sorted = [...assets].sort((a,b)=>b.chgPct-a.chgPct);
   const best = sorted[0];
