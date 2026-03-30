@@ -7080,6 +7080,24 @@ async function loadPortTargets(){
    FEATURE 5: PORTFOLIO PERFORMANCE CHART
 ══════════════════════════════════════════ */
 let portPerfCI=null;
+// Benchmark famosi: sym → { label, sublabel, color, dash }
+const BENCH_DEFS={
+  'SPY':  {label:'S&P 500',     sub:'Mercato USA (500 aziende)',          color:'#8499B0',dash:[5,3]},
+  'BRK-B':{label:'Buffett',     sub:'Berkshire Hathaway — Warren Buffett',color:'#F59E0B',dash:[4,3]},
+  'QQQ':  {label:'Nasdaq 100',  sub:'Big Tech & Growth',                  color:'#8B5CF6',dash:[5,3]},
+  'ARKK': {label:'Cathie Wood', sub:'ARK Innovation ETF',                 color:'#EF4444',dash:[4,2]},
+  'ACWI': {label:'MSCI World',  sub:'1600+ aziende globali',              color:'#10B981',dash:[5,3]},
+  'GLD':  {label:'Oro',         sub:'Asset rifugio — All-Weather',        color:'#D97706',dash:[3,3]},
+};
+let _activeBenches=new Set(['SPY','BRK-B']);
+function togglePerfBench(sym,btn){
+  if(_activeBenches.has(sym)){
+    if(_activeBenches.size>1){_activeBenches.delete(sym);btn.classList.remove('active');}
+  } else {
+    _activeBenches.add(sym);btn.classList.add('active');
+  }
+  loadPortPerf(null,null);
+}
 let _portPerfRange='1mo';
 async function loadPortPerf(range,btn){
   if(range){
