@@ -8133,6 +8133,7 @@ function closeStockDetail(){
   document.getElementById('stock-detail-overlay').classList.remove('open');
   document.body.style.overflow='';
   if(sdChartInst){sdChartInst.remove();sdChartInst=null;}
+  if(sdWyckoffChartInst){sdWyckoffChartInst.remove();sdWyckoffChartInst=null;}
   if(sdPriceTimer){clearInterval(sdPriceTimer);sdPriceTimer=null;}
   sdSym='';
 }
