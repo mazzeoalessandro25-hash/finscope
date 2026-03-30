@@ -4464,8 +4464,10 @@ async function renderPortfolio(){
   const rows=sortedPortfolio.map((item,si)=>{
     const i=item._origIdx;
     const d=quotes[i];
-    const csym=item.currency==='EUR'?'€':'$';
-    const cur=item.currency||'USD';
+    const _quoteCur=d?.currency||item.currency||'USD';
+    const _CURSYM={USD:'$',EUR:'€',GBP:'£',DKK:'kr',SEK:'kr',NOK:'kr',CHF:'CHF',JPY:'¥',HKD:'HK$',CNY:'¥',AUD:'A$',CAD:'C$',INR:'₹',BRL:'R$',KRW:'₩',MXN:'$',SGD:'S$',PLN:'zł',CZK:'Kč',HUF:'Ft',TRY:'₺',ZAR:'R',ILS:'₪',AED:'د.إ'};
+    const csym=_CURSYM[_quoteCur]||_quoteCur+' ';
+    const cur=_quoteCur;
     const curPrice=d?.price??null;
     const invested=item.qty*item.buyPrice;
     const curVal=curPrice!=null?item.qty*curPrice:null;
