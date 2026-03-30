@@ -8061,15 +8061,16 @@ async function loadWyckoffAnalysis(sym){
   const el=document.getElementById('sd-wyckoff-content');
   if(!el)return;
   try{
-    const data=await api(sym,'history&range=3mo');
+    const data=await api(sym,'history&range=6mo');
     if(sdSym!==sym)return; // utente ha cambiato pagina
-    if(!data||!Array.isArray(data)||data.length<20){
+    const rawPts=Array.isArray(data)?data:(data?.points||[]);
+    if(rawPts.length<20){
       el.innerHTML='<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Dati storici insufficienti per l\'analisi Wyckoff.</div>';
       return;
     }
 
     // Calcola OBV
-    const pts=data.filter(d=>d.close!=null&&d.volume!=null).sort((a,b)=>a.time-b.time);
+    const pts=rawPts.filter(d=>d.close!=null&&d.volume!=null).sort((a,b)=>a.time-b.time);
     const obv=[];
     let cumObv=0;
     for(let i=0;i<pts.length;i++){
