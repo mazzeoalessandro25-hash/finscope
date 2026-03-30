@@ -1434,7 +1434,33 @@ html.dark .auth-box{background:#1e293b}
           <button class="cc-btn" onclick="loadDashChart(1,null,'2y',this)">2A</button>
         </div>
       </div>
-      <div id="dashChart1" style="width:100%;height:260px"></div>
+      <div class="cc-row" style="margin-bottom:8px;gap:4px;position:relative">
+        <div class="ind-toggle-btn" style="position:relative">
+          <button class="cc-btn" id="ch1-ind-toggle" onclick="toggleDashIndPanel(1,event)" style="display:flex;align-items:center;gap:5px">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="flex-shrink:0"><rect x="1" y="2" width="10" height="1.5" rx=".75" fill="currentColor"/><rect x="1" y="5.25" width="7" height="1.5" rx=".75" fill="currentColor"/><rect x="1" y="8.5" width="5" height="1.5" rx=".75" fill="currentColor"/></svg>
+            Indicatori
+          </button>
+          <span class="ind-badge" id="ch1-ind-badge" style="display:none">0</span>
+        </div>
+        <div class="ind-panel" id="ch1-ind-panel" style="display:none">
+          <div class="ind-panel-cat">Medie Mobili</div>
+          <div class="ind-panel-row">
+            <button class="cc-btn" id="ch1-ind-sma20" onclick="toggleDashInd(1,'sma20',this)" style="color:#f59e0b">SMA20</button>
+            <button class="cc-btn" id="ch1-ind-sma50" onclick="toggleDashInd(1,'sma50',this)" style="color:#8b5cf6">SMA50</button>
+            <button class="cc-btn" id="ch1-ind-ema20" onclick="toggleDashInd(1,'ema20',this)" style="color:#06b6d4">EMA20</button>
+          </div>
+          <div class="ind-panel-cat">Oscillatori</div>
+          <div class="ind-panel-row">
+            <button class="cc-btn" id="ch1-ind-rsi" onclick="toggleDashInd(1,'rsi',this)" style="color:#8b5cf6">RSI 14</button>
+          </div>
+          <div class="ind-panel-cat">Volatilità &amp; Bande</div>
+          <div class="ind-panel-row">
+            <button class="cc-btn" id="ch1-ind-bb" onclick="toggleDashInd(1,'bb',this)" style="color:#6366f1">Bollinger</button>
+          </div>
+        </div>
+      </div>
+      <div id="dashChart1" style="width:100%;height:300px"></div>
+      <div id="dashRsi1" style="display:none;width:100%;height:80px;margin-top:3px;border-top:1px solid var(--bd)"></div>
     </div>
 
     <!-- Grafico 2 -->
