@@ -1926,7 +1926,7 @@ html.dark .auth-box{background:#1e293b}
       <div class="port-tab-panel" id="ptab-performance">
         <div class="card" id="port-perf-card">
           <div class="ch" style="flex-wrap:wrap;gap:8px">
-            <div><div class="ct">📈 Performance Portafoglio<span class="info-icon">i<span class="info-tip">Andamento del portafoglio nel periodo selezionato, a confronto con il benchmark scelto. Il rendimento è calcolato sul valore attuale vs il prezzo di acquisto.</span></span></div><div class="cs" id="port-perf-sub">Rendimento ponderato vs benchmark</div></div>
+            <div><div class="ct">📈 Performance Portafoglio<span class="info-icon">i<span class="info-tip">Andamento del portafoglio confrontato con i più grandi investitori e fondi al mondo. Ogni linea rappresenta il rendimento normalizzato dal primo giorno del periodo selezionato.</span></span></div><div class="cs" id="port-perf-sub">Rendimento ponderato vs grandi investitori</div></div>
             <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
               <div style="display:flex;gap:3px" id="perf-range-btns">
                 <button class="port-sort-btn" id="prf-ytd" onclick="loadPortPerf('ytd',this)">YTD</button>
@@ -1935,16 +1935,19 @@ html.dark .auth-box{background:#1e293b}
                 <button class="port-sort-btn" id="prf-6mo" onclick="loadPortPerf('6mo',this)">6M</button>
                 <button class="port-sort-btn" id="prf-1y" onclick="loadPortPerf('1y',this)">1A</button>
               </div>
-              <div style="width:1px;height:16px;background:var(--bd);margin:0 4px"></div>
-              <select id="perf-bench-sel" onchange="loadPortPerf(null,null)" style="background:var(--s2);border:1px solid var(--bd);color:var(--t2);padding:3px 6px;border-radius:5px;font-size:11px;font-family:var(--fm);outline:none">
-                <option value="SPY">S&amp;P 500</option>
-                <option value="QQQ">NASDAQ 100</option>
-                <option value="EWI">FTSE MIB (approx)</option>
-                <option value="GLD">Oro</option>
-              </select>
             </div>
           </div>
-          <canvas id="portPerfChart" height="80"></canvas>
+          <!-- Toggle benchmark famosi -->
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--bd)" id="perf-bench-btns">
+            <button class="port-sort-btn active" data-bench="SPY"   onclick="togglePerfBench('SPY',this)"   title="S&P 500 — mercato azionario USA">📊 S&P 500</button>
+            <button class="port-sort-btn active" data-bench="BRK-B" onclick="togglePerfBench('BRK-B',this)" title="Berkshire Hathaway — Warren Buffett">🧓 Buffett</button>
+            <button class="port-sort-btn"        data-bench="QQQ"   onclick="togglePerfBench('QQQ',this)"   title="Nasdaq 100 — Big Tech &amp; Growth">💻 Nasdaq 100</button>
+            <button class="port-sort-btn"        data-bench="ARKK"  onclick="togglePerfBench('ARKK',this)"  title="ARK Innovation ETF — Cathie Wood">🚀 Cathie Wood</button>
+            <button class="port-sort-btn"        data-bench="ACWI"  onclick="togglePerfBench('ACWI',this)"  title="MSCI All-Country World — diversificazione globale">🌍 MSCI World</button>
+            <button class="port-sort-btn"        data-bench="GLD"   onclick="togglePerfBench('GLD',this)"   title="Oro — asset rifugio (Ray Dalio All-Weather)">🏅 Oro</button>
+          </div>
+          <canvas id="portPerfChart" height="90"></canvas>
+          <div id="perf-comparison-table" style="margin-top:14px"></div>
         </div>
         <div class="card" style="margin-top:10px" id="port-cagr-card">
           <div class="ch"><div><div class="ct">📊 Rendimenti per titolo<span class="info-icon">i<span class="info-tip">Rendimento totale e CAGR (tasso annuo composto) per ogni posizione. Il CAGR normalizza il rendimento sulla durata dell'investimento, così puoi confrontare titoli detenuti per periodi diversi.</span></span></div><div class="cs">P&L % · CAGR annualizzato · Periodo di detenzione</div></div></div>
