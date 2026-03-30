@@ -5407,30 +5407,22 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     discussed.add(a.sym);
     const assetUp=a.chgPct>=0;
     const chgStr=`${assetUp?'+':''}${a.chgPct.toFixed(2)}%`;
-    const usdStr=`${a.chgUSD>=0?'+':''}€${Math.abs(a.chgUSD/_fxR).toFixed(0)}`;
-    const name=a.name&&a.name!==a.sym?`${a.sym} (${a.name})`:`<strong>${a.sym}</strong>`;
+    const eurAbs=Math.abs(a.chgUSD/_fxR).toFixed(0);
+    const eurSign=a.chgUSD>=0?'+':'−';
     const news=newsMap[a.sym]||[];
-
-    let line=`<strong>${a.sym}</strong>`;
-    if(a.name&&a.name!==a.sym) line+=` — ${a.name}`;
-    line+=`: ${chgStr} (${usdStr}). `;
-
-    // Interpretazione della variazione
+    let comment='';
     if(role==='best'){
-      if(a.chgPct>3)       line+=`Una performance eccellente che ha dato un contributo determinante al risultato del portafoglio. `;
-      else if(a.chgPct>1)  line+=`Un buon contributo alla performance giornaliera complessiva. `;
-      else                  line+=`Ha chiuso in leggero rialzo, contribuendo positivamente al portafoglio. `;
+      comment=a.chgPct>3?'Contributo determinante al portafoglio':a.chgPct>1?'Buon contributo positivo':'Leggero rialzo nella seduta';
     } else if(role==='worst'){
-      if(a.chgPct<-3)      line+=`Una flessione rilevante che ha pesato in modo significativo sul portafoglio. `;
-      else if(a.chgPct<-1) line+=`Ha frenato la performance complessiva con un calo moderato. `;
-      else                  line+=`Piccolo passo indietro nella seduta odierna. `;
+      comment=a.chgPct<-3?'Flessione rilevante, ha pesato sul risultato':a.chgPct<-1?'Calo moderato che ha frenato la performance':'Piccola perdita giornaliera';
+    } else {
+      comment=assetUp?'Positivo nella seduta':'In flessione nella seduta';
     }
-
-    // Notizie specifiche del titolo
-    if(news[0]) line+=`In evidenza: "${news[0].title}". `;
-    if(news[1]) line+=`Inoltre: "${news[1].title}". `;
-
-    return line;
+    let line=`• <strong>${a.sym}</strong>`;
+    if(a.name&&a.name!==a.sym) line+=` (${a.name})`;
+    line+=`: <strong>${chgStr}</strong> (${eurSign}€${eurAbs}) — ${comment}`;
+    if(news[0]) line+=`. <em>"${news[0].title}"</em>`;
+    return line+'\n';
   };
 
   evidenzaText+=commentAsset(best,'best');
