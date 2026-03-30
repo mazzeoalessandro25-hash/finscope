@@ -8464,7 +8464,7 @@ async function loadSdChart(sym,range,btn){
   if(!pts?.length)return;
   const container=document.getElementById('sd-chart');
   if(sdChartInst){sdChartInst.remove();sdChartInst=null;sdVolSeries=null;}
-  sdChartInst=buildLWChart(container,sdType,pts);
+  sdChartInst=buildLWChart(container,sdType,pts,{timeVisible:sdRange==='1d'||sdRange==='5d'});
   // Volume histogram — scala separata nella fascia bassa del grafico
   const volData=pts.filter(p=>p.volume!=null&&p.volume>0).map(p=>{
     const isUp=p.open!=null?+p.close>=+p.open:true;
