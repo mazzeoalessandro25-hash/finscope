@@ -1073,13 +1073,17 @@ html.dark .auth-box{background:#1e293b}
           <button class="chart-type-btn active" id="sd-btn-candle" onclick="setSdType('candle',this)">Candele</button>
           <button class="chart-type-btn" id="sd-btn-line" onclick="setSdType('line',this)">Linea</button>
           <div style="width:1px;height:14px;background:var(--bd);margin:0 4px"></div>
-          <button class="cc-btn" onclick="loadSdChart(null,'1d',this)">1G</button>
-          <button class="cc-btn" onclick="loadSdChart(null,'5d',this)">5G</button>
-          <button class="cc-btn active" id="sd-range-1mo" onclick="loadSdChart(null,'1mo',this)">1M</button>
-          <button class="cc-btn" onclick="loadSdChart(null,'3mo',this)">3M</button>
-          <button class="cc-btn" onclick="loadSdChart(null,'1y',this)">1A</button>
-          <button class="cc-btn" onclick="loadSdChart(null,'5y',this)">5A</button>
-          <button class="cc-btn" onclick="loadSdChart(null,'max',this)">MAX</button>
+          <div class="tf-scroll">
+            <button class="cc-btn" onclick="loadSdChart(null,'1d',this)">1G</button>
+            <button class="cc-btn" onclick="loadSdChart(null,'5d',this)">5G</button>
+            <button class="cc-btn active" id="sd-range-1mo" onclick="loadSdChart(null,'1mo',this)">1M</button>
+            <button class="cc-btn" onclick="loadSdChart(null,'3mo',this)">3M</button>
+            <button class="cc-btn" onclick="loadSdChart(null,'6mo',this)">6M</button>
+            <button class="cc-btn" onclick="loadSdChart(null,'1y',this)">1A</button>
+            <button class="cc-btn" onclick="loadSdChart(null,'5y',this)">5A</button>
+            <button class="cc-btn" onclick="loadSdChart(null,'10y',this)">10A</button>
+            <button class="cc-btn" onclick="loadSdChart(null,'max',this)">MAX</button>
+          </div>
           <span class="sd-info-btn" style="margin-left:auto">i<div class="sd-tip">Grafico prezzi interattivo con dati storici Yahoo Finance.<br><br><b>Candele</b>: mostra apertura, chiusura, massimo e minimo giornaliero.<br><b>Linea</b>: solo prezzo di chiusura.<br><b>Volumi</b>: istogramma in verde/rosso sovrapposto al grafico.<br>Usa il pannello Indicatori per aggiungere medie mobili, RSI e bande di Bollinger.</div></span>
         </div>
         <div class="cc-row" style="margin-bottom:10px;gap:4px;position:relative">
