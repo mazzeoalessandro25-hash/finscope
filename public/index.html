@@ -4825,9 +4825,10 @@ async function renderPortfolio(){
 
 async function refreshPortfolio(){
   const btn=document.getElementById('port-refresh-btn');
-  if(btn){btn.disabled=true;btn.textContent='⟳ ...';}
+  if(btn){btn.disabled=true;btn.textContent='↻ ...';}
   await renderPortfolio();
-  if(btn){btn.disabled=false;btn.textContent='⟳ Aggiorna';}
+  refreshPortDailyAnalysis();
+  if(btn){btn.disabled=false;btn.textContent='↻ Aggiorna';}
 }
 
 // ══════════════════════════════════════════════════════
