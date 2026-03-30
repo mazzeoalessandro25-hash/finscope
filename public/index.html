@@ -7109,9 +7109,8 @@ async function loadPortPerf(range,btn){
   const apiRange=r==='ytd'?'1y':r;
   const canvas=document.getElementById('portPerfChart');
   if(!canvas||!portfolio.length)return;
-  const benchSym=(document.getElementById('perf-bench-sel')?.value)||'SPY';
   const sub=document.getElementById('port-perf-sub');
-  if(sub)sub.textContent=`Rendimento ponderato ${r.toUpperCase()} vs ${benchSym}`;
+  if(sub)sub.textContent=`Caricamento...`;
 
   canvas.parentElement.style.position='relative';
   let loadDiv=canvas.parentElement.querySelector('.perf-loading');
@@ -7119,41 +7118,63 @@ async function loadPortPerf(range,btn){
   loadDiv.style.display='flex';
 
   try{
-    const [benchData,...portData]=await Promise.all([
-      api(benchSym,'history&range='+apiRange),
-      ...portfolio.map(item=>api(item.sym,'history&range='+apiRange))
+    const activeBenchSyms=[..._activeBenches];
+    // Fetch portfolio + tutti i benchmark attivi in parallelo
+    const [portDataArr,...benchDataArr]=await Promise.all([
+      Promise.all(portfolio.map(item=>api(item.sym,'history&range='+apiRange))),
+      ...activeBenchSyms.map(sym=>api(sym,'history&range='+apiRange))
     ]);
-    if(!benchData?.points?.length){loadDiv.style.display='none';return;}
 
-    let benchPts=benchData.points;
-    if(r==='ytd'){
-      const jan1=new Date(new Date().getFullYear(),0,1).getTime();
-      benchPts=benchPts.filter(p=>new Date(p.date).getTime()>=jan1);
-    }
+    // Usa il primo benchmark disponibile come asse temporale
+    const refData=benchDataArr.find(d=>d?.points?.length);
+    if(!refData){loadDiv.style.display='none';return;}
 
-    const benchFirst=benchPts[0].close;
-    const benchReturns=benchPts.map(p=>((p.close-benchFirst)/benchFirst*100));
-    const labels=benchPts.map(p=>p.date);
+    // Filtra date per YTD
+    const filterYTD=pts=>{
+      if(r!=='ytd')return pts;
+      const jan1=new Date(new Date().getFullYear(),0,1).getTime()/1000;
+      return pts.filter(p=>p.time>=jan1);
+    };
 
+    let refPts=filterYTD(refData.points);
+    if(!refPts.length){loadDiv.style.display='none';return;}
+    const labels=refPts.map(p=>p.date);
+
+    // Rendimento portafoglio ponderato
     let totalInvested=0;
-    const weights=portfolio.map(item=>{const inv=item.qty*item.buyPrice;totalInvested+=inv;return inv;});
-    const portReturns=benchPts.map((_,di)=>{
+    const weights=portfolio.map(item=>{const inv=item.qty*(item.buyPrice||0);totalInvested+=inv;return inv;});
+    const portReturns=refPts.map((_,di)=>{
+      if(!totalInvested)return 0;
       let wSum=0;
       portfolio.forEach((item,pi)=>{
-        let pts=portData[pi]?.points||[];
-        if(r==='ytd'){const jan1=new Date(new Date().getFullYear(),0,1).getTime();pts=pts.filter(p=>new Date(p.date).getTime()>=jan1);}
+        let pts=filterYTD(portDataArr[pi]?.points||[]);
         if(!pts.length)return;
         const first=pts[0].close;
-        const cur=pts[di]?.close||pts[Math.min(di,pts.length-1)].close;
-        wSum+=((cur-first)/first*100)*(weights[pi]/totalInvested);
+        const cur=pts[Math.min(di,pts.length-1)].close;
+        if(first)wSum+=((cur-first)/first*100)*(weights[pi]/totalInvested);
       });
       return wSum;
     });
-
     const portFinal=portReturns[portReturns.length-1]||0;
-    const benchFinal=benchReturns[benchReturns.length-1]||0;
-    const alpha=portFinal-benchFinal;
-    if(sub)sub.textContent=`Portfolio: ${portFinal>=0?'+':''}${portFinal.toFixed(2)}% · ${benchSym}: ${benchFinal>=0?'+':''}${benchFinal.toFixed(2)}% · Alpha: ${alpha>=0?'+':''}${alpha.toFixed(2)}%`;
+
+    // Calcola rendimenti per ogni benchmark attivo
+    const benchResults=activeBenchSyms.map((sym,bi)=>{
+      const def=BENCH_DEFS[sym]||{label:sym,color:'#8499B0',dash:[5,3]};
+      const pts=filterYTD(benchDataArr[bi]?.points||[]);
+      if(!pts.length)return{sym,def,returns:null,final:null};
+      const first=pts[0].close;
+      // Allinea sull'asse del refPts: per ogni data di refPts prendi il close più vicino
+      const returns=refPts.map((_,di)=>{
+        const cur=pts[Math.min(di,pts.length-1)].close;
+        return first?((cur-first)/first*100):0;
+      });
+      return{sym,def,returns,final:returns[returns.length-1]||0};
+    }).filter(b=>b.returns);
+
+    if(sub){
+      const parts=benchResults.map(b=>`${b.def.label}: ${b.final>=0?'+':''}${b.final.toFixed(1)}%`);
+      sub.textContent=`Portafoglio: ${portFinal>=0?'+':''}${portFinal.toFixed(2)}% · ${parts.join(' · ')}`;
+    }
 
     if(portPerfCI){portPerfCI.destroy();portPerfCI=null;}
     const ctx=canvas.getContext('2d');
@@ -7164,17 +7185,21 @@ async function loadPortPerf(range,btn){
         labels,
         datasets:[
           {label:'Portafoglio',data:portReturns,borderColor:'#1A56C4',borderWidth:2.5,fill:true,
-            backgroundColor:cx=>{const g=cx.chart.ctx.createLinearGradient(0,0,0,200);g.addColorStop(0,'rgba(26,86,196,.18)');g.addColorStop(1,'rgba(26,86,196,0)');return g;},
-            tension:.35,pointRadius:0,pointHoverRadius:4},
-          {label:benchSym,data:benchReturns,borderColor:'#8499B0',borderWidth:1.5,borderDash:[5,5],fill:false,tension:.35,pointRadius:0,pointHoverRadius:4}
+            backgroundColor:cx=>{const g=cx.chart.ctx.createLinearGradient(0,0,0,220);g.addColorStop(0,'rgba(26,86,196,.18)');g.addColorStop(1,'rgba(26,86,196,0)');return g;},
+            tension:.35,pointRadius:0,pointHoverRadius:5,order:0},
+          ...benchResults.map((b,i)=>({
+            label:b.def.label,data:b.returns,
+            borderColor:b.def.color,borderWidth:1.5,borderDash:b.def.dash,
+            fill:false,tension:.35,pointRadius:0,pointHoverRadius:4,order:i+1
+          }))
         ]
       },
       options:{
         responsive:true,
         interaction:{mode:'index',intersect:false},
         plugins:{
-          legend:{labels:{color:isDark?'#8FAFC8':'#5D7A96',font:{family:'IBM Plex Mono',size:11}}},
-          tooltip:{callbacks:{label:ctx=>(`${ctx.dataset.label}: ${ctx.parsed.y>=0?'+':''}${ctx.parsed.y.toFixed(2)}%`)}}
+          legend:{labels:{color:isDark?'#8FAFC8':'#5D7A96',font:{family:'IBM Plex Mono',size:11},boxWidth:16,padding:12}},
+          tooltip:{callbacks:{label:c=>(`${c.dataset.label}: ${c.parsed.y>=0?'+':''}${c.parsed.y.toFixed(2)}%`)}}
         },
         scales:{
           x:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8,maxRotation:0},grid:{display:false}},
@@ -7182,6 +7207,41 @@ async function loadPortPerf(range,btn){
         }
       }
     });
+
+    // Tabella comparativa
+    const tblEl=document.getElementById('perf-comparison-table');
+    if(tblEl){
+      const allRows=[{label:'Il tuo portafoglio',sub:'Rendimento ponderato per acquisto',color:'#1A56C4',final:portFinal,isPort:true},...benchResults.map(b=>({label:b.def.label,sub:b.def.sub,color:b.def.color,final:b.final,isPort:false}))];
+      const maxAbs=Math.max(...allRows.map(x=>Math.abs(x.final)),1);
+      tblEl.innerHTML=`
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Confronto a ${r.toUpperCase()}</div>
+        ${allRows.map(row=>{
+          const alpha=row.isPort?null:portFinal-row.final;
+          const barW=Math.round(Math.abs(row.final)/maxAbs*100);
+          const isPos=row.final>=0;
+          return`<div style="display:grid;grid-template-columns:160px 1fr 70px 80px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd)">
+            <div>
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:${row.color};flex-shrink:0"></span>
+                <span style="font-size:12px;font-weight:${row.isPort?'700':'500'};color:${row.isPort?'var(--t)':'var(--t2)'}">${row.label}</span>
+              </div>
+              <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:1px;padding-left:16px">${row.sub}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="flex:1;height:6px;background:var(--bd);border-radius:4px;overflow:hidden">
+                <div style="height:6px;width:${barW}%;background:${isPos?row.color:'#EF4444'};border-radius:4px;transition:width .5s"></div>
+              </div>
+            </div>
+            <div style="text-align:right;font-family:var(--fm);font-size:13px;font-weight:700;color:${isPos?'var(--g)':'var(--r)'}">${row.final>=0?'+':''}${row.final.toFixed(2)}%</div>
+            <div style="text-align:right">
+              ${alpha!=null?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${alpha>=0?'var(--g)':'var(--r)'}">${alpha>=0?'▲ +':'▼ '}${Math.abs(alpha).toFixed(2)}%</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${alpha>=0?'sovraperfroma':'sottoperfroma'}</div>`:'<div style="font-size:9px;color:var(--t3);font-family:var(--fm)">baseline</div>'}
+            </div>
+          </div>`;
+        }).join('')}
+        <div style="margin-top:10px;font-size:9px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ Rendimento normalizzato dal primo giorno del periodo · BRK-B = azioni Berkshire Hathaway (proxy Buffett) · ARKK = ARK Innovation ETF (Cathie Wood) · ACWI = iShares MSCI ACWI</div>`;
+    }
+
   }catch(e){console.warn('loadPortPerf error',e);}
   loadDiv.style.display='none';
 }
