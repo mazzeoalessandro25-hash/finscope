@@ -3102,15 +3102,16 @@ function applyLWChartTheme(chart){
     timeScale:{borderColor:t.border},
   });
 }
-function buildLWChart(container,type,pts){
+function buildLWChart(container,type,pts,opts={}){
   const t=getLWChartTheme();
+  const timeVisible=opts.timeVisible??false;
   const chart=LightweightCharts.createChart(container,{
     width:container.clientWidth,height:container.clientHeight||280,
     layout:{background:{color:t.bg},textColor:t.text},
     grid:{vertLines:{color:t.grid},horzLines:{color:t.grid}},
     crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
     rightPriceScale:{borderColor:t.border},
-    timeScale:{borderColor:t.border,timeVisible:false},
+    timeScale:{borderColor:t.border,timeVisible,secondsVisible:false},
     handleScroll:true,handleScale:true,
   });
   if(type==='candle'){
