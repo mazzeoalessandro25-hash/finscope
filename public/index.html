@@ -8485,6 +8485,41 @@ function calcRSI(closes,period=14){
   return res;
 }
 
+function calcMACD(closes,fast=12,slow=26,signal=9){
+  if(closes.length<slow+signal)return{macd:[],signal:[],hist:[]};
+  const emaFast=calcEMA(closes,fast);
+  const emaSlow=calcEMA(closes,slow);
+  // Allinea per indice
+  const slowMap=new Map(emaSlow.map(r=>[r.idx,r.value]));
+  const macdLine=emaFast.filter(r=>slowMap.has(r.idx)).map(r=>({idx:r.idx,value:+(r.value-slowMap.get(r.idx)).toFixed(4)}));
+  if(macdLine.length<signal)return{macd:macdLine,signal:[],hist:[]};
+  const macdVals=macdLine.map(r=>r.value);
+  const k=2/(signal+1);
+  let sig=macdVals.slice(0,signal).reduce((a,b)=>a+b,0)/signal;
+  const sigLine=[{idx:macdLine[signal-1].idx,value:+sig.toFixed(4)}];
+  for(let i=signal;i<macdLine.length;i++){sig=macdVals[i]*k+sig*(1-k);sigLine.push({idx:macdLine[i].idx,value:+sig.toFixed(4)});}
+  const sigMap=new Map(sigLine.map(r=>[r.idx,r.value]));
+  const hist=macdLine.filter(r=>sigMap.has(r.idx)).map(r=>({idx:r.idx,value:+(r.value-sigMap.get(r.idx)).toFixed(4)}));
+  return{macd:macdLine,signal:sigLine,hist};
+}
+function calcStoch(pts,kPeriod=14,dPeriod=3){
+  const res=[];
+  for(let i=kPeriod-1;i<pts.length;i++){
+    const sl=pts.slice(i-kPeriod+1,i+1);
+    const lo=Math.min(...sl.map(p=>+p.low||+p.close));
+    const hi=Math.max(...sl.map(p=>+p.high||+p.close));
+    const c=+pts[i].close;
+    const k=hi>lo?+((c-lo)/(hi-lo)*100).toFixed(2):50;
+    res.push({idx:i,k});
+  }
+  if(res.length<dPeriod)return res.map(r=>({...r,d:r.k}));
+  for(let i=dPeriod-1;i<res.length;i++){
+    res[i].d=+((res[i-dPeriod+1].k+res[i-dPeriod+2].k+res[i].k)/dPeriod).toFixed(2);
+  }
+  for(let i=0;i<dPeriod-1;i++)res[i].d=res[i].k;
+  return res;
+}
+
 function toggleIndPanel(e){
   if(e)e.stopPropagation();
   const panel=document.getElementById('sd-ind-panel');
