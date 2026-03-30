@@ -5064,7 +5064,7 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
 
   // Apertura: variazione con interpretazione calibrata
   if(Math.abs(totalChgPct)<0.3)
-    portText+=`Il portafoglio ha chiuso la giornata pressoché invariato (${up?'+':'−'}${absPct}%, ${up?'+':'−'}$${absUSD}). In assenza di movimenti rilevanti, il valore complessivo rimane stabile: queste sedute di transizione sono normali e spesso precedono fasi più direzionali. `;
+    portText+=`Il portafoglio ha chiuso la giornata pressoché invariato (${up?'+':'−'}${absPct}%, ${up?'+':'−'}€${absEUR}). In assenza di movimenti rilevanti, il valore complessivo rimane stabile: queste sedute di transizione sono normali e spesso precedono fasi più direzionali. `;
   else if(up)
     portText+=totalChgPct>2
       ? `Una seduta eccellente per il portafoglio, che ha guadagnato il ${absPct}% corrispondente a +$${absUSD}. Movimenti di questa entità su base giornaliera non sono frequenti e riflettono una combinazione favorevole di titoli in posizione. `
