@@ -3166,7 +3166,7 @@ async function loadDashChart(n,sym,range,btn){
   if(s.rsiInst){s.rsiInst.remove();s.rsiInst=null;const rd=document.getElementById(`dashRsi${n}`);if(rd)rd.style.display='none';}
   if(s.inst){s.inst.remove();s.inst=null;s.volSeries=null;}
   s.indSeries={};
-  s.inst=buildLWChart(container,s.type,pts);
+  s.inst=buildLWChart(container,s.type,pts,{timeVisible:s.range==='1d'||s.range==='5d'});
   // Volume histogram
   const volData=pts.filter(p=>p.volume!=null&&p.volume>0).map(p=>{
     const isUp=p.open!=null?+p.close>=+p.open:true;
