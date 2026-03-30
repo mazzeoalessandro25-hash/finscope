@@ -5338,6 +5338,22 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   // ── SEZIONE 2: Il tuo portafoglio ──
   let portText='';
 
+  // KPI bullets sintetici
+  {
+    const _fxR2=_fxR;
+    const _valEUR2=totalValUSD>0?totalValUSD/_fxR2:null;
+    const _invUSD2=(typeof portfolio!=='undefined'&&portfolio.length)?portfolio.reduce((s,it)=>s+(it.qty*(it.buyPrice||0)*(it.currency==='EUR'?_fxR2:1)),0):0;
+    const _invEUR2=_invUSD2/_fxR2;
+    const _pnlEUR2=_valEUR2!=null?_valEUR2-_invEUR2:null;
+    const _pnlPct2=_invEUR2>0&&_pnlEUR2!=null?_pnlEUR2/_invEUR2*100:null;
+    const _todayEUR2=totalChgUSD/_fxR2;
+    if(_valEUR2!=null) portText+=`• Valore portafoglio: <strong>€${fmt(_valEUR2,0)}</strong>${_invEUR2>0?' · Investito €'+fmt(_invEUR2,0):''}\n`;
+    if(_pnlEUR2!=null) portText+=`• P&L complessivo: <strong>${_pnlEUR2>=0?'+':''}€${fmt(_pnlEUR2,0)}</strong> (${_pnlEUR2>=0?'+':''}${fmt(_pnlPct2||0,1)}%)\n`;
+    portText+=`• Variazione oggi: <strong>${up?'+':'−'}€${fmt(Math.abs(_todayEUR2),0)}</strong> (${up?'+':'−'}${absPct}%) · ${nUp}/${tot} titoli in verde\n`;
+    if(best) portText+=`• Miglior titolo: <strong>${best.sym}</strong> ${best.chgPct>=0?'+':''}${best.chgPct.toFixed(1)}%\n`;
+    if(worst&&worst.sym!==best?.sym&&Math.abs(worst.chgPct)>0.3) portText+=`• Peggior titolo: <strong>${worst.sym}</strong> ${worst.chgPct.toFixed(1)}%\n`;
+  }
+
   // Apertura: variazione con interpretazione calibrata
   if(Math.abs(totalChgPct)<0.3)
     portText+=`Il portafoglio ha chiuso la giornata pressoché invariato (${up?'+':'−'}${absPct}%, ${up?'+':'−'}€${absEUR}). In assenza di movimenti rilevanti, il valore complessivo rimane stabile: queste sedute di transizione sono normali e spesso precedono fasi più direzionali. `;
