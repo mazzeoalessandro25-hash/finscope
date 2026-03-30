@@ -8117,6 +8117,7 @@ function openStockDetail(sym){
   document.getElementById('sd-btn-candle').classList.add('active');
   document.getElementById('sd-btn-line').classList.remove('active');
   // Reset Wyckoff
+  if(sdWyckoffChartInst){sdWyckoffChartInst.remove();sdWyckoffChartInst=null;}
   const _wyEl=document.getElementById('sd-wyckoff-content');
   if(_wyEl)_wyEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento analisi Wyckoff...</div>';
   // Load
