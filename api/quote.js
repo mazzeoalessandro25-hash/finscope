@@ -80,7 +80,7 @@ export default async function handler(req, res) {
   try {
     if (type === 'history') {
       const range = req.query.range || '1mo';
-      const interval = range === '1d' ? '5m' : range === '5d' ? '15m' : '1d';
+      const interval = range === '1d' ? '5m' : range === '5d' ? '15m' : range === 'max' ? '1wk' : '1d';
       const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=${interval}&range=${range}`;
       const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' } });
       const data = await r.json();
