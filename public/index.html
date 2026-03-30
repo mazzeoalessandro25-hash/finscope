@@ -115,9 +115,12 @@ nav{height:54px;background:var(--b2);
 
 /* CHART CONTROLS */
 .cc-row{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
-.cc-btn{background:none;border:1px solid var(--bd);color:var(--t2);font-family:var(--fm);font-size:10px;padding:3px 9px;border-radius:5px;cursor:pointer;transition:all .15s}
+.cc-btn{background:none;border:1px solid var(--bd);color:var(--t2);font-family:var(--fm);font-size:10px;padding:3px 9px;border-radius:5px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
 .cc-btn:hover{background:var(--b3);color:var(--b);border-color:rgba(26,86,196,.3)}
 .cc-btn.active{background:var(--b);color:#fff;border-color:var(--b)}
+/* Timeframe scrollable strip */
+.tf-scroll{display:flex;gap:4px;align-items:center;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none;padding-bottom:1px}
+.tf-scroll::-webkit-scrollbar{display:none}
 .sym-sel{background:var(--s2);border:1px solid var(--bd);color:var(--t);font-family:var(--fm);font-size:11px;padding:3px 8px;border-radius:5px;outline:none;cursor:pointer;margin-right:6px}
 .sym-sel:focus{border-color:var(--b)}
 .chart-type-btn{background:none;border:1px solid var(--bd);color:var(--t2);font-family:var(--fm);font-size:10px;padding:3px 9px;border-radius:5px;cursor:pointer;transition:all .15s}
