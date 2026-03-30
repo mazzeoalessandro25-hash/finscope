@@ -9876,50 +9876,61 @@ async function loadPortfolioNews(){
     return;
   }
   el.innerHTML='<div class="ld">Caricamento news del portafoglio...</div>';
-  const tickers=portfolio.map(p=>p.sym);
-  const query=tickers.map(t=>t.replace(/\.(MI|PA|DE|L|SW|T|TO)$/,'')).join(' ');
-  try{
-    const r=await fetch('/api/news?q='+encodeURIComponent(query));
-    const data=await r.json();
-    const articles=data.news||[];
-    if(!articles.length){
-      el.innerHTML='<div class="ld" style="padding:10px">Nessuna news trovata per i titoli in portafoglio</div>';
-      return;
-    }
-    el.innerHTML=`
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:12px;letter-spacing:.5px">
-        News per: ${tickers.join(' · ')}
-      </div>
-      <div class="news-grid" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;display:grid">
-        ${articles.slice(0,16).map(a=>{
-          const dt=a.time?new Date(a.time*1000).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-          const thumb=a.thumbnail?`<div style="width:100%;height:120px;background:url('${a.thumbnail}') center/cover no-repeat;border-radius:8px;margin-bottom:8px"></div>`:'';
-          return`<a href="${a.link}" target="_blank" rel="noopener" class="news-item">
-            ${thumb}
-            <div class="n-pub">${a.publisher||''}</div>
-            <div class="n-title">${a.title||''}</div>
-            <div class="n-time">${dt}</div>
-          </a>`;
-        }).join('')}
-      </div>`;
-  }catch(e){
-    // Fallback: mostra link di ricerca per ogni ticker
-    el.innerHTML=`
-      <div style="font-size:12px;color:var(--t2);margin-bottom:12px">
-        News per i tuoi titoli (apri su Google Finance):
-      </div>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">
-        ${tickers.map(t=>`<a href="https://www.google.com/finance/quote/${t}" target="_blank" rel="noopener"
-          style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--b3);
-          color:var(--b);border-radius:8px;font-family:var(--fm);font-size:12px;font-weight:700;text-decoration:none;transition:all .15s"
-          onmouseover="this.style.background='var(--b)';this.style.color='#fff'"
-          onmouseout="this.style.background='var(--b3)';this.style.color='var(--b)'">
-          ${t} ↗</a>`).join('')}
-      </div>
-      <div style="margin-top:12px;font-size:11px;color:var(--t3);font-family:var(--fm)">
-        ℹ API news non disponibile — apertura diretta su Google Finance per ogni titolo
-      </div>`;
+
+  // Fetch parallelo: una chiamata per ticker
+  const results=await Promise.all(portfolio.map(async item=>{
+    try{
+      const r=await fetch(`/api/quote?type=news&symbol=${encodeURIComponent(item.sym)}`);
+      const d=await r.json();
+      const name=item.name||((_lastPortQuotes.find&&_lastPortQuotes.find(q=>q?.symbol===item.sym||q?.sym===item.sym))?.longName)||item.sym;
+      return{sym:item.sym,name,news:(d.news||[]).slice(0,5)};
+    }catch{return{sym:item.sym,name:item.name||item.sym,news:[]};}
+  }));
+
+  // Filtra ticker senza news, ordina per news più recente
+  const groups=results
+    .filter(g=>g.news.length>0)
+    .sort((a,b)=>{
+      const tA=a.news[0]?.time||0;
+      const tB=b.news[0]?.time||0;
+      return tB-tA;
+    });
+
+  if(!groups.length){
+    el.innerHTML='<div class="ld" style="padding:10px">Nessuna notizia recente trovata per i titoli in portafoglio</div>';
+    return;
   }
+
+  const totalArticles=groups.reduce((s,g)=>s+g.news.length,0);
+
+  // Palette colori per i ticker badge
+  const palette=['#1A56C4','#10B981','#F59E0B','#EF4444','#8B5CF6','#0EA5E9','#F43F5E','#06B6D4','#84CC16','#F97316'];
+
+  el.innerHTML=`
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+      <span>${groups.length} titol${groups.length===1?'o':'i'} con notizie · ${totalArticles} articoli</span>
+      <span style="font-size:9px;opacity:.6">Aggiornato ora</span>
+    </div>
+    ${groups.map((g,gi)=>{
+      const col=palette[gi%palette.length];
+      const rows=g.news.map(a=>{
+        const ago=a.time?_timeAgo(a.time):'';
+        return`<a href="${a.link||'#'}" target="_blank" rel="noopener"
+          style="display:flex;align-items:baseline;gap:0;padding:7px 0 7px 16px;border-bottom:1px solid var(--bd);text-decoration:none;transition:background .12s;cursor:pointer"
+          onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+          <span style="flex:1;font-size:12px;color:var(--t);line-height:1.45;padding-right:10px">${a.title||''}</span>
+          <span style="flex-shrink:0;font-size:10px;color:var(--t3);font-family:var(--fm);white-space:nowrap">${a.publisher?a.publisher+' · ':''} ${ago}</span>
+        </a>`;
+      }).join('');
+      return`<div style="margin-bottom:4px">
+        <div style="display:flex;align-items:center;gap:8px;padding:9px 0 8px;border-bottom:2px solid ${col}22">
+          <span style="font-size:11px;font-weight:700;font-family:var(--fm);color:${col};background:${col}15;padding:2px 8px;border-radius:4px;letter-spacing:.3px">${g.sym}</span>
+          <span style="font-size:11px;color:var(--t2);font-weight:500">${g.name!==g.sym?g.name:''}</span>
+          <span style="margin-left:auto;font-size:10px;font-family:var(--fm);color:var(--t3)">${g.news.length} articol${g.news.length===1?'o':'i'}</span>
+        </div>
+        ${rows}
+      </div>`;
+    }).join('')}`;
 }
 
 /* ══════════════════════════════════════════
