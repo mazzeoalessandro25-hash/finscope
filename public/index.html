@@ -3400,7 +3400,7 @@ async function loadModalChart(sym,range,btn){
   const container=document.getElementById('modal-chart');
   container.style.height='320px';
   if(modalChart){modalChart.remove();modalChart=null;}
-  modalChart=buildLWChart(container,modalType,pts);
+  modalChart=buildLWChart(container,modalType,pts,{timeVisible:modalRange==='1d'||modalRange==='5d'});
 }
 // ESC chiude modal
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal({target:document.getElementById('modal')});});
