@@ -4630,7 +4630,7 @@ async function renderPortfolio(){
   const dailyValBefore=totalValUSD-dailyPnlUSD;
   const dailyPnlPct=dailyValBefore>0?(dailyPnlUSD/dailyValBefore*100):0;
   const dailyUp=dailyPnlUSD>=0;
-  setS('psb-oggi-inline',(dailyUp?'+':'')+fmt(dailyPnlUSD,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
+  setS('psb-oggi-inline',(dailyUp?'+':'')+'€'+fmt(dailyPnlUSD/eurUsd,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
   // Mostra la card full-width giornata
   const dailyOuter=document.getElementById('port-daily-outer');
   if(dailyOuter&&dailyItems.length>0) dailyOuter.style.display='block';
