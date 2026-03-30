@@ -4995,7 +4995,9 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   const nDown = assets.filter(a=>a.chgPct<0).length;
   const tot = assets.length;
   const absPct = Math.abs(totalChgPct).toFixed(2);
-  const absUSD = Math.abs(totalChgUSD).toFixed(0);
+  const _fxR = _lastFxRate||1.08;
+  const totalChgEUR = totalChgUSD / _fxR;
+  const absEUR = Math.abs(totalChgEUR).toFixed(0);
   const date = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
 
   // ── Dati indici ──
