@@ -92,10 +92,21 @@ export default async function handler(req, res) {
       const highs  = result.indicators?.quote?.[0]?.high  || [];
       const lows   = result.indicators?.quote?.[0]?.low   || [];
       const vols   = result.indicators?.quote?.[0]?.volume || [];
+      const fmtDate = (t) => {
+        const d = new Date(t * 1000);
+        if (interval === '5m') {
+          return d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
+        }
+        if (interval === '15m') {
+          return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit', timeZone: 'America/New_York' })
+            + ' ' + d.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' });
+        }
+        return d.toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' });
+      };
       return res.json({
         points: timestamps.map((t, i) => ({
           time: t,
-          date: new Date(t * 1000).toLocaleDateString('it-IT', { day: '2-digit', month: '2-digit' }),
+          date: fmtDate(t),
           open:   opens[i],
           high:   highs[i],
           low:    lows[i],
