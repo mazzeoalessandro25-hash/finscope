@@ -5115,7 +5115,7 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     discussed.add(a.sym);
     const assetUp=a.chgPct>=0;
     const chgStr=`${assetUp?'+':''}${a.chgPct.toFixed(2)}%`;
-    const usdStr=`${a.chgUSD>=0?'+':''}$${Math.abs(a.chgUSD).toFixed(0)}`;
+    const usdStr=`${a.chgUSD>=0?'+':''}€${Math.abs(a.chgUSD/_fxR).toFixed(0)}`;
     const name=a.name&&a.name!==a.sym?`${a.sym} (${a.name})`:`<strong>${a.sym}</strong>`;
     const news=newsMap[a.sym]||[];
 
