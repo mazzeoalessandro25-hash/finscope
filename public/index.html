@@ -8909,6 +8909,31 @@ function renderSdTechSignals(){
       signals.push({label:'EMA20',text:lastPrice>last?'Prezzo sopra EMA — trend positivo':'Prezzo sotto EMA — pressione ribassista',type:lastPrice>last?'bull':'bear'});
     }
   }
+  if(sdIndicators.has('macd')){
+    const md=calcMACD(closes);
+    if(md.hist.length){
+      const last=md.hist[md.hist.length-1].value;
+      const prev=md.hist.length>1?md.hist[md.hist.length-2].value:last;
+      const macdVal=md.macd.length?md.macd[md.macd.length-1].value:null;
+      const sigVal=md.signal.length?md.signal[md.signal.length-1].value:null;
+      const cross=prev<0&&last>0?'bull':prev>0&&last<0?'bear':null;
+      if(cross==='bull')signals.push({label:'MACD',text:'Incrocio rialzista — MACD sopra la linea Signal',type:'bull'});
+      else if(cross==='bear')signals.push({label:'MACD',text:'Incrocio ribassista — MACD sotto la linea Signal',type:'bear'});
+      else if(macdVal!==null&&sigVal!==null)signals.push({label:`MACD ${macdVal.toFixed(2)}`,text:macdVal>sigVal?'MACD sopra Signal — momentum positivo':'MACD sotto Signal — momentum negativo',type:macdVal>sigVal?'bull':'bear'});
+    }
+  }
+  if(sdIndicators.has('stoch')){
+    const st=calcStoch(pts);
+    if(st.length){
+      const last=st[st.length-1];
+      const prev=st.length>1?st[st.length-2]:last;
+      const type=last.k>=80?'bear':last.k<=20?'bull':last.k>50?'bull':'bear';
+      const cross=prev.k<prev.d&&last.k>last.d?'bull':prev.k>prev.d&&last.k<last.d?'bear':null;
+      if(cross==='bull')signals.push({label:'Stoch',text:`%K incrocia sopra %D a ${last.k.toFixed(0)} — segnale di acquisto`,type:'bull'});
+      else if(cross==='bear')signals.push({label:'Stoch',text:`%K incrocia sotto %D a ${last.k.toFixed(0)} — segnale di vendita`,type:'bear'});
+      else signals.push({label:`Stoch ${last.k.toFixed(0)}`,text:last.k>=80?'Ipercomprato — possibile inversione':last.k<=20?'Ipervenduto — possibile rimbalzo':last.k>50?'Zona positiva':'Zona negativa',type});
+    }
+  }
 
   el.style.display='block';
   el.innerHTML=`<div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px">Segnali tecnici</div>
