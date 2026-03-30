@@ -1096,6 +1096,8 @@ html.dark .auth-box{background:#1e293b}
             <div class="ind-panel-cat">Oscillatori</div>
             <div class="ind-panel-row">
               <button class="cc-btn" id="sd-ind-rsi" onclick="toggleSdInd('rsi',this)" style="color:#8b5cf6" title="RSI 14 periodi">RSI 14</button>
+              <button class="cc-btn" id="sd-ind-macd" onclick="toggleSdInd('macd',this)" style="color:#f43f5e" title="MACD 12-26-9">MACD</button>
+              <button class="cc-btn" id="sd-ind-stoch" onclick="toggleSdInd('stoch',this)" style="color:#0ea5e9" title="Stocastico 14,3">Stoch</button>
             </div>
             <div class="ind-panel-cat">Volatilità &amp; Bande</div>
             <div class="ind-panel-row">
@@ -1105,6 +1107,8 @@ html.dark .auth-box{background:#1e293b}
         </div>
         <div id="sd-chart" style="width:100%;height:300px"></div>
         <div id="sd-rsi-chart" style="display:none;width:100%;height:80px;margin-top:3px;border-top:1px solid var(--bd)"></div>
+        <div id="sd-macd-chart" style="display:none;width:100%;height:80px;margin-top:3px;border-top:1px solid var(--bd)"></div>
+        <div id="sd-stoch-chart" style="display:none;width:100%;height:70px;margin-top:3px;border-top:1px solid var(--bd)"></div>
         <div id="sd-tech-signals" style="display:none;margin-top:10px"></div>
       </div>
       <!-- Dati chiave -->
