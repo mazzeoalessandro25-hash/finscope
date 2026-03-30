@@ -3155,8 +3155,26 @@ async function loadDashChart(n,sym,range,btn){
   sub.textContent=`${fmt(last,last<20?4:0)} · ${s.range}: ${ch>=0?'+':''}${fmt(ch,2)}%`;
   sub.style.color=ch>=0?'var(--g)':'var(--r)';
   const container=document.getElementById(`dashChart${n}`);
-  if(s.inst){s.inst.remove();s.inst=null;}
+  // Distruggi grafico e RSI precedenti
+  if(s.rsiInst){s.rsiInst.remove();s.rsiInst=null;const rd=document.getElementById(`dashRsi${n}`);if(rd)rd.style.display='none';}
+  if(s.inst){s.inst.remove();s.inst=null;s.volSeries=null;}
+  s.indSeries={};
   s.inst=buildLWChart(container,s.type,pts);
+  // Volume histogram
+  const volData=pts.filter(p=>p.volume!=null&&p.volume>0).map(p=>{
+    const isUp=p.open!=null?+p.close>=+p.open:true;
+    return{time:p.time,value:+p.volume,color:isUp?'rgba(5,150,105,.3)':'rgba(220,38,38,.3)'};
+  });
+  if(volData.length){
+    try{
+      s.volSeries=s.inst.addHistogramSeries({priceFormat:{type:'volume'},priceScaleId:'vol',lastValueVisible:false,priceLineVisible:false});
+      s.inst.priceScale('vol').applyOptions({scaleMargins:{top:0.8,bottom:0},borderVisible:false});
+      s.volSeries.setData(volData);
+    }catch(e){s.volSeries=null;}
+  }
+  s.lastPts=pts;
+  // Ri-applica indicatori attivi dopo reload
+  renderDashTechOverlays(n,null);
 }
 
 /* ── MODAL CHART ── */
