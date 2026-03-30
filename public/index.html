@@ -3177,6 +3177,118 @@ async function loadDashChart(n,sym,range,btn){
   renderDashTechOverlays(n,null);
 }
 
+/* ── DASH INDICATORS ── */
+function toggleDashIndPanel(n,e){
+  if(e)e.stopPropagation();
+  const panel=document.getElementById(`ch${n}-ind-panel`);
+  if(!panel)return;
+  const open=panel.style.display!=='none'&&panel.style.display!=='';
+  panel.style.display=open?'none':'block';
+}
+document.addEventListener('click',function(e){
+  [1,2].forEach(n=>{
+    const panel=document.getElementById(`ch${n}-ind-panel`);
+    const btn=document.getElementById(`ch${n}-ind-toggle`);
+    if(panel&&btn&&!panel.contains(e.target)&&!btn.contains(e.target)){
+      panel.style.display='none';
+    }
+  });
+});
+function _updateDashIndBadge(n){
+  const s=dashCharts[n];
+  const badge=document.getElementById(`ch${n}-ind-badge`);
+  if(!badge)return;
+  const cnt=s.indicators.size;
+  badge.textContent=cnt;
+  badge.style.display=cnt>0?'block':'none';
+}
+function toggleDashInd(n,key,btn){
+  const s=dashCharts[n];
+  btn.classList.toggle('active');
+  if(s.indicators.has(key)){
+    s.indicators.delete(key);
+    if(key==='rsi'){
+      const rd=document.getElementById(`dashRsi${n}`);
+      if(rd)rd.style.display='none';
+      if(s.rsiInst){s.rsiInst.remove();s.rsiInst=null;}
+      delete s.indSeries[key];
+    } else if(s.indSeries[key]){
+      const arr=Array.isArray(s.indSeries[key])?s.indSeries[key]:[s.indSeries[key]];
+      arr.forEach(ser=>{try{if(s.inst)s.inst.removeSeries(ser);}catch(_){}});
+      delete s.indSeries[key];
+    }
+  } else {
+    s.indicators.add(key);
+    renderDashTechOverlays(n,key);
+  }
+  _updateDashIndBadge(n);
+}
+function renderDashTechOverlays(n,onlyKey){
+  const s=dashCharts[n];
+  if(!s.inst||!s.lastPts||!s.lastPts.length)return;
+  const pts=s.lastPts;
+  const closes=pts.map(p=>+p.close);
+  const keys=onlyKey?[onlyKey]:[...s.indicators];
+  keys.forEach(key=>{
+    if(s.indSeries[key])return;
+    if(key==='sma20'){
+      const d=calcSMA(closes,20);if(!d.length)return;
+      const ser=s.inst.addLineSeries({color:'#f59e0b',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      ser.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
+      s.indSeries[key]=ser;
+    } else if(key==='sma50'){
+      const d=calcSMA(closes,50);if(!d.length)return;
+      const ser=s.inst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      ser.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
+      s.indSeries[key]=ser;
+    } else if(key==='ema20'){
+      const d=calcEMA(closes,20);if(!d.length)return;
+      const ser=s.inst.addLineSeries({color:'#06b6d4',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      ser.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
+      s.indSeries[key]=ser;
+    } else if(key==='bb'){
+      const d=calcBB(closes,20);if(!d.length)return;
+      const [upS,midS,loS]=[
+        s.inst.addLineSeries({color:'rgba(99,102,241,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
+        s.inst.addLineSeries({color:'rgba(99,102,241,.85)',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
+        s.inst.addLineSeries({color:'rgba(99,102,241,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
+      ];
+      upS.setData(d.map(r=>({time:pts[r.idx].time,value:r.upper})));
+      midS.setData(d.map(r=>({time:pts[r.idx].time,value:r.middle})));
+      loS.setData(d.map(r=>({time:pts[r.idx].time,value:r.lower})));
+      s.indSeries[key]=[upS,midS,loS];
+    } else if(key==='rsi'){
+      const d=calcRSI(closes,14);if(!d.length)return;
+      const rd=document.getElementById(`dashRsi${n}`);if(!rd)return;
+      rd.style.display='block';
+      if(s.rsiInst){s.rsiInst.remove();}
+      const theme=getLWChartTheme();
+      s.rsiInst=LightweightCharts.createChart(rd,{
+        width:rd.clientWidth,height:80,
+        layout:{background:{color:theme.bg},textColor:theme.text},
+        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
+        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
+        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
+        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
+        handleScroll:false,handleScale:false,
+      });
+      const rsiS=s.rsiInst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
+      const lwData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      rsiS.setData(lwData);
+      if(lwData.length>=2){
+        const t0=lwData[0].time,tN=lwData[lwData.length-1].time;
+        const ob=s.rsiInst.addLineSeries({color:'rgba(220,38,38,.4)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false});
+        const os=s.rsiInst.addLineSeries({color:'rgba(5,150,105,.4)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false});
+        ob.setData([{time:t0,value:70},{time:tN,value:70}]);
+        os.setData([{time:t0,value:30},{time:tN,value:30}]);
+      }
+      s.rsiInst.timeScale().fitContent();
+      new ResizeObserver(()=>{if(s.rsiInst)s.rsiInst.applyOptions({width:rd.clientWidth});}).observe(rd);
+      s.indSeries[key]='rsi_active';
+    }
+  });
+}
+
 /* ── MODAL CHART ── */
 async function openModal(sym,label){
   modalSym=sym;modalRange='1mo';
