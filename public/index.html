@@ -7208,40 +7208,6 @@ async function loadPortPerf(range,btn){
       }
     });
 
-    // Tabella comparativa
-    const tblEl=document.getElementById('perf-comparison-table');
-    if(tblEl){
-      const allRows=[{label:'Il tuo portafoglio',sub:'Rendimento ponderato per acquisto',color:'#1A56C4',final:portFinal,isPort:true},...benchResults.map(b=>({label:b.def.label,sub:b.def.sub,color:b.def.color,final:b.final,isPort:false}))];
-      const maxAbs=Math.max(...allRows.map(x=>Math.abs(x.final)),1);
-      tblEl.innerHTML=`
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Confronto a ${r.toUpperCase()}</div>
-        ${allRows.map(row=>{
-          const alpha=row.isPort?null:portFinal-row.final;
-          const barW=Math.round(Math.abs(row.final)/maxAbs*100);
-          const isPos=row.final>=0;
-          return`<div style="display:grid;grid-template-columns:160px 1fr 70px 80px;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd)">
-            <div>
-              <div style="display:flex;align-items:center;gap:6px">
-                <span style="display:inline-block;width:10px;height:3px;border-radius:2px;background:${row.color};flex-shrink:0"></span>
-                <span style="font-size:12px;font-weight:${row.isPort?'700':'500'};color:${row.isPort?'var(--t)':'var(--t2)'}">${row.label}</span>
-              </div>
-              <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:1px;padding-left:16px">${row.sub}</div>
-            </div>
-            <div style="display:flex;align-items:center;gap:6px">
-              <div style="flex:1;height:6px;background:var(--bd);border-radius:4px;overflow:hidden">
-                <div style="height:6px;width:${barW}%;background:${isPos?row.color:'#EF4444'};border-radius:4px;transition:width .5s"></div>
-              </div>
-            </div>
-            <div style="text-align:right;font-family:var(--fm);font-size:13px;font-weight:700;color:${isPos?'var(--g)':'var(--r)'}">${row.final>=0?'+':''}${row.final.toFixed(2)}%</div>
-            <div style="text-align:right">
-              ${alpha!=null?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${alpha>=0?'var(--g)':'var(--r)'}">${alpha>=0?'▲ +':'▼ '}${Math.abs(alpha).toFixed(2)}%</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${alpha>=0?'sovraper&shy;forma':'sottoper&shy;forma'}</div>`:'<div style="font-size:9px;color:var(--t3);font-family:var(--fm)">baseline</div>'}
-            </div>
-          </div>`;
-        }).join('')}
-        <div style="margin-top:10px;font-size:9px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ Rendimento normalizzato dal primo giorno del periodo · BRK-B = azioni Berkshire Hathaway (proxy Buffett) · ARKK = ARK Innovation ETF (Cathie Wood) · ACWI = iShares MSCI ACWI</div>`;
-    }
-
   }catch(e){console.warn('loadPortPerf error',e);}
   loadDiv.style.display='none';
 }
