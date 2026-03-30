@@ -3168,7 +3168,8 @@ async function loadDashChart(n,sym,range,btn){
   if(volData.length){
     try{
       s.volSeries=s.inst.addHistogramSeries({priceFormat:{type:'volume'},priceScaleId:'vol',lastValueVisible:false,priceLineVisible:false});
-      s.inst.priceScale('vol').applyOptions({scaleMargins:{top:0.8,bottom:0},borderVisible:false});
+      s.inst.priceScale('right').applyOptions({scaleMargins:{top:0.05,bottom:0.22}});
+      s.inst.priceScale('vol').applyOptions({scaleMargins:{top:0.82,bottom:0},borderVisible:false});
       s.volSeries.setData(volData);
     }catch(e){s.volSeries=null;}
   }
