@@ -3318,16 +3318,7 @@ function renderDashTechOverlays(n,onlyKey){
       const rd=document.getElementById(`dashRsi${n}`);if(!rd)return;
       rd.style.display='block';
       if(s.rsiInst){s.rsiInst.remove();}
-      const theme=getLWChartTheme();
-      s.rsiInst=LightweightCharts.createChart(rd,{
-        width:rd.clientWidth,height:80,
-        layout:{background:{color:theme.bg},textColor:theme.text},
-        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
-        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
-        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
-        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
-        handleScroll:false,handleScale:false,
-      });
+      s.rsiInst=buildSubChart(rd,90);
       const rsiS=s.rsiInst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
       const lwData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
       rsiS.setData(lwData);
@@ -3339,7 +3330,6 @@ function renderDashTechOverlays(n,onlyKey){
         os.setData([{time:t0,value:30},{time:tN,value:30}]);
       }
       s.rsiInst.timeScale().fitContent();
-      new ResizeObserver(()=>{if(s.rsiInst)s.rsiInst.applyOptions({width:rd.clientWidth});}).observe(rd);
       s.indSeries[key]='rsi_active';
     } else if(key==='macd'){
       const md_res=calcMACD(closes);
@@ -3347,16 +3337,7 @@ function renderDashTechOverlays(n,onlyKey){
       const md=document.getElementById(`dashMacd${n}`);if(!md)return;
       md.style.display='block';
       if(s.macdInst){s.macdInst.remove();}
-      const theme=getLWChartTheme();
-      s.macdInst=LightweightCharts.createChart(md,{
-        width:md.clientWidth,height:80,
-        layout:{background:{color:theme.bg},textColor:theme.text},
-        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
-        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
-        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
-        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
-        handleScroll:false,handleScale:false,
-      });
+      s.macdInst=buildSubChart(md,100);
       const macdS=s.macdInst.addLineSeries({color:'#f43f5e',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
       const sigS=s.macdInst.addLineSeries({color:'#f59e0b',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false});
       const histS=s.macdInst.addHistogramSeries({priceLineVisible:false,lastValueVisible:false,priceScaleId:'right'});
@@ -3364,7 +3345,6 @@ function renderDashTechOverlays(n,onlyKey){
       sigS.setData(md_res.signal.map(r=>({time:pts[r.idx].time,value:r.value})));
       histS.setData(md_res.hist.map(r=>({time:pts[r.idx].time,value:r.value,color:r.value>=0?'rgba(5,150,105,.6)':'rgba(220,38,38,.6)'})));
       s.macdInst.timeScale().fitContent();
-      new ResizeObserver(()=>{if(s.macdInst)s.macdInst.applyOptions({width:md.clientWidth});}).observe(md);
       s.indSeries[key]='macd_active';
     } else if(key==='stoch'){
       const st_res=calcStoch(pts);
@@ -3372,16 +3352,7 @@ function renderDashTechOverlays(n,onlyKey){
       const sd=document.getElementById(`dashStoch${n}`);if(!sd)return;
       sd.style.display='block';
       if(s.stochInst){s.stochInst.remove();}
-      const theme=getLWChartTheme();
-      s.stochInst=LightweightCharts.createChart(sd,{
-        width:sd.clientWidth,height:70,
-        layout:{background:{color:theme.bg},textColor:theme.text},
-        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
-        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
-        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
-        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
-        handleScroll:false,handleScale:false,
-      });
+      s.stochInst=buildSubChart(sd,85);
       const kS=s.stochInst.addLineSeries({color:'#0ea5e9',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
       const dS=s.stochInst.addLineSeries({color:'#f59e0b',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false});
       kS.setData(st_res.map(r=>({time:pts[r.idx].time,value:r.k})));
@@ -3394,7 +3365,6 @@ function renderDashTechOverlays(n,onlyKey){
         osS.setData([{time:t0,value:20},{time:tN,value:20}]);
       }
       s.stochInst.timeScale().fitContent();
-      new ResizeObserver(()=>{if(s.stochInst)s.stochInst.applyOptions({width:sd.clientWidth});}).observe(sd);
       s.indSeries[key]='stoch_active';
     }
   });
