@@ -8897,16 +8897,7 @@ function renderSdTechOverlays(onlyKey){
       if(!rd)return;
       rd.style.display='block';
       if(sdRsiInst){sdRsiInst.remove();}
-      const theme=getLWChartTheme();
-      sdRsiInst=LightweightCharts.createChart(rd,{
-        width:rd.clientWidth,height:80,
-        layout:{background:{color:theme.bg},textColor:theme.text},
-        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
-        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
-        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
-        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
-        handleScroll:false,handleScale:false,
-      });
+      sdRsiInst=buildSubChart(rd,90);
       const rsiS=sdRsiInst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
       const lwData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
       rsiS.setData(lwData);
@@ -8918,7 +8909,6 @@ function renderSdTechOverlays(onlyKey){
         osS.setData([{time:t0,value:30},{time:tN,value:30}]);
       }
       sdRsiInst.timeScale().fitContent();
-      new ResizeObserver(()=>{if(sdRsiInst)sdRsiInst.applyOptions({width:rd.clientWidth});}).observe(rd);
       sdIndSeries[key]='rsi_active';
     } else if(key==='macd'){
       const md_res=calcMACD(closes);
@@ -8926,16 +8916,7 @@ function renderSdTechOverlays(onlyKey){
       const md=document.getElementById('sd-macd-chart');if(!md)return;
       md.style.display='block';
       if(sdMacdInst){sdMacdInst.remove();}
-      const theme=getLWChartTheme();
-      sdMacdInst=LightweightCharts.createChart(md,{
-        width:md.clientWidth,height:80,
-        layout:{background:{color:theme.bg},textColor:theme.text},
-        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
-        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
-        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
-        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
-        handleScroll:false,handleScale:false,
-      });
+      sdMacdInst=buildSubChart(md,100);
       const macdS=sdMacdInst.addLineSeries({color:'#f43f5e',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
       const sigS=sdMacdInst.addLineSeries({color:'#f59e0b',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false});
       const histS=sdMacdInst.addHistogramSeries({priceLineVisible:false,lastValueVisible:false,priceScaleId:'right'});
@@ -8943,7 +8924,6 @@ function renderSdTechOverlays(onlyKey){
       sigS.setData(md_res.signal.map(r=>({time:pts[r.idx].time,value:r.value})));
       histS.setData(md_res.hist.map(r=>({time:pts[r.idx].time,value:r.value,color:r.value>=0?'rgba(5,150,105,.6)':'rgba(220,38,38,.6)'})));
       sdMacdInst.timeScale().fitContent();
-      new ResizeObserver(()=>{if(sdMacdInst)sdMacdInst.applyOptions({width:md.clientWidth});}).observe(md);
       sdIndSeries[key]='macd_active';
     } else if(key==='stoch'){
       const st_res=calcStoch(pts);
@@ -8951,16 +8931,7 @@ function renderSdTechOverlays(onlyKey){
       const sd2=document.getElementById('sd-stoch-chart');if(!sd2)return;
       sd2.style.display='block';
       if(sdStochInst){sdStochInst.remove();}
-      const theme=getLWChartTheme();
-      sdStochInst=LightweightCharts.createChart(sd2,{
-        width:sd2.clientWidth,height:70,
-        layout:{background:{color:theme.bg},textColor:theme.text},
-        grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
-        rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1}},
-        timeScale:{borderColor:theme.border,timeVisible:false,visible:false},
-        crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
-        handleScroll:false,handleScale:false,
-      });
+      sdStochInst=buildSubChart(sd2,85);
       const kS=sdStochInst.addLineSeries({color:'#0ea5e9',lineWidth:1,priceLineVisible:false,lastValueVisible:true});
       const dS=sdStochInst.addLineSeries({color:'#f59e0b',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false});
       kS.setData(st_res.map(r=>({time:pts[r.idx].time,value:r.k})));
