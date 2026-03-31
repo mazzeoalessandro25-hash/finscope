@@ -3126,6 +3126,20 @@ function applyLWChartTheme(chart){
     timeScale:{borderColor:t.border},
   });
 }
+// Helper per sub-chart indicatori (RSI, MACD, Stoch)
+function buildSubChart(container,height){
+  const t=getLWChartTheme();
+  return LightweightCharts.createChart(container,{
+    autoSize:true,
+    height,
+    layout:{background:{color:t.bg},textColor:t.text,fontSize:10},
+    grid:{vertLines:{color:t.grid},horzLines:{color:t.grid}},
+    rightPriceScale:{borderColor:t.border,scaleMargins:{top:.12,bottom:.12},minimumWidth:52},
+    timeScale:{borderColor:t.border,timeVisible:false,visible:false},
+    crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
+    handleScroll:false,handleScale:false,
+  });
+}
 function buildLWChart(container,type,pts,opts={}){
   const t=getLWChartTheme();
   const timeVisible=opts.timeVisible??false;
