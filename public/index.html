@@ -4468,6 +4468,7 @@ async function loadMcap(region,btn){
   list.innerHTML='<div class="ld">Caricamento...</div>';
   const items=MCAP_DATA[mcapCurrentRegion]||MCAP_DATA.world;
   const prices=await Promise.all(items.map(it=>api(it.sym).catch(()=>null)));
+  const maxCap=Math.max(...items.map(it=>it.capNum));
   list.innerHTML='';
   items.forEach((it,i)=>{
     const d=prices[i];
@@ -4476,6 +4477,10 @@ async function loadMcap(region,btn){
     const c=price&&prev?chgPct(price,prev):null;
     const up=c==null||c>=0;
     const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
+    const capPct=Math.round(it.capNum/maxCap*100);
+    const dec=!price?2:price<10?4:price<1000?2:0;
+    const vol=d?.volume;
+    const volStr=vol?fmtLg(vol):'';
     const spId='sp-mc-'+it.sym.replace(/[^a-z0-9]/gi,'');
     const row=document.createElement('div');
     row.className='mcap-row';
@@ -4483,14 +4488,27 @@ async function loadMcap(region,btn){
     row.innerHTML=`
       <div class="mcap-rank">${medal}</div>
       <div class="mcap-av" style="background:${it.color}">${it.flag}</div>
-      <div class="mcap-info"><div class="mcap-name">${it.name}</div><div class="mcap-sym">${it.sym}</div></div>
-      <svg class="spark" id="${spId}" width="56" height="28" style="flex-shrink:0"></svg>
-      <div class="mcap-cap">${it.cap}</div>
-      <div class="mcap-price">${price?fmt(price,price<100?2:0):'—'}</div>
-      <span class="mcap-chg ${up?'up':'down'}">${chgStr(c)}</span>`;
+      <div class="mcap-info">
+        <div class="mcap-name">${it.name}</div>
+        <div class="mcap-sym">${it.sym}<span class="mcap-sector-tag">${it.sector}</span></div>
+      </div>
+      <div class="mcap-mid">
+        <svg class="spark" id="${spId}" width="56" height="28"></svg>
+        <div class="mcap-cap-bar"><div class="mcap-cap-bar-fill" style="width:${capPct}%"></div></div>
+      </div>
+      <div class="mcap-r">
+        <div class="mcap-cap">${it.cap}</div>
+        <div class="mcap-price">${price?fmt(price,dec):'—'}</div>
+        <span class="mcap-chg ${up?'up':'down'}">${chgStr(c)}</span>
+        ${volStr?`<div class="mcap-vol">Vol&nbsp;${volStr}</div>`:''}
+      </div>`;
     list.appendChild(row);
     fetchSparkData(it.sym).then(sd=>drawSparkline(spId,sd,up)).catch(()=>{});
   });
+  const note=document.createElement('div');
+  note.className='mcap-ref-note';
+  note.textContent='Market cap di riferimento (lug 2025) · prezzi e variazioni in tempo reale';
+  list.appendChild(note);
 }
 /* ── BOOT ── */
 async function boot(){
