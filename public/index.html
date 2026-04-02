@@ -5755,6 +5755,7 @@ async function loadPortChart(sym,range){
       series.setData(pts.map(p=>({time:p.time,value:p.close})).filter(p=>p.value));
     }
     chart.timeScale().fitContent();
+    attachLWTooltip(chart,el,series,portChartType,pts);
     portChart=chart;
     const ro=new ResizeObserver(()=>{if(el.clientWidth)chart.applyOptions({width:el.clientWidth});});
     ro.observe(el);
