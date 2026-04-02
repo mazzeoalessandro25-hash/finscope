@@ -1717,6 +1717,24 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k5" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div>
   </div>
 
+  <!-- TOP 10 MARKET CAP -->
+  <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Top 10 Capitalizzazione</div><div class="sdiv-l"></div></div>
+  <div class="card" id="mcap-card">
+    <div class="ch">
+      <div><div class="ct">Maggiori capitalizzazioni mondiali</div><div class="cs">Market cap indicativa · prezzi live · clicca per il grafico</div></div>
+      <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadMcap()">↻ Aggiorna</button>
+    </div>
+    <div class="mcap-filter">
+      <button class="mcap-btn active" id="mcap-btn-world" onclick="loadMcap('world',this)">🌍 Mondo</button>
+      <button class="mcap-btn" onclick="loadMcap('usa',this)">🇺🇸 USA</button>
+      <button class="mcap-btn" onclick="loadMcap('europa',this)">🇪🇺 Europa</button>
+      <button class="mcap-btn" onclick="loadMcap('italia',this)">🇮🇹 Italia</button>
+      <button class="mcap-btn" onclick="loadMcap('asia',this)">🌏 Asia</button>
+      <button class="mcap-btn" onclick="loadMcap('crypto',this)">₿ Crypto</button>
+    </div>
+    <div id="mcap-list"><div class="ld">Caricamento...</div></div>
+  </div>
+
   <!-- MARKET HEATMAP -->
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Market Heatmap</div><div class="sdiv-l"></div></div>
   <div class="card" id="heatmap-card">
