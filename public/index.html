@@ -3198,25 +3198,63 @@ function buildLWChart(container,type,pts,opts={}){
     timeScale:{borderColor:t.border,timeVisible,secondsVisible:false},
     handleScroll:true,handleScale:true,
   });
+  let mainSeries;
   if(type==='candle'){
-    const series=chart.addCandlestickSeries({
+    mainSeries=chart.addCandlestickSeries({
       upColor:'#059669',downColor:'#DC2626',
       borderUpColor:'#059669',borderDownColor:'#DC2626',
       wickUpColor:'#059669',wickDownColor:'#DC2626',
     });
-    series.setData(pts.filter(p=>p.open&&p.high&&p.low&&p.close).map(p=>({
+    mainSeries.setData(pts.filter(p=>p.open&&p.high&&p.low&&p.close).map(p=>({
       time:p.time,open:+p.open.toFixed(4),high:+p.high.toFixed(4),
       low:+p.low.toFixed(4),close:+p.close.toFixed(4)
     })));
   } else {
-    const series=chart.addAreaSeries({
+    mainSeries=chart.addAreaSeries({
       lineColor:'#1A56C4',topColor:'rgba(26,86,196,.15)',bottomColor:'rgba(26,86,196,0)',lineWidth:2,
     });
-    series.setData(pts.map(p=>({time:p.time,value:+p.close.toFixed(4)})));
+    mainSeries.setData(pts.map(p=>({time:p.time,value:+p.close.toFixed(4)})));
   }
   chart.timeScale().fitContent();
   new ResizeObserver(()=>{if(chart)chart.applyOptions({width:container.clientWidth});}).observe(container);
+  attachLWTooltip(chart,container,mainSeries,type,pts);
   return chart;
+}
+function attachLWTooltip(chart,container,mainSeries,type,pts){
+  if(!chart||!container||!mainSeries)return;
+  if(getComputedStyle(container).position==='static')container.style.position='relative';
+  const old=container.querySelector('.lw-tooltip');if(old)old.remove();
+  const tip=document.createElement('div');tip.className='lw-tooltip';container.appendChild(tip);
+  const firstClose=pts&&pts.length?+pts[0].close:null;
+  chart.subscribeCrosshairMove(param=>{
+    if(!param.time||!param.point||!param.seriesData||!param.seriesData.size){tip.classList.remove('vis');return;}
+    const data=param.seriesData.get(mainSeries);
+    if(!data){tip.classList.remove('vis');return;}
+    let price,open,high,low,close;
+    if(type==='candle'&&data.close!==undefined){open=data.open;high=data.high;low=data.low;close=data.close;price=close;}
+    else{price=data.value??data.close;close=price;}
+    if(price==null){tip.classList.remove('vis');return;}
+    const dec=price<10?4:price<100?2:price<10000?2:0;
+    let dateStr='';
+    try{
+      if(typeof param.time==='object'){const{year,month,day}=param.time;dateStr=new Date(year,month-1,day).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'});}
+      else{dateStr=new Date(param.time*1000).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'});}
+    }catch(e){}
+    const perf=firstClose&&close?(close-firstClose)/firstClose*100:null;
+    let html=`<div class="lw-tt-date">${dateStr}</div>`;
+    if(type==='candle'&&open!=null){
+      html+=`<div class="lw-tt-price">C&nbsp;${fmt(close,dec)}</div><div class="lw-tt-ohlc">A&nbsp;<b>${fmt(open,dec)}</b>&nbsp;·&nbsp;H&nbsp;<b style="color:var(--g)">${fmt(high,dec)}</b>&nbsp;·&nbsp;L&nbsp;<b style="color:var(--r)">${fmt(low,dec)}</b></div>`;
+    }else{html+=`<div class="lw-tt-price">${fmt(price,dec)}</div>`;}
+    if(perf!=null)html+=`<span class="lw-tt-perf ${perf>=0?'up':'down'}">${perf>=0?'+':''}${fmt(perf,2)}%</span>`;
+    tip.innerHTML=html;tip.classList.add('vis');
+    const cW=container.clientWidth,cH=container.clientHeight;
+    const tw=tip.offsetWidth||140,th=tip.offsetHeight||80;
+    let left=param.point.x+14;
+    if(left+tw>cW-4)left=param.point.x-tw-14;
+    let top=param.point.y-th/2;
+    top=Math.max(4,Math.min(top,cH-th-4));
+    tip.style.left=left+'px';tip.style.top=top+'px';
+  });
 }
 
 /* ── DASH CHARTS ── */
