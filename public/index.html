@@ -965,6 +965,34 @@ html.dark .auth-box{background:#1e293b}
 /* ═══ DRIP SIMULATOR ═══ */
 .drip-card{padding:12px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;text-align:center}
 .drip-val{font-family:var(--fm);font-size:18px;font-weight:700;color:var(--g);line-height:1.2;margin-top:4px}
+/* ═══ MARKET CAP RANKING ═══ */
+.mcap-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.mcap-btn{padding:5px 14px;border:1px solid var(--bd);background:none;border-radius:8px;font-family:var(--ff);font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);transition:all .15s;white-space:nowrap}
+.mcap-btn.active{background:var(--b);color:#fff;border-color:var(--b)}
+.mcap-btn:not(.active):hover{background:var(--b3);color:var(--b);border-color:rgba(26,86,196,.3)}
+.mcap-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--bd)}
+.mcap-row:last-child{border-bottom:none}
+.mcap-row:hover{background:var(--b3)}
+.mcap-rank{width:24px;text-align:center;flex-shrink:0;font-size:15px;line-height:1}
+.mcap-av{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.mcap-info{flex:1;min-width:0}
+.mcap-name{font-size:12px;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcap-sym{font-family:var(--fm);font-size:10px;color:var(--t3)}
+.mcap-cap{font-family:var(--fm);font-size:10px;color:var(--t3);min-width:60px;text-align:right}
+.mcap-price{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--t);min-width:72px;text-align:right}
+.mcap-chg{font-family:var(--fm);font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;min-width:54px;text-align:center}
+.mcap-chg.up{background:var(--g2);color:#047857}
+.mcap-chg.down{background:var(--r2);color:#B91C1C}
+/* ═══ CHART CROSSHAIR TOOLTIP ═══ */
+.lw-tooltip{position:absolute;z-index:100;pointer-events:none;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 11px;box-shadow:0 4px 20px rgba(0,0,0,.13);font-family:var(--fm);font-size:11px;line-height:1.6;display:none;min-width:120px;white-space:nowrap}
+.lw-tooltip.vis{display:block}
+.lw-tt-date{font-size:9px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+.lw-tt-price{font-size:14px;font-weight:700;color:var(--t);line-height:1.2}
+.lw-tt-ohlc{font-size:10px;color:var(--t2);margin-top:2px}
+.lw-tt-perf{font-size:11px;font-weight:700;margin-top:5px;padding:2px 7px;border-radius:4px;display:inline-block}
+.lw-tt-perf.up{background:var(--g2);color:#047857}
+.lw-tt-perf.down{background:var(--r2);color:#B91C1C}
+html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 </style>
 </head>
 <body>
