@@ -4374,6 +4374,114 @@ async function runAI(){
   btn.innerHTML='<span class="ai-badge">AI</span>Analisi';
 }
 
+/* ── TOP MARKET CAP ── */
+const MCAP_DATA={
+  world:[
+    {sym:'AAPL',name:'Apple',cap:'~$3.1T',flag:'🇺🇸',color:'#555555'},
+    {sym:'MSFT',name:'Microsoft',cap:'~$3.0T',flag:'🇺🇸',color:'#00A4EF'},
+    {sym:'NVDA',name:'NVIDIA',cap:'~$2.8T',flag:'🇺🇸',color:'#76B900'},
+    {sym:'GOOGL',name:'Alphabet',cap:'~$2.0T',flag:'🇺🇸',color:'#4285F4'},
+    {sym:'AMZN',name:'Amazon',cap:'~$2.0T',flag:'🇺🇸',color:'#FF9900'},
+    {sym:'META',name:'Meta',cap:'~$1.5T',flag:'🇺🇸',color:'#0866FF'},
+    {sym:'TSLA',name:'Tesla',cap:'~$1.0T',flag:'🇺🇸',color:'#CC0000'},
+    {sym:'BRK-B',name:'Berkshire Hathaway',cap:'~$950B',flag:'🇺🇸',color:'#354A6A'},
+    {sym:'TSM',name:'TSMC',cap:'~$900B',flag:'🇹🇼',color:'#BE1833'},
+    {sym:'LLY',name:'Eli Lilly',cap:'~$750B',flag:'🇺🇸',color:'#D52B1E'},
+  ],
+  usa:[
+    {sym:'AAPL',name:'Apple',cap:'~$3.1T',flag:'🇺🇸',color:'#555555'},
+    {sym:'MSFT',name:'Microsoft',cap:'~$3.0T',flag:'🇺🇸',color:'#00A4EF'},
+    {sym:'NVDA',name:'NVIDIA',cap:'~$2.8T',flag:'🇺🇸',color:'#76B900'},
+    {sym:'GOOGL',name:'Alphabet',cap:'~$2.0T',flag:'🇺🇸',color:'#4285F4'},
+    {sym:'AMZN',name:'Amazon',cap:'~$2.0T',flag:'🇺🇸',color:'#FF9900'},
+    {sym:'META',name:'Meta',cap:'~$1.5T',flag:'🇺🇸',color:'#0866FF'},
+    {sym:'TSLA',name:'Tesla',cap:'~$1.0T',flag:'🇺🇸',color:'#CC0000'},
+    {sym:'BRK-B',name:'Berkshire Hathaway',cap:'~$950B',flag:'🇺🇸',color:'#354A6A'},
+    {sym:'LLY',name:'Eli Lilly',cap:'~$750B',flag:'🇺🇸',color:'#D52B1E'},
+    {sym:'JPM',name:'JPMorgan Chase',cap:'~$700B',flag:'🇺🇸',color:'#0A3161'},
+  ],
+  europa:[
+    {sym:'NOVO-B.CO',name:'Novo Nordisk',cap:'~€380B',flag:'🇩🇰',color:'#002060'},
+    {sym:'ASML',name:'ASML Holding',cap:'~€270B',flag:'🇳🇱',color:'#2D4A8A'},
+    {sym:'NESN.SW',name:'Nestlé',cap:'~€250B',flag:'🇨🇭',color:'#C8102E'},
+    {sym:'MC.PA',name:'LVMH',cap:'~€250B',flag:'🇫🇷',color:'#9B7536'},
+    {sym:'SAP',name:'SAP SE',cap:'~€220B',flag:'🇩🇪',color:'#008FD3'},
+    {sym:'ROG.SW',name:'Roche',cap:'~€180B',flag:'🇨🇭',color:'#009FE3'},
+    {sym:'AZN',name:'AstraZeneca',cap:'~€170B',flag:'🇬🇧',color:'#003087'},
+    {sym:'SHELL',name:'Shell',cap:'~€200B',flag:'🇬🇧',color:'#DD1D21'},
+    {sym:'SIE.DE',name:'Siemens',cap:'~€130B',flag:'🇩🇪',color:'#009999'},
+    {sym:'TTE',name:'TotalEnergies',cap:'~€120B',flag:'🇫🇷',color:'#EE2024'},
+  ],
+  italia:[
+    {sym:'RACE.MI',name:'Ferrari',cap:'~€65B',flag:'🇮🇹',color:'#CE1126'},
+    {sym:'ENEL.MI',name:'Enel',cap:'~€60B',flag:'🇮🇹',color:'#007BC4'},
+    {sym:'ISP.MI',name:'Intesa Sanpaolo',cap:'~€58B',flag:'🇮🇹',color:'#0C3A6A'},
+    {sym:'ENI.MI',name:'ENI',cap:'~€48B',flag:'🇮🇹',color:'#1A3A5C'},
+    {sym:'UCG.MI',name:'UniCredit',cap:'~€47B',flag:'🇮🇹',color:'#E2001A'},
+    {sym:'G.MI',name:'Generali',cap:'~€38B',flag:'🇮🇹',color:'#C8102E'},
+    {sym:'STM.MI',name:'STMicroelectronics',cap:'~€25B',flag:'🇮🇹',color:'#0066CC'},
+    {sym:'STLAM.MI',name:'Stellantis',cap:'~€20B',flag:'🇮🇹',color:'#005BAC'},
+    {sym:'LDO.MI',name:'Leonardo',cap:'~€18B',flag:'🇮🇹',color:'#003087'},
+    {sym:'BAMI.MI',name:'Banco BPM',cap:'~€8B',flag:'🇮🇹',color:'#005BAC'},
+  ],
+  asia:[
+    {sym:'TSM',name:'TSMC',cap:'~$900B',flag:'🇹🇼',color:'#BE1833'},
+    {sym:'TCEHY',name:'Tencent',cap:'~$430B',flag:'🇨🇳',color:'#1C7EBB'},
+    {sym:'005930.KS',name:'Samsung',cap:'~$330B',flag:'🇰🇷',color:'#1428A0'},
+    {sym:'7203.T',name:'Toyota',cap:'~$250B',flag:'🇯🇵',color:'#EB0A1E'},
+    {sym:'9988.HK',name:'Alibaba',cap:'~$200B',flag:'🇨🇳',color:'#FF6600'},
+    {sym:'PDD',name:'PDD Holdings',cap:'~$150B',flag:'🇨🇳',color:'#E1251B'},
+    {sym:'9984.T',name:'SoftBank',cap:'~$100B',flag:'🇯🇵',color:'#CC0000'},
+    {sym:'BABA',name:'Alibaba ADR',cap:'~$200B',flag:'🇨🇳',color:'#FF6600'},
+    {sym:'9618.HK',name:'JD.com',cap:'~$50B',flag:'🇨🇳',color:'#CC0000'},
+    {sym:'TM',name:'Toyota ADR',cap:'~$250B',flag:'🇯🇵',color:'#EB0A1E'},
+  ],
+  crypto:[
+    {sym:'BTC-USD',name:'Bitcoin',cap:'~$1.9T',flag:'₿',color:'#F7931A'},
+    {sym:'ETH-USD',name:'Ethereum',cap:'~$360B',flag:'Ξ',color:'#627EEA'},
+    {sym:'XRP-USD',name:'XRP',cap:'~$150B',flag:'✕',color:'#00AAE4'},
+    {sym:'BNB-USD',name:'BNB',cap:'~$90B',flag:'◈',color:'#F3BA2F'},
+    {sym:'SOL-USD',name:'Solana',cap:'~$80B',flag:'◎',color:'#9945FF'},
+    {sym:'DOGE-USD',name:'Dogecoin',cap:'~$40B',flag:'Ð',color:'#C2A633'},
+    {sym:'ADA-USD',name:'Cardano',cap:'~$25B',flag:'₳',color:'#0D1E2D'},
+    {sym:'AVAX-USD',name:'Avalanche',cap:'~$14B',flag:'▲',color:'#E84142'},
+    {sym:'DOT-USD',name:'Polkadot',cap:'~$10B',flag:'●',color:'#E6007A'},
+    {sym:'LINK-USD',name:'Chainlink',cap:'~$10B',flag:'⬡',color:'#375BD2'},
+  ],
+};
+let mcapCurrentRegion='world';
+async function loadMcap(region,btn){
+  if(region)mcapCurrentRegion=region;
+  if(btn){document.querySelectorAll('.mcap-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  const list=document.getElementById('mcap-list');
+  if(!list)return;
+  list.innerHTML='<div class="ld">Caricamento...</div>';
+  const items=MCAP_DATA[mcapCurrentRegion]||MCAP_DATA.world;
+  const prices=await Promise.all(items.map(it=>api(it.sym).catch(()=>null)));
+  list.innerHTML='';
+  items.forEach((it,i)=>{
+    const d=prices[i];
+    const price=d?.price;
+    const prev=d?.prev;
+    const c=price&&prev?chgPct(price,prev):null;
+    const up=c==null||c>=0;
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
+    const spId='sp-mc-'+it.sym.replace(/[^a-z0-9]/gi,'');
+    const row=document.createElement('div');
+    row.className='mcap-row';
+    row.onclick=()=>openModal(it.sym,it.name);
+    row.innerHTML=`
+      <div class="mcap-rank">${medal}</div>
+      <div class="mcap-av" style="background:${it.color}">${it.flag}</div>
+      <div class="mcap-info"><div class="mcap-name">${it.name}</div><div class="mcap-sym">${it.sym}</div></div>
+      <svg class="spark" id="${spId}" width="56" height="28" style="flex-shrink:0"></svg>
+      <div class="mcap-cap">${it.cap}</div>
+      <div class="mcap-price">${price?fmt(price,price<100?2:0):'—'}</div>
+      <span class="mcap-chg ${up?'up':'down'}">${chgStr(c)}</span>`;
+    list.appendChild(row);
+    fetchSparkData(it.sym).then(sd=>drawSparkline(spId,sd,up)).catch(()=>{});
+  });
+}
 /* ── BOOT ── */
 async function boot(){
   updateHours();
