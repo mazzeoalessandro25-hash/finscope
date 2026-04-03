@@ -966,33 +966,24 @@ html.dark .auth-box{background:#1e293b}
 .drip-card{padding:12px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;text-align:center}
 .drip-val{font-family:var(--fm);font-size:18px;font-weight:700;color:var(--g);line-height:1.2;margin-top:4px}
 /* ═══ MARKET CAP RANKING ═══ */
-.mcap-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+/* ═══ MARKET CAP RANKING ═══ */
+.mcap-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
 .mcap-btn{padding:5px 14px;border:1px solid var(--bd);background:none;border-radius:8px;font-family:var(--ff);font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);transition:all .15s;white-space:nowrap}
 .mcap-btn.active{background:var(--b);color:#fff;border-color:var(--b)}
 .mcap-btn:not(.active):hover{background:var(--b3);color:var(--b);border-color:rgba(26,86,196,.3)}
-.mcap-row{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;transition:background .12s;border-bottom:1px solid var(--bd)}
-.mcap-row:last-child{border-bottom:none}
+.mcap-row{display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .12s;border-radius:6px}
+.mcap-row:last-of-type{border-bottom:none}
 .mcap-row:hover{background:var(--b3)}
-.mcap-rank{width:24px;text-align:center;flex-shrink:0;font-size:15px;line-height:1}
-.mcap-av{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
-.mcap-info{flex:1;min-width:0}
-.mcap-name{font-size:12px;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mcap-sym{font-family:var(--fm);font-size:10px;color:var(--t3)}
-.mcap-cap{font-family:var(--fm);font-size:10px;color:var(--t3);min-width:60px;text-align:right}
-.mcap-price{font-family:var(--fm);font-size:13px;font-weight:600;color:var(--t);min-width:72px;text-align:right}
-.mcap-chg{font-family:var(--fm);font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;min-width:54px;text-align:center}
-.mcap-chg.up{background:var(--g2);color:#047857}
-.mcap-chg.down{background:var(--r2);color:#B91C1C}
-.mcap-sector-tag{font-size:8px;font-weight:700;letter-spacing:.4px;padding:1px 5px;border-radius:3px;background:var(--b3);color:var(--b);text-transform:uppercase;margin-left:5px;vertical-align:middle;white-space:nowrap}
-.mcap-mid{display:flex;flex-direction:column;gap:4px;align-items:center;flex-shrink:0;width:60px}
-.mcap-cap-bar{width:56px;height:3px;background:var(--bd);border-radius:2px;overflow:hidden}
-.mcap-cap-bar-fill{height:3px;border-radius:2px;background:linear-gradient(90deg,var(--b),#60a5fa);transition:width .7s ease}
-.mcap-r{text-align:right;flex-shrink:0;min-width:100px}
-.mcap-cap{font-family:var(--fm);font-size:10px;color:var(--t3);margin-bottom:2px}
-.mcap-price{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t);line-height:1.2}
-.mcap-vol{font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:2px}
-.mcap-ref-note{font-size:10px;color:var(--t3);font-family:var(--fm);padding:10px 10px 2px;text-align:right;border-top:1px solid var(--bd);margin-top:4px}
-@media(max-width:600px){.mcap-mid{display:none}.mcap-r{min-width:80px}}
+.mcap-rank{font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t3);width:18px;text-align:right;flex-shrink:0}
+.mcap-id{display:flex;align-items:center;gap:8px;width:170px;flex-shrink:0}
+.mcap-name{font-size:12px;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:116px}
+.mcap-sym{font-family:var(--fm);font-size:9px;color:var(--t3)}
+.mcap-bar-wrap{flex:1;min-width:0;height:22px;background:var(--s3);border-radius:5px;overflow:hidden;position:relative}
+.mcap-bar{height:100%;border-radius:5px;transition:width .85s cubic-bezier(.22,1,.36,1);display:flex;align-items:center;padding-left:8px;position:relative}
+.mcap-bar-lbl{font-family:var(--fm);font-size:10px;font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.35);position:relative;z-index:1}
+.mcap-cap-val{font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);width:50px;text-align:right;flex-shrink:0}
+.mcap-ref-note{font-size:10px;color:var(--t3);font-family:var(--fm);padding:10px 4px 2px;text-align:right;border-top:1px solid var(--bd);margin-top:6px}
+@media(max-width:600px){.mcap-id{width:120px}.mcap-name{max-width:72px}}
 /* ═══ CHART CROSSHAIR TOOLTIP ═══ */
 .lw-tooltip{position:absolute;z-index:100;pointer-events:none;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 11px;box-shadow:0 4px 20px rgba(0,0,0,.13);font-family:var(--fm);font-size:11px;line-height:1.6;display:none;min-width:120px;white-space:nowrap}
 .lw-tooltip.vis{display:block}
