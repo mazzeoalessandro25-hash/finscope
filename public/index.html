@@ -4451,54 +4451,40 @@ const MCAP_DATA={
   ],
 };
 let mcapCurrentRegion='world';
-async function loadMcap(region,btn){
+function loadMcap(region,btn){
   if(region)mcapCurrentRegion=region;
   if(btn){document.querySelectorAll('.mcap-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
   const list=document.getElementById('mcap-list');
   if(!list)return;
-  list.innerHTML='<div class="ld">Caricamento...</div>';
   const items=MCAP_DATA[mcapCurrentRegion]||MCAP_DATA.world;
-  const prices=await Promise.all(items.map(it=>api(it.sym).catch(()=>null)));
-  const maxCap=Math.max(...items.map(it=>it.capNum));
+  const maxCap=items[0].capNum; // lista già ordinata per cap desc
   list.innerHTML='';
   items.forEach((it,i)=>{
-    const d=prices[i];
-    const price=d?.price;
-    const prev=d?.prev;
-    const c=price&&prev?chgPct(price,prev):null;
-    const up=c==null||c>=0;
-    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1;
     const capPct=Math.round(it.capNum/maxCap*100);
-    const dec=!price?2:price<10?4:price<1000?2:0;
-    const vol=d?.volume;
-    const volStr=vol?fmtLg(vol):'';
-    const spId='sp-mc-'+it.sym.replace(/[^a-z0-9]/gi,'');
+    const rank=i+1;
     const row=document.createElement('div');
     row.className='mcap-row';
     row.onclick=()=>openModal(it.sym,it.name);
     row.innerHTML=`
-      <div class="mcap-rank">${medal}</div>
-      <div class="mcap-av" style="background:${it.color}">${it.flag}</div>
-      <div class="mcap-info">
-        <div class="mcap-name">${it.name}</div>
-        <div class="mcap-sym">${it.sym}<span class="mcap-sector-tag">${it.sector}</span></div>
+      <div class="mcap-rank">${rank}</div>
+      <div class="mcap-id">
+        ${logoHtmlSm(it.sym,it.name)}
+        <div>
+          <div class="mcap-name">${it.name}</div>
+          <div class="mcap-sym">${it.sym}</div>
+        </div>
       </div>
-      <div class="mcap-mid">
-        <svg class="spark" id="${spId}" width="56" height="28"></svg>
-        <div class="mcap-cap-bar"><div class="mcap-cap-bar-fill" style="width:${capPct}%"></div></div>
+      <div class="mcap-bar-wrap">
+        <div class="mcap-bar" style="width:${capPct}%;background:${it.color}">
+          <span class="mcap-bar-lbl">${it.cap}</span>
+        </div>
       </div>
-      <div class="mcap-r">
-        <div class="mcap-cap">${it.cap}</div>
-        <div class="mcap-price">${price?fmt(price,dec):'—'}</div>
-        <span class="mcap-chg ${up?'up':'down'}">${chgStr(c)}</span>
-        ${volStr?`<div class="mcap-vol">Vol&nbsp;${volStr}</div>`:''}
-      </div>`;
+      <div class="mcap-cap-val">${it.cap}</div>`;
     list.appendChild(row);
-    fetchSparkData(it.sym).then(sd=>drawSparkline(spId,sd,up)).catch(()=>{});
   });
   const note=document.createElement('div');
   note.className='mcap-ref-note';
-  note.textContent='Market cap di riferimento (lug 2025) · prezzi e variazioni in tempo reale';
+  note.textContent='Capitalizzazione di riferimento (lug 2025) · clicca per aprire il grafico';
   list.appendChild(note);
 }
 /* ── BOOT ── */
