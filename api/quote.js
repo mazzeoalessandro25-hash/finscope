@@ -152,21 +152,19 @@ export default async function handler(req, res) {
       });
     }
 
-    // default: quote
-    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=1d`;
-    const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' } });
-    const data = await r.json();
-    const meta = data?.chart?.result?.[0]?.meta;
-    if (!meta) return res.status(404).json({ error: 'no data' });
+    // default: quote — usa yahoo-finance2 per avere marketCap nativo
+    const q = await fetchYahooQuote(symbol);
+    if (!q) return res.status(404).json({ error: 'no data' });
     return res.json({
-      symbol:        meta.symbol,
-      price:         meta.regularMarketPrice,
-      prev:          meta.previousClose ?? meta.chartPreviousClose,
-      currency:      meta.currency,
-      name:          meta.shortName || meta.symbol,
-      dayHigh:       meta.regularMarketDayHigh,
-      dayLow:        meta.regularMarketDayLow,
-      volume:        meta.regularMarketVolume,
+      symbol:    q.symbol,
+      price:     q.regularMarketPrice,
+      prev:      q.regularMarketPreviousClose,
+      currency:  q.currency,
+      name:      q.shortName || q.longName || q.symbol,
+      dayHigh:   q.regularMarketDayHigh,
+      dayLow:    q.regularMarketDayLow,
+      volume:    q.regularMarketVolume,
+      marketCap: q.marketCap ?? null,
     });
 
   } catch (e) {
