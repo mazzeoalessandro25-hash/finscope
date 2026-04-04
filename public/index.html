@@ -4377,7 +4377,8 @@ async function runAI(){
 
 /* ── TOP MARKET CAP ── */
 const MCAP_DATA={
-  // Dati di riferimento: luglio 2025. Prezzi live aggiornati in tempo reale.
+  // Simboli US-listed per avere marketCap in USD da Yahoo Finance.
+  // Simboli .MI usano EUR (confronto regionale corretto). Capnum = miliardi USD/EUR di riferimento.
   world:[
     {sym:'AAPL',   name:'Apple',              cap:'$3.4T', capNum:3400, sector:'Technology',    flag:'🇺🇸', color:'#555555'},
     {sym:'NVDA',   name:'NVIDIA',             cap:'$3.3T', capNum:3300, sector:'Semiconduttori', flag:'🇺🇸', color:'#76B900'},
@@ -4391,28 +4392,28 @@ const MCAP_DATA={
     {sym:'LLY',    name:'Eli Lilly',          cap:'$750B', capNum:750,  sector:'Farmaceutica',   flag:'🇺🇸', color:'#D52B1E'},
   ],
   usa:[
-    {sym:'AAPL',   name:'Apple',              cap:'$3.4T', capNum:3400, sector:'Technology',    flag:'🇺🇸', color:'#555555'},
-    {sym:'NVDA',   name:'NVIDIA',             cap:'$3.3T', capNum:3300, sector:'Semiconduttori', flag:'🇺🇸', color:'#76B900'},
-    {sym:'MSFT',   name:'Microsoft',          cap:'$3.1T', capNum:3100, sector:'Software',       flag:'🇺🇸', color:'#00A4EF'},
-    {sym:'AMZN',   name:'Amazon',             cap:'$2.3T', capNum:2300, sector:'E-commerce',     flag:'🇺🇸', color:'#FF9900'},
-    {sym:'GOOGL',  name:'Alphabet',           cap:'$2.2T', capNum:2200, sector:'Technology',     flag:'🇺🇸', color:'#4285F4'},
-    {sym:'META',   name:'Meta',               cap:'$1.7T', capNum:1700, sector:'Social Media',   flag:'🇺🇸', color:'#0866FF'},
-    {sym:'BRK-B',  name:'Berkshire Hathaway', cap:'$1.1T', capNum:1100, sector:'Finanza',        flag:'🇺🇸', color:'#354A6A'},
-    {sym:'TSLA',   name:'Tesla',              cap:'$900B', capNum:900,  sector:'Automotive',     flag:'🇺🇸', color:'#CC0000'},
-    {sym:'LLY',    name:'Eli Lilly',          cap:'$750B', capNum:750,  sector:'Farmaceutica',   flag:'🇺🇸', color:'#D52B1E'},
-    {sym:'JPM',    name:'JPMorgan Chase',     cap:'$770B', capNum:770,  sector:'Banca',          flag:'🇺🇸', color:'#0A3161'},
+    {sym:'AAPL',  name:'Apple',              cap:'$3.4T', capNum:3400, sector:'Technology',    flag:'🇺🇸', color:'#555555'},
+    {sym:'NVDA',  name:'NVIDIA',             cap:'$3.3T', capNum:3300, sector:'Semiconduttori', flag:'🇺🇸', color:'#76B900'},
+    {sym:'MSFT',  name:'Microsoft',          cap:'$3.1T', capNum:3100, sector:'Software',       flag:'🇺🇸', color:'#00A4EF'},
+    {sym:'AMZN',  name:'Amazon',             cap:'$2.3T', capNum:2300, sector:'E-commerce',     flag:'🇺🇸', color:'#FF9900'},
+    {sym:'GOOGL', name:'Alphabet',           cap:'$2.2T', capNum:2200, sector:'Technology',     flag:'🇺🇸', color:'#4285F4'},
+    {sym:'META',  name:'Meta',               cap:'$1.7T', capNum:1700, sector:'Social Media',   flag:'🇺🇸', color:'#0866FF'},
+    {sym:'BRK-B', name:'Berkshire Hathaway', cap:'$1.1T', capNum:1100, sector:'Finanza',        flag:'🇺🇸', color:'#354A6A'},
+    {sym:'AVGO',  name:'Broadcom',           cap:'$900B', capNum:900,  sector:'Semiconduttori', flag:'🇺🇸', color:'#CC0000'},
+    {sym:'TSLA',  name:'Tesla',              cap:'$900B', capNum:900,  sector:'Automotive',     flag:'🇺🇸', color:'#E82127'},
+    {sym:'LLY',   name:'Eli Lilly',          cap:'$750B', capNum:750,  sector:'Farmaceutica',   flag:'🇺🇸', color:'#D52B1E'},
   ],
   europa:[
-    {sym:'NVO',     name:'Novo Nordisk',  cap:'€380B', capNum:380, sector:'Farmaceutica',  flag:'🇩🇰', color:'#002060'},
-    {sym:'SAP',     name:'SAP SE',        cap:'€270B', capNum:270, sector:'Software',      flag:'🇩🇪', color:'#008FD3'},
-    {sym:'ASML',    name:'ASML Holding',  cap:'€265B', capNum:265, sector:'Semiconduttori',flag:'🇳🇱', color:'#2D4A8A'},
-    {sym:'AZN',     name:'AstraZeneca',   cap:'€230B', capNum:230, sector:'Farmaceutica',  flag:'🇬🇧', color:'#003087'},
-    {sym:'SHEL',    name:'Shell',         cap:'€215B', capNum:215, sector:'Energia',       flag:'🇬🇧', color:'#DD1D21'},
-    {sym:'MC.PA',   name:'LVMH',          cap:'€210B', capNum:210, sector:'Lusso',         flag:'🇫🇷', color:'#9B7536'},
-    {sym:'NESN.SW', name:'Nestlé',        cap:'€200B', capNum:200, sector:'Beni consumo',  flag:'🇨🇭', color:'#C8102E'},
-    {sym:'ROG.SW',  name:'Roche',         cap:'€165B', capNum:165, sector:'Farmaceutica',  flag:'🇨🇭', color:'#009FE3'},
-    {sym:'SIE.DE',  name:'Siemens',       cap:'€155B', capNum:155, sector:'Industriali',   flag:'🇩🇪', color:'#009999'},
-    {sym:'TTE',     name:'TotalEnergies', cap:'€130B', capNum:130, sector:'Energia',       flag:'🇫🇷', color:'#EE2024'},
+    {sym:'NVO',   name:'Novo Nordisk',  cap:'$380B', capNum:380, sector:'Farmaceutica',  flag:'🇩🇰', color:'#002060'},
+    {sym:'SAP',   name:'SAP SE',        cap:'$270B', capNum:270, sector:'Software',      flag:'🇩🇪', color:'#008FD3'},
+    {sym:'ASML',  name:'ASML Holding',  cap:'$265B', capNum:265, sector:'Semiconduttori',flag:'🇳🇱', color:'#2D4A8A'},
+    {sym:'AZN',   name:'AstraZeneca',   cap:'$230B', capNum:230, sector:'Farmaceutica',  flag:'🇬🇧', color:'#003087'},
+    {sym:'SHEL',  name:'Shell',         cap:'$215B', capNum:215, sector:'Energia',       flag:'🇬🇧', color:'#DD1D21'},
+    {sym:'LVMUY', name:'LVMH',          cap:'$210B', capNum:210, sector:'Lusso',         flag:'🇫🇷', color:'#9B7536'},
+    {sym:'NSRGY', name:'Nestlé',        cap:'$200B', capNum:200, sector:'Beni consumo',  flag:'🇨🇭', color:'#C8102E'},
+    {sym:'RHHBY', name:'Roche',         cap:'$165B', capNum:165, sector:'Farmaceutica',  flag:'🇨🇭', color:'#009FE3'},
+    {sym:'SIEGY', name:'Siemens',       cap:'$155B', capNum:155, sector:'Industriali',   flag:'🇩🇪', color:'#009999'},
+    {sym:'TTE',   name:'TotalEnergies', cap:'$130B', capNum:130, sector:'Energia',       flag:'🇫🇷', color:'#EE2024'},
   ],
   italia:[
     {sym:'UCG.MI',  name:'UniCredit',          cap:'€72B', capNum:72, sector:'Banca',          flag:'🇮🇹', color:'#E2001A'},
@@ -4427,16 +4428,16 @@ const MCAP_DATA={
     {sym:'BAMI.MI', name:'Banco BPM',          cap:'€11B', capNum:11, sector:'Banca',          flag:'🇮🇹', color:'#1D6FA4'},
   ],
   asia:[
-    {sym:'TSM',        name:'TSMC',           cap:'$1.0T', capNum:1000, sector:'Semiconduttori', flag:'🇹🇼', color:'#BE1833'},
-    {sym:'TCEHY',      name:'Tencent',        cap:'$460B', capNum:460,  sector:'Technology',     flag:'🇨🇳', color:'#1C7EBB'},
-    {sym:'005930.KS',  name:'Samsung',        cap:'$310B', capNum:310,  sector:'Technology',     flag:'🇰🇷', color:'#1428A0'},
-    {sym:'TM',         name:'Toyota',         cap:'$270B', capNum:270,  sector:'Automotive',     flag:'🇯🇵', color:'#EB0A1E'},
-    {sym:'BABA',       name:'Alibaba',        cap:'$245B', capNum:245,  sector:'E-commerce',     flag:'🇨🇳', color:'#FF6600'},
-    {sym:'RELIANCE.NS',name:'Reliance Ind.',  cap:'$230B', capNum:230,  sector:'Conglomerato',   flag:'🇮🇳', color:'#0066CC'},
-    {sym:'HDB',        name:'HDFC Bank',      cap:'$160B', capNum:160,  sector:'Banca',          flag:'🇮🇳', color:'#004C97'},
-    {sym:'PDD',        name:'PDD Holdings',   cap:'$155B', capNum:155,  sector:'E-commerce',     flag:'🇨🇳', color:'#E1251B'},
-    {sym:'9984.T',     name:'SoftBank',       cap:'$130B', capNum:130,  sector:'Telecom/Tech',   flag:'🇯🇵', color:'#CC0000'},
-    {sym:'INFY',       name:'Infosys',        cap:'$88B',  capNum:88,   sector:'IT Services',    flag:'🇮🇳', color:'#0F6BB5'},
+    {sym:'TSM',   name:'TSMC',         cap:'$1.0T', capNum:1000, sector:'Semiconduttori', flag:'🇹🇼', color:'#BE1833'},
+    {sym:'TCEHY', name:'Tencent',      cap:'$460B', capNum:460,  sector:'Technology',     flag:'🇨🇳', color:'#1C7EBB'},
+    {sym:'SSNLF', name:'Samsung',      cap:'$310B', capNum:310,  sector:'Technology',     flag:'🇰🇷', color:'#1428A0'},
+    {sym:'TM',    name:'Toyota',       cap:'$270B', capNum:270,  sector:'Automotive',     flag:'🇯🇵', color:'#EB0A1E'},
+    {sym:'BABA',  name:'Alibaba',      cap:'$245B', capNum:245,  sector:'E-commerce',     flag:'🇨🇳', color:'#FF6600'},
+    {sym:'RLNIY', name:'Reliance Ind.',cap:'$230B', capNum:230,  sector:'Conglomerato',   flag:'🇮🇳', color:'#0066CC'},
+    {sym:'HDB',   name:'HDFC Bank',    cap:'$160B', capNum:160,  sector:'Banca',          flag:'🇮🇳', color:'#004C97'},
+    {sym:'PDD',   name:'PDD Holdings', cap:'$155B', capNum:155,  sector:'E-commerce',     flag:'🇨🇳', color:'#E1251B'},
+    {sym:'SFTBY', name:'SoftBank',     cap:'$130B', capNum:130,  sector:'Telecom/Tech',   flag:'🇯🇵', color:'#CC0000'},
+    {sym:'INFY',  name:'Infosys',      cap:'$88B',  capNum:88,   sector:'IT Services',    flag:'🇮🇳', color:'#0F6BB5'},
   ],
   crypto:[
     {sym:'BTC-USD',  name:'Bitcoin',   cap:'$1.5T', capNum:1500, sector:'PoW · Store of Value', flag:'₿', color:'#F7931A'},
@@ -4470,10 +4471,24 @@ async function loadMcap(region,btn){
       if(fb?.marketCap){if(!quotes[qi])quotes[qi]={};quotes[qi].marketCap=fb.marketCap;}
     });
   }
+  // Converti tutto in USD — recupera tassi FX live per le valute non-USD trovate
+  const currencies=new Set(quotes.map(q=>q?.currency==='GBp'?'GBP':q?.currency).filter(c=>c&&c!=='USD'));
+  const fxRates={};
+  if(currencies.size>0){
+    const cArr=[...currencies];
+    const fxRes=await Promise.all(cArr.map(c=>api(c+'USD=X').catch(()=>null)));
+    cArr.forEach((c,i)=>{if(fxRes[i]?.price)fxRates[c]=fxRes[i].price;});
+  }
+  const toUsd=(cap,cur)=>{
+    if(!cap)return null;
+    if(!cur||cur==='USD')return cap;
+    if(cur==='GBp')return cap*(fxRates['GBP']||1)/100;
+    return fxRates[cur]?cap*fxRates[cur]:null;
+  };
   // Unisci dati live con base, usa capNum statico come fallback
   const items=base.map((it,i)=>{
     const q=quotes[i];
-    const liveCap=q?.marketCap||null;
+    const liveCap=toUsd(q?.marketCap||null, q?.currency||'USD');
     return{...it, liveCap, capNum: liveCap?Math.round(liveCap/1e9):it.capNum};
   });
   // Ordina per cap live desc
@@ -4506,7 +4521,7 @@ async function loadMcap(region,btn){
   const note=document.createElement('div');
   note.className='mcap-ref-note';
   const ts=now();
-  note.textContent=`Market cap live da Yahoo Finance · aggiornato ${ts} · clicca per il grafico`;
+  note.textContent=`Market cap in USD · tasso di cambio live da Yahoo Finance · aggiornato ${ts} · clicca per il grafico`;
   list.appendChild(note);
 }
 /* ── BOOT ── */

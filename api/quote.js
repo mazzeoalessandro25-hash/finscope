@@ -153,13 +153,8 @@ export default async function handler(req, res) {
     }
 
     // default: quote — usa yahoo-finance2 per avere marketCap nativo
-    // Lancia quote e (in parallelo) summaryDetail per avere marketCap anche se non presente in quote
-    const [q, sd] = await Promise.all([
-      fetchYahooQuote(symbol),
-      fetchQuoteSummary(symbol).catch(() => null),
-    ]);
+    const q = await fetchYahooQuote(symbol);
     if (!q) return res.status(404).json({ error: 'no data' });
-    const marketCap = q.marketCap ?? sd?.summaryDetail?.marketCap ?? null;
     return res.json({
       symbol:    q.symbol,
       price:     q.regularMarketPrice,
@@ -169,7 +164,7 @@ export default async function handler(req, res) {
       dayHigh:   q.regularMarketDayHigh,
       dayLow:    q.regularMarketDayLow,
       volume:    q.regularMarketVolume,
-      marketCap,
+      marketCap: q.marketCap ?? null,
     });
 
   } catch (e) {
