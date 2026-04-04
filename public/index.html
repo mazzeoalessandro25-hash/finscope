@@ -4481,7 +4481,8 @@ async function loadMcap(region,btn){
   }
   const toUsd=(cap,cur)=>{
     if(!cap)return null;
-    if(!cur||cur==='USD')return cap;
+    if(cur==='USD')return cap;
+    if(!cur)return null; // valuta sconosciuta → usa fallback statico
     if(cur==='GBp')return cap*(fxRates['GBP']||1)/100;
     return fxRates[cur]?cap*fxRates[cur]:null;
   };
