@@ -2698,12 +2698,14 @@ async function loadCal(forceRefresh){
   const macro    = macroData?.events    || [];
   const bmo      = earnings.filter(e=>e.time==='bmo').length;
   const amc      = earnings.filter(e=>e.time==='amc').length;
+  const srcMap   = {fmp:'dati live FMP', yahoo:'dati live Yahoo', hardcoded:'date indicative'};
+  const srcLbl   = earningsData?.source ? srcMap[earningsData.source]||'' : '';
 
   let subParts = [];
-  if(earnings.length) subParts.push(`${earnings.length} earnings${bmo||amc ? ` (☀ ${bmo} pre · 🌙 ${amc} post)` : ''}`);
+  if(earnings.length) subParts.push(`${earnings.length} earnings${bmo||amc ? ` · ☀ ${bmo} pre · 🌙 ${amc} post` : ''}${srcLbl ? ' · '+srcLbl : ''}`);
   if(macro.length)    subParts.push(`${macro.length} macro`);
   document.getElementById('cal-sub').textContent = subParts.length
-    ? subParts.join(' · ')
+    ? subParts.join(' — ')
     : 'Nessun evento trovato';
 
   renderCal(earnings, macro);
