@@ -5916,6 +5916,7 @@ function refreshPortDailyAnalysis(){
     const totalValUSD=_portHeroUSD||0;
     const totalChgPct=(totalValUSD-totalChgUSD)>0?(totalChgUSD/(totalValUSD-totalChgUSD)*100):0;
     loadPortDailyAnalysis(assets,totalChgUSD,totalChgPct,totalValUSD,true);
+    loadPortfolioEarnings(assets);
   }
 }
 
