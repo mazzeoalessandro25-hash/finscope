@@ -8223,86 +8223,167 @@ const ECO_EVENTS=[
   {date:'2026-06-18',label:'BCE Meeting',type:'bce',detail:'Decisione tassi BCE'},
 ];
 
-let calYear=new Date().getFullYear(), calMonth=new Date().getMonth(), calCache={};
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
+let calCache={}, earningsCache={}, calViewTab='all';
+
 function calChangeMonth(d){
   calMonth+=d;
   if(calMonth>11){calMonth=0;calYear++;}
   if(calMonth<0){calMonth=11;calYear--;}
   renderCalendar();
 }
+
+function setCalViewTab(tab,btn){
+  calViewTab=tab;
+  document.querySelectorAll('.cal-tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCalendar();
+}
+
 async function renderCalendar(){
   const el=document.getElementById('eco-calendar-content');
   const titleEl=document.getElementById('cal-month-title');
   if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
-  // Month title
   const monthName=new Date(calYear,calMonth,1).toLocaleDateString('it-IT',{month:'long',year:'numeric'});
-  if(titleEl)titleEl.textContent=monthName;
-  // Show spinner while loading
-  el.innerHTML='<div class="ld">Caricamento eventi...</div>';
-  // Fetch from API (with per-month cache)
+  if(titleEl)titleEl.textContent=monthName.charAt(0).toUpperCase()+monthName.slice(1);
+  el.innerHTML='<div class="ld">Caricamento...</div>';
+  const m=calMonth+1;
   const cacheKey=`${calYear}-${calMonth}`;
-  let events=calCache[cacheKey];
-  if(!events){
+
+  // Fetch macro events
+  let macroEvs=calCache[cacheKey];
+  if(!macroEvs){
     try{
-      const m=calMonth+1;
       const r=await fetch(`/api/ecocal?year=${calYear}&month=${m}`);
       const data=await r.json();
-      if(data.ok&&Array.isArray(data.events)){
-        events=data.events;
-        calCache[cacheKey]=events;
-      } else {
-        events=[];
-        el.innerHTML=`<div class="ld" style="color:var(--r)">Errore: ${data.error||'risposta non valida'}</div>`;
-        return;
-      }
-    }catch(err){
-      el.innerHTML=`<div class="ld" style="color:var(--r)">Errore connessione API</div>`;
-      return;
-    }
+      macroEvs=(data.ok&&Array.isArray(data.events))?data.events:[];
+      calCache[cacheKey]=macroEvs;
+    }catch(_){ macroEvs=[]; }
   }
-  // Build event map: key = "YYYY-MM-DD" → array of events
+
+  // Fetch earnings
+  let earEvs=earningsCache[cacheKey];
+  if(!earEvs){
+    try{
+      const r=await fetch(`/api/earnings?year=${calYear}&month=${m}`);
+      const data=await r.json();
+      if(data.ok&&Array.isArray(data.events)){
+        earEvs=data.events;
+        earningsCache[cacheKey]=earEvs;
+        // Aggiorna subtitle con fonte
+        const srcMap={fmp:'dati live FMP',yahoo:'dati live Yahoo',hardcoded:'date indicative'};
+        const bmo=earEvs.filter(e=>e.time==='bmo').length;
+        const amc=earEvs.filter(e=>e.time==='amc').length;
+        const subEl=document.getElementById('cal-sub-info');
+        if(subEl) subEl.textContent=`${earEvs.length} earnings (☀ ${bmo} pre · 🌙 ${amc} post) · ${macroEvs.length} macro · ${srcMap[data.source]||''}`;
+      } else { earEvs=[]; }
+    }catch(_){ earEvs=[]; }
+  }
+
+  // Aggiorna timestamp
+  const tsEl=document.getElementById('cal-refresh-ts');
+  if(tsEl) tsEl.textContent='Aggiornato '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+
+  // Applica filtro tab
+  const showMacro    = calViewTab!=='earnings';
+  const showEarnings = calViewTab!=='macro';
+
+  // Costruisci mappa per data
   const evMap={};
-  events.forEach(e=>{evMap[e.date]=(evMap[e.date]||[]).concat(e);});
-  // Calendar grid
+  if(showMacro)    macroEvs.forEach(e=>{(evMap[e.date]||(evMap[e.date]=[])).push({...e,_src:'macro'});});
+  if(showEarnings) earEvs.forEach(e=>{
+    const dotCls=e.time==='bmo'?'earnings-bmo':e.time==='amc'?'earnings-amc':'earnings';
+    (evMap[e.date]||(evMap[e.date]=[])).push({...e,_src:'earnings',type:dotCls,label:e.name||e.symbol});
+  });
+
+  // Griglia calendario
   const firstDay=new Date(calYear,calMonth,1);
   const lastDay=new Date(calYear,calMonth+1,0);
-  // Start grid on Monday (0=Mon ... 6=Sun)
   let startDow=firstDay.getDay()-1; if(startDow<0)startDow=6;
-  const DOW_LABELS=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+  const DOW=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
   let html='<div class="cal-grid">';
-  DOW_LABELS.forEach(d=>{html+=`<div class="cal-dow">${d}</div>`;});
+  DOW.forEach(d=>{html+=`<div class="cal-dow">${d}</div>`;});
   for(let i=0;i<startDow;i++) html+=`<div class="cal-day other-month"></div>`;
+
   for(let day=1;day<=lastDay.getDate();day++){
-    const dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dateStr=`${calYear}-${String(m).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const evs=evMap[dateStr]||[];
     const isToday=new Date(calYear,calMonth,day).getTime()===today.getTime();
     const hasEv=evs.length>0;
+
+    // Separa earnings e macro per mostrare label diversi
+    const earRows=evs.filter(e=>e._src==='earnings');
+    const macRows=evs.filter(e=>e._src==='macro');
+
     html+=`<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}">`;
     html+=`<div class="cal-day-num">${day}</div>`;
     if(hasEv){
-      // Show max 3 dots
-      html+=`<div class="cal-dots">${evs.slice(0,3).map(e=>`<div class="cal-dot ${e.type}"></div>`).join('')}${evs.length>3?`<span style="font-size:8px;color:var(--t3)">+${evs.length-3}</span>`:''}</div>`;
-      html+=`<div class="cal-event-labels">${evs.slice(0,2).map(e=>`<span class="cal-event-lbl">${e.label}</span>`).join('')}</div>`;
+      // Dots: prima BMO (arancio), poi AMC (blu), poi macro
+      const allDots=[...earRows,...macRows];
+      html+=`<div class="cal-dots">${allDots.slice(0,4).map(e=>`<div class="cal-dot ${e.type}" title="${e.label}"></div>`).join('')}${allDots.length>4?`<span style="font-size:8px;color:var(--t3)">+${allDots.length-4}</span>`:''}</div>`;
+      // Label: mostra simboli earnings prima, poi macro
+      const labelEvs=[...earRows.slice(0,2),...(earRows.length<2?macRows.slice(0,2-earRows.length):[])];
+      html+=`<div class="cal-event-labels">${labelEvs.map(e=>`<span class="cal-event-lbl">${e._src==='earnings'?(e.symbol||e.label):e.label}</span>`).join('')}</div>`;
       // Popup
-      html+=`<div class="cal-popup"><div class="cal-popup-title">${dateStr.split('-').reverse().join('/')}</div>`;
-      evs.forEach(e=>{
-        const vals=[];
-        if(e.actual!=null)vals.push(`Eff: <b>${e.actual}${e.unit}</b>`);
-        if(e.estimate!=null)vals.push(`Stima: ${e.estimate}${e.unit}`);
-        if(e.prev!=null)vals.push(`Prec: ${e.prev}${e.unit}`);
-        html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot ${e.type}"></div><div class="cal-popup-text"><strong>${e.label}</strong>${vals.length?'<br><span style="opacity:.8">'+vals.join(' · ')+'</span>':''}</div></div>`;
-      });
+      html+=`<div class="cal-popup"><div class="cal-popup-title">${day} ${monthName}</div>`;
+      // Earnings nel popup: BMO prima, poi AMC, poi senza orario
+      const bmoRows=earRows.filter(e=>e.time==='bmo');
+      const amcRows=earRows.filter(e=>e.time==='amc');
+      const unkRows=earRows.filter(e=>e.time!=='bmo'&&e.time!=='amc');
+      if(bmoRows.length){
+        html+=`<div style="font-size:9px;font-weight:700;color:#D97706;margin:4px 0 2px;letter-spacing:.4px">☀ PRIMA APERTURA</div>`;
+        bmoRows.forEach(e=>{
+          const eps=e.epsEstimate!=null?`<br><span style="opacity:.7">EPS est ${e.epsEstimate.toFixed(2)}</span>`:'';
+          const beat=e.epsActual!=null&&e.epsEstimate!=null&&e.epsActual>e.epsEstimate;
+          const miss=e.epsActual!=null&&e.epsEstimate!=null&&e.epsActual<=e.epsEstimate;
+          const res=e.epsActual!=null?(beat?' ✅':' ❌'):'';
+          html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot earnings-bmo"></div><div class="cal-popup-text"><strong>${e.name||e.symbol}</strong> <span style="opacity:.6">${e.symbol}</span>${res}${eps}</div></div>`;
+        });
+      }
+      if(amcRows.length){
+        html+=`<div style="font-size:9px;font-weight:700;color:#1A56C4;margin:4px 0 2px;letter-spacing:.4px">🌙 DOPO CHIUSURA</div>`;
+        amcRows.forEach(e=>{
+          const eps=e.epsEstimate!=null?`<br><span style="opacity:.7">EPS est ${e.epsEstimate.toFixed(2)}</span>`:'';
+          const beat=e.epsActual!=null&&e.epsEstimate!=null&&e.epsActual>e.epsEstimate;
+          const miss=e.epsActual!=null&&e.epsEstimate!=null&&e.epsActual<=e.epsEstimate;
+          const res=e.epsActual!=null?(beat?' ✅':' ❌'):'';
+          html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot earnings-amc"></div><div class="cal-popup-text"><strong>${e.name||e.symbol}</strong> <span style="opacity:.6">${e.symbol}</span>${res}${eps}</div></div>`;
+        });
+      }
+      if(unkRows.length){
+        unkRows.forEach(e=>{
+          html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot earnings"></div><div class="cal-popup-text"><strong>${e.name||e.symbol}</strong> <span style="opacity:.6">${e.symbol}</span></div></div>`;
+        });
+      }
+      // Macro nel popup
+      if(macRows.length){
+        if(earRows.length) html+=`<div style="border-top:1px solid rgba(255,255,255,.15);margin:5px 0 3px"></div>`;
+        macRows.forEach(e=>{
+          const vals=[];
+          if(e.actual!=null)vals.push(`Eff: <b>${e.actual}${e.unit||''}</b>`);
+          if(e.estimate!=null)vals.push(`Stima: ${e.estimate}${e.unit||''}`);
+          if(e.prev!=null)vals.push(`Prec: ${e.prev}${e.unit||''}`);
+          html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot ${e.type}"></div><div class="cal-popup-text"><strong>${e.label}</strong>${vals.length?'<br><span style="opacity:.8">'+vals.join(' · ')+'</span>':''}</div></div>`;
+        });
+      }
       html+=`</div>`;
     }
     html+=`</div>`;
   }
-  const totalCells=startDow+lastDay.getDate();
-  const remainder=totalCells%7;
-  if(remainder>0){for(let i=0;i<7-remainder;i++)html+=`<div class="cal-day other-month"></div>`;}
+  const total=startDow+lastDay.getDate();
+  const rem=total%7;
+  if(rem>0){for(let i=0;i<7-rem;i++)html+=`<div class="cal-day other-month"></div>`;}
   html+='</div>';
   el.innerHTML=html;
 }
+
+// Auto-refresh ogni 30 minuti — invalida cache del mese corrente
+setInterval(()=>{
+  const k=`${new Date().getFullYear()}-${new Date().getMonth()}`;
+  delete calCache[k]; delete earningsCache[k];
+  if(calYear===new Date().getFullYear()&&calMonth===new Date().getMonth()) renderCalendar();
+},30*60*1000);
 
 /* ══════════════════════════════════════════
    STOCK DETAIL OVERLAY
