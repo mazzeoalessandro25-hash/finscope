@@ -82,7 +82,7 @@ async function fetchBatched(tickers, from, to) {
           date:            dateStr,
           symbol:          ticker,
           name:            q.shortName || q.longName || ticker,
-          epsEstimate:     q.epsCurrentYear ?? q.epsTrailingTwelveMonths ?? null,
+          epsEstimate:     null,
           epsActual:       null,
           revenueEstimate: null,
           revenueActual:   null,
