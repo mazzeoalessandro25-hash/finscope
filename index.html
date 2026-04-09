@@ -2635,6 +2635,7 @@ let calMonth = new Date().getMonth() + 1;
 let calTab   = 'all';
 let calEarningsCache = {};
 let calMacroCache    = {};
+let calLastUpdate    = null;
 
 const CAL_MONTHS_IT = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
   'Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
@@ -2656,12 +2657,25 @@ function setCalTab(tab, btn){
   renderCal();
 }
 
-async function loadCal(){
+function calUpdateBadge(){
+  const t = calLastUpdate
+    ? new Date(calLastUpdate).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})
+    : null;
+  const el = document.getElementById('cal-refresh-badge');
+  if(el && t) el.textContent = 'Aggiornato ' + t;
+}
+
+async function loadCal(forceRefresh){
   const key = `${calYear}-${calMonth}`;
   document.getElementById('cal-month-lbl').textContent = `${CAL_MONTHS_IT[calMonth-1]} ${calYear}`;
-  document.getElementById('cal-body').innerHTML='<div class="ld">Caricamento...</div>';
+  if(forceRefresh){
+    delete calEarningsCache[key];
+    delete calMacroCache[key];
+  }
+  if(!calEarningsCache[key] || !calMacroCache[key]){
+    document.getElementById('cal-body').innerHTML='<div class="ld">Caricamento...</div>';
+  }
 
-  // Fetch in parallelo earnings + macro (con cache)
   const [earningsData, macroData] = await Promise.all([
     calEarningsCache[key]
       ? Promise.resolve(calEarningsCache[key])
@@ -2676,123 +2690,154 @@ async function loadCal(){
   if(earningsData?.ok) calEarningsCache[key] = earningsData;
   if(macroData?.ok)    calMacroCache[key]    = macroData;
 
+  calLastUpdate = Date.now();
+  calUpdateBadge();
+
   const earnings = earningsData?.events || [];
   const macro    = macroData?.events    || [];
-  const total    = earnings.length + macro.length;
+  const bmo      = earnings.filter(e=>e.time==='bmo').length;
+  const amc      = earnings.filter(e=>e.time==='amc').length;
 
-  document.getElementById('cal-sub').textContent =
-    total > 0
-      ? `${earnings.length} earnings · ${macro.length} eventi macro`
-      : 'Nessun evento trovato per questo mese';
+  let subParts = [];
+  if(earnings.length) subParts.push(`${earnings.length} earnings${bmo||amc ? ` (☀ ${bmo} pre · 🌙 ${amc} post)` : ''}`);
+  if(macro.length)    subParts.push(`${macro.length} macro`);
+  document.getElementById('cal-sub').textContent = subParts.length
+    ? subParts.join(' · ')
+    : 'Nessun evento trovato';
 
   renderCal(earnings, macro);
 }
 
+function renderMacroEvent(ev){
+  const iconMap = {fed:'🏦', bce:'🏛️', macro:'📈'};
+  const icon    = iconMap[ev.type] || '📈';
+  const impCls  = (ev.impact||'').toLowerCase();
+  let actHtml='';
+  if(ev.actual!=null){
+    actHtml=`<div class="cal-ev-eps">${ev.actual}${ev.unit||''}</div>`;
+    if(ev.estimate!=null) actHtml+=`<div class="cal-ev-eps-sub">est ${ev.estimate}${ev.unit||''}</div>`;
+  } else if(ev.estimate!=null){
+    actHtml=`<div class="cal-ev-eps" style="color:var(--t3)">est ${ev.estimate}${ev.unit||''}</div>`;
+  }
+  if(ev.impact) actHtml+=`<div class="cal-ev-impact ${impCls}">${ev.impact.toUpperCase()}</div>`;
+  return `<div class="cal-event">
+    <div class="cal-ev-icon ${ev.type||'macro'}">${icon}</div>
+    <div class="cal-ev-body">
+      <div class="cal-ev-name">${ev.label}</div>
+      <div class="cal-ev-sub">${ev.detail||''}${ev.country ? ' · '+ev.country : ''}</div>
+    </div>
+    <div class="cal-ev-right">${actHtml}</div>
+  </div>`;
+}
+
+function renderEarningsEvent(ev){
+  const name   = STOCK_NAMES[ev.symbol] || ev.name || ev.symbol;
+  const hasEst = ev.epsEstimate != null;
+  const hasAct = ev.epsActual   != null;
+  const beat   = hasAct && hasEst && ev.epsActual >  ev.epsEstimate;
+  const miss   = hasAct && hasEst && ev.epsActual <= ev.epsEstimate;
+  const timing = ev.time === 'bmo' ? 'bmo' : ev.time === 'amc' ? 'amc' : '';
+  const icon   = ev.time === 'bmo' ? '☀' : ev.time === 'amc' ? '🌙' : '📊';
+  const icoCls = ev.time === 'bmo' ? 'bmo' : ev.time === 'amc' ? 'amc' : 'earnings';
+  let epsHtml='';
+  if(hasAct){
+    const cls=beat?'beat':miss?'miss':'';
+    epsHtml=`<div class="cal-ev-eps ${cls}">EPS ${ev.epsActual>=0?'+':''}${ev.epsActual.toFixed(2)}</div>`;
+    if(hasEst) epsHtml+=`<div class="cal-ev-eps-sub">est ${ev.epsEstimate.toFixed(2)}</div>`;
+  } else if(hasEst){
+    epsHtml=`<div class="cal-ev-eps">est ${ev.epsEstimate.toFixed(2)}</div>`;
+  }
+  const badge = beat?' · ✅ BEAT':miss?' · ❌ MISS':'';
+  const sym = ev.symbol.replace(/'/g,'');
+  const safeName = name.replace(/'/g,'');
+  return `<div class="cal-event ${timing}" onclick="openModal('${sym}','${safeName} — Earnings')">
+    <div class="cal-ev-icon ${icoCls}">${icon}</div>
+    <div class="cal-ev-body">
+      <div class="cal-ev-name">${name}<span class="cal-ev-ticker">${ev.symbol}</span></div>
+      <div class="cal-ev-sub">Risultati trimestrali${badge}</div>
+    </div>
+    <div class="cal-ev-right">${epsHtml}</div>
+  </div>`;
+}
+
 function renderCal(earnings, macro){
-  // Recupera da cache se non passati
   const key = `${calYear}-${calMonth}`;
   if(!earnings) earnings = calEarningsCache[key]?.events || [];
   if(!macro)    macro    = calMacroCache[key]?.events    || [];
 
-  // Applica filtro tab
-  let earningsFiltered = calTab === 'macro'    ? [] : earnings;
-  let macroFiltered    = calTab === 'earnings' ? [] : macro;
+  const earF = calTab === 'macro'    ? [] : earnings;
+  const macF = calTab === 'earnings' ? [] : macro;
 
-  // Unisci e raggruppa per data
   const byDate = {};
-  earningsFiltered.forEach(e => {
-    if(!byDate[e.date]) byDate[e.date] = [];
-    byDate[e.date].push({ ...e, _type: 'earnings' });
-  });
-  macroFiltered.forEach(e => {
-    if(!byDate[e.date]) byDate[e.date] = [];
-    byDate[e.date].push({ ...e, _type: 'macro' });
-  });
+  earF.forEach(e => { (byDate[e.date]||(byDate[e.date]=[])).push({...e,_type:'earnings'}); });
+  macF.forEach(e => { (byDate[e.date]||(byDate[e.date]=[])).push({...e,_type:'macro'}); });
 
   const dates = Object.keys(byDate).sort();
-
   if(!dates.length){
-    document.getElementById('cal-body').innerHTML =
-      '<div class="ld">Nessun evento per questo periodo</div>';
+    document.getElementById('cal-body').innerHTML='<div class="ld">Nessun evento per questo periodo</div>';
     return;
   }
 
   const todayStr = new Date().toISOString().split('T')[0];
+  let html='';
 
-  let html = '';
   dates.forEach(date => {
-    const d       = new Date(date + 'T12:00:00');
+    const d       = new Date(date+'T12:00:00');
     const isToday = date === todayStr;
     const past    = date < todayStr;
-    const wd      = d.toLocaleDateString('it-IT',{weekday:'short'});
+    const wd      = d.toLocaleDateString('it-IT',{weekday:'long'});
     const day     = d.getDate();
     const mon     = d.toLocaleDateString('it-IT',{month:'short'});
-    const label   = `${wd} ${day} ${mon} ${calYear}`;
 
-    html += `<div class="cal-day-group" style="${past?'opacity:.6':''}">`;
-    html += `<div class="cal-day-label${isToday?' today':''}">${isToday?'● ':''} ${label.toUpperCase()}</div>`;
+    html+=`<div class="cal-day-group" style="${past?'opacity:.55':''}">`;
+    html+=`<div class="cal-day-label${isToday?' today':''}">
+      ${isToday?'<span style="color:var(--b)">●</span>':''}
+      <span>${wd.charAt(0).toUpperCase()+wd.slice(1)} ${day} ${mon.toUpperCase()} ${calYear}</span>
+    </div>`;
 
-    byDate[date].forEach(ev => {
-      if(ev._type === 'earnings'){
-        const name    = STOCK_NAMES[ev.symbol] || ev.name || ev.symbol;
-        const hasEst  = ev.epsEstimate != null;
-        const hasAct  = ev.epsActual   != null;
-        const beat    = hasAct && hasEst && ev.epsActual >  ev.epsEstimate;
-        const miss    = hasAct && hasEst && ev.epsActual <= ev.epsEstimate;
-        const timeMap = { bmo:'PRE-MKT', amc:'POST-MKT' };
-        const timeLbl = ev.time ? timeMap[ev.time] || ev.time.toUpperCase() : null;
-        const timeCls = ev.time || '';
+    // Separa macro (ordinati per impatto) e earnings per timing
+    const macroEvs = byDate[date].filter(e=>e._type==='macro')
+      .sort((a,b)=>{const o={high:0,medium:1};return(o[(a.impact||'').toLowerCase()]??2)-(o[(b.impact||'').toLowerCase()]??2);});
+    const bmoEvs = byDate[date].filter(e=>e._type==='earnings'&&e.time==='bmo');
+    const amcEvs = byDate[date].filter(e=>e._type==='earnings'&&e.time==='amc');
+    const unkEvs = byDate[date].filter(e=>e._type==='earnings'&&e.time!=='bmo'&&e.time!=='amc');
 
-        let rightHtml = '';
-        if(hasAct){
-          const cls = beat?'beat':miss?'miss':'';
-          rightHtml += `<div class="cal-ev-eps ${cls}">EPS: ${ev.epsActual>=0?'+':''}${ev.epsActual.toFixed(2)}</div>`;
-          if(hasEst) rightHtml += `<div style="font-family:var(--fm);font-size:9px;color:var(--t3)">est ${ev.epsEstimate.toFixed(2)}</div>`;
-        } else if(hasEst){
-          rightHtml += `<div class="cal-ev-eps">est ${ev.epsEstimate.toFixed(2)}</div>`;
-        }
-        if(timeLbl) rightHtml += `<div class="cal-ev-time ${timeCls}">${timeLbl}</div>`;
+    // Macro
+    macroEvs.forEach(ev=>{ html+=renderMacroEvent(ev); });
 
-        html += `<div class="cal-event" onclick="openModal('${ev.symbol}','${name} — Earnings')">
-          <div class="cal-ev-icon earnings">📊</div>
-          <div class="cal-ev-body">
-            <div class="cal-ev-name">${name} <span style="font-family:var(--fm);font-size:9px;color:var(--t3);font-weight:400">${ev.symbol}</span></div>
-            <div class="cal-ev-sub">Risultati trimestrali${beat?' · ✅ BEAT':miss?' · ❌ MISS':''}</div>
-          </div>
-          <div class="cal-ev-right">${rightHtml}</div>
-        </div>`;
-      } else {
-        // Macro event
-        const iconMap = { fed:'🏦', bce:'🏛️', macro:'📈' };
-        const icon    = iconMap[ev.type] || '📈';
-        const impCls  = (ev.impact||'').toLowerCase();
+    // BMO prima apertura
+    if(bmoEvs.length){
+      html+=`<div class="cal-timing-sep bmo-sep">☀&nbsp; Prima apertura &nbsp;·&nbsp; ${bmoEvs.length} societ${bmoEvs.length===1?'à':'à'}</div>`;
+      bmoEvs.forEach(ev=>{ html+=renderEarningsEvent(ev); });
+    }
 
-        let actHtml = '';
-        if(ev.actual != null){
-          actHtml = `<div class="cal-ev-eps">${ev.actual}${ev.unit||''}</div>`;
-          if(ev.estimate != null)
-            actHtml += `<div style="font-family:var(--fm);font-size:9px;color:var(--t3)">est ${ev.estimate}${ev.unit||''}</div>`;
-        } else if(ev.estimate != null){
-          actHtml = `<div class="cal-ev-eps" style="color:var(--t3)">est ${ev.estimate}${ev.unit||''}</div>`;
-        }
-        if(ev.impact) actHtml += `<div class="cal-ev-impact ${impCls}">${ev.impact.toUpperCase()}</div>`;
+    // Orario sconosciuto
+    if(unkEvs.length){
+      const showSep = bmoEvs.length||amcEvs.length||macroEvs.length;
+      if(showSep) html+=`<div class="cal-timing-sep unk-sep">📊&nbsp; Orario da definire &nbsp;·&nbsp; ${unkEvs.length} societ${unkEvs.length===1?'à':'à'}</div>`;
+      unkEvs.forEach(ev=>{ html+=renderEarningsEvent(ev); });
+    }
 
-        html += `<div class="cal-event">
-          <div class="cal-ev-icon ${ev.type||'macro'}">${icon}</div>
-          <div class="cal-ev-body">
-            <div class="cal-ev-name">${ev.label}</div>
-            <div class="cal-ev-sub">${ev.detail||''} · ${ev.country||''}</div>
-          </div>
-          <div class="cal-ev-right">${actHtml}</div>
-        </div>`;
-      }
-    });
+    // AMC dopo chiusura
+    if(amcEvs.length){
+      html+=`<div class="cal-timing-sep amc-sep">🌙&nbsp; Dopo chiusura &nbsp;·&nbsp; ${amcEvs.length} societ${amcEvs.length===1?'à':'à'}</div>`;
+      amcEvs.forEach(ev=>{ html+=renderEarningsEvent(ev); });
+    }
 
-    html += '</div>';
+    html+='</div>';
   });
 
-  document.getElementById('cal-body').innerHTML = html;
+  document.getElementById('cal-body').innerHTML=html;
 }
+
+// Auto-refresh: invalida la cache del mese corrente ogni 30 minuti e ricarica
+setInterval(()=>{
+  const curKey=`${new Date().getFullYear()}-${new Date().getMonth()+1}`;
+  delete calEarningsCache[curKey];
+  delete calMacroCache[curKey];
+  const viewKey=`${calYear}-${calMonth}`;
+  if(viewKey===curKey) loadCal();
+}, 30*60*1000);
 
 /* ── BOOT ── */
 async function boot(){
