@@ -5467,7 +5467,17 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   const topMovers=sorted.slice(0,3);
 
   // Fetch parallelo: notizie asset + macro mercato + quotazioni indici
-  const [newsResults, indicesResults, macroNewsResults] = await Promise.all([
+  const _now = new Date();
+  const _todayStr = _now.toISOString().slice(0,10);
+  const _portSyms = new Set(assets.map(a=>a.sym));
+
+  // Mesi da fetchare per earnings: mese precedente + corrente + prossimi 2
+  const _eMths = [-1,0,1,2].map(off=>{
+    const d=new Date(_now.getFullYear(), _now.getMonth()+off, 1);
+    return { year:d.getFullYear(), month:d.getMonth()+1 };
+  });
+
+  const [newsResults, indicesResults, macroNewsResults, earningsResponses] = await Promise.all([
     // Notizie per i top mover
     Promise.all(topMovers.map(a=>
       fetch(`/api/quote?type=news&symbol=${encodeURIComponent(a.sym)}`)
@@ -5489,6 +5499,11 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
       fetch(`/api/quote?type=news&symbol=${encodeURIComponent(q)}`)
         .then(r=>r.json()).then(d=>(d.news||[]).slice(0,2))
         .catch(()=>[])
+    )),
+    // Earnings: 4 mesi per avere contesto recente + prossimo
+    Promise.all(_eMths.map(({year,month})=>
+      fetch(`/api/earnings?year=${year}&month=${month}`)
+        .then(r=>r.json()).catch(()=>({ok:false,events:[]}))
     ))
   ]);
 
