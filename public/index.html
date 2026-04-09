@@ -5292,6 +5292,8 @@ async function renderPortfolio(){
   document.getElementById('port-summary').innerHTML=summaryHtml;
   // Carica analisi giornaliera AI (async, non bloccante)
   if(dailyItems.length>0) loadPortDailyAnalysis(dailyItems, dailyPnlUSD, dailyPnlPct, totalValUSD);
+  // Carica earnings prossimi per i titoli in portafoglio
+  if(dailyItems.length>0) loadPortfolioEarnings(dailyItems);
   // Interactive allocation donut
   setTimeout(()=>{
     const dc=document.getElementById('port-alloc-donut');
