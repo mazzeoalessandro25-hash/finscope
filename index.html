@@ -646,45 +646,65 @@ body.dark .sd-item:hover{background:var(--s3)}
 }
 
 /* ── CALENDARIO MERCATI & EARNINGS ── */
-.cal-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.cal-tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
 .cal-tab{background:var(--card);border:1px solid var(--bd);color:var(--t2);
   font-family:var(--fm);font-size:11px;padding:5px 14px;border-radius:100px;
   cursor:pointer;transition:all .15s;font-weight:500}
 .cal-tab:hover{background:var(--b3);border-color:rgba(26,86,196,.25);color:var(--b)}
 .cal-tab.active{background:var(--b);border-color:var(--b);color:#fff}
-.cal-day-group{margin-bottom:10px}
-.cal-day-label{font-family:var(--fm);font-size:10px;font-weight:600;color:var(--t3);
-  letter-spacing:.7px;text-transform:uppercase;padding:4px 0 6px;
-  border-bottom:1px solid var(--bd);margin-bottom:6px}
-.cal-day-label.today{color:var(--b)}
-.cal-event{display:flex;align-items:center;gap:10px;padding:7px 10px;
-  border-radius:8px;cursor:default;transition:background .12s;margin-bottom:2px}
+.cal-refresh-badge{font-family:var(--fm);font-size:9px;color:var(--t3);margin-left:auto;
+  display:flex;align-items:center;gap:4px}
+.cal-refresh-dot{width:6px;height:6px;border-radius:50%;background:var(--g);flex-shrink:0;
+  animation:calPulse 2.5s ease-in-out infinite}
+@keyframes calPulse{0%,100%{opacity:.4}50%{opacity:1}}
+.cal-day-group{margin-bottom:14px}
+.cal-day-label{font-family:var(--fm);font-size:10px;font-weight:700;color:var(--t2);
+  letter-spacing:.8px;text-transform:uppercase;padding:6px 10px;
+  background:var(--s2);border-radius:6px;margin-bottom:6px;
+  display:flex;align-items:center;gap:6px}
+.cal-day-label.today{background:var(--b3);color:var(--b)}
+.cal-timing-sep{font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:.7px;
+  text-transform:uppercase;padding:4px 8px;margin:5px 0 3px;
+  border-radius:4px;display:inline-flex;align-items:center;gap:5px;width:100%}
+.cal-timing-sep.bmo-sep{color:#92400E;background:#FEF9EE;border-left:3px solid #D97706}
+.cal-timing-sep.amc-sep{color:#1A56C4;background:#EEF4FD;border-left:3px solid #1A56C4}
+.cal-timing-sep.unk-sep{color:var(--t3);background:var(--s3);border-left:3px solid var(--bd2)}
+.cal-event{display:flex;align-items:center;gap:10px;padding:7px 10px 7px 13px;
+  border-radius:8px;cursor:default;transition:background .12s;margin-bottom:2px;
+  position:relative}
+.cal-event[onclick]{cursor:pointer}
 .cal-event:hover{background:var(--s2)}
-.cal-ev-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;
-  justify-content:center;font-size:13px;flex-shrink:0}
-.cal-ev-icon.earnings{background:var(--b3);color:var(--b)}
+.cal-event.bmo{box-shadow:inset 3px 0 0 #D97706;background:rgba(217,119,6,.03)}
+.cal-event.bmo:hover{background:rgba(217,119,6,.07)}
+.cal-event.amc{box-shadow:inset 3px 0 0 #1A56C4;background:rgba(26,86,196,.03)}
+.cal-event.amc:hover{background:rgba(26,86,196,.07)}
+.cal-ev-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;flex-shrink:0}
+.cal-ev-icon.bmo{background:#FEF3C7;color:#D97706}
+.cal-ev-icon.amc{background:#EBF1FB;color:#1A56C4}
+.cal-ev-icon.earnings{background:var(--s3);color:var(--t2)}
 .cal-ev-icon.fed{background:#FEF3C7;color:#92400E}
 .cal-ev-icon.bce{background:#F0FDF4;color:#065F46}
 .cal-ev-icon.macro{background:var(--s3);color:var(--t2)}
 .cal-ev-body{flex:1;min-width:0}
 .cal-ev-name{font-size:12px;font-weight:600;color:var(--t);white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis}
-.cal-ev-sub{font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:1px}
-.cal-ev-right{text-align:right;flex-shrink:0}
-.cal-ev-eps{font-family:var(--fm);font-size:11px;color:var(--t);font-weight:500}
+  overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:5px}
+.cal-ev-ticker{font-family:var(--fm);font-size:9px;color:var(--t3);font-weight:400;
+  background:var(--s3);padding:1px 5px;border-radius:3px;flex-shrink:0}
+.cal-ev-sub{font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px}
+.cal-ev-right{text-align:right;flex-shrink:0;min-width:68px}
+.cal-ev-eps{font-family:var(--fm);font-size:11px;color:var(--t);font-weight:600}
 .cal-ev-eps.beat{color:var(--g)}
 .cal-ev-eps.miss{color:var(--r)}
-.cal-ev-time{font-size:9px;font-family:var(--fm);padding:2px 7px;border-radius:3px;
-  font-weight:600;letter-spacing:.4px;margin-top:2px;display:inline-block}
-.cal-ev-time.bmo{background:#FEF3C7;color:#92400E}
-.cal-ev-time.amc{background:var(--b3);color:var(--b)}
+.cal-ev-eps-sub{font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:1px}
 .cal-ev-impact{font-size:9px;font-family:var(--fm);padding:2px 7px;border-radius:3px;
-  font-weight:600;letter-spacing:.4px;display:inline-block}
+  font-weight:600;letter-spacing:.4px;display:inline-block;margin-top:3px}
 .cal-ev-impact.high{background:var(--r2);color:#B91C1C}
 .cal-ev-impact.medium{background:var(--o2);color:#92400E}
+.cal-ev-impact.low{background:var(--s3);color:var(--t3)}
 .cal-nav-row{display:flex;align-items:center;gap:8px}
 .cal-month-lbl{font-family:var(--fm);font-size:12px;font-weight:600;
-  min-width:110px;text-align:center;color:var(--t)}
+  min-width:120px;text-align:center;color:var(--t)}
 </style>
 </head>
 <body>
