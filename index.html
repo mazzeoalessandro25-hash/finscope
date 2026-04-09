@@ -948,6 +948,28 @@ body.dark .sd-item:hover{background:var(--s3)}
     <div class="crypto-item" onclick="openModal('XRP-USD','XRP')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4;font-size:11px">XRP</div><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k4" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div>
     <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k5" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div>
   </div>
+
+  <!-- CALENDARIO MERCATI & EARNINGS -->
+  <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Calendario Mercati & Earnings</div><div class="sdiv-l"></div></div>
+  <div class="card">
+    <div class="ch">
+      <div>
+        <div class="ct">Prossimi eventi · Earnings & Macro</div>
+        <div class="cs" id="cal-sub">Caricamento...</div>
+      </div>
+      <div class="cal-nav-row">
+        <button class="cc-btn" onclick="calNav(-1)">‹</button>
+        <span class="cal-month-lbl" id="cal-month-lbl">—</span>
+        <button class="cc-btn" onclick="calNav(1)">›</button>
+      </div>
+    </div>
+    <div class="cal-tabs">
+      <button class="cal-tab active" id="cal-tab-all"      onclick="setCalTab('all',this)">Tutti</button>
+      <button class="cal-tab"        id="cal-tab-earnings" onclick="setCalTab('earnings',this)">📊 Earnings</button>
+      <button class="cal-tab"        id="cal-tab-macro"    onclick="setCalTab('macro',this)">🏦 Macro</button>
+    </div>
+    <div id="cal-body"><div class="ld">Caricamento...</div></div>
+  </div>
 </div>
 
 <!-- ═══ SCREENER ═══ -->
