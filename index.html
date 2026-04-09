@@ -2607,6 +2607,173 @@ async function runAI(){
   btn.innerHTML='<span class="ai-badge">AI</span>Analisi';
 }
 
+/* ══════════════════════════════════════════
+   CALENDARIO MERCATI & EARNINGS
+══════════════════════════════════════════ */
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth() + 1;
+let calTab   = 'all';
+let calEarningsCache = {};
+let calMacroCache    = {};
+
+const CAL_MONTHS_IT = ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno',
+  'Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'];
+
+const STOCK_NAMES = {};
+STOCKS.forEach(s => { STOCK_NAMES[s.s] = s.n; });
+
+function calNav(dir){
+  calMonth += dir;
+  if(calMonth > 12){ calMonth=1; calYear++; }
+  if(calMonth < 1) { calMonth=12; calYear--; }
+  loadCal();
+}
+
+function setCalTab(tab, btn){
+  calTab = tab;
+  document.querySelectorAll('.cal-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCal();
+}
+
+async function loadCal(){
+  const key = `${calYear}-${calMonth}`;
+  document.getElementById('cal-month-lbl').textContent = `${CAL_MONTHS_IT[calMonth-1]} ${calYear}`;
+  document.getElementById('cal-body').innerHTML='<div class="ld">Caricamento...</div>';
+
+  // Fetch in parallelo earnings + macro (con cache)
+  const [earningsData, macroData] = await Promise.all([
+    calEarningsCache[key]
+      ? Promise.resolve(calEarningsCache[key])
+      : fetch(`/api/earnings?year=${calYear}&month=${calMonth}`)
+          .then(r=>r.ok?r.json():null).catch(()=>null),
+    calMacroCache[key]
+      ? Promise.resolve(calMacroCache[key])
+      : fetch(`/api/ecocal?year=${calYear}&month=${calMonth}`)
+          .then(r=>r.ok?r.json():null).catch(()=>null),
+  ]);
+
+  if(earningsData?.ok) calEarningsCache[key] = earningsData;
+  if(macroData?.ok)    calMacroCache[key]    = macroData;
+
+  const earnings = earningsData?.events || [];
+  const macro    = macroData?.events    || [];
+  const total    = earnings.length + macro.length;
+
+  document.getElementById('cal-sub').textContent =
+    total > 0
+      ? `${earnings.length} earnings · ${macro.length} eventi macro`
+      : 'Nessun evento trovato per questo mese';
+
+  renderCal(earnings, macro);
+}
+
+function renderCal(earnings, macro){
+  // Recupera da cache se non passati
+  const key = `${calYear}-${calMonth}`;
+  if(!earnings) earnings = calEarningsCache[key]?.events || [];
+  if(!macro)    macro    = calMacroCache[key]?.events    || [];
+
+  // Applica filtro tab
+  let earningsFiltered = calTab === 'macro'    ? [] : earnings;
+  let macroFiltered    = calTab === 'earnings' ? [] : macro;
+
+  // Unisci e raggruppa per data
+  const byDate = {};
+  earningsFiltered.forEach(e => {
+    if(!byDate[e.date]) byDate[e.date] = [];
+    byDate[e.date].push({ ...e, _type: 'earnings' });
+  });
+  macroFiltered.forEach(e => {
+    if(!byDate[e.date]) byDate[e.date] = [];
+    byDate[e.date].push({ ...e, _type: 'macro' });
+  });
+
+  const dates = Object.keys(byDate).sort();
+
+  if(!dates.length){
+    document.getElementById('cal-body').innerHTML =
+      '<div class="ld">Nessun evento per questo periodo</div>';
+    return;
+  }
+
+  const todayStr = new Date().toISOString().split('T')[0];
+
+  let html = '';
+  dates.forEach(date => {
+    const d       = new Date(date + 'T12:00:00');
+    const isToday = date === todayStr;
+    const past    = date < todayStr;
+    const wd      = d.toLocaleDateString('it-IT',{weekday:'short'});
+    const day     = d.getDate();
+    const mon     = d.toLocaleDateString('it-IT',{month:'short'});
+    const label   = `${wd} ${day} ${mon} ${calYear}`;
+
+    html += `<div class="cal-day-group" style="${past?'opacity:.6':''}">`;
+    html += `<div class="cal-day-label${isToday?' today':''}">${isToday?'● ':''} ${label.toUpperCase()}</div>`;
+
+    byDate[date].forEach(ev => {
+      if(ev._type === 'earnings'){
+        const name    = STOCK_NAMES[ev.symbol] || ev.name || ev.symbol;
+        const hasEst  = ev.epsEstimate != null;
+        const hasAct  = ev.epsActual   != null;
+        const beat    = hasAct && hasEst && ev.epsActual >  ev.epsEstimate;
+        const miss    = hasAct && hasEst && ev.epsActual <= ev.epsEstimate;
+        const timeMap = { bmo:'PRE-MKT', amc:'POST-MKT' };
+        const timeLbl = ev.time ? timeMap[ev.time] || ev.time.toUpperCase() : null;
+        const timeCls = ev.time || '';
+
+        let rightHtml = '';
+        if(hasAct){
+          const cls = beat?'beat':miss?'miss':'';
+          rightHtml += `<div class="cal-ev-eps ${cls}">EPS: ${ev.epsActual>=0?'+':''}${ev.epsActual.toFixed(2)}</div>`;
+          if(hasEst) rightHtml += `<div style="font-family:var(--fm);font-size:9px;color:var(--t3)">est ${ev.epsEstimate.toFixed(2)}</div>`;
+        } else if(hasEst){
+          rightHtml += `<div class="cal-ev-eps">est ${ev.epsEstimate.toFixed(2)}</div>`;
+        }
+        if(timeLbl) rightHtml += `<div class="cal-ev-time ${timeCls}">${timeLbl}</div>`;
+
+        html += `<div class="cal-event" onclick="openModal('${ev.symbol}','${name} — Earnings')">
+          <div class="cal-ev-icon earnings">📊</div>
+          <div class="cal-ev-body">
+            <div class="cal-ev-name">${name} <span style="font-family:var(--fm);font-size:9px;color:var(--t3);font-weight:400">${ev.symbol}</span></div>
+            <div class="cal-ev-sub">Risultati trimestrali${beat?' · ✅ BEAT':miss?' · ❌ MISS':''}</div>
+          </div>
+          <div class="cal-ev-right">${rightHtml}</div>
+        </div>`;
+      } else {
+        // Macro event
+        const iconMap = { fed:'🏦', bce:'🏛️', macro:'📈' };
+        const icon    = iconMap[ev.type] || '📈';
+        const impCls  = (ev.impact||'').toLowerCase();
+
+        let actHtml = '';
+        if(ev.actual != null){
+          actHtml = `<div class="cal-ev-eps">${ev.actual}${ev.unit||''}</div>`;
+          if(ev.estimate != null)
+            actHtml += `<div style="font-family:var(--fm);font-size:9px;color:var(--t3)">est ${ev.estimate}${ev.unit||''}</div>`;
+        } else if(ev.estimate != null){
+          actHtml = `<div class="cal-ev-eps" style="color:var(--t3)">est ${ev.estimate}${ev.unit||''}</div>`;
+        }
+        if(ev.impact) actHtml += `<div class="cal-ev-impact ${impCls}">${ev.impact.toUpperCase()}</div>`;
+
+        html += `<div class="cal-event">
+          <div class="cal-ev-icon ${ev.type||'macro'}">${icon}</div>
+          <div class="cal-ev-body">
+            <div class="cal-ev-name">${ev.label}</div>
+            <div class="cal-ev-sub">${ev.detail||''} · ${ev.country||''}</div>
+          </div>
+          <div class="cal-ev-right">${actHtml}</div>
+        </div>`;
+      }
+    });
+
+    html += '</div>';
+  });
+
+  document.getElementById('cal-body').innerHTML = html;
+}
+
 /* ── BOOT ── */
 async function boot(){
   updateHours();
@@ -2619,6 +2786,7 @@ async function boot(){
     loadMovers(),
   ]);
   loadTape();
+  loadCal();
   document.getElementById('dash-ts').textContent='Aggiornato: '+now();
 }
 boot();
