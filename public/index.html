@@ -888,6 +888,19 @@ html.dark .auth-box{background:#1e293b}
 .cal-popup-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .cal-popup-text{font-size:10.5px;line-height:1.35}
 
+/* Earnings nel calendario */
+.cal-dot.earnings-bmo{background:#D97706}
+.cal-dot.earnings-amc{background:#1A56C4}
+.cal-dot.earnings{background:#8499B0}
+.cal-tabs-cal{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.cal-tab-btn{background:var(--card);border:1px solid var(--bd);color:var(--t2);
+  font-family:var(--fm);font-size:11px;padding:4px 12px;border-radius:100px;
+  cursor:pointer;transition:all .15s;font-weight:500}
+.cal-tab-btn:hover{background:var(--b3);border-color:rgba(26,86,196,.25);color:var(--b)}
+.cal-tab-btn.active{background:var(--b);border-color:var(--b);color:#fff}
+.cal-refresh-info{font-family:var(--fm);font-size:9px;color:var(--t3);margin-left:auto;
+  display:flex;align-items:center;gap:4px}
+
 /* ═══ STOCK DETAIL OVERLAY ═══ */
 .sd-overlay{position:fixed;inset:0;background:var(--bg);z-index:2000;overflow-y:auto;
   transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
