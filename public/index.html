@@ -6781,12 +6781,22 @@ async function loadDividendTracker(){
   const avgYield=totalInvestedEUR>0?totalWeightedYield/totalInvestedEUR:0;
   // Calendario mensile (tutto in EUR per il grafico)
   const monthlyIncome=Array(12).fill(0);
+  const monthlyNetInc=Array(12).fill(0);
+  const monthlyBreakdown=Array(12).fill(null).map(()=>[]);
   rows.forEach(r=>{
     const months=r.currency==='EUR'?[2,8]:[1,4,7,10];
-    months.forEach(m=>{ monthlyIncome[m]+=r.annualIncomeEUR/months.length; });
+    months.forEach(m=>{
+      const gross=r.annualIncomeEUR/months.length;
+      const net=r.annualNetEUR/months.length;
+      monthlyIncome[m]+=gross;
+      monthlyNetInc[m]+=net;
+      monthlyBreakdown[m].push({sym:r.sym,gross,net});
+    });
   });
+  // Rendi disponibile globalmente per il tooltip
+  window._divTipData={breakdown:monthlyBreakdown,monthNames:['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic']};
   const maxMonth=Math.max(...monthlyIncome);
-  const monthNames=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  const monthNames=window._divTipData.monthNames;
   const nowMonth=new Date().getMonth();
 
   el.innerHTML=`
