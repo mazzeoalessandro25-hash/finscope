@@ -5624,7 +5624,7 @@ async function loadPortfolioEarnings(assets){
   section.style.display = 'block';
 }
 
-function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}, totalValUSD=0){
+function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}, totalValUSD=0, earningsCtx=null){
   const up = totalChgUSD >= 0;
   const sorted = [...assets].sort((a,b)=>b.chgPct-a.chgPct);
   const best = sorted[0];
