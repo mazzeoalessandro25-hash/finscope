@@ -6809,14 +6809,21 @@ async function loadDividendTracker(){
       <div class="rb"><div class="rl">TITOLI CON DIVIDENDI</div><div class="rv2 b">${rows.length}</div></div>
     </div>
 
+    <!-- Tooltip dividendi (position:fixed, invisibile di default) -->
+    <div id="div-cal-tt" style="display:none;position:fixed;z-index:9999;background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:9px 11px;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.18);min-width:140px;max-width:210px"></div>
+
     <!-- Calendario mensile -->
     <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Calendario dividendi stimato (€)</div>
     <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:4px">
       ${monthlyIncome.map((v,i)=>{
         const h=maxMonth>0?Math.round(v/maxMonth*52)+4:4;
         const isCur=i===nowMonth;
-        return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-          <div style="width:100%;height:${h}px;background:${isCur?'var(--b)':v>0?'#10B981':'var(--bd)'};border-radius:3px 3px 0 0;opacity:${isCur?1:0.7}"></div>
+        const hasPay=v>0;
+        return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:${hasPay?'crosshair':'default'}"
+          onmouseenter="showDivTip(event,${i})"
+          onmouseleave="hideDivTip()">
+          <div style="width:100%;height:${h}px;background:${isCur?'var(--b)':hasPay?'#10B981':'var(--bd)'};border-radius:3px 3px 0 0;opacity:${isCur?1:0.7};transition:opacity .15s"
+            onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity='${isCur?1:0.7}'"></div>
         </div>`;
       }).join('')}
     </div>
