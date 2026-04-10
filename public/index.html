@@ -6857,6 +6857,52 @@ async function loadDividendTracker(){
     </div>`;
 }
 
+function showDivTip(e, idx){
+  const d=window._divTipData;
+  if(!d) return;
+  const tt=document.getElementById('div-cal-tt');
+  if(!tt) return;
+  const breakdown=d.breakdown[idx];
+  if(!breakdown||breakdown.length===0){ hideDivTip(); return; }
+  const mName=d.monthNames[idx];
+  const grossTotal=breakdown.reduce((s,b)=>s+b.gross,0);
+  const netTotal=breakdown.reduce((s,b)=>s+b.net,0);
+  const detailRows=[...breakdown]
+    .sort((a,b)=>b.gross-a.gross)
+    .map(b=>`<div style="display:flex;justify-content:space-between;gap:14px;padding:2px 0">
+      <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${b.sym}</span>
+      <span style="font-size:10px;color:var(--t);font-weight:600;font-family:var(--fm)">€${b.gross.toFixed(2)}</span>
+    </div>`).join('');
+  tt.innerHTML=`
+    <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid var(--bd)">${mName} — dividendi stimati</div>
+    ${detailRows}
+    <div style="margin-top:5px;padding-top:5px;border-top:1px solid var(--bd)">
+      <div style="display:flex;justify-content:space-between;gap:14px;margin-bottom:2px">
+        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">Totale lordo</span>
+        <span style="font-size:11px;color:#10B981;font-weight:700;font-family:var(--fm)">€${grossTotal.toFixed(2)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;gap:14px">
+        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">Totale netto</span>
+        <span style="font-size:11px;color:#059669;font-weight:700;font-family:var(--fm)">€${netTotal.toFixed(2)}</span>
+      </div>
+    </div>`;
+  tt.style.display='block';
+  const rect=e.currentTarget.getBoundingClientRect();
+  const ttH=tt.offsetHeight||110;
+  const ttW=tt.offsetWidth||160;
+  let left=rect.left+rect.width/2-ttW/2;
+  let top=rect.top-ttH-8;
+  if(top<4) top=rect.bottom+8;
+  left=Math.max(4,Math.min(left,window.innerWidth-ttW-4));
+  tt.style.left=left+'px';
+  tt.style.top=top+'px';
+}
+
+function hideDivTip(){
+  const tt=document.getElementById('div-cal-tt');
+  if(tt) tt.style.display='none';
+}
+
 /* ══════════════════════════════════════════
    FEATURE 3: WATCHLIST POTENZIATA
 ══════════════════════════════════════════ */
