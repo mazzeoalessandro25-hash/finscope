@@ -5520,7 +5520,42 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   const indicesMap={};
   indicesResults.forEach(d=>{ indicesMap[d.sym]=d; });
 
-  const text = buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews, indicesMap, totalValUSD);
+  // ── Elabora earnings context ──────────────────────────────────────────────
+  const allEarnings = earningsResponses.flatMap(d=>d.ok?d.events:[]);
+  const portEarnings = allEarnings.filter(e=>_portSyms.has(e.symbol));
+
+  const _in7  = new Date(_now.getTime()+7*86400000).toISOString().slice(0,10);
+  const _ago7 = new Date(_now.getTime()-7*86400000).toISOString().slice(0,10);
+
+  const _upcoming = portEarnings
+    .filter(e=>e.date>_todayStr && e.date<=_in7)
+    .sort((a,b)=>a.date.localeCompare(b.date));
+
+  const _recentReported = portEarnings
+    .filter(e=>e.date<=_todayStr && e.date>=_ago7)
+    .sort((a,b)=>b.date.localeCompare(a.date));
+
+  // Per quelli riportati senza dati EPS/revenue, chiama /api/earnings-result
+  const _needResults = _recentReported.filter(e=>e.epsActual===null&&e.epsActual!==undefined);
+  const _resultsFetched = await Promise.all(_needResults.map(e=>
+    fetch(`/api/earnings-result?symbol=${encodeURIComponent(e.symbol)}`)
+      .then(r=>r.json()).catch(()=>({ok:false}))
+  ));
+  const _resultsMap={};
+  _needResults.forEach((e,i)=>{ _resultsMap[e.symbol]=_resultsFetched[i]; });
+
+  const _recentWithData = _recentReported.map(e=>{
+    const r=_resultsMap[e.symbol];
+    if(r?.ok && e.epsActual===null){
+      return {...e, epsActual:r.epsActual, epsEstimate:r.epsEstimate,
+                    revenueActual:r.revenueActual, quarter:r.quarter, fiscalYear:r.fiscalYear};
+    }
+    return e;
+  });
+
+  const earningsCtx = { upcoming:_upcoming, recent:_recentWithData };
+
+  const text = buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews, indicesMap, totalValUSD, earningsCtx);
   const payload = JSON.stringify({ text, macroNews, indicesMap, newsMap });
   sessionStorage.setItem('portDaily_'+key, payload);
   renderPortDailyText(el, payload);
