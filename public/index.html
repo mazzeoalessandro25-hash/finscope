@@ -5819,8 +5819,66 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     else sintesi=`Leggera correzione per il portafoglio. ${avgIdx<0?'Il ribasso è in linea con il tono generale dei mercati e non genera preoccupazioni particolari.':'Vale la pena monitorare i titoli che hanno mostrato maggiore debolezza relativa.'}`;
   }
 
+  // ── SEZIONE 5: Earnings in arrivo e risultati recenti ──────────────────────
+  let earningsText = '';
+  if(earningsCtx){
+    const { upcoming=[], recent=[] } = earningsCtx;
+    const _eNow = new Date();
+
+    // Prossimi earnings (entro 7 giorni)
+    upcoming.forEach(e=>{
+      const dt = new Date(e.date+'T12:00:00');
+      const diffDays = Math.round((dt - _eNow) / 86400000);
+      const whenStr = diffDays===0 ? 'oggi'
+                    : diffDays===1 ? 'domani'
+                    : `tra ${diffDays} giorni (${dt.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})})`;
+      const timingStr = e.time==='bmo'
+        ? `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(217,119,6,.15);color:#D97706;font-weight:600">☀ pre-apertura</span>`
+        : `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(26,86,196,.12);color:#1A56C4;font-weight:600">🌙 post-chiusura</span>`;
+      const nameStr = e.name&&e.name!==e.symbol ? ` (${e.name})` : '';
+      earningsText += `• <strong>${e.symbol}</strong>${nameStr} riporterà i risultati trimestrali <strong>${whenStr}</strong> ${timingStr}\n`;
+    });
+
+    // Risultati recenti (ultimi 7 giorni)
+    recent.forEach(e=>{
+      const dt = new Date(e.date+'T12:00:00');
+      const diffDays = Math.round((_eNow - dt) / 86400000);
+      const whenStr = diffDays===0 ? 'oggi' : diffDays===1 ? 'ieri' : `${diffDays} giorni fa`;
+      const nameStr = e.name&&e.name!==e.symbol ? ` (${e.name})` : '';
+      let resultsStr = '';
+
+      if(e.epsActual!==null && e.epsActual!==undefined){
+        const beat = e.epsEstimate!=null ? e.epsActual - e.epsEstimate : null;
+        const beatPct = beat!=null && e.epsEstimate!==0 ? beat/Math.abs(e.epsEstimate)*100 : null;
+        const beatBadge = beatPct!=null
+          ? (beatPct>=0
+              ? ` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(5,150,105,.12);color:#059669;font-weight:600">▲ beat +${beatPct.toFixed(1)}%</span>`
+              : ` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(220,38,38,.1);color:#DC2626;font-weight:600">▼ miss ${beatPct.toFixed(1)}%</span>`)
+          : '';
+        resultsStr += `EPS <strong>$${e.epsActual.toFixed(2)}</strong>`;
+        if(e.epsEstimate!=null) resultsStr += ` vs stima $${e.epsEstimate.toFixed(2)}`;
+        resultsStr += beatBadge;
+      }
+
+      if(e.revenueActual!=null && e.revenueActual!==undefined){
+        const rev = e.revenueActual;
+        const revFmt = rev>=1e12?`$${(rev/1e12).toFixed(2)}T`:rev>=1e9?`$${(rev/1e9).toFixed(1)}B`:`$${(rev/1e6).toFixed(0)}M`;
+        if(resultsStr) resultsStr += ' · ';
+        resultsStr += `Revenue <strong>${revFmt}</strong>`;
+      }
+
+      const quarterStr = e.quarter ? ` — ${e.quarter}${e.fiscalYear?' '+e.fiscalYear:''}` : '';
+      if(resultsStr){
+        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ha riportato ${whenStr}${quarterStr}: ${resultsStr}\n`;
+      } else {
+        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ha riportato ${whenStr}${quarterStr} — dati non ancora disponibili\n`;
+      }
+    });
+  }
+
   return [
     macro.trim() ? `**Contesto di mercato**\n${macro.trim()}` : '',
+    earningsText.trim() ? `**📊 Earnings**\n${earningsText.trim()}` : '',
     `**Il tuo portafoglio**\n${portText.trim()}`,
     evidenzaText.trim() ? `**Titoli in evidenza**\n${evidenzaText.trim()}` : '',
     `**Sintesi**\n${sintesi}`
