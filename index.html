@@ -3498,13 +3498,12 @@ async function loadPortMetrics(sym){
 /* ── News correlate all'asset ── */
 async function loadPortNews(sym){
   const el=document.getElementById('port-news');
-  el.innerHTML='<div class="port-news-section"><div class="port-news-hdr">NEWS</div><div class="ld" style="padding:6px 0">Caricamento…</div></div>';
+  el.innerHTML='<div class="port-news-hdr">NEWS</div><div class="ld" style="padding:6px 0">Caricamento…</div>';
   const data=await api(sym,'news');
   if(!data?.news?.length){el.innerHTML='';return;}
   const timeAgo=t=>{if(!t)return'';const d=Math.floor((Date.now()/1000-t)/60);if(d<60)return d+'m fa';if(d<1440)return Math.floor(d/60)+'h fa';return Math.floor(d/1440)+'g fa';};
-  el.innerHTML=`<div class="port-news-section">
-    <div class="port-news-hdr">NEWS · ${sym}</div>
-    ${data.news.slice(0,3).map(n=>`
+  el.innerHTML=`<div class="port-news-hdr">NEWS · ${sym}</div>
+    ${data.news.slice(0,5).map(n=>`
       <a class="port-news-mini" href="${n.link||'#'}" target="_blank" rel="noopener noreferrer">
         ${n.thumbnail?`<img class="port-news-mini-img" src="${n.thumbnail}" alt="" loading="lazy" onerror="this.style.display='none'"/>`:''}
         <div style="flex:1;min-width:0">
@@ -3512,8 +3511,39 @@ async function loadPortNews(sym){
           <div class="port-news-mini-title">${n.title}</div>
           <div class="port-news-mini-time">${timeAgo(n.time)}</div>
         </div>
-      </a>`).join('')}
-  </div>`;
+      </a>`).join('')}`;
+}
+
+/* ── AI Analysis nel portafoglio ── */
+async function runPortAI(){
+  const sym=window._portLastSym||portSelectedSym;
+  const sd=window._portLastSD||null;
+  if(!sym)return;
+  const btn=document.getElementById('port-ai-btn');
+  const res=document.getElementById('port-ai-result');
+  if(!btn||!res)return;
+  btn.disabled=true;
+  btn.innerHTML='<span style="background:rgba(255,255,255,.25);font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 6px;border-radius:3px;font-family:var(--fm)">AI</span> Analisi in corso…';
+  res.innerHTML='';
+  try{
+    const q=portQuotes[sym];
+    const r=await fetch('/api/analyze',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ticker:sym,qd:q||null,sd:sd||null})
+    });
+    const d=await r.json();
+    if(!r.ok||d.error){
+      res.innerHTML=`<div class="port-ai-result" style="border-color:var(--r)"><span style="color:var(--r)">⚠ ${d.error||'Errore AI'}</span></div>`;
+    }else{
+      const html=d.analysis.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+      res.innerHTML=`<div class="port-ai-result"><div class="port-ai-badge-tag">✦ FinEdge AI · ${sym}</div><div>${html}</div></div>`;
+    }
+  }catch(e){
+    res.innerHTML=`<div class="port-ai-result" style="border-color:var(--r)"><span style="color:var(--r)">⚠ Errore connessione</span></div>`;
+  }
+  btn.disabled=false;
+  btn.innerHTML='<span style="background:rgba(255,255,255,.25);font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 6px;border-radius:3px;font-family:var(--fm)">AI</span> Analisi FinEdge AI';
 }
 
 /* ── Grafico allocazione ── */
