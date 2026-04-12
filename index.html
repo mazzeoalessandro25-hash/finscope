@@ -401,6 +401,27 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 .port-news-mini-pub{font-size:9px;color:var(--b);font-family:var(--fm);letter-spacing:.4px;text-transform:uppercase;margin-bottom:2px;font-weight:600}
 .port-news-mini-title{font-size:12px;font-weight:500;color:var(--t);line-height:1.4}
 .port-news-mini-time{font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px}
+/* 52W Range bar */
+.port-52w-wrap{grid-column:1/-1;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;margin-bottom:4px}
+.port-52w-hdr{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--t3);margin-bottom:7px}
+.port-52w-bar{position:relative;height:6px;background:var(--bd2);border-radius:3px;margin-bottom:7px}
+.port-52w-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--o),var(--g))}
+.port-52w-dot{position:absolute;top:50%;transform:translate(-50%,-50%);width:11px;height:11px;background:var(--b);border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.port-52w-pcts{display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;font-weight:600}
+/* Analyst consensus */
+.port-consensus-wrap{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:9px;margin-bottom:4px;flex-wrap:wrap}
+.port-consensus-badge{font-family:var(--fm);font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 12px;border-radius:6px;border:1px solid;flex-shrink:0}
+.port-target-info{display:flex;align-items:center;gap:7px;flex:1;flex-wrap:wrap}
+.port-target-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase}
+.port-target-val{font-family:var(--fm);font-size:14px;font-weight:700;color:var(--t)}
+.port-target-upside{font-family:var(--fm);font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px}
+/* AI section in portfolio */
+.port-ai-section{margin-top:12px;border-top:1px solid var(--bd);padding-top:12px}
+.port-ai-btn{display:flex;align-items:center;justify-content:center;gap:7px;background:linear-gradient(135deg,#1A56C4,#7C3AED);color:#fff;border:none;padding:9px 16px;border-radius:9px;font-family:var(--ff);font-size:13px;font-weight:600;cursor:pointer;transition:opacity .15s;width:100%}
+.port-ai-btn:hover{opacity:.88}
+.port-ai-btn:disabled{opacity:.55;cursor:default}
+.port-ai-result{margin-top:10px;background:linear-gradient(135deg,rgba(26,86,196,.06),rgba(124,58,237,.06));border:1px solid rgba(26,86,196,.2);border-radius:10px;padding:14px;font-size:12px;line-height:1.75;color:var(--t)}
+.port-ai-badge-tag{background:linear-gradient(135deg,#1A56C4,#7C3AED);color:#fff;font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 7px;border-radius:4px;font-family:var(--fm);display:inline-block;margin-bottom:8px}
 /* Right column */
 .port-right-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
 .port-alloc-legend{margin-top:10px;display:flex;flex-direction:column;gap:5px}
