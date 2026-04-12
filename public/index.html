@@ -7164,86 +7164,102 @@ function renderPortAnalysis(portItems, quotes){
   }
 
   el.innerHTML=`
-    <!-- Selezione profilo investitore -->
-    <div class="port-profile-tabs" style="margin-bottom:10px">
+    <!-- ── Profilo tabs ── -->
+    <div class="port-profile-tabs" style="margin-bottom:12px">
       ${profKeys.map(k=>{
         const p=INVESTOR_PROFILES[k];
-        return`<button class="port-profile-tab${k===selectedProfile?' active':''}" style="${k===selectedProfile?'background:'+p.color+';border-color:'+p.color:''}" onclick="selectedProfile='${k}';renderPortAnalysis(portfolio,_lastPortQuotes)">${p.emoji} ${p.name} <span style="font-size:10px;opacity:.85">${scores[k]}pt</span></button>`;
+        return`<button class="port-profile-tab${k===selectedProfile?' active':''}" style="${k===selectedProfile?'background:'+p.color+';border-color:'+p.color:''}" onclick="selectedProfile='${k}';renderPortAnalysis(portfolio,_lastPortQuotes)">${p.emoji} ${p.name} <span style="font-size:10px;opacity:.8">${scores[k]}</span></button>`;
       }).join('')}
     </div>
 
-    <!-- Profilo compatto inline -->
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:8px">
-      <svg width="34" height="34" viewBox="0 0 82 82" style="flex-shrink:0">
-        <circle cx="41" cy="41" r="34" fill="none" stroke="var(--bd)" stroke-width="9"/>
-        <circle cx="41" cy="41" r="34" fill="none" stroke="${scoreColor}" stroke-width="9"
-          stroke-dasharray="${dash.toFixed(1)} ${C2.toFixed(1)}" stroke-linecap="round"
-          transform="rotate(-90 41 41)"/>
-        <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
-      </svg>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm)">${prof.emoji} ${prof.name} — <span style="color:${scoreColor}">${score>=75?'Ottimo':score>=50?'Discreto':'Da migliorare'}</span></div>
-        ${bestMatch!==selectedProfile
-          ?`<div style="font-size:10px;color:var(--b);font-family:var(--fm);margin-top:2px">Miglior match: ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
-          :'<div style="font-size:10px;color:#10B981;font-family:var(--fm);margin-top:2px">✓ Profilo ottimale per questo portafoglio</div>'}
+    <!-- ── Row A: Score+KPIs (sx) | Radar (dx) ── -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;align-items:start">
+
+      <!-- Score card + KPI 2×2 -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:10px">
+          <svg width="58" height="58" viewBox="0 0 82 82" style="flex-shrink:0">
+            <circle cx="41" cy="41" r="34" fill="none" stroke="var(--bd)" stroke-width="9"/>
+            <circle cx="41" cy="41" r="34" fill="none" stroke="${scoreColor}" stroke-width="9"
+              stroke-dasharray="${dash.toFixed(1)} ${C2.toFixed(1)}" stroke-linecap="round"
+              transform="rotate(-90 41 41)"/>
+            <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
+          </svg>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:700;color:var(--t);font-family:var(--fm)">${prof.emoji} ${prof.name}</div>
+            <div style="font-size:11px;color:${scoreColor};font-family:var(--fm);margin-top:2px;font-weight:600">${score>=75?'Ottimo allineamento':score>=50?'Discreto':' Da migliorare'}</div>
+            ${bestMatch!==selectedProfile
+              ?`<div style="font-size:10px;color:var(--b);font-family:var(--fm);margin-top:3px">↗ ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
+              :'<div style="font-size:10px;color:#10B981;font-family:var(--fm);margin-top:3px">✓ Profilo ottimale</div>'}
+          </div>
+        </div>
+        <!-- KPI 2×2 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div class="rb"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:17px">${nStocks}</div></div>
+          <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:17px">${nSectors}</div></div>
+          <div class="rb"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:17px">${fmt(weightedBeta,2)}</div></div>
+          <div class="rb"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:17px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
+        </div>
+      </div>
+
+      <!-- Radar chart -->
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;text-align:center">Profilo portafoglio</div>
+        <div style="display:flex;justify-content:center">
+          <canvas id="port-radar-canvas" width="220" height="190"></canvas>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-top:6px">
+          ${[['Rendimento',radarReturn],['Diversif.',radarDiversif],['Qualità',radarQuality],['Momentum',radarMomentum],['Stabilità',radarStability],['Reddito',radarIncome]].map(([l,v])=>`<div style="text-align:center;padding:3px 4px;background:var(--s);border-radius:5px"><div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${l}</div><div style="font-size:11px;font-weight:700;font-family:var(--fm);color:${v>=70?'var(--g)':v>=45?'var(--o)':'var(--r)'}">${v}</div></div>`).join('')}
+        </div>
       </div>
     </div>
 
-    <!-- Raccomandazioni -->
+    <!-- ── Raccomandazioni ── -->
     <div style="margin-bottom:12px">
       ${getRecs(selectedProfile).map(r=>`<div class="port-rec ${r.cls}">${r.txt}</div>`).join('')}
     </div>
 
-    <!-- KPI rapidi -->
-    <div class="port-kpi-row" style="margin-bottom:12px">
-      <div class="rb"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:18px">${nStocks}</div></div>
-      <div class="rb"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:18px">${fmt(weightedBeta,2)}</div></div>
-      <div class="rb"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:18px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
-      <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:18px">${nSectors}</div></div>
-    </div>
+    <!-- ── Row B: Composizione (sx) | Segnali acquisto (dx) ── -->
+    <div style="display:grid;grid-template-columns:3fr 2fr;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd);align-items:start">
 
-    <!-- 3 grafici a ciambella centrati con % sotto -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
-        <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Tipo</div>
-        <div style="display:flex;justify-content:center">${svgDonut(typeEntries,typePal,66,12)}</div>
-        <div style="margin-top:6px;line-height:1.9">${donutPcts(typeEntries,typePal)}</div>
+      <!-- 3 donut charts -->
+      <div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Composizione portafoglio</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+          <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
+            <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">Tipo</div>
+            <div style="display:flex;justify-content:center">${svgDonut(typeEntries,typePal,62,11)}</div>
+            <div style="margin-top:5px;line-height:2">${donutPcts(typeEntries,typePal)}</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
+            <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">Area</div>
+            <div style="display:flex;justify-content:center">${svgDonut(mktEntries,null,62,11)}</div>
+            <div style="margin-top:5px;line-height:2">${donutPcts(mktEntries,null)}</div>
+          </div>
+          <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
+            <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">Settori</div>
+            <div style="display:flex;justify-content:center">${svgDonut(secEntries.slice(0,8),null,62,11)}</div>
+            <div style="margin-top:5px;line-height:2">${donutPcts(secEntries.slice(0,8),null)}</div>
+          </div>
+        </div>
       </div>
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
-        <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Area geografica</div>
-        <div style="display:flex;justify-content:center">${svgDonut(mktEntries,null,66,12)}</div>
-        <div style="margin-top:6px;line-height:1.9">${donutPcts(mktEntries,null)}</div>
-      </div>
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
-        <div style="font-size:8px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">Settori</div>
-        <div style="display:flex;justify-content:center">${svgDonut(secEntries.slice(0,8),null,66,12)}</div>
-        <div style="margin-top:6px;line-height:1.9">${donutPcts(secEntries.slice(0,8),null)}</div>
-      </div>
-    </div>
 
-    <!-- 3 Gauge segnali acquisto portafoglio -->
-    <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Segnale acquisto portafoglio</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;justify-items:center">
-        ${svgGauge(shortScore,'Breve termine','1–3 mesi')}
-        ${svgGauge(midScore,'Medio termine','3–12 mesi')}
-        ${svgGauge(longScore,'Lungo termine','1–3 anni')}
-      </div>
-      <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">⚠ Segnali quantitativi aggregati · Non costituisce consulenza finanziaria</div>
-    </div>
-
-    <!-- Radar Chart profilo portafoglio -->
-    <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Profilo portafoglio — Radar</div>
-      <div style="max-width:260px;margin:0 auto">
-        <canvas id="port-radar-canvas" width="260" height="220"></canvas>
+      <!-- 3 gauge segnali (impilati) -->
+      <div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Segnale acquisto</div>
+        <div style="display:flex;flex-direction:column;gap:6px;align-items:center;overflow:hidden">
+          ${svgGauge(shortScore,'Breve termine','1–3 mesi')}
+          ${svgGauge(midScore,'Medio termine','3–12 mesi')}
+          ${svgGauge(longScore,'Lungo termine','1–3 anni')}
+        </div>
+        <div style="margin-top:8px;font-size:8px;color:var(--t3);font-family:var(--fm);text-align:center;line-height:1.4">⚠ Quantitativi · Non consulenza finanziaria</div>
       </div>
     </div>
 
-    <!-- Segnali per titolo -->
+    <!-- ── Segnali per titolo ── -->
     <div style="margin-bottom:14px">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Segnali per titolo</div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Segnali per titolo</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:6px">
         ${(()=>{
           const prof2=INVESTOR_PROFILES[selectedProfile];
           return portItems.map((item,i)=>{
@@ -7267,46 +7283,46 @@ function renderPortAnalysis(portItems, quotes){
             else if(bad>=2){sig='ATTENZIONE';sigCol='#B91C1C';sigBg='rgba(220,38,38,.10)';}
             else{sig='NEUTRALE';sigCol='#92400E';sigBg='rgba(245,158,11,.10)';}
             return`<div style="background:${sigBg};border:1px solid var(--bd);border-radius:8px;padding:9px 10px">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                 <span style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${item.sym}</span>
-                <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:${sigCol}">${sig}</span>
+                <span style="font-size:9px;font-weight:700;font-family:var(--fm);padding:2px 6px;border-radius:4px;background:${sigBg};color:${sigCol};border:1px solid ${sigCol}40">${sig}</span>
               </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
-                ${fscore!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score <span style="font-weight:600;color:${fscore>=70?'var(--g)':fscore<45?'var(--r)':'var(--o)'}">${fscore}</span></div>`:''}
-                ${upside!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Upside <span style="color:${upside>=0?'var(--g)':'var(--r)'};font-weight:600">${upside>=0?'+':''}${fmt(upside,1)}%</span></div>`:''}
-                <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">P&L <span style="color:${pnlPct>=0?'var(--g)':'var(--r)'};font-weight:600">${pnlPct>=0?'+':''}${fmt(pnlPct,1)}%</span></div>
-                <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Beta <span style="font-weight:600;color:var(--t)">${fmt(beta,2)}</span></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px">
+                ${fscore!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Score <span style="font-weight:700;color:${fscore>=70?'var(--g)':fscore<45?'var(--r)':'var(--o)'}">${fscore}</span></div>`:'<div></div>'}
+                ${upside!=null?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Upside <span style="color:${upside>=0?'var(--g)':'var(--r)'};font-weight:700">${upside>=0?'+':''}${fmt(upside,1)}%</span></div>`:'<div></div>'}
+                <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">P&L <span style="color:${pnlPct>=0?'var(--g)':'var(--r)'};font-weight:700">${pnlPct>=0?'+':''}${fmt(pnlPct,1)}%</span></div>
+                <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">Beta <span style="font-weight:700;color:${beta>1.2?'var(--r)':beta<0.8?'var(--b)':'var(--t)'}">${fmt(beta,2)}</span></div>
               </div>
             </div>`;
           }).join('');
         })()}
       </div>
-      <div style="margin-top:6px;font-size:10px;color:var(--t3);font-family:var(--fm)">⚠ Segnali quantitativi · Non costituisce consulenza finanziaria (MiFID II)</div>
+      <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">⚠ Segnali quantitativi · Non costituisce consulenza finanziaria (MiFID II)</div>
     </div>
 
-    <!-- What-If Optimizer -->
-    <div style="margin-top:16px;border-top:1px solid var(--bd);padding-top:12px">
+    <!-- ── What-If Optimizer ── -->
+    <div style="border-top:1px solid var(--bd);padding-top:12px">
       <button onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none';this.querySelector('.wi-arrow').textContent=this.nextElementSibling.style.display==='none'?'▸':'▾'" style="display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:0;width:100%">
-        <span style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">⚡ What-If Optimizer</span>
+        <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">⚡ What-If Optimizer</span>
         <span class="wi-arrow" style="font-size:10px;color:var(--t3);margin-left:auto">▸</span>
       </button>
       <div style="display:none;margin-top:10px">
-      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px">
-        <div style="flex:1;min-width:120px">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">RIMUOVI TICKER</div>
-          <select id="whatif-old" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px">
-            ${portItems.map(item=>`<option value="${item.sym}">${item.sym}</option>`).join('')}
-          </select>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px">
+          <div style="flex:1;min-width:110px">
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">RIMUOVI TICKER</div>
+            <select id="whatif-old" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px">
+              ${portItems.map(item=>`<option value="${item.sym}">${item.sym}</option>`).join('')}
+            </select>
+          </div>
+          <div style="font-size:14px;color:var(--t3);padding-bottom:8px">→</div>
+          <div style="flex:1;min-width:110px">
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">AGGIUNGI TICKER</div>
+            <input id="whatif-new" placeholder="es. GOOGL" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px;box-sizing:border-box" />
+          </div>
+          <button onclick="runWhatIf()" style="padding:8px 18px;background:var(--b);color:#fff;border:none;border-radius:6px;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0">Analizza</button>
         </div>
-        <div style="font-size:14px;color:var(--t3);padding-bottom:8px">→</div>
-        <div style="flex:1;min-width:120px">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">AGGIUNGI TICKER</div>
-          <input id="whatif-new" placeholder="es. GOOGL" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px;box-sizing:border-box" />
-        </div>
-        <button onclick="runWhatIf()" style="padding:8px 18px;background:var(--b);color:#fff;border:none;border-radius:6px;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0">Analizza</button>
+        <div id="whatif-result"></div>
       </div>
-      <div id="whatif-result"></div>
-      </div><!-- /collapsible -->
     </div>
   `;
 
