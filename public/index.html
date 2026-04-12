@@ -7153,6 +7153,7 @@ function renderPortAnalysis(portItems, quotes){
   const radarIncome=Math.max(0,Math.min(100,Math.round(avgYield*1000)));
 
   // Percentuali colorate sotto i donut (senza legenda laterale)
+  const PALETTE=['#1A56C4','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#65A30D','#DC2626','#F59E0B','#10B981'];
   function donutPcts(entries,pal){
     const total=entries.reduce((s,[,v])=>s+v,0);
     return entries.map(([label,val],idx)=>{
