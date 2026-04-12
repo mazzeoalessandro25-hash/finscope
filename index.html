@@ -2393,24 +2393,94 @@ async function runFA(){
     </div>
   </div>`;
 
-  el.innerHTML=`${faLogoHtml}${scoreBlock}<div class="fa-grid">
-    <div class="rb"><div class="rl">PREZZO</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${qd?'$'+fmt(qd.price,2):'—'}</div></div>
-    <div class="rb"><div class="rl">VAR OGGI</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${chgStr(c)}</div></div>
-    <div class="rb"><div class="rl">P/E</div><div class="rv2" style="font-size:17px">${sd?.pe?fmt(sd.pe,1):'—'}</div></div>
-    <div class="rb"><div class="rl">P/B</div><div class="rv2" style="font-size:17px">${sd?.pb?fmt(sd.pb,1):'—'}</div></div>
-    <div class="rb"><div class="rl">ROE</div><div class="rv2 g" style="font-size:17px">${sd?.roe?fmt(sd.roe*100,1)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">DIVIDENDO</div><div class="rv2 a" style="font-size:17px">${sd?.dividend?fmt(sd.dividend*100,2)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">MG. OPERATIVO</div><div class="rv2" style="font-size:15px">${sd?.operatingMargins?fmt(sd.operatingMargins*100,1)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">CRESCITA RIC.</div><div class="rv2 ${sd?.revenueGrowth>=0?'g':'down'}" style="font-size:15px">${sd?.revenueGrowth!=null?(sd.revenueGrowth>=0?'+':'')+fmt(sd.revenueGrowth*100,1)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">52W MAX</div><div class="rv2" style="font-size:14px">${sd?.week52High?'$'+fmt(sd.week52High,2):'—'}</div></div>
-    <div class="rb"><div class="rl">52W MIN</div><div class="rv2" style="font-size:14px">${sd?.week52Low?'$'+fmt(sd.week52Low,2):'—'}</div></div>
-  </div>
-  <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-top:2px">
-    <div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">CONSENSUS ANALISTI</div>
-    <div style="font-family:var(--fm);font-size:14px;font-weight:600;color:${recCol[rec]||'var(--o)'}">${recMap[rec]||'—'}</div></div>
-    ${sd?.targetPrice?`<div style="text-align:right"><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">TARGET ANALISTI</div><div style="font-family:var(--fm);font-size:14px;font-weight:600;color:var(--b)">$${fmt(sd.targetPrice,2)}</div></div>`:''}
-  </div>
-  ${sd?.marketCap?`<div style="margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--t3)">Market Cap: ${fmtLg(sd.marketCap)} · Beta: ${sd.beta?fmt(sd.beta,2):'—'} · EPS: ${sd.eps?'$'+fmt(sd.eps,2):'—'} · Debt/Eq: ${sd.debtToEquity?fmt(sd.debtToEquity,1):'—'}</div>`:''}`;
+  // Helpers colori contestuali
+  const peCol=v=>v==null||v<=0?'var(--t)':v<=15?'var(--g)':v<=25?'var(--t)':v<=40?'var(--o)':'var(--r)';
+  const pbCol=v=>v==null||v<=0?'var(--t)':v<=1?'var(--g)':v<=2?'var(--t)':v<=4?'var(--o)':'var(--r)';
+  const roeCol=v=>v==null?'var(--t)':v>=20?'var(--g)':v>=10?'var(--t)':v>=5?'var(--o)':'var(--r)';
+  const mgnCol=v=>v==null?'var(--t)':v>=20?'var(--g)':v>=10?'var(--t)':v>=5?'var(--o)':'var(--r)';
+  const grwCol=v=>v==null?'var(--t)':v>=10?'var(--g)':v>=0?'var(--t)':'var(--r)';
+  const btaCol=v=>v==null?'var(--t)':v>=0.6&&v<=1.4?'var(--g)':v>=0.3&&v<=1.8?'var(--o)':'var(--r)';
+  const detCol=v=>v==null?'var(--t)':v<1?'var(--g)':v<2?'var(--t)':v<3?'var(--o)':'var(--r)';
+  const crCol=v=>v==null?'var(--t)':v>=2?'var(--g)':v>=1?'var(--t)':'var(--r)';
+  // Helper cella metrica con colore e hint
+  const mc=(lbl,val,color,hint)=>`<div class="rb"><div class="rl">${lbl}</div><div style="font-family:var(--fm);font-size:14px;font-weight:700;color:${color}">${val}</div>${hint?`<div class="fa-metric-hint">${hint}</div>`:''}</div>`;
+  const sh=lbl=>`<div class="fa-section-hdr">${lbl}</div>`;
+
+  // Barra 52W visuale
+  const fa52w=(sd?.week52High&&sd?.week52Low&&qd?.price)?(()=>{
+    const p52=Math.min(100,Math.max(0,((qd.price-sd.week52Low)/(sd.week52High-sd.week52Low))*100));
+    const fl=((qd.price-sd.week52Low)/sd.week52Low*100);
+    const fh=((qd.price-sd.week52High)/sd.week52High*100);
+    return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 12px;margin-bottom:4px">
+      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;color:var(--t3);margin-bottom:7px"><span>52W MIN · $${fmt(sd.week52Low,2)}</span><span>52W MAX · $${fmt(sd.week52High,2)}</span></div>
+      <div style="position:relative;height:6px;background:var(--bd2);border-radius:3px;margin-bottom:7px">
+        <div style="height:100%;width:${p52.toFixed(1)}%;border-radius:3px;background:linear-gradient(90deg,var(--r),var(--o),var(--g))"></div>
+        <div style="position:absolute;top:50%;left:${p52.toFixed(1)}%;transform:translate(-50%,-50%);width:11px;height:11px;background:var(--b);border:2px solid #fff;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,.25)"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;font-weight:600">
+        <span class="${fl>=0?'up':'down'}">${fl>=0?'+':''}${fmt(fl,1)}% dal min</span>
+        <span class="${fh>=0?'up':'down'}">${fh>=0?'+':''}${fmt(fh,1)}% dal max</span>
+      </div>
+    </div>`;
+  })():'';
+
+  // Consensus + Target (card grande)
+  const faConsensus=`<div class="fa-consensus-row">
+    <div class="fa-consensus-cell">
+      <div class="rl">CONSENSUS ANALISTI</div>
+      <div style="font-family:var(--fm);font-size:17px;font-weight:700;color:${recCol[rec]||'var(--o)'};margin-top:2px">${recMap[rec]||'—'}</div>
+    </div>
+    ${sd?.targetPrice?`<div class="fa-consensus-cell">
+      <div class="rl">TARGET PRICE ANALISTI</div>
+      <div style="font-family:var(--fm);font-size:17px;font-weight:700;color:var(--b);margin-top:2px">$${fmt(sd.targetPrice,2)}</div>
+      ${qd?.price?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;margin-top:3px" class="${sd.targetPrice>=qd.price?'up':'down'}">${sd.targetPrice>=qd.price?'▲':'▼'} ${fmt(Math.abs((sd.targetPrice-qd.price)/qd.price*100),1)}% potenziale</div>`:''}
+    </div>`:'<div></div>'}
+  </div>`;
+
+  // Sezione VALUTAZIONE
+  const valCells=[
+    sd?.pe&&sd.pe>0?mc('P/E Trailing',fmt(sd.pe,1),peCol(sd.pe),sd.pe<=15?'sottovalutato':sd.pe<=25?'nella norma':sd.pe<=40?'elevato':'molto elevato'):null,
+    sd?.forwardPE&&sd.forwardPE>0?mc('P/E Forward',fmt(sd.forwardPE,1),peCol(sd.forwardPE),'atteso prossimi 12m'):null,
+    sd?.pb&&sd.pb>0?mc('P/Book',fmt(sd.pb,2),pbCol(sd.pb),sd.pb<=1?'sotto valore contabile':sd.pb<=2?'nella norma':'premium su book'):null,
+    sd?.eps!=null?mc('EPS','$'+fmt(sd.eps,2),sd.eps>0?'var(--g)':'var(--r)',sd.eps>0?'utile per azione':'perdita per azione'):null,
+    sd?.ps&&sd.ps>0?mc('P/Sales',fmt(sd.ps,2),'var(--t)','prezzo / ricavi'):null,
+  ].filter(Boolean);
+
+  // Sezione REDDITIVITÀ
+  const rdtCells=[
+    sd?.roe!=null?mc('ROE',fmt(sd.roe*100,1)+'%',roeCol(sd.roe*100),sd.roe*100>=20?'ottimo':sd.roe*100>=10?'buono':sd.roe*100>=5?'nella media':'sotto media'):null,
+    sd?.roa!=null?mc('ROA',fmt(sd.roa*100,1)+'%',roeCol(sd.roa*100),'return on assets'):null,
+    sd?.operatingMargins!=null?mc('Mg. Operativo',fmt(sd.operatingMargins*100,1)+'%',mgnCol(sd.operatingMargins*100),sd.operatingMargins*100>=20?'molto efficiente':sd.operatingMargins*100>=10?'buono':sd.operatingMargins*100>=5?'nella media':'margine basso'):null,
+    sd?.grossMargins!=null?mc('Mg. Lordo',fmt(sd.grossMargins*100,1)+'%',mgnCol(sd.grossMargins*100),'margine lordo'):null,
+    sd?.revenueGrowth!=null?mc('Crescita Ricavi',(sd.revenueGrowth>=0?'+':'')+fmt(sd.revenueGrowth*100,1)+'%',grwCol(sd.revenueGrowth*100),'anno su anno'):null,
+    sd?.earningsGrowth!=null?mc('Crescita Utili',(sd.earningsGrowth>=0?'+':'')+fmt(sd.earningsGrowth*100,1)+'%',grwCol(sd.earningsGrowth*100),'anno su anno'):null,
+  ].filter(Boolean);
+
+  // Sezione SOLIDITÀ FINANZIARIA
+  const solCells=[
+    sd?.debtToEquity!=null?mc('Debt / Equity',fmt(sd.debtToEquity,1),detCol(sd.debtToEquity),sd.debtToEquity<1?'basso indebitamento':sd.debtToEquity<2?'moderato':sd.debtToEquity<3?'elevato':'molto elevato'):null,
+    sd?.currentRatio!=null?mc('Current Ratio',fmt(sd.currentRatio,2),crCol(sd.currentRatio),sd.currentRatio>=2?'molto liquido':sd.currentRatio>=1?'adeguato':'liquidità scarsa'):null,
+    sd?.freeCashflow?mc('Free Cash Flow',fmtLg(sd.freeCashflow),sd.freeCashflow>0?'var(--g)':'var(--r)',sd.freeCashflow>0?'cash flow positivo':'cash flow negativo'):null,
+    sd?.totalCash?mc('Liquidità totale',fmtLg(sd.totalCash),'var(--t)','cassa e equivalenti'):null,
+    sd?.totalDebt?mc('Debito totale',fmtLg(sd.totalDebt),'var(--t)','debito consolidato'):null,
+  ].filter(Boolean);
+
+  // Sezione MERCATO
+  const mktCells=[
+    sd?.marketCap?mc('Market Cap',fmtLg(sd.marketCap),'var(--t)','capitalizzazione di mercato'):null,
+    sd?.beta!=null?mc('Beta',fmt(sd.beta,2),btaCol(sd.beta),sd.beta>=0.6&&sd.beta<=1.4?'volatilità normale':sd.beta<0.6?'meno volatile del mercato':'più volatile del mercato'):null,
+    sd?.dividend&&sd.dividend>0?mc('Div. Yield',fmt(sd.dividend*100,2)+'%','var(--o)','rendimento dividendo annuo'):null,
+    sd?.avgVolume?mc('Vol. Medio',fmtLg(sd.avgVolume),'var(--t)','volume medio giornaliero'):null,
+    sd?.employees?mc('Dipendenti',sd.employees.toLocaleString('it-IT'),'var(--t)','full-time employees'):null,
+    sd?.sector?mc('Settore',sd.sector,'var(--t)',''):null,
+  ].filter(Boolean);
+
+  el.innerHTML=`${faLogoHtml}${scoreBlock}${fa52w}${faConsensus}
+    ${valCells.length?sh('VALUTAZIONE')+'<div class="fa-metrics-3col">'+valCells.join('')+'</div>':''}
+    ${rdtCells.length?sh('REDDITIVITÀ')+'<div class="fa-metrics-3col">'+rdtCells.join('')+'</div>':''}
+    ${solCells.length?sh('SOLIDITÀ FINANZIARIA')+'<div class="fa-metrics-3col">'+solCells.join('')+'</div>':''}
+    ${mktCells.length?sh('MERCATO')+'<div class="fa-metrics-3col">'+mktCells.join('')+'</div>':''}
+    <div style="margin-top:12px;font-family:var(--fm);font-size:10px;color:var(--t3)">Dati da Yahoo Finance · Ritardo max 15 min · Colori: <span style="color:var(--g)">●</span> buono · <span style="color:var(--o)">●</span> attenzione · <span style="color:var(--r)">●</span> critico</div>`;
 }
 
 /* ── NEWS ── */
