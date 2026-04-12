@@ -3320,6 +3320,12 @@ function updatePortAnalysisHeader(item,q){
   const chgUp=chg==null||chg>=0;
   const name=item.name||q?.name||item.sym;
   const cat=item.cat||detectPortCat(item.sym);
+  // Metriche aggiuntive posizione
+  const todayGain=(q?.prev!=null&&curPrice!=null)?item.qty*(curPrice-q.prev):null;
+  const todayGainUp=todayGain==null||todayGain>=0;
+  const totalPortVal=portfolio.reduce((sum,pi)=>{const pq=portQuotes[pi.sym];return sum+(pq?.price?pi.qty*pq.price:pi.qty*pi.buyPrice);},0);
+  const weight=(totalPortVal>0&&val!=null)?(val/totalPortVal*100):null;
+  const daysHeld=item.addedAt?Math.floor((Date.now()-item.addedAt)/86400000):null;
   document.getElementById('port-analysis-logo').innerHTML=logoHtml(item.sym,name);
   document.getElementById('port-analysis-name').textContent=name;
   document.getElementById('port-analysis-sym').textContent=item.sym+' · '+cat.toUpperCase();
@@ -3328,14 +3334,21 @@ function updatePortAnalysisHeader(item,q){
   chgEl.textContent=chgStr(chg)+(q?.dayHigh?'  H: '+portFmtPrice(q.dayHigh)+'  L: '+portFmtPrice(q.dayLow):'');
   chgEl.className='port-analysis-chg '+(chgUp?'up':'down');
   chgEl.style.background=chgUp?'var(--g2)':'var(--r2)';
-  // Riepilogo posizione
+  // Riepilogo posizione (3×3)
   document.getElementById('port-analysis-pos').innerHTML=`
     <div class="port-pos-item"><div class="port-pos-lbl">QUANTITÀ</div><div class="port-pos-val">${item.qty}</div></div>
     <div class="port-pos-item"><div class="port-pos-lbl">PREZZO MEDIO</div><div class="port-pos-val">${symbol}${fmt(item.buyPrice,2)}</div></div>
     <div class="port-pos-item"><div class="port-pos-lbl">INVESTITO</div><div class="port-pos-val">${symbol}${fmt(inv,2)}</div></div>
     <div class="port-pos-item"><div class="port-pos-lbl">VALORE</div><div class="port-pos-val">${val?symbol+fmt(val,2):'—'}</div></div>
-    <div class="port-pos-item"><div class="port-pos-lbl">P&L $</div><div class="port-pos-val ${pnlUp?'up':'down'}">${pnl!=null?(pnlUp?'+':'')+symbol+fmt(pnl,2):'—'}</div></div>
-    <div class="port-pos-item"><div class="port-pos-lbl">P&L %</div><div class="port-pos-val ${pnlUp?'up':'down'}">${pnlPct!=null?(pnlUp?'+':'')+fmt(pnlPct,2)+'%':'—'}</div></div>`;
+    <div class="port-pos-item"><div class="port-pos-lbl">P&amp;L</div><div class="port-pos-val ${pnlUp?'up':'down'}">${pnl!=null?(pnlUp?'+':'')+symbol+fmt(Math.abs(pnl),2)+(pnlPct!=null?' ('+(pnlUp?'+':'-')+fmt(Math.abs(pnlPct),1)+'%)':''):'—'}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">OGGI</div><div class="port-pos-val ${todayGainUp?'up':'down'}">${todayGain!=null?(todayGainUp?'+':'')+symbol+fmt(Math.abs(todayGain),2):'—'}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">PESO %</div><div class="port-pos-val">${weight!=null?fmt(weight,1)+'%':'—'}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">GIORNI</div><div class="port-pos-val">${daysHeld!=null?daysHeld+'g':'—'}</div></div>`;
+  // Reset AI result quando si cambia asset
+  const aiRes=document.getElementById('port-ai-result');
+  if(aiRes)aiRes.innerHTML='';
+  const aiBtn=document.getElementById('port-ai-btn');
+  if(aiBtn){aiBtn.disabled=false;aiBtn.innerHTML='<span style="background:rgba(255,255,255,.25);font-size:9px;font-weight:700;letter-spacing:.5px;padding:2px 6px;border-radius:3px;font-family:var(--fm)">AI</span> Analisi FinEdge AI';}
 }
 
 /* ── Grafico con Lightweight Charts ── */
