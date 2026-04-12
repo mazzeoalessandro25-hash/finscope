@@ -2342,6 +2342,13 @@ async function runFA(){
 
   const dimLabels={valutazione:'Valutazione',redditivita:'Redditività',momentum:'Momentum',consensus:'Consensus',stabilita:'Stabilità'};
   const dimMax={valutazione:25,redditivita:25,momentum:20,consensus:20,stabilita:10};
+  const dimHints={
+    valutazione:sd?.pe&&sd.pe>0?'P/E '+fmt(sd.pe,1)+(sd?.pb?' · P/B '+fmt(sd.pb,1):''):(sd?.pb?'P/B '+fmt(sd.pb,1):'Multipli n.d.'),
+    redditivita:sd?.roe!=null?'ROE '+fmt(sd.roe*100,1)+'%'+(sd?.operatingMargins?' · Mg.Op. '+fmt(sd.operatingMargins*100,1)+'%':''):'ROE n.d.',
+    momentum:(sd?.week52High&&sd?.week52Low&&qd?.price)?fmt(((qd.price-sd.week52Low)/(sd.week52High-sd.week52Low)*100),0)+'% del range 52W':'Dati 52W n.d.',
+    consensus:{strongbuy:'Strong Buy',buy:'Buy',hold:'Hold',sell:'Sell',strongsell:'Strong Sell'}[sd?.rec]||'n.d.',
+    stabilita:sd?.beta!=null?'Beta '+fmt(sd.beta,2):'Beta n.d.',
+  };
 
   const scoreBlock=sc!=null?`
   <div class="fs-score-wrap">
@@ -2358,7 +2365,7 @@ async function runFA(){
       ${pt?`<div style="text-align:right">
         <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINEDGE TARGET PRICE</div>
         <div style="font-family:var(--fm);font-size:22px;font-weight:700;color:var(--b);line-height:1">$${fmt(pt.value,2)}</div>
-        <div style="font-family:var(--fm);font-size:11px;margin-top:3px" class="${pt.upside>=0?'up':'down'}">${pt.upside>=0?'▲':'▼'} ${fmt(Math.abs(pt.upside),1)}% upside vs oggi</div>
+        <div style="font-family:var(--fm);font-size:11px;margin-top:3px" class="${pt.upside>=0?'up':'down'}">${pt.upside>=0?'▲':'▼'} ${fmt(Math.abs(pt.upside),1)}% vs oggi</div>
         <div class="fs-pt-methods">${pt.methods.map(m=>m.m+': $'+fmt(m.v,2)).join(' · ')}</div>
       </div>`:''}
     </div>
@@ -2367,6 +2374,7 @@ async function runFA(){
         <div class="fs-dim-cell">
           <div class="fs-dim-val" style="color:${getScoreColor(v/(dimMax[k]||10)*100)}">${v}<span style="font-size:9px;color:var(--t3)">/${dimMax[k]||10}</span></div>
           <div class="fs-dim-lbl">${dimLabels[k]||k}</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm);margin-top:3px;line-height:1.3">${dimHints[k]||''}</div>
         </div>`).join('')}
     </div>
   </div>`:'';
