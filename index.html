@@ -3415,21 +3415,84 @@ async function loadPortMetrics(sym){
   el.innerHTML='<div class="ld" style="grid-column:1/-1;padding:12px">Caricamento metriche…</div>';
   const sd=await api(sym,'summary');
   if(!sd){el.innerHTML='';return;}
-  const metricsData=[
-    {l:'P/E',v:sd.pe!=null?fmt(sd.pe,1):'—'},
-    {l:'P/E Fwd',v:sd.forwardPE!=null?fmt(sd.forwardPE,1):'—'},
-    {l:'P/Book',v:sd.pb!=null?fmt(sd.pb,2):'—'},
-    {l:'Beta',v:sd.beta!=null?fmt(sd.beta,2):'—'},
-    {l:'52W Max',v:sd.week52High?portFmtPrice(sd.week52High):'—'},
-    {l:'52W Min',v:sd.week52Low?portFmtPrice(sd.week52Low):'—'},
-    {l:'Div Yield',v:sd.dividend?fmt(sd.dividend*100,2)+'%':'—'},
-    {l:'Mkt Cap',v:sd.marketCap?fmtLg(sd.marketCap):'—'},
-    {l:'ROE',v:sd.roe!=null?fmt(sd.roe*100,1)+'%':'—'},
-  ];
-  el.innerHTML=metricsData.map(m=>`<div class="port-metric">
-    <div class="port-metric-lbl">${m.l}</div>
-    <div class="port-metric-val">${m.v}</div>
-  </div>`).join('');
+  const item=portfolio.find(i=>i.sym===sym);
+  const cat=item?.cat||detectPortCat(sym);
+  const q=portQuotes[sym];
+  const curPrice=q?.price||null;
+  const symbol=item?.symbol||'$';
+  let html='';
+  // ── Barra 52W Range ──
+  if(sd.week52High&&sd.week52Low&&curPrice){
+    const pct=Math.min(100,Math.max(0,((curPrice-sd.week52Low)/(sd.week52High-sd.week52Low))*100));
+    const fromLow=((curPrice-sd.week52Low)/sd.week52Low*100);
+    const fromHigh=((curPrice-sd.week52High)/sd.week52High*100);
+    html+=`<div class="port-52w-wrap">
+      <div class="port-52w-hdr"><span>52W MIN · ${symbol}${portFmtPrice(sd.week52Low)}</span><span>52W MAX · ${symbol}${portFmtPrice(sd.week52High)}</span></div>
+      <div class="port-52w-bar"><div class="port-52w-fill" style="width:${pct}%"></div><div class="port-52w-dot" style="left:${pct}%"></div></div>
+      <div class="port-52w-pcts">
+        <span class="${fromLow>=0?'up':'down'}">${fromLow>=0?'+':''}${fmt(fromLow,1)}% dal min</span>
+        <span class="${fromHigh>=0?'up':'down'}">${fromHigh>=0?'+':''}${fmt(fromHigh,1)}% dal max</span>
+      </div>
+    </div>`;
+  }
+  // ── Consensus analisti (solo azioni) ──
+  if(cat==='stock'&&(sd.rec||sd.targetPrice)){
+    const recMap={strong_buy:{l:'STRONG BUY',c:'#059669'},buy:{l:'BUY',c:'#059669'},hold:{l:'HOLD',c:'#D97706'},underperform:{l:'UNDERPERFORM',c:'#DC2626'},sell:{l:'SELL',c:'#DC2626'}};
+    const rec=recMap[sd.rec]||(sd.rec?{l:sd.rec.toUpperCase(),c:'var(--t2)'}:null);
+    const upside=sd.targetPrice&&curPrice?((sd.targetPrice-curPrice)/curPrice*100):null;
+    html+=`<div class="port-consensus-wrap">`;
+    if(rec)html+=`<div class="port-consensus-badge" style="background:${rec.c}22;color:${rec.c};border-color:${rec.c}44">${rec.l}</div>`;
+    if(sd.targetPrice)html+=`<div class="port-target-info"><span class="port-target-lbl">TARGET ANALISTI</span><span class="port-target-val">${symbol}${portFmtPrice(sd.targetPrice)}</span>${upside!=null?`<span class="port-target-upside ${upside>=0?'up':'down'}" style="background:${upside>=0?'var(--g2)':'var(--r2)'}">${upside>=0?'+':''}${fmt(upside,1)}% upside</span>`:''}</div>`;
+    html+=`</div>`;
+  }
+  // ── Metriche per tipo asset ──
+  let metrics=[];
+  if(cat==='stock'){
+    metrics=[
+      sd.pe!=null&&{l:'P/E',v:fmt(sd.pe,1)},
+      sd.forwardPE!=null&&{l:'P/E Fwd',v:fmt(sd.forwardPE,1)},
+      sd.pb!=null&&{l:'P/Book',v:fmt(sd.pb,2)},
+      sd.eps!=null&&{l:'EPS',v:symbol+fmt(sd.eps,2)},
+      sd.roe!=null&&{l:'ROE',v:fmt(sd.roe*100,1)+'%'},
+      sd.marketCap&&{l:'Mkt Cap',v:fmtLg(sd.marketCap)},
+      sd.dividend&&{l:'Div Yield',v:fmt(sd.dividend*100,2)+'%'},
+      sd.beta!=null&&{l:'Beta',v:fmt(sd.beta,2)},
+      sd.sector&&{l:'Settore',v:sd.sector},
+      sd.grossMargins!=null&&{l:'Marg. Lordo',v:fmt(sd.grossMargins*100,1)+'%'},
+      sd.operatingMargins!=null&&{l:'Marg. Oper.',v:fmt(sd.operatingMargins*100,1)+'%'},
+      sd.revenueGrowth!=null&&{l:'Cresc. Ric.',v:(sd.revenueGrowth>=0?'+':'')+fmt(sd.revenueGrowth*100,1)+'%'},
+      sd.debtToEquity!=null&&{l:'Debt/Equity',v:fmt(sd.debtToEquity,1)},
+      sd.currentRatio!=null&&{l:'Current Ratio',v:fmt(sd.currentRatio,2)},
+      sd.freeCashflow&&{l:'Free CF',v:fmtLg(sd.freeCashflow)},
+    ].filter(Boolean);
+  }else if(cat==='etf'){
+    metrics=[
+      sd.beta!=null&&{l:'Beta',v:fmt(sd.beta,2)},
+      sd.dividend&&{l:'Div Yield',v:fmt(sd.dividend*100,2)+'%'},
+      sd.marketCap&&{l:'AUM',v:fmtLg(sd.marketCap)},
+      sd.avgVolume&&{l:'Vol. Medio',v:fmtLg(sd.avgVolume)},
+      sd.pe!=null&&{l:'P/E',v:fmt(sd.pe,1)},
+    ].filter(Boolean);
+  }else if(cat==='crypto'){
+    metrics=[
+      sd.marketCap&&{l:'Mkt Cap',v:fmtLg(sd.marketCap)},
+      sd.avgVolume&&{l:'Vol. Medio',v:fmtLg(sd.avgVolume)},
+      sd.beta!=null&&{l:'Beta vs S&P',v:fmt(sd.beta,2)},
+    ].filter(Boolean);
+  }else{
+    metrics=[
+      sd.avgVolume&&{l:'Vol. Medio',v:fmtLg(sd.avgVolume)},
+      sd.beta!=null&&{l:'Beta',v:fmt(sd.beta,2)},
+      sd.marketCap&&{l:'Mkt Cap',v:fmtLg(sd.marketCap)},
+    ].filter(Boolean);
+  }
+  if(metrics.length){
+    html+=metrics.map(m=>`<div class="port-metric"><div class="port-metric-lbl">${m.l}</div><div class="port-metric-val">${m.v}</div></div>`).join('');
+  }
+  el.innerHTML=html||'<div style="grid-column:1/-1;color:var(--t3);font-size:12px;font-family:var(--fm);padding:8px">Nessun dato fondamentale disponibile</div>';
+  // Salva dati per AI
+  window._portLastSD=sd;
+  window._portLastSym=sym;
 }
 
 /* ── News correlate all'asset ── */
