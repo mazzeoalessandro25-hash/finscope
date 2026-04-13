@@ -3239,7 +3239,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     tc.addEventListener('mouseenter',()=>{if(tapeRAF){cancelAnimationFrame(tapeRAF);tapeRAF=null;}});
     tc.addEventListener('mouseleave',()=>{if(!tapeRAF)runTape();});
   }
-  initInsiderSelect();
+  loadInsiderFeed();
 });
 
 /* ── CHART HELPERS ── */
