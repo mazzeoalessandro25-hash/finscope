@@ -165,6 +165,7 @@ export default async function handler(req, res) {
       dayLow:    q.regularMarketDayLow,
       volume:    q.regularMarketVolume,
       marketCap: q.marketCap ?? null,
+      divYield:  q.trailingAnnualDividendYield ?? null,
     });
 
   } catch (e) {
