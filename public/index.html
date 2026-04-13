@@ -11887,16 +11887,17 @@ function pqNext(){
 // ══════════════════════════════════════════════════════════════════════════════
 // INSIDER TRADING
 // ══════════════════════════════════════════════════════════════════════════════
-let _insiderCache = {};      // cache per simbolo
-let _insiderFilter = 'all';  // 'all' | 'buy' | 'sell'
-let _sdInsiderFilter = 'all';
-let _sdInsiderData = [];
+let _insiderFeedCache = null;   // cache feed globale
+let _insiderSymCache  = {};     // cache per simbolo specifico
+let _insiderFilter    = 'all';
+let _sdInsiderFilter  = 'all';
+let _sdInsiderData    = [];
 
 function fmtInsValue(v){
   if(!v||v<=0) return '—';
-  if(v>=1e9)  return '$'+(v/1e9).toFixed(1)+'B';
-  if(v>=1e6)  return '$'+(v/1e6).toFixed(1)+'M';
-  if(v>=1e3)  return '$'+(v/1e3).toFixed(0)+'K';
+  if(v>=1e9) return '$'+(v/1e9).toFixed(1)+'B';
+  if(v>=1e6) return '$'+(v/1e6).toFixed(1)+'M';
+  if(v>=1e3) return '$'+(v/1e3).toFixed(0)+'K';
   return '$'+Math.round(v);
 }
 function fmtInsShares(s){
@@ -11907,78 +11908,75 @@ function fmtInsShares(s){
 }
 function fmtInsRole(r){
   if(!r) return '';
-  const m={'director':'Direttore','officer':'Dirigente','10% owner':'Azionista >10%','ceo':'CEO','cfo':'CFO','coo':'COO'};
-  return m[r.toLowerCase()]||r;
+  const map={
+    'director':'Direttore','officer':'Dirigente','10% owner':'Az. >10%',
+    'ceo':'CEO','cfo':'CFO','coo':'COO','president':'Presidente',
+    'general counsel':'Cons. Legale','vp':'VP','svp':'SVP','evp':'EVP'
+  };
+  return map[r.toLowerCase()] || r.charAt(0).toUpperCase()+r.slice(1);
 }
 
-function renderInsiderTable(transactions, filter, containerId){
+function renderInsiderTable(transactions, filter, containerId, showSymbol){
   const el = document.getElementById(containerId);
   if(!el) return;
   const rows = filter==='all' ? transactions : transactions.filter(t=>t.type===filter);
   if(!rows.length){
-    el.innerHTML='<div class="ld" style="padding:12px">Nessuna transazione disponibile per questo filtro</div>';
+    el.innerHTML='<div class="ld" style="padding:16px">Nessuna transazione '+(filter==='buy'?'di acquisto':filter==='sell'?'di vendita':'')+' disponibile</div>';
     return;
   }
-  const buys  = rows.filter(t=>t.type==='buy').length;
-  const sells = rows.filter(t=>t.type==='sell').length;
-  const sumBuy  = rows.filter(t=>t.type==='buy').reduce((s,t)=>s+t.value,0);
-  const sumSell = rows.filter(t=>t.type==='sell').reduce((s,t)=>s+t.value,0);
+  const nBuy=rows.filter(t=>t.type==='buy').length;
+  const nSell=rows.filter(t=>t.type==='sell').length;
+  const vBuy=rows.filter(t=>t.type==='buy').reduce((s,t)=>s+(t.value||0),0);
+  const vSell=rows.filter(t=>t.type==='sell').reduce((s,t)=>s+(t.value||0),0);
 
-  let html = `<div style="display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap">
-    <span style="font-size:11px;font-family:var(--fm);background:rgba(5,150,105,.12);color:#059669;padding:4px 10px;border-radius:6px;font-weight:600">🟢 ${buys} acquisti · ${fmtInsValue(sumBuy)}</span>
-    <span style="font-size:11px;font-family:var(--fm);background:rgba(220,38,38,.12);color:#DC2626;padding:4px 10px;border-radius:6px;font-weight:600">🔴 ${sells} vendite · ${fmtInsValue(sumSell)}</span>
-  </div>
-  <div style="overflow-x:auto">
-  <table class="ins-table">
-    <thead><tr>
-      <th>Data</th><th>Nome</th><th>Ruolo</th><th>Tipo</th><th>Azioni</th><th>Prezzo</th><th>Valore</th>
-    </tr></thead><tbody>`;
+  let html=`<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+    <span style="font-size:11px;font-family:var(--fm);background:rgba(5,150,105,.14);color:#059669;padding:4px 12px;border-radius:6px;font-weight:700">🟢 ${nBuy} acquisti · ${fmtInsValue(vBuy)}</span>
+    <span style="font-size:11px;font-family:var(--fm);background:rgba(220,38,38,.14);color:#DC2626;padding:4px 12px;border-radius:6px;font-weight:700">🔴 ${nSell} vendite · ${fmtInsValue(vSell)}</span>
+  </div><div style="overflow-x:auto"><table class="ins-table"><thead><tr>
+    ${showSymbol?'<th>Titolo</th>':''}
+    <th>Data</th><th>Nome</th><th>Ruolo</th><th>Tipo</th>
+    <th style="text-align:right">Azioni</th><th style="text-align:right">Prezzo</th><th style="text-align:right">Valore</th>
+  </tr></thead><tbody>`;
+
   rows.forEach(t=>{
     html+=`<tr>
+      ${showSymbol?`<td><span class="ins-sym-pill" onclick="openStockDetail('${t.symbol}')">${t.symbol||'—'}</span></td>`:''}
       <td style="color:var(--t3);white-space:nowrap">${t.date||'—'}</td>
-      <td style="font-weight:600;color:var(--t)">${t.name||'—'}</td>
-      <td style="color:var(--t2)">${fmtInsRole(t.role)}</td>
+      <td style="font-weight:600;color:var(--t);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name||'—'}</td>
+      <td style="color:var(--t2);white-space:nowrap">${fmtInsRole(t.role)}</td>
       <td><span class="ins-badge ${t.type}">${t.type==='buy'?'ACQUISTO':'VENDITA'}</span></td>
       <td style="text-align:right;font-family:var(--fm)">${fmtInsShares(t.shares)}</td>
       <td style="text-align:right;font-family:var(--fm)">${t.price>0?'$'+t.price.toFixed(2):'—'}</td>
-      <td style="text-align:right;font-family:var(--fm);font-weight:600;color:${t.type==='buy'?'var(--g)':'var(--r)'}">${fmtInsValue(t.value)}</td>
+      <td style="text-align:right;font-family:var(--fm);font-weight:700;color:${t.type==='buy'?'var(--g)':'var(--r)'}">${fmtInsValue(t.value)}</td>
     </tr>`;
   });
   html+='</tbody></table></div>';
   el.innerHTML=html;
 }
 
-// ── Dashboard insider ──────────────────────────────────────────────────────
+// ── Dashboard: feed globale ────────────────────────────────────────────────
 function insSetFilter(f, btn){
   _insiderFilter=f;
   document.querySelectorAll('#insider-dash-card .cal-tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const sym = document.getElementById('ins-sym-select')?.value;
-  if(sym && _insiderCache[sym]) renderInsiderTable(_insiderCache[sym],'all'===f?'all':f,'insider-dash-content');
+  if(_insiderFeedCache) renderInsiderTable(_insiderFeedCache, f, 'insider-dash-content', true);
 }
 
-async function loadInsiderDash(){
-  const sel = document.getElementById('ins-sym-select');
-  const sym = sel?.value;
-  if(!sym){ document.getElementById('insider-dash-content').innerHTML='<div class="ld">Seleziona un titolo per vedere le transazioni insider</div>'; return; }
-  const el = document.getElementById('insider-dash-content');
-  if(_insiderCache[sym]){ renderInsiderTable(_insiderCache[sym],_insiderFilter,'insider-dash-content'); return; }
-  el.innerHTML='<div class="ld">Caricamento transazioni insider per '+sym+'...</div>';
-  try{
-    const d=await fetch(`/api/insider?symbol=${encodeURIComponent(sym)}`).then(r=>r.json());
-    _insiderCache[sym]=d.transactions||[];
-    renderInsiderTable(_insiderCache[sym],_insiderFilter,'insider-dash-content');
-  }catch(e){
-    el.innerHTML='<div class="ld">Errore caricamento insider: '+e.message+'</div>';
+async function loadInsiderFeed(forceRefresh){
+  const el=document.getElementById('insider-dash-content');
+  if(!el) return;
+  if(_insiderFeedCache && !forceRefresh){
+    renderInsiderTable(_insiderFeedCache, _insiderFilter, 'insider-dash-content', true);
+    return;
   }
-}
-
-function initInsiderSelect(){
-  const sel=document.getElementById('ins-sym-select');
-  if(!sel)return;
-  const all=STOCKS.concat(customStocks);
-  sel.innerHTML='<option value="">— seleziona titolo —</option>';
-  all.forEach(s=>{ const o=document.createElement('option'); o.value=s.s; o.textContent=s.s+' – '+s.n; sel.appendChild(o); });
+  el.innerHTML='<div class="ld">Caricamento ultime transazioni insider...</div>';
+  try{
+    const d=await fetch('/api/insider').then(r=>r.json());
+    _insiderFeedCache=d.transactions||[];
+    renderInsiderTable(_insiderFeedCache, _insiderFilter, 'insider-dash-content', true);
+  } catch(e){
+    el.innerHTML='<div class="ld">Errore: '+e.message+'</div>';
+  }
 }
 
 // ── Dettaglio singolo titolo ───────────────────────────────────────────────
@@ -11986,7 +11984,7 @@ function sdInsFilter(f, btn){
   _sdInsiderFilter=f;
   document.querySelectorAll('#sd-insider-section .cal-tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderInsiderTable(_sdInsiderData,f,'sd-insider-content');
+  renderInsiderTable(_sdInsiderData, f, 'sd-insider-content', false);
 }
 
 async function loadInsiderForStock(sym){
@@ -11994,20 +11992,24 @@ async function loadInsiderForStock(sym){
   _sdInsiderFilter='all';
   document.querySelectorAll('#sd-insider-section .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   const el=document.getElementById('sd-insider-content');
-  if(!el)return;
-  if(_insiderCache[sym]){
-    _sdInsiderData=_insiderCache[sym];
-    renderInsiderTable(_sdInsiderData,'all','sd-insider-content');
+  if(!el) return;
+  if(_insiderSymCache[sym]){
+    _sdInsiderData=_insiderSymCache[sym];
+    renderInsiderTable(_sdInsiderData,'all','sd-insider-content',false);
     return;
   }
   el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento transazioni insider...</div>';
   try{
     const d=await fetch(`/api/insider?symbol=${encodeURIComponent(sym)}`).then(r=>r.json());
     _sdInsiderData=d.transactions||[];
-    _insiderCache[sym]=_sdInsiderData;
-    renderInsiderTable(_sdInsiderData,'all','sd-insider-content');
-  }catch(e){
-    el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati insider non disponibili</div>';
+    _insiderSymCache[sym]=_sdInsiderData;
+    if(_sdInsiderData.length===0){
+      el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessuna transazione insider disponibile per questo titolo</div>';
+    } else {
+      renderInsiderTable(_sdInsiderData,'all','sd-insider-content',false);
+    }
+  } catch(e){
+    el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati non disponibili</div>';
   }
 }
 </script>
