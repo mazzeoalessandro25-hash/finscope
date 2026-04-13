@@ -7406,7 +7406,7 @@ async function runWhatIf(){
     const oldBeta=oldQ?.beta??(scSummary[oldSym]||scData[oldSym])?.beta??1;
     const _oldYieldRaw=(scSummary[oldSym]||scData[oldSym])?.dividend??oldQ?.divYield??0;const oldYieldVal=_oldYieldRaw>1?_oldYieldRaw/100:_oldYieldRaw;
     const newBetaVal=newQ?.beta??newSum?.beta??1;
-    const newYieldVal=newSum?.dividend??0;
+    const _newYieldRaw=newSum?.dividend??0;const newYieldVal=_newYieldRaw>1?_newYieldRaw/100:_newYieldRaw;
     const newPortBeta=curBeta-(oldBeta*posWeight)+(newBetaVal*posWeight);
     const newPortYield=curYield-(oldYieldVal*posWeight)+(newYieldVal*posWeight);
     const betaDiff=newPortBeta-curBeta;
