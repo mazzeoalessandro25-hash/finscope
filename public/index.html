@@ -12015,21 +12015,52 @@ function insSetSort(val){
   if(_insiderFeedCache) renderInsiderTable(_insiderFeedCache, _insiderFilter, 'insider-dash-content', true, val);
 }
 
+const _INSIDER_LS_KEY  = 'finscope_insider_cache';
+const _INSIDER_LS_TIME = 'finscope_insider_ts';
+const _INSIDER_TTL_MS  = 24 * 60 * 60 * 1000; // 24 ore
+
 async function loadInsiderFeed(forceRefresh){
   const el=document.getElementById('insider-dash-content');
   if(!el) return;
-  if(_insiderFeedCache && !forceRefresh){
-    renderInsiderTable(_insiderFeedCache, _insiderFilter, 'insider-dash-content', true);
-    return;
+
+  // Controlla se i dati in localStorage sono ancora freschi (< 24h)
+  if(!forceRefresh){
+    try{
+      const ts=parseInt(localStorage.getItem(_INSIDER_LS_TIME)||'0',10);
+      const age=Date.now()-ts;
+      if(age < _INSIDER_TTL_MS){
+        const cached=JSON.parse(localStorage.getItem(_INSIDER_LS_KEY)||'null');
+        if(cached?.length){
+          _insiderFeedCache=cached;
+          renderInsiderTable(_insiderFeedCache,_insiderFilter,'insider-dash-content',true,_insiderSort);
+          _insUpdateLastRefresh(ts);
+          return;
+        }
+      }
+    }catch(_){}
   }
+
   el.innerHTML='<div class="ld">Caricamento ultime transazioni insider...</div>';
   try{
     const d=await fetch('/api/insider').then(r=>r.json());
     _insiderFeedCache=d.transactions||[];
-    renderInsiderTable(_insiderFeedCache, _insiderFilter, 'insider-dash-content', true);
-  } catch(e){
+    // Salva in localStorage con timestamp
+    try{
+      localStorage.setItem(_INSIDER_LS_KEY, JSON.stringify(_insiderFeedCache));
+      localStorage.setItem(_INSIDER_LS_TIME, String(Date.now()));
+    }catch(_){}
+    renderInsiderTable(_insiderFeedCache,_insiderFilter,'insider-dash-content',true,_insiderSort);
+    _insUpdateLastRefresh(Date.now());
+  }catch(e){
     el.innerHTML='<div class="ld">Errore: '+e.message+'</div>';
   }
+}
+
+function _insUpdateLastRefresh(ts){
+  const el=document.getElementById('ins-last-refresh');
+  if(!el||!ts) return;
+  const d=new Date(ts);
+  el.textContent='Aggiornato: '+d.toLocaleDateString('it-IT')+' '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
 }
 
 // ── Dettaglio singolo titolo ───────────────────────────────────────────────
