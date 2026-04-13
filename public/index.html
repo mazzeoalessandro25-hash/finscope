@@ -7255,7 +7255,7 @@ function renderPortAnalysis(portItems, quotes){
 
       <!-- COL DX: Radar — stessa altezza delle altre due -->
       <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px;display:flex;flex-direction:column">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;text-align:center">Profilo portafoglio</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:3px">Profilo portafoglio${tip('Grafico a 6 dimensioni: Rendimento (P&L vs prezzo di carico), Diversificazione (settori e titoli), Qualità (FinEdge Score medio), Momentum (trend recente), Stabilità (beta basso = più stabile), Reddito (yield dividendi). 0–100 per ogni asse.')}</div>
         <div style="flex:1;display:flex;align-items:center;justify-content:center">
           <canvas id="port-radar-canvas" width="200" height="180"></canvas>
         </div>
