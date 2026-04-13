@@ -165,7 +165,12 @@ export default async function handler(req, res) {
       dayLow:    q.regularMarketDayLow,
       volume:    q.regularMarketVolume,
       marketCap: q.marketCap ?? null,
-      divYield:  q.trailingAnnualDividendYield ?? null,
+      // Calcola yield come rate/price invece di usare trailingAnnualDividendYield
+      // che Yahoo Finance a volte restituisce come DPS in valuta locale (es. 36 DKK)
+      // invece che come rendimento decimale (es. 0.0450), causando valori errati.
+      divYield: (q.trailingAnnualDividendRate && q.regularMarketPrice)
+        ? q.trailingAnnualDividendRate / q.regularMarketPrice
+        : null,
     });
 
   } catch (e) {
