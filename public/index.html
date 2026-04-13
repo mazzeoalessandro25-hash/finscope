@@ -7086,10 +7086,8 @@ function renderPortAnalysis(portItems, quotes){
       // converti tutto in EUR per coerenza
       const isEUR=(q?.currency||'USD')==='EUR';
       const curValEUR=isEUR?curVal:curVal/fxR;
-      // divYield da Yahoo è sempre un decimale (es. 0.0588 = 5.88%)
-      // In rari casi europei può arrivare come percentuale (5.88): normalizziamo
-      const rawY=q?.divYield??0;
-      const y=rawY>1?rawY/100:rawY;
+      // divYield è calcolato dall'API come rate/price → sempre decimale (es. 0.0450 = 4.5%)
+      const y=q?.divYield??0;
       const annDiv=curValEUR*y;
       if(y>0) breakdown.push({sym:item.sym,y,annDiv});
       totalDiv+=annDiv;
