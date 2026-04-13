@@ -11916,6 +11916,19 @@ function fmtInsRole(r){
   return map[r.toLowerCase()] || r.charAt(0).toUpperCase()+r.slice(1);
 }
 
+function _insRowHtml(t, showSymbol){
+  return `<tr>
+    ${showSymbol?`<td><span class="ins-sym-pill" onclick="openStockDetail('${t.symbol}')">${t.symbol||'—'}</span></td>`:''}
+    <td style="color:var(--t3);white-space:nowrap">${t.date||'—'}</td>
+    <td style="font-weight:600;color:var(--t);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name||'—'}</td>
+    <td style="color:var(--t2);white-space:nowrap">${fmtInsRole(t.role)}</td>
+    <td><span class="ins-badge ${t.type}">${t.type==='buy'?'ACQUISTO':'VENDITA'}</span></td>
+    <td style="text-align:right;font-family:var(--fm)">${fmtInsShares(t.shares)}</td>
+    <td style="text-align:right;font-family:var(--fm)">${t.price>0?'$'+t.price.toFixed(2):'—'}</td>
+    <td style="text-align:right;font-family:var(--fm);font-weight:700;color:${t.type==='buy'?'var(--g)':'var(--r)'}">${fmtInsValue(t.value)}</td>
+  </tr>`;
+}
+
 function renderInsiderTable(transactions, filter, containerId, showSymbol){
   const el = document.getElementById(containerId);
   if(!el) return;
@@ -11929,28 +11942,40 @@ function renderInsiderTable(transactions, filter, containerId, showSymbol){
   const vBuy=rows.filter(t=>t.type==='buy').reduce((s,t)=>s+(t.value||0),0);
   const vSell=rows.filter(t=>t.type==='sell').reduce((s,t)=>s+(t.value||0),0);
 
+  const VISIBLE = 20;
+  const visible = rows.slice(0, VISIBLE);
+  const hidden  = rows.slice(VISIBLE);
+  const thead = `${showSymbol?'<th>Titolo</th>':''}<th>Data</th><th>Nome</th><th>Ruolo</th><th>Tipo</th><th style="text-align:right">Azioni</th><th style="text-align:right">Prezzo</th><th style="text-align:right">Valore</th>`;
+
   let html=`<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
     <span style="font-size:11px;font-family:var(--fm);background:rgba(5,150,105,.14);color:#059669;padding:4px 12px;border-radius:6px;font-weight:700">🟢 ${nBuy} acquisti · ${fmtInsValue(vBuy)}</span>
     <span style="font-size:11px;font-family:var(--fm);background:rgba(220,38,38,.14);color:#DC2626;padding:4px 12px;border-radius:6px;font-weight:700">🔴 ${nSell} vendite · ${fmtInsValue(vSell)}</span>
-  </div><div style="overflow-x:auto"><table class="ins-table"><thead><tr>
-    ${showSymbol?'<th>Titolo</th>':''}
-    <th>Data</th><th>Nome</th><th>Ruolo</th><th>Tipo</th>
-    <th style="text-align:right">Azioni</th><th style="text-align:right">Prezzo</th><th style="text-align:right">Valore</th>
-  </tr></thead><tbody>`;
+  </div>
+  <div style="overflow-x:auto">
+  <table class="ins-table"><thead><tr>${thead}</tr></thead>
+  <tbody>${visible.map(t=>_insRowHtml(t,showSymbol)).join('')}</tbody>
+  </table>`;
 
-  rows.forEach(t=>{
-    html+=`<tr>
-      ${showSymbol?`<td><span class="ins-sym-pill" onclick="openStockDetail('${t.symbol}')">${t.symbol||'—'}</span></td>`:''}
-      <td style="color:var(--t3);white-space:nowrap">${t.date||'—'}</td>
-      <td style="font-weight:600;color:var(--t);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name||'—'}</td>
-      <td style="color:var(--t2);white-space:nowrap">${fmtInsRole(t.role)}</td>
-      <td><span class="ins-badge ${t.type}">${t.type==='buy'?'ACQUISTO':'VENDITA'}</span></td>
-      <td style="text-align:right;font-family:var(--fm)">${fmtInsShares(t.shares)}</td>
-      <td style="text-align:right;font-family:var(--fm)">${t.price>0?'$'+t.price.toFixed(2):'—'}</td>
-      <td style="text-align:right;font-family:var(--fm);font-weight:700;color:${t.type==='buy'?'var(--g)':'var(--r)'}">${fmtInsValue(t.value)}</td>
-    </tr>`;
-  });
-  html+='</tbody></table></div>';
+  if(hidden.length > 0){
+    html+=`<details style="margin-top:0">
+      <summary style="cursor:pointer;padding:9px 8px;font-size:12px;font-family:var(--fm);color:var(--t2);border-top:1px solid var(--bd);list-style:none;display:flex;align-items:center;gap:6px;user-select:none">
+        <span id="${containerId}-arrow" style="transition:transform .2s;display:inline-block">▶</span>
+        Mostra altre ${hidden.length} transazioni
+      </summary>
+      <table class="ins-table"><tbody>${hidden.map(t=>_insRowHtml(t,showSymbol)).join('')}</tbody></table>
+    </details>`;
+    // ruota la freccia all'apertura/chiusura
+    html+=`<script>
+      (function(){
+        var det=document.currentScript.previousElementSibling;
+        det.addEventListener('toggle',function(){
+          document.getElementById('${containerId}-arrow').style.transform=det.open?'rotate(90deg)':'';
+        });
+      })();
+    <\/script>`;
+  }
+
+  html+='</div>';
   el.innerHTML=html;
 }
 
