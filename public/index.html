@@ -864,13 +864,29 @@ html.dark .auth-box{background:#1e293b}
 .port-target-row:last-child{border-bottom:none}
 
 /* ═══ FEATURE 6: MACRO DASHBOARD ═══ */
-.macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
-.macro-stat{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;
-  box-shadow:0 1px 4px rgba(0,0,0,.04)}
-.macro-stat-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;
-  text-transform:uppercase;margin-bottom:6px}
-.macro-stat-val{font-family:var(--fm);font-size:20px;font-weight:600;color:var(--t);line-height:1}
-.macro-stat-chg{font-family:var(--fm);font-size:11px;font-weight:500;margin-top:4px}
+.macro-pulse-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.macro-pulse-stat{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:18px 20px;position:relative;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.macro-pulse-stat::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--b)}
+.macro-pulse-stat.warn::before{background:var(--o)}
+.macro-pulse-stat.danger::before{background:var(--r)}
+.macro-pulse-stat.safe::before{background:var(--g)}
+.mps-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
+.mps-val{font-family:var(--fm);font-size:24px;font-weight:600;color:var(--t);line-height:1;margin-bottom:5px}
+.mps-chg{font-family:var(--fm);font-size:11px;font-weight:500}
+.mps-desc{font-size:10px;color:var(--t3);margin-top:5px}
+.macro-cb-item{display:flex;align-items:center;padding:11px 0;border-bottom:1px solid var(--bd)}
+.macro-cb-item:last-child{border-bottom:none}
+.cb-flag{font-size:18px;flex-shrink:0;line-height:1}
+.cb-info{flex:1;margin-left:10px;min-width:0}
+.cb-name{font-size:11px;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cb-detail{font-size:10px;color:var(--t3);margin-top:1px}
+.cb-rate{font-family:var(--fm);font-size:18px;font-weight:700;color:var(--t);text-align:right;white-space:nowrap;flex-shrink:0;margin-left:10px}
+.macro-mdi{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:6px;transition:background .1s;cursor:default}
+.macro-mdi:hover{background:var(--b3)}
+.macro-mdi-lbl{font-size:11px;color:var(--t2)}
+.macro-spread-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,#DC2626 0%,#D97706 35%,#059669 55%,#1A56C4 80%,#3730a3 100%);position:relative;margin:6px 0}
+.macro-spread-needle{position:absolute;top:50%;width:2px;height:16px;background:var(--t);border-radius:1px;transform:translate(-50%,-50%);transition:left .6s cubic-bezier(.4,0,.2,1)}
 
 /* ═══ FEATURE 8: ECONOMIC CALENDAR ═══ */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
