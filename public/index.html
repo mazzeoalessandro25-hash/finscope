@@ -5343,21 +5343,21 @@ async function renderPortfolio(){
     <!-- Breakdown valuta -->
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px">
       <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Breakdown valuta</div>
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
+      ${totalEUR_inv>0?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
         <span style="font-size:11px;color:var(--t2);font-family:var(--fm)">🇪🇺 EUR</span>
         <div style="text-align:right">
-          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">€${fmt(totalValEUR,2)}</div>
-          <div style="font-size:10px;font-family:var(--fm);color:${upE?'var(--g)':'var(--r)'};">${upE?'+':'−'}€${fmt(Math.abs(pnlE),2)} (${fmt(Math.abs(pctE),1)}%)</div>
+          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">€${fmt(totalEUR_val||totalEUR_inv,2)}</div>
+          <div style="font-size:10px;font-family:var(--fm);color:${upE?'var(--g)':'var(--r)'};">${upE?'+':'−'}€${fmt(Math.abs(pnlE),2)} (${upE?'+':'−'}${fmt(Math.abs(pctE),1)}%)</div>
         </div>
-      </div>
-      <div style="height:1px;background:var(--bd);margin:5px 0"></div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
+      </div>`:''}
+      ${totalEUR_inv>0&&totalUSD_inv>0?`<div style="height:1px;background:var(--bd);margin:5px 0"></div>`:''}
+      ${totalUSD_inv>0?`<div style="display:flex;justify-content:space-between;align-items:center">
         <span style="font-size:11px;color:var(--t2);font-family:var(--fm)">🇺🇸 USD</span>
         <div style="text-align:right">
-          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">$${fmt(totalValUSD,2)}</div>
-          <div style="font-size:10px;font-family:var(--fm);color:${upU?'var(--g)':'var(--r)'};">${upU?'+':'−'}$${fmt(Math.abs(pnlU),2)} (${fmt(Math.abs(pctU),1)}%)</div>
+          <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">$${fmt(totalUSD_val||totalUSD_inv,2)}</div>
+          <div style="font-size:10px;font-family:var(--fm);color:${upU?'var(--g)':'var(--r)'};">${upU?'+':'−'}$${fmt(Math.abs(pnlU),2)} (${upU?'+':'−'}${fmt(Math.abs(pctU),1)}%)</div>
         </div>
-      </div>
+      </div>`:''}
     </div>
     ${dailySection}`
     :'<div style="padding:30px;text-align:center;color:var(--t3)"><div style="font-size:32px;margin-bottom:10px">📊</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Nessun titolo</div><div style="font-size:11px">Aggiungi il primo asset dalla lista</div></div>';
