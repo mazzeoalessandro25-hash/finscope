@@ -1812,19 +1812,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div class="card" id="insider-dash-card">
     <div class="ch">
       <div>
-        <div class="ct">🔍 Transazioni Insider</div>
-        <div class="cs">Acquisti e vendite di dirigenti e dipendenti — aggiornati in tempo reale</div>
+        <div class="ct">🔍 Transazioni Insider — Ultime operazioni</div>
+        <div class="cs">Acquisti e vendite recenti di dirigenti, CEO, CFO e insider aziendali</div>
       </div>
-      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;gap:6px;align-items:center">
         <button class="cal-tab-btn active" id="ins-filter-all"  onclick="insSetFilter('all',this)">Tutti</button>
         <button class="cal-tab-btn"        id="ins-filter-buy"  onclick="insSetFilter('buy',this)">🟢 Acquisti</button>
         <button class="cal-tab-btn"        id="ins-filter-sell" onclick="insSetFilter('sell',this)">🔴 Vendite</button>
-        <select id="ins-sym-select" style="background:var(--s2);border:1px solid var(--bd);color:var(--t);padding:4px 8px;border-radius:6px;font-size:12px;font-family:var(--fm);cursor:pointer" onchange="loadInsiderDash()">
-          <option value="">— seleziona titolo —</option>
-        </select>
+        <button onclick="loadInsiderFeed(true)" style="padding:4px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;font-size:11px;font-family:var(--fm);color:var(--t2);cursor:pointer">↺ Aggiorna</button>
       </div>
     </div>
-    <div id="insider-dash-content" style="margin-top:4px"><div class="ld">Seleziona un titolo per vedere le transazioni insider</div></div>
+    <div id="insider-dash-content" style="margin-top:4px"><div class="ld">Caricamento transazioni insider...</div></div>
   </div>
 
   <!-- ECONOMIC CALENDAR -->
