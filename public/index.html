@@ -6979,6 +6979,7 @@ const INVESTOR_PROFILES={
     types:{dividend:.0,value:.05,growth:.95},maxBeta:2.0,color:'#EC4899'},
 };
 let selectedProfile='moderate';
+try{const _sp=localStorage.getItem('finedge_profile');if(_sp&&INVESTOR_PROFILES[_sp])selectedProfile=_sp;}catch(_){}
 
 // ── Donut chart helpers (global) ──
 const COLORS=['#1A56C4','#10B981','#F59E0B','#EF4444','#8B5CF6','#06B6D4','#EC4899','#6B7280'];
