@@ -1831,7 +1831,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <option value="value_asc">💰 Valore ↑</option>
           <option value="shares_desc">📊 N° azioni ↓</option>
         </select>
-        <button onclick="loadInsiderFeed(true)" style="padding:4px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;font-size:11px;font-family:var(--fm);color:var(--t2);cursor:pointer">↺</button>
+        <span id="ins-last-refresh" style="font-size:10px;color:var(--t3);font-family:var(--fm)"></span>
+        <button onclick="loadInsiderFeed(true)" title="Aggiorna ora" style="padding:4px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;font-size:11px;font-family:var(--fm);color:var(--t2);cursor:pointer">↺ Aggiorna</button>
       </div>
     </div>
     <div id="insider-dash-content" style="margin-top:4px"><div class="ld">Caricamento transazioni insider...</div></div>
