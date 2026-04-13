@@ -2520,21 +2520,121 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <!-- ═══ MACRO DASHBOARD ═══ -->
 <div class="page" id="page-macro">
   <div class="pg-title">Macro Dashboard</div>
-  <div class="pg-sub">Tassi, spread, forex e materie prime chiave</div>
+  <div class="pg-sub">Tassi · Banche Centrali · Ciclo Economico · Forex · Condizioni del Credito</div>
 
-  <div class="sdiv"><div class="sdiv-t">Tassi &amp; Banche Centrali</div><div class="sdiv-l"></div></div>
-  <div class="macro-grid" id="macro-rates">
-    <div class="ld">Caricamento...</div>
+  <!-- PULSE BAR -->
+  <div class="macro-pulse-bar">
+    <div class="macro-pulse-stat" id="mps-10y">
+      <div class="mps-lbl">US 10Y Treasury</div>
+      <div class="mps-val" id="mps-10y-val">—</div>
+      <div class="mps-chg" id="mps-10y-chg">—</div>
+      <div class="mps-desc">Tasso di riferimento globale</div>
+    </div>
+    <div class="macro-pulse-stat" id="mps-spread">
+      <div class="mps-lbl">Spread 10Y – 3M</div>
+      <div class="mps-val" id="mps-spread-val">—</div>
+      <div class="mps-chg" id="mps-spread-desc" style="color:var(--t3)">—</div>
+      <div class="mps-desc">Inversione = segnale recessione</div>
+    </div>
+    <div class="macro-pulse-stat" id="mps-dxy">
+      <div class="mps-lbl">DXY — Dollar Index</div>
+      <div class="mps-val" id="mps-dxy-val">—</div>
+      <div class="mps-chg" id="mps-dxy-chg">—</div>
+      <div class="mps-desc" id="mps-dxy-desc">Forza del dollaro USA</div>
+    </div>
+    <div class="macro-pulse-stat" id="mps-fed">
+      <div class="mps-lbl">Fed Funds Rate</div>
+      <div class="mps-val" id="mps-fed-val">—</div>
+      <div class="mps-chg" id="mps-fed-next" style="color:var(--t3)">—</div>
+      <div class="mps-desc">Tasso di riferimento Fed</div>
+    </div>
   </div>
 
-  <div class="sdiv"><div class="sdiv-t">Forex</div><div class="sdiv-l"></div></div>
-  <div class="macro-grid" id="macro-forex">
-    <div class="ld">Caricamento...</div>
+  <!-- ROW 1: Yield Curve | Banche Centrali | Condizioni Credito -->
+  <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px;margin-bottom:14px">
+
+    <div class="card">
+      <div class="ch"><div>
+        <div class="ct">📈 Curva dei Rendimenti USA</div>
+        <div class="cs" id="macro-yield-sub">Treasury · 3M · 5Y · 10Y · 30Y</div>
+      </div></div>
+      <div style="position:relative;height:160px">
+        <canvas id="macro-yield-canvas"></canvas>
+      </div>
+      <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <span style="font-size:9px;font-weight:600;color:var(--t2);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">Spread 10Y – 3M</span>
+          <span id="macro-spread-badge" style="font-family:var(--fm);font-size:11px;font-weight:700;padding:2px 10px;border-radius:100px;border:1px solid var(--bd)">—</span>
+        </div>
+        <div class="macro-spread-bar"><div class="macro-spread-needle" id="macro-spread-needle" style="left:50%"></div></div>
+        <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:3px">
+          <span>−3% Inv.</span><span>0%</span><span>+3% Normale</span>
+        </div>
+        <div id="macro-spread-interp" style="margin-top:8px;font-size:11px;color:var(--t2);line-height:1.5;padding:8px 10px;background:var(--s2);border-radius:7px"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div>
+        <div class="ct">🏦 Banche Centrali</div>
+        <div class="cs">Tassi · Prossime riunioni · Bias</div>
+      </div></div>
+      <div id="macro-cb-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div>
+        <div class="ct">💳 Condizioni del Credito</div>
+        <div class="cs">High Yield · Invest. Grade · Treasury</div>
+      </div></div>
+      <div id="macro-credit-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
   </div>
 
-  <div class="sdiv"><div class="sdiv-t">Materie Prime Chiave</div><div class="sdiv-l"></div></div>
-  <div class="macro-grid" id="macro-comms">
-    <div class="ld">Caricamento...</div>
+  <!-- ROW 2: Snapshot USA | Snapshot EU -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+    <div class="card">
+      <div class="ch">
+        <div>
+          <div class="ct">🇺🇸 Snapshot Macroeconomico USA</div>
+          <div class="cs" id="macro-us-upd">—</div>
+        </div>
+        <div id="macro-regime-badge"></div>
+      </div>
+      <div id="macro-us-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div>
+        <div class="ct">🇪🇺 Snapshot Macroeconomico Eurozona</div>
+        <div class="cs" id="macro-eu-upd">—</div>
+      </div></div>
+      <div id="macro-eu-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
+  </div>
+
+  <!-- ROW 3: Forex | Segnali Leading -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+
+    <div class="card">
+      <div class="ch"><div>
+        <div class="ct">💱 Forex Globale</div>
+        <div class="cs">DXY · Valute principali · Live</div>
+      </div></div>
+      <div id="macro-forex-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div>
+        <div class="ct">🔍 Segnali Leading</div>
+        <div class="cs">Rame · Petrolio · Ratio Gold/Copper come indicatori macro</div>
+      </div></div>
+      <div id="macro-leading-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
   </div>
 </div>
 
