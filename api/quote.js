@@ -178,6 +178,16 @@ export default async function handler(req, res) {
       } catch (_) { /* ignora errori, divYield resta null */ }
     }
 
+    // beta: disponibile direttamente da yf.quote() nella maggior parte dei casi;
+    // se mancante (es. ETF, crypto), prova summaryDetail come fallback.
+    let beta = q.beta ?? null;
+    if (beta === null) {
+      try {
+        const sd = await fetchQuoteSummary(symbol);
+        beta = sd?.summaryDetail?.beta ?? null;
+      } catch (_) { /* ignora, beta resta null */ }
+    }
+
     return res.json({
       symbol:    q.symbol,
       price:     q.regularMarketPrice,
@@ -188,6 +198,7 @@ export default async function handler(req, res) {
       dayLow:    q.regularMarketDayLow,
       volume:    q.regularMarketVolume,
       marketCap: q.marketCap ?? null,
+      beta,
       divYield,
     });
 
