@@ -7211,7 +7211,7 @@ function renderPortAnalysis(portItems, quotes){
             <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
           </svg>
           <div style="flex:1;min-width:0">
-            <div style="font-size:12px;font-weight:700;color:${scoreColor};font-family:var(--fm)">${score}/100 pt</div>
+            <div style="font-size:12px;font-weight:700;color:${scoreColor};font-family:var(--fm);display:flex;align-items:center;gap:4px">${score}/100 pt ${tip('Punteggio di allineamento tra il portafoglio e il profilo selezionato. Considera la distribuzione per tipo (Dividendo/Value/Growth), il beta medio e il numero di titoli. 100 = allineamento perfetto.')}</div>
             <div style="font-size:10px;color:var(--t2);font-family:var(--fm);margin-top:2px">${score>=75?'Ottimo allineamento':score>=50?'Allineamento discreto':'Da migliorare'}</div>
             ${bestMatch!==selectedProfile
               ?`<div style="font-size:9px;color:var(--b);font-family:var(--fm);margin-top:3px">↗ ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
