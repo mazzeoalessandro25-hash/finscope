@@ -5,10 +5,16 @@ import { fetchInsiderTransactions } from './_lib/yahoo.js';
 //   startDate: "2026-04-02T00:00:00.000Z", transactionText: "Sale at price 255.12..." }
 // NOTA: shares/value sono numeri diretti (non {raw:...}), startDate è ISO string
 
+// Yahoo Finance insiderTransactions funziona solo per titoli con Form 4 SEC (USA)
+// + alcuni ADR europei/UK quotati su NYSE/NASDAQ. I titoli .MI/.PA/.DE non hanno dati.
 const FEED_STOCKS = [
+  // USA
   'AAPL','MSFT','NVDA','AMZN','GOOGL','META','TSLA','JPM','V','JNJ',
   'XOM','UNH','HD','PG','BAC','ABBV','MRK','CVX','LLY','AVGO',
-  'NFLX','AMD','ORCL','CRM','COST','WMT','DIS','IBM','GS','MS'
+  'NFLX','AMD','ORCL','CRM','COST','WMT','DIS','IBM','GS','MS',
+  'QCOM','INTC','TXN','PYPL','ADBE','NFLX','SBUX','NKE','PEP','KO',
+  // ADR europei/UK con dati insider su Yahoo Finance
+  'AZN','SHEL','TTE','BP','RIO','BTI','GSK','UL',
 ];
 
 function fmtDate(raw) {
