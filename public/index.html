@@ -12008,7 +12008,11 @@ function insSetFilter(f, btn){
   _insiderFilter=f;
   document.querySelectorAll('#insider-dash-card .cal-tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  if(_insiderFeedCache) renderInsiderTable(_insiderFeedCache, f, 'insider-dash-content', true);
+  if(_insiderFeedCache) renderInsiderTable(_insiderFeedCache, f, 'insider-dash-content', true, _insiderSort);
+}
+function insSetSort(val){
+  _insiderSort=val;
+  if(_insiderFeedCache) renderInsiderTable(_insiderFeedCache, _insiderFilter, 'insider-dash-content', true, val);
 }
 
 async function loadInsiderFeed(forceRefresh){
