@@ -12037,7 +12037,11 @@ function sdInsFilter(f, btn){
   _sdInsiderFilter=f;
   document.querySelectorAll('#sd-insider-section .cal-tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderInsiderTable(_sdInsiderData, f, 'sd-insider-content', false);
+  renderInsiderTable(_sdInsiderData, f, 'sd-insider-content', false, _sdInsiderSort);
+}
+function sdInsSetSort(val){
+  _sdInsiderSort=val;
+  renderInsiderTable(_sdInsiderData, _sdInsiderFilter, 'sd-insider-content', false, val);
 }
 
 async function loadInsiderForStock(sym){
