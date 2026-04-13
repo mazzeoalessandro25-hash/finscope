@@ -165,12 +165,15 @@ export default async function handler(req, res) {
       dayLow:    q.regularMarketDayLow,
       volume:    q.regularMarketVolume,
       marketCap: q.marketCap ?? null,
-      // Calcola yield come rate/price invece di usare trailingAnnualDividendYield
-      // che Yahoo Finance a volte restituisce come DPS in valuta locale (es. 36 DKK)
-      // invece che come rendimento decimale (es. 0.0450), causando valori errati.
-      divYield: (q.trailingAnnualDividendRate && q.regularMarketPrice)
-        ? q.trailingAnnualDividendRate / q.regularMarketPrice
-        : null,
+      // trailingAnnualDividendYield dovrebbe essere un decimale (0.046 = 4.6%)
+      // ma per alcuni titoli Yahoo restituisce valori assurdi (es. 36 per NVO a causa
+      // di mixing valute DKK/USD). Normalizziamo e cappiamo a 0.25 (25% max realistico).
+      divYield: (() => {
+        let y = q.trailingAnnualDividendYield;
+        if (y == null || y <= 0) return null;
+        if (y > 1) y = y / 100;   // normalizza se arriva come percentuale (es. 5.88 → 0.0588)
+        return y <= 0.25 ? y : null; // rifiuta valori > 25%: quasi certamente dati errati
+      })(),
     });
 
   } catch (e) {
