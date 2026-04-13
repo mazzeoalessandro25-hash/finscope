@@ -7173,6 +7173,8 @@ function renderPortAnalysis(portItems, quotes){
     }).join('');
   }
 
+  const tip=(t)=>`<span class="pa-tip" data-tip="${t}">i</span>`;
+
   el.innerHTML=`
     <!-- ══════════════════════════════════════
          PROFILO HEADER  (badge + select + quiz CTA)
