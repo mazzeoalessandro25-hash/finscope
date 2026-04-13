@@ -12076,29 +12076,58 @@ function sdInsSetSort(val){
   renderInsiderTable(_sdInsiderData, _sdInsiderFilter, 'sd-insider-content', false, val);
 }
 
+// Suffissi di borsa senza dati insider pubblici via API
+const _INSIDER_NO_DATA_SUFFIX = new Set([
+  'MI','PA','DE','AS','BR','LS','MC','CO','ST','HE','OL','SW','VX', // Europa continentale + Italia
+  'T','V','TO','AX','HK','SS','SZ','KS','NS','BO','SA','JO',        // Asia, Australia, Sudafrica, Brasile
+]);
+
+function _insiderSupported(sym){
+  const sfx = (sym.match(/\.([A-Z0-9]+)$/)||[])[1]||'';
+  return !_INSIDER_NO_DATA_SUFFIX.has(sfx); // senza suffisso = USA = supportato
+}
+
 async function loadInsiderForStock(sym){
-  _sdInsiderData=[];
-  _sdInsiderFilter='all';
-  document.querySelectorAll('#sd-insider-section .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
-  const el=document.getElementById('sd-insider-content');
-  if(!el) return;
-  if(_insiderSymCache[sym]){
-    _sdInsiderData=_insiderSymCache[sym];
-    renderInsiderTable(_sdInsiderData,'all','sd-insider-content',false);
+  const section=document.getElementById('sd-insider-section');
+  if(!section) return;
+
+  // Se il mercato non ha dati insider, nascondi la sezione e basta
+  if(!_insiderSupported(sym)){
+    section.style.display='none';
     return;
   }
+  section.style.display='';
+
+  _sdInsiderData=[];
+  _sdInsiderFilter='all';
+  _sdInsiderSort='date';
+  const sortSel=document.getElementById('sd-ins-sort-select');
+  if(sortSel) sortSel.value='date';
+  document.querySelectorAll('#sd-insider-section .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+
+  const el=document.getElementById('sd-insider-content');
+  if(!el) return;
+
+  // Usa cache se disponibile
+  if(_insiderSymCache[sym]){
+    _sdInsiderData=_insiderSymCache[sym];
+    renderInsiderTable(_sdInsiderData,'all','sd-insider-content',false,_sdInsiderSort);
+    return;
+  }
+
   el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento transazioni insider...</div>';
   try{
     const d=await fetch(`/api/insider?symbol=${encodeURIComponent(sym)}`).then(r=>r.json());
     _sdInsiderData=d.transactions||[];
     _insiderSymCache[sym]=_sdInsiderData;
     if(_sdInsiderData.length===0){
-      el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessuna transazione insider disponibile per questo titolo</div>';
+      // Se arriva vuoto nonostante il mercato sia supportato, nascondi la sezione
+      section.style.display='none';
     } else {
-      renderInsiderTable(_sdInsiderData,'all','sd-insider-content',false);
+      renderInsiderTable(_sdInsiderData,'all','sd-insider-content',false,_sdInsiderSort);
     }
   } catch(e){
-    el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati non disponibili</div>';
+    section.style.display='none';
   }
 }
 </script>
