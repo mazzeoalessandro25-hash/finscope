@@ -7960,64 +7960,347 @@ async function loadPortPerf(range,btn){
 /* ══════════════════════════════════════════
    FEATURE 6: MACRO DASHBOARD
 ══════════════════════════════════════════ */
+
+// Snapshot macroeconomico — aggiornare ogni mese/trimestre
+const MACRO_SNAP={
+  // Regime: expansion | slowdown | contraction | stagflation
+  regime:'slowdown',
+  regimeLbl:'Rallentamento',
+  regimeNote:'Crescita moderata · inflazione sopra target Fed 2%',
+  cb:[
+    {flag:'🇺🇸',name:'Federal Reserve',short:'Fed Funds Rate',rate:'4.25–4.50',
+     lastChg:'Set 2024',next:'7 Mag 2026',bias:'neutrale',biasDir:0},
+    {flag:'🇪🇺',name:'Banca Centrale Europea',short:'Deposit Facility Rate',rate:'2.40',
+     lastChg:'Mar 2026',next:'5 Giu 2026',bias:'accomodante',biasDir:-1},
+    {flag:'🇬🇧',name:'Bank of England',short:'Bank Rate',rate:'4.50',
+     lastChg:'Feb 2026',next:'Mag 2026',bias:'neutrale',biasDir:0},
+    {flag:'🇯🇵',name:'Bank of Japan',short:'Policy Rate',rate:'0.50',
+     lastChg:'Gen 2026',next:'Apr 2026',bias:'hawkish',biasDir:1},
+  ],
+  // dir: 'up'|'down' = direzione vs precedente · better: true = cambiamento favorevole
+  us:[
+    {l:'PIL (Q4 2025)',       v:'+2.4%',   p:'+2.8%',  dir:'down', better:false, tip:'Crescita PIL USA annualizzata'},
+    {l:'CPI YoY (Feb 2026)', v:'+2.8%',   p:'+3.0%',  dir:'down', better:true,  tip:'Inflazione prezzi al consumo'},
+    {l:'Core CPI YoY',       v:'+3.1%',   p:'+3.3%',  dir:'down', better:true,  tip:'CPI escluso energia e alimentari'},
+    {l:'PCE YoY (Gen 2026)', v:'+2.5%',   p:'+2.6%',  dir:'down', better:true,  tip:'Indice spesa personale — preferito dalla Fed'},
+    {l:'Core PCE YoY',       v:'+2.8%',   p:'+2.9%',  dir:'down', better:true,  tip:'Core PCE · target Fed = 2%'},
+    {l:'Disoccupazione',     v:'4.2%',    p:'4.1%',   dir:'up',   better:false, tip:'Tasso di disoccupazione USA'},
+    {l:'NFP (Mar 2026)',     v:'+148K',   p:'+175K',  dir:'down', better:false, tip:'Posti lavoro non agricoli mensili'},
+    {l:'ISM Manifatturiero', v:'49.8',    p:'50.3',   dir:'down', better:false, tip:'<50 = contrazione settore manifatturiero'},
+    {l:'ISM Servizi',        v:'53.4',    p:'53.5',   dir:'down', better:false, tip:'>50 = espansione settore servizi'},
+  ],
+  eu:[
+    {l:'PIL (Q4 2025)',       v:'+0.9%',  p:'+0.8%',  dir:'up',   better:true,  tip:'Crescita PIL Eurozona YoY'},
+    {l:'CPI YoY (Feb 2026)', v:'+2.2%',  p:'+2.5%',  dir:'down', better:true,  tip:'Inflazione al consumo Eurozona'},
+    {l:'Core CPI YoY',       v:'+2.6%',  p:'+2.7%',  dir:'down', better:true,  tip:'CPI ex energia e cibo'},
+    {l:'Disoccupazione',     v:'5.9%',   p:'6.0%',   dir:'down', better:true,  tip:'Tasso disoccupazione Eurozona'},
+    {l:'PMI Manifatturiero', v:'48.6',   p:'47.6',   dir:'up',   better:true,  tip:'Migliora ma <50 = ancora in contrazione'},
+    {l:'PMI Servizi',        v:'51.3',   p:'51.6',   dir:'down', better:false, tip:'>50 = espansione · lieve calo'},
+  ],
+  updatedAt:'Apr 2026'
+};
+
 async function loadMacroDashboard(){
-  // Rates & Central Banks
-  const rateSyms=[
-    {s:'^TNX',l:'US 10Y Treasury',unit:'%'},
-    {s:'^IRX',l:'US 3M T-Bill',unit:'%'},
-    {s:'^TYX',l:'US 30Y Treasury',unit:'%'},
-    {s:'EURUSD=X',l:'EUR/USD',unit:'',dec:4},
-  ];
-  const ratesEl=document.getElementById('macro-rates');
-  if(ratesEl){
-    const rd=await Promise.all(rateSyms.map(x=>api(x.s)));
-    ratesEl.innerHTML=rateSyms.map((x,i)=>{
-      const d=rd[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
-      return`<div class="macro-stat">
-        <div class="macro-stat-lbl">${x.l}</div>
-        <div class="macro-stat-val">${d?fmt(d.price,x.dec||2)+x.unit:'—'}</div>
-        <div class="macro-stat-chg ${up?'up':'down'}">${chgStr(c)}</div>
-      </div>`;
-    }).join('');
+  // Render sezioni hardcoded immediatamente
+  _macroRenderCB();
+  _macroRenderSnapshot();
+
+  // Fetch live in parallelo
+  const SYMS={
+    t3m:'^IRX', t5y:'^FVX', t10y:'^TNX', t30y:'^TYX',
+    dxy:'DX-Y.NYB',
+    eurusd:'EURUSD=X', gbpusd:'GBPUSD=X', usdjpy:'USDJPY=X',
+    usdchf:'USDCHF=X', usdcny:'USDCNY=X', audusd:'AUDUSD=X',
+    hyg:'HYG', lqd:'LQD', tlt:'TLT',
+    copper:'HG=F', oil:'BZ=F', gold:'GC=F'
+  };
+  const keys=Object.keys(SYMS);
+  const results=await Promise.all(keys.map(k=>api(SYMS[k])));
+  const d={};keys.forEach((k,i)=>{d[k]=results[i];});
+
+  _macroRenderPulse(d);
+  _macroRenderYieldCurve(d);
+  _macroRenderCredit(d);
+  _macroRenderForex(d);
+  _macroRenderLeading(d);
+}
+
+function _macroRenderPulse(d){
+  // US 10Y
+  const t10=d.t10y;
+  if(t10){
+    const chg=t10.price-t10.prev;
+    const el=document.getElementById('mps-10y');
+    if(el)el.className='macro-pulse-stat '+(t10.price>4.8?'danger':t10.price>4.0?'warn':'safe');
+    const v=document.getElementById('mps-10y-val');if(v)v.textContent=fmt(t10.price,2)+'%';
+    const c=document.getElementById('mps-10y-chg');
+    if(c){c.className='mps-chg '+(chg>=0?'up':'down');c.textContent=(chg>=0?'+':'')+fmt(chg,3)+' bp oggi';}
   }
-  // Forex
-  const fxSyms=[
-    {s:'EURUSD=X',l:'EUR/USD',dec:4},
-    {s:'GBPUSD=X',l:'GBP/USD',dec:4},
-    {s:'USDJPY=X',l:'USD/JPY',dec:2},
-    {s:'USDCHF=X',l:'USD/CHF',dec:4},
-  ];
-  const fxEl=document.getElementById('macro-forex');
-  if(fxEl){
-    const fd=await Promise.all(fxSyms.map(x=>api(x.s)));
-    fxEl.innerHTML=fxSyms.map((x,i)=>{
-      const d=fd[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
-      return`<div class="macro-stat">
-        <div class="macro-stat-lbl">${x.l}</div>
-        <div class="macro-stat-val">${d?fmt(d.price,x.dec):'—'}</div>
-        <div class="macro-stat-chg ${up?'up':'down'}">${chgStr(c)}</div>
-      </div>`;
-    }).join('');
+  // Spread 10Y-3M
+  const t3=d.t3m;
+  if(t10&&t3){
+    const spread=t10.price-t3.price;
+    const el=document.getElementById('mps-spread');
+    if(el)el.className='macro-pulse-stat '+(spread<-0.5?'danger':spread<0?'warn':'safe');
+    const v=document.getElementById('mps-spread-val');if(v)v.textContent=(spread>=0?'+':'')+fmt(spread,2)+'%';
+    const c=document.getElementById('mps-spread-desc');
+    if(c){c.textContent=spread<0?'⚠ Curva invertita':spread<0.5?'Curva piatta':'Curva normale';c.style.color=spread<0?'var(--r)':spread<0.5?'var(--o)':'var(--g)';}
   }
-  // Commodities
-  const commSyms=[
-    {s:'GC=F',l:'Oro · XAU/USD'},
-    {s:'BZ=F',l:'Petrolio Brent'},
-    {s:'NG=F',l:'Gas Naturale'},
-    {s:'SI=F',l:'Argento · XAG/USD'},
-  ];
-  const cmEl=document.getElementById('macro-comms');
-  if(cmEl){
-    const cd=await Promise.all(commSyms.map(x=>api(x.s)));
-    cmEl.innerHTML=commSyms.map((x,i)=>{
-      const d=cd[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
-      return`<div class="macro-stat" style="cursor:pointer" onclick="openModal('${x.s}','${x.l}')">
-        <div class="macro-stat-lbl">${x.l}</div>
-        <div class="macro-stat-val">${d?'$'+fmt(d.price,2):'—'}</div>
-        <div class="macro-stat-chg ${up?'up':'down'}">${chgStr(c)}</div>
-      </div>`;
-    }).join('');
+  // DXY
+  const dxy=d.dxy;
+  if(dxy){
+    const chg=chgPct(dxy.price,dxy.prev);
+    const el=document.getElementById('mps-dxy');
+    if(el)el.className='macro-pulse-stat '+(dxy.price>105?'danger':dxy.price>102?'warn':'');
+    const v=document.getElementById('mps-dxy-val');if(v)v.textContent=fmt(dxy.price,2);
+    const c=document.getElementById('mps-dxy-chg');
+    if(c){c.className='mps-chg '+(chg>=0?'up':'down');c.textContent=chgStr(chg)+' oggi';}
+    const desc=document.getElementById('mps-dxy-desc');
+    if(desc)desc.textContent=dxy.price>104?'Dollaro molto forte':dxy.price>101?'Dollaro forte':dxy.price>98?'Neutrale':'Dollaro debole';
   }
+  // Fed rate (hardcoded)
+  const fv=document.getElementById('mps-fed-val');if(fv)fv.textContent=MACRO_SNAP.cb[0].rate+'%';
+  const fn=document.getElementById('mps-fed-next');if(fn)fn.textContent='Prossima FOMC: '+MACRO_SNAP.cb[0].next;
+}
+
+function _macroRenderCB(){
+  const el=document.getElementById('macro-cb-content');if(!el)return;
+  const biasCol={'-1':'var(--g)','0':'var(--t2)','1':'var(--r)'};
+  const biasLbl={'-1':'Accomodante','0':'Neutrale','1':'Hawkish'};
+  el.innerHTML=MACRO_SNAP.cb.map(cb=>{
+    const bc=biasCol[String(cb.biasDir)];
+    return`<div class="macro-cb-item">
+      <span class="cb-flag">${cb.flag}</span>
+      <div class="cb-info">
+        <div class="cb-name">${cb.name}</div>
+        <div class="cb-detail">${cb.short} · Prossima: <strong>${cb.next}</strong></div>
+        <div style="margin-top:4px;display:flex;align-items:center;gap:6px">
+          <span style="font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 7px;border-radius:3px;color:${bc};background:${bc}18;border:1px solid ${bc}30">${biasLbl[String(cb.biasDir)]}</span>
+          <span style="font-size:9px;color:var(--t3);font-family:var(--fm)">ult. ${cb.lastChg}</span>
+        </div>
+      </div>
+      <div class="cb-rate">${cb.rate}%</div>
+    </div>`;
+  }).join('');
+}
+
+function _macroRenderYieldCurve(d){
+  const canvas=document.getElementById('macro-yield-canvas');if(!canvas)return;
+  const labels=['3M','5Y','10Y','30Y'];
+  const vals=[d.t3m?.price??null,d.t5y?.price??null,d.t10y?.price??null,d.t30y?.price??null];
+  if(vals.every(v=>v===null))return;
+  if(window._macroYieldChart){window._macroYieldChart.destroy();window._macroYieldChart=null;}
+  const inv=vals[0]!==null&&vals[2]!==null&&vals[2]<vals[0];
+  const col=inv?'#DC2626':'#1A56C4';
+  const bgCol=inv?'rgba(220,38,38,.07)':'rgba(26,86,196,.07)';
+  window._macroYieldChart=new Chart(canvas,{
+    type:'line',
+    data:{labels,datasets:[{
+      data:vals,borderColor:col,backgroundColor:bgCol,borderWidth:2,
+      pointBackgroundColor:col,pointRadius:5,pointHoverRadius:7,
+      tension:.25,fill:true,
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y.toFixed(2)}%`}}},
+      scales:{
+        x:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{family:'IBM Plex Mono',size:10},color:'#8499B0'}},
+        y:{grid:{color:'rgba(0,0,0,.05)'},beginAtZero:false,
+           ticks:{font:{family:'IBM Plex Mono',size:9},color:'#8499B0',callback:v=>v.toFixed(1)+'%'}},
+      }
+    }
+  });
+  // Sub title con valori
+  const sub=document.getElementById('macro-yield-sub');
+  if(sub)sub.textContent=`3M: ${vals[0]!=null?fmt(vals[0],2)+'%':'—'} · 5Y: ${vals[1]!=null?fmt(vals[1],2)+'%':'—'} · 10Y: ${vals[2]!=null?fmt(vals[2],2)+'%':'—'} · 30Y: ${vals[3]!=null?fmt(vals[3],2)+'%':'—'}`;
+  // Spread bar
+  if(d.t10y&&d.t3m){
+    const spread=d.t10y.price-d.t3m.price;
+    const pct=Math.max(2,Math.min(98,(spread+3)/6*100));
+    const needle=document.getElementById('macro-spread-needle');if(needle)needle.style.left=pct+'%';
+    const badge=document.getElementById('macro-spread-badge');
+    if(badge){
+      badge.textContent=(spread>=0?'+':'')+fmt(spread,2)+'%';
+      const s=spread<-0.5?'rgba(220,38,38,':spread<0?'rgba(217,119,6,':spread<1?'rgba(5,150,105,':'rgba(26,86,196,';
+      const sc=spread<-0.5?'#B91C1C':spread<0?'#B45309':spread<1?'#065F46':'#1A56C4';
+      badge.style.cssText=`font-family:var(--fm);font-size:11px;font-weight:700;padding:2px 10px;border-radius:100px;color:${sc};background:${s}.12);border:1px solid ${s}.25)`;
+    }
+    const interp=document.getElementById('macro-spread-interp');
+    if(interp){
+      if(spread<-1)interp.innerHTML='<strong style="color:var(--r)">⚠ Inversione profonda.</strong> La curva è marcatamente invertita — storicamente precede una recessione con 12–18 mesi di anticipo.';
+      else if(spread<0)interp.innerHTML='<strong style="color:var(--o)">⚠ Inversione lieve.</strong> I tassi a breve superano i tassi a lungo: mercato sconta taglio dei tassi o rallentamento economico.';
+      else if(spread<0.5)interp.innerHTML='<strong style="color:var(--o)">Curva piatta.</strong> Spread contenuto: aspettative di tassi stabili con rischi al ribasso per la crescita.';
+      else interp.innerHTML='<strong style="color:var(--g)">Curva normale.</strong> I tassi a lungo superano i brevi: condizioni ordinarie con aspettative di crescita positive.';
+    }
+  }
+}
+
+function _macroRenderCredit(d){
+  const el=document.getElementById('macro-credit-content');if(!el)return;
+  const items=[
+    {sym:'HYG',label:'iShares High Yield Bond',desc:'Obbligazioni junk — risk appetite',q:d.hyg},
+    {sym:'LQD',label:'iShares Invest. Grade Bond',desc:'Obbligazioni IG — qualità creditizia',q:d.lqd},
+    {sym:'TLT',label:'iShares 20Y Treasury',desc:'Treasury a lungo termine — duration',q:d.tlt},
+  ];
+  const hygChg=d.hyg?chgPct(d.hyg.price,d.hyg.prev):null;
+  const lqdChg=d.lqd?chgPct(d.lqd.price,d.lqd.prev):null;
+  let signal='',sigCol='var(--t2)';
+  if(hygChg!==null&&lqdChg!==null){
+    const diff=hygChg-lqdChg;
+    if(hygChg>0&&diff>0.1){signal='✅ Risk-on: High Yield sovraperforma IG';sigCol='var(--g)';}
+    else if(hygChg<0&&diff<-0.1){signal='⚠ Stress creditizio: HY sottoperforma IG';sigCol='var(--r)';}
+    else if(hygChg>=0){signal='⬜ Condizioni neutrali · mercato stabile';sigCol='var(--t2)';}
+    else{signal='🟡 Avversione al rischio generalizzata';sigCol='var(--o)';}
+  }
+  el.innerHTML=items.map(it=>{
+    const c=it.q?chgPct(it.q.price,it.q.prev):null;const up=c==null||c>=0;
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;margin-bottom:3px;background:var(--s2)">
+      <div style="min-width:0">
+        <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${it.sym}</div>
+        <div style="font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.desc}</div>
+      </div>
+      <div style="text-align:right;flex-shrink:0;margin-left:10px">
+        <div style="font-family:var(--fm);font-size:13px;font-weight:600;color:var(--t)">${it.q?'$'+fmt(it.q.price,2):'—'}</div>
+        <div style="font-family:var(--fm);font-size:10px;font-weight:600;color:${up?'var(--g)':'var(--r)'}">${c!=null?chgStr(c):'—'}</div>
+      </div>
+    </div>`;
+  }).join('')
+  +(signal?`<div style="margin-top:10px;padding:8px 12px;border-radius:8px;background:var(--s2);border:1px solid var(--bd)">
+    <div style="font-size:9px;font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:3px">Segnale credito</div>
+    <div style="font-size:11px;font-weight:600;color:${sigCol}">${signal}</div>
+  </div>`:'')
+  +`<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bd)">
+    <div style="font-size:9px;font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:8px">Come interpretare</div>
+    <div style="display:flex;flex-direction:column;gap:5px">
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--g)">HYG ↑ &gt; LQD ↑</span> → risk-on, condizioni creditizie espansive</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--r)">HYG ↓ &gt; LQD ↓</span> → stress creditizio, spread in allargamento</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--b)">TLT ↑</span> → tassi lunghi in calo (flight to safety o pivot Fed)</div>
+    </div>
+  </div>`;
+}
+
+function _macroRenderSnapshot(){
+  // Regime badge
+  const reg=document.getElementById('macro-regime-badge');
+  if(reg){
+    const rc={expansion:'#065F46',slowdown:'#B45309',contraction:'#B91C1C',stagflation:'#7C3AED'};
+    const rb={expansion:'rgba(5,150,105,.12)',slowdown:'rgba(217,119,6,.12)',contraction:'rgba(220,38,38,.12)',stagflation:'rgba(124,58,237,.12)'};
+    const rbd={expansion:'rgba(5,150,105,.25)',slowdown:'rgba(217,119,6,.25)',contraction:'rgba(220,38,38,.25)',stagflation:'rgba(124,58,237,.25)'};
+    const rico={expansion:'🟢',slowdown:'🟡',contraction:'🔴',stagflation:'🟠'};
+    const rlbl={expansion:'Espansione',slowdown:'Rallentamento',contraction:'Contrazione',stagflation:'Stagflazione'};
+    const r=MACRO_SNAP.regime;
+    reg.innerHTML=`<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--fm);color:${rc[r]};background:${rb[r]};border:1px solid ${rbd[r]}">${rico[r]} ${rlbl[r]}</div>`;
+  }
+  const usUpd=document.getElementById('macro-us-upd');
+  if(usUpd)usUpd.textContent='Aggiornato '+MACRO_SNAP.updatedAt+' · '+MACRO_SNAP.regimeNote;
+  const euUpd=document.getElementById('macro-eu-upd');
+  if(euUpd)euUpd.textContent='Aggiornato '+MACRO_SNAP.updatedAt+' · Fonte: Eurostat · BCE';
+
+  function renderList(items){
+    return`<div style="display:flex;flex-direction:column;gap:1px">`+items.map(it=>{
+      const arrow=it.dir==='up'?'▲':'▼';
+      const col=it.better?'var(--g)':'var(--r)';
+      return`<div class="macro-mdi" title="${it.tip}">
+        <span class="macro-mdi-lbl">${it.l}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">prec. ${it.p}</span>
+          <span style="font-family:var(--fm);font-size:11px;font-weight:700;color:${col}">${arrow} ${it.v}</span>
+        </div>
+      </div>`;
+    }).join('')+`</div>
+    <div style="margin-top:10px;padding:8px 10px;background:var(--s2);border-radius:7px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.4px">
+      ▲▼ Direzione vs dato precedente · 🟢 Cambiamento favorevole · 🔴 Cambiamento sfavorevole
+    </div>`;
+  }
+  const usEl=document.getElementById('macro-us-content');if(usEl)usEl.innerHTML=renderList(MACRO_SNAP.us);
+  const euEl=document.getElementById('macro-eu-content');if(euEl)euEl.innerHTML=renderList(MACRO_SNAP.eu);
+}
+
+function _macroRenderForex(d){
+  const el=document.getElementById('macro-forex-content');if(!el)return;
+  const dxy=d.dxy;
+  const dxyChg=dxy?chgPct(dxy.price,dxy.prev):null;
+  const dxyUp=dxyChg==null||dxyChg>=0;
+  const dxyNote=dxy?(dxy.price>104?'Dollaro molto forte':dxy.price>101?'Dollaro forte':dxy.price>98?'Neutrale':'Dollaro debole'):'—';
+  const pairs=[
+    {lbl:'EUR/USD',d:d.eurusd,dec:4,note:'Euro vs Dollaro'},
+    {lbl:'GBP/USD',d:d.gbpusd,dec:4,note:'Sterlina vs Dollaro'},
+    {lbl:'USD/JPY',d:d.usdjpy,dec:2,note:'Dollaro vs Yen · risk barometer'},
+    {lbl:'USD/CHF',d:d.usdchf,dec:4,note:'Dollaro vs Franco Svizzero · safe haven'},
+    {lbl:'AUD/USD',d:d.audusd,dec:4,note:'AUD vs Dollaro · commodity FX'},
+    {lbl:'USD/CNY',d:d.usdcny,dec:4,note:'Dollaro vs Yuan Cinese'},
+  ];
+  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--b3);border-radius:10px;margin-bottom:14px;border:1px solid rgba(26,86,196,.15)">
+    <div>
+      <div style="font-size:9px;color:var(--b);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">DXY — Dollar Index</div>
+      <div style="font-family:var(--fm);font-size:22px;font-weight:700;color:var(--t)">${dxy?fmt(dxy.price,2):'—'}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px">${dxyNote}</div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:var(--fm);font-size:13px;font-weight:600;color:${dxyUp?'var(--g)':'var(--r)'}">${dxyChg!=null?chgStr(dxyChg):'—'}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px">Oggi</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:2px">
+  ${pairs.map(p=>{
+    const q=p.d;const c=q?chgPct(q.price,q.prev):null;const up=c==null||c>=0;
+    return`<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:7px;cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--b3)'" onmouseout="this.style.background='transparent'">
+      <div>
+        <span style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${p.lbl}</span>
+        <span style="font-size:10px;color:var(--t3);margin-left:8px">${p.note}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <span style="font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t)">${q?fmt(q.price,p.dec):'—'}</span>
+        <span style="font-family:var(--fm);font-size:10px;font-weight:600;min-width:52px;text-align:right;padding:1px 7px;border-radius:3px;background:${up?'var(--g2)':'var(--r2)'};color:${up?'#047857':'#B91C1C'}">${c!=null?chgStr(c):'—'}</span>
+      </div>
+    </div>`;
+  }).join('')}
+  </div>`;
+}
+
+function _macroRenderLeading(d){
+  const el=document.getElementById('macro-leading-content');if(!el)return;
+  const copper=d.copper,oil=d.oil,gold=d.gold;
+  const gcRatio=gold&&copper?(gold.price/copper.price):null;
+  const gcInterp=gcRatio==null?'—':gcRatio>600?'Elevato — avversione al rischio prevalente':gcRatio>450?'Neutro — equilibrio crescita/paura':'Basso — ottimismo sulla crescita globale';
+  const gcCol=gcRatio==null?'var(--t)':gcRatio>600?'var(--r)':gcRatio>450?'var(--o)':'var(--g)';
+  const cu=copper?chgPct(copper.price,copper.prev):null;
+  const oi=oil?chgPct(oil.price,oil.prev):null;
+  el.innerHTML=`
+  <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">🥇 Rame — Dr. Copper</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div>
+        <div style="font-family:var(--fm);font-size:20px;font-weight:700;color:var(--t)">${copper?'$'+fmt(copper.price,2):'—'}<span style="font-size:11px;color:var(--t3);margin-left:4px">/lb</span></div>
+        <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${cu!=null&&cu>=0?'var(--g)':'var(--r)'};margin-top:2px">${cu!=null?chgStr(cu)+' oggi':'—'}</div>
+      </div>
+      <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">Il rame è il "termometro" dell'economia globale: la domanda anticipa cicli di espansione e recessione.</div>
+    </div>
+    ${copper?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">
+      ${copper.price>4.5?'⬆ Rame forte — segnale di crescita industriale':copper.price>4.0?'Livello neutro — crescita moderata':'⬇ Rame debole — possibile rallentamento domanda'}
+    </div>`:''}
+  </div>
+  <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
+    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">🛢 Petrolio Brent — Input inflazione</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-family:var(--fm);font-size:20px;font-weight:700;color:var(--t)">${oil?'$'+fmt(oil.price,2):'—'}<span style="font-size:11px;color:var(--t3);margin-left:4px">/bbl</span></div>
+        <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${oi!=null&&oi>=0?'var(--g)':'var(--r)'};margin-top:2px">${oi!=null?chgStr(oi)+' oggi':'—'}</div>
+      </div>
+      <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">Influenza l'inflazione headline, i costi di trasporto e la politica monetaria delle banche centrali.</div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">⚖️ Ratio Gold/Copper — Paura vs Crescita</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div style="font-family:var(--fm);font-size:22px;font-weight:700;color:${gcCol}">${gcRatio!=null?fmt(gcRatio,0):'—'}</div>
+      <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">${gcInterp}</div>
+    </div>
+    <div style="background:var(--s2);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:5px">
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--r)">Ratio alto (&gt;600)</span> → oro sovraperforma il rame = avversione al rischio</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--g)">Ratio basso (&lt;400)</span> → rame sovraperforma l'oro = fiducia nella crescita</div>
+    </div>
+  </div>`;
 }
 
 /* ══════════════════════════════════════════
