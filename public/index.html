@@ -892,6 +892,32 @@ html.dark .auth-box{background:#1e293b}
   #page-macro [style*="grid-template-columns:1.4fr"]{grid-template-columns:1fr!important}
   #page-macro [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
 }
+/* ── Macro Education ── */
+.cycle-q{border:2px solid var(--bd);border-radius:12px;padding:14px;transition:all .2s;position:relative}
+.cycle-q.cq-active{box-shadow:0 0 0 3px currentColor;background:var(--card)}
+.cycle-q-ico{font-size:20px;margin-bottom:6px}
+.cycle-q-name{font-size:12px;font-weight:700;color:var(--t);margin-bottom:5px;font-family:var(--fm)}
+.cycle-q-secs{font-size:10px;color:var(--t2);line-height:1.6}
+.cycle-q-curr{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;font-family:var(--fm);padding:2px 7px;border-radius:100px;letter-spacing:.4px}
+.rot-cell{font-family:var(--fm);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;text-align:center;white-space:nowrap}
+.rot-ow2{background:rgba(5,150,105,.14);color:#065F46}
+.rot-ow1{background:rgba(5,150,105,.08);color:#047857}
+.rot-neu{background:var(--s2);color:var(--t3)}
+.rot-uw1{background:rgba(220,38,38,.08);color:#B91C1C}
+.rot-uw2{background:rgba(220,38,38,.14);color:#991B1B}
+.sec-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;transition:all .15s}
+.sec-card:hover{border-color:rgba(26,86,196,.35);box-shadow:0 4px 14px rgba(26,86,196,.08);transform:translateY(-1px)}
+.sec-card-hd{padding:14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px}
+.sec-card-ico{font-size:22px;line-height:1;flex-shrink:0;margin-top:1px}
+.sec-card-info{flex:1;min-width:0}
+.sec-card-name{font-size:12px;font-weight:700;color:var(--t)}
+.sec-card-etf{font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:1px}
+.sec-card-body{display:none;padding:0 14px 14px;border-top:1px solid var(--bd)}
+.sec-card.open .sec-card-body{display:block}
+.sec-tip{display:flex;gap:7px;padding:6px 0;border-bottom:1px solid var(--bd);font-size:10px;color:var(--t2);line-height:1.5}
+.sec-tip:last-child{border-bottom:none}
+.phase-guide-item{padding:12px 14px;border-radius:10px;margin-bottom:8px}
+@media(max-width:900px){.sec-sectors-grid{grid-template-columns:repeat(2,1fr)!important}}
 
 /* ═══ FEATURE 8: ECONOMIC CALENDAR ═══ */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
