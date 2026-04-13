@@ -7244,7 +7244,7 @@ function renderPortAnalysis(portItems, quotes){
             </div>`;
           }).join('');
           return`<div style="flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:9px 10px;display:flex;flex-direction:column;justify-content:center">
-            <div style="font-size:8px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${title}</div>
+            <div style="font-size:8px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;display:flex;align-items:center">${title}${tip(tipText)}</div>
             <div style="display:flex;align-items:center;gap:10px">
               <div style="flex-shrink:0">${svgDonut(entries,pal,58,10)}</div>
               <div style="flex:1;min-width:0">${leg||'<span style="font-size:9px;color:var(--t3);font-family:var(--fm)">—</span>'}</div>
