@@ -11888,6 +11888,8 @@ function pqNext(){
 // INSIDER TRADING
 // ══════════════════════════════════════════════════════════════════════════════
 let _insiderFeedCache = null;   // cache feed globale
+let _insiderSort     = 'date';  // 'date' | 'value_desc' | 'value_asc' | 'shares_desc'
+let _sdInsiderSort   = 'date';
 let _insiderSymCache  = {};     // cache per simbolo specifico
 let _insiderFilter    = 'all';
 let _sdInsiderFilter  = 'all';
