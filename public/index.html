@@ -7277,7 +7277,7 @@ function renderPortAnalysis(portItems, quotes){
          SEGNALI PER TITOLO
     ══════════════════════════════════════ -->
     <div style="margin-bottom:14px">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px">Segnali per titolo</div>
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center">Segnali per titolo${tip('Valutazione di ogni titolo rispetto al profilo selezionato. Considera 4 fattori: FinEdge Score (qualità fondamentale), Upside verso target analisti, P&L (rendimento dal prezzo di carico) e Beta (rischio). COMPRA = tutti positivi, ATTENZIONE = 2+ negativi.')}</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:6px">
         ${(()=>{
           const prof2=INVESTOR_PROFILES[selectedProfile];
