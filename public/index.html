@@ -8068,6 +8068,7 @@ async function loadMacroDashboard(){
   const d={};keys.forEach((k,i)=>{d[k]=results[i];});
 
   _macroRenderPulse(d);
+  _macroRenderEdu();
   _macroRenderYieldCurve(d);
   _macroRenderCredit(d);
   _macroRenderForex(d);
