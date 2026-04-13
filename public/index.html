@@ -836,6 +836,12 @@ html.dark .auth-box{background:#1e293b}
 .port-score-ring{flex-shrink:0}
 .port-rec{padding:8px 12px;border-radius:6px;border-left:3px solid;background:var(--s2);margin-bottom:7px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.5}
 .port-rec.ok{border-color:#059669}.port-rec.warn{border-color:#CA8A04}.port-rec.bad{border-color:#DC2626}
+/* ── Investor Profile Quiz Modal ── */
+.pq-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(3px)}
+.pq-box{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:24px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(0,0,0,.35)}
+.pq-opt{width:100%;text-align:left;padding:11px 14px;margin-bottom:8px;background:var(--s2);border:1.5px solid var(--bd);border-radius:9px;color:var(--t2);font-family:var(--fm);font-size:12px;cursor:pointer;transition:.15s;line-height:1.4;display:block}
+.pq-opt:hover{border-color:var(--b);color:var(--t)}
+.pq-opt.pq-sel{border-color:var(--b);color:var(--t);background:rgba(26,86,196,.1);font-weight:600}
 .port-target-summary{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;padding:16px;background:var(--s2);border-radius:10px;border:1px solid var(--bd);margin-bottom:14px}
 .port-target-row{display:grid;grid-template-columns:70px 1fr auto auto;gap:8px 12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--bd)}
 .port-target-row:last-child{border-bottom:none}
