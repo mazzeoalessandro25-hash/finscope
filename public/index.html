@@ -8354,6 +8354,344 @@ function _macroRenderLeading(d){
 }
 
 /* ══════════════════════════════════════════
+   MACRO EDU — Dati settoriali e ciclo
+══════════════════════════════════════════ */
+
+// cycle: { expansion, peak, contraction, recovery } → -2..2 (OW/UW)
+const SECTOR_DATA=[
+  {id:'tech',name:'Tecnologia',ico:'💻',etf:'XLK',
+   ex:'AAPL · MSFT · NVDA · GOOGL · META',
+   type:'Ciclico',typeCol:'#1A56C4',beta:'1.1–1.5',
+   rSens:'Alta',rSensNote:'Duration lunga: i tassi reali in rialzo comprimono i multipli P/E forward delle growth stock',
+   desc:'Software, hardware, semiconduttori, cloud computing e piattaforme digitali.',
+   drivers:['Tassi reali (fondamentale: tassi alti = multipli compressi)','Crescita ricavi e free cash flow','Innovazione: AI, cloud, semiconduttori'],
+   metrics:['P/E forward','Revenue growth YoY','FCF yield','Gross margin','R&D/Revenue'],
+   cycle:{expansion:2,peak:0,contraction:-2,recovery:2},
+   best:'Espansione con tassi stabili/in calo · bassa inflazione',
+   worst:'Fed hawkish con tassi reali in rialzo · recessione degli utili',
+   tips:['Nei cicli di taglio dei tassi, i multipli tech si espandono significativamente prima degli utili',
+         'La concentrazione nei top 5-7 titoli è estrema: il settore non è "diversificato"',
+         'Distinzione fondamentale: Tech ciclico (semiconduttori) vs Tech difensivo (software enterprise con contratti pluriennali)']},
+  {id:'health',name:'Salute',ico:'🏥',etf:'XLV',
+   ex:'JNJ · LLY · UNH · ABBV · MRK · PFE',
+   type:'Difensivo',typeCol:'#059669',beta:'0.6–0.9',
+   rSens:'Bassa',rSensNote:'Domanda anelastica: le persone comprano farmaci indipendentemente dal ciclo economico',
+   desc:'Farmaceutica, biotecnologia, dispositivi medici, assicurazioni sanitarie, CRO.',
+   drivers:['Pipeline farmaceutica e approvazioni FDA/EMA','Invecchiamento demografico globale','Pricing power sui farmaci brevettati','Politiche di drug pricing (rischio regolatorio)'],
+   metrics:['P/E vs benchmark','Pipeline R&D value','Dividend yield','Patent cliff exposure','EPS growth'],
+   cycle:{expansion:0,peak:1,contraction:2,recovery:0},
+   best:'Recessione, alta volatilità, incertezza: la domanda è stabile e indipendente dal ciclo',
+   worst:'Bull market aggressivo e risk-on: gli investitori preferiscono asset a maggiore crescita',
+   tips:['Eccellente porto sicuro nelle fasi di incertezza, ma tende a sottoperformare nei bull market',
+         'Attenzione al rischio binario dei biotech: un trial clinico fallito può dimezzare le quotazioni',
+         'Le Large Cap Pharma (JNJ, LLY) sono molto più stabili dei biotech small/mid cap speculativi']},
+  {id:'fin',name:'Finanziari',ico:'🏦',etf:'XLF',
+   ex:'JPM · GS · BAC · V · MA · BRK-B',
+   type:'Ciclico',typeCol:'#1A56C4',beta:'1.0–1.4',
+   rSens:'Alta (positiva)',rSensNote:'Le banche beneficiano di tassi alti (NIM più elevato) ma soffrono in recessione per l\'aumento degli NPL',
+   desc:'Banche commerciali, investment banking, assicurazioni, asset management, fintech, payment networks.',
+   drivers:['Pendenza della curva dei rendimenti (10Y–2Y)','Net Interest Margin (NIM)','Qualità del credito e NPL','Volumi M&A/IPO','Regolamentazione (Basilea, stress test)'],
+   metrics:['P/Book ratio','Return on Equity (ROE)','Net Interest Margin','CET1 ratio','Dividend yield'],
+   cycle:{expansion:2,peak:2,contraction:-1,recovery:2},
+   best:'Curva dei rendimenti positiva e ripida · economia in espansione · tassi medio-alti',
+   worst:'Curva invertita · recessione · crisi del credito · tassi zero o negativi',
+   tips:['La pendenza della curva (10Y–2Y) è il principale driver della redditività bancaria: monitora sempre lo spread',
+         'Distingui: banche commerciali (sensitive ai tassi) vs payment networks Visa/MA (volumi di transazione, molto meno sensitive)',
+         'In un ciclo di tagli Fed, i mercati dei capitali (GS, MS) beneficiano prima delle banche retail']},
+  {id:'cons',name:'Beni Discrezionali',ico:'🛍',etf:'XLY',
+   ex:'AMZN · TSLA · MCD · BKNG · HD · NKE',
+   type:'Ciclico',typeCol:'#1A56C4',beta:'1.1–1.6',
+   rSens:'Media',rSensNote:'I consumi facoltativi dipendono dalla fiducia dei consumatori e dal reddito disponibile, entrambi influenzati dai tassi sui mutui e sul credito al consumo',
+   desc:'Retail, automotive, viaggi, ristorazione, e-commerce, lusso, leisure.',
+   drivers:['Consumer Confidence Index','Reddito disponibile e tasso di risparmio','Mercato del lavoro (occupazione e salari)','Disponibilità e costo del credito al consumo'],
+   metrics:['Same-store sales growth','Revenue per store/visit','Debt/EBITDA','Personal savings rate','Consumer confidence'],
+   cycle:{expansion:2,peak:1,contraction:-2,recovery:1},
+   best:'Forte occupazione · salari reali in crescita · consumatori fiduciosi con risparmio accumulato',
+   worst:'Recessione · disoccupazione in rialzo · inflazione alta che erode il potere d\'acquisto reale',
+   tips:['AMZN e TSLA pesano molto: XLY non riflette "i consumi" in modo puro — valuta anche RCD (Vanguard)',
+         'Il settore del lusso (LVMH, Hermès, Ferrari) è meno ciclico grazie alla clientela HNWI',
+         'Monitora il Consumer Confidence Index e il tasso di risparmio come leading indicator del settore']},
+  {id:'stap',name:'Beni di Prima Necessità',ico:'🛒',etf:'XLP',
+   ex:'PG · KO · WMT · PEP · COST · MO',
+   type:'Difensivo',typeCol:'#059669',beta:'0.5–0.8',
+   rSens:'Media',rSensNote:'Beta basso e dividendi stabili: in un contesto di tassi alti i dividendi diventano meno attraenti vs bond (bond proxy trap)',
+   desc:'Alimentari, bevande, tabacco, prodotti per la casa, supermercati e discount.',
+   drivers:['Pricing power (trasferire inflazione al consumatore)','Brand fidelizzazione e barriere d\'ingresso','Crescita nei mercati emergenti','Private label vs branded (margin pressure)'],
+   metrics:['Organic sales growth','Gross margin','Dividend yield','FCF yield','EV/EBITDA'],
+   cycle:{expansion:-1,peak:0,contraction:2,recovery:-1},
+   best:'Alta volatilità e recessione: domanda anelastica garantisce flussi di cassa stabili e prevedibili',
+   worst:'Bull market aggressivo e risk-on: gli investitori preferiscono crescita e rendimenti più elevati',
+   tips:['Funziona da ammortizzatore nelle fasi ribassiste — la correlazione negativa con il mercato è preziosa',
+         'Attenzione alla "bond proxy trap": quando i tassi salgono, XLP può correggere come i bond',
+         'Le aziende FMCG con pricing power (KO, PG, COST) si proteggono dall\'inflazione meglio delle commodity']},
+  {id:'energy',name:'Energia',ico:'⚡',etf:'XLE',
+   ex:'XOM · CVX · SLB · ENI · BP · Shell',
+   type:'Commodity-linked',typeCol:'#D97706',beta:'0.9–1.5',
+   rSens:'Bassa',rSensNote:'Il driver principale è il prezzo del petrolio/gas, non i tassi. Alta correlazione con le commodity e con i fattori geopolitici',
+   desc:'Upstream (E&P), downstream (raffinerie), midstream (pipeline), oilfield services, energy integrata.',
+   drivers:['Prezzo Brent/WTI e natural gas','Geopolitica (OPEC+, tensioni M.O. e Russia)','Domanda globale (Cina in primis)','Break-even price di produzione','Transizione energetica'],
+   metrics:['EV/EBITDA','FCF yield','Break-even price del petrolio','Reserve replacement ratio','Dividend + buyback yield totale'],
+   cycle:{expansion:0,peak:2,contraction:-1,recovery:0},
+   best:'Petrolio in rialzo per domanda forte o supply restriction (OPEC+) · inflazione alta da commodity',
+   worst:'Recessione globale con calo domanda · overproduction · dollaro molto forte · transizione verde accelerata',
+   tips:['Il settore è fortemente dipendente da una commodity: utile come hedge sull\'inflazione in portafoglio',
+         'Le major integrate (XOM, CVX, ENI) sono più stabili degli E&P puri: dividendi e buyback più affidabili',
+         'La transizione energetica crea un dual narrative: valore oggi ma rischio di stranded assets a lungo termine']},
+  {id:'mat',name:'Materiali',ico:'⛏',etf:'XLB',
+   ex:'LIN · APD · NEM · FCX · DOW · NUE',
+   type:'Ciclico',typeCol:'#1A56C4',beta:'1.1–1.4',
+   rSens:'Media',rSensNote:'Fortemente legato al ciclo industriale globale e ai prezzi delle commodity. Un dollaro forte penalizza i prezzi delle materie prime denominate in USD',
+   desc:'Chimico, minerario, siderurgico, fertilizzanti, gas industriali, forestale, packaging.',
+   drivers:['Domanda industriale globale (Cina, India)','Prezzi commodity (rame, oro, alluminio, litio)','Capex infrastrutturale (Green Deal, IRA USA)','Valore del dollaro USA'],
+   metrics:['EV/EBITDA','Commodity price sensitivity','ROIC','Net Debt/EBITDA','FCF yield'],
+   cycle:{expansion:1,peak:2,contraction:-2,recovery:1},
+   best:'Espansione globale sincronizzata · inflazione alta · programmi infrastrutturali governativi · commodity in rialzo',
+   worst:'Recessione · rallentamento Cina · dollaro forte · oversupply di commodity',
+   tips:['Il prezzo del rame (HG=F) è il barometro di questo settore: monitora sempre Dr. Copper prima di investire',
+         'Le società di gas industriali (LIN, APD) sono più difensive rispetto alle commodity pure (FCX, NEM)',
+         'Il settore beneficia enormemente dei cicli infrastrutturali: Green Deal EU e Inflation Reduction Act USA']},
+  {id:'ind',name:'Industriali',ico:'🏭',etf:'XLI',
+   ex:'GE · HON · CAT · RTX · UPS · DE',
+   type:'Ciclico',typeCol:'#1A56C4',beta:'1.0–1.3',
+   rSens:'Media',rSensNote:'Sensibile agli ordini manifatturieri (ISM) e al capex aziendale, entrambi influenzati dal costo del denaro e dalla fiducia dei CEO',
+   desc:'Aerospazio, difesa, macchinari industriali, trasporti, ingegneria civile, servizi ambientali.',
+   drivers:['ISM Manufacturing PMI','Ordini di beni durevoli (Durable Goods Orders)','Spesa pubblica per la difesa','Capex aziendale e reshoring','Backlog ordini e book-to-bill ratio'],
+   metrics:['Order backlog','Book-to-bill ratio','EBIT margin','FCF conversion','EV/EBIT'],
+   cycle:{expansion:2,peak:1,contraction:-2,recovery:2},
+   best:'PMI manifatturiero > 50 in espansione · capex robusto · reshoring in corso · spesa infrastrutturale',
+   worst:'PMI < 50 in contrazione · tagli capex · supply chain disruption · rallentamento commercio globale',
+   tips:['L\'ISM Manufacturing PMI è il leading indicator più affidabile per timing di ingresso/uscita dal settore',
+         'Il reshoring/near-shoring è un tema secolare che prolunga strutturalmente il ciclo per i produttori USA',
+         'Aerospazio & Difesa (RTX, NOC) è molto meno ciclico: la spesa militare non dipende dal ciclo economico']},
+  {id:'re',name:'Immobiliare',ico:'🏢',etf:'XLRE',
+   ex:'PLD · AMT · EQIX · SPG · O · WPC',
+   type:'Sensibile ai tassi',typeCol:'#7C3AED',beta:'0.7–1.1',
+   rSens:'Molto Alta',rSensNote:'I REIT usano leva finanziaria significativa: tassi alti aumentano i costi di finanziamento e comprimono i cap rate (valutazioni degli immobili)',
+   desc:'REIT divisi per: logistica, data center, tower telefoniche, retail, uffici, residenziale, healthcare.',
+   drivers:['Tassi di interesse e spread cap rate/debt cost','Occupancy rate e rent growth','Domanda strutturale di data center e logistica','Net Asset Value (NAV) vs prezzo di mercato'],
+   metrics:['FFO (Funds From Operations)','AFFO (Adjusted FFO)','Cap rate','Dividend yield vs 10Y Treasury','NAV discount/premium'],
+   cycle:{expansion:0,peak:-2,contraction:1,recovery:2},
+   best:'Fed pivot · tassi in calo · spread cap rate/debt favorevole · economia stabile',
+   worst:'Fed hawkish · tassi in rialzo prolungato: si comportano come bond a duration lunga in negativo',
+   tips:['I REIT obbligano per legge a distribuire ≥90% degli utili: ottimi per income investing',
+         'Non tutti i REIT sono uguali: data center (EQIX, DLR) e logistica (PLD) hanno driver secolari fortissimi — AI e e-commerce',
+         'Monitora sempre lo spread tra il dividend yield del REIT e il rendimento del Treasury 10Y: se troppo compresso, valutazioni care']},
+  {id:'util',name:'Utilities',ico:'💡',etf:'XLU',
+   ex:'NEE · DUK · SO · AEP · ED · EXC',
+   type:'Difensivo / Bond Proxy',typeCol:'#059669',beta:'0.4–0.7',
+   rSens:'Molto Alta',rSensNote:'Le utility si comportano come obbligazioni a lungo termine: tassi alti le penalizzano. Il dividend yield è benchmarkato vs il Treasury 10Y',
+   desc:'Elettricità, gas naturale, acqua e rifiuti — servizi regolamentati con flussi di cassa prevedibili e stabili.',
+   drivers:['Livello dei tassi di interesse','Regolamentazione tariffaria (allowed ROE)','Transizione energetica e capex rinnovabili','Domanda di elettricità da AI e data center','Rate base growth'],
+   metrics:['EV/EBITDA regolatorio','Dividend yield vs 10Y Treasury','Rate base growth','FFO/Debt','Payout ratio'],
+   cycle:{expansion:-2,peak:-1,contraction:2,recovery:-1},
+   best:'Recessione o alta volatilità con tassi in calo — porto sicuro con dividendi stabili e crescita regolata',
+   worst:'Tassi in forte rialzo — gli investitori preferiscono i bond risk-free ai dividendi delle utility',
+   tips:['Nuovo driver secolare: l\'esplosione della domanda di elettricità per i data center AI favorisce le utility negli USA',
+         'NEE (NextEra) è la più "growth" del settore (50%+ rinnovabili) — valorizzata più come tech green che utility tradizionale',
+         'La regolamentazione è un vantaggio (monopolio naturale protetto) ma pone un tetto al rendimento del capitale (ROE capped)']},
+  {id:'comm',name:'Comunicazioni',ico:'📡',etf:'XLC',
+   ex:'GOOGL · META · NFLX · DIS · CMCSA · T',
+   type:'Ibrido Growth + Difensivo',typeCol:'#6366F1',beta:'0.9–1.3',
+   rSens:'Media-Alta',rSensNote:'Il settore è dominato da GOOGL e META (~40%): si comporta come il settore tech per la parte growth, con alta sensibilità ai tassi reali',
+   desc:'Telecomunicazioni, media, intrattenimento, pubblicità digitale, social media, streaming, gaming.',
+   drivers:['Crescita della pubblicità digitale (economic cycle-linked)','Subscriber growth e ARPU (streaming)','AI integration nei prodotti (GOOGL, META)','Pricing power telecom','Rischio regolatorio antitrust'],
+   metrics:['ARPU (revenue per user)','DAU/MAU ratio','Churn rate','EBITDA margin','FCF yield'],
+   cycle:{expansion:1,peak:0,contraction:-1,recovery:1},
+   best:'Crescita economica · spesa pubblicitaria in espansione · sentiment risk-on · AI adoption',
+   worst:'Recessione degli utili pubblicitari · rischio antitrust · tassi reali alti · cord-cutting accelerato',
+   tips:['XLC è concentrato ~40% in GOOGL+META: chi compra l\'ETF scommette essenzialmente sulla digital advertising',
+         'Le telco tradizionali (T, VZ, CMCSA) sono più difensive: alto debito ma flussi stabili e dividendi attraenti',
+         'Il rischio antitrust su Big Tech (GOOGL, META) è il principale tail risk strutturale del settore']}
+];
+
+const _PHASE_MAP={
+  expansion:{idx:0,label:'Espansione',ico:'🟢',col:'#059669',bg:'rgba(5,150,105,.09)',
+    desc:'Alta crescita, inflazione moderata. Tassi stabili o in moderato rialzo.',
+    action:'Sovrappesa settori ciclici e growth. Riduci difensivi e bond proxy.',
+    sectors:'Tech ↑↑ · Industriali ↑↑ · Finanziari ↑↑ · Beni Discrez. ↑↑'},
+  slowdown:{idx:1,label:'Peak / Surriscaldamento',ico:'🟡',col:'#B45309',bg:'rgba(217,119,6,.09)',
+    desc:'Crescita ai massimi, inflazione in rialzo. La Fed inizia a inasprire la politica monetaria.',
+    action:'Ruota verso Energy, Materiali e Healthcare. Riduci esposizione Tech e Real Estate.',
+    sectors:'Energy ↑↑ · Materiali ↑↑ · Finanziari ↑ · Healthcare ↑'},
+  contraction:{idx:2,label:'Contrazione / Recessione',ico:'🔴',col:'#B91C1C',bg:'rgba(220,38,38,.09)',
+    desc:'Crescita in calo, inflazione in discesa. La Fed inizia a tagliare i tassi.',
+    action:'Sovrappesa difensivi (Consumer Def., Utilities, Healthcare). Tieni liquidità e bond.',
+    sectors:'Consumer Def. ↑↑ · Utilities ↑↑ · Healthcare ↑↑ · Real Estate ↑'},
+  stagflation:{idx:3,label:'Stagflazione',ico:'🟠',col:'#7C3AED',bg:'rgba(124,58,237,.09)',
+    desc:'Bassa crescita + alta inflazione: lo scenario peggiore per gli investitori.',
+    action:'Real asset: Energy, Materiali, Oro. Riduci fortemente Tech, Growth e Real Estate.',
+    sectors:'Energy ↑↑ · Materiali ↑ · Consumer Def. ↑ · Oro (hedge)'},
+};
+
+function _macroRenderEdu(){
+  _macroRenderCycle();
+  _macroRenderRotation();
+  _macroRenderSectors();
+}
+
+function _macroRenderCycle(){
+  const cyc=document.getElementById('macro-cycle-card');
+  const pha=document.getElementById('macro-phase-card');
+  if(!cyc||!pha)return;
+  const cur=MACRO_SNAP.regime;
+  const phases=[
+    {key:'expansion',  quadrant:'tl',label:'🟢 Espansione',       cond:'Alta crescita · Bassa inflazione',  sectors:'Tech · Ind · Fin · Disc.',  col:'#059669',bg:'rgba(5,150,105,.09)'},
+    {key:'slowdown',   quadrant:'tr',label:'🟡 Peak · Surrisc.',  cond:'Alta crescita · Alta inflazione',   sectors:'Energy · Mat · Finanziari',  col:'#B45309',bg:'rgba(217,119,6,.09)'},
+    {key:'contraction',quadrant:'bl',label:'🔴 Recessione',       cond:'Bassa crescita · Bassa inflazione', sectors:'Cons.Def · Util · HCare',    col:'#B91C1C',bg:'rgba(220,38,38,.09)'},
+    {key:'stagflation',quadrant:'br',label:'🟠 Stagflazione',     cond:'Bassa crescita · Alta inflazione',  sectors:'Energy · ConsD · Oro',       col:'#7C3AED',bg:'rgba(124,58,237,.09)'},
+  ];
+  cyc.innerHTML=`<div class="ch"><div><div class="ct">⏱ Il Ciclo Economico</div><div class="cs">4 fasi · le banche centrali e i mercati si muovono in modo prevedibile attraverso di essi</div></div></div>
+  <div style="display:grid;grid-template:1fr 1fr/1fr 1fr;gap:8px;margin-bottom:10px">
+    ${phases.map(p=>{
+      const active=p.key===cur;
+      return`<div class="cycle-q" style="border-color:${p.col};background:${active?p.bg:'var(--s2)'};opacity:${active?1:.72}">
+        ${active?`<div class="cycle-q-curr" style="background:${p.col};color:#fff">ATTUALE</div>`:''}
+        <div class="cycle-q-name">${p.label}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3);margin-bottom:5px">${p.cond}</div>
+        <div class="cycle-q-secs">↑ ${p.sectors}</div>
+      </div>`;
+    }).join('')}
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;text-align:center;font-size:9px;color:var(--t3);font-family:var(--fm);padding:0 2px">
+    <span>← Inflazione bassa</span><span>Inflazione alta →</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:3px;padding:0 2px">
+    <span style="writing-mode:vertical-rl;transform:rotate(180deg);height:32px;line-height:1;align-self:center">↑ Crescita</span>
+    <div style="flex:1;text-align:center;font-size:10px;color:var(--t2);margin:6px 0 0 10px;line-height:1.5">Il ciclo economico si muove in senso <strong>orario</strong>: Espansione → Peak → Recessione → Ripresa. Il timing di ingresso/uscita da un settore deve anticipare il ciclo di 3–6 mesi.</div>
+  </div>`;
+
+  const p=_PHASE_MAP[cur];
+  pha.innerHTML=`<div class="ch"><div><div class="ct">📌 Come investire ora</div><div class="cs">Fase attuale: <strong style="color:${p.col}">${p.label}</strong></div></div></div>
+  <div style="padding:14px;border-radius:10px;background:${p.bg};border:1px solid ${p.col}30;margin-bottom:14px">
+    <div style="font-size:11px;color:var(--t2);line-height:1.6;margin-bottom:8px">${p.desc}</div>
+    <div style="font-size:10px;font-weight:600;color:${p.col};font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Azione suggerita</div>
+    <div style="font-size:11px;color:var(--t);line-height:1.6;margin-bottom:8px">${p.action}</div>
+    <div style="font-size:9px;font-family:var(--fm);color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Settori da sovrappesare</div>
+    <div style="font-size:11px;font-weight:600;color:${p.col}">${p.sectors}</div>
+  </div>
+  <div style="font-size:10px;font-weight:700;color:var(--t2);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px">Principi chiave per investire nel ciclo</div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    ${[
+      ['📊','Anticipa il ciclo','I mercati scontano la fase successiva 3–6 mesi in anticipo. Non investire in base a dove siamo oggi, ma a dove saremo tra 2 trimestri.'],
+      ['💱','Osserva la Fed','La politica monetaria è il driver principale: primo taglio dei tassi = segnale di acquisto sui growth, primo rialzo = ruota verso difensivi e commodity.'],
+      ['📈','Yield Curve','Quando la curva si re-inverte (da invertita a normale) è uno dei segnali più affidabili di fine recessione e inizio ripresa.'],
+      ['🥇','Gold/Copper Ratio','Il rapporto oro/rame misura la paura vs crescita globale. In calo = fiducia nella ripresa. In rialzo = avversione al rischio crescente.'],
+      ['⚠','Non market-time','La rotazione settoriale è un framework di lungo periodo: cercare di fare timing perfetto è controproducente. Pesi graduali, non switch totali.'],
+    ].map(([ic,t,d])=>`<div style="display:flex;gap:10px;padding:8px 10px;border-radius:8px;background:var(--s2)">
+      <span style="font-size:16px;flex-shrink:0;line-height:1.3">${ic}</span>
+      <div><div style="font-size:11px;font-weight:600;color:var(--t);margin-bottom:2px">${t}</div><div style="font-size:10px;color:var(--t2);line-height:1.5">${d}</div></div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function _macroRenderRotation(){
+  const el=document.getElementById('macro-rotation-card');if(!el)return;
+  const cur=MACRO_SNAP.regime;
+  const phases=['expansion','peak','contraction','recovery'];
+  const pLabels={expansion:'🟢 Espansione',peak:'🟡 Peak',contraction:'🔴 Recessione',recovery:'🔵 Ripresa'};
+  // Recovery non è nei settori ma è utile come colonna aggiuntiva
+  // Usiamo il ciclo con 4 colonne, dove recovery = inverse of contraction roughly
+  const rotFn=(v)=>{
+    if(v===2)return'<span class="rot-cell rot-ow2">↑↑ OW</span>';
+    if(v===1)return'<span class="rot-cell rot-ow1">↑ OW</span>';
+    if(v===0)return'<span class="rot-cell rot-neu">— N</span>';
+    if(v===-1)return'<span class="rot-cell rot-uw1">↓ UW</span>';
+    return'<span class="rot-cell rot-uw2">↓↓ UW</span>';
+  };
+  const recov={tech:2,health:0,fin:2,cons:1,stap:-1,energy:0,mat:1,ind:2,re:2,util:-1,comm:1};
+  el.innerHTML=`<div class="ch"><div><div class="ct">🔄 Rotazione Settoriale</div><div class="cs">Performance relativa attesa dei settori per fase del ciclo economico · OW = sovrappeso, N = neutrale, UW = sottopeso</div></div></div>
+  <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+  <table class="tbl" style="min-width:600px">
+    <thead><tr>
+      <th style="min-width:150px">Settore</th>
+      ${phases.map(p=>`<th style="text-align:center${p===cur?';color:var(--b);font-weight:800':''}">${pLabels[p]||'🔵 Ripresa'}${p===cur?' ◀':''}</th>`).join('')}
+    </tr></thead>
+    <tbody>
+      ${SECTOR_DATA.map(s=>`<tr>
+        <td><span style="font-size:15px;margin-right:6px">${s.ico}</span><span style="font-weight:600">${s.name}</span> <span style="font-family:var(--fm);font-size:9px;color:var(--t3)">${s.etf}</span></td>
+        <td style="text-align:center">${rotFn(s.cycle.expansion)}</td>
+        <td style="text-align:center">${rotFn(s.cycle.peak)}</td>
+        <td style="text-align:center">${rotFn(s.cycle.contraction)}</td>
+        <td style="text-align:center">${rotFn(recov[s.id])}</td>
+      </tr>`).join('')}
+    </tbody>
+  </table>
+  </div>
+  <div style="margin-top:12px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+    <span style="font-size:9px;color:var(--t3);font-family:var(--fm)">LEGENDA:</span>
+    <span class="rot-cell rot-ow2">↑↑ OW Forte</span>
+    <span class="rot-cell rot-ow1">↑ OW Lieve</span>
+    <span class="rot-cell rot-neu">— Neutrale</span>
+    <span class="rot-cell rot-uw1">↓ UW Lieve</span>
+    <span class="rot-cell rot-uw2">↓↓ UW Forte</span>
+    <span style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-left:auto">▼ = fase attuale evidenziata</span>
+  </div>`;
+}
+
+function _macroRenderSectors(){
+  const el=document.getElementById('macro-sectors-grid');if(!el)return;
+  el.innerHTML=SECTOR_DATA.map(s=>{
+    const typeColLight=s.typeCol+'20';
+    return`<div class="sec-card" id="seccard-${s.id}">
+      <div class="sec-card-hd" onclick="_macroToggleSec('${s.id}')">
+        <span class="sec-card-ico">${s.ico}</span>
+        <div class="sec-card-info">
+          <div class="sec-card-name">${s.name}</div>
+          <div class="sec-card-etf">ETF: ${s.etf} · β ${s.beta}</div>
+          <div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 7px;border-radius:3px;color:${s.typeCol};background:${typeColLight}">${s.type}</span>
+            <span style="font-size:9px;font-family:var(--fm);padding:1px 7px;border-radius:3px;background:var(--s2);color:var(--t3)">Tassi: ${s.rSens}</span>
+          </div>
+        </div>
+        <span style="font-size:10px;color:var(--t3);flex-shrink:0;margin-left:4px" id="sec-arr-${s.id}">▼</span>
+      </div>
+      <div class="sec-card-body">
+        <div style="padding:10px 0;font-size:10px;color:var(--t2);line-height:1.6;border-bottom:1px solid var(--bd)">${s.desc}</div>
+        <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Driver principali</div>
+          ${s.drivers.map(d=>`<div style="display:flex;gap:5px;font-size:10px;color:var(--t2);line-height:1.5;margin-bottom:3px"><span style="color:var(--b);flex-shrink:0">•</span>${d}</div>`).join('')}
+        </div>
+        <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Metriche chiave</div>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${s.metrics.map(m=>`<span style="font-family:var(--fm);font-size:9px;padding:2px 7px;border-radius:4px;background:var(--s2);color:var(--t2)">${m}</span>`).join('')}</div>
+        </div>
+        <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Sensibilità ai tassi</div>
+          <div style="font-size:10px;color:var(--t2);line-height:1.5">${s.rSensNote}</div>
+        </div>
+        <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
+          <div style="display:flex;gap:10px">
+            <div style="flex:1;padding:8px 10px;border-radius:7px;background:rgba(5,150,105,.07)">
+              <div style="font-size:9px;font-weight:700;color:#065F46;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Migliore scenario</div>
+              <div style="font-size:10px;color:var(--t2);line-height:1.4">${s.best}</div>
+            </div>
+            <div style="flex:1;padding:8px 10px;border-radius:7px;background:rgba(220,38,38,.07)">
+              <div style="font-size:9px;font-weight:700;color:#B91C1C;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Scenario peggiore</div>
+              <div style="font-size:10px;color:var(--t2);line-height:1.4">${s.worst}</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding-top:10px">
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">💡 Tips per investire</div>
+          ${s.tips.map(t=>`<div class="sec-tip"><span style="color:var(--b);font-size:14px;flex-shrink:0;line-height:1.3">›</span>${t}</div>`).join('')}
+          <div style="margin-top:10px;padding:8px 10px;border-radius:7px;background:var(--b3);font-size:10px;color:var(--b)">
+            <strong>Esempi:</strong> ${s.ex}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function _macroToggleSec(id){
+  const card=document.getElementById('seccard-'+id);
+  const arr=document.getElementById('sec-arr-'+id);
+  if(!card)return;
+  const open=card.classList.toggle('open');
+  if(arr)arr.textContent=open?'▲':'▼';
+}
+
+/* ══════════════════════════════════════════
    FEATURE 7: EXPORT PDF
 ══════════════════════════════════════════ */
 async function exportPortfolioPDF(){
