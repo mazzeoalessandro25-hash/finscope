@@ -1819,7 +1819,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <button class="cal-tab-btn active" id="ins-filter-all"  onclick="insSetFilter('all',this)">Tutti</button>
         <button class="cal-tab-btn"        id="ins-filter-buy"  onclick="insSetFilter('buy',this)">🟢 Acquisti</button>
         <button class="cal-tab-btn"        id="ins-filter-sell" onclick="insSetFilter('sell',this)">🔴 Vendite</button>
-        <button onclick="loadInsiderFeed(true)" style="padding:4px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;font-size:11px;font-family:var(--fm);color:var(--t2);cursor:pointer">↺ Aggiorna</button>
+        <select id="ins-sort-select" onchange="insSetSort(this.value)" style="background:var(--s2);border:1px solid var(--bd);color:var(--t);padding:4px 8px;border-radius:6px;font-size:11px;font-family:var(--fm);cursor:pointer">
+          <option value="date">📅 Più recenti</option>
+          <option value="value_desc">💰 Valore ↓</option>
+          <option value="value_asc">💰 Valore ↑</option>
+          <option value="shares_desc">📊 N° azioni ↓</option>
+        </select>
+        <button onclick="loadInsiderFeed(true)" style="padding:4px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;font-size:11px;font-family:var(--fm);color:var(--t2);cursor:pointer">↺</button>
       </div>
     </div>
     <div id="insider-dash-content" style="margin-top:4px"><div class="ld">Caricamento transazioni insider...</div></div>
