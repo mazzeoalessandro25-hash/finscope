@@ -89,7 +89,7 @@ export default async function handler(req, res) {
   if (!symbol) {
     if (TOKEN) {
       try {
-        const url = `https://financialmodelingprep.com/api/v4/insider-trading?limit=80&apikey=${TOKEN}`;
+        const url = `https://financialmodelingprep.com/api/v4/insider-trading?limit=100&apikey=${TOKEN}`;
         const r = await fetch(url, { signal: AbortSignal.timeout(8000) });
         if (r.ok) {
           const raw = await r.json();
