@@ -11740,6 +11740,90 @@ function showTransition(onDone) {
     },350);
   },2400);
 }
+
+/* ══════════════════════════════════════════
+   INVESTOR PROFILE QUIZ
+══════════════════════════════════════════ */
+const PQ_QUESTIONS=[
+  {q:'Qual è il tuo orizzonte temporale per questi investimenti?',
+   opts:['Meno di 1 anno','Da 1 a 3 anni','Da 3 a 7 anni','Oltre 7 anni']},
+  {q:'Qual è il tuo obiettivo principale?',
+   opts:['Preservare il capitale','Reddito costante da dividendi','Crescita bilanciata','Massimizzare la crescita del capitale']},
+  {q:'Se il tuo portafoglio perdesse il 20% in un mese, cosa faresti?',
+   opts:['Venderei tutto immediatamente','Venderei una parte per ridurre il rischio','Manterrei la posizione senza cambiamenti','Comprerei di più approfittando dei prezzi più bassi']},
+  {q:'Che percentuale del tuo patrimonio totale vuoi investire in azioni?',
+   opts:['Meno del 10%','Tra il 10% e il 30%','Tra il 30% e il 60%','Oltre il 60%']},
+  {q:'Qual è la tua esperienza con investimenti finanziari?',
+   opts:['Nessuna esperienza','Meno di 3 anni','Tra 3 e 10 anni','Oltre 10 anni di esperienza']},
+  {q:'Quanto è stabile il tuo reddito attuale?',
+   opts:['Molto variabile o incerto','Abbastanza variabile','Stabile','Molto stabile e prevedibile']},
+  {q:'Potresti aver bisogno di liquidare parte degli investimenti nei prossimi 2 anni?',
+   opts:['Sì, probabilmente oltre il 50%','Sì, tra il 20% e il 50%','Solo una piccola parte (< 20%)','No, nessuna necessità prevista']},
+  {q:'Quale rendimento annuo ritieni accettabile, sapendo che più rendimento = più rischio?',
+   opts:['2–4% con rischio minimo','4–7% con rischio contenuto','7–12% con rischio moderato','Oltre il 12% anche con alta volatilità']},
+];
+let _pqA=[],_pqIdx=0;
+
+function openPQ(){
+  _pqA=new Array(PQ_QUESTIONS.length).fill(null);
+  _pqIdx=0;
+  document.getElementById('pq-result').style.display='none';
+  document.getElementById('pq-nav').style.display='flex';
+  document.getElementById('pq-q').style.display='block';
+  document.getElementById('pq-overlay').style.display='flex';
+  _pqRender();
+}
+function closePQ(){document.getElementById('pq-overlay').style.display='none';}
+function _pqRender(){
+  const n=PQ_QUESTIONS.length,q=PQ_QUESTIONS[_pqIdx];
+  document.getElementById('pq-progbar').style.width=((_pqIdx/n)*100)+'%';
+  document.getElementById('pq-counter').textContent='Domanda '+(_pqIdx+1)+' di '+n;
+  document.getElementById('pq-q').textContent=q.q;
+  document.getElementById('pq-opts').innerHTML=q.opts.map((o,i)=>
+    '<button class="pq-opt'+(_pqA[_pqIdx]===i?' pq-sel':'')+'" onclick="_pqSel('+i+')">'+o+'</button>'
+  ).join('');
+  const back=document.getElementById('pq-btn-back');
+  const next=document.getElementById('pq-btn-next');
+  back.style.display=_pqIdx===0?'none':'inline-flex';
+  const has=_pqA[_pqIdx]!==null;
+  next.disabled=!has;
+  next.style.opacity=has?'1':'.35';
+  next.textContent=_pqIdx===n-1?'Vedi il mio profilo ✓':'Avanti →';
+}
+function _pqSel(i){_pqA[_pqIdx]=i;_pqRender();}
+function pqBack(){if(_pqIdx>0){_pqIdx--;_pqRender();}}
+function pqNext(){
+  if(_pqA[_pqIdx]===null)return;
+  if(_pqIdx<PQ_QUESTIONS.length-1){_pqIdx++;_pqRender();return;}
+  // Calcola profilo dal punteggio totale (0–3 per domanda, max 21)
+  const tot=_pqA.reduce((s,a)=>s+(a||0),0);
+  const prof=tot<=4?'income':tot<=7?'conservative':tot<=11?'moderate':tot<=14?'balanced_growth':tot<=17?'dynamic':tot<=20?'aggressive':'speculative';
+  selectedProfile=prof;
+  try{localStorage.setItem('finedge_profile',prof);}catch(_){}
+  const p=INVESTOR_PROFILES[prof];
+  const maxScore=(PQ_QUESTIONS.length-1)*3;
+  // Nascondi domanda e nav, mostra risultato
+  document.getElementById('pq-progbar').style.width='100%';
+  document.getElementById('pq-counter').textContent='Completato ✓';
+  document.getElementById('pq-q').style.display='none';
+  document.getElementById('pq-opts').innerHTML='';
+  document.getElementById('pq-nav').style.display='none';
+  const res=document.getElementById('pq-result');
+  res.style.display='block';
+  res.innerHTML=
+    '<div style="text-align:center;padding:12px 0 8px">'+
+      '<div style="font-size:48px;margin-bottom:12px">'+p.emoji+'</div>'+
+      '<div style="font-size:22px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:8px">'+p.name+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);font-family:var(--fm);line-height:1.7;margin-bottom:16px;max-width:340px;margin-left:auto;margin-right:auto">'+p.desc+'</div>'+
+      '<div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:'+p.color+'18;border:1.5px solid '+p.color+'50;border-radius:20px;margin-bottom:24px">'+
+        '<span style="font-size:12px;font-family:var(--fm);color:'+p.color+';font-weight:700">Punteggio: '+tot+' / '+maxScore+'</span>'+
+      '</div>'+
+      '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
+        '<button onclick="closePQ();renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:12px 28px;background:'+p.color+';color:#fff;border:none;border-radius:10px;font-family:var(--fm);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px '+p.color+'40">Analizza il portafoglio →</button>'+
+        '<button onclick="openPQ()" style="padding:12px 18px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;font-family:var(--fm);font-size:12px;color:var(--t2);cursor:pointer">↺ Rifai il test</button>'+
+      '</div>'+
+    '</div>';
+}
 </script>
 <!-- ══ INVESTOR PROFILE QUIZ MODAL ══ -->
 <div id="pq-overlay" class="pq-overlay" style="display:none" onclick="if(event.target===this)closePQ()">
