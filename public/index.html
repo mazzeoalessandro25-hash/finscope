@@ -8935,6 +8935,7 @@ function openStockDetail(sym){
   loadSdChart(sym,'1mo',null);
   loadSdData(sym);
   loadWyckoffAnalysis(sym);
+  loadInsiderForStock(sym);
   // Auto-refresh prezzo ogni 30s
   if(sdPriceTimer)clearInterval(sdPriceTimer);
   sdPriceTimer=setInterval(()=>{if(sdSym)refreshSdPrice(sdSym);},30000);
