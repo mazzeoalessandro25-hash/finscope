@@ -7229,9 +7229,9 @@ function renderPortAnalysis(portItems, quotes){
       <!-- COL CENTRO: 3 donut impilati, stesso spazio verticale -->
       <div style="display:flex;flex-direction:column;gap:6px">
         ${[
-          ['Tipo',         typeEntries,           typePal],
-          ['Area geogr.',  mktEntries,            null],
-          ['Settori',      secEntries.slice(0,8), null]
+          ['Tipo',         typeEntries,           typePal, 'Classifica i titoli in Dividendo (azioni che pagano cedole regolari), Value (sottovalutate rispetto ai fondamentali) e Growth (alta crescita dei ricavi/utili).'],
+          ['Area geogr.',  mktEntries,            null,    'Distribuzione geografica del portafoglio. Diversificare su più mercati riduce il rischio-paese e valutario.'],
+          ['Settori',      secEntries.slice(0,8), null,    'Settori economici rappresentati (Tecnologia, Salute, Finanza…). Concentrare oltre il 40% in un solo settore aumenta il rischio specifico.']
         ].map(([title,entries,pal,tipText])=>{
           const tot=entries.reduce((s,[,v])=>s+v,0);
           const leg=entries.slice(0,5).map(([k,v],i)=>{
