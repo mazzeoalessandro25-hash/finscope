@@ -1,29 +1,73 @@
 import { fetchInsiderTransactions } from './_lib/yahoo.js';
 
-// Titoli di riferimento per il feed globale (fallback Yahoo quando non c'è FMP)
+// Struttura reale Yahoo Finance insiderTransactions:
+// { shares: 30002, value: 7660875, filerName: "...", filerRelation: "Officer",
+//   startDate: "2026-04-02T00:00:00.000Z", transactionText: "Sale at price 255.12..." }
+// NOTA: shares/value sono numeri diretti (non {raw:...}), startDate è ISO string
+
 const FEED_STOCKS = [
   'AAPL','MSFT','NVDA','AMZN','GOOGL','META','TSLA','JPM','V','JNJ',
   'XOM','UNH','HD','PG','BAC','ABBV','MRK','CVX','LLY','AVGO',
   'NFLX','AMD','ORCL','CRM','COST','WMT','DIS','IBM','GS','MS'
 ];
 
-function normalize(raw) {
+function fmtDate(raw) {
+  if (!raw) return '';
+  // ISO string "2026-04-02T..." → "2026-04-02"
+  if (typeof raw === 'string') return raw.split('T')[0];
+  // FMP usa già "2026-04-02"
+  return String(raw);
+}
+
+function detectType(t) {
+  // FMP usa acquistionOrDisposition: 'A'=buy, 'D'=sell
+  if (t.acquistionOrDisposition) return t.acquistionOrDisposition === 'A' ? 'buy' : 'sell';
+  // Yahoo usa transactionText: "Sale at price..." / "Purchase at price..."
+  const txt = (t.transactionText || '').toLowerCase();
+  if (txt.includes('sale') || txt.includes('sold')) return 'sell';
+  if (txt.includes('purchase') || txt.includes('bought')) return 'buy';
+  return null; // skip transazioni ambigue (award, tax withholding, ecc.)
+}
+
+function normalizeFMP(raw, sym) {
   return raw
-    .map(t => ({
-      symbol: t.symbol || '',
-      date:   t.transactionDate || t.filingDate || t.startDate?.fmt || '',
-      name:   t.reportingName   || t.filerName  || '',
-      role:   t.typeOfOwner     || t.filerRelation || '',
-      type:   (t.acquistionOrDisposition === 'A' || (t.transactionDescription||'').toLowerCase().includes('purchase'))
-              ? 'buy' : 'sell',
-      shares: Math.abs(t.securitiesTransacted || t.shares?.raw || 0),
-      price:  t.price || 0,
-      value:  Math.abs(
-        (t.securitiesTransacted || t.shares?.raw || 0) * (t.price || 0)
-        || t.value?.raw || 0
-      ),
-    }))
-    .filter(t => t.shares > 0 && t.date)
+    .map(t => {
+      const type = detectType(t);
+      if (!type) return null;
+      const shares = Math.abs(t.securitiesTransacted || 0);
+      const price  = t.price || 0;
+      const value  = shares * price;
+      return {
+        symbol: t.symbol || sym || '',
+        date:   fmtDate(t.transactionDate || t.filingDate),
+        name:   t.reportingName  || '',
+        role:   t.typeOfOwner    || '',
+        type, shares, price, value,
+      };
+    })
+    .filter(t => t && t.shares > 0 && t.date)
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+function normalizeYahoo(raw, sym) {
+  return raw
+    .map(t => {
+      const type = detectType(t);
+      if (!type) return null;
+      const shares = Math.abs(typeof t.shares === 'object' ? t.shares?.raw : t.shares) || 0;
+      const value  = Math.abs(typeof t.value  === 'object' ? t.value?.raw  : t.value)  || 0;
+      // prova a estrarre il prezzo dal testo "Sale at price 255.12 per share."
+      const priceMatch = (t.transactionText || '').match(/price\s+([\d.]+)/i);
+      const price = priceMatch ? parseFloat(priceMatch[1]) : (shares > 0 && value > 0 ? value / shares : 0);
+      return {
+        symbol: sym || '',
+        date:   fmtDate(t.startDate),
+        name:   t.filerName     || '',
+        role:   t.filerRelation || '',
+        type, shares, price, value,
+      };
+    })
+    .filter(t => t && t.shares > 0 && t.date)
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
@@ -36,9 +80,8 @@ export default async function handler(req, res) {
   const { symbol } = req.query;
   const TOKEN = process.env.FMP_API_KEY;
 
-  // ── Modalità feed globale (nessun simbolo) ────────────────────────────────
+  // ── Feed globale (nessun simbolo) ─────────────────────────────────────────
   if (!symbol) {
-    // 1. FMP senza simbolo → feed di tutti i mercati
     if (TOKEN) {
       try {
         const url = `https://financialmodelingprep.com/api/v4/insider-trading?limit=80&apikey=${TOKEN}`;
@@ -46,32 +89,35 @@ export default async function handler(req, res) {
         if (r.ok) {
           const raw = await r.json();
           if (Array.isArray(raw) && raw.length > 0) {
-            const transactions = normalize(raw).slice(0, 50);
+            const transactions = normalizeFMP(raw, '').slice(0, 50);
             return res.json({ ok: true, transactions, source: 'fmp' });
           }
         }
       } catch (_) {}
     }
 
-    // 2. Yahoo Finance — fetch parallelo su lista top stocks
+    // Fallback Yahoo: fetch parallelo top stocks
     try {
       const results = await Promise.allSettled(
-        FEED_STOCKS.map(sym => fetchInsiderTransactions(sym).then(d => {
-          const txs = d?.insiderTransactions?.transactions || [];
-          return txs.map(t => ({ ...t, symbol: sym }));
-        }))
+        FEED_STOCKS.map(sym =>
+          fetchInsiderTransactions(sym).then(d => {
+            const txs = d?.insiderTransactions?.transactions || [];
+            return normalizeYahoo(txs, sym);
+          })
+        )
       );
       const all = results
         .filter(r => r.status === 'fulfilled')
-        .flatMap(r => r.value);
-      const transactions = normalize(all).slice(0, 50);
-      return res.json({ ok: true, transactions, source: 'yahoo' });
+        .flatMap(r => r.value)
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 50);
+      return res.json({ ok: true, transactions: all, source: 'yahoo' });
     } catch (e) {
       return res.status(500).json({ error: e.message });
     }
   }
 
-  // ── Modalità simbolo specifico ────────────────────────────────────────────
+  // ── Simbolo specifico ─────────────────────────────────────────────────────
   if (TOKEN) {
     try {
       const url = `https://financialmodelingprep.com/api/v4/insider-trading?symbol=${encodeURIComponent(symbol)}&limit=25&apikey=${TOKEN}`;
@@ -79,7 +125,7 @@ export default async function handler(req, res) {
       if (r.ok) {
         const raw = await r.json();
         if (Array.isArray(raw) && raw.length > 0) {
-          const transactions = normalize(raw.map(t => ({ ...t, symbol }))).slice(0, 20);
+          const transactions = normalizeFMP(raw, symbol).slice(0, 20);
           return res.json({ ok: true, transactions, source: 'fmp', symbol });
         }
       }
@@ -88,8 +134,8 @@ export default async function handler(req, res) {
 
   try {
     const d = await fetchInsiderTransactions(symbol);
-    const raw = (d?.insiderTransactions?.transactions || []).map(t => ({ ...t, symbol }));
-    const transactions = normalize(raw).slice(0, 20);
+    const txs = d?.insiderTransactions?.transactions || [];
+    const transactions = normalizeYahoo(txs, symbol).slice(0, 20);
     return res.json({ ok: true, transactions, source: 'yahoo', symbol });
   } catch (e) {
     return res.status(500).json({ error: e.message });
