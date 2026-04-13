@@ -7190,7 +7190,7 @@ function renderPortAnalysis(portItems, quotes){
     <!-- ══════════════════════════════════════
          3 COLONNE: SCORE+KPI | COMPOSIZIONE | RADAR
     ══════════════════════════════════════ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;align-items:start">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;align-items:stretch">
 
       <!-- COL SX: Score + KPI 2×2 -->
       <div style="display:flex;flex-direction:column;gap:8px">
@@ -7210,15 +7210,15 @@ function renderPortAnalysis(portItems, quotes){
               :'<div style="font-size:9px;color:#10B981;font-family:var(--fm);margin-top:3px">✓ Profilo ottimale</div>'}
           </div>
         </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <div class="rb"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:16px">${nStocks}</div></div>
-          <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:16px">${nSectors}</div></div>
-          <div class="rb"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:16px">${fmt(weightedBeta,2)}</div></div>
-          <div class="rb"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:16px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;align-content:stretch">
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:16px">${nStocks}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:16px">${nSectors}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:16px">${fmt(weightedBeta,2)}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:16px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
         </div>
       </div>
 
-      <!-- COL CENTRO: 3 donut impilati -->
+      <!-- COL CENTRO: 3 donut impilati, stesso spazio verticale -->
       <div style="display:flex;flex-direction:column;gap:6px">
         ${[
           ['Tipo',         typeEntries,           typePal],
@@ -7235,7 +7235,7 @@ function renderPortAnalysis(portItems, quotes){
               <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t);flex-shrink:0">${pct}%</span>
             </div>`;
           }).join('');
-          return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:9px 10px">
+          return`<div style="flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:9px 10px;display:flex;flex-direction:column;justify-content:center">
             <div style="font-size:8px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${title}</div>
             <div style="display:flex;align-items:center;gap:10px">
               <div style="flex-shrink:0">${svgDonut(entries,pal,58,10)}</div>
@@ -7245,10 +7245,10 @@ function renderPortAnalysis(portItems, quotes){
         }).join('')}
       </div>
 
-      <!-- COL DX: Radar -->
-      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px">
+      <!-- COL DX: Radar — stessa altezza delle altre due -->
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px;display:flex;flex-direction:column">
         <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;text-align:center">Profilo portafoglio</div>
-        <div style="display:flex;justify-content:center">
+        <div style="flex:1;display:flex;align-items:center;justify-content:center">
           <canvas id="port-radar-canvas" width="200" height="180"></canvas>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:6px">
