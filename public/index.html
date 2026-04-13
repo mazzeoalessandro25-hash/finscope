@@ -7188,14 +7188,14 @@ function renderPortAnalysis(portItems, quotes){
     </div>
 
     <!-- ══════════════════════════════════════
-         ROW A: SCORE + KPI (sx)  |  RADAR (dx)
+         3 COLONNE: SCORE+KPI | COMPOSIZIONE | RADAR
     ══════════════════════════════════════ -->
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;align-items:start">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;align-items:start">
 
+      <!-- COL SX: Score + KPI 2×2 -->
       <div style="display:flex;flex-direction:column;gap:8px">
-        <!-- Score card -->
-        <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:10px">
-          <svg width="62" height="62" viewBox="0 0 82 82" style="flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:10px">
+          <svg width="56" height="56" viewBox="0 0 82 82" style="flex-shrink:0">
             <circle cx="41" cy="41" r="34" fill="none" stroke="var(--bd)" stroke-width="9"/>
             <circle cx="41" cy="41" r="34" fill="none" stroke="${scoreColor}" stroke-width="9"
               stroke-dasharray="${dash.toFixed(1)} ${C2.toFixed(1)}" stroke-linecap="round"
@@ -7203,29 +7203,55 @@ function renderPortAnalysis(portItems, quotes){
             <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
           </svg>
           <div style="flex:1;min-width:0">
-            <div style="font-size:13px;font-weight:700;color:${scoreColor};font-family:var(--fm)">${score}/100 pt</div>
-            <div style="font-size:11px;color:var(--t2);font-family:var(--fm);margin-top:2px">${score>=75?'Ottimo allineamento':score>=50?'Allineamento discreto':'Da migliorare'}</div>
+            <div style="font-size:12px;font-weight:700;color:${scoreColor};font-family:var(--fm)">${score}/100 pt</div>
+            <div style="font-size:10px;color:var(--t2);font-family:var(--fm);margin-top:2px">${score>=75?'Ottimo allineamento':score>=50?'Allineamento discreto':'Da migliorare'}</div>
             ${bestMatch!==selectedProfile
-              ?`<div style="font-size:10px;color:var(--b);font-family:var(--fm);margin-top:4px">↗ Migliore: ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
-              :'<div style="font-size:10px;color:#10B981;font-family:var(--fm);margin-top:4px">✓ Profilo ottimale per il portafoglio</div>'}
+              ?`<div style="font-size:9px;color:var(--b);font-family:var(--fm);margin-top:3px">↗ ${INVESTOR_PROFILES[bestMatch].emoji} ${INVESTOR_PROFILES[bestMatch].name} (${scores[bestMatch]}pt)</div>`
+              :'<div style="font-size:9px;color:#10B981;font-family:var(--fm);margin-top:3px">✓ Profilo ottimale</div>'}
           </div>
         </div>
-        <!-- KPI 2×2 -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          <div class="rb"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:17px">${nStocks}</div></div>
-          <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:17px">${nSectors}</div></div>
-          <div class="rb"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:17px">${fmt(weightedBeta,2)}</div></div>
-          <div class="rb"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:17px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
+          <div class="rb"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:16px">${nStocks}</div></div>
+          <div class="rb"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:16px">${nSectors}</div></div>
+          <div class="rb"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:16px">${fmt(weightedBeta,2)}</div></div>
+          <div class="rb"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:16px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
         </div>
       </div>
 
-      <!-- Radar -->
+      <!-- COL CENTRO: 3 donut impilati -->
+      <div style="display:flex;flex-direction:column;gap:6px">
+        ${[
+          ['Tipo',         typeEntries,           typePal],
+          ['Area geogr.',  mktEntries,            null],
+          ['Settori',      secEntries.slice(0,8), null]
+        ].map(([title,entries,pal])=>{
+          const tot=entries.reduce((s,[,v])=>s+v,0);
+          const leg=entries.slice(0,5).map(([k,v],i)=>{
+            const col=(pal&&pal[i])||PALETTE[i%PALETTE.length];
+            const pct=tot>0?Math.round(v/tot*100):0;
+            return`<div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;min-width:0">
+              <span style="width:6px;height:6px;border-radius:2px;background:${col};flex-shrink:0;display:inline-block"></span>
+              <span style="font-size:9px;color:var(--t2);font-family:var(--fm);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k}</span>
+              <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t);flex-shrink:0">${pct}%</span>
+            </div>`;
+          }).join('');
+          return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:9px 10px">
+            <div style="font-size:8px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">${title}</div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="flex-shrink:0">${svgDonut(entries,pal,58,10)}</div>
+              <div style="flex:1;min-width:0">${leg||'<span style="font-size:9px;color:var(--t3);font-family:var(--fm)">—</span>'}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- COL DX: Radar -->
       <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px">
         <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;text-align:center">Profilo portafoglio</div>
         <div style="display:flex;justify-content:center">
-          <canvas id="port-radar-canvas" width="220" height="190"></canvas>
+          <canvas id="port-radar-canvas" width="200" height="180"></canvas>
         </div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:5px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:6px">
           ${[['Rendimento',radarReturn],['Diversif.',radarDiversif],['Qualità',radarQuality],['Momentum',radarMomentum],['Stabilità',radarStability],['Reddito',radarIncome]].map(([l,v])=>`<div style="text-align:center;padding:3px;background:var(--s);border-radius:5px"><div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${l}</div><div style="font-size:11px;font-weight:700;font-family:var(--fm);color:${v>=70?'var(--g)':v>=45?'var(--o)':'var(--r)'}">${v}</div></div>`).join('')}
         </div>
       </div>
@@ -7236,38 +7262,6 @@ function renderPortAnalysis(portItems, quotes){
     ══════════════════════════════════════ -->
     <div style="margin-bottom:12px">
       ${getRecs(selectedProfile).map(r=>`<div class="port-rec ${r.cls}">${r.txt}</div>`).join('')}
-    </div>
-
-    <!-- ══════════════════════════════════════
-         COMPOSIZIONE PORTAFOGLIO  (3 donut + legenda)
-    ══════════════════════════════════════ -->
-    <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Composizione portafoglio</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        ${[
-          ['Tipo di titolo', typeEntries, typePal],
-          ['Area geografica', mktEntries, null],
-          ['Settori',         secEntries.slice(0,8), null]
-        ].map(([title,entries,pal])=>{
-          const tot=entries.reduce((s,[,v])=>s+v,0);
-          const legendItems=entries.slice(0,6).map(([k,v],i)=>{
-            const col=(pal&&pal[i])||PALETTE[i%PALETTE.length];
-            const pct=tot>0?Math.round(v/tot*100):0;
-            return`<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;min-width:0">
-              <span style="width:7px;height:7px;border-radius:2px;background:${col};flex-shrink:0;display:inline-block"></span>
-              <span style="font-size:10px;color:var(--t2);font-family:var(--fm);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k}</span>
-              <span style="font-size:10px;font-weight:700;font-family:var(--fm);color:var(--t);flex-shrink:0">${pct}%</span>
-            </div>`;
-          }).join('');
-          return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px">
-            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">${title}</div>
-            <div style="display:flex;align-items:center;gap:12px">
-              <div style="flex-shrink:0">${svgDonut(entries,pal,80,14)}</div>
-              <div style="flex:1;min-width:0">${legendItems||'<span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Nessun dato</span>'}</div>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
     </div>
 
     <!-- ══════════════════════════════════════
