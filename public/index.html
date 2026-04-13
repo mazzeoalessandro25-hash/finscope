@@ -7232,7 +7232,7 @@ function renderPortAnalysis(portItems, quotes){
           ['Tipo',         typeEntries,           typePal],
           ['Area geogr.',  mktEntries,            null],
           ['Settori',      secEntries.slice(0,8), null]
-        ].map(([title,entries,pal])=>{
+        ].map(([title,entries,pal,tipText])=>{
           const tot=entries.reduce((s,[,v])=>s+v,0);
           const leg=entries.slice(0,5).map(([k,v],i)=>{
             const col=(pal&&pal[i])||PALETTE[i%PALETTE.length];
