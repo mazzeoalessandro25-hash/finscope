@@ -7409,7 +7409,7 @@ async function runWhatIf(){
       ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const b=q?.beta??(scSummary[item.sym]||scData[item.sym])?.beta??1;return s+b*(item.qty*item.buyPrice);},0)/totalInv2
       :1;
     const curYield=_lastPortQuotes.length===portfolio.length
-      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const rawY=q?.divYield??(scSummary[item.sym]||scData[item.sym])?.dividend??0;const y=rawY>1?rawY/100:rawY;return s+y*(item.qty*item.buyPrice);},0)/totalInv2
+      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const rawY=q?.divYield??0;const y=rawY>1?rawY/100:rawY;return s+y*(item.qty*item.buyPrice);},0)/totalInv2
       :0;
     const oldQ=_lastPortQuotes[portfolio.indexOf(pos)];
     const oldBeta=oldQ?.beta??(scSummary[oldSym]||scData[oldSym])?.beta??1;
