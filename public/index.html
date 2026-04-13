@@ -11931,10 +11931,20 @@ function _insRowHtml(t, showSymbol){
   </tr>`;
 }
 
-function renderInsiderTable(transactions, filter, containerId, showSymbol){
+function _insSort(rows, sort){
+  const r=[...rows];
+  if(sort==='value_desc')  return r.sort((a,b)=>(b.value||0)-(a.value||0));
+  if(sort==='value_asc')   return r.sort((a,b)=>(a.value||0)-(b.value||0));
+  if(sort==='shares_desc') return r.sort((a,b)=>(b.shares||0)-(a.shares||0));
+  return r.sort((a,b)=>b.date.localeCompare(a.date)); // default: più recente
+}
+
+function renderInsiderTable(transactions, filter, containerId, showSymbol, sort){
+  sort = sort || (containerId==='insider-dash-content' ? _insiderSort : _sdInsiderSort);
   const el = document.getElementById(containerId);
   if(!el) return;
-  const rows = filter==='all' ? transactions : transactions.filter(t=>t.type===filter);
+  let rows = filter==='all' ? transactions : transactions.filter(t=>t.type===filter);
+  rows = _insSort(rows, sort);
   if(!rows.length){
     el.innerHTML='<div class="ld" style="padding:16px">Nessuna transazione '+(filter==='buy'?'di acquisto':filter==='sell'?'di vendita':'')+' disponibile</div>';
     return;
