@@ -13,9 +13,8 @@ const FEED_STOCKS = [
 
 function fmtDate(raw) {
   if (!raw) return '';
-  // ISO string "2026-04-02T..." → "2026-04-02"
-  if (typeof raw === 'string') return raw.split('T')[0];
-  // FMP usa già "2026-04-02"
+  if (typeof raw === 'string') return raw.split('T')[0];  // "2026-04-02T..." → "2026-04-02"
+  if (raw instanceof Date) return raw.toISOString().split('T')[0]; // yahoo-finance2 ritorna Date object
   return String(raw);
 }
 
