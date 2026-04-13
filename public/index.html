@@ -7269,6 +7269,7 @@ function renderPortAnalysis(portItems, quotes){
          RACCOMANDAZIONI
     ══════════════════════════════════════ -->
     <div style="margin-bottom:12px">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center">Raccomandazioni${tip('Suggerimenti automatici basati sul confronto tra la composizione reale del portafoglio e i target del profilo selezionato (tipo titoli, beta, concentrazione, diversificazione).')}</div>
       ${getRecs(selectedProfile).map(r=>`<div class="port-rec ${r.cls}">${r.txt}</div>`).join('')}
     </div>
 
