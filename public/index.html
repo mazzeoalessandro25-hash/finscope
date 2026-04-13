@@ -836,6 +836,17 @@ html.dark .auth-box{background:#1e293b}
 .port-score-ring{flex-shrink:0}
 .port-rec{padding:8px 12px;border-radius:6px;border-left:3px solid;background:var(--s2);margin-bottom:7px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.5}
 .port-rec.ok{border-color:#059669}.port-rec.warn{border-color:#CA8A04}.port-rec.bad{border-color:#DC2626}
+/* ── Insider Trading table ── */
+.ins-table{width:100%;border-collapse:collapse;font-family:var(--fm);font-size:12px}
+.ins-table th{text-align:left;color:var(--t3);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--bd);white-space:nowrap}
+.ins-table td{padding:6px 8px;border-bottom:1px solid var(--bd2,rgba(255,255,255,.04));vertical-align:middle}
+.ins-table tr:last-child td{border-bottom:none}
+.ins-table tr:hover td{background:var(--s2)}
+.ins-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-weight:700;font-size:11px;letter-spacing:.3px}
+.ins-badge.buy{background:rgba(5,150,105,.18);color:#059669}
+.ins-badge.sell{background:rgba(220,38,38,.18);color:#DC2626}
+.ins-sym-pill{display:inline-block;background:var(--b2,rgba(26,86,196,.18));color:var(--b);padding:2px 7px;border-radius:4px;font-weight:700;font-size:11px;cursor:pointer}
+.ins-sym-pill:hover{text-decoration:underline}
 /* ── Info tooltip (ⓘ) ── */
 .pa-tip{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;border-radius:50%;background:rgba(128,128,128,.18);color:var(--t3);font-size:8px;font-weight:700;font-style:normal;cursor:help;position:relative;flex-shrink:0;font-family:var(--fm);vertical-align:middle;margin-left:3px;line-height:1}
 .pa-tip::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font-size:10px;color:var(--t2);font-family:var(--fm);white-space:normal;min-width:190px;max-width:240px;line-height:1.55;z-index:300;box-shadow:0 8px 24px rgba(0,0,0,.18);font-weight:400;opacity:0;pointer-events:none;transition:opacity .15s;text-transform:none;letter-spacing:0}
