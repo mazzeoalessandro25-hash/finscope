@@ -7418,9 +7418,9 @@ async function runWhatIf(){
       :0;
     const oldQ=_lastPortQuotes[portfolio.indexOf(pos)];
     const oldBeta=oldQ?.beta??(scSummary[oldSym]||scData[oldSym])?.beta??1;
-    const _oldYieldRaw=oldQ?.divYield??0;const oldYieldVal=_oldYieldRaw>1?_oldYieldRaw/100:_oldYieldRaw;
+    const oldYieldVal=oldQ?.divYield??0;
     const newBetaVal=newQ?.beta??newSum?.beta??1;
-    const _newYieldRaw=newQ?.divYield??0;const newYieldVal=_newYieldRaw>1?_newYieldRaw/100:_newYieldRaw;
+    const newYieldVal=newQ?.divYield??0;
     const newPortBeta=curBeta-(oldBeta*posWeight)+(newBetaVal*posWeight);
     const newPortYield=curYield-(oldYieldVal*posWeight)+(newYieldVal*posWeight);
     const betaDiff=newPortBeta-curBeta;
