@@ -7080,8 +7080,11 @@ function renderPortAnalysis(portItems, quotes){
       const q=quotes[i];
       const curPrice=q?.price??item.buyPrice;
       const curVal=item.qty*curPrice;
-      const rawY=q?.divYield??(scSummary[item.sym]||scData[item.sym])?.dividend??0;
-      const y=rawY>1?rawY/100:rawY;
+      // Usa SOLO divYield dalla quote live (trailingAnnualDividendYield).
+      // Non si fa fallback su scSummary/scData perché quei dati cached
+      // possono avere formati diversi e gonfiare il calcolo.
+      const rawY=q?.divYield??0;
+      const y=rawY>1?rawY/100:rawY; // normalizza se Yahoo restituisce % (es. 5.88) invece di decimale (0.0588)
       totalDiv+=curVal*y;
       totalVal+=curVal;
     });
