@@ -7219,10 +7219,10 @@ function renderPortAnalysis(portItems, quotes){
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;align-content:stretch">
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">TITOLI</div><div class="rv2 b" style="font-size:16px">${nStocks}</div></div>
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">SETTORI</div><div class="rv2 b" style="font-size:16px">${nSectors}</div></div>
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">BETA MEDIO</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:16px">${fmt(weightedBeta,2)}</div></div>
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl">YIELD MEDIO</div><div class="rv2 g" style="font-size:16px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">TITOLI${tip('Numero di posizioni aperte. Una buona diversificazione richiede almeno 8-10 titoli su settori diversi.')}</div><div class="rv2 b" style="font-size:16px">${nStocks}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">SETTORI${tip('Numero di settori economici rappresentati (Tech, Salute, Energia…). Più settori = minore rischio di concentrazione.')}</div><div class="rv2 b" style="font-size:16px">${nSectors}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">BETA MEDIO${tip('Volatilità media del portafoglio rispetto al mercato (S&P 500 = 1.0). Beta < 1 = più stabile del mercato. Beta > 1 = più volatile. Ponderato per capitale investito.')}</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:16px">${fmt(weightedBeta,2)}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">YIELD MEDIO${tip('Rendimento annuo da dividendi medio del portafoglio, ponderato per il capitale investito in ciascun titolo. Include solo i titoli che distribuiscono dividendi.')}</div><div class="rv2 g" style="font-size:16px">${avgYield>0?fmt(avgYield*100,2)+'%':'—'}</div></div>
         </div>
       </div>
 
