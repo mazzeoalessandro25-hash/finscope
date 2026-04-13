@@ -11741,6 +11741,27 @@ function showTransition(onDone) {
   },2400);
 }
 </script>
+<!-- ══ INVESTOR PROFILE QUIZ MODAL ══ -->
+<div id="pq-overlay" class="pq-overlay" style="display:none" onclick="if(event.target===this)closePQ()">
+  <div class="pq-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <div style="font-size:15px;font-weight:700;color:var(--t);font-family:var(--fm)">🧭 Profilo Investitore</div>
+      <button onclick="closePQ()" style="background:none;border:none;font-size:20px;color:var(--t3);cursor:pointer;padding:0;line-height:1;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px">✕</button>
+    </div>
+    <div style="height:3px;background:var(--bd);border-radius:3px;margin-bottom:6px">
+      <div id="pq-progbar" style="height:3px;background:linear-gradient(90deg,#1A56C4,#7C3AED);border-radius:3px;transition:width .35s;width:0%"></div>
+    </div>
+    <div id="pq-counter" style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:18px"></div>
+    <div id="pq-q" style="font-size:14px;font-weight:700;color:var(--t);font-family:var(--fm);line-height:1.5;margin-bottom:14px"></div>
+    <div id="pq-opts"></div>
+    <div id="pq-nav" style="display:flex;gap:8px;margin-top:16px">
+      <button id="pq-btn-back" onclick="pqBack()" style="padding:9px 18px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;color:var(--t2);font-family:var(--fm);font-size:12px;cursor:pointer;display:none">← Indietro</button>
+      <button id="pq-btn-next" onclick="pqNext()" style="flex:1;padding:9px 18px;background:linear-gradient(135deg,#1A56C4,#7C3AED);color:#fff;border:none;border-radius:8px;font-family:var(--fm);font-size:12px;font-weight:700;cursor:pointer;opacity:.35;transition:.15s" disabled>Avanti →</button>
+    </div>
+    <div id="pq-result" style="display:none"></div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 </body>
