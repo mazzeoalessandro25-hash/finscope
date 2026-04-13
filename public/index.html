@@ -7073,15 +7073,21 @@ function renderPortAnalysis(portItems, quotes){
   });
   const nSectors=Object.keys(bySec).length;
   const nStocks=portItems.length;
-  const avgYield=(function(){
-    let ty=0,tw=0;
+  // Yield portafoglio = dividendi annui totali / valore corrente totale
+  const {portYield, annualDivAmt, totalCurVal} = (function(){
+    let totalDiv=0, totalVal=0;
     portItems.forEach((item,i)=>{
-      const q=quotes[i];const rawY=q?.divYield??(scSummary[item.sym]||scData[item.sym])?.dividend??0;const y=rawY>1?rawY/100:rawY;
-      const w=totalInv>0?(item.qty*item.buyPrice)/totalInv:0;
-      ty+=y*w;tw+=w;
+      const q=quotes[i];
+      const curPrice=q?.price??item.buyPrice;
+      const curVal=item.qty*curPrice;
+      const rawY=q?.divYield??(scSummary[item.sym]||scData[item.sym])?.dividend??0;
+      const y=rawY>1?rawY/100:rawY;
+      totalDiv+=curVal*y;
+      totalVal+=curVal;
     });
-    return tw>0?ty/tw:0;
+    return {portYield: totalVal>0?totalDiv/totalVal:0, annualDivAmt: totalDiv, totalCurVal: totalVal};
   })();
+  const avgYield=portYield; // alias per compatibilità con il codice esistente
 
   // --- Score ---
   function calcScore(profKey){
