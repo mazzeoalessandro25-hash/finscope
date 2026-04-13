@@ -7076,7 +7076,7 @@ function renderPortAnalysis(portItems, quotes){
   const avgYield=(function(){
     let ty=0,tw=0;
     portItems.forEach((item,i)=>{
-      const q=quotes[i];const y=q?.divYield||(scSummary[item.sym]||scData[item.sym])?.dividend||0;
+      const q=quotes[i];const y=q?.divYield??(scSummary[item.sym]||scData[item.sym])?.dividend??0;
       const w=totalInv>0?(item.qty*item.buyPrice)/totalInv:0;
       ty+=y*w;tw+=w;
     });
