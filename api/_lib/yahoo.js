@@ -38,3 +38,14 @@ export async function fetchETFData(symbol) {
     return null;
   }
 }
+
+export async function fetchInsiderTransactions(symbol) {
+  try {
+    return await Promise.race([
+      yf.quoteSummary(symbol, { modules: ['insiderTransactions'] }),
+      timeout(7000),
+    ]);
+  } catch (_) {
+    return null;
+  }
+}
