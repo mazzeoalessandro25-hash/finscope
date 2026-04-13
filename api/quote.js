@@ -155,6 +155,29 @@ export default async function handler(req, res) {
     // default: quote — usa yahoo-finance2 per avere marketCap nativo
     const q = await fetchYahooQuote(symbol);
     if (!q) return res.status(404).json({ error: 'no data' });
+
+    // Calcola divYield in modo affidabile:
+    // 1. Prova trailingAnnualDividendYield (già un ratio corretto nella maggior parte dei casi)
+    // 2. Se è null/0 o > 25% (dati corrotti come NVO che mischia DKK e USD),
+    //    usa summaryDetail.dividendYield che Yahoo calcola correttamente per ogni mercato
+    let divYield = null;
+    const rawY = q.trailingAnnualDividendYield;
+    if (rawY != null && rawY > 0) {
+      const norm = rawY > 1 ? rawY / 100 : rawY;
+      if (norm <= 0.25) divYield = norm;
+    }
+    if (divYield === null) {
+      // Fallback su summaryDetail.dividendYield (più lento ma affidabile per ADR/cross-listed)
+      try {
+        const sd = await fetchQuoteSummary(symbol);
+        const sy = sd?.summaryDetail?.dividendYield;
+        if (sy != null && sy > 0) {
+          const norm = sy > 1 ? sy / 100 : sy;
+          if (norm <= 0.25) divYield = norm;
+        }
+      } catch (_) { /* ignora errori, divYield resta null */ }
+    }
+
     return res.json({
       symbol:    q.symbol,
       price:     q.regularMarketPrice,
@@ -165,15 +188,7 @@ export default async function handler(req, res) {
       dayLow:    q.regularMarketDayLow,
       volume:    q.regularMarketVolume,
       marketCap: q.marketCap ?? null,
-      // trailingAnnualDividendYield dovrebbe essere un decimale (0.046 = 4.6%)
-      // ma per alcuni titoli Yahoo restituisce valori assurdi (es. 36 per NVO a causa
-      // di mixing valute DKK/USD). Normalizziamo e cappiamo a 0.25 (25% max realistico).
-      divYield: (() => {
-        let y = q.trailingAnnualDividendYield;
-        if (y == null || y <= 0) return null;
-        if (y > 1) y = y / 100;   // normalizza se arriva come percentuale (es. 5.88 → 0.0588)
-        return y <= 0.25 ? y : null; // rifiuta valori > 25%: quasi certamente dati errati
-      })(),
+      divYield,
     });
 
   } catch (e) {
