@@ -7073,22 +7073,29 @@ function renderPortAnalysis(portItems, quotes){
   });
   const nSectors=Object.keys(bySec).length;
   const nStocks=portItems.length;
-  // Yield portafoglio = dividendi annui totali / valore corrente totale
-  const {portYield, annualDivAmt, totalCurVal} = (function(){
+  // Yield portafoglio = dividendi annui totali (EUR) / valore corrente totale (EUR)
+  // Tutti i titoli contano nel denominatore; solo chi paga dividendi contribuisce al numeratore.
+  const {portYield, annualDivAmt, totalCurVal, divBreakdown} = (function(){
+    const fxR=_lastFxRate||1.08;
     let totalDiv=0, totalVal=0;
+    const breakdown=[];
     portItems.forEach((item,i)=>{
       const q=quotes[i];
       const curPrice=q?.price??item.buyPrice;
       const curVal=item.qty*curPrice;
-      // Usa SOLO divYield dalla quote live (trailingAnnualDividendYield).
-      // Non si fa fallback su scSummary/scData perché quei dati cached
-      // possono avere formati diversi e gonfiare il calcolo.
+      // converti tutto in EUR per coerenza
+      const isEUR=(q?.currency||'USD')==='EUR';
+      const curValEUR=isEUR?curVal:curVal/fxR;
+      // divYield da Yahoo è sempre un decimale (es. 0.0588 = 5.88%)
+      // In rari casi europei può arrivare come percentuale (5.88): normalizziamo
       const rawY=q?.divYield??0;
-      const y=rawY>1?rawY/100:rawY; // normalizza se Yahoo restituisce % (es. 5.88) invece di decimale (0.0588)
-      totalDiv+=curVal*y;
-      totalVal+=curVal;
+      const y=rawY>1?rawY/100:rawY;
+      const annDiv=curValEUR*y;
+      if(y>0) breakdown.push({sym:item.sym,y,annDiv});
+      totalDiv+=annDiv;
+      totalVal+=curValEUR;   // TUTTI i titoli, dividend o no
     });
-    return {portYield: totalVal>0?totalDiv/totalVal:0, annualDivAmt: totalDiv, totalCurVal: totalVal};
+    return {portYield: totalVal>0?totalDiv/totalVal:0, annualDivAmt: totalDiv, totalCurVal: totalVal, divBreakdown: breakdown};
   })();
   const avgYield=portYield; // alias per compatibilità con il codice esistente
 
