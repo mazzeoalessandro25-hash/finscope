@@ -7086,8 +7086,18 @@ function renderPortAnalysis(portItems, quotes){
       // converti tutto in EUR per coerenza
       const isEUR=(q?.currency||'USD')==='EUR';
       const curValEUR=isEUR?curVal:curVal/fxR;
-      // divYield è calcolato dall'API come rate/price → sempre decimale (es. 0.0450 = 4.5%)
-      const y=q?.divYield??0;
+      // divYield dalla quote (già validato e cappato a 25% dall'API).
+      // Fallback su scSummary/scData per titoli con dati corrotti in Yahoo (es. NVO)
+      // dove l'API ha restituito null. summaryDetail.dividendYield è più affidabile.
+      let y=q?.divYield??null;
+      if(y===null){
+        const sd=(scSummary[item.sym]||scData[item.sym]);
+        const raw=sd?.dividend??null;
+        if(raw!=null&&raw>0){
+          const norm=raw>1?raw/100:raw;
+          y=norm<=0.25?norm:0;
+        } else { y=0; }
+      }
       const annDiv=curValEUR*y;
       if(y>0) breakdown.push({sym:item.sym,y,annDiv});
       totalDiv+=annDiv;
