@@ -7183,7 +7183,7 @@ function renderPortAnalysis(portItems, quotes){
       <div style="flex:1;min-width:190px;display:flex;align-items:center;gap:10px;padding:9px 12px;background:${prof.color}15;border:1.5px solid ${prof.color}50;border-radius:10px">
         <span style="font-size:22px;line-height:1;flex-shrink:0">${prof.emoji}</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px">Profilo investitore</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center">Profilo investitore ${tip('Il profilo determina come valutare il portafoglio. Ogni profilo ha target diversi per tipo di titoli, beta massimo e rendimento atteso. Usa il quiz per trovare il tuo.')}</div>
           <div style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">${prof.name}</div>
         </div>
         <select onchange="selectedProfile=this.value;renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:7px;color:var(--t);font-family:var(--fm);font-size:11px;cursor:pointer;flex-shrink:0">
