@@ -7242,48 +7242,34 @@ function renderPortAnalysis(portItems, quotes){
     </div>
 
     <!-- ══════════════════════════════════════
-         ROW B: COMPOSIZIONE (sx 3fr) | SEGNALI ACQUISTO (dx 2fr)
+         COMPOSIZIONE PORTAFOGLIO  (3 donut + legenda)
     ══════════════════════════════════════ -->
-    <div style="display:grid;grid-template-columns:3fr 2fr;gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd);align-items:start">
-
-      <!-- 3 donut charts -->
-      <div>
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px">Composizione</div>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
-          ${[
-            ['Tipo',typeEntries,typePal],
-            ['Area geografica',mktEntries,null],
-            ['Settori',secEntries.slice(0,8),null]
-          ].map(([title,entries,pal])=>`
-            <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px;text-align:center">
-              <div style="font-size:8px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">${title}</div>
-              <div style="display:flex;justify-content:center">${svgDonut(entries,pal,62,11)}</div>
-              <div style="margin-top:5px;line-height:2">${donutPcts(entries,pal)}</div>
-            </div>`).join('')}
-        </div>
-      </div>
-
-      <!-- 3 compact signal cards (no SVG oversize) -->
-      <div>
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px">Segnale acquisto</div>
-        <div style="display:flex;flex-direction:column;gap:6px">
-          ${[[shortScore,'BREVE','1–3 mesi'],[midScore,'MEDIO','3–12 mesi'],[longScore,'LUNGO','1–3 anni']].map(([sc,lbl,sub])=>{
-            const gc=sc>=67?'#10B981':sc>=34?'#F59E0B':'#EF4444';
-            const gs=sc>=67?'COMPRA':sc>=34?'NEUTRALE':'VENDI';
-            return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;display:flex;align-items:center;gap:10px">
-              <div style="text-align:center;flex-shrink:0;width:42px">
-                <div style="font-size:20px;font-weight:700;font-family:var(--fm);color:${gc};line-height:1">${sc}</div>
-                <div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;margin-top:1px">${lbl}</div>
-              </div>
-              <div style="flex:1;min-width:0">
-                <div style="height:5px;background:var(--bd);border-radius:3px;margin-bottom:5px;overflow:hidden"><div style="height:5px;border-radius:3px;background:${gc};width:${sc}%"></div></div>
-                <div style="font-size:10px;font-weight:700;font-family:var(--fm);color:${gc}">${gs}</div>
-                <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${sub}</div>
-              </div>
+    <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Composizione portafoglio</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        ${[
+          ['Tipo di titolo', typeEntries, typePal],
+          ['Area geografica', mktEntries, null],
+          ['Settori',         secEntries.slice(0,8), null]
+        ].map(([title,entries,pal])=>{
+          const tot=entries.reduce((s,[,v])=>s+v,0);
+          const legendItems=entries.slice(0,6).map(([k,v],i)=>{
+            const col=(pal&&pal[i])||PALETTE[i%PALETTE.length];
+            const pct=tot>0?Math.round(v/tot*100):0;
+            return`<div style="display:flex;align-items:center;gap:5px;margin-bottom:4px;min-width:0">
+              <span style="width:7px;height:7px;border-radius:2px;background:${col};flex-shrink:0;display:inline-block"></span>
+              <span style="font-size:10px;color:var(--t2);font-family:var(--fm);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${k}</span>
+              <span style="font-size:10px;font-weight:700;font-family:var(--fm);color:var(--t);flex-shrink:0">${pct}%</span>
             </div>`;
-          }).join('')}
-        </div>
-        <div style="margin-top:7px;font-size:8px;color:var(--t3);font-family:var(--fm);line-height:1.4">⚠ Segnali quantitativi aggregati. Non consulenza finanziaria.</div>
+          }).join('');
+          return`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px">
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px">${title}</div>
+            <div style="display:flex;align-items:center;gap:12px">
+              <div style="flex-shrink:0">${svgDonut(entries,pal,80,14)}</div>
+              <div style="flex:1;min-width:0">${legendItems||'<span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Nessun dato</span>'}</div>
+            </div>
+          </div>`;
+        }).join('')}
       </div>
     </div>
 
