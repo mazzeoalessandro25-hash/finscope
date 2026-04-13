@@ -1325,6 +1325,24 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
     </div>
 
+    <!-- Insider Transactions -->
+    <div class="sd-desc-card" style="margin-bottom:16px" id="sd-insider-section">
+      <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
+        <span style="display:flex;align-items:center">
+          🔍 Transazioni Insider
+          <span class="sd-info-btn">i<div class="sd-tip">Acquisti e vendite di azioni da parte di dirigenti, amministratori e dipendenti della società. Gli acquisti insider sono spesso un segnale positivo sul futuro dell'azienda. Le vendite possono avere motivazioni personali e non indicare necessariamente un segnale negativo.</div></span>
+        </span>
+        <div style="display:flex;gap:6px">
+          <button class="cal-tab-btn active" id="sd-ins-all"  onclick="sdInsFilter('all',this)">Tutti</button>
+          <button class="cal-tab-btn"        id="sd-ins-buy"  onclick="sdInsFilter('buy',this)">🟢 Acquisti</button>
+          <button class="cal-tab-btn"        id="sd-ins-sell" onclick="sdInsFilter('sell',this)">🔴 Vendite</button>
+        </div>
+      </div>
+      <div id="sd-insider-content" style="margin-top:10px">
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento transazioni insider...</div>
+      </div>
+    </div>
+
     <!-- Notizie + Descrizione -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="sd-bottom-row">
       <div class="sd-desc-card" style="margin-bottom:0">
