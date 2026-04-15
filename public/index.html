@@ -2390,11 +2390,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
     </div>
-    <!-- RIGHT: grafico grande -->
-    <div style="display:flex;flex-direction:column;gap:10px">
-      <div class="card" style="padding:16px">
+    <!-- RIGHT: grafico full-height -->
+    <div style="display:flex;flex-direction:column;gap:10px;height:100%">
+      <div class="card" style="padding:16px;flex:1;display:flex;flex-direction:column">
         <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:14px">Proiezione — Interesse composto nel tempo</div>
-        <canvas id="simChart" height="340"></canvas>
+        <div style="position:relative;flex:1;min-height:0">
+          <canvas id="simChart" style="position:absolute;top:0;left:0;width:100%!important;height:100%!important"></canvas>
+        </div>
       </div>
       <div class="card" id="sim-tax-note-card" style="display:none">
         <div class="ch"><div><div class="ct">Note fiscali</div><div class="cs">Vantaggi fiscali del veicolo selezionato</div></div></div>
