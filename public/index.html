@@ -8923,12 +8923,79 @@ function _macroRenderAnalysis(d){
     regBadge.innerHTML=`<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--fm);color:${rc[r]};background:${rb[r]};border:1px solid ${rbd[r]}">${rico[r]} ${rlbl[r]}</div>`;
   }
 
+  // ── Asset Class Outlook ──
+  function acCard(ico,lbl,cls,sig,sigCol,sigBg,note){
+    return`<div class="mac-ac-card ${cls}">
+      <div class="mac-ac-ico">${ico}</div>
+      <div class="mac-ac-lbl">${lbl}</div>
+      <div class="mac-ac-sig" style="color:${sigCol};background:${sigBg}">${sig}</div>
+      <div class="mac-ac-note">${note}</div>
+    </div>`;
+  }
+  // Azioni
+  let eqSig,eqCls,eqSigC,eqSigBg,eqNote;
+  if(regime==='expansion'&&fedBias<=0){eqSig='Positivo';eqCls='pos';eqSigC='#065F46';eqSigBg='rgba(5,150,105,.15)';eqNote='Espansione + Fed accomodante: il miglior contesto storico per le azioni. I multipli si espandono e gli utili crescono.';}
+  else if(regime==='expansion'&&fedBias===1){eqSig='Neutrale';eqCls='neu';eqSigC='var(--t2)';eqSigBg='var(--s2)';eqNote='Espansione ma Fed hawkish: utili in crescita ma multipli compressi dai tassi alti. Selettività necessaria — preferire value e qualità.';}
+  else if(regime==='slowdown'){eqSig='Cautela';eqCls='neg';eqSigC='#B45309';eqSigBg='rgba(217,119,6,.12)';eqNote='Crescita in rallentamento: le revisioni al ribasso degli utili iniziano a pesare. Ridurre il beta, aumentare la qualità e i difensivi.';}
+  else if(regime==='contraction'){eqSig='Negativo';eqCls='neg';eqSigC='#B91C1C';eqSigBg='rgba(220,38,38,.12)';eqNote='Recessione: utili in calo del 15–30% storicamente. Le azioni scendono prima della fine della recessione — attenzione al timing del re-entry.';}
+  else{eqSig='Attenzione';eqCls='neg';eqSigC='#B91C1C';eqSigBg='rgba(220,38,38,.12)';eqNote='Stagflazione: il peggior contesto per le azioni tradizionali. Solo energia e value con pricing power reggono bene.';}
+  // Bond governativi
+  let bgSig,bgCls,bgSigC,bgSigBg,bgNote;
+  if(fedBias===1&&t10!=null&&t10>4.0){bgSig='Opportunità';bgCls='pos';bgSigC='#065F46';bgSigBg='rgba(5,150,105,.15)';bgNote=`10Y al ${fmt(t10,2)}%: rendimenti reali positivi per la prima volta in anni. Lock-in di rendimenti elevati prima del pivot Fed — TLT e BTP diventano interessanti.`;}
+  else if(fedBias===-1){bgSig='Positivo';bgCls='pos';bgSigC='#065F46';bgSigBg='rgba(5,150,105,.15)';bgNote='Fed in taglio: i prezzi dei bond salgono quando i tassi scendono. La duration lunga (TLT, BTP 10Y) beneficia di più dei tagli successivi.';}
+  else if(spread!=null&&spread<0){bgSig='Interessante';bgCls='pos';bgSigC='#065F46';bgSigBg='rgba(5,150,105,.15)';bgNote='Curva invertita: i bond a breve (3–6M) offrono rendimenti superiori ai lunghi con meno rischio di duration. Ideali per la componente "safe" del portafoglio.';}
+  else{bgSig='Neutrale';bgCls='neu';bgSigC='var(--t2)';bgSigBg='var(--s2)';bgNote='Bond governativi con rendimento adeguato ma senza catalyst immediato per un rally. Utili per la diversificazione e la riduzione della volatilità del portafoglio.';}
+  // Bond corporate
+  let corpSig,corpCls,corpSigC,corpSigBg,corpNote;
+  if(hygChg!=null&&lqdChg!=null&&hygChg>0&&(hygChg-lqdChg)>0.1){corpSig='Risk-On';corpCls='pos';corpSigC='#065F46';corpSigBg='rgba(5,150,105,.15)';corpNote='Spread HY in restringimento: buon momento per il credito corporate. HY e IG quotano bene — il mercato non sconta stress creditizio.';}
+  else if(regime==='contraction'||(hygChg!=null&&lqdChg!=null&&hygChg<lqdChg-0.1)){corpSig='Cautela';corpCls='neg';corpSigC='#B91C1C';corpSigBg='rgba(220,38,38,.12)';corpNote='Spread in allargamento o stress creditizio: evitare HY e ridurre l\'esposizione alle emittenti con alto leverage. Preferire IG di qualità.';}
+  else{corpSig='Neutrale';corpCls='neu';corpSigC='var(--t2)';corpSigBg='var(--s2)';corpNote='Condizioni creditizie equilibrate. L\'IG offre carry decente. Per l\'HY serve selettività: privilegiare emittenti con bilanci solidi e bassa scadenza del debito.';}
+  // Commodities
+  let comSig,comCls,comSigC,comSigBg,comNote;
+  if(regime==='stagflation'||(oilP!=null&&oilP>90&&copperP!=null&&copperP>4.0)){comSig='Positivo';comCls='pos';comSigC='#065F46';comSigBg='rgba(5,150,105,.15)';comNote=`Energia e metalli in forza. ${oilP?'Brent a $'+fmt(oilP,0)+'.':''} ${copperP?'Rame a $'+fmt(copperP,2)+'/lb.':''} Le commodity si apprezzano quando l'inflazione è persistente e la domanda industriale regge.`;}
+  else if(dxyP!=null&&dxyP>104){comSig='Pressione';comCls='neg';comSigC='#B91C1C';comSigBg='rgba(220,38,38,.12)';comNote=`Dollaro forte (DXY ${fmt(dxyP,1)}): poiché le commodity sono prezzate in USD, un dollaro forte le rende più care per i compratori esteri, riducendo la domanda e comprimendo i prezzi.`;}
+  else if(copperP!=null&&copperP>4.2){comSig='Moderato';comCls='pos';comSigC='#065F46';comSigBg='rgba(5,150,105,.15)';comNote=`Rame su livelli elevati ($${fmt(copperP,2)}/lb): la domanda industriale è solida. ${gcRatio!=null&&gcRatio<450?'Gold/Copper ratio basso: ottimismo sulla crescita globale.':''}`;}
+  else{comSig='Neutrale';comCls='neu';comSigC='var(--t2)';comSigBg='var(--s2)';comNote='Le commodity non mostrano trend direzionale dominante. L\'oro rimane un\'opzione di hedging valida contro l\'incertezza geopolitica e i picchi di inflazione.';}
+  // Liquidità / Cash
+  let cashSig,cashCls,cashSigC,cashSigBg,cashNote;
+  if(t3!=null&&t3>4.5){cashSig='Attraente';cashCls='pos';cashSigC='#065F46';cashSigBg='rgba(5,150,105,.15)';cashNote=`BOT e money market al ${fmt(t3,2)}%: il costo opportunità del cash è azzerato. La liquidità "lavora" senza rischio di mercato — un'allocazione del 10–20% è razionale in questa fase.`;}
+  else if(fedBias===-1){cashSig='In calo';cashCls='neg';cashSigC='#B91C1C';cashSigBg='rgba(220,38,38,.12)';cashNote='La Fed taglia: i rendimenti dei money market scendono. Ogni mese di ritardo nell\'investire significa perdere il carry che si comprimerà. Il cash va reimpiegato progressivamente.';}
+  else{cashSig='Moderato';cashCls='neu';cashSigC='var(--t2)';cashSigBg='var(--s2)';cashNote=`Liquidità con rendimento${t3!=null?' del '+fmt(t3,2)+'%':' positivo'}: competitiva come asset class difensiva ma non sufficiente per battere l'inflazione a lungo. Mantenere una riserva tattica del 5–15%.`;}
+
+  const acHtml=acCard('📈','Azioni',eqCls,eqSig,eqSigC,eqSigBg,eqNote)
+    +acCard('🏛','Bond Gov.',bgCls,bgSig,bgSigC,bgSigBg,bgNote)
+    +acCard('🏢','Bond Corp.',corpCls,corpSig,corpSigC,corpSigBg,corpNote)
+    +acCard('🛢','Commodities',comCls,comSig,comSigC,comSigBg,comNote)
+    +acCard('💵','Liquidità',cashCls,cashSig,cashSigC,cashSigBg,cashNote);
+
+  // ── Cosa monitorare ──
+  const CB=MACRO_SNAP.cb;
+  const WATCH=[
+    {date:'7 Mag 2026',title:'FOMC — Federal Reserve',note:`Tassi attuali al ${CB[0].rate}% · Bias: ${CB[0].bias}. Qualsiasi variazione del dot plot o del linguaggio comunicativo muoverà i mercati obbligazionari e azionari in modo significativo.`,imp:'alta'},
+    {date:'5 Giu 2026',title:'BCE — Banca Centrale Europea',note:`Deposit rate al ${CB[1].rate}% · Orientamento ${CB[1].bias}. La BCE è in ciclo di taglio — i mercati europei prezzano ulteriori riduzioni. Monitorare la divergenza con la Fed.`,imp:'alta'},
+    {date:'Mensile',title:'CPI / Core PCE USA',note:`Il Core PCE è il target della Fed (obiettivo 2%). Ogni stampa sopra le attese spinge i rendimenti dei Treasury e i tassi reali verso l'alto, comprimendo le valutazioni growth.`,imp:'alta'},
+    {date:'Mensile',title:'NFP — Non-Farm Payrolls',note:'I dati occupazionali sono il secondo mandato della Fed. Un mercato del lavoro troppo forte ritarda i tagli; un deterioramento accelera il pivot. Mercati molto sensibili alla sorpresa vs consensus.',imp:'alta'},
+    {date:'Mensile',title:'PMI Manifatturiero & Servizi',note:'Il PMI sotto 50 segnala contrazione. In USA il manifatturiero è già debole (ISM ~49): un'ulteriore scivolata sotto 48 aumenterebbe il rischio recessivo e spingerebbe la Fed ad agire.',imp:'media'},
+    {date:'Trimestrale',title:'Earnings Season USA',note:'Le revisioni degli utili forward (EPS) sono il principale driver del mercato azionario nel breve. Monitorare i guidance delle aziende sui margini: inflazione dei costi e tariffe doganali sono i fattori chiave.',imp:'media'},
+    {date:'Settimana',title:'Jobless Claims settimanali',note:'Le richieste di sussidi di disoccupazione sono un leading indicator del mercato del lavoro. Un trend in rialzo sopra 250K/settimana segnalerebbe un deterioramento dell\'occupazione.',imp:'bassa'},
+  ];
+  const watchHtml=WATCH.map(w=>`<div class="mac-wl-item">
+    <div class="mac-wl-date">${w.date}</div>
+    <div class="mac-wl-body">
+      <div class="mac-wl-title">${w.title}</div>
+      <div class="mac-wl-note">${w.note}</div>
+    </div>
+    <div class="mac-wl-imp ${w.imp}">${w.imp.charAt(0).toUpperCase()+w.imp.slice(1)}</div>
+  </div>`).join('');
+
   // ── Render ──
   const scEl=document.getElementById('mac-scenario');if(scEl)scEl.innerHTML=mainNarrative;
   const rEl=document.getElementById('mac-txt-rates');if(rEl)rEl.innerHTML=ratesBlock;
   const dEl=document.getElementById('mac-txt-dollar');if(dEl)dEl.innerHTML=dollarBlock||'Dati non disponibili.';
   const cEl=document.getElementById('mac-txt-credit');if(cEl)cEl.innerHTML=creditBlock;
   const sEl=document.getElementById('mac-sector-row');if(sEl)sEl.innerHTML=sectorHtml;
+  const acEl=document.getElementById('mac-ac-grid');if(acEl)acEl.innerHTML=acHtml;
+  const wEl=document.getElementById('mac-watchlist');if(wEl)wEl.innerHTML=watchHtml;
 }
 
 /* ══════════════════════════════════════════
