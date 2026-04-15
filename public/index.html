@@ -932,6 +932,22 @@ html.dark .auth-box{background:#1e293b}
 .macro-mdi-lbl{font-size:11px;color:var(--t2)}
 .macro-spread-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,#DC2626 0%,#D97706 35%,#059669 55%,#1A56C4 80%,#3730a3 100%);position:relative;margin:6px 0}
 .macro-spread-needle{position:absolute;top:50%;width:2px;height:16px;background:var(--t);border-radius:1px;transform:translate(-50%,-50%);transition:left .6s cubic-bezier(.4,0,.2,1)}
+/* Macro Analysis Commentary Card */
+.mac-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.mac-block{background:var(--s2);border-radius:10px;padding:14px 16px;border:1px solid var(--bd)}
+.mac-block-ico{font-size:18px;margin-bottom:6px}
+.mac-block-lbl{font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.mac-block-txt{font-size:12px;color:var(--t);line-height:1.65}
+.mac-sector-row{display:flex;flex-wrap:wrap;gap:8px}
+.mac-sec-pill{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:9px;font-size:10px;font-weight:700;font-family:var(--fm);border:1px solid transparent;min-width:74px;text-align:center;cursor:default}
+.mac-sec-pill .mac-sp-ico{font-size:16px}
+.mac-sec-pill .mac-sp-lbl{font-size:9px;font-weight:400;opacity:.75}
+.mac-sec-pill.ow{background:rgba(5,150,105,.11);border-color:rgba(5,150,105,.28);color:#065F46}
+.mac-sec-pill.ow1{background:rgba(5,150,105,.06);border-color:rgba(5,150,105,.15);color:#047857}
+.mac-sec-pill.neu{background:var(--s2);border-color:var(--bd);color:var(--t2)}
+.mac-sec-pill.uw1{background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.18);color:#B91C1C}
+.mac-sec-pill.uw{background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.28);color:#991B1B}
+@media(max-width:700px){.mac-3col{grid-template-columns:1fr}}
 /* Macro page named grids */
 .macro-row-rates{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
 .macro-row-economy{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
