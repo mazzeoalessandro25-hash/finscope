@@ -8731,6 +8731,178 @@ function _macroRenderLeading(d){
 }
 
 /* ══════════════════════════════════════════
+   MACRO ANALYSIS — Narrativa contestuale
+══════════════════════════════════════════ */
+function _macroRenderAnalysis(d){
+  const t10=d.t10y?.price??null;
+  const t3=d.t3m?.price??null;
+  const t5=d.t5y?.price??null;
+  const t30=d.t30y?.price??null;
+  const dxyP=d.dxy?.price??null;
+  const dxyChg=d.dxy?chgPct(d.dxy.price,d.dxy.prev):null;
+  const copperP=d.copper?.price??null;
+  const oilP=d.oil?.price??null;
+  const goldP=d.gold?.price??null;
+  const gcRatio=goldP&&copperP?goldP/copperP:null;
+  const hygChg=d.hyg?chgPct(d.hyg.price,d.hyg.prev):null;
+  const lqdChg=d.lqd?chgPct(d.lqd.price,d.lqd.prev):null;
+  const tltChg=d.tlt?chgPct(d.tlt.price,d.tlt.prev):null;
+  const spread=t10!=null&&t3!=null?t10-t3:null;
+  const regime=MACRO_SNAP.regime;
+  const fedRate=MACRO_SNAP.cb[0].rate;
+  const fedBias=MACRO_SNAP.cb[0].biasDir; // -1 dovish · 0 neutrale · 1 hawkish
+  const ecbBias=MACRO_SNAP.cb[1].biasDir;
+
+  // ── Spread / curva ──
+  let curveSentence='';
+  if(spread!=null){
+    if(spread<-1) curveSentence='La curva dei rendimenti è marcatamente invertita (spread 10Y–3M a '+(spread>=0?'+':'')+fmt(spread,2)+'%): storicamente precede una recessione con 12–18 mesi di anticipo.';
+    else if(spread<0) curveSentence='La curva è leggermente invertita (spread '+(spread>=0?'+':'')+fmt(spread,2)+'%): il mercato obbligazionario anticipa un rallentamento e possibili tagli dei tassi.';
+    else if(spread<0.5) curveSentence='La curva è sostanzialmente piatta (spread +'+fmt(spread,2)+'%): il mercato è incerto sulla direzione futura di tassi e crescita.';
+    else curveSentence='La curva è positivamente inclinata (spread +'+fmt(spread,2)+'%), segnale di aspettative di crescita sostenute.';
+  }
+
+  // ── Scenario principale ──
+  const regimeTxtMap={
+    expansion:'L\'economia USA è in fase di espansione',
+    slowdown:'L\'economia USA mostra segnali di rallentamento',
+    contraction:'L\'economia è in fase di contrazione',
+    stagflation:'Il contesto è stagflazionario — crescita stagnante con inflazione persistente'
+  };
+  const regimeTxt=regimeTxtMap[regime]||'Il regime macro è incerto';
+  const fedBiasTxt=fedBias===1?'orientamento restrittivo (hawkish)':fedBias===-1?'orientamento accomodante (dovish)':'posizione di attesa (neutrale)';
+  let mainNarrative='';
+
+  if(regime==='expansion'&&fedBias>=0){
+    const highRates=t10!=null&&t10>4.0;
+    mainNarrative=`${regimeTxt}, ma la Fed mantiene un ${fedBiasTxt} con i tassi di riferimento al ${fedRate}%. ${t10!=null?`Il rendimento del Treasury 10Y è al <strong>${fmt(t10,2)}%</strong>, livello che ${highRates?'comprime i multipli di valutazione delle growth stock e rende i bond competitivi per la prima volta da anni':'rimane su livelli storicamente normali'}.`:''} ${curveSentence} In questa fase, la chiave è monitorare l'inflazione core (PCE) e i dati sul mercato del lavoro: finché rimangono elevati, la Fed ha poco spazio per tagliare.`;
+  } else if(regime==='expansion'&&fedBias===-1){
+    mainNarrative=`${regimeTxt} e la Fed è passata a un ${fedBiasTxt} — una combinazione storicamente molto favorevole per le asset rischiose. ${t10!=null?`Il 10Y è al <strong>${fmt(t10,2)}%</strong>.`:''} ${curveSentence} I tagli dei tassi riducono il costo del capitale, espandono i multipli P/E e riducono il costo del debito per le aziende — tutte condizioni positive per equities growth, real estate e credito HY.`;
+  } else if(regime==='slowdown'){
+    mainNarrative=`${regimeTxt}: la crescita perde slancio mentre l'inflazione rimane sopra il target Fed del 2%. La Fed è in ${fedBiasTxt} con tassi al ${fedRate}%. ${t10!=null?`Il 10Y a <strong>${fmt(t10,2)}%</strong>`:''} ${curveSentence} In questa fase storica è cruciale distinguere tra rallentamento ciclico (temporaneo) e inizio di una contrazione strutturale. I leading indicator da monitorare: PMI manifatturiero, nuove richieste di sussidi di disoccupazione e gli spread creditizi HY–IG.`;
+  } else if(regime==='contraction'){
+    mainNarrative=`${regimeTxt}: siamo in recessione o molto vicini. ${t10!=null?`I rendimenti (10Y a <strong>${fmt(t10,2)}%</strong>) tendono a scendere`:''} perché la Fed tende a tagliare aggressivamente in questa fase — il tasso attuale è ${fedRate}%. ${curveSentence} Le conseguenze tipiche: calo degli utili aziendali del 15–30%, allargamento degli spread creditizi, riduzione dei buyback e dei dividendi. Le obbligazioni governative di qualità e i settori difensivi diventano il porto sicuro.`;
+  } else if(regime==='stagflation'){
+    mainNarrative=`${regimeTxt} — il contesto più difficile per gli investitori tradizionali. Né i bond (l'inflazione erode i rendimenti reali) né le azioni growth (valutazioni compresse da tassi alti) performano bene. ${t10!=null?`Il 10Y è al <strong>${fmt(t10,2)}%</strong>`:''} e la Fed mantiene un ${fedBiasTxt}. ${curveSentence} Le commodity reali (oro, petrolio, agricoltura), le aziende con forte pricing power e i TIPS sono storicamente i migliori asset in questa fase.`;
+  } else {
+    mainNarrative=`${regimeTxt}. La Fed mantiene un ${fedBiasTxt} con tassi al ${fedRate}%. ${curveSentence}`;
+  }
+
+  // ── Block 1: Tassi & Fed ──
+  let ratesBlock='';
+  if(t10!=null){
+    let ratesImpact='';
+    if(fedBias===1){
+      ratesImpact=`La Fed rimane restrittiva: ogni rialzo aggiuntivo comprime ulteriormente i multipli P/E forward delle growth stock e aumenta il rendimento "risk-free" dei bond, rendendoli più attraenti rispetto alle azioni. I settori più esposti: tecnologia (duration lunga), real estate (costo mutui) e utilities (bond proxy).`;
+    } else if(fedBias===-1){
+      ratesImpact=`Con la Fed in taglio, ogni -25bp riduce il costo del capitale, espande i multipli azionari e alleggerisce le aziende ad alto debito. I beneficiari diretti: tech growth, REITs, small cap, mercati emergenti. I perdenti: banche tradizionali (NIM in calo).`;
+    } else {
+      ratesImpact=`La Fed è in pausa: il mercato monitora ogni dato macro per anticipare la prossima mossa. Le aspettative di inflazione implicita (breakeven 5Y) e i dati PMI sono ora i principali market mover dei tassi.`;
+    }
+    ratesBlock=`<strong>10Y: ${fmt(t10,2)}% · Fed: ${fedRate}%</strong>${t5!=null?' · 5Y: '+fmt(t5,2)+'%':''}<br><br>${ratesImpact}`;
+  } else {
+    ratesBlock=`Fed al ${fedRate}%. La Fed mantiene un ${fedBiasTxt}.`;
+  }
+
+  // ── Block 2: Dollaro & Commodities ──
+  let dollarBlock='';
+  const dxyNote=dxyP?(dxyP>104?'molto forte':dxyP>101?'forte':dxyP>98?'neutrale':'debole'):'';
+  let dxyImpact='';
+  if(dxyP){
+    if(dxyP>104) dxyImpact='Dollaro molto forte: le materie prime prezzate in USD (petrolio, oro, rame) subiscono pressione al ribasso. Gli emergenti con debito in dollari soffrono. Le multinazionali USA con ricavi esteri vedono un impatto negativo sulla conversione dei profitti.';
+    else if(dxyP>101) dxyImpact='Dollaro forte: pressione sulle commodity e sulle valute emergenti. Le esportazioni USA diventano meno competitive a livello globale.';
+    else if(dxyP<97) dxyImpact='Dollaro debole: vento favorevole per le commodity (petrolio, oro, rame), gli emergenti e le multinazionali USA con ricavi in valuta estera. Attenzione a possibili pressioni inflazionistiche da importazioni.';
+    else dxyImpact='Dollaro su livelli neutri — nessun effetto valutario dominante sui mercati globali in questo momento.';
+  }
+  let commodityLine='';
+  if(oilP&&copperP){
+    const oilNote=oilP>90?`Petrolio elevato ($${fmt(oilP,0)}): possibili pressioni inflazionistiche in energia e trasporti.`:oilP<65?`Petrolio debole ($${fmt(oilP,0)}): deflazione energetica positiva per la spesa dei consumatori.`:`Petrolio a $${fmt(oilP,0)}, su livelli moderati.`;
+    const cuNote=copperP>4.5?`Rame forte ($${fmt(copperP,2)}/lb): domanda industriale robusta — segnale di salute manifatturiera.`:copperP<3.5?`Rame debole ($${fmt(copperP,2)}/lb): possibile rallentamento della domanda manifatturiera globale.`:`Rame a $${fmt(copperP,2)}/lb, livello neutro.`;
+    commodityLine=`<br><br>${oilNote} ${cuNote}`;
+  }
+  if(gcRatio!=null){
+    const gcNote=gcRatio>600?'Gold/Copper ratio elevato ('+fmt(gcRatio,0)+'): avversione al rischio prevalente.':gcRatio<400?'Gold/Copper ratio basso ('+fmt(gcRatio,0)+'): ottimismo sulla crescita globale.':'Gold/Copper ratio neutro ('+fmt(gcRatio,0)+').';
+    commodityLine+='<br>'+gcNote;
+  }
+  dollarBlock=(dxyP?`<strong>DXY: ${fmt(dxyP,2)} (${dxyNote})</strong><br><br>${dxyImpact}`:'')+commodityLine;
+
+  // ── Block 3: Credito ──
+  let creditBlock='';
+  if(hygChg!=null&&lqdChg!=null){
+    const diff=hygChg-lqdChg;
+    let creditSignal,creditNote;
+    if(hygChg>0&&diff>0.15){
+      creditSignal='<span style="color:var(--g)">✅ Risk-on — appetite al rischio alto</span>';
+      creditNote='Gli spread HY si restringono e HY sovraperforma IG: il mercato sta comprando rischio. Buon segnale per le azioni cicliche e le obbligazioni sub-investment grade.';
+    } else if(hygChg<0&&diff<-0.1){
+      creditSignal='<span style="color:var(--r)">⚠ Stress creditizio</span>';
+      creditNote='HY scende più di IG: gli spread si allargano e gli investitori fuggono dal rischio. Attenzione alle aziende con alto leverage — il costo del rifinanziamento sale.';
+    } else if(tltChg!=null&&tltChg>0.3){
+      creditSignal='<span style="color:var(--b)">🛡 Flight-to-safety</span>';
+      creditNote='I Treasury lunghi (TLT) salgono mentre gli investitori cercano rifugio. Questo precede spesso un taglio Fed o segnala un rallentamento economico imminente.';
+    } else if(hygChg>=0){
+      creditSignal='<span style="color:var(--t2)">⬜ Condizioni neutrali</span>';
+      creditNote='Il mercato del credito è bilanciato — nessun segnale di stress estremo né di euforia. Buona finestra per esaminare la qualità del credito dei propri asset.';
+    } else {
+      creditSignal='<span style="color:var(--o)">🟡 Avversione al rischio</span>';
+      creditNote='Gli spread obbligazionari si allargano in modo generalizzato. Il mercato riduce il rischio di portafoglio — monitorare la tenuta dei livelli di supporto sulle azioni.';
+    }
+    creditBlock=`<strong>${creditSignal}</strong><br><br>${creditNote}`;
+  } else {
+    creditBlock='Dati credito non disponibili — possibile blocco Yahoo Finance. Riprova tra qualche minuto.';
+  }
+
+  // ── Posizionamento settoriale ──
+  function sectorScore(name){
+    let s=0;
+    if(regime==='expansion'){if(['Tecnologia','Finanziari','Beni Discrezionali','Industriali','Materiali','Comm. Servizi'].includes(name))s+=2;if(['Salute','Necessità','Utilities'].includes(name))s-=1;}
+    else if(regime==='slowdown'){if(['Salute','Necessità','Utilities'].includes(name))s+=1;if(['Beni Discrezionali','Industriali'].includes(name))s-=1;}
+    else if(regime==='contraction'){if(['Salute','Necessità','Utilities'].includes(name))s+=2;if(['Finanziari','Beni Discrezionali','Industriali'].includes(name))s-=2;}
+    else if(regime==='stagflation'){if(['Energia','Materiali'].includes(name))s+=2;if(['Necessità'].includes(name))s+=1;if(['Real Estate','Tecnologia','Beni Discrezionali','Utilities'].includes(name))s-=2;}
+    if(t10!=null&&t10>4.5){if(['Tecnologia','Real Estate','Utilities'].includes(name))s-=1;if(['Finanziari'].includes(name))s+=1;}
+    if(t10!=null&&t10<3.0){if(['Tecnologia','Real Estate'].includes(name))s+=1;if(['Finanziari'].includes(name))s-=1;}
+    if(fedBias===-1){if(['Tecnologia','Real Estate','Beni Discrezionali'].includes(name))s+=1;if(['Finanziari'].includes(name))s-=1;}
+    else if(fedBias===1){if(['Finanziari'].includes(name))s+=1;if(['Real Estate','Utilities'].includes(name))s-=1;}
+    if(spread!=null){if(spread<-0.5){if(['Finanziari'].includes(name))s-=1;if(['Salute','Necessità'].includes(name))s+=1;}else if(spread>1.5){if(['Finanziari'].includes(name))s+=1;}}
+    if(dxyP&&dxyP>104&&['Energia','Materiali'].includes(name))s-=1;
+    if(dxyP&&dxyP<97&&['Energia','Materiali'].includes(name))s+=1;
+    if(regime==='stagflation'&&['Energia','Materiali'].includes(name))s+=1;
+    return s;
+  }
+  const SECTORS=[
+    {n:'Tecnologia',ico:'💻'},{n:'Finanziari',ico:'🏦'},{n:'Salute',ico:'🏥'},
+    {n:'Beni Discrezionali',ico:'🛍'},{n:'Necessità',ico:'🛒'},{n:'Energia',ico:'⚡'},
+    {n:'Industriali',ico:'🏗'},{n:'Materiali',ico:'⚙️'},{n:'Real Estate',ico:'🏠'},
+    {n:'Utilities',ico:'💡'},{n:'Comm. Servizi',ico:'📡'},
+  ];
+  const sectorHtml=SECTORS.map(sec=>{
+    const sc=sectorScore(sec.n);
+    const cls=sc>=2?'ow':sc===1?'ow1':sc<=-2?'uw':sc===-1?'uw1':'neu';
+    const lbl=sc>=2?'Sovrappeso':sc===1?'Lieve OW':sc<=-2?'Sottopeso':sc===-1?'Lieve UW':'Neutrale';
+    return`<div class="mac-sec-pill ${cls}" title="${sec.n}: ${lbl} (score ${sc})"><span class="mac-sp-ico">${sec.ico}</span><span>${sec.n}</span><span class="mac-sp-lbl">${lbl}</span></div>`;
+  }).join('');
+
+  // ── Regime badge ──
+  const regBadge=document.getElementById('mac-regime-badge-an');
+  if(regBadge){
+    const rc={expansion:'#065F46',slowdown:'#B45309',contraction:'#B91C1C',stagflation:'#7C3AED'};
+    const rb={expansion:'rgba(5,150,105,.12)',slowdown:'rgba(217,119,6,.12)',contraction:'rgba(220,38,38,.12)',stagflation:'rgba(124,58,237,.12)'};
+    const rbd={expansion:'rgba(5,150,105,.25)',slowdown:'rgba(217,119,6,.25)',contraction:'rgba(220,38,38,.25)',stagflation:'rgba(124,58,237,.25)'};
+    const rico={expansion:'🟢',slowdown:'🟡',contraction:'🔴',stagflation:'🟠'};
+    const rlbl={expansion:'Espansione',slowdown:'Rallentamento',contraction:'Contrazione',stagflation:'Stagflazione'};
+    const r=MACRO_SNAP.regime;
+    regBadge.innerHTML=`<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--fm);color:${rc[r]};background:${rb[r]};border:1px solid ${rbd[r]}">${rico[r]} ${rlbl[r]}</div>`;
+  }
+
+  // ── Render ──
+  const scEl=document.getElementById('mac-scenario');if(scEl)scEl.innerHTML=mainNarrative;
+  const rEl=document.getElementById('mac-txt-rates');if(rEl)rEl.innerHTML=ratesBlock;
+  const dEl=document.getElementById('mac-txt-dollar');if(dEl)dEl.innerHTML=dollarBlock||'Dati non disponibili.';
+  const cEl=document.getElementById('mac-txt-credit');if(cEl)cEl.innerHTML=creditBlock;
+  const sEl=document.getElementById('mac-sector-row');if(sEl)sEl.innerHTML=sectorHtml;
+}
+
+/* ══════════════════════════════════════════
    MACRO EDU — Dati settoriali e ciclo
 ══════════════════════════════════════════ */
 
