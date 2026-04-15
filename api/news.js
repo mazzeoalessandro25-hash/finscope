@@ -363,7 +363,7 @@ export default async function handler(req, res) {
     .filter(a => a.title && a.link)
     .sort((a, b) => (b.time || 0) - (a.time || 0))
     .map(({ _specific, ...rest }) => rest)
-    .slice(0, 30);
+    .slice(0, 40);
 
   return res.json(isDebug ? { news, debug: debugInfo } : { news });
 }
