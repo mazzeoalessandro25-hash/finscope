@@ -4377,6 +4377,84 @@ async function loadETFScreener(){
   }
 }
 
+const BOND_RATE_TICKERS=[
+  {sym:'^IRX',label:'3 Mesi',name:'T-Bill 3M'},
+  {sym:'^FVX',label:'5 Anni',name:'T-Note 5Y'},
+  {sym:'^TNX',label:'10 Anni',name:'T-Note 10Y'},
+  {sym:'^TYX',label:'30 Anni',name:'T-Bond 30Y'},
+];
+const BOND_ETFS=[
+  {sym:'TLT',  name:'iShares 20+ Year Treasury Bond', cat:'Gov. USA Lungo'},
+  {sym:'IEF',  name:'iShares 7-10 Year Treasury Bond', cat:'Gov. USA Medio'},
+  {sym:'SHY',  name:'iShares 1-3 Year Treasury Bond', cat:'Gov. USA Corto'},
+  {sym:'BND',  name:'Vanguard Total Bond Market', cat:'Obblig. Misto USA'},
+  {sym:'LQD',  name:'iShares iBoxx $ IG Corporate', cat:'Corporate IG USD'},
+  {sym:'HYG',  name:'iShares iBoxx $ HY Corporate', cat:'High Yield USD'},
+  {sym:'EMB',  name:'iShares JP Morgan EM Bond', cat:'Emergenti USD'},
+  {sym:'XGIN.MI',name:'Xtrackers Eurozone Gov. Bond', cat:'Gov. Eurozona'},
+  {sym:'IBGS.MI',name:'iShares Core € Govt Bond', cat:'Gov. EUR'},
+  {sym:'IEAG.MI',name:'iShares Core € Aggregate Bond', cat:'Aggregate EUR'},
+];
+async function loadBondScreener(){
+  const rateGrid=document.getElementById('bond-rate-grid');
+  const etfBody=document.getElementById('bond-etf-body');
+  rateGrid.innerHTML='<div class="bond-rate-card ld" style="grid-column:1/-1">Caricamento tassi…</div>';
+  etfBody.innerHTML='<tr><td colspan="8" class="ld">Caricamento ETF…</td></tr>';
+
+  // Fetch yield curve
+  const rateResults=await Promise.all(BOND_RATE_TICKERS.map(async t=>{
+    try{
+      const r=await fetch('/api/quote?symbol='+encodeURIComponent(t.sym));
+      if(!r.ok) return null;
+      return await r.json();
+    }catch{return null;}
+  }));
+  rateGrid.innerHTML=BOND_RATE_TICKERS.map((t,i)=>{
+    const d=rateResults[i];
+    if(!d||!d.price) return `<div class="bond-rate-card"><div class="br-label">${t.label}</div><div class="br-val">—</div><div class="br-name">${t.name}</div></div>`;
+    const chg=d.price-(d.prev||d.price);
+    const chgPct=d.prev?((chg/d.prev)*100):0;
+    const col=chg>=0?'var(--g)':'var(--r)';
+    const sign=chg>=0?'+':'';
+    return `<div class="bond-rate-card">
+      <div class="br-label">${t.label}</div>
+      <div class="br-val">${d.price.toFixed(2)}%</div>
+      <div class="br-chg" style="color:${col}">${sign}${chgPct.toFixed(2)}%</div>
+      <div class="br-name">${t.name}</div>
+    </div>`;
+  }).join('');
+
+  // Fetch ETF prices
+  const etfResults=await Promise.all(BOND_ETFS.map(async e=>{
+    try{
+      const r=await fetch('/api/quote?symbol='+encodeURIComponent(e.sym));
+      if(!r.ok) return null;
+      return await r.json();
+    }catch{return null;}
+  }));
+  etfBody.innerHTML=BOND_ETFS.map((e,i)=>{
+    const d=etfResults[i];
+    const price=d?.price;
+    const prev=d?.prev;
+    const cur=d?.currency||'USD';
+    const chg=price!=null&&prev!=null?((price-prev)/prev*100):null;
+    const divY=d?.divYield;
+    const chgStr=chg!=null?`<span class="${chg>=0?'pos':'neg'}">${chg>=0?'+':''}${chg.toFixed(2)}%</span>`:'<span class="t3">—</span>';
+    const priceStr=price!=null?`${price.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})} <span style="font-size:10px;color:var(--t3)">${cur}</span>`:'—';
+    const divStr=divY!=null?`${(divY*100).toFixed(2)}%`:'—';
+    return `<tr>
+      <td><button class="star-btn ${watchlist.includes(e.sym)?'active':''}" onclick="toggleWl('${e.sym}',this.closest('tr'))"><span class="star-btn">★</span></button></td>
+      <td><span class="sc-sym" onclick="openFA('${e.sym}')">${e.sym}</span></td>
+      <td style="color:var(--t2)">${e.name}</td>
+      <td><span class="sc-sect">${e.cat}</span></td>
+      <td style="font-family:var(--fm);font-weight:600">${priceStr}</td>
+      <td>${chgStr}</td>
+      <td style="font-family:var(--fm)">${divStr}</td>
+      <td><button class="add-btn" onclick="quickAddToPortfolio('${e.sym}','${e.name.replace(/'/g,"\\'")}')">＋</button></td>
+    </tr>`;
+  }).join('');
+}
+
 function sortTbl(k){if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=-1;}renderMarketStocks();}
 function toggleWl(sym,el){
   const i=watchlist.indexOf(sym);if(i===-1)watchlist.push(sym);else watchlist.splice(i,1);
