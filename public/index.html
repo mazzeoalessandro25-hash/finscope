@@ -939,6 +939,27 @@ html.dark .auth-box{background:#1e293b}
 .mac-block-lbl{font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
 .mac-block-txt{font-size:12px;color:var(--t);line-height:1.65}
 .mac-sector-row{display:flex;flex-wrap:wrap;gap:8px}
+.mac-ac-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.mac-ac-card{border-radius:10px;padding:14px 12px;border:1px solid var(--bd);text-align:center}
+.mac-ac-card .mac-ac-ico{font-size:22px;margin-bottom:6px}
+.mac-ac-card .mac-ac-lbl{font-size:10px;font-weight:700;font-family:var(--fm);color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.mac-ac-card .mac-ac-sig{font-size:11px;font-weight:700;font-family:var(--fm);padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:8px}
+.mac-ac-card .mac-ac-note{font-size:10px;color:var(--t2);line-height:1.55;text-align:left}
+.mac-ac-card.pos{background:rgba(5,150,105,.07);border-color:rgba(5,150,105,.22)}
+.mac-ac-card.neu{background:var(--s2)}
+.mac-ac-card.neg{background:rgba(220,38,38,.06);border-color:rgba(220,38,38,.18)}
+.mac-watchlist{display:flex;flex-direction:column;gap:6px}
+.mac-wl-item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-radius:8px;background:var(--s2);border:1px solid var(--bd)}
+.mac-wl-date{font-family:var(--fm);font-size:10px;font-weight:700;color:var(--b);flex-shrink:0;min-width:72px;padding-top:1px}
+.mac-wl-body{flex:1}
+.mac-wl-title{font-size:12px;font-weight:600;color:var(--t);margin-bottom:3px}
+.mac-wl-note{font-size:11px;color:var(--t2);line-height:1.5}
+.mac-wl-imp{font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 7px;border-radius:3px;flex-shrink:0;margin-top:2px}
+.mac-wl-imp.alta{background:rgba(220,38,38,.12);color:#B91C1C}
+.mac-wl-imp.media{background:rgba(217,119,6,.12);color:#B45309}
+.mac-wl-imp.bassa{background:var(--s2);color:var(--t3)}
+@media(max-width:900px){.mac-ac-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.mac-ac-grid{grid-template-columns:repeat(2,1fr)}}
 .mac-sec-pill{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:9px;font-size:10px;font-weight:700;font-family:var(--fm);border:1px solid transparent;min-width:74px;text-align:center;cursor:default}
 .mac-sec-pill .mac-sp-ico{font-size:16px}
 .mac-sec-pill .mac-sp-lbl{font-size:9px;font-weight:400;opacity:.75}
