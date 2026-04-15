@@ -4466,6 +4466,17 @@ function toggleWl(sym,el){
 function openFA(sym){
   openStockDetail(sym);
 }
+function quickAddToPortfolio(sym,name){
+  showPage('portafoglio',document.getElementById('nb-portafoglio'));
+  setTimeout(()=>{
+    const wrap=document.getElementById('port-add-form-wrap');
+    if(wrap&&(wrap.style.display==='none'||wrap.style.display==='')) togglePortAddForm();
+    setTimeout(()=>{
+      const inp=document.getElementById('port-search');
+      if(inp){inp.value=sym;inp.dispatchEvent(new Event('input'));}
+    },100);
+  },150);
+}
 
 /* ── SIMULATORE ── */
 function calcSim(){
