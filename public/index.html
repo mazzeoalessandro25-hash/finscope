@@ -4516,7 +4516,7 @@ function calcSim(){
   if(simCI)simCI.destroy();
   simCI=new Chart(sCtx,{type:'line',data:{labels,datasets:[
     {label:'Portafoglio',data:vals,borderColor:'#1A56C4',borderWidth:2,fill:true,
-      backgroundColor:cx=>{const g=cx.chart.ctx.createLinearGradient(0,0,0,190);g.addColorStop(0,'rgba(26,86,196,.14)');g.addColorStop(1,'rgba(255,255,255,0)');return g;},tension:.4,pointRadius:0},
+      backgroundColor:cx=>{const h=cx.chart.height||300;const g=cx.chart.ctx.createLinearGradient(0,0,0,h);g.addColorStop(0,'rgba(26,86,196,.14)');g.addColorStop(1,'rgba(255,255,255,0)');return g;},tension:.4,pointRadius:0},
     {label:'Investito',data:inv,borderColor:'#8499B0',borderWidth:1.5,borderDash:[4,4],fill:false,tension:.4,pointRadius:0}
   ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8499B0',font:{family:'IBM Plex Mono',size:11}}}},
     scales:{x:{ticks:{color:'#8499B0',font:{family:'IBM Plex Mono',size:10},maxTicksLimit:10},grid:{color:'rgba(216,226,239,.5)'}},
