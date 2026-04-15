@@ -3962,11 +3962,19 @@ function setScreenerIndex(idx, btn){
   currentIndex=idx;
   document.querySelectorAll('.sc-idx-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
+  const isBonds=idx==='bonds';
+  const bondsSection=document.getElementById('sc-bonds-section');
+  const stocksWrap=document.getElementById('sc-stocks-wrap');
+  const scFilters=document.getElementById('sc-filters');
+  const scLoadWrap=document.getElementById('sc-load-wrap');
+  if(bondsSection) bondsSection.style.display=isBonds?'block':'none';
+  if(stocksWrap) stocksWrap.style.display=isBonds?'none':'';
+  if(scFilters) scFilters.style.display=isBonds?'none':'';
+  if(isBonds){ loadBondScreener(); return; }
   const isAll=idx==='all';
   const elCountry=document.getElementById('sc-country');
   if(elCountry) elCountry.style.display=idx==='etf'?'none':'';
-  const elLoadWrap=document.getElementById('sc-load-wrap');
-  if(elLoadWrap) elLoadWrap.style.display=isAll?'block':'none';
+  if(scLoadWrap) scLoadWrap.style.display=isAll?'block':'none';
   const thSpark=document.getElementById('sc-th-spark');
   if(thSpark) thSpark.style.display='none';
   hideSearchDropdown();
