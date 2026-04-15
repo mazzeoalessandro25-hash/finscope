@@ -932,10 +932,17 @@ html.dark .auth-box{background:#1e293b}
 .macro-mdi-lbl{font-size:11px;color:var(--t2)}
 .macro-spread-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,#DC2626 0%,#D97706 35%,#059669 55%,#1A56C4 80%,#3730a3 100%);position:relative;margin:6px 0}
 .macro-spread-needle{position:absolute;top:50%;width:2px;height:16px;background:var(--t);border-radius:1px;transform:translate(-50%,-50%);transition:left .6s cubic-bezier(.4,0,.2,1)}
-/* Macro page inline grids responsive */
-@media(max-width:900px){
-  #page-macro [style*="grid-template-columns:1.4fr"]{grid-template-columns:1fr!important}
-  #page-macro [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+/* Macro page named grids */
+.macro-row-rates{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+.macro-row-economy{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.macro-row-forex{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+@media(max-width:1000px){
+  .macro-row-rates{grid-template-columns:1fr}
+  .macro-row-economy{grid-template-columns:1fr 1fr}
+}
+@media(max-width:640px){
+  .macro-row-economy{grid-template-columns:1fr}
+  .macro-row-forex{grid-template-columns:1fr}
 }
 /* ── Macro Education ── */
 .cycle-q{border:2px solid var(--bd);border-radius:12px;padding:14px;transition:all .2s;position:relative}
