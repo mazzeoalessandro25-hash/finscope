@@ -8,7 +8,7 @@
  * ?debug=1       → mostra conteggio articoli per fonte
  */
 
-const RSS_TIMEOUT = 6000;
+const RSS_TIMEOUT = 8000;
 
 // ─── RSS parsing ──────────────────────────────────────────────
 function extractTag(xml, tag) {
