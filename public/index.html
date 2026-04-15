@@ -308,6 +308,12 @@ nav{height:54px;background:var(--b2);
 .bench-bar{height:5px;border-radius:4px;transition:width .6s ease}
 .bench-val{font-family:var(--fm);font-size:12px;font-weight:700;width:56px;text-align:right;flex-shrink:0}
 
+/* LAB TABS */
+.lab-tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:4px}
+.lab-tab{flex:1;padding:9px 12px;border:none;background:none;border-radius:9px;font-family:var(--fm);font-size:12px;font-weight:600;cursor:pointer;color:var(--t2);transition:all .15s;letter-spacing:.2px}
+.lab-tab.active{background:var(--card);color:var(--b);box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.lab-panel{display:none}
+.lab-panel.active{display:block}
 /* SIMULATORE */
 .sim-l{display:grid;grid-template-columns:350px 1fr;gap:20px}
 .bt-layout{display:grid;grid-template-columns:320px 1fr;gap:20px;align-items:start}
