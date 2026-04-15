@@ -2679,15 +2679,18 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     </div>
   </div>
 
-  <!-- ROW 1: Yield Curve | Banche Centrali | Condizioni Credito -->
-  <div style="display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:14px;margin-bottom:14px">
+  <!-- ── SEZIONE: Tassi & Rendimenti ── -->
+  <div class="sdiv" style="margin-top:4px"><div class="sdiv-t">Tassi & Rendimenti</div><div class="sdiv-l"></div></div>
+
+  <!-- ROW 1: Yield Curve (wide) | Banche Centrali -->
+  <div class="macro-row-rates">
 
     <div class="card">
       <div class="ch"><div>
         <div class="ct">📈 Curva dei Rendimenti USA</div>
         <div class="cs" id="macro-yield-sub">Treasury · 3M · 5Y · 10Y · 30Y</div>
       </div></div>
-      <div style="position:relative;height:160px">
+      <div style="position:relative;height:180px">
         <canvas id="macro-yield-canvas"></canvas>
       </div>
       <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)">
@@ -2711,6 +2714,33 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div id="macro-cb-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
     </div>
 
+  </div>
+
+  <!-- ── SEZIONE: Economia & Mercati Globali ── -->
+  <div class="sdiv"><div class="sdiv-t">Economia & Mercati Globali</div><div class="sdiv-l"></div></div>
+
+  <!-- ROW 2: USA | EU | Condizioni Credito -->
+  <div class="macro-row-economy">
+
+    <div class="card">
+      <div class="ch">
+        <div>
+          <div class="ct">🇺🇸 Snapshot USA</div>
+          <div class="cs" id="macro-us-upd">—</div>
+        </div>
+        <div id="macro-regime-badge"></div>
+      </div>
+      <div id="macro-us-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
+    <div class="card">
+      <div class="ch"><div>
+        <div class="ct">🇪🇺 Snapshot Eurozona</div>
+        <div class="cs" id="macro-eu-upd">—</div>
+      </div></div>
+      <div id="macro-eu-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+    </div>
+
     <div class="card">
       <div class="ch"><div>
         <div class="ct">💳 Condizioni del Credito</div>
@@ -2721,32 +2751,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
   </div>
 
-  <!-- ROW 2: Snapshot USA | Snapshot EU -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-
-    <div class="card">
-      <div class="ch">
-        <div>
-          <div class="ct">🇺🇸 Snapshot Macroeconomico USA</div>
-          <div class="cs" id="macro-us-upd">—</div>
-        </div>
-        <div id="macro-regime-badge"></div>
-      </div>
-      <div id="macro-us-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
-    </div>
-
-    <div class="card">
-      <div class="ch"><div>
-        <div class="ct">🇪🇺 Snapshot Macroeconomico Eurozona</div>
-        <div class="cs" id="macro-eu-upd">—</div>
-      </div></div>
-      <div id="macro-eu-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
-    </div>
-
-  </div>
+  <!-- ── SEZIONE: Forex & Indicatori ── -->
+  <div class="sdiv"><div class="sdiv-t">Forex & Indicatori Leading</div><div class="sdiv-l"></div></div>
 
   <!-- ROW 3: Forex | Segnali Leading -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+  <div class="macro-row-forex">
 
     <div class="card">
       <div class="ch"><div>
