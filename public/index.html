@@ -2599,17 +2599,22 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <!-- ═══ NEWS ═══ -->
 <div class="page" id="page-news">
   <div class="pg-title">News Mercati</div>
-  <div class="pg-sub">Ultime notizie finanziarie · Clicca per aprire l'articolo</div>
-  <div class="nf">
-    <button class="nf-btn active" onclick="loadNews('mercati',this)">Mercati</button>
-    <button class="nf-btn" onclick="loadNews('italia',this)">Italia</button>
-    <button class="nf-btn" onclick="loadNews('usa',this)">USA</button>
-    <button class="nf-btn" onclick="loadNews('commodities',this)">Commodities</button>
-    <button class="nf-btn" onclick="loadNews('forex',this)">Forex</button>
-    <button class="nf-btn" onclick="loadNews('crypto',this)">Crypto</button>
-    <button class="nf-btn" onclick="loadNews('macro',this)">Macro</button>
+  <div class="pg-sub" style="margin-bottom:14px">Ultime notizie finanziarie · Aggiornate in tempo reale</div>
+  <div class="news-search-wrap">
+    <input class="news-search-inp" id="news-search-inp" type="text" placeholder="Cerca ticker o tema… es. AAPL, Fed, oro, BTP"
+      onkeydown="if(event.key==='Enter')loadNewsSearch(this.value)" autocomplete="off"/>
+    <button class="news-search-btn" onclick="loadNewsSearch(document.getElementById('news-search-inp').value)">Cerca</button>
   </div>
-  <div class="news-grid" id="news-grid"><div class="ld">Caricamento notizie...</div></div>
+  <div class="nf">
+    <button class="nf-btn active" onclick="loadNews('mercati',this)">🌐 Mercati</button>
+    <button class="nf-btn" onclick="loadNews('italia',this)">🇮🇹 Italia</button>
+    <button class="nf-btn" onclick="loadNews('usa',this)">🇺🇸 USA</button>
+    <button class="nf-btn" onclick="loadNews('commodities',this)">🛢 Commodities</button>
+    <button class="nf-btn" onclick="loadNews('forex',this)">💱 Forex</button>
+    <button class="nf-btn" onclick="loadNews('crypto',this)">₿ Crypto</button>
+    <button class="nf-btn" onclick="loadNews('macro',this)">📊 Macro</button>
+  </div>
+  <div id="news-grid"><div class="ld">Caricamento notizie...</div></div>
 </div>
 
 
