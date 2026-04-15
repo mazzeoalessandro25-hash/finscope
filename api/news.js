@@ -298,7 +298,7 @@ const CATEGORIES = {
 // ─── Handler ──────────────────────────────────────────────────
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=180, stale-while-revalidate=60');
+  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
 
   const { category = 'mercati', symbol, q, debug } = req.query;
   const finnhubKey = process.env.FINNHUB_KEY || '';
