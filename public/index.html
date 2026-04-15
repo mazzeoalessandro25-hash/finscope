@@ -226,6 +226,13 @@ nav{height:54px;background:var(--b2);
 .sc-idx-btn{padding:7px 13px;border:1px solid var(--bd);background:var(--s2);border-radius:8px;font-family:var(--ff);font-size:12px;font-weight:500;cursor:pointer;color:var(--t2);transition:all .15s;white-space:nowrap}
 .sc-idx-btn.active{background:var(--b);color:#fff;border-color:var(--b);box-shadow:0 2px 8px rgba(26,86,196,.25)}
 .sc-idx-btn:not(.active):hover{background:var(--b3);color:var(--b);border-color:rgba(26,86,196,.3)}
+.bond-rate-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:4px}
+.bond-rate-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;text-align:center}
+.bond-rate-card .br-label{font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+.bond-rate-card .br-val{font-size:22px;font-weight:700;color:var(--t);font-family:var(--fm)}
+.bond-rate-card .br-chg{font-size:11px;font-weight:600;margin-top:4px}
+.bond-rate-card .br-name{font-size:10px;color:var(--t3);margin-top:2px}
+@media(max-width:600px){.bond-rate-grid{grid-template-columns:repeat(2,1fr)}}
 .sc-f{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center}
 .fsel,.finp{background:var(--card);border:1px solid var(--bd);color:var(--t);padding:8px 12px;border-radius:8px;font-family:var(--ff);font-size:13px;outline:none;transition:all .15s}
 .fsel:focus,.finp:focus{border-color:rgba(26,86,196,.5);box-shadow:0 0 0 3px rgba(26,86,196,.08)}
