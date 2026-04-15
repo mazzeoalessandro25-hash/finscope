@@ -1970,7 +1970,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <button class="sc-btn" id="sc-load-btn" onclick="loadMoreScreener()" style="background:var(--s2);color:var(--b);border:1px solid var(--bd)">Mostra altri 50</button>
   </div>
 
-  <div class="tbl-wrap">
+  <div class="tbl-wrap" id="sc-stocks-wrap">
     <table class="tbl">
       <thead><tr>
         <th></th>
@@ -1985,6 +1985,34 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </tr></thead>
       <tbody id="sc-body"><tr><td colspan="12" class="ld">Caricamento...</td></tr></tbody>
     </table>
+  </div>
+
+  <!-- ═══ SEZIONE OBBLIGAZIONI ═══ -->
+  <div id="sc-bonds-section" style="display:none">
+    <!-- Curva dei Tassi USA -->
+    <div style="margin-bottom:20px">
+      <div style="font-size:11px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">📈 Curva dei Rendimenti USA — Live</div>
+      <div class="bond-rate-grid" id="bond-rate-grid">
+        <div class="bond-rate-card ld">Caricamento...</div>
+      </div>
+    </div>
+    <!-- Tabella ETF Obbligazionari -->
+    <div style="font-size:11px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">📊 ETF Obbligazionari — Prezzi Live</div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr>
+          <th></th>
+          <th>TICKER</th>
+          <th>NOME</th>
+          <th>CATEGORIA</th>
+          <th>PREZZO</th>
+          <th>VAR 1G</th>
+          <th>YIELD DIV.</th>
+          <th>+ PORTAFOGLIO</th>
+        </tr></thead>
+        <tbody id="bond-etf-body"><tr><td colspan="8" class="ld">Caricamento...</td></tr></tbody>
+      </table>
+    </div>
   </div>
 
   </div>
