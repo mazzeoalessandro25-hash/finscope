@@ -4790,7 +4790,7 @@ async function _renderNews(category){
           </a>`;
         }).join('')}
       </div>` : '';
-    grid.innerHTML=sentiment+featuredHtml+restHtml;
+    grid.innerHTML=featuredHtml+restHtml;
   }catch{grid.innerHTML='<div class="ld">Errore caricamento notizie</div>';}
 }
 
