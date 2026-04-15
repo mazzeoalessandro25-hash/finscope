@@ -4684,19 +4684,113 @@ async function runFA(){
 }
 
 /* ── NEWS ── */
+function newsTimeAgo(ts){
+  if(!ts)return'';
+  const d=Math.floor(Date.now()/1000-ts);
+  if(d<60)return'Adesso';
+  if(d<3600)return Math.floor(d/60)+' min fa';
+  if(d<86400)return Math.floor(d/3600)+' ore fa';
+  if(d<172800)return'Ieri';
+  return new Date(ts*1000).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
+}
+function getNewsBadge(title,time){
+  const t=(title||'').toLowerCase();
+  const age=time?Math.floor(Date.now()/1000-time):99999;
+  const bull=['rally','surge','soar','gain',' rise','record high','boost','bullish','jump','climb','rialzo','crescita','positiv','guadagn'];
+  const bear=['crash','plunge',' fall','drop','slump','decline','recession','fear','crisis','sell-off','bearish','calo','crollo','ribasso','perdita','negativ'];
+  const cb=['federal reserve','fed rate','ecb rate','bce rate','banca centrale','rate hike','rate cut','interest rate','powell','lagarde','tassi'];
+  if(bull.some(w=>t.includes(w)))return'<span class="news-badge bullish">📈 Rialzo</span>';
+  if(bear.some(w=>t.includes(w)))return'<span class="news-badge bearish">📉 Calo</span>';
+  if(cb.some(w=>t.includes(w)))return'<span class="news-badge cb">🏦 Banca Centrale</span>';
+  if(age<1800)return'<span class="news-badge breaking">🔴 Breaking</span>';
+  if(age<3600)return'<span class="news-badge recent">🕐 Recente</span>';
+  return'';
+}
+function renderSentimentBar(news){
+  const total=news.length;if(!total)return'';
+  let bull=0,bear=0;
+  news.forEach(n=>{
+    const t=(n.title||'').toLowerCase();
+    if(['rally','surge','soar','gain','record','boost','bullish','jump','rialzo','crescita'].some(w=>t.includes(w)))bull++;
+    else if(['crash','plunge','fall','drop','slump','decline','recession','crisis','bearish','calo','crollo'].some(w=>t.includes(w)))bear++;
+  });
+  const neutral=total-bull-bear;
+  const bP=Math.round(bull/total*100),rP=Math.round(bear/total*100),nP=100-bP-rP;
+  const mood=bull>bear?'📈 Positivo':bear>bull?'📉 Negativo':'➡ Neutro';
+  const mc=bull>bear?'#059669':bear>bull?'#DC2626':'var(--t3)';
+  return`<div class="news-sentiment">
+    <span style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap">Sentiment</span>
+    <div style="flex:1;height:6px;border-radius:3px;background:var(--s2);overflow:hidden;display:flex">
+      <div style="width:${bP}%;background:#059669"></div>
+      <div style="width:${nP}%;background:#94A3B8"></div>
+      <div style="width:${rP}%;background:#DC2626"></div>
+    </div>
+    <span style="font-size:11px;font-weight:700;color:#059669;font-family:var(--fm);white-space:nowrap">${bP}% 📈</span>
+    <span style="font-size:11px;color:var(--t3);font-family:var(--fm);white-space:nowrap">${nP}% ➡</span>
+    <span style="font-size:11px;font-weight:700;color:#DC2626;font-family:var(--fm);white-space:nowrap">${rP}% 📉</span>
+    <span style="font-size:12px;font-weight:700;color:${mc};font-family:var(--fm);margin-left:4px;white-space:nowrap">${mood}</span>
+  </div>`;
+}
 async function loadNews(category,btn){
-  if(btn){document.querySelectorAll('.nf-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  document.querySelectorAll('.nf-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  const inp=document.getElementById('news-search-inp');
+  if(inp)inp.value='';
+  await _renderNews(category);
+}
+function loadNewsSearch(q){
+  if(!q?.trim())return;
+  document.querySelectorAll('.nf-btn').forEach(b=>b.classList.remove('active'));
+  _renderNews(q.trim());
+}
+const _newsGrads=['linear-gradient(135deg,#1A56C4,#7C3AED)','linear-gradient(135deg,#059669,#1A56C4)','linear-gradient(135deg,#D97706,#B91C1C)'];
+async function _renderNews(category){
   const grid=document.getElementById('news-grid');
-  grid.innerHTML='<div class="ld">Caricamento...</div>';
+  grid.innerHTML='<div class="ld">Caricamento notizie...</div>';
   try{
     const r=await fetch('/api/news?category='+encodeURIComponent(category));
     const data=await r.json();
     if(!data?.news?.length){grid.innerHTML='<div class="ld">Nessuna notizia disponibile</div>';return;}
-    grid.innerHTML=data.news.map(n=>{
-      const dt=n.time?new Date(n.time*1000).toLocaleString('it-IT',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
-      const thumb=n.thumbnail?`<div style="width:100%;height:140px;background:url('${n.thumbnail}') center/cover no-repeat;border-radius:8px;margin-bottom:10px;flex-shrink:0"></div>`:'';
-      return`<a class="news-item" href="${n.link}" target="_blank" rel="noopener">${thumb}<div class="n-pub">${n.publisher||''}</div><div class="n-title">${n.title}</div><div class="n-time">${dt}</div></a>`;
-    }).join('');
+    const news=data.news;
+    const featured=news.slice(0,3);
+    const rest=news.slice(3,15);
+    const sentiment=renderSentimentBar(news);
+    const featuredHtml=`
+      <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">🔥 In Evidenza</div>
+      <div class="news-featured-grid">
+        ${featured.map((n,i)=>{
+          const badge=getNewsBadge(n.title,n.time);
+          const time=newsTimeAgo(n.time);
+          const bg=n.thumbnail?`background-image:url('${n.thumbnail}')`:`background:${_newsGrads[i%3]}`;
+          return`<a class="news-hero" href="${n.link}" target="_blank" rel="noopener">
+            <div class="news-hero-img" style="${bg}"></div>
+            <div class="news-hero-overlay"></div>
+            <div class="news-hero-body">
+              <div class="news-hero-pub">${n.publisher||''}</div>
+              <div class="news-hero-title">${n.title}</div>
+              <div class="news-hero-foot">${badge}<span class="news-hero-time">${time}</span></div>
+            </div>
+          </a>`;
+        }).join('')}
+      </div>`;
+    const restHtml=rest.length?`
+      <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">📰 Ultime Notizie</div>
+      <div class="news-grid">
+        ${rest.map(n=>{
+          const badge=getNewsBadge(n.title,n.time);
+          const time=newsTimeAgo(n.time);
+          const bg=n.thumbnail?`background-image:url('${n.thumbnail}')`:'';
+          return`<a class="news-item" href="${n.link}" target="_blank" rel="noopener">
+            <div class="news-item-img" style="${bg}"></div>
+            <div class="news-item-body">
+              <div class="n-pub">${n.publisher||''}</div>
+              <div class="n-title">${n.title}</div>
+              <div class="n-foot">${badge}<span class="n-time">${time}</span></div>
+            </div>
+          </a>`;
+        }).join('')}
+      </div>` : '';
+    grid.innerHTML=sentiment+featuredHtml+restHtml;
   }catch{grid.innerHTML='<div class="ld">Errore caricamento notizie</div>';}
 }
 
