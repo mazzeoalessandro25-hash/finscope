@@ -172,16 +172,25 @@ function deduplicate(articles) {
 const CATEGORIES = {
   mercati: {
     rss: [
+      // Con thumbnail — fonti primarie
+      { urls: ['https://feeds.marketwatch.com/marketwatch/topstories/'], name: 'MarketWatch', specific: false },
+      { urls: ['https://www.thestreet.com/.rss/full/'], name: 'TheStreet', specific: false },
+      // Senza thumbnail ma abbondanti
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+      { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
     ],
     finnhub: 'general',
     yahooQueries: ['stock market finance today', 'global markets stocks bonds', 'wall street nasdaq dow jones'],
     keywords: null,
   },
   italia: {
-    rss: [],
+    rss: [
+      // Con thumbnail — fonti italiane primarie
+      { urls: ['https://www.ilsole24ore.com/rss/homepage.xml'], name: 'Il Sole 24 Ore', specific: true },
+      { urls: ['https://www.corriere.it/rss/economia.xml'], name: 'Corriere Economia', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+    ],
     finnhub: null,
-    // Ticker Yahoo Finance delle principali blue chip italiane → news precise per azienda
     yahooTickers: [
       'ENI.MI','ENEL.MI','UCG.MI','ISP.MI','RACE','STLAM.MI',
       'MB.MI','G.MI','LDO.MI','PRY.MI','MONC.MI','CPR.MI',
@@ -200,7 +209,11 @@ const CATEGORIES = {
   },
   usa: {
     rss: [
+      // Con thumbnail
+      { urls: ['https://feeds.marketwatch.com/marketwatch/topstories/'], name: 'MarketWatch', specific: false },
+      { urls: ['https://www.thestreet.com/.rss/full/'], name: 'TheStreet', specific: false },
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+      { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
     ],
     finnhub: 'general',
     yahooTickers: ['AAPL','MSFT','NVDA','GOOGL','AMZN','META','TSLA','JPM','BRK-B','V'],
@@ -216,6 +229,8 @@ const CATEGORIES = {
   commodities: {
     rss: [
       { urls: ['https://www.cnbc.com/id/100727362/device/rss/rss.html'], name: 'CNBC Commodities', specific: true },
+      { urls: ['https://www.thestreet.com/.rss/full/'], name: 'TheStreet', specific: false },
+      { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
     ],
     finnhub: 'general',
     yahooTickers: ['GC=F','CL=F','SI=F','NG=F','HG=F','ZW=F','ZC=F'],
@@ -230,6 +245,8 @@ const CATEGORIES = {
   forex: {
     rss: [
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+      { urls: ['https://www.ft.com/markets?format=rss'], name: 'Financial Times', specific: false },
+      { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
     ],
     finnhub: 'forex',
     yahooQueries: ['forex euro dollar exchange rate', 'currency pound yen franc', 'foreign exchange bce ecb'],
@@ -260,6 +277,8 @@ const CATEGORIES = {
   macro: {
     rss: [
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+      { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
+      { urls: ['https://www.ft.com/world?format=rss'], name: 'Financial Times', specific: false },
     ],
     finnhub: 'general',
     yahooQueries: ['inflation interest rate central bank', 'fed ecb monetary policy rates', 'gdp recession economy growth'],
