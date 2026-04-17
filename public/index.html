@@ -14321,26 +14321,34 @@ async function loadCryptoChart(days,btn){
     const data=await r.json();
     const prices=data.prices||[];
     chartEl.innerHTML='';
+    const prices=data.prices||[];
+    const vols=data.total_volumes||[];
     if(!prices.length){chartEl.innerHTML='<div class="ld" style="padding:60px;text-align:center;color:var(--t3)">Nessun dato disponibile</div>';return;}
     const isDark=document.documentElement.classList.contains('dark');
     const textColor=isDark?'#e5e7eb':'#374151';
+    const dedup=(arr)=>{const seen=new Set();return arr.filter(d=>{if(seen.has(d.time))return false;seen.add(d.time);return true;}).sort((a,b)=>a.time-b.time);};
+    const pts=dedup(prices.map(([ts,p])=>({time:Math.floor(ts/1000),value:p})));
+    const isUp=(pts[pts.length-1]?.value||0)>=(pts[0]?.value||0);
+    const lineColor=isUp?'#16A34A':'#DC2626';
+    const topColor=isUp?'rgba(22,163,74,.22)':'rgba(220,38,38,.22)';
     const chart=LightweightCharts.createChart(chartEl,{
-      width:chartEl.clientWidth,height:280,
+      width:chartEl.clientWidth,height:340,
       layout:{background:{type:'Solid',color:'transparent'},textColor},
-      grid:{vertLines:{color:'rgba(128,128,128,.07)'},horzLines:{color:'rgba(128,128,128,.07)'}},
-      rightPriceScale:{borderColor:'transparent',scaleMargins:{top:.1,bottom:.1}},
+      grid:{vertLines:{color:'rgba(128,128,128,.06)'},horzLines:{color:'rgba(128,128,128,.06)'}},
+      rightPriceScale:{borderColor:'transparent',scaleMargins:{top:.08,bottom:.28}},
       timeScale:{borderColor:'transparent',timeVisible:true},
       crosshair:{mode:LightweightCharts.CrosshairMode.Normal}
     });
-    const series=chart.addAreaSeries({
-      lineColor:'#1A56C4',topColor:'rgba(26,86,196,.28)',bottomColor:'rgba(26,86,196,0)',
-      lineWidth:2
-    });
-    const seen=new Set();
-    const pts=prices.map(([ts,p])=>({time:Math.floor(ts/1000),value:p}))
-      .filter(d=>{if(seen.has(d.time))return false;seen.add(d.time);return true;})
-      .sort((a,b)=>a.time-b.time);
+    const series=chart.addAreaSeries({lineColor,topColor,bottomColor:'rgba(0,0,0,0)',lineWidth:2});
     series.setData(pts);
+    // Volume histogram
+    chart.priceScale('volume').applyOptions({scaleMargins:{top:.82,bottom:0},drawTicks:false});
+    const volSeries=chart.addHistogramSeries({
+      priceScaleId:'volume',
+      color:isUp?'rgba(22,163,74,.35)':'rgba(220,38,38,.35)',
+      priceFormat:{type:'volume'},
+    });
+    volSeries.setData(dedup(vols.map(([ts,v])=>({time:Math.floor(ts/1000),value:v}))));
     chart.timeScale().fitContent();
     _crdChart=chart;
     new ResizeObserver(()=>{chart.applyOptions({width:chartEl.clientWidth});}).observe(chartEl);
