@@ -14295,11 +14295,15 @@ async function openCryptoDetail(coinId){
   });
   const def=document.getElementById('crd-btn-30');
   if(def)def.classList.add('active');
+  // Reset chart mode to line on open
+  _crdChartMode='line';
+  document.querySelectorAll('.chart-type-btn[id^="crd-mode"]').forEach(b=>b.classList.remove('active'));
+  const lineBtn=document.getElementById('crd-mode-line');if(lineBtn)lineBtn.classList.add('active');
   // Populate from cache
   try{
     const d=await _loadCryptoData();
     const coin=d.coins.find(c=>c.id===coinId);
-    if(coin)_populateCryptoHeader(coin);
+    if(coin){_populateCryptoHeader(coin);_initConverter(coin);_renderMcapComparison(coin,d);}
     if(d.fng)_renderFngGauge(d.fng);
     if(coin)_renderCryptoDetailNarrative(coin,d);
   }catch(e){}
