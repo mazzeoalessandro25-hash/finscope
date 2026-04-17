@@ -1698,14 +1698,27 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
   <div class="crd-body">
 
+    <!-- ACTION ROW -->
+    <div class="qa-action-row">
+      <button class="qa-btn" onclick="crdQuickPortfolio()">＋ Aggiungi al Portafoglio</button>
+      <button class="qa-btn qa-btn-ghost" onclick="crdQuickAlert()">🔔 Imposta Alerta</button>
+    </div>
+
     <!-- GRAFICO — prima cosa visible -->
     <div class="crd-chart-card">
-      <div class="crd-tf-row">
+      <div class="crd-tf-row" style="flex-wrap:wrap;gap:6px">
+        <button class="chart-type-btn active" id="crd-mode-line" onclick="setCrdMode('line',this)">Linea</button>
+        <button class="chart-type-btn" id="crd-mode-candle" onclick="setCrdMode('candle',this)">Candele</button>
+        <div style="width:1px;height:16px;background:var(--bd);margin:0 2px;flex-shrink:0"></div>
         <button class="cc-btn active" id="crd-btn-30" onclick="loadCryptoChart(30,this)">30G</button>
         <button class="cc-btn" id="crd-btn-90" onclick="loadCryptoChart(90,this)">90G</button>
         <button class="cc-btn" id="crd-btn-180" onclick="loadCryptoChart(180,this)">180G</button>
         <button class="cc-btn" id="crd-btn-365" onclick="loadCryptoChart(365,this)">1A</button>
         <button class="cc-btn" id="crd-btn-max" onclick="loadCryptoChart('max',this)">MAX</button>
+        <div style="margin-left:auto;font-family:var(--fm);font-size:9px;color:var(--t3);display:flex;align-items:center;gap:8px">
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:2px;background:#F59E0B;border-radius:1px;display:inline-block"></span>MA7</span>
+          <span style="display:flex;align-items:center;gap:3px"><span style="width:10px;height:2px;background:#3B82F6;border-radius:1px;display:inline-block"></span>MA25</span>
+        </div>
       </div>
       <div id="crd-chart" style="width:100%;height:380px"></div>
     </div>
