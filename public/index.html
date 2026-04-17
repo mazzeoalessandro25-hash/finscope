@@ -5834,6 +5834,7 @@ setInterval(()=>{loadIndices();loadComs();loadCrypto();loadVIX();document.getEle
 ══════════════════════════════════════════ */
 const TOKEN_KEY='fs_token';
 const USER_KEY='fs_user';
+let currentLang=localStorage.getItem('fs_lang')||'it';
 let currentUser=null;
 let currentToken=null;
 let authTab='login';
