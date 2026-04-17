@@ -6087,67 +6087,71 @@ async function savePacPlans(){
 
 /* ── PAC — Piano di Accumulo del Capitale ── */
 
-// Sposta una data al prossimo giorno lavorativo (lun-ven) se cade di weekend
+// Sposta al primo giorno lavorativo (lun-ven) se cade di weekend
 function _toWorkday(d){
-  const day=d.getDay();
-  if(day===6)d.setDate(d.getDate()+2); // sab → lun
-  if(day===0)d.setDate(d.getDate()+1); // dom → lun
+  if(d.getDay()===6)d.setDate(d.getDate()+2);
+  if(d.getDay()===0)d.setDate(d.getDate()+1);
   return d;
 }
 
-// Calcola il primo giorno lavorativo (lun-ven) del mese indicato
+// Primo giorno lavorativo di un dato mese/anno
 function _firstTradingDay(year, month){
-  const d=new Date(year,month,1);
-  return _toWorkday(d).toISOString().split('T')[0];
+  return _toWorkday(new Date(year, month, 1)).toISOString().split('T')[0];
 }
 
-// Calcola il giorno target (es. 4) del mese, spostato al lavorativo successivo se weekend
-function _targetDayOfMonth(year, month, dayOfMonth){
-  // Cap al giorno massimo del mese (es. febbraio non ha il 29)
+// Giorno specifico del mese, spostato al lunedì se weekend. Cap al max giorno del mese.
+function _targetDayOfMonth(year, month, day){
   const maxDay=new Date(year, month+1, 0).getDate();
-  const d=new Date(year, month, Math.min(dayOfMonth, maxDay));
-  return _toWorkday(d).toISOString().split('T')[0];
+  return _toWorkday(new Date(year, month, Math.min(day, maxDay))).toISOString().split('T')[0];
 }
 
-// Data prossima esecuzione in base a frequenza (monthly/quarterly) e giorno del mese
-function _nextPacDate(fromDateStr, freq, dayOfMonth){
-  const d=new Date(fromDateStr);
+// Prossima data di esecuzione dopo una data di riferimento
+function _nextPacDate(afterDateStr, freq, dayOfMonth){
+  const d=new Date(afterDateStr);
   const months=freq==='quarterly'?3:1;
   let y=d.getFullYear(), m=d.getMonth()+months;
   if(m>11){y+=Math.floor(m/12);m=m%12;}
-  if(dayOfMonth)return _targetDayOfMonth(y,m,dayOfMonth);
-  return _firstTradingDay(y,m);
+  return dayOfMonth?_targetDayOfMonth(y,m,dayOfMonth):_firstTradingDay(y,m);
 }
 
-// Data prima esecuzione: giorno target del mese corrente (o primo lavorativo se non specificato)
-function _firstExecDate(startDateStr, dayOfMonth){
+// Prima data di esecuzione futura (mai nel passato)
+function _firstExecDate(startDateStr, dayOfMonth, freq){
+  const today=new Date().toISOString().split('T')[0];
   const d=new Date(startDateStr);
-  if(dayOfMonth)return _targetDayOfMonth(d.getFullYear(),d.getMonth(),dayOfMonth);
-  return _firstTradingDay(d.getFullYear(),d.getMonth());
+  let candidate=dayOfMonth
+    ?_targetDayOfMonth(d.getFullYear(),d.getMonth(),dayOfMonth)
+    :_firstTradingDay(d.getFullYear(),d.getMonth());
+  // Se la data è già passata, avanza al mese successivo
+  if(candidate<=today){
+    const months=(freq==='quarterly')?3:1;
+    let y=d.getFullYear(), m=d.getMonth()+months;
+    if(m>11){y+=Math.floor(m/12);m=m%12;}
+    candidate=dayOfMonth?_targetDayOfMonth(y,m,dayOfMonth):_firstTradingDay(y,m);
+  }
+  return candidate;
 }
 
 let _pacSearchDelay=null, _pacNameCache={}, _pacCatCache={};
 
 function openPacForm(){
   if(!currentUser){openAuthModal();return;}
-  const f=document.getElementById('pac-add-form');
-  if(f){f.style.display='block';}
-  // Imposta data di oggi come default
+  document.getElementById('pac-add-form').style.display='block';
   const startEl=document.getElementById('pac-start');
   if(startEl&&!startEl.value)startEl.value=new Date().toISOString().split('T')[0];
+  document.getElementById('pac-preview-line').style.display='none';
 }
+
 function closePacForm(){
-  const f=document.getElementById('pac-add-form');
-  if(f){f.style.display='none';}
-  const s=document.getElementById('pac-search');if(s)s.value='';
-  const a=document.getElementById('pac-amount');if(a)a.value='';
-  const dy=document.getElementById('pac-day');if(dy)dy.value='';
+  document.getElementById('pac-add-form').style.display='none';
+  ['pac-search','pac-amount','pac-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('pac-dd').innerHTML='';
+  document.getElementById('pac-preview-line').style.display='none';
 }
 
 function onPacSearchInput(){
   clearTimeout(_pacSearchDelay);
   const q=(document.getElementById('pac-search')?.value||'').trim();
+  document.getElementById('pac-preview-line').style.display='none';
   if(q.length<2){document.getElementById('pac-dd').innerHTML='';return;}
   _pacSearchDelay=setTimeout(async()=>{
     try{
@@ -6157,19 +6161,58 @@ function onPacSearchInput(){
       if(!dd)return;
       dd.innerHTML='';
       (d.quotes||[]).forEach(x=>{
-        const item=document.createElement('div');
-        item.className='port-dd-item';
-        item.textContent=x.symbol+(x.name&&x.name!==x.symbol?' — '+x.name:'');
-        item.onclick=()=>{
+        const el=document.createElement('div');
+        el.className='port-dd-item';
+        el.textContent=x.symbol+(x.name&&x.name!==x.symbol?' — '+x.name:'');
+        el.onclick=()=>{
           document.getElementById('pac-search').value=x.symbol;
           _pacNameCache[x.symbol]=x.name||x.symbol;
-          _pacCatCache[x.symbol]=x.cat||'stock';
+          _pacCatCache[x.symbol]=x.cat||'etf';
           dd.innerHTML='';
+          _fetchPacPreview(x.symbol);
         };
-        dd.appendChild(item);
+        dd.appendChild(el);
       });
     }catch{}
   },300);
+}
+
+async function _fetchPacPreview(sym){
+  const previewEl=document.getElementById('pac-preview-line');
+  if(!previewEl)return;
+  previewEl.textContent='Caricamento prezzo…';
+  previewEl.style.display='block';
+  try{
+    const r=await fetch('/api/quote?symbol='+encodeURIComponent(sym));
+    const q=await r.json();
+    if(!q.price){previewEl.style.display='none';return;}
+    const amountEl=document.getElementById('pac-amount');
+    const amount=parseFloat(amountEl?.value||'0')||200;
+    const isEU=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||
+               sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||
+               sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L');
+    const csym=isEU?'€':'$';
+    const qty=(amount/q.price).toFixed(4);
+    previewEl.textContent=`Prezzo attuale: ${csym}${q.price.toFixed(2)} · Con ${csym}${amount} compreresti circa ${qty} quote`;
+    // aggiorna preview se l'utente cambia l'importo
+    if(amountEl){
+      amountEl._pacSym=sym;
+      amountEl._pacPrice=q.price;
+      amountEl._pacIsEU=isEU;
+    }
+  }catch{previewEl.style.display='none';}
+}
+
+function onPacAmountInput(){
+  const amountEl=document.getElementById('pac-amount');
+  const previewEl=document.getElementById('pac-preview-line');
+  if(!amountEl||!previewEl||!amountEl._pacPrice)return;
+  const amount=parseFloat(amountEl.value)||0;
+  if(!amount){previewEl.style.display='none';return;}
+  const csym=amountEl._pacIsEU?'€':'$';
+  const qty=(amount/amountEl._pacPrice).toFixed(4);
+  previewEl.textContent=`Prezzo attuale: ${csym}${amountEl._pacPrice.toFixed(2)} · Con ${csym}${amount} compreresti circa ${qty} quote`;
+  previewEl.style.display='block';
 }
 
 function onPacSearchKey(e){
@@ -6177,23 +6220,10 @@ function onPacSearchKey(e){
   const items=dd.querySelectorAll('.port-dd-item');
   if(!items.length)return;
   const cur=dd.querySelector('.port-dd-item.active');
-  if(e.key==='ArrowDown'){
-    e.preventDefault();
-    const next=cur?cur.nextElementSibling:items[0];
-    if(cur)cur.classList.remove('active');
-    if(next)next.classList.add('active');
-  } else if(e.key==='ArrowUp'){
-    e.preventDefault();
-    const prev=cur?cur.previousElementSibling:items[items.length-1];
-    if(cur)cur.classList.remove('active');
-    if(prev)prev.classList.add('active');
-  } else if(e.key==='Enter'){
-    e.preventDefault();
-    const active=dd.querySelector('.port-dd-item.active');
-    if(active)active.click();
-  } else if(e.key==='Escape'){
-    dd.innerHTML='';
-  }
+  if(e.key==='ArrowDown'){e.preventDefault();const n=cur?cur.nextElementSibling:items[0];if(cur)cur.classList.remove('active');if(n)n.classList.add('active');}
+  else if(e.key==='ArrowUp'){e.preventDefault();const p=cur?cur.previousElementSibling:items[items.length-1];if(cur)cur.classList.remove('active');if(p)p.classList.add('active');}
+  else if(e.key==='Enter'){e.preventDefault();const a=dd.querySelector('.port-dd-item.active');if(a)a.click();}
+  else if(e.key==='Escape'){dd.innerHTML='';}
 }
 
 async function addPacPlan(){
@@ -6203,17 +6233,19 @@ async function addPacPlan(){
   const startDate=document.getElementById('pac-start')?.value||new Date().toISOString().split('T')[0];
   const freq=document.getElementById('pac-freq')?.value||'monthly';
   const dayOfMonth=parseInt(document.getElementById('pac-day')?.value||'0')||null;
-  if(!symRaw){const s=document.getElementById('pac-search');if(s)s.style.border='1px solid var(--r)';return;}
-  if(!amount||amount<=0){const a=document.getElementById('pac-amount');if(a)a.style.border='1px solid var(--r)';return;}
-  const s=document.getElementById('pac-search');if(s)s.style.border='';
-  const a=document.getElementById('pac-amount');if(a)a.style.border='';
+  const searchEl=document.getElementById('pac-search');
+  const amountEl=document.getElementById('pac-amount');
+  if(!symRaw){if(searchEl)searchEl.style.border='1px solid var(--r)';return;}
+  if(!amount||amount<=0){if(amountEl)amountEl.style.border='1px solid var(--r)';return;}
+  if(searchEl)searchEl.style.border='';
+  if(amountEl)amountEl.style.border='';
   const isEU=symRaw.endsWith('.MI')||symRaw.endsWith('.PA')||symRaw.endsWith('.DE')||
               symRaw.endsWith('.SW')||symRaw.endsWith('.AS')||symRaw.endsWith('.MC')||
               symRaw.endsWith('.BR')||symRaw.endsWith('.VI')||symRaw.endsWith('.L');
   const currency=isEU?'EUR':'USD';
   const cat=_pacCatCache[symRaw]||'etf';
   const name=_pacNameCache[symRaw]||symRaw;
-  const nextExecution=_firstExecDate(startDate, dayOfMonth);
+  const nextExecution=_firstExecDate(startDate, dayOfMonth, freq);
   const plan={
     id:'pac_'+Date.now(),
     sym:symRaw, name, amount, currency, freq, dayOfMonth,
@@ -6225,13 +6257,16 @@ async function addPacPlan(){
   await savePacPlans();
   closePacForm();
   renderPacPlans();
+  renderPacLog();
 }
 
 async function deletePacPlan(id){
+  if(!confirm('Eliminare questo piano PAC?'))return;
   pacPlans=pacPlans.filter(p=>p.id!==id);
   await savePacPlans();
   renderPacPlans();
   renderPacLog();
+  checkPacDue();
 }
 
 async function togglePacPlan(id){
@@ -6240,41 +6275,51 @@ async function togglePacPlan(id){
   p.active=!p.active;
   await savePacPlans();
   renderPacPlans();
+  checkPacDue();
 }
 
 function renderPacPlans(){
   const el=document.getElementById('pac-list');
   if(!el)return;
   if(!pacPlans.length){
-    el.innerHTML='<div class="ld" style="padding:16px;text-align:center">Nessun piano PAC attivo. Clicca "＋ Nuovo PAC" per iniziare.</div>';
+    el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t3);font-size:13px">Nessun piano PAC configurato.<br><span style="font-size:12px">Clicca "＋ Nuovo PAC" per iniziare ad accumulare.</span></div>';
     return;
   }
   const today=new Date().toISOString().split('T')[0];
   el.innerHTML=pacPlans.map(p=>{
     const isDue=p.active&&p.nextExecution<=today;
-    const freqLabel=(p.freq==='quarterly'?'Trimestrale':'Mensile')+(p.dayOfMonth?` (giorno ${p.dayOfMonth})`:'');
+    const totalInvested=(p.log||[]).reduce((s,l)=>s+l.amount,0);
+    const totalQty=(p.log||[]).reduce((s,l)=>s+(l.qty||0),0);
+    const execCount=(p.log||[]).length;
+    const freqLabel=p.freq==='quarterly'?'Trimestrale':'Mensile';
+    const dayLabel=p.dayOfMonth?` · giorno ${p.dayOfMonth}`:'';
     const csym=p.currency==='EUR'?'€':'$';
+    const statusDot=p.active?(isDue?'🟠':'🟢'):'⚪';
+    const statusText=p.active?(isDue?'Da eseguire':'Attivo'):'In pausa';
     const statusColor=p.active?(isDue?'var(--o)':'var(--g)'):'var(--t3)';
-    const statusText=p.active?(isDue?'In scadenza oggi':'Attivo'):'In pausa';
-    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)">
-      <div style="flex:1;min-width:0">
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
-          <span style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">${p.sym}</span>
-          <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${p.name!==p.sym?p.name:''}</span>
-          <span style="font-size:9px;padding:1px 6px;border-radius:4px;background:var(--s2);color:var(--t3);font-family:var(--fm)">${freqLabel}</span>
+    return `<div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin-bottom:10px">
+      <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+            <span style="font-size:14px;font-weight:700;color:var(--t);font-family:var(--fm)">${p.sym}</span>
+            ${p.name!==p.sym?`<span style="font-size:11px;color:var(--t3)">${p.name}</span>`:''}
+            <span style="font-size:9px;padding:2px 7px;border-radius:4px;background:rgba(59,130,246,.12);color:var(--b);font-family:var(--fm);font-weight:600">ETF PAC</span>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Importo</div><div style="font-size:13px;font-weight:700;color:var(--t)">${csym}${p.amount.toLocaleString('it-IT')}</div></div>
+            <div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Frequenza</div><div style="font-size:12px;color:var(--t2)">${freqLabel}${dayLabel}</div></div>
+            <div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Prossima data</div><div style="font-size:12px;color:var(--t2);font-weight:600">${p.nextExecution||'—'}</div></div>
+            ${execCount>0?`<div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Investito</div><div style="font-size:12px;color:var(--g);font-weight:600">${csym}${totalInvested.toLocaleString('it-IT')} · ${execCount} acquist${execCount===1?'o':'i'}</div></div>`:''}
+          </div>
         </div>
-        <div style="font-size:12px;color:var(--t2)">
-          <span style="font-weight:600;color:var(--t)">${csym}${p.amount.toLocaleString('it-IT')}</span>
-          <span style="margin:0 6px;color:var(--t3)">·</span>
-          <span>Prossima esecuzione: <b>${p.nextExecution||'—'}</b></span>
-          ${p.lastExecuted?`<span style="margin:0 6px;color:var(--t3)">·</span><span style="color:var(--t3)">Ultimo: ${p.lastExecuted}</span>`:''}
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0">
+          <span style="font-size:11px;font-family:var(--fm);color:${statusColor}">${statusDot} ${statusText}</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            ${isDue?`<button id="pac-exec-btn-${p.id}" onclick="executePacNow('${p.id}')" style="background:var(--b);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;padding:6px 14px;cursor:pointer;font-family:var(--fm)">▶ Esegui acquisto</button>`:''}
+            <button onclick="togglePacPlan('${p.id}')" title="${p.active?'Metti in pausa':'Riprendi'}" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:13px;padding:4px 9px;cursor:pointer;color:var(--t3)">${p.active?'⏸':'▶'}</button>
+            <button onclick="deletePacPlan('${p.id}')" title="Elimina piano" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:13px;padding:4px 9px;cursor:pointer;color:var(--r)">✕</button>
+          </div>
         </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
-        <span style="font-size:10px;font-family:var(--fm);padding:2px 8px;border-radius:4px;background:var(--s2);color:${statusColor}">${statusText}</span>
-        ${isDue?`<button onclick="executePacNow('${p.id}')" title="Esegui ora" style="background:var(--b);color:#fff;border:none;border-radius:6px;font-size:11px;padding:4px 10px;cursor:pointer;font-family:var(--fm)">▶ Esegui</button>`:''}
-        <button onclick="togglePacPlan('${p.id}')" title="${p.active?'Metti in pausa':'Riprendi'}" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:14px;padding:3px 8px;cursor:pointer;color:var(--t3)">${p.active?'⏸':'▶'}</button>
-        <button onclick="deletePacPlan('${p.id}')" title="Elimina" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:14px;padding:3px 8px;cursor:pointer;color:var(--r)">✕</button>
       </div>
     </div>`;
   }).join('');
@@ -6286,78 +6331,96 @@ function renderPacLog(){
   if(!el||!card)return;
   const allLogs=pacPlans.flatMap(p=>(p.log||[]).map(l=>({...l,sym:p.sym,name:p.name,currency:p.currency})));
   allLogs.sort((a,b)=>b.date.localeCompare(a.date));
-  if(!allLogs.length){
-    card.style.display='none';return;
-  }
+  if(!allLogs.length){card.style.display='none';return;}
   card.style.display='block';
+  const totalByPlan={};
+  pacPlans.forEach(p=>{totalByPlan[p.sym]=(totalByPlan[p.sym]||0)+(p.log||[]).reduce((s,l)=>s+l.amount,0);});
   const csym=c=>c==='EUR'?'€':'$';
   el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px">
-    <thead><tr style="color:var(--t3);font-family:var(--fm);font-size:10px;text-align:left">
-      <th style="padding:6px 0;border-bottom:1px solid var(--bd)">Data</th>
-      <th style="padding:6px 0;border-bottom:1px solid var(--bd)">Titolo</th>
-      <th style="padding:6px 0;border-bottom:1px solid var(--bd);text-align:right">Importo</th>
-      <th style="padding:6px 0;border-bottom:1px solid var(--bd);text-align:right">Prezzo</th>
-      <th style="padding:6px 0;border-bottom:1px solid var(--bd);text-align:right">Quote</th>
+    <thead><tr style="color:var(--t3);font-family:var(--fm);font-size:10px;text-align:left;border-bottom:1px solid var(--bd)">
+      <th style="padding:8px 4px 8px 0">Data</th>
+      <th style="padding:8px 4px">Titolo</th>
+      <th style="padding:8px 4px;text-align:right">Importo</th>
+      <th style="padding:8px 4px;text-align:right">Prezzo acquisto</th>
+      <th style="padding:8px 4px;text-align:right">Quote acquistate</th>
     </tr></thead>
     <tbody>${allLogs.map(l=>`<tr style="border-bottom:1px solid var(--bd)">
-      <td style="padding:7px 0;color:var(--t3)">${l.date}</td>
-      <td style="padding:7px 0;font-weight:600;color:var(--t)">${l.sym}</td>
-      <td style="padding:7px 0;text-align:right;color:var(--t)">${csym(l.currency)}${l.amount.toLocaleString('it-IT')}</td>
-      <td style="padding:7px 0;text-align:right;color:var(--t2)">${csym(l.currency)}${(l.price||0).toFixed(2)}</td>
-      <td style="padding:7px 0;text-align:right;color:var(--t2)">${(l.qty||0).toFixed(4)}</td>
+      <td style="padding:8px 4px 8px 0;color:var(--t3);white-space:nowrap">${l.date}</td>
+      <td style="padding:8px 4px;font-weight:600;color:var(--t)">${l.sym}</td>
+      <td style="padding:8px 4px;text-align:right;color:var(--t);font-weight:600">${csym(l.currency)}${l.amount.toLocaleString('it-IT')}</td>
+      <td style="padding:8px 4px;text-align:right;color:var(--t2)">${csym(l.currency)}${(l.price||0).toFixed(2)}</td>
+      <td style="padding:8px 4px;text-align:right;color:var(--t2);font-family:var(--fm)">${(l.qty||0).toFixed(6)}</td>
     </tr>`).join('')}</tbody>
   </table>`;
 }
 
-// Controlla se ci sono PAC in scadenza e mostra badge
+// Badge rosso sul tab quando ci sono PAC in scadenza
 function checkPacDue(){
   const today=new Date().toISOString().split('T')[0];
   const due=pacPlans.filter(p=>p.active&&p.nextExecution<=today);
   const btn=document.getElementById('ptab-btn-pac');
   if(!btn)return;
   if(due.length){
-    btn.innerHTML=`📅 PAC <span style="background:var(--r);color:#fff;border-radius:10px;font-size:9px;padding:1px 5px;margin-left:4px;font-family:var(--fm)">${due.length}</span>`;
+    btn.innerHTML=`📅 PAC <span style="background:var(--r);color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;margin-left:3px;vertical-align:middle;font-family:var(--fm)">${due.length}</span>`;
   } else {
     btn.textContent='📅 PAC';
   }
 }
 
-// Esegue manualmente un PAC ora (fetcha prezzo corrente e aggiunge al portafoglio)
+// Esecuzione PAC: fetch prezzo corrente → aggiunge al portafoglio → avanza data
 async function executePacNow(id){
   const p=pacPlans.find(x=>x.id===id);
   if(!p||!currentUser)return;
-  const btn=document.querySelector(`[onclick="executePacNow('${id}')"]`);
-  if(btn){btn.disabled=true;btn.textContent='...';}
+  const execBtn=document.getElementById('pac-exec-btn-'+id);
+  if(execBtn){execBtn.disabled=true;execBtn.textContent='⏳ Acquisto...';}
   try{
     const r=await fetch('/api/quote?symbol='+encodeURIComponent(p.sym));
     const q=await r.json();
-    if(!q.price){throw new Error('Prezzo non disponibile');}
+    if(!q.price)throw new Error('Prezzo non disponibile per '+p.sym);
     const price=q.price;
     const qty=p.amount/price;
     const today=new Date().toISOString().split('T')[0];
-    const isEU=p.sym.endsWith('.MI')||p.sym.endsWith('.PA')||p.sym.endsWith('.DE')||
-                p.sym.endsWith('.SW')||p.sym.endsWith('.AS')||p.sym.endsWith('.MC')||
-                p.sym.endsWith('.BR')||p.sym.endsWith('.VI')||p.sym.endsWith('.L');
-    const currency=p.currency||( isEU?'EUR':'USD');
+    const currency=p.currency||(p.sym.match(/\.(MI|PA|DE|SW|AS|MC|BR|VI|L)$/)?'EUR':'USD');
     const csym=currency==='EUR'?'€':'$';
-    // Aggiunge al portafoglio
-    portfolio.push({sym:p.sym,qty,buyPrice:price,currency,symbol:csym,cat:p.cat||'etf',name:p.name,addedAt:Date.now(),buyDate:today,_pac:true});
+    // Aggiunge al portafoglio come acquisto reale
+    portfolio.push({
+      sym:p.sym, qty, buyPrice:price, currency, symbol:csym,
+      cat:p.cat||'etf', name:p.name,
+      addedAt:Date.now(), buyDate:today, _pac:true
+    });
     await savePortfolio();
     renderPortfolio();
-    // Registra nel log PAC
+    // Registra esecuzione nel log PAC
     if(!p.log)p.log=[];
-    p.log.unshift({date:today,amount:p.amount,price,qty});
+    p.log.unshift({date:today, amount:p.amount, price, qty});
     p.lastExecuted=today;
-    // Calcola prossima esecuzione
-    p.nextExecution=_nextPacDate(today,p.freq,p.dayOfMonth||null);
+    p.nextExecution=_nextPacDate(today, p.freq, p.dayOfMonth||null);
     await savePacPlans();
     renderPacPlans();
     renderPacLog();
     checkPacDue();
+    // Toast di conferma
+    _showPacToast(`✓ Acquistato ${qty.toFixed(4)} quote di ${p.sym} a ${csym}${price.toFixed(2)} — ${csym}${p.amount} investiti`);
   }catch(e){
-    alert('Errore esecuzione PAC: '+e.message);
-    if(btn){btn.disabled=false;btn.textContent='▶ Esegui';}
+    if(execBtn){execBtn.disabled=false;execBtn.textContent='▶ Esegui acquisto';}
+    _showPacToast('Errore: '+e.message, true);
   }
+}
+
+function _showPacToast(msg, isErr=false){
+  let t=document.getElementById('pac-toast');
+  if(!t){
+    t=document.createElement('div');
+    t.id='pac-toast';
+    t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;transition:opacity .4s;box-shadow:0 4px 20px rgba(0,0,0,.2);max-width:90vw;text-align:center';
+    document.body.appendChild(t);
+  }
+  t.textContent=msg;
+  t.style.background=isErr?'var(--r)':'var(--g)';
+  t.style.color='#fff';
+  t.style.opacity='1';
+  clearTimeout(t._hide);
+  t._hide=setTimeout(()=>{t.style.opacity='0';},4000);
 }
 
 /* ── PORTFOLIO PAGE ── */
