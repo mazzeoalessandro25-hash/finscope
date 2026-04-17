@@ -60,12 +60,12 @@ export default async function handler(req, res) {
   if (type === 'crypto-info' && id) {
     res.setHeader('Cache-Control','public,s-maxage=3600,stale-while-revalidate=600');
     try {
-      const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false`;
+      const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}?localization=true&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false`;
       const r=await fetch(url,{headers:{'User-Agent':'FinEdge/1.0'}});
       if(!r.ok) return res.status(502).json({error:'info error '+r.status});
       const d=await r.json();
       return res.json({
-        description: d.description?.en||null,
+        description: d.description?.it||d.description?.en||null,
         categories:  d.categories||[],
         genesis_date: d.genesis_date||null,
         hashing_algorithm: d.hashing_algorithm||null,
