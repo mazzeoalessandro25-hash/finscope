@@ -13974,7 +13974,7 @@ function _chgClassCrypto(v){return v==null?'':v>=0?'up':'down';}
 
 async function _loadCryptoData(force=false){
   if(_cryptoData&&!force)return _cryptoData;
-  const r=await fetch('/api/crypto');
+  const r=await fetch('/api/quote?type=crypto');
   if(!r.ok)throw new Error('Crypto API error '+r.status);
   _cryptoData=await r.json();
   return _cryptoData;
