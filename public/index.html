@@ -14403,7 +14403,7 @@ function _renderCryptoDetailNarrative(coin,d){
     if(fngV<30)signals.push({i:'🔴',t:`<strong>Sentiment: Paura (${fngV}/100)</strong> — Mercato in paura. Storicamente questi livelli precedono rimbalzi.`});
     else if(fngV>70)signals.push({i:'⚠️',t:`<strong>Sentiment: Euforia (${fngV}/100)</strong> — Mercato surriscaldato. Aumentare cautela nelle nuove posizioni.`});
   }
-  el.innerHTML=signals.map(s=>`<div class="cry-signal-row"><span class="cry-signal-icon">${s.i}</span><span class="cry-signal-text">${s.t}</span></div>`).join('')||'<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessun segnale disponibile.</div>';
+  el.innerHTML=signals.map(s=>`<div class="crd-sig-row"><div class="crd-sig-ico">${s.i}</div><div><div class="crd-sig-title">${s.t.replace(/<strong>|<\/strong>/g,'')}</div><div class="crd-sig-desc">${s.d||''}</div></div></div>`).join('')||'<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessun segnale disponibile.</div>';
 }
 
 async function loadCryptoChart(days,btn){
