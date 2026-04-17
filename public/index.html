@@ -8934,8 +8934,9 @@ function _macroRenderAnalysis(d){
   const sub1=spread!=null?(spread<-0.5?'Curva invertita':spread<0.2?'Curva piatta':'Curva normale'):'—';
   const sub2=dxyP!=null?(dxyP>103?'Dollaro forte':dxyP<98?'Dollaro debole':'Dollaro neutrale'):'—';
   const sub3=fedBias===1?`Fed hawkish (${fedRate}%)`:fedBias===-1?`Fed in taglio (${fedRate}%)`:`Fed in pausa (${fedRate}%)`;
+  const sub4=vixP!=null?(vixP>30?`VIX ${fmt(vixP,1)} — panico`:vixP>20?`VIX ${fmt(vixP,1)} — stress`:vixP>15?`VIX ${fmt(vixP,1)} — allerta`:`VIX ${fmt(vixP,1)} — calmo`):'';
   const rsub=document.getElementById('mac-regime-sub');
-  if(rsub)rsub.textContent=`${sub1}  ·  ${sub2}  ·  ${sub3}`;
+  if(rsub)rsub.textContent=`${sub1}  ·  ${sub2}  ·  ${sub3}${sub4?' · '+sub4:''}`;
 
   // ── C: Regime badge ──
   const regBadge=document.getElementById('mac-regime-badge-an');
