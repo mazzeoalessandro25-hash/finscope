@@ -14596,7 +14596,7 @@ async function loadCryptoChart(days, btn){
       width:chartEl.clientWidth,height:380,
       layout:{background:{type:'Solid',color:'transparent'},textColor},
       grid:{vertLines:{color:gridColor},horzLines:{color:gridColor}},
-      rightPriceScale:{borderColor:'transparent',scaleMargins:{top:.08,bottom:.28}},
+      rightPriceScale:{borderColor:'transparent',scaleMargins:{top:.08,bottom:.22}},
       timeScale:{borderColor:'transparent',timeVisible:true},
       crosshair:{mode:LightweightCharts.CrosshairMode.Normal}
     });
@@ -14611,7 +14611,8 @@ async function loadCryptoChart(days, btn){
       const series=chart.addCandlestickSeries({
         upColor:'#16A34A',downColor:'#DC2626',
         borderUpColor:'#16A34A',borderDownColor:'#DC2626',
-        wickUpColor:'#16A34A',wickDownColor:'#DC2626'
+        wickUpColor:'#16A34A',wickDownColor:'#DC2626',
+        priceLineVisible:false,lastValueVisible:false
       });
       series.setData(ohlcPts);
       closePts=ohlcPts.map(p=>({time:p.time,value:p.close}));
@@ -14624,7 +14625,8 @@ async function loadCryptoChart(days, btn){
       const series=chart.addAreaSeries({
         lineColor:isUp?'#16A34A':'#DC2626',
         topColor:isUp?'rgba(22,163,74,.22)':'rgba(220,38,38,.22)',
-        bottomColor:'rgba(0,0,0,0)',lineWidth:2
+        bottomColor:'rgba(0,0,0,0)',lineWidth:2,
+        priceLineVisible:false,lastValueVisible:false
       });
       series.setData(pts);
       closePts=pts;
