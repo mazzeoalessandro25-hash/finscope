@@ -3849,7 +3849,7 @@ function showPage(id,btn){
   if(id==='alerts'){renderWlaWatchlist&&renderWlaWatchlist();checkAlerts&&checkAlerts();}
   if(id==='macro')loadMacroDashboard();
   if(id==='lab')switchLabTab(_labActiveTab);
-  if(id==='crypto')loadCryptoDashboard();
+  if(id==='crypto'&&typeof loadCryptoDashboard==='function')loadCryptoDashboard();
 }
 
 /* ── ORARI ── */
