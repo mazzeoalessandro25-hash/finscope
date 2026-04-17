@@ -6213,10 +6213,10 @@ async function addPacPlan(){
   const currency=isEU?'EUR':'USD';
   const cat=_pacCatCache[symRaw]||'etf';
   const name=_pacNameCache[symRaw]||symRaw;
-  const nextExecution=_firstExecDate(startDate);
+  const nextExecution=_firstExecDate(startDate, dayOfMonth);
   const plan={
     id:'pac_'+Date.now(),
-    sym:symRaw, name, amount, currency, freq,
+    sym:symRaw, name, amount, currency, freq, dayOfMonth,
     startDate, nextExecution,
     lastExecuted:null, active:true, cat,
     log:[]
