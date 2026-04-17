@@ -14336,7 +14336,7 @@ async function openCryptoDetail(coinId){
   try{
     const d=await _loadCryptoData();
     const coin=d.coins.find(c=>c.id===coinId);
-    if(coin){_populateCryptoHeader(coin);_initConverter(coin);_renderMcapComparison(coin,d);}
+    if(coin){_populateCryptoHeader(coin);_initConverter(coin);}
     if(d.fng)_renderFngGauge(d.fng);
     if(coin)_renderCryptoDetailNarrative(coin,d);
   }catch(e){}
