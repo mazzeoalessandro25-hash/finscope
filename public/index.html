@@ -1006,7 +1006,8 @@ html.dark .auth-box{background:#1e293b}
 .mac-wl-note{font-size:11px;color:var(--t2);line-height:1.55}
 .mac-disclaimer{margin-top:12px;font-size:10px;color:var(--t3);line-height:1.5;padding:10px 13px;background:var(--s2);border-radius:8px}
 /* Responsive */
-@media(max-width:900px){.mac-2col{grid-template-columns:1fr}.mac-stats-strip{grid-template-columns:1fr 1fr}}
+@media(max-width:1100px){.mac-stats-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.mac-2col{grid-template-columns:1fr}.mac-stats-strip{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:700px){.mac-3col{grid-template-columns:1fr}.mac-stats-strip{grid-template-columns:1fr 1fr}}
 /* Macro page named grids */
 .macro-row-rates{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
