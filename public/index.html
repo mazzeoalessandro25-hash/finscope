@@ -6080,6 +6080,262 @@ async function savePacPlans(){
   });}catch{}
 }
 
+/* ── PAC — Piano di Accumulo del Capitale ── */
+
+// Calcola il primo giorno lavorativo (lun-ven) del mese indicato
+function _firstTradingDay(year, month){
+  const d=new Date(year,month,1);
+  while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);
+  return d.toISOString().split('T')[0];
+}
+
+// Data prossima esecuzione in base a frequenza (monthly/quarterly)
+function _nextPacDate(fromDateStr, freq){
+  const d=new Date(fromDateStr);
+  const months=freq==='quarterly'?3:1;
+  let y=d.getFullYear(), m=d.getMonth()+months;
+  if(m>11){y+=Math.floor(m/12);m=m%12;}
+  return _firstTradingDay(y,m);
+}
+
+// Data prima esecuzione: primo giorno lavorativo del mese di startDate
+function _firstExecDate(startDateStr){
+  const d=new Date(startDateStr);
+  return _firstTradingDay(d.getFullYear(),d.getMonth());
+}
+
+let _pacSearchDelay=null, _pacNameCache={}, _pacCatCache={};
+
+function openPacForm(){
+  if(!currentUser){openAuthModal();return;}
+  const f=document.getElementById('pac-add-form');
+  if(f){f.style.display='block';}
+  // Imposta data di oggi come default
+  const startEl=document.getElementById('pac-start');
+  if(startEl&&!startEl.value)startEl.value=new Date().toISOString().split('T')[0];
+}
+function closePacForm(){
+  const f=document.getElementById('pac-add-form');
+  if(f){f.style.display='none';}
+  const s=document.getElementById('pac-search');if(s)s.value='';
+  const a=document.getElementById('pac-amount');if(a)a.value='';
+  document.getElementById('pac-dd').innerHTML='';
+}
+
+function onPacSearchInput(){
+  clearTimeout(_pacSearchDelay);
+  const q=(document.getElementById('pac-search')?.value||'').trim();
+  if(q.length<2){document.getElementById('pac-dd').innerHTML='';return;}
+  _pacSearchDelay=setTimeout(async()=>{
+    try{
+      const r=await fetch('/api/quote?type=search&q='+encodeURIComponent(q));
+      const d=await r.json();
+      const dd=document.getElementById('pac-dd');
+      if(!dd)return;
+      dd.innerHTML='';
+      (d.quotes||[]).forEach(x=>{
+        const item=document.createElement('div');
+        item.className='port-dd-item';
+        item.textContent=x.symbol+(x.name&&x.name!==x.symbol?' — '+x.name:'');
+        item.onclick=()=>{
+          document.getElementById('pac-search').value=x.symbol;
+          _pacNameCache[x.symbol]=x.name||x.symbol;
+          _pacCatCache[x.symbol]=x.cat||'stock';
+          dd.innerHTML='';
+        };
+        dd.appendChild(item);
+      });
+    }catch{}
+  },300);
+}
+
+function onPacSearchKey(e){
+  const dd=document.getElementById('pac-dd');
+  const items=dd.querySelectorAll('.port-dd-item');
+  if(!items.length)return;
+  const cur=dd.querySelector('.port-dd-item.active');
+  if(e.key==='ArrowDown'){
+    e.preventDefault();
+    const next=cur?cur.nextElementSibling:items[0];
+    if(cur)cur.classList.remove('active');
+    if(next)next.classList.add('active');
+  } else if(e.key==='ArrowUp'){
+    e.preventDefault();
+    const prev=cur?cur.previousElementSibling:items[items.length-1];
+    if(cur)cur.classList.remove('active');
+    if(prev)prev.classList.add('active');
+  } else if(e.key==='Enter'){
+    e.preventDefault();
+    const active=dd.querySelector('.port-dd-item.active');
+    if(active)active.click();
+  } else if(e.key==='Escape'){
+    dd.innerHTML='';
+  }
+}
+
+async function addPacPlan(){
+  if(!currentUser){openAuthModal();return;}
+  const symRaw=(document.getElementById('pac-search')?.value||'').trim().toUpperCase();
+  const amount=parseFloat(document.getElementById('pac-amount')?.value||'0');
+  const startDate=document.getElementById('pac-start')?.value||new Date().toISOString().split('T')[0];
+  const freq=document.getElementById('pac-freq')?.value||'monthly';
+  if(!symRaw){const s=document.getElementById('pac-search');if(s)s.style.border='1px solid var(--r)';return;}
+  if(!amount||amount<=0){const a=document.getElementById('pac-amount');if(a)a.style.border='1px solid var(--r)';return;}
+  const s=document.getElementById('pac-search');if(s)s.style.border='';
+  const a=document.getElementById('pac-amount');if(a)a.style.border='';
+  const isEU=symRaw.endsWith('.MI')||symRaw.endsWith('.PA')||symRaw.endsWith('.DE')||
+              symRaw.endsWith('.SW')||symRaw.endsWith('.AS')||symRaw.endsWith('.MC')||
+              symRaw.endsWith('.BR')||symRaw.endsWith('.VI')||symRaw.endsWith('.L');
+  const currency=isEU?'EUR':'USD';
+  const cat=_pacCatCache[symRaw]||'etf';
+  const name=_pacNameCache[symRaw]||symRaw;
+  const nextExecution=_firstExecDate(startDate);
+  const plan={
+    id:'pac_'+Date.now(),
+    sym:symRaw, name, amount, currency, freq,
+    startDate, nextExecution,
+    lastExecuted:null, active:true, cat,
+    log:[]
+  };
+  pacPlans.push(plan);
+  await savePacPlans();
+  closePacForm();
+  renderPacPlans();
+}
+
+async function deletePacPlan(id){
+  pacPlans=pacPlans.filter(p=>p.id!==id);
+  await savePacPlans();
+  renderPacPlans();
+  renderPacLog();
+}
+
+async function togglePacPlan(id){
+  const p=pacPlans.find(x=>x.id===id);
+  if(!p)return;
+  p.active=!p.active;
+  await savePacPlans();
+  renderPacPlans();
+}
+
+function renderPacPlans(){
+  const el=document.getElementById('pac-list');
+  if(!el)return;
+  if(!pacPlans.length){
+    el.innerHTML='<div class="ld" style="padding:16px;text-align:center">Nessun piano PAC attivo. Clicca "＋ Nuovo PAC" per iniziare.</div>';
+    return;
+  }
+  const today=new Date().toISOString().split('T')[0];
+  el.innerHTML=pacPlans.map(p=>{
+    const isDue=p.active&&p.nextExecution<=today;
+    const freqLabel=p.freq==='quarterly'?'Trimestrale':'Mensile';
+    const csym=p.currency==='EUR'?'€':'$';
+    const statusColor=p.active?(isDue?'var(--o)':'var(--g)'):'var(--t3)';
+    const statusText=p.active?(isDue?'In scadenza oggi':'Attivo'):'In pausa';
+    return `<div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd)">
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px">
+          <span style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">${p.sym}</span>
+          <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${p.name!==p.sym?p.name:''}</span>
+          <span style="font-size:9px;padding:1px 6px;border-radius:4px;background:var(--s2);color:var(--t3);font-family:var(--fm)">${freqLabel}</span>
+        </div>
+        <div style="font-size:12px;color:var(--t2)">
+          <span style="font-weight:600;color:var(--t)">${csym}${p.amount.toLocaleString('it-IT')}</span>
+          <span style="margin:0 6px;color:var(--t3)">·</span>
+          <span>Prossima esecuzione: <b>${p.nextExecution||'—'}</b></span>
+          ${p.lastExecuted?`<span style="margin:0 6px;color:var(--t3)">·</span><span style="color:var(--t3)">Ultimo: ${p.lastExecuted}</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <span style="font-size:10px;font-family:var(--fm);padding:2px 8px;border-radius:4px;background:var(--s2);color:${statusColor}">${statusText}</span>
+        ${isDue?`<button onclick="executePacNow('${p.id}')" title="Esegui ora" style="background:var(--b);color:#fff;border:none;border-radius:6px;font-size:11px;padding:4px 10px;cursor:pointer;font-family:var(--fm)">▶ Esegui</button>`:''}
+        <button onclick="togglePacPlan('${p.id}')" title="${p.active?'Metti in pausa':'Riprendi'}" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:14px;padding:3px 8px;cursor:pointer;color:var(--t3)">${p.active?'⏸':'▶'}</button>
+        <button onclick="deletePacPlan('${p.id}')" title="Elimina" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:14px;padding:3px 8px;cursor:pointer;color:var(--r)">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPacLog(){
+  const el=document.getElementById('pac-log-content');
+  const card=document.getElementById('pac-log-card');
+  if(!el||!card)return;
+  const allLogs=pacPlans.flatMap(p=>(p.log||[]).map(l=>({...l,sym:p.sym,name:p.name,currency:p.currency})));
+  allLogs.sort((a,b)=>b.date.localeCompare(a.date));
+  if(!allLogs.length){
+    card.style.display='none';return;
+  }
+  card.style.display='block';
+  const csym=c=>c==='EUR'?'€':'$';
+  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px">
+    <thead><tr style="color:var(--t3);font-family:var(--fm);font-size:10px;text-align:left">
+      <th style="padding:6px 0;border-bottom:1px solid var(--bd)">Data</th>
+      <th style="padding:6px 0;border-bottom:1px solid var(--bd)">Titolo</th>
+      <th style="padding:6px 0;border-bottom:1px solid var(--bd);text-align:right">Importo</th>
+      <th style="padding:6px 0;border-bottom:1px solid var(--bd);text-align:right">Prezzo</th>
+      <th style="padding:6px 0;border-bottom:1px solid var(--bd);text-align:right">Quote</th>
+    </tr></thead>
+    <tbody>${allLogs.map(l=>`<tr style="border-bottom:1px solid var(--bd)">
+      <td style="padding:7px 0;color:var(--t3)">${l.date}</td>
+      <td style="padding:7px 0;font-weight:600;color:var(--t)">${l.sym}</td>
+      <td style="padding:7px 0;text-align:right;color:var(--t)">${csym(l.currency)}${l.amount.toLocaleString('it-IT')}</td>
+      <td style="padding:7px 0;text-align:right;color:var(--t2)">${csym(l.currency)}${(l.price||0).toFixed(2)}</td>
+      <td style="padding:7px 0;text-align:right;color:var(--t2)">${(l.qty||0).toFixed(4)}</td>
+    </tr>`).join('')}</tbody>
+  </table>`;
+}
+
+// Controlla se ci sono PAC in scadenza e mostra badge
+function checkPacDue(){
+  const today=new Date().toISOString().split('T')[0];
+  const due=pacPlans.filter(p=>p.active&&p.nextExecution<=today);
+  const btn=document.getElementById('ptab-btn-pac');
+  if(!btn)return;
+  if(due.length){
+    btn.innerHTML=`📅 PAC <span style="background:var(--r);color:#fff;border-radius:10px;font-size:9px;padding:1px 5px;margin-left:4px;font-family:var(--fm)">${due.length}</span>`;
+  } else {
+    btn.textContent='📅 PAC';
+  }
+}
+
+// Esegue manualmente un PAC ora (fetcha prezzo corrente e aggiunge al portafoglio)
+async function executePacNow(id){
+  const p=pacPlans.find(x=>x.id===id);
+  if(!p||!currentUser)return;
+  const btn=document.querySelector(`[onclick="executePacNow('${id}')"]`);
+  if(btn){btn.disabled=true;btn.textContent='...';}
+  try{
+    const r=await fetch('/api/quote?symbol='+encodeURIComponent(p.sym));
+    const q=await r.json();
+    if(!q.price){throw new Error('Prezzo non disponibile');}
+    const price=q.price;
+    const qty=p.amount/price;
+    const today=new Date().toISOString().split('T')[0];
+    const isEU=p.sym.endsWith('.MI')||p.sym.endsWith('.PA')||p.sym.endsWith('.DE')||
+                p.sym.endsWith('.SW')||p.sym.endsWith('.AS')||p.sym.endsWith('.MC')||
+                p.sym.endsWith('.BR')||p.sym.endsWith('.VI')||p.sym.endsWith('.L');
+    const currency=p.currency||( isEU?'EUR':'USD');
+    const csym=currency==='EUR'?'€':'$';
+    // Aggiunge al portafoglio
+    portfolio.push({sym:p.sym,qty,buyPrice:price,currency,symbol:csym,cat:p.cat||'etf',name:p.name,addedAt:Date.now(),buyDate:today,_pac:true});
+    await savePortfolio();
+    renderPortfolio();
+    // Registra nel log PAC
+    if(!p.log)p.log=[];
+    p.log.unshift({date:today,amount:p.amount,price,qty});
+    p.lastExecuted=today;
+    // Calcola prossima esecuzione
+    p.nextExecution=_nextPacDate(today,p.freq);
+    await savePacPlans();
+    renderPacPlans();
+    renderPacLog();
+    checkPacDue();
+  }catch(e){
+    alert('Errore esecuzione PAC: '+e.message);
+    if(btn){btn.disabled=false;btn.textContent='▶ Esegui';}
+  }
+}
+
 /* ── PORTFOLIO PAGE ── */
 function showPortfolioState(){
   const logMsg=document.getElementById('port-login-msg');
