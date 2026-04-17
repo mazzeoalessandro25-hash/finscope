@@ -14107,17 +14107,6 @@ function _renderCryptoTable(tbodyId,coins){
   }).join('');
 }
 
-/* ── CRYPTO SCREENER ── */
-async function loadCryptoScreener(){
-  const tbody=document.getElementById('sc-crypto-body');
-  if(tbody)tbody.innerHTML='<tr><td colspan="10" class="ld">Caricamento top 50 crypto...</td></tr>';
-  try{
-    const d=await _loadCryptoData();
-    _renderCryptoTable('sc-crypto-body',d.coins);
-  }catch(e){
-    if(tbody)tbody.innerHTML='<tr><td colspan="10" class="ld" style="color:var(--r)">Errore caricamento</td></tr>';
-  }
-}
 
 /* ── CRYPTO DETAIL ── */
 async function openCryptoDetail(coinId){
