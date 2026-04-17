@@ -6252,7 +6252,7 @@ function renderPacPlans(){
   const today=new Date().toISOString().split('T')[0];
   el.innerHTML=pacPlans.map(p=>{
     const isDue=p.active&&p.nextExecution<=today;
-    const freqLabel=p.freq==='quarterly'?'Trimestrale':'Mensile';
+    const freqLabel=(p.freq==='quarterly'?'Trimestrale':'Mensile')+(p.dayOfMonth?` (giorno ${p.dayOfMonth})`:'');
     const csym=p.currency==='EUR'?'€':'$';
     const statusColor=p.active?(isDue?'var(--o)':'var(--g)'):'var(--t3)';
     const statusText=p.active?(isDue?'In scadenza oggi':'Attivo'):'In pausa';
