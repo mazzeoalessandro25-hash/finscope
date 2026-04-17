@@ -14263,7 +14263,7 @@ async function loadCryptoChart(days,btn){
   chartEl.innerHTML='<div class="ld" style="padding:60px;text-align:center">Caricamento grafico...</div>';
   if(_crdChart){try{_crdChart.remove();}catch(e){}_crdChart=null;}
   try{
-    const r=await fetch(`/api/crypto?action=chart&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`);
+    const r=await fetch(`/api/quote?type=crypto-chart&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`);
     if(!r.ok)throw new Error('chart '+r.status);
     const data=await r.json();
     const prices=data.prices||[];
