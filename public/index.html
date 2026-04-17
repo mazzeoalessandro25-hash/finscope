@@ -3829,10 +3829,16 @@ function switchLabTab(tab){
 }
 
 function showPage(id,btn){
+  // chiudi overlay crypto se aperto
+  const crdOv=document.getElementById('crypto-detail-overlay');
+  if(crdOv&&crdOv.classList.contains('open')){crdOv.classList.remove('open');}
+  document.body.style.overflow='';
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
+  const pageEl=document.getElementById('page-'+id);
+  if(!pageEl)return;
+  pageEl.classList.add('active');
   if(btn)btn.classList.add('active');
   const mobBtn=document.getElementById('mob-nb-'+id);
   if(mobBtn)mobBtn.classList.add('active');
