@@ -14322,6 +14322,12 @@ async function openCryptoDetail(coinId){
   _crdChartMode='line';
   document.querySelectorAll('.chart-type-btn[id^="crd-mode"]').forEach(b=>b.classList.remove('active'));
   const lineBtn=document.getElementById('crd-mode-line');if(lineBtn)lineBtn.classList.add('active');
+  // Reset info card
+  const infoCard=document.getElementById('crd-info-card');
+  if(infoCard)infoCard.style.display='none';
+  const descEl=document.getElementById('crd-description');if(descEl)descEl.textContent='';
+  const catEl=document.getElementById('crd-categories');if(catEl)catEl.innerHTML='';
+  const linksEl=document.getElementById('crd-links');if(linksEl)linksEl.innerHTML='';
   // Populate from cache
   try{
     const d=await _loadCryptoData();
@@ -14330,7 +14336,9 @@ async function openCryptoDetail(coinId){
     if(d.fng)_renderFngGauge(d.fng);
     if(coin)_renderCryptoDetailNarrative(coin,d);
   }catch(e){}
+  // Carica grafico e info descrizione in parallelo
   loadCryptoChart(30,document.getElementById('crd-btn-30'));
+  _fetchCryptoInfo(coinId);
 }
 
 function closeCryptoDetail(){
