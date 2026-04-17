@@ -6202,6 +6202,7 @@ async function addPacPlan(){
   const amount=parseFloat(document.getElementById('pac-amount')?.value||'0');
   const startDate=document.getElementById('pac-start')?.value||new Date().toISOString().split('T')[0];
   const freq=document.getElementById('pac-freq')?.value||'monthly';
+  const dayOfMonth=parseInt(document.getElementById('pac-day')?.value||'0')||null;
   if(!symRaw){const s=document.getElementById('pac-search');if(s)s.style.border='1px solid var(--r)';return;}
   if(!amount||amount<=0){const a=document.getElementById('pac-amount');if(a)a.style.border='1px solid var(--r)';return;}
   const s=document.getElementById('pac-search');if(s)s.style.border='';
