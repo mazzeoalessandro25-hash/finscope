@@ -932,43 +932,82 @@ html.dark .auth-box{background:#1e293b}
 .macro-mdi-lbl{font-size:11px;color:var(--t2)}
 .macro-spread-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,#DC2626 0%,#D97706 35%,#059669 55%,#1A56C4 80%,#3730a3 100%);position:relative;margin:6px 0}
 .macro-spread-needle{position:absolute;top:50%;width:2px;height:16px;background:var(--t);border-radius:1px;transform:translate(-50%,-50%);transition:left .6s cubic-bezier(.4,0,.2,1)}
-/* Macro Analysis Commentary Card */
-.mac-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
-.mac-block{background:var(--s2);border-radius:10px;padding:14px 16px;border:1px solid var(--bd)}
-.mac-block-ico{font-size:18px;margin-bottom:6px}
-.mac-block-lbl{font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
-.mac-block-txt{font-size:12px;color:var(--t);line-height:1.65}
-.mac-sector-row{display:flex;flex-wrap:wrap;gap:8px}
-.mac-ac-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.mac-ac-card{border-radius:10px;padding:14px 12px;border:1px solid var(--bd);text-align:center}
-.mac-ac-card .mac-ac-ico{font-size:22px;margin-bottom:6px}
-.mac-ac-card .mac-ac-lbl{font-size:10px;font-weight:700;font-family:var(--fm);color:var(--t2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
-.mac-ac-card .mac-ac-sig{font-size:11px;font-weight:700;font-family:var(--fm);padding:3px 10px;border-radius:100px;display:inline-block;margin-bottom:8px}
-.mac-ac-card .mac-ac-note{font-size:10px;color:var(--t2);line-height:1.55;text-align:left}
-.mac-ac-card.pos{background:rgba(5,150,105,.07);border-color:rgba(5,150,105,.22)}
-.mac-ac-card.neu{background:var(--s2)}
-.mac-ac-card.neg{background:rgba(220,38,38,.06);border-color:rgba(220,38,38,.18)}
+/* ── Macro Analysis Redesign ── */
+/* Hero briefing */
+.mac-hero-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.mac-regime-eyebrow{font-size:9px;font-weight:700;font-family:var(--fm);color:var(--b);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:6px}
+.mac-regime-title{font-size:21px;font-weight:700;color:var(--t);line-height:1.2;margin-bottom:4px}
+.mac-regime-sub{font-size:11px;color:var(--t3)}
+/* Live stats strip */
+.mac-stats-strip{display:grid;grid-template-columns:repeat(4,1fr);background:var(--s2);border-radius:12px;border:1px solid var(--bd);overflow:hidden;margin-bottom:20px}
+.mac-stat-item{padding:14px 16px;border-right:1px solid var(--bd);position:relative}
+.mac-stat-item:last-child{border-right:none}
+.mac-stat-item::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.mac-stat-item.sig-danger::before{background:var(--r)}
+.mac-stat-item.sig-warn::before{background:var(--o)}
+.mac-stat-item.sig-safe::before{background:var(--g)}
+.mac-stat-item.sig-neu::before{background:var(--bd)}
+.mac-stat-lbl{font-size:9px;font-weight:600;font-family:var(--fm);color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px}
+.mac-stat-val{font-family:var(--fm);font-size:22px;font-weight:700;color:var(--t);line-height:1;margin-bottom:4px}
+.mac-stat-sub{font-size:10px;font-weight:600;font-family:var(--fm)}
+/* Scenario box */
+.mac-scenario-box{background:var(--s2);border-radius:10px;padding:16px 18px;border-left:3px solid var(--b)}
+.mac-scenario-label{font-size:9px;font-weight:700;font-family:var(--fm);color:var(--b);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+#mac-scenario{font-size:13.5px;color:var(--t);line-height:1.85}
+/* 3-col analysis blocks */
+.mac-3col{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.mac-block-card{padding:0;overflow:hidden}
+.mac-bk-signal{height:4px;width:100%;transition:background .3s}
+.mac-bk-inner{padding:14px 16px 16px}
+.mac-bk-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.mac-bk-ico{font-size:20px;flex-shrink:0;line-height:1}
+.mac-bk-lbl{font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px}
+.mac-bk-badge{font-size:10px;font-weight:700;font-family:var(--fm);padding:2px 9px;border-radius:3px;display:inline-block}
+.mac-bk-txt{font-size:12px;color:var(--t);line-height:1.7}
+.mac-bk-txt strong{color:var(--t);font-weight:700}
+/* 2-col outlook + sectors */
+.mac-2col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* Asset class list */
+.mac-ac-list{display:flex;flex-direction:column;gap:7px}
+.mac-ac-item{display:flex;align-items:center;gap:12px;padding:10px 13px;border-radius:9px;border:1px solid var(--bd);transition:background .1s}
+.mac-ac-item.pos{background:rgba(5,150,105,.07);border-color:rgba(5,150,105,.2)}
+.mac-ac-item.neu{background:var(--s2)}
+.mac-ac-item.cau{background:rgba(217,119,6,.07);border-color:rgba(217,119,6,.2)}
+.mac-ac-item.neg{background:rgba(220,38,38,.06);border-color:rgba(220,38,38,.18)}
+.mac-ac-ico{font-size:18px;flex-shrink:0}
+.mac-ac-body{flex:1;min-width:0}
+.mac-ac-name{font-size:12px;font-weight:700;color:var(--t);margin-bottom:2px}
+.mac-ac-note{font-size:10px;color:var(--t2);line-height:1.45}
+.mac-ac-sig{font-size:9px;font-weight:700;font-family:var(--fm);padding:3px 9px;border-radius:100px;flex-shrink:0;text-align:center;white-space:nowrap}
+/* Sector grid */
+.mac-sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mac-sec-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:1px solid var(--bd);background:var(--s2)}
+.mac-sec-row.ow{background:rgba(5,150,105,.09);border-color:rgba(5,150,105,.25)}
+.mac-sec-row.ow1{background:rgba(5,150,105,.05);border-color:rgba(5,150,105,.14)}
+.mac-sec-row.uw{background:rgba(220,38,38,.09);border-color:rgba(220,38,38,.24)}
+.mac-sec-row.uw1{background:rgba(220,38,38,.05);border-color:rgba(220,38,38,.14)}
+.mac-sec-ico{font-size:14px;flex-shrink:0}
+.mac-sec-name{font-size:11px;font-weight:600;color:var(--t);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mac-sec-lbl2{font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 6px;border-radius:3px;flex-shrink:0}
+.mac-sec-lbl2.ow,.mac-sec-lbl2.ow1{background:rgba(5,150,105,.15);color:#065F46}
+.mac-sec-lbl2.neu{background:var(--s2);color:var(--t3);border:1px solid var(--bd)}
+.mac-sec-lbl2.uw,.mac-sec-lbl2.uw1{background:rgba(220,38,38,.12);color:#B91C1C}
+/* Watchlist */
 .mac-watchlist{display:flex;flex-direction:column;gap:6px}
-.mac-wl-item{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-radius:8px;background:var(--s2);border:1px solid var(--bd)}
-.mac-wl-date{font-family:var(--fm);font-size:10px;font-weight:700;color:var(--b);flex-shrink:0;min-width:72px;padding-top:1px}
+.mac-wl-item{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border-radius:9px;background:var(--s2);border:1px solid var(--bd)}
+.mac-wl-left{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;min-width:64px}
+.mac-wl-date{font-family:var(--fm);font-size:10px;font-weight:700;color:var(--b);text-align:center}
+.mac-wl-imp{font-size:9px;font-weight:700;font-family:var(--fm);padding:2px 7px;border-radius:3px}
+.mac-wl-imp.alta{background:rgba(220,38,38,.13);color:#B91C1C}
+.mac-wl-imp.media{background:rgba(217,119,6,.13);color:#B45309}
+.mac-wl-imp.bassa{background:var(--s2);color:var(--t3);border:1px solid var(--bd)}
 .mac-wl-body{flex:1}
-.mac-wl-title{font-size:12px;font-weight:600;color:var(--t);margin-bottom:3px}
-.mac-wl-note{font-size:11px;color:var(--t2);line-height:1.5}
-.mac-wl-imp{font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 7px;border-radius:3px;flex-shrink:0;margin-top:2px}
-.mac-wl-imp.alta{background:rgba(220,38,38,.12);color:#B91C1C}
-.mac-wl-imp.media{background:rgba(217,119,6,.12);color:#B45309}
-.mac-wl-imp.bassa{background:var(--s2);color:var(--t3)}
-@media(max-width:900px){.mac-ac-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:560px){.mac-ac-grid{grid-template-columns:repeat(2,1fr)}}
-.mac-sec-pill{display:inline-flex;flex-direction:column;align-items:center;gap:3px;padding:8px 10px;border-radius:9px;font-size:10px;font-weight:700;font-family:var(--fm);border:1px solid transparent;min-width:74px;text-align:center;cursor:default}
-.mac-sec-pill .mac-sp-ico{font-size:16px}
-.mac-sec-pill .mac-sp-lbl{font-size:9px;font-weight:400;opacity:.75}
-.mac-sec-pill.ow{background:rgba(5,150,105,.11);border-color:rgba(5,150,105,.28);color:#065F46}
-.mac-sec-pill.ow1{background:rgba(5,150,105,.06);border-color:rgba(5,150,105,.15);color:#047857}
-.mac-sec-pill.neu{background:var(--s2);border-color:var(--bd);color:var(--t2)}
-.mac-sec-pill.uw1{background:rgba(220,38,38,.07);border-color:rgba(220,38,38,.18);color:#B91C1C}
-.mac-sec-pill.uw{background:rgba(220,38,38,.12);border-color:rgba(220,38,38,.28);color:#991B1B}
-@media(max-width:700px){.mac-3col{grid-template-columns:1fr}}
+.mac-wl-title{font-size:12px;font-weight:700;color:var(--t);margin-bottom:3px}
+.mac-wl-note{font-size:11px;color:var(--t2);line-height:1.55}
+.mac-disclaimer{margin-top:12px;font-size:10px;color:var(--t3);line-height:1.5;padding:10px 13px;background:var(--s2);border-radius:8px}
+/* Responsive */
+@media(max-width:900px){.mac-2col{grid-template-columns:1fr}.mac-stats-strip{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.mac-3col{grid-template-columns:1fr}.mac-stats-strip{grid-template-columns:1fr 1fr}}
 /* Macro page named grids */
 .macro-row-rates{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
 .macro-row-economy{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
