@@ -6349,7 +6349,7 @@ async function executePacNow(id){
     p.log.unshift({date:today,amount:p.amount,price,qty});
     p.lastExecuted=today;
     // Calcola prossima esecuzione
-    p.nextExecution=_nextPacDate(today,p.freq);
+    p.nextExecution=_nextPacDate(today,p.freq,p.dayOfMonth||null);
     await savePacPlans();
     renderPacPlans();
     renderPacLog();
