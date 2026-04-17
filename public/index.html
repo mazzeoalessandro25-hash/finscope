@@ -14253,87 +14253,92 @@ function closeCryptoDetail(){
 
 function _populateCryptoHeader(c){
   const el=id=>document.getElementById(id);
-  const logo=el('crd-logo');
-  if(logo){logo.src=c.image;logo.alt=c.symbol;}
+  const logo=el('crd-logo');if(logo){logo.src=c.image;logo.alt=c.symbol;}
   if(el('crd-sym'))el('crd-sym').textContent=c.symbol.toUpperCase();
   if(el('crd-name'))el('crd-name').textContent=c.name;
   if(el('crd-price'))el('crd-price').textContent=_fmtCryptoPrice(c.current_price);
   const chg=c.price_change_percentage_24h;
   if(el('crd-chg')&&chg!=null){
-    el('crd-chg').textContent=_fmtCryptoChg(chg);
+    el('crd-chg').textContent=(chg>=0?'+':'')+chg.toFixed(2)+'% (24h)';
     el('crd-chg').style.background=chg>=0?'var(--g2)':'var(--r2)';
     el('crd-chg').style.color=chg>=0?'var(--g)':'var(--r)';
   }
-  // Strip riga 1
-  if(el('crd-mcap'))el('crd-mcap').textContent=_fmtCryptoCap(c.market_cap);
-  if(el('crd-mcap-sub'))el('crd-mcap-sub').textContent='#'+c.market_cap_rank+' per cap';
-  if(el('crd-fdv'))el('crd-fdv').textContent=c.fully_diluted_valuation?_fmtCryptoCap(c.fully_diluted_valuation):'—';
-  // Se FDV >> MCap → rischio inflazione supply
-  if(el('crd-fdv-sub')&&c.fully_diluted_valuation&&c.market_cap){
-    const ratio=c.fully_diluted_valuation/c.market_cap;
-    el('crd-fdv-sub').textContent=ratio>2?`⚠ ${ratio.toFixed(1)}× MCap — alto rischio`:'Fully Diluted Val.';
-    if(ratio>2)el('crd-fdv-sub').style.color='var(--o)';
+  // Header meta: rank + categoria
+  const mcap=c.market_cap;
+  const capLabel=mcap>10e9?'Large Cap':mcap>1e9?'Mid Cap':mcap>100e6?'Small Cap':'Micro Cap';
+  if(el('crd-hdr-rank'))el('crd-hdr-rank').textContent='#'+c.market_cap_rank+' per MCap';
+  if(el('crd-hdr-cat'))el('crd-hdr-cat').textContent='· '+capLabel;
+  if(el('crd-hdr-mcap-small'))el('crd-hdr-mcap-small').textContent='· '+_fmtCryptoCap(mcap);
+  // Price position bar (ATL → ATH)
+  const ath=c.ath,atl=c.atl,price=c.current_price;
+  if(ath&&atl&&price&&ath>atl){
+    const pct=Math.max(0,Math.min(100,(price-atl)/(ath-atl)*100));
+    const needle=el('crd-level-needle');if(needle)needle.style.left=pct.toFixed(1)+'%';
+    const badge=el('crd-ath-badge');
+    const athChg=c.ath_change_percentage;
+    if(badge&&athChg!=null){
+      badge.textContent=athChg.toFixed(1)+'% dall\'ATH';
+      badge.style.color=athChg>-10?'var(--o)':'var(--r)';
+    }
   }
-  if(el('crd-vol'))el('crd-vol').textContent=_fmtCryptoCap(c.total_volume);
-  const volRatio=c.total_volume&&c.market_cap?(c.total_volume/c.market_cap*100):null;
-  if(el('crd-vol-sub')&&volRatio!=null)el('crd-vol-sub').textContent='Vol/MCap: '+volRatio.toFixed(1)+'%';
-  const supplyPct=c.max_supply?(c.circulating_supply/c.max_supply*100):null;
-  if(el('crd-supply'))el('crd-supply').textContent=c.circulating_supply?(c.circulating_supply/1e6).toFixed(2)+'M':'—';
-  if(el('crd-supply-sub'))el('crd-supply-sub').textContent=supplyPct!=null?supplyPct.toFixed(1)+'% del max':'Supply illimitata';
-  // Strip riga 2
-  if(el('crd-ath'))el('crd-ath').textContent=_fmtCryptoPrice(c.ath);
-  const athChg=c.ath_change_percentage;
-  if(el('crd-ath-sub')&&athChg!=null){
-    el('crd-ath-sub').textContent=athChg.toFixed(1)+'% dall\'ATH';
-    el('crd-ath-sub').style.color='var(--r)';
-  }
-  if(el('crd-atl'))el('crd-atl').textContent=_fmtCryptoPrice(c.atl);
+  if(el('crd-atl-val'))el('crd-atl-val').textContent=_fmtCryptoPrice(c.atl);
+  if(el('crd-atl-date')&&c.atl_date)el('crd-atl-date').textContent=new Date(c.atl_date).toLocaleDateString('it-IT',{month:'short',year:'numeric'});
   const atlChg=c.atl_change_percentage;
-  if(el('crd-atl-sub')&&atlChg!=null){
-    el('crd-atl-sub').textContent='+'+atlChg.toFixed(0)+'% dall\'ATL';
-    el('crd-atl-sub').style.color='var(--g)';
+  if(el('crd-atl-chg')&&atlChg!=null)el('crd-atl-chg').textContent='+'+Math.round(atlChg).toLocaleString('it-IT')+'% dall\'ATL';
+  if(el('crd-price-center'))el('crd-price-center').textContent=_fmtCryptoPrice(price);
+  if(el('crd-price-center-chg')&&chg!=null){
+    el('crd-price-center-chg').textContent=_fmtCryptoChg(chg)+' (24h)';
+    el('crd-price-center-chg').style.color=chg>=0?'var(--g)':'var(--r)';
   }
-  if(el('crd-rank'))el('crd-rank').textContent='#'+c.market_cap_rank;
-  if(el('crd-volmcap'))el('crd-volmcap').textContent=volRatio!=null?volRatio.toFixed(1)+'%':'—';
-  if(el('crd-volmcap-sub')&&volRatio!=null){
-    el('crd-volmcap-sub').textContent=volRatio>15?'Alta liquidità':volRatio>5?'Liquidità media':'Bassa liquidità';
-    el('crd-volmcap-sub').style.color=volRatio>15?'var(--g)':volRatio>5?'var(--o)':'var(--r)';
+  if(el('crd-ath-val'))el('crd-ath-val').textContent=_fmtCryptoPrice(c.ath);
+  if(el('crd-ath-date')&&c.ath_date)el('crd-ath-date').textContent=new Date(c.ath_date).toLocaleDateString('it-IT',{month:'short',year:'numeric'});
+  if(el('crd-ath-chg')&&c.ath_change_percentage!=null)el('crd-ath-chg').textContent=c.ath_change_percentage.toFixed(1)+'%';
+  // Metriche
+  if(el('crd-mcap'))el('crd-mcap').textContent=_fmtCryptoCap(mcap);
+  if(el('crd-mcap-sub'))el('crd-mcap-sub').textContent='Rank #'+c.market_cap_rank;
+  const volRatio=c.total_volume&&mcap?(c.total_volume/mcap*100):null;
+  if(el('crd-vol'))el('crd-vol').textContent=_fmtCryptoCap(c.total_volume);
+  if(el('crd-vol-sub')&&volRatio!=null){
+    el('crd-vol-sub').textContent='Vol/MCap: '+volRatio.toFixed(1)+'%';
+    el('crd-vol-sub').style.color=volRatio>15?'var(--g)':volRatio>5?'':'var(--r)';
   }
-  // Performance
-  const pf=[['crd-p24',chg],['crd-p7',c.price_change_percentage_7d_in_currency],['crd-p30',c.price_change_percentage_30d_in_currency],['crd-p1y',c.price_change_percentage_1y_in_currency]];
-  pf.forEach(([id,v])=>{
-    const e=el(id);
-    if(e){e.textContent=_fmtCryptoChg(v);e.className='crd-perf-val '+_chgClassCrypto(v);}
+  if(el('crd-fdv'))el('crd-fdv').textContent=c.fully_diluted_valuation?_fmtCryptoCap(c.fully_diluted_valuation):'—';
+  if(el('crd-fdv-sub')&&c.fully_diluted_valuation&&mcap){
+    const r=c.fully_diluted_valuation/mcap;
+    el('crd-fdv-sub').textContent=r>2?`⚠ ${r.toFixed(1)}× MCap — rischio diluzione`:'Fully Diluted';
+    if(r>2)el('crd-fdv-sub').style.color='var(--o)';
+  }
+  const supplyPct=c.max_supply?(c.circulating_supply/c.max_supply*100):null;
+  if(el('crd-supply'))el('crd-supply').textContent=c.circulating_supply?new Intl.NumberFormat('it-IT',{notation:'compact',maximumFractionDigits:2}).format(c.circulating_supply):'—';
+  if(el('crd-supply-sub')){
+    if(!c.max_supply)el('crd-supply-sub').textContent='Supply illimitata ♾';
+    else el('crd-supply-sub').textContent=supplyPct.toFixed(1)+'% del max emessa';
+  }
+  // Performance con barre
+  const p24=chg,p7=c.price_change_percentage_7d_in_currency,p30=c.price_change_percentage_30d_in_currency,p1y=c.price_change_percentage_1y_in_currency;
+  const perfPairs=[['24','crd-p24','crd-bar-24',p24,50],['7','crd-p7','crd-bar-7',p7,100],['30','crd-p30','crd-bar-30',p30,150],['1y','crd-p1y','crd-bar-1y',p1y,300]];
+  perfPairs.forEach(([,valId,barId,v,maxPct])=>{
+    const ve=el(valId),be=el(barId);
+    if(ve&&v!=null){ve.textContent=_fmtCryptoChg(v);ve.style.color=v>=0?'var(--g)':'var(--r)';}
+    if(be&&v!=null){
+      const w=Math.min(Math.abs(v)/maxPct*100,100);
+      be.style.width=w+'%';be.style.background=v>=0?'var(--g)':'var(--r)';
+    }
   });
-  // Segnali rapidi
-  const p24=chg,p7=c.price_change_percentage_7d_in_currency,p30=c.price_change_percentage_30d_in_currency;
-  // Momentum score
+  // Segnali chiave (card destra)
   let momScore=0;
   if(p24!=null)momScore+=p24>0?1:-1;
   if(p7!=null)momScore+=p7>3?2:p7>0?1:p7>-3?-1:-2;
   if(p30!=null)momScore+=p30>10?2:p30>0?1:p30>-10?-1:-2;
-  const momLabels=[[-5,'🔴','Ribassista forte'],[-2,'🟠','Ribassista'],[0,'⚪','Neutro'],[2,'🟡','Rialzista'],[5,'🟢','Rialzista forte']];
-  let momLabel=momLabels[momLabels.length-1];
-  for(const [th,ico,lbl] of momLabels){if(momScore<=th){momLabel=[th,ico,lbl];break;}}
-  if(el('crd-sig-mom-ico'))el('crd-sig-mom-ico').textContent=momLabel[1];
-  if(el('crd-sig-mom'))el('crd-sig-mom').textContent=momLabel[2];
-  // Liquidità
-  if(el('crd-sig-liq-ico'))el('crd-sig-liq-ico').textContent=volRatio>15?'🟢':volRatio>5?'🟡':'🔴';
-  if(el('crd-sig-liq'))el('crd-sig-liq').textContent=volRatio!=null?(volRatio>15?'Alta':volRatio>5?'Media':'Bassa'):'—';
-  // Categoria MCap
-  const mcap=c.market_cap;
-  const capTier=mcap>10e9?['🏛','Large Cap','>$10B']:mcap>1e9?['🏢','Mid Cap','$1B–$10B']:mcap>100e6?['🏗','Small Cap','$100M–$1B']:['⚡','Micro Cap','<$100M'];
-  if(el('crd-sig-cap-ico'))el('crd-sig-cap-ico').textContent=capTier[0];
-  if(el('crd-sig-cap'))el('crd-sig-cap').textContent=capTier[1]+'\n'+capTier[2];
-  // Inflazione supply
-  if(el('crd-sig-sup')){
-    if(!c.max_supply){el('crd-sig-sup-ico')&&(el('crd-sig-sup-ico').textContent='♾');el('crd-sig-sup').textContent='Supply illimitata';}
-    else{
-      const pct=supplyPct||0;
-      el('crd-sig-sup-ico')&&(el('crd-sig-sup-ico').textContent=pct>80?'✅':pct>50?'🟡':'⚠️');
-      el('crd-sig-sup').textContent=pct.toFixed(1)+'% emessa\n'+(pct>80?'Bassa inflazione':pct>50?'Inflazione moderata':'Alta inflazione');
-    }
-  }
+  const momTable=[[-5,'🔴','Ribassista forte',`24h ${_fmtCryptoChg(p24)} · 7g ${_fmtCryptoChg(p7)} · 30g ${_fmtCryptoChg(p30)}`],[-2,'🟠','Ribassista',`Trend negativo su tutti i periodi`],[0,'⚪','Neutro',`Nessuna direzione chiara`],[2,'🟡','Rialzista',`Pressione acquisti prevalente`],[99,'🟢','Rialzista forte',`Momentum positivo su più timeframe`]];
+  const [,mIco,mTit,mDesc]=momTable.find(([th])=>momScore<=th)||momTable[momTable.length-1];
+  const liquidity=volRatio!=null?(volRatio>15?['🟢','Alta liquidità',`Vol/MCap ${volRatio.toFixed(1)}% — facile entrare/uscire`]:volRatio>5?['🟡','Liquidità media',`Vol/MCap ${volRatio.toFixed(1)}% — normale per questa categoria`]:['🔴','Liquidità bassa',`Vol/MCap ${volRatio.toFixed(1)}% — movimenti bruschi possibili`]):['⚪','Dati non disp.',''];
+  const supplyRisk=!c.max_supply?['♾','Supply illimitata','Nessun cap massimo — pressione inflattiva costante']:supplyPct>85?['✅','Inflazione minima',`${supplyPct.toFixed(0)}% già emessa — poche nuove coin in arrivo`]:supplyPct>60?['🟡','Inflazione moderata',`${supplyPct.toFixed(0)}% emessa — ${(100-supplyPct).toFixed(0)}% ancora da rilasciare`]:['⚠️','Alta inflazione',`Solo ${supplyPct.toFixed(0)}% emessa — forti pressioni di vendita future`];
+  const athDist=c.ath_change_percentage;
+  const posRisk=athDist!=null?(athDist>-10?['⚠️','Zona di ATH',`Prezzo al ${(100+athDist).toFixed(0)}% dell'ATH — area di resistenza`]:athDist>-50?['📊','Zona intermedia',`${Math.abs(athDist).toFixed(0)}% sotto ATH — moderatamente corretto`]:['💡','Profonda correzione',`${Math.abs(athDist).toFixed(0)}% sotto ATH — massimo storico lontano`]):['⚪','Dati non disp.',''];
+  const signals=[{ico:mIco,title:mTit,desc:mDesc},{ico:liquidity[0],title:liquidity[1],desc:liquidity[2]},{ico:supplyRisk[0],title:supplyRisk[1],desc:supplyRisk[2]},{ico:posRisk[0],title:posRisk[1],desc:posRisk[2]}];
+  const sq=el('crd-quick-signals');
+  if(sq)sq.innerHTML=signals.map(s=>`<div class="crd-sig-row"><div class="crd-sig-ico">${s.ico}</div><div><div class="crd-sig-title">${s.title}</div><div class="crd-sig-desc">${s.desc}</div></div></div>`).join('');
 }
 
 function _renderFngGauge(fng){
