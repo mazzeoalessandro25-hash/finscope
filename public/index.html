@@ -8544,7 +8544,7 @@ async function loadMacroDashboard(){
     eurusd:'EURUSD=X', gbpusd:'GBPUSD=X', usdjpy:'USDJPY=X',
     usdchf:'USDCHF=X', usdcny:'USDCNY=X', audusd:'AUDUSD=X',
     hyg:'HYG', lqd:'LQD', tlt:'TLT',
-    copper:'HG=F', oil:'BZ=F', gold:'GC=F'
+    copper:'HG=F', oil:'BZ=F', gold:'GC=F', vix:'^VIX'
   };
   const keys=Object.keys(SYMS);
   const results=await Promise.all(keys.map(k=>api(SYMS[k])));
