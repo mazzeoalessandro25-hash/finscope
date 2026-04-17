@@ -4430,7 +4430,7 @@ function setScreenerIndex(idx, btn){
   if(stocksWrap) stocksWrap.style.display=(isBonds||isCrypto)?'none':'';
   if(scFilters) scFilters.style.display=(isBonds||isCrypto)?'none':'';
   if(isBonds){ loadBondScreener(); return; }
-  if(isCrypto){ loadCryptoScreener(); return; }
+  if(isCrypto){ loadCryptoDashboard(); return; }
   const isAll=idx==='all';
   const elCountry=document.getElementById('sc-country');
   if(elCountry) elCountry.style.display=idx==='etf'?'none':'';
