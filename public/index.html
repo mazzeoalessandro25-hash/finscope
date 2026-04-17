@@ -1638,16 +1638,18 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     </div>
   </div>
   <div class="crd-body">
-    <!-- Strip metriche chiave -->
+    <!-- Strip metriche chiave — 2 righe × 4 col -->
     <div class="crd-strip">
       <div class="crd-strip-item"><div class="crd-strip-lbl">Market Cap</div><div class="crd-strip-val" id="crd-mcap">—</div><div class="crd-strip-sub" id="crd-mcap-sub">—</div></div>
-      <div class="crd-strip-item"><div class="crd-strip-lbl">FDV</div><div class="crd-strip-val" id="crd-fdv">—</div><div class="crd-strip-sub">Fully Diluted Val.</div></div>
+      <div class="crd-strip-item"><div class="crd-strip-lbl">FDV</div><div class="crd-strip-val" id="crd-fdv">—</div><div class="crd-strip-sub" id="crd-fdv-sub">Fully Diluted Val.</div></div>
       <div class="crd-strip-item"><div class="crd-strip-lbl">Volume 24h</div><div class="crd-strip-val" id="crd-vol">—</div><div class="crd-strip-sub" id="crd-vol-sub">—</div></div>
       <div class="crd-strip-item"><div class="crd-strip-lbl">Supply Circ.</div><div class="crd-strip-val" id="crd-supply">—</div><div class="crd-strip-sub" id="crd-supply-sub">—</div></div>
       <div class="crd-strip-item"><div class="crd-strip-lbl">ATH</div><div class="crd-strip-val" id="crd-ath">—</div><div class="crd-strip-sub" id="crd-ath-sub">—</div></div>
+      <div class="crd-strip-item"><div class="crd-strip-lbl">ATL</div><div class="crd-strip-val" id="crd-atl">—</div><div class="crd-strip-sub" id="crd-atl-sub">—</div></div>
       <div class="crd-strip-item"><div class="crd-strip-lbl">Rank</div><div class="crd-strip-val" id="crd-rank">—</div><div class="crd-strip-sub">per Market Cap</div></div>
+      <div class="crd-strip-item"><div class="crd-strip-lbl">Vol / MCap</div><div class="crd-strip-val" id="crd-volmcap">—</div><div class="crd-strip-sub" id="crd-volmcap-sub">liquidità relativa</div></div>
     </div>
-    <!-- Grafico prezzi -->
+    <!-- Grafico prezzi con volume -->
     <div class="sd-section" style="margin-bottom:20px">
       <div class="cc-row" style="margin-bottom:10px">
         <button class="cc-btn active" id="crd-btn-30" onclick="loadCryptoChart(30,this)">30G</button>
@@ -1656,7 +1658,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <button class="cc-btn" id="crd-btn-365" onclick="loadCryptoChart(365,this)">1A</button>
         <button class="cc-btn" id="crd-btn-max" onclick="loadCryptoChart('max',this)">MAX</button>
       </div>
-      <div id="crd-chart" style="width:100%;height:280px"></div>
+      <div id="crd-chart" style="width:100%;height:340px"></div>
     </div>
     <!-- Performance -->
     <div class="crd-perf-row">
@@ -1664,6 +1666,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="crd-perf-item"><div class="crd-perf-lbl">7 giorni</div><div class="crd-perf-val" id="crd-p7">—</div></div>
       <div class="crd-perf-item"><div class="crd-perf-lbl">30 giorni</div><div class="crd-perf-val" id="crd-p30">—</div></div>
       <div class="crd-perf-item"><div class="crd-perf-lbl">1 anno</div><div class="crd-perf-val" id="crd-p1y">—</div></div>
+    </div>
+    <!-- Segnali rapidi -->
+    <div class="crd-signals-row" id="crd-signals-row">
+      <div class="crd-signal-card"><div class="crd-signal-ico" id="crd-sig-mom-ico">⏳</div><div class="crd-signal-lbl">Momentum</div><div class="crd-signal-val" id="crd-sig-mom">—</div></div>
+      <div class="crd-signal-card"><div class="crd-signal-ico" id="crd-sig-liq-ico">💧</div><div class="crd-signal-lbl">Liquidità</div><div class="crd-signal-val" id="crd-sig-liq">—</div></div>
+      <div class="crd-signal-card"><div class="crd-signal-ico" id="crd-sig-cap-ico">📊</div><div class="crd-signal-lbl">Categoria</div><div class="crd-signal-val" id="crd-sig-cap">—</div></div>
+      <div class="crd-signal-card"><div class="crd-signal-ico" id="crd-sig-sup-ico">🔄</div><div class="crd-signal-lbl">Inflazione Supply</div><div class="crd-signal-val" id="crd-sig-sup">—</div></div>
     </div>
     <!-- Fear&Greed + Narrativa -->
     <div style="display:grid;grid-template-columns:200px 1fr;gap:16px;margin-bottom:20px">
