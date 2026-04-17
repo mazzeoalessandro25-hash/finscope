@@ -14630,6 +14630,53 @@ async function loadCryptoChart(days, btn){
 }
 
 /* ══════════════════════════════════════════════════
+   CRYPTO INFO — descrizione, categorie, link
+══════════════════════════════════════════════════ */
+async function _fetchCryptoInfo(coinId){
+  try{
+    const r=await fetch(`/api/quote?type=crypto-info&id=${encodeURIComponent(coinId)}`);
+    if(!r.ok)return;
+    _renderCryptoInfo(await r.json());
+  }catch(e){}
+}
+
+function _renderCryptoInfo(d){
+  const card=document.getElementById('crd-info-card');
+  if(!card)return;
+  let hasContent=false;
+  // Descrizione
+  const descEl=document.getElementById('crd-description');
+  if(descEl&&d.description){
+    const tmp=document.createElement('div');
+    tmp.innerHTML=d.description;
+    const text=(tmp.textContent||tmp.innerText||'').replace(/\s+/g,' ').trim();
+    if(text){
+      descEl.textContent=text.length>900?text.slice(0,900).trimEnd()+'…':text;
+      hasContent=true;
+    }
+  }
+  // Categorie
+  const catEl=document.getElementById('crd-categories');
+  if(catEl&&d.categories&&d.categories.length){
+    catEl.innerHTML=d.categories.slice(0,8).map(c=>
+      `<span style="font-family:var(--fm);font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--s2);border:1px solid var(--bd);color:var(--t2)">${c}</span>`
+    ).join('');
+    hasContent=true;
+  }
+  // Link
+  const linksEl=document.getElementById('crd-links');
+  if(linksEl&&d.links){
+    const items=[];
+    if(d.links.homepage)items.push(`<a href="${d.links.homepage}" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--b);text-decoration:none;padding:5px 12px;border:1px solid var(--bd);border-radius:8px">🌐 Sito Web</a>`);
+    if(d.links.twitter)items.push(`<a href="${d.links.twitter}" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--b);text-decoration:none;padding:5px 12px;border:1px solid var(--bd);border-radius:8px">𝕏 Twitter</a>`);
+    if(d.links.reddit)items.push(`<a href="${d.links.reddit}" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--b);text-decoration:none;padding:5px 12px;border:1px solid var(--bd);border-radius:8px">Reddit</a>`);
+    if(d.links.github)items.push(`<a href="${d.links.github}" target="_blank" rel="noopener" style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--b);text-decoration:none;padding:5px 12px;border:1px solid var(--bd);border-radius:8px">GitHub</a>`);
+    if(items.length){linksEl.innerHTML=items.join('');hasContent=true;}
+  }
+  if(hasContent)card.style.display='block';
+}
+
+/* ══════════════════════════════════════════════════
    CONVERTER
 ══════════════════════════════════════════════════ */
 let _crdCurrentPrice=0;
