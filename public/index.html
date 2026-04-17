@@ -14384,26 +14384,35 @@ function _renderCryptoDetailNarrative(coin,d){
   const btcDom=g?.market_cap_percentage?.btc;
   const fngV=fng?parseInt(fng.value):null;
   const signals=[];
+  // Posizione rispetto all'ATH
   const athChg=coin.ath_change_percentage;
   if(athChg!=null){
-    if(athChg>-10)signals.push({i:'🏆',t:`<strong>${coin.name} è al ${(100+athChg).toFixed(1)}% del suo ATH</strong> — Zona di resistenza storica. Livelli vicini all'euforia passata.`});
-    else if(athChg>-30)signals.push({i:'📊',t:`<strong>${coin.name} è ${Math.abs(athChg).toFixed(0)}% sotto l'ATH</strong> — Prezzi lontani dall'euforia. Zona di interesse per il medio termine.`});
-    else signals.push({i:'💡',t:`<strong>${coin.name} è ${Math.abs(athChg).toFixed(0)}% sotto l'ATH</strong> — Correzione significativa. Valutare il contesto prima di posizionarsi.`});
+    if(athChg>-10)signals.push({i:'🏆',t:`${coin.name} vicino all'ATH`,d:`Prezzo all'${(100+athChg).toFixed(0)}% del massimo storico. Zona di resistenza — potenziale pressione di vendita da chi è in profitto.`});
+    else if(athChg>-35)signals.push({i:'📊',t:`Correzione moderata dall'ATH`,d:`${Math.abs(athChg).toFixed(0)}% sotto il massimo storico. Zona intermedia, valutare il trend di breve.`});
+    else if(athChg>-70)signals.push({i:'💡',t:`Profonda correzione — opportunità?`,d:`${Math.abs(athChg).toFixed(0)}% sotto l'ATH. Prezzi lontani dall'euforia passata — interessante per il medio/lungo termine se i fondamentali reggono.`});
+    else signals.push({i:'⚠️',t:`Crollo significativo dall'ATH`,d:`${Math.abs(athChg).toFixed(0)}% sotto il massimo storico. Valutare attentamente prima di posizionarsi.`});
   }
+  // BTC Dominance context
+  if(btcDom!=null&&coin.symbol!=='btc'){
+    if(btcDom>55)signals.push({i:'🔵',t:`BTC Dominance alta: ${btcDom.toFixed(1)}%`,d:`Fase risk-off crypto. I flussi si concentrano su Bitcoin — storicamente sfavorevole per le altcoin.`});
+    else if(btcDom<45)signals.push({i:'🟢',t:`Possibile Altseason: BTC Dom ${btcDom.toFixed(1)}%`,d:`La dominanza BTC è bassa — storicamente un segnale di rotazione verso le altcoin.`});
+    else signals.push({i:'⚪',t:`Mercato bilanciato: BTC Dom ${btcDom.toFixed(1)}%`,d:`Nessuna direzione chiara tra Bitcoin e altcoin.`});
+  }
+  // Fear & Greed
+  if(fngV!=null){
+    if(fngV<25)signals.push({i:'🔴',t:`Paura estrema: ${fngV}/100`,d:`Sentiment ai minimi. Storicamente questi livelli hanno preceduto recuperi significativi — opportunità per il lungo termine.`});
+    else if(fngV<45)signals.push({i:'🟠',t:`Paura di mercato: ${fngV}/100`,d:`Sentiment negativo diffuso. Gli investitori sono cauti — possibili opportunità selettive.`});
+    else if(fngV<55)signals.push({i:'⚪',t:`Sentiment neutro: ${fngV}/100`,d:`Mercato in equilibrio senza eccessi in nessuna direzione.`});
+    else if(fngV<75)signals.push({i:'🟡',t:`Greed: ${fngV}/100`,d:`Sentiment positivo e momentum favorevole. Attenzione a possibili correzioni di breve.`});
+    else signals.push({i:'⚠️',t:`Euforia: ${fngV}/100`,d:`Mercato surriscaldato. Storicamente associato a picchi di breve — aumentare la cautela.`});
+  }
+  // Liquidità
   const volRatio=coin.total_volume&&coin.market_cap?(coin.total_volume/coin.market_cap*100):null;
   if(volRatio!=null){
-    if(volRatio>20)signals.push({i:'💧',t:`<strong>Volume/MCap: ${volRatio.toFixed(1)}%</strong> — Alta liquidità relativa. Coin molto scambiato rispetto alla sua capitalizzazione.`});
-    else if(volRatio<3)signals.push({i:'⚠️',t:`<strong>Volume/MCap: ${volRatio.toFixed(1)}%</strong> — Liquidità bassa. Possibili movimenti bruschi su volumi ridotti.`});
+    if(volRatio>20)signals.push({i:'💧',t:`Alta liquidità: Vol/MCap ${volRatio.toFixed(1)}%`,d:`Mercato attivo con elevati scambi relativi. Facile entrare e uscire dalla posizione.`});
+    else if(volRatio<3)signals.push({i:'⚠️',t:`Bassa liquidità: Vol/MCap ${volRatio.toFixed(1)}%`,d:`Volumi ridotti rispetto alla capitalizzazione. Possibili movimenti di prezzo bruschi su ordini di piccole dimensioni.`});
   }
-  if(btcDom!=null&&coin.symbol!=='btc'){
-    if(btcDom>55)signals.push({i:'🔵',t:`<strong>BTC Dominance alta (${btcDom.toFixed(1)}%)</strong> — Contesto sfavorevole per le altcoin. I flussi si concentrano su Bitcoin.`});
-    else if(btcDom<45)signals.push({i:'🟢',t:`<strong>BTC Dominance bassa (${btcDom.toFixed(1)}%)</strong> — Possibile altseason. Contesto favorevole per ${coin.name}.`});
-  }
-  if(fngV!=null){
-    if(fngV<30)signals.push({i:'🔴',t:`<strong>Sentiment: Paura (${fngV}/100)</strong> — Mercato in paura. Storicamente questi livelli precedono rimbalzi.`});
-    else if(fngV>70)signals.push({i:'⚠️',t:`<strong>Sentiment: Euforia (${fngV}/100)</strong> — Mercato surriscaldato. Aumentare cautela nelle nuove posizioni.`});
-  }
-  el.innerHTML=signals.map(s=>`<div class="crd-sig-row"><div class="crd-sig-ico">${s.i}</div><div><div class="crd-sig-title">${s.t.replace(/<strong>|<\/strong>/g,'')}</div><div class="crd-sig-desc">${s.d||''}</div></div></div>`).join('')||'<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessun segnale disponibile.</div>';
+  el.innerHTML=signals.map(s=>`<div class="crd-sig-row"><div class="crd-sig-ico">${s.i}</div><div><div class="crd-sig-title">${s.t}</div><div class="crd-sig-desc">${s.d}</div></div></div>`).join('')||'<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessun segnale disponibile.</div>';
 }
 
 async function loadCryptoChart(days,btn){
