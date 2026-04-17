@@ -12378,7 +12378,7 @@ function renderTaxDashboard(){
   `;
 }
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStockDetail();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeStockDetail();closeCryptoDetail();}});
 
 /* ══════════════════════════════════════════
    TICKER AUTOCOMPLETE
