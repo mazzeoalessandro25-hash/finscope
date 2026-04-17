@@ -5,7 +5,36 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET');
   res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=30');
 
-  const { symbol, type } = req.query;
+  const { symbol, type, id, days } = req.query;
+
+  // CRYPTO LIST — top 50 + global + Fear&Greed
+  if (type === 'crypto') {
+    res.setHeader('Cache-Control','public,s-maxage=120,stale-while-revalidate=60');
+    try {
+      const [mR,gR,fR]=await Promise.all([
+        fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=7d%2C30d%2C1y',{headers:{'User-Agent':'FinEdge/1.0'}}),
+        fetch('https://api.coingecko.com/api/v3/global',{headers:{'User-Agent':'FinEdge/1.0'}}),
+        fetch('https://api.alternative.me/fng/')
+      ]);
+      if(!mR.ok) return res.status(502).json({error:'markets error '+mR.status});
+      const [coins,global,fng]=await Promise.all([mR.json(),gR.ok?gR.json():null,fR.ok?fR.json():null]);
+      return res.json({coins,global:global?.data||null,fng:fng?.data?.[0]||null});
+    } catch(e){ return res.status(500).json({error:e.message}); }
+  }
+
+  // CRYPTO CHART — storico prezzi da CoinGecko
+  if (type === 'crypto-chart' && id) {
+    res.setHeader('Cache-Control','public,s-maxage=300,stale-while-revalidate=120');
+    try {
+      const dParam=days==='max'?'max':(parseInt(days)||30);
+      const url=dParam==='max'
+        ?`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/market_chart?vs_currency=usd&days=max`
+        :`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/market_chart?vs_currency=usd&days=${dParam}&interval=daily`;
+      const r=await fetch(url,{headers:{'User-Agent':'FinEdge/1.0'}});
+      if(!r.ok) return res.status(502).json({error:'chart error '+r.status});
+      return res.json(await r.json());
+    } catch(e){ return res.status(500).json({error:e.message}); }
+  }
 
   // TAPE NEWS — 2 titoli rapidi per la ticker tape
   if (type === 'tapenews') {
