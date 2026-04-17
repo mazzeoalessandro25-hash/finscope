@@ -14319,7 +14319,6 @@ async function loadCryptoChart(days,btn){
     const r=await fetch(`/api/quote?type=crypto-chart&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`);
     if(!r.ok)throw new Error('chart '+r.status);
     const data=await r.json();
-    const prices=data.prices||[];
     chartEl.innerHTML='';
     const prices=data.prices||[];
     const vols=data.total_volumes||[];
