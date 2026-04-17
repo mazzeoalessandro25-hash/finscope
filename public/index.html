@@ -1921,6 +1921,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <button class="nav-btn" id="nb-macro" onclick="showPage('macro',this)">Macro</button>
   </div>
   <div class="nav-right">
+    <div class="lang-switcher" id="lang-switcher">
+      <button class="lang-btn active" id="lang-btn-it" onclick="setLang('it')" title="Italiano">🇮🇹</button>
+      <button class="lang-btn" id="lang-btn-en" onclick="setLang('en')" title="English">🇬🇧</button>
+      <button class="lang-btn" id="lang-btn-de" onclick="setLang('de')" title="Deutsch">🇩🇪</button>
+    </div>
     <button class="dm-toggle" id="dm-btn" onclick="toggleDark()" title="Cambia tema chiaro/scuro" aria-label="Toggle tema">
       <span class="dm-moon">🌙</span>
       <span class="dm-track">☀</span>
