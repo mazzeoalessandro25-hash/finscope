@@ -36,6 +36,25 @@ export default async function handler(req, res) {
     } catch(e){ return res.status(500).json({error:e.message}); }
   }
 
+  // CRYPTO OHLC — candele per CoinGecko (OHLC + volumi in parallelo)
+  if (type === 'crypto-ohlc' && id) {
+    res.setHeader('Cache-Control','public,s-maxage=300,stale-while-revalidate=120');
+    try {
+      const dParam=days==='max'?'max':(parseInt(days)||30);
+      const valid=[1,7,14,30,90,180,365];
+      const d=dParam==='max'?'max':valid.reduce((p,c)=>Math.abs(c-dParam)<Math.abs(p-dParam)?c:p);
+      const base='https://api.coingecko.com/api/v3/coins/'+encodeURIComponent(id);
+      const [ohlcR,volR]=await Promise.all([
+        fetch(`${base}/ohlc?vs_currency=usd&days=${d}`,{headers:{'User-Agent':'FinEdge/1.0'}}),
+        fetch(`${base}/market_chart?vs_currency=usd&days=${d}&interval=daily`,{headers:{'User-Agent':'FinEdge/1.0'}})
+      ]);
+      if(!ohlcR.ok) return res.status(502).json({error:'ohlc error '+ohlcR.status});
+      const ohlc=await ohlcR.json();
+      const volumes=volR.ok?(await volR.json()).total_volumes||[]:[];
+      return res.json({ohlc,volumes});
+    } catch(e){ return res.status(500).json({error:e.message}); }
+  }
+
   // TAPE NEWS — 2 titoli rapidi per la ticker tape
   if (type === 'tapenews') {
     try {
