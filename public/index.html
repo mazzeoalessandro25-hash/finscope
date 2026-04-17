@@ -14346,9 +14346,18 @@ async function openCryptoDetail(coinId){
     if(d.fng)_renderFngGauge(d.fng);
     if(coin)_renderCryptoDetailNarrative(coin,d);
   }catch(e){}
-  // Carica grafico e info descrizione in parallelo
+  // Reset notizie
+  const newsEl=document.getElementById('crd-news-list');
+  if(newsEl)newsEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento notizie...</div>';
+  // Carica grafico, info e notizie in parallelo
   loadCryptoChart(30,document.getElementById('crd-btn-30'));
   _fetchCryptoInfo(coinId);
+  // Notizie: le carichiamo dopo aver il nome della coin dai dati già caricati
+  try{
+    const dd=await _loadCryptoData();
+    const cc=dd.coins.find(c=>c.id===coinId);
+    if(cc)_fetchCryptoNews(cc.name);
+  }catch(e){}
 }
 
 function closeCryptoDetail(){
