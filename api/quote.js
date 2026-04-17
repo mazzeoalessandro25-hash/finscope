@@ -37,12 +37,13 @@ export default async function handler(req, res) {
   }
 
   // CRYPTO OHLC — candele per CoinGecko (OHLC + volumi in parallelo)
+  // Free plan supporta solo 1-90 giorni; cap a 90 per evitare errori
   if (type === 'crypto-ohlc' && id) {
     res.setHeader('Cache-Control','public,s-maxage=300,stale-while-revalidate=120');
     try {
-      const dParam=days==='max'?'max':(parseInt(days)||30);
-      const valid=[1,7,14,30,90,180,365];
-      const d=dParam==='max'?'max':valid.reduce((p,c)=>Math.abs(c-dParam)<Math.abs(p-dParam)?c:p);
+      const dParam=parseInt(days)||30;
+      const valid=[1,7,14,30,90];
+      const d=valid.reduce((p,c)=>Math.abs(c-dParam)<Math.abs(p-dParam)?c:p);
       const base='https://api.coingecko.com/api/v3/coins/'+encodeURIComponent(id);
       const [ohlcR,volR]=await Promise.all([
         fetch(`${base}/ohlc?vs_currency=usd&days=${d}`,{headers:{'User-Agent':'FinEdge/1.0'}}),
@@ -51,7 +52,30 @@ export default async function handler(req, res) {
       if(!ohlcR.ok) return res.status(502).json({error:'ohlc error '+ohlcR.status});
       const ohlc=await ohlcR.json();
       const volumes=volR.ok?(await volR.json()).total_volumes||[]:[];
-      return res.json({ohlc,volumes});
+      return res.json({ohlc,volumes,capped_days:d});
+    } catch(e){ return res.status(500).json({error:e.message}); }
+  }
+
+  // CRYPTO INFO — descrizione, categorie, link per una singola coin
+  if (type === 'crypto-info' && id) {
+    res.setHeader('Cache-Control','public,s-maxage=3600,stale-while-revalidate=600');
+    try {
+      const url=`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}?localization=false&tickers=false&market_data=false&community_data=false&developer_data=false&sparkline=false`;
+      const r=await fetch(url,{headers:{'User-Agent':'FinEdge/1.0'}});
+      if(!r.ok) return res.status(502).json({error:'info error '+r.status});
+      const d=await r.json();
+      return res.json({
+        description: d.description?.en||null,
+        categories:  d.categories||[],
+        genesis_date: d.genesis_date||null,
+        hashing_algorithm: d.hashing_algorithm||null,
+        links:{
+          homepage: d.links?.homepage?.[0]||null,
+          twitter:  d.links?.twitter_screen_name?`https://twitter.com/${d.links.twitter_screen_name}`:null,
+          reddit:   d.links?.subreddit_url||null,
+          github:   d.links?.repos_url?.github?.[0]||null,
+        }
+      });
     } catch(e){ return res.status(500).json({error:e.message}); }
   }
 
