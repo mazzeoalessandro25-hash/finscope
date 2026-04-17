@@ -6087,25 +6087,42 @@ async function savePacPlans(){
 
 /* ── PAC — Piano di Accumulo del Capitale ── */
 
+// Sposta una data al prossimo giorno lavorativo (lun-ven) se cade di weekend
+function _toWorkday(d){
+  const day=d.getDay();
+  if(day===6)d.setDate(d.getDate()+2); // sab → lun
+  if(day===0)d.setDate(d.getDate()+1); // dom → lun
+  return d;
+}
+
 // Calcola il primo giorno lavorativo (lun-ven) del mese indicato
 function _firstTradingDay(year, month){
   const d=new Date(year,month,1);
-  while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);
-  return d.toISOString().split('T')[0];
+  return _toWorkday(d).toISOString().split('T')[0];
 }
 
-// Data prossima esecuzione in base a frequenza (monthly/quarterly)
-function _nextPacDate(fromDateStr, freq){
+// Calcola il giorno target (es. 4) del mese, spostato al lavorativo successivo se weekend
+function _targetDayOfMonth(year, month, dayOfMonth){
+  // Cap al giorno massimo del mese (es. febbraio non ha il 29)
+  const maxDay=new Date(year, month+1, 0).getDate();
+  const d=new Date(year, month, Math.min(dayOfMonth, maxDay));
+  return _toWorkday(d).toISOString().split('T')[0];
+}
+
+// Data prossima esecuzione in base a frequenza (monthly/quarterly) e giorno del mese
+function _nextPacDate(fromDateStr, freq, dayOfMonth){
   const d=new Date(fromDateStr);
   const months=freq==='quarterly'?3:1;
   let y=d.getFullYear(), m=d.getMonth()+months;
   if(m>11){y+=Math.floor(m/12);m=m%12;}
+  if(dayOfMonth)return _targetDayOfMonth(y,m,dayOfMonth);
   return _firstTradingDay(y,m);
 }
 
-// Data prima esecuzione: primo giorno lavorativo del mese di startDate
-function _firstExecDate(startDateStr){
+// Data prima esecuzione: giorno target del mese corrente (o primo lavorativo se non specificato)
+function _firstExecDate(startDateStr, dayOfMonth){
   const d=new Date(startDateStr);
+  if(dayOfMonth)return _targetDayOfMonth(d.getFullYear(),d.getMonth(),dayOfMonth);
   return _firstTradingDay(d.getFullYear(),d.getMonth());
 }
 
