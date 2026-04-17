@@ -14527,6 +14527,292 @@ async function loadCryptoChart(days,btn){
     chartEl.innerHTML='<div class="ld" style="padding:60px;text-align:center;color:var(--r)">Errore caricamento grafico</div>';
   }
 }
+
+/* ══════════════════════════════════════════════════
+   CRYPTO CHART — candele + MA + toggle
+══════════════════════════════════════════════════ */
+let _crdChartMode='line';
+let _crdCurrentDays=30;
+let _crdCurrentTfBtn=null;
+
+function setCrdMode(mode, btn){
+  _crdChartMode=mode;
+  document.querySelectorAll('.chart-type-btn[id^="crd-mode"]').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  loadCryptoChart(_crdCurrentDays, _crdCurrentTfBtn);
+}
+
+function _calcMA(pts, period, key='value'){
+  const result=[];
+  for(let i=period-1;i<pts.length;i++){
+    const slice=pts.slice(i-period+1,i+1);
+    const avg=slice.reduce((s,p)=>s+(p[key]||0),0)/period;
+    result.push({time:pts[i].time,value:avg});
+  }
+  return result;
+}
+
+async function loadCryptoChart(days, btn){
+  ['crd-btn-30','crd-btn-90','crd-btn-180','crd-btn-365','crd-btn-max'].forEach(id=>{
+    const b=document.getElementById(id);if(b)b.classList.remove('active');
+  });
+  if(btn)btn.classList.add('active');
+  _crdCurrentDays=days;
+  _crdCurrentTfBtn=btn;
+  if(!_crdCurrentId)return;
+  const chartEl=document.getElementById('crd-chart');
+  if(!chartEl)return;
+  chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center">Caricamento grafico...</div>';
+  if(_crdChart){try{_crdChart.remove();}catch(e){}_crdChart=null;}
+  try{
+    const isCandle=_crdChartMode==='candle';
+    const url=isCandle
+      ?`/api/quote?type=crypto-ohlc&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`
+      :`/api/quote?type=crypto-chart&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`;
+    const r=await fetch(url);
+    if(!r.ok)throw new Error('chart '+r.status);
+    const data=await r.json();
+    chartEl.innerHTML='';
+    const isDark=document.documentElement.classList.contains('dark');
+    const textColor=isDark?'#e5e7eb':'#374151';
+    const gridColor='rgba(128,128,128,.06)';
+    const dedup=(arr,timeKey='time')=>{const seen=new Set();return arr.filter(d=>{if(seen.has(d[timeKey]))return false;seen.add(d[timeKey]);return true;}).sort((a,b)=>a[timeKey]-b[timeKey]);};
+
+    const chart=LightweightCharts.createChart(chartEl,{
+      width:chartEl.clientWidth,height:380,
+      layout:{background:{type:'Solid',color:'transparent'},textColor},
+      grid:{vertLines:{color:gridColor},horzLines:{color:gridColor}},
+      rightPriceScale:{borderColor:'transparent',scaleMargins:{top:.08,bottom:.28}},
+      timeScale:{borderColor:'transparent',timeVisible:true},
+      crosshair:{mode:LightweightCharts.CrosshairMode.Normal}
+    });
+
+    let closePts=[];
+    let volumes=[];
+
+    if(isCandle){
+      const raw=(data.ohlc||[]);
+      const ohlcPts=dedup(raw.map(([ts,o,h,l,c])=>({time:Math.floor(ts/1000),open:o,high:h,low:l,close:c})),'time');
+      if(!ohlcPts.length){chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--t3)">Nessun dato disponibile</div>';return;}
+      const series=chart.addCandlestickSeries({
+        upColor:'#16A34A',downColor:'#DC2626',
+        borderUpColor:'#16A34A',borderDownColor:'#DC2626',
+        wickUpColor:'#16A34A',wickDownColor:'#DC2626'
+      });
+      series.setData(ohlcPts);
+      closePts=ohlcPts.map(p=>({time:p.time,value:p.close}));
+      volumes=(data.volumes||[]).map(([ts,v])=>({time:Math.floor(ts/1000),value:v}));
+    } else {
+      const prices=(data.prices||[]);
+      const pts=dedup(prices.map(([ts,p])=>({time:Math.floor(ts/1000),value:p})));
+      if(!pts.length){chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--t3)">Nessun dato disponibile</div>';return;}
+      const isUp=(pts[pts.length-1]?.value||0)>=(pts[0]?.value||0);
+      const series=chart.addAreaSeries({
+        lineColor:isUp?'#16A34A':'#DC2626',
+        topColor:isUp?'rgba(22,163,74,.22)':'rgba(220,38,38,.22)',
+        bottomColor:'rgba(0,0,0,0)',lineWidth:2
+      });
+      series.setData(pts);
+      closePts=pts;
+      volumes=(data.total_volumes||[]).map(([ts,v])=>({time:Math.floor(ts/1000),value:v}));
+    }
+
+    // MA7 e MA25
+    if(closePts.length>=7){
+      const ma7=chart.addLineSeries({color:'#F59E0B',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      ma7.setData(_calcMA(closePts,7));
+    }
+    if(closePts.length>=25){
+      const ma25=chart.addLineSeries({color:'#3B82F6',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+      ma25.setData(_calcMA(closePts,25));
+    }
+
+    // Volume histogram
+    if(volumes.length){
+      chart.priceScale('volume').applyOptions({scaleMargins:{top:.82,bottom:0},drawTicks:false});
+      const volSeries=chart.addHistogramSeries({priceScaleId:'volume',color:'rgba(100,100,100,.25)',priceFormat:{type:'volume'}});
+      volSeries.setData(dedup(volumes));
+    }
+
+    chart.timeScale().fitContent();
+    _crdChart=chart;
+    new ResizeObserver(()=>{chart.applyOptions({width:chartEl.clientWidth});}).observe(chartEl);
+  }catch(e){
+    chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--r)">Errore caricamento grafico</div>';
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   CONVERTER
+══════════════════════════════════════════════════ */
+let _crdCurrentPrice=0;
+
+function _initConverter(coin){
+  _crdCurrentPrice=coin.current_price||0;
+  const symLbl=document.getElementById('crd-conv-sym-lbl');
+  if(symLbl)symLbl.textContent=coin.symbol.toUpperCase();
+  const rateEl=document.getElementById('crd-conv-rate');
+  if(rateEl)rateEl.textContent=`1 ${coin.symbol.toUpperCase()} = ${_fmtCryptoPrice(_crdCurrentPrice)}`;
+  const qtyEl=document.getElementById('crd-conv-qty');
+  if(qtyEl){qtyEl.value='1';document.getElementById('crd-conv-usd').value=_crdCurrentPrice.toFixed(2);}
+}
+function crdConvFromQty(){
+  const q=parseFloat(document.getElementById('crd-conv-qty')?.value)||0;
+  const usdEl=document.getElementById('crd-conv-usd');
+  if(usdEl)usdEl.value=q?(_crdCurrentPrice*q).toFixed(2):'';
+}
+function crdConvFromUsd(){
+  const u=parseFloat(document.getElementById('crd-conv-usd')?.value)||0;
+  const qtyEl=document.getElementById('crd-conv-qty');
+  if(qtyEl)qtyEl.value=u&&_crdCurrentPrice?(_crdCurrentPrice?(u/_crdCurrentPrice).toFixed(8):''):'';
+}
+
+/* ══════════════════════════════════════════════════
+   MCAP COMPARISON
+══════════════════════════════════════════════════ */
+function _renderMcapComparison(coin, d){
+  const el=document.getElementById('crd-mcc-items');
+  if(!el||!d.global||!coin.circulating_supply)return;
+  const totalMcap=d.global.total_market_cap?.usd;
+  const btcPct=d.global.market_cap_percentage?.btc;
+  const ethPct=d.global.market_cap_percentage?.eth;
+  const sp500Mcap=44e12; // stima S&P 500 ~$44T
+  const circ=coin.circulating_supply;
+  const targets=[];
+  if(btcPct&&totalMcap&&coin.symbol!=='btc'){
+    const btcMcap=totalMcap*btcPct/100;
+    targets.push({label:'BTC',mcap:btcMcap,color:'#F59E0B'});
+  }
+  if(ethPct&&totalMcap&&coin.symbol!=='eth'){
+    const ethMcap=totalMcap*ethPct/100;
+    targets.push({label:'ETH',mcap:ethMcap,color:'#6366F1'});
+  }
+  targets.push({label:'S&P 500',mcap:sp500Mcap,color:'#10B981'});
+  el.innerHTML=targets.map(t=>{
+    const hypoPrice=t.mcap/circ;
+    const mult=coin.current_price?hypoPrice/coin.current_price:null;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);last-child:border-none">
+      <div style="font-family:var(--fm);font-size:10px;font-weight:700;color:${t.color};width:40px;flex-shrink:0">${t.label}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:var(--t)">${_fmtCryptoPrice(hypoPrice)}</div>
+        <div style="font-family:var(--fm);font-size:9px;color:var(--t3)">${_fmtCryptoCap(t.mcap)} MCap</div>
+      </div>
+      ${mult!=null?`<div style="font-family:var(--fm);font-size:11px;font-weight:700;color:${mult>=1?'var(--g)':'var(--r)'}">${mult>=1?'+':''}${mult>=1?(mult-1)*100>0?'+':''+(((mult-1)*100).toFixed(0))+'%':'-'+(((1-mult)*100).toFixed(0))+'%'}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════
+   QUICK MODAL — portafoglio e alert da qualsiasi overlay
+══════════════════════════════════════════════════ */
+let _qmOnConfirm=null;
+
+function openQM(html, onConfirm){
+  _qmOnConfirm=onConfirm;
+  const content=document.getElementById('qm-content');
+  const msg=document.getElementById('qm-msg');
+  if(content)content.innerHTML=html;
+  if(msg)msg.textContent='';
+  const btn=document.getElementById('qm-confirm-btn');
+  if(btn)btn.onclick=()=>{ if(_qmOnConfirm)_qmOnConfirm(); };
+  const ov=document.getElementById('qm-overlay');
+  if(ov)ov.style.display='flex';
+}
+function closeQM(){
+  const ov=document.getElementById('qm-overlay');
+  if(ov)ov.style.display='none';
+  _qmOnConfirm=null;
+}
+function _qmMsg(text,isErr){
+  const el=document.getElementById('qm-msg');
+  if(el){el.textContent=text;el.style.color=isErr?'var(--r)':'var(--g)';}
+}
+
+/* -- Portafoglio quick add -- */
+function _quickPortfolioModal(sym, name, price, cat, currency){
+  if(typeof currentUser==='undefined'||!currentUser){openAuthModal?.();return;}
+  const today=new Date().toISOString().split('T')[0];
+  const html=`
+    <div class="qm-title">＋ Aggiungi al Portafoglio</div>
+    <div class="qm-sub">${name} · ${sym}${price?` · Prezzo attuale: ${currency==='EUR'?'€':'$'}${price.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:4})}`:''}  </div>
+    <div class="qm-row"><div class="qm-lbl">Quantità</div><input class="qm-inp" id="qm-qty" type="number" placeholder="es. 10" min="0.0001" step="any" autofocus></div>
+    <div class="qm-row"><div class="qm-lbl">Prezzo di acquisto (${currency==='EUR'?'€':'$'})</div><input class="qm-inp" id="qm-price" type="number" value="${price||''}" min="0" step="any"></div>
+    <div class="qm-row"><div class="qm-lbl">Data acquisto</div><input class="qm-inp" id="qm-date" type="date" value="${today}"></div>`;
+  openQM(html, async ()=>{
+    const qty=parseFloat(document.getElementById('qm-qty')?.value);
+    const buyPrice=parseFloat(document.getElementById('qm-price')?.value);
+    const buyDate=document.getElementById('qm-date')?.value||today;
+    if(!qty||qty<=0){_qmMsg('Inserisci una quantità valida',true);return;}
+    if(!buyPrice||buyPrice<=0){_qmMsg('Inserisci un prezzo valido',true);return;}
+    const isEU=(sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L'))||(currency==='EUR');
+    const cur=isEU?'EUR':'USD';
+    const csym=isEU?'€':'$';
+    const detectedCat=cat||(typeof detectPortCat==='function'?detectPortCat(sym):'stock');
+    portfolio.push({sym,qty,buyPrice,currency:cur,symbol:csym,cat:detectedCat,name,addedAt:Date.now(),buyDate});
+    if(typeof _logTransaction==='function')_logTransaction('buy',sym,qty,buyPrice,cur);
+    await savePortfolio();
+    if(typeof renderPortfolio==='function')renderPortfolio();
+    _qmMsg('✓ Aggiunto al portafoglio!',false);
+    setTimeout(closeQM,1200);
+  });
+}
+
+/* -- Alert quick add -- */
+function _quickAlertModal(sym, price){
+  if(typeof currentUser==='undefined'||!currentUser){openAuthModal?.();return;}
+  const html=`
+    <div class="qm-title">🔔 Imposta Alerta Prezzo</div>
+    <div class="qm-sub">${sym}</div>
+    <div class="qm-row"><div class="qm-lbl">Condizione</div>
+      <select class="qm-sel" id="qm-cond">
+        <option value="above">↑ Sopra (prezzo sale a)</option>
+        <option value="below">↓ Sotto (prezzo scende a)</option>
+      </select>
+    </div>
+    <div class="qm-row"><div class="qm-lbl">Prezzo target</div><input class="qm-inp" id="qm-alert-price" type="number" value="${price||''}" min="0" step="any" autofocus></div>
+    <div class="qm-row"><div class="qm-lbl">Nota (opzionale)</div><input class="qm-inp" id="qm-alert-label" type="text" placeholder="es. Target profitto"></div>`;
+  openQM(html, async ()=>{
+    const target=parseFloat(document.getElementById('qm-alert-price')?.value);
+    const condition=document.getElementById('qm-cond')?.value||'above';
+    const label=document.getElementById('qm-alert-label')?.value.trim()||'';
+    if(!target||target<=0){_qmMsg('Inserisci un prezzo valido',true);return;}
+    alerts.push({sym,target,condition,label,addedAt:Date.now()});
+    await saveAlerts();
+    if(typeof renderAlerts==='function')renderAlerts();
+    if(typeof updateScQuickCounts==='function')updateScQuickCounts();
+    _qmMsg('✓ Alerta creato!',false);
+    setTimeout(closeQM,1200);
+  });
+}
+
+/* -- Stock detail buttons -- */
+function sdQuickPortfolio(){
+  const sym=(document.getElementById('sd-sym')?.textContent||'').trim();
+  const name=(document.getElementById('sd-name')?.textContent||sym).trim();
+  const priceText=(document.getElementById('sd-hdr-price')?.textContent||'').replace(/[^0-9.,]/g,'').replace(',','.');
+  const price=parseFloat(priceText)||0;
+  const isEU=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L');
+  _quickPortfolioModal(sym,name,price,typeof detectPortCat==='function'?detectPortCat(sym):'stock',isEU?'EUR':'USD');
+}
+function sdQuickAlert(){
+  const sym=(document.getElementById('sd-sym')?.textContent||'').trim();
+  const priceText=(document.getElementById('sd-hdr-price')?.textContent||'').replace(/[^0-9.,]/g,'').replace(',','.');
+  const price=parseFloat(priceText)||0;
+  _quickAlertModal(sym,price);
+}
+
+/* -- Crypto detail buttons -- */
+function crdQuickPortfolio(){
+  const d=_cryptoData?.coins?.find(c=>c.id===_crdCurrentId);
+  if(!d)return;
+  const sym=d.symbol.toUpperCase()+'-USD';
+  _quickPortfolioModal(sym,d.name,d.current_price,'crypto','USD');
+}
+function crdQuickAlert(){
+  const d=_cryptoData?.coins?.find(c=>c.id===_crdCurrentId);
+  if(!d)return;
+  _quickAlertModal(d.symbol.toUpperCase(),d.current_price);
+}
 </script>
 <!-- ══ INVESTOR PROFILE QUIZ MODAL ══ -->
 <div id="pq-overlay" class="pq-overlay" style="display:none" onclick="if(event.target===this)closePQ()">
