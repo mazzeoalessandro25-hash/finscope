@@ -4427,10 +4427,24 @@ async function loadCrypto(){
    ══════════════════════════════════════════════════════════ */
 
 /* Seleziona indice */
+function onScreenerIndexChange(sel){
+  ['sc-btn-etf','sc-btn-bonds','sc-btn-crypto'].forEach(id=>{
+    const b=document.getElementById(id);if(b)b.classList.remove('active');
+  });
+  setScreenerIndex(sel.value,null);
+}
+function onScreenerSpecialClick(idx,btn){
+  const sel=document.getElementById('sc-idx-select');
+  if(sel)sel.value='all';
+  ['sc-btn-etf','sc-btn-bonds','sc-btn-crypto'].forEach(id=>{
+    const b=document.getElementById(id);if(b)b.classList.remove('active');
+  });
+  if(btn)btn.classList.add('active');
+  setScreenerIndex(idx,btn);
+}
 function setScreenerIndex(idx, btn){
   currentIndex=idx;
-  document.querySelectorAll('.sc-idx-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
+  if(btn)btn.classList.add('active');
   const isBonds=idx==='bonds';
   const isCrypto=idx==='crypto';
   const bondsSection=document.getElementById('sc-bonds-section');
