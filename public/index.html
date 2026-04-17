@@ -14541,7 +14541,7 @@ function _calcMA(pts, period, key='value'){
 }
 
 async function loadCryptoChart(days, btn){
-  ['crd-btn-30','crd-btn-90','crd-btn-180','crd-btn-365','crd-btn-max'].forEach(id=>{
+  ['crd-btn-1','crd-btn-7','crd-btn-30','crd-btn-90','crd-btn-180','crd-btn-365','crd-btn-max'].forEach(id=>{
     const b=document.getElementById(id);if(b)b.classList.remove('active');
   });
   if(btn)btn.classList.add('active');
