@@ -8907,11 +8907,19 @@ function _macroRenderAnalysis(d){
     const sc2=dxyP>104?'var(--r)':dxyP>101?'var(--o)':dxyP>98?'var(--t3)':'var(--g)';
     setStat('mss-dxy','mss-dxy-sub','mss-dxy-item',fmt(dxyP,2),st,sc2,sc);
   }
-  if(copperP!=null){
-    const sc=copperP>4.5?'sig-safe':copperP>4.0?'sig-neu':'sig-warn';
-    const st=copperP>4.5?'Domanda robusta':copperP>4.0?'Livello neutro':'Segnale debole';
-    const sc2=copperP>4.5?'var(--g)':copperP>4.0?'var(--t3)':'var(--r)';
-    setStat('mss-copper','mss-copper-sub','mss-cu-item','$'+fmt(copperP,2),st,sc2,sc);
+  if(vixP!=null){
+    const sc=vixP>30?'sig-danger':vixP>20?'sig-warn':vixP>15?'sig-neu':'sig-safe';
+    const st=vixP>30?'Panico — risk-off':vixP>20?'Stress elevato':vixP>15?'Allerta moderata':'Mercato calmo';
+    const sc2=vixP>30?'var(--r)':vixP>20?'var(--o)':vixP>15?'var(--t3)':'var(--g)';
+    setStat('mss-vix','mss-vix-sub','mss-vix-item',fmt(vixP,1),st,sc2,sc);
+  }
+  if(goldP!=null){
+    const goldChgPct=d.gold?chgPct(d.gold.price,d.gold.prev):null;
+    const sc=goldP>3000?'sig-safe':goldP>2500?'sig-neu':'sig-neu';
+    const st=goldP>3000?'Domanda risk-off forte':goldP>2500?'Livello storico alto':'Livello elevato';
+    const sc2=goldP>3000?'var(--g)':goldP>2500?'var(--t3)':'var(--t3)';
+    const sub=st+(goldChgPct!=null?' · '+chgStr(goldChgPct):'');
+    setStat('mss-gold','mss-gold-sub','mss-gold-item','$'+fmt(goldP,0),sub,sc2,sc);
   }
 
   // ── B: Regime title + subtitle ──
