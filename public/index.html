@@ -14645,8 +14645,11 @@ async function loadCryptoChart(days, btn){
 
     // Volume histogram
     if(volumes.length){
-      chart.priceScale('volume').applyOptions({scaleMargins:{top:.82,bottom:0},drawTicks:false});
-      const volSeries=chart.addHistogramSeries({priceScaleId:'volume',color:'rgba(100,100,100,.25)',priceFormat:{type:'volume'}});
+      chart.priceScale('volume').applyOptions({scaleMargins:{top:.80,bottom:0},drawTicks:false,visible:false});
+      const volSeries=chart.addHistogramSeries({
+        priceScaleId:'volume',color:'rgba(100,100,100,.25)',
+        priceFormat:{type:'volume'},lastValueVisible:false,priceLineVisible:false
+      });
       volSeries.setData(dedup(volumes));
     }
 
