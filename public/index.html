@@ -2694,13 +2694,22 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
 <!-- ═══ NEWS ═══ -->
 <div class="page" id="page-news">
-  <div class="pg-title">News Mercati</div>
-  <div class="pg-sub" style="margin-bottom:14px">Ultime notizie finanziarie · Aggiornate in tempo reale</div>
+  <div class="news-hdr">
+    <div>
+      <div class="pg-title" style="margin-bottom:2px">News Mercati</div>
+      <div class="pg-sub">Ultime notizie finanziarie · RSS, Finnhub, Yahoo Finance</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+      <span class="news-refresh-ts" id="news-refresh-ts"></span>
+      <button class="news-refresh-btn" onclick="newsRefresh()">🔄 Aggiorna</button>
+    </div>
+  </div>
   <div class="news-search-wrap">
     <input class="news-search-inp" id="news-search-inp" type="text" placeholder="Cerca ticker o tema… es. AAPL, Fed, oro, BTP"
       onkeydown="if(event.key==='Enter')loadNewsSearch(this.value)" autocomplete="off"/>
     <button class="news-search-btn" onclick="loadNewsSearch(document.getElementById('news-search-inp').value)">Cerca</button>
   </div>
+  <div id="news-port-pills" class="news-port-pills"></div>
   <div class="nf">
     <button class="nf-btn active" onclick="loadNews('mercati',this)">🌐 Mercati</button>
     <button class="nf-btn" onclick="loadNews('italia',this)">🇮🇹 Italia</button>
