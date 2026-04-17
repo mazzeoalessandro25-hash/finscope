@@ -92,5 +92,12 @@ export default async function handler(req, res) {
     return res.json({ ok: true });
   }
 
+  // ── SAVE PAC PLANS ──
+  if (req.method === 'POST' && type === 'pac') {
+    const { pac } = req.body;
+    await kv('SET', `${uid}:pac`, pac || []);
+    return res.json({ ok: true });
+  }
+
   return res.status(400).json({ error: 'Tipo non valido' });
 }
