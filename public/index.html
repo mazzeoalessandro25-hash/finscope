@@ -14549,6 +14549,18 @@ async function loadCryptoChart(days,btn){
   </div>
 </div>
 
+<!-- QUICK MODAL — portafoglio / alert rapido da qualsiasi overlay -->
+<div id="qm-overlay" class="qm-overlay" style="display:none" onclick="if(event.target===this)closeQM()">
+  <div class="qm-box" onclick="event.stopPropagation()">
+    <div id="qm-content"></div>
+    <div class="qm-actions">
+      <button class="qm-cancel" onclick="closeQM()">Annulla</button>
+      <button class="qm-confirm" id="qm-confirm-btn">Conferma</button>
+    </div>
+    <div class="qm-msg" id="qm-msg"></div>
+  </div>
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
