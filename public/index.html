@@ -6011,6 +6011,15 @@ async function savePortfolio(){
   }
 }
 
+async function savePacPlans(){
+  localStorage.setItem('fs_pac',JSON.stringify(pacPlans));
+  if(!currentToken)return;
+  try{await fetch('/api/user?type=pac',{
+    method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
+    body:JSON.stringify({pac:pacPlans})
+  });}catch{}
+}
+
 /* ── PORTFOLIO PAGE ── */
 function showPortfolioState(){
   const logMsg=document.getElementById('port-login-msg');
