@@ -13943,6 +13943,358 @@ async function loadInsiderForStock(sym){
     section.style.display='none';
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   CRYPTO — CoinGecko + Fear & Greed
+   ══════════════════════════════════════════════════════════ */
+
+let _cryptoData=null;
+let _crdChart=null;
+let _crdCurrentId=null;
+
+function _fmtCryptoCap(n){
+  if(!n)return'—';
+  if(n>=1e12)return'$'+(n/1e12).toFixed(2)+'T';
+  if(n>=1e9)return'$'+(n/1e9).toFixed(1)+'B';
+  if(n>=1e6)return'$'+(n/1e6).toFixed(1)+'M';
+  return'$'+n.toFixed(0);
+}
+function _fmtCryptoPrice(n){
+  if(n==null)return'—';
+  if(n>=1000)return'$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+  if(n>=1)return'$'+n.toFixed(2);
+  if(n>=0.01)return'$'+n.toFixed(4);
+  return'$'+n.toFixed(8);
+}
+function _fmtCryptoChg(v){
+  if(v==null)return'—';
+  return(v>=0?'+':'')+v.toFixed(2)+'%';
+}
+function _chgClassCrypto(v){return v==null?'':v>=0?'up':'down';}
+
+async function _loadCryptoData(force=false){
+  if(_cryptoData&&!force)return _cryptoData;
+  const r=await fetch('/api/crypto');
+  if(!r.ok)throw new Error('Crypto API error '+r.status);
+  _cryptoData=await r.json();
+  return _cryptoData;
+}
+
+/* ── CRYPTO PAGE ── */
+async function loadCryptoDashboard(){
+  try{
+    const d=await _loadCryptoData();
+    _renderCryptoGlobal(d);
+    _renderCryptoGainersLosers(d);
+    _renderCryptoNarrative(d);
+    _renderCryptoTable('cry-page-body',d.coins);
+  }catch(e){
+    const el=document.getElementById('cry-page-body');
+    if(el)el.innerHTML='<tr><td colspan="10" class="ld" style="color:var(--r)">Errore caricamento dati crypto. Riprovare.</td></tr>';
+  }
+}
+
+function _renderCryptoGlobal(d){
+  const g=d.global,fng=d.fng;
+  if(!g)return;
+  const mcap=g.total_market_cap?.usd;
+  const mcapChg=g.market_cap_change_percentage_24h_usd;
+  const vol=g.total_volume?.usd;
+  const btcDom=g.market_cap_percentage?.btc;
+  const ethDom=g.market_cap_percentage?.eth;
+  const el=id=>document.getElementById(id);
+  if(el('cry-g-mcap')){
+    el('cry-g-mcap').textContent=mcap?_fmtCryptoCap(mcap):'—';
+    if(mcapChg!=null){
+      const s=el('cry-g-mcap-sub');
+      s.textContent=_fmtCryptoChg(mcapChg)+' (24h)';
+      s.style.color=mcapChg>=0?'var(--g)':'var(--r)';
+    }
+  }
+  if(el('cry-g-btc')){
+    el('cry-g-btc').textContent=btcDom?btcDom.toFixed(1)+'%':'—';
+    el('cry-g-btc-sub').textContent=btcDom>55?'Risk-off — flussi su BTC':btcDom<45?'Possibile altseason':'Mercato bilanciato';
+  }
+  if(el('cry-g-eth'))el('cry-g-eth').textContent=ethDom?ethDom.toFixed(1)+'%':'—';
+  if(el('cry-g-vol')){
+    el('cry-g-vol').textContent=vol?_fmtCryptoCap(vol):'—';
+    const ratio=vol&&mcap?(vol/mcap*100):null;
+    if(ratio!=null)el('cry-g-vol-sub').textContent='Vol/MCap: '+ratio.toFixed(1)+'%';
+  }
+  if(el('cry-g-fng')&&fng){
+    const v=parseInt(fng.value);
+    el('cry-g-fng').textContent=v+'/100';
+    el('cry-g-fng').style.color=v<25?'var(--r)':v<45?'var(--o)':v<55?'var(--t2)':'var(--g)';
+    el('cry-g-fng-sub').textContent=fng.value_classification;
+  }
+}
+
+function _renderCryptoGainersLosers(d){
+  const coins=[...d.coins].filter(c=>c.price_change_percentage_24h!=null);
+  const sorted=coins.sort((a,b)=>(b.price_change_percentage_24h||0)-(a.price_change_percentage_24h||0));
+  const gainers=sorted.slice(0,5);
+  const losers=[...sorted].reverse().slice(0,5);
+  const makeRows=arr=>arr.map(c=>{
+    const chg=c.price_change_percentage_24h;
+    const bg=chg>=0?'var(--g2)':'var(--r2)';
+    const col=chg>=0?'var(--g)':'var(--r)';
+    return`<div class="cry-gl-row" onclick="openCryptoDetail('${c.id}')" style="cursor:pointer">
+      <img class="cry-gl-logo" src="${c.image}" alt="" onerror="this.style.display='none'">
+      <div style="flex:1"><div class="cry-gl-name">${c.name}</div><div class="cry-gl-sym">${c.symbol.toUpperCase()}</div></div>
+      <div style="font-family:var(--fm);font-size:11px;color:var(--t2);margin-right:6px">${_fmtCryptoPrice(c.current_price)}</div>
+      <div class="cry-gl-chg" style="background:${bg};color:${col}">${_fmtCryptoChg(chg)}</div>
+    </div>`;
+  }).join('');
+  const ge=document.getElementById('cry-gainers');
+  const le=document.getElementById('cry-losers');
+  if(ge)ge.innerHTML=makeRows(gainers);
+  if(le)le.innerHTML=makeRows(losers);
+}
+
+function _renderCryptoNarrative(d){
+  const el=document.getElementById('cry-narrative-content');
+  if(!el||!d.global)return;
+  const g=d.global,fng=d.fng;
+  const btcDom=g.market_cap_percentage?.btc;
+  const ethDom=g.market_cap_percentage?.eth;
+  const mcapChg=g.market_cap_change_percentage_24h_usd;
+  const fngV=fng?parseInt(fng.value):null;
+  const signals=[];
+  if(btcDom!=null){
+    if(btcDom>55)signals.push({i:'🔵',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Fase risk-off crypto. Il capitale si concentra su Bitcoin. Le altcoin tendono a sottoperformare.`});
+    else if(btcDom>50)signals.push({i:'⚪',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Mercato bilanciato con leggera preferenza per Bitcoin. Altseason non ancora confermata.`});
+    else if(btcDom>45)signals.push({i:'🟡',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Rotazione verso le altcoin in corso. Possibile inizio di altseason.`});
+    else signals.push({i:'🟢',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Altseason in corso. Il capitale si distribuisce su ETH, DeFi e small cap.`});
+  }
+  if(fngV!=null){
+    if(fngV<25)signals.push({i:'🔴',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Paura estrema. Storicamente zona di accumulo per gli investitori di lungo periodo.`});
+    else if(fngV<45)signals.push({i:'🟠',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Sentiment negativo. Mercato cauto, possibile opportunità per chi guarda al medio termine.`});
+    else if(fngV<55)signals.push({i:'⚪',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Sentiment neutro. Mercato in equilibrio senza eccessi.`});
+    else if(fngV<75)signals.push({i:'🟢',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Sentiment positivo. Momentum favorevole, ma attenzione a possibili correzioni.`});
+    else signals.push({i:'⚠️',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Euforia di mercato. Possibile surriscaldamento, aumentare cautela.`});
+  }
+  if(mcapChg!=null&&Math.abs(mcapChg)>3){
+    const icon=mcapChg>0?'📈':'📉';
+    signals.push({i:icon,t:`<strong>Market Cap ${_fmtCryptoChg(mcapChg)} nelle ultime 24h</strong> — Movimento significativo della capitalizzazione totale del mercato crypto.`});
+  }
+  if(ethDom!=null){
+    if(ethDom>20)signals.push({i:'💎',t:`<strong>ETH Dominance ${ethDom.toFixed(1)}%</strong> — DeFi e Layer 2 in buona salute. Attività on-chain sostenuta.`});
+    else if(ethDom<12)signals.push({i:'⚡',t:`<strong>ETH Dominance ${ethDom.toFixed(1)}%</strong> — ETH perde quota. Possibile rotazione verso BTC o Layer 1 alternativi.`});
+  }
+  el.innerHTML=signals.map(s=>`<div class="cry-signal-row"><span class="cry-signal-icon">${s.i}</span><span class="cry-signal-text">${s.t}</span></div>`).join('')||'<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessun segnale disponibile.</div>';
+}
+
+function _renderCryptoTable(tbodyId,coins){
+  const tbody=document.getElementById(tbodyId);
+  if(!tbody)return;
+  tbody.innerHTML=coins.map((c,i)=>{
+    const chg24=c.price_change_percentage_24h;
+    const chg7=c.price_change_percentage_7d_in_currency;
+    const chg30=c.price_change_percentage_30d_in_currency;
+    const supplyPct=c.max_supply?(c.circulating_supply/c.max_supply*100):null;
+    return`<tr onclick="openCryptoDetail('${c.id}')" style="cursor:pointer">
+      <td><span class="crypto-rank">${i+1}</span></td>
+      <td><img class="crypto-logo" src="${c.image}" alt="" onerror="this.style.display='none'"></td>
+      <td><div style="font-weight:600;color:var(--t)">${c.name}</div><div style="font-family:var(--fm);font-size:10px;color:var(--t3)">${c.symbol.toUpperCase()}</div></td>
+      <td style="font-family:var(--fm);font-weight:600">${_fmtCryptoPrice(c.current_price)}</td>
+      <td class="${_chgClassCrypto(chg24)}" style="font-family:var(--fm);font-weight:700">${_fmtCryptoChg(chg24)}</td>
+      <td class="${_chgClassCrypto(chg7)}" style="font-family:var(--fm);font-weight:700">${_fmtCryptoChg(chg7)}</td>
+      <td class="${_chgClassCrypto(chg30)}" style="font-family:var(--fm);font-weight:700">${_fmtCryptoChg(chg30)}</td>
+      <td style="font-family:var(--fm)">${_fmtCryptoCap(c.market_cap)}</td>
+      <td style="font-family:var(--fm)">${_fmtCryptoCap(c.total_volume)}</td>
+      <td style="font-family:var(--fm)">${supplyPct!=null?supplyPct.toFixed(1)+'%':'∞'}</td>
+    </tr>`;
+  }).join('');
+}
+
+/* ── CRYPTO SCREENER ── */
+async function loadCryptoScreener(){
+  const tbody=document.getElementById('sc-crypto-body');
+  if(tbody)tbody.innerHTML='<tr><td colspan="10" class="ld">Caricamento top 50 crypto...</td></tr>';
+  try{
+    const d=await _loadCryptoData();
+    _renderCryptoTable('sc-crypto-body',d.coins);
+  }catch(e){
+    if(tbody)tbody.innerHTML='<tr><td colspan="10" class="ld" style="color:var(--r)">Errore caricamento</td></tr>';
+  }
+}
+
+/* ── CRYPTO DETAIL ── */
+async function openCryptoDetail(coinId){
+  const overlay=document.getElementById('crypto-detail-overlay');
+  if(!overlay)return;
+  overlay.classList.add('open');
+  document.body.style.overflow='hidden';
+  _crdCurrentId=coinId;
+  // Reset chart buttons
+  ['crd-btn-30','crd-btn-90','crd-btn-180','crd-btn-365','crd-btn-max'].forEach(id=>{
+    const b=document.getElementById(id);
+    if(b)b.classList.remove('active');
+  });
+  const def=document.getElementById('crd-btn-30');
+  if(def)def.classList.add('active');
+  // Populate from cache
+  try{
+    const d=await _loadCryptoData();
+    const coin=d.coins.find(c=>c.id===coinId);
+    if(coin)_populateCryptoHeader(coin);
+    if(d.fng)_renderFngGauge(d.fng);
+    if(coin)_renderCryptoDetailNarrative(coin,d);
+  }catch(e){}
+  loadCryptoChart(30,document.getElementById('crd-btn-30'));
+}
+
+function closeCryptoDetail(){
+  const overlay=document.getElementById('crypto-detail-overlay');
+  if(overlay)overlay.classList.remove('open');
+  document.body.style.overflow='';
+  if(_crdChart){try{_crdChart.remove();}catch(e){}_crdChart=null;}
+}
+
+function _populateCryptoHeader(c){
+  const el=id=>document.getElementById(id);
+  const logo=el('crd-logo');
+  if(logo){logo.src=c.image;logo.alt=c.symbol;}
+  if(el('crd-sym'))el('crd-sym').textContent=c.symbol.toUpperCase();
+  if(el('crd-name'))el('crd-name').textContent=c.name;
+  if(el('crd-price'))el('crd-price').textContent=_fmtCryptoPrice(c.current_price);
+  const chg=c.price_change_percentage_24h;
+  if(el('crd-chg')&&chg!=null){
+    el('crd-chg').textContent=_fmtCryptoChg(chg);
+    el('crd-chg').style.background=chg>=0?'var(--g2)':'var(--r2)';
+    el('crd-chg').style.color=chg>=0?'var(--g)':'var(--r)';
+  }
+  if(el('crd-mcap'))el('crd-mcap').textContent=_fmtCryptoCap(c.market_cap);
+  if(el('crd-mcap-sub'))el('crd-mcap-sub').textContent='#'+c.market_cap_rank+' per cap';
+  if(el('crd-fdv'))el('crd-fdv').textContent=c.fully_diluted_valuation?_fmtCryptoCap(c.fully_diluted_valuation):'—';
+  if(el('crd-vol'))el('crd-vol').textContent=_fmtCryptoCap(c.total_volume);
+  const volRatio=c.total_volume&&c.market_cap?(c.total_volume/c.market_cap*100):null;
+  if(el('crd-vol-sub')&&volRatio!=null)el('crd-vol-sub').textContent='Vol/MCap: '+volRatio.toFixed(1)+'%';
+  const supplyPct=c.max_supply?(c.circulating_supply/c.max_supply*100):null;
+  if(el('crd-supply'))el('crd-supply').textContent=c.circulating_supply?(c.circulating_supply/1e6).toFixed(2)+'M':'—';
+  if(el('crd-supply-sub'))el('crd-supply-sub').textContent=supplyPct!=null?supplyPct.toFixed(1)+'% del max':'Supply illimitata';
+  if(el('crd-ath'))el('crd-ath').textContent=_fmtCryptoPrice(c.ath);
+  const athChg=c.ath_change_percentage;
+  if(el('crd-ath-sub')&&athChg!=null){
+    el('crd-ath-sub').textContent=athChg.toFixed(1)+'% dall\'ATH';
+    el('crd-ath-sub').style.color='var(--r)';
+  }
+  if(el('crd-rank'))el('crd-rank').textContent='#'+c.market_cap_rank;
+  const pf=[['crd-p24',chg],['crd-p7',c.price_change_percentage_7d_in_currency],['crd-p30',c.price_change_percentage_30d_in_currency],['crd-p1y',c.price_change_percentage_1y_in_currency]];
+  pf.forEach(([id,v])=>{
+    const e=el(id);
+    if(e){e.textContent=_fmtCryptoChg(v);e.className='crd-perf-val '+_chgClassCrypto(v);}
+  });
+}
+
+function _renderFngGauge(fng){
+  const canvas=document.getElementById('crd-fng-gauge');
+  if(!canvas)return;
+  const v=parseInt(fng.value);
+  const ctx=canvas.getContext('2d');
+  canvas.width=120;canvas.height=70;
+  ctx.clearRect(0,0,120,70);
+  const cx=60,cy=62,r=48;
+  // BG arc
+  ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,0);
+  ctx.lineWidth=10;ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--bd')||'#e5e7eb';
+  ctx.stroke();
+  // Colored arc
+  const grad=ctx.createLinearGradient(10,62,110,62);
+  grad.addColorStop(0,'#DC2626');grad.addColorStop(0.25,'#EA580C');grad.addColorStop(0.5,'#EAB308');
+  grad.addColorStop(0.75,'#84CC16');grad.addColorStop(1,'#16A34A');
+  const endAngle=Math.PI+(v/100)*Math.PI;
+  ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,endAngle);
+  ctx.lineWidth=10;ctx.strokeStyle=grad;ctx.lineCap='round';
+  ctx.stroke();
+  // Needle
+  const na=Math.PI+(v/100)*Math.PI;
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+(r-8)*Math.cos(na),cy+(r-8)*Math.sin(na));
+  ctx.lineWidth=2;ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--t')||'#111';
+  ctx.lineCap='round';ctx.stroke();
+  const el=id=>document.getElementById(id);
+  if(el('crd-fng-val'))el('crd-fng-val').textContent=v;
+  if(el('crd-fng-lbl')){
+    el('crd-fng-lbl').textContent=fng.value_classification;
+    el('crd-fng-lbl').style.color=v<25?'var(--r)':v<45?'var(--o)':v<55?'var(--t2)':'var(--g)';
+  }
+  if(el('crd-fng-date')&&fng.timestamp){
+    el('crd-fng-date').textContent='Aggiornato: '+new Date(fng.timestamp*1000).toLocaleDateString('it-IT');
+  }
+}
+
+function _renderCryptoDetailNarrative(coin,d){
+  const el=document.getElementById('crd-narrative');
+  if(!el)return;
+  const g=d.global,fng=d.fng;
+  const btcDom=g?.market_cap_percentage?.btc;
+  const fngV=fng?parseInt(fng.value):null;
+  const signals=[];
+  const athChg=coin.ath_change_percentage;
+  if(athChg!=null){
+    if(athChg>-10)signals.push({i:'🏆',t:`<strong>${coin.name} è al ${(100+athChg).toFixed(1)}% del suo ATH</strong> — Zona di resistenza storica. Livelli vicini all'euforia passata.`});
+    else if(athChg>-30)signals.push({i:'📊',t:`<strong>${coin.name} è ${Math.abs(athChg).toFixed(0)}% sotto l'ATH</strong> — Prezzi lontani dall'euforia. Zona di interesse per il medio termine.`});
+    else signals.push({i:'💡',t:`<strong>${coin.name} è ${Math.abs(athChg).toFixed(0)}% sotto l'ATH</strong> — Correzione significativa. Valutare il contesto prima di posizionarsi.`});
+  }
+  const volRatio=coin.total_volume&&coin.market_cap?(coin.total_volume/coin.market_cap*100):null;
+  if(volRatio!=null){
+    if(volRatio>20)signals.push({i:'💧',t:`<strong>Volume/MCap: ${volRatio.toFixed(1)}%</strong> — Alta liquidità relativa. Coin molto scambiato rispetto alla sua capitalizzazione.`});
+    else if(volRatio<3)signals.push({i:'⚠️',t:`<strong>Volume/MCap: ${volRatio.toFixed(1)}%</strong> — Liquidità bassa. Possibili movimenti bruschi su volumi ridotti.`});
+  }
+  if(btcDom!=null&&coin.symbol!=='btc'){
+    if(btcDom>55)signals.push({i:'🔵',t:`<strong>BTC Dominance alta (${btcDom.toFixed(1)}%)</strong> — Contesto sfavorevole per le altcoin. I flussi si concentrano su Bitcoin.`});
+    else if(btcDom<45)signals.push({i:'🟢',t:`<strong>BTC Dominance bassa (${btcDom.toFixed(1)}%)</strong> — Possibile altseason. Contesto favorevole per ${coin.name}.`});
+  }
+  if(fngV!=null){
+    if(fngV<30)signals.push({i:'🔴',t:`<strong>Sentiment: Paura (${fngV}/100)</strong> — Mercato in paura. Storicamente questi livelli precedono rimbalzi.`});
+    else if(fngV>70)signals.push({i:'⚠️',t:`<strong>Sentiment: Euforia (${fngV}/100)</strong> — Mercato surriscaldato. Aumentare cautela nelle nuove posizioni.`});
+  }
+  el.innerHTML=signals.map(s=>`<div class="cry-signal-row"><span class="cry-signal-icon">${s.i}</span><span class="cry-signal-text">${s.t}</span></div>`).join('')||'<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessun segnale disponibile.</div>';
+}
+
+async function loadCryptoChart(days,btn){
+  ['crd-btn-30','crd-btn-90','crd-btn-180','crd-btn-365','crd-btn-max'].forEach(id=>{
+    const b=document.getElementById(id);if(b)b.classList.remove('active');
+  });
+  if(btn)btn.classList.add('active');
+  if(!_crdCurrentId)return;
+  const chartEl=document.getElementById('crd-chart');
+  if(!chartEl)return;
+  chartEl.innerHTML='<div class="ld" style="padding:60px;text-align:center">Caricamento grafico...</div>';
+  if(_crdChart){try{_crdChart.remove();}catch(e){}_crdChart=null;}
+  try{
+    const r=await fetch(`/api/crypto?action=chart&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`);
+    if(!r.ok)throw new Error('chart '+r.status);
+    const data=await r.json();
+    const prices=data.prices||[];
+    chartEl.innerHTML='';
+    if(!prices.length){chartEl.innerHTML='<div class="ld" style="padding:60px;text-align:center;color:var(--t3)">Nessun dato disponibile</div>';return;}
+    const isDark=document.documentElement.classList.contains('dark');
+    const textColor=isDark?'#e5e7eb':'#374151';
+    const chart=LightweightCharts.createChart(chartEl,{
+      width:chartEl.clientWidth,height:280,
+      layout:{background:{type:'Solid',color:'transparent'},textColor},
+      grid:{vertLines:{color:'rgba(128,128,128,.07)'},horzLines:{color:'rgba(128,128,128,.07)'}},
+      rightPriceScale:{borderColor:'transparent',scaleMargins:{top:.1,bottom:.1}},
+      timeScale:{borderColor:'transparent',timeVisible:true},
+      crosshair:{mode:LightweightCharts.CrosshairMode.Normal}
+    });
+    const series=chart.addAreaSeries({
+      lineColor:'#1A56C4',topColor:'rgba(26,86,196,.28)',bottomColor:'rgba(26,86,196,0)',
+      lineWidth:2
+    });
+    const seen=new Set();
+    const pts=prices.map(([ts,p])=>({time:Math.floor(ts/1000),value:p}))
+      .filter(d=>{if(seen.has(d.time))return false;seen.add(d.time);return true;})
+      .sort((a,b)=>a.time-b.time);
+    series.setData(pts);
+    chart.timeScale().fitContent();
+    _crdChart=chart;
+    new ResizeObserver(()=>{chart.applyOptions({width:chartEl.clientWidth});}).observe(chartEl);
+  }catch(e){
+    chartEl.innerHTML='<div class="ld" style="padding:60px;text-align:center;color:var(--r)">Errore caricamento grafico</div>';
+  }
+}
 </script>
 <!-- ══ INVESTOR PROFILE QUIZ MODAL ══ -->
 <div id="pq-overlay" class="pq-overlay" style="display:none" onclick="if(event.target===this)closePQ()">
