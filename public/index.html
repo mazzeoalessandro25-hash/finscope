@@ -14548,7 +14548,16 @@ async function loadCryptoChart(days, btn){
       ?`/api/quote?type=crypto-ohlc&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`
       :`/api/quote?type=crypto-chart&id=${encodeURIComponent(_crdCurrentId)}&days=${days}`;
     const r=await fetch(url);
-    if(!r.ok)throw new Error('chart '+r.status);
+    if(!r.ok){
+      // Candlestick OHLC non disponibile per questo timeframe → fallback linea
+      if(isCandle){
+        _crdChartMode='line';
+        document.getElementById('crd-mode-line')?.classList.add('active');
+        document.getElementById('crd-mode-candle')?.classList.remove('active');
+        return loadCryptoChart(days,btn);
+      }
+      throw new Error('HTTP '+r.status);
+    }
     const data=await r.json();
     chartEl.innerHTML='';
     const isDark=document.documentElement.classList.contains('dark');
