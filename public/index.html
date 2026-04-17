@@ -4418,14 +4418,18 @@ function setScreenerIndex(idx, btn){
   document.querySelectorAll('.sc-idx-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const isBonds=idx==='bonds';
+  const isCrypto=idx==='crypto';
   const bondsSection=document.getElementById('sc-bonds-section');
+  const cryptoSection=document.getElementById('sc-crypto-section');
   const stocksWrap=document.getElementById('sc-stocks-wrap');
   const scFilters=document.getElementById('sc-filters');
   const scLoadWrap=document.getElementById('sc-load-wrap');
   if(bondsSection) bondsSection.style.display=isBonds?'block':'none';
-  if(stocksWrap) stocksWrap.style.display=isBonds?'none':'';
-  if(scFilters) scFilters.style.display=isBonds?'none':'';
+  if(cryptoSection) cryptoSection.style.display=isCrypto?'block':'none';
+  if(stocksWrap) stocksWrap.style.display=(isBonds||isCrypto)?'none':'';
+  if(scFilters) scFilters.style.display=(isBonds||isCrypto)?'none':'';
   if(isBonds){ loadBondScreener(); return; }
+  if(isCrypto){ loadCryptoScreener(); return; }
   const isAll=idx==='all';
   const elCountry=document.getElementById('sc-country');
   if(elCountry) elCountry.style.display=idx==='etf'?'none':'';
