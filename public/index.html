@@ -2174,23 +2174,31 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   </div>
 
   <!-- INDICI MONDIALI -->
-  <div class="sc-idx-bar" id="sc-idx-bar">
-    <button class="sc-idx-btn" onclick="setScreenerIndex('all',this)">🌐 Tutti</button>
-    <button class="sc-idx-btn active" onclick="setScreenerIndex('sp500',this)">🇺🇸 S&amp;P 500</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('nasdaq100',this)">🇺🇸 NASDAQ 100</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('dowjones',this)">🇺🇸 Dow Jones 30</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('ftsemib',this)">🇮🇹 FTSE MIB</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('dax',this)">🇩🇪 DAX 40</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('cac40',this)">🇫🇷 CAC 40</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('ftse100',this)">🇬🇧 FTSE 100</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('eurostoxx50',this)">🇪🇺 Euro Stoxx 50</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('ibex35',this)">🇪🇸 IBEX 35</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('smi',this)">🇨🇭 SMI</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('nikkei225',this)">🇯🇵 Nikkei 225</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('tsx',this)">🇨🇦 TSX</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('etf',this)">📊 ETF</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('bonds',this)">🏛 Obbligazioni</button>
-    <button class="sc-idx-btn" onclick="setScreenerIndex('crypto',this)">₿ Crypto</button>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+    <select class="fsel" id="sc-idx-select" onchange="onScreenerIndexChange(this)" style="min-width:200px;font-weight:600">
+      <option value="all">🌐 Tutti i mercati</option>
+      <optgroup label="🇺🇸 USA">
+        <option value="sp500">S&amp;P 500</option>
+        <option value="nasdaq100">NASDAQ 100</option>
+        <option value="dowjones">Dow Jones 30</option>
+      </optgroup>
+      <optgroup label="🇪🇺 Europa">
+        <option value="ftsemib">🇮🇹 FTSE MIB</option>
+        <option value="dax">🇩🇪 DAX 40</option>
+        <option value="cac40">🇫🇷 CAC 40</option>
+        <option value="ftse100">🇬🇧 FTSE 100</option>
+        <option value="eurostoxx50">🇪🇺 Euro Stoxx 50</option>
+        <option value="ibex35">🇪🇸 IBEX 35</option>
+        <option value="smi">🇨🇭 SMI</option>
+      </optgroup>
+      <optgroup label="🌏 Asia &amp; Altro">
+        <option value="nikkei225">🇯🇵 Nikkei 225</option>
+        <option value="tsx">🇨🇦 TSX</option>
+      </optgroup>
+    </select>
+    <button class="sc-idx-btn" id="sc-btn-etf" onclick="onScreenerSpecialClick('etf',this)">📊 ETF</button>
+    <button class="sc-idx-btn" id="sc-btn-bonds" onclick="onScreenerSpecialClick('bonds',this)">🏛 Obbligazioni</button>
+    <button class="sc-idx-btn" id="sc-btn-crypto" onclick="onScreenerSpecialClick('crypto',this)">₿ Crypto</button>
   </div>
 
   <div class="sc-f" id="sc-filters">
