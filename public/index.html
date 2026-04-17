@@ -2746,6 +2746,65 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div id="portnews-content"><div class="ld" style="padding:10px">Caricamento news...</div></div>
         </div>
       </div>
+
+      <!-- PAC: Piano di Accumulo del Capitale -->
+      <div class="port-tab-panel" id="ptab-pac">
+        <div class="card" id="pac-card">
+          <div class="ch">
+            <div>
+              <div class="ct">📅 PAC — Piano di Accumulo<span class="info-icon">i<span class="info-tip">Il PAC (Piano di Accumulo del Capitale) consente di investire una somma fissa a cadenza mensile. L'acquisto viene simulato il primo giorno lavorativo disponibile del mese al prezzo di mercato di quel giorno.</span></span></div>
+              <div class="cs">Investimento automatico mensile · Primo giorno lavorativo del mese · Prezzo di mercato</div>
+            </div>
+            <button class="port-add-toggle" style="font-size:12px;padding:7px 14px" onclick="openPacForm()">＋ Nuovo PAC</button>
+          </div>
+
+          <!-- Form aggiunta PAC (inizialmente nascosto) -->
+          <div id="pac-add-form" style="display:none;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px">
+            <div style="font-size:12px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:12px">Nuovo Piano di Accumulo</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div>
+                <div class="port-inp-lbl">Strumento (ETF, Azione…)</div>
+                <div style="position:relative">
+                  <input class="port-inp" id="pac-search" type="text" placeholder="Cerca ticker o nome…" autocomplete="off"
+                    oninput="onPacSearchInput()" onkeydown="onPacSearchKey(event)" style="width:100%;box-sizing:border-box"/>
+                  <div id="pac-dd" class="port-dd"></div>
+                </div>
+              </div>
+              <div>
+                <div class="port-inp-lbl">Importo mensile (€)</div>
+                <input class="port-inp" id="pac-amount" type="number" placeholder="es. 200" min="1" step="1" style="width:100%;box-sizing:border-box"/>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <div>
+                <div class="port-inp-lbl">Data inizio</div>
+                <input class="port-inp" id="pac-start" type="date" style="width:100%;box-sizing:border-box"/>
+              </div>
+              <div>
+                <div class="port-inp-lbl">Frequenza</div>
+                <select class="port-inp" id="pac-freq" style="width:100%;box-sizing:border-box;background:var(--card);color:var(--t)">
+                  <option value="monthly">Mensile</option>
+                  <option value="quarterly">Trimestrale</option>
+                </select>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end">
+              <button onclick="closePacForm()" style="background:var(--s2);border:1px solid var(--bd);color:var(--t2);padding:7px 16px;border-radius:8px;font-size:12px;cursor:pointer">Annulla</button>
+              <button class="port-add-btn" onclick="addPacPlan()" style="padding:7px 20px">＋ Aggiungi PAC</button>
+            </div>
+          </div>
+
+          <!-- Lista piani PAC -->
+          <div id="pac-list"><div class="ld" style="padding:16px;text-align:center">Nessun piano PAC attivo. Clicca "＋ Nuovo PAC" per iniziare.</div></div>
+        </div>
+
+        <!-- Log esecuzioni PAC -->
+        <div class="card" style="margin-top:10px" id="pac-log-card" style="display:none">
+          <div class="ch"><div><div class="ct">📋 Storico esecuzioni PAC</div><div class="cs">Tutti gli acquisti automatici effettuati dai tuoi piani PAC</div></div></div>
+          <div id="pac-log-content"><div class="ld" style="padding:10px">Nessuna esecuzione registrata</div></div>
+        </div>
+      </div>
+
     </div>
 
   </div>
