@@ -7127,9 +7127,9 @@ function checkPacDue(){
   const btn=document.getElementById('ptab-btn-pac');
   if(!btn)return;
   if(due.length){
-    btn.innerHTML=`📅 PAC <span style="background:var(--r);color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;margin-left:3px;vertical-align:middle;font-family:var(--fm)">${due.length}</span>`;
+    btn.innerHTML=`${_t('port.tab.pac')} <span style="background:var(--r);color:#fff;border-radius:10px;font-size:9px;padding:1px 6px;margin-left:3px;vertical-align:middle;font-family:var(--fm)">${due.length}</span>`;
   } else {
-    btn.textContent='📅 PAC';
+    btn.textContent=_t('port.tab.pac');
   }
 }
 
