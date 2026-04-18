@@ -319,7 +319,7 @@ const INDEX_DATA = {
     {s:'ERG.MI',n:'ERG',sec:'Utilities',mkt:'IT'},
     {s:'STLAM.MI',n:'Stellantis',sec:'Consumer Cyclical',mkt:'IT'},
     {s:'PIRC.MI',n:'Pirelli',sec:'Consumer Cyclical',mkt:'IT'},
-    {s:'BPER.MI',n:'BPER Banca',sec:'Financial Services',mkt:'IT'},
+    {s:'BPE.MI',n:'BPER Banca',sec:'Financial Services',mkt:'IT'},
     {s:'AMP.MI',n:'Amplifon',sec:'Healthcare',mkt:'IT'},
     {s:'SRG.MI',n:'Snam',sec:'Utilities',mkt:'IT'},
     {s:'TEN.MI',n:'Tenaris',sec:'Energy',mkt:'IT'},
