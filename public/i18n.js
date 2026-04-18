@@ -857,5 +857,16 @@ const TRANSLATIONS={
     'tip.info.rebalance':'Vergleicht die aktuelle Allokation mit deinen Zielwerten. Wenn eine Position mehr als ±5% vom Ziel abweicht, wird sie markiert. Vorgeschlagene Orders zeigen, wie viel zu kaufen oder zu verkaufen ist.',
     'tip.info.alerts':'Alarme setzen, wenn eine Position einen Kurs über- oder unterschreitet. Alarme werden bei jeder Portfolio-Aktualisierung geprüft.',
     'tip.info.pac':'Der Sparplan ermöglicht es, monatlich einen festen Betrag zu investieren. Der Kauf wird am ersten verfügbaren Geschäftstag des Monats zum Marktpreis simuliert.',
+    /* ── EXTRA STRINGS ── */
+    'hm.all':'🌍 Alle','hm.eu':'🇪🇺 Europa',
+    'period.1d':'1T','period.5d':'5T','period.1y':'1J',
+    'ins.sort.recent':'📅 Neueste',
+    'ins.sort.valueDesc':'💰 Wert ↓','ins.sort.valueAsc':'💰 Wert ↑',
+    'ins.sort.sharesDesc':'📊 Aktien ↓',
+    'load.watchlist':'Watchlist laden...',
+    'load.wyckoff':'Wyckoff-Analyse laden...',
+    'load.insider':'Insider-Transaktionen laden...',
+    'nav.logout':'Abmelden',
+    'common.clearHistory':'Verlauf löschen',
   }
 };
