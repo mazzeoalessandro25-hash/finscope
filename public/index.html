@@ -7138,7 +7138,7 @@ async function executePacNow(id){
   const p=pacPlans.find(x=>x.id===id);
   if(!p||!currentUser)return;
   const execBtn=document.getElementById('pac-exec-btn-'+id);
-  if(execBtn){execBtn.disabled=true;execBtn.textContent='⏳ Acquisto...';}
+  if(execBtn){execBtn.disabled=true;execBtn.textContent=_t('pac.executing');}
   try{
     const r=await fetch('/api/quote?symbol='+encodeURIComponent(p.sym));
     const q=await r.json();
