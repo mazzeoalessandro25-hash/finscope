@@ -5616,47 +5616,6 @@ function getScoreColor(pct){
 
 /* ── DARK MODE (gestito da initTheme + toggleDark sotto) ── */
 
-/* ── AI ANALYSIS ── */
-let _lastFA={qd:null,sd:null,ticker:''};
-
-async function runAI(){
-  const btn=document.getElementById('ai-btn');
-  const oldBox=document.getElementById('ai-result-box');
-  if(oldBox)oldBox.remove();
-  if(!_lastFA.ticker){return;}
-  btn.disabled=true;
-  btn.innerHTML='<span class="ai-badge">AI</span>Analisi in corso...';
-  try{
-    const r=await fetch('/api/analyze',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({ticker:_lastFA.ticker,qd:_lastFA.qd,sd:_lastFA.sd})
-    });
-    const d=await r.json();
-    const box=document.createElement('div');
-    box.id='ai-result-box';
-    box.className='ai-result-box';
-    if(!r.ok||d.error){
-      box.innerHTML=`<span style="color:var(--r)">⚠ ${d.error||'Errore AI'}</span>`;
-    } else {
-      // Formatta il testo markdown in HTML semplice
-      const html=d.analysis
-        .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-        .replace(/\n/g,'<br>');
-      box.innerHTML=`<div class="ai-header"><span class="ai-tag">✦ FinEdge AI · ${d.ticker}</span></div>${html}`;
-    }
-    document.getElementById('fa-res').after(box);
-  }catch(e){
-    const box=document.createElement('div');
-    box.id='ai-result-box';
-    box.className='ai-result-box';
-    box.innerHTML=`<span style="color:var(--r)">⚠ Errore connessione. Verifica che ANTHROPIC_API_KEY sia configurata in Vercel.</span>`;
-    document.getElementById('fa-res').after(box);
-  }
-  btn.disabled=false;
-  btn.innerHTML='<span class="ai-badge">AI</span>Analisi';
-}
-
 /* ── TOP MARKET CAP ── */
 const MCAP_DATA={
   // Simboli US-listed per avere marketCap in USD da Yahoo Finance.
