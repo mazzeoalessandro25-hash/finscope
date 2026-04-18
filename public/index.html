@@ -6646,7 +6646,7 @@ function switchTab(tab,btn){
   document.getElementById('auth-submit').textContent=tab==='login'?'Accedi':'Crea account';
   document.getElementById('auth-err').classList.remove('show');
   document.getElementById('auth-ok').classList.remove('show');
-  document.getElementById('auth-pwd').placeholder=tab==='login'?'La tua password':'Minimo 8 caratteri';
+  document.getElementById('auth-pwd').placeholder=tab==='login'?_t('auth.pwdPh.login'):_t('auth.pwdPh.register');
   document.getElementById('name-field').style.display=tab==='register'?'block':'none';
   const fl=document.getElementById('forgot-link');if(fl)fl.style.display=tab==='login'?'':'none';
   if(tab==='register') setTimeout(()=>document.getElementById('auth-name').focus(),50);
