@@ -9814,7 +9814,7 @@ function _macroRenderSnapshot(){
   const usUpd=document.getElementById('macro-us-upd');
   if(usUpd)usUpd.textContent=_t('macro.updated')+' '+MACRO_SNAP.updatedAt+' · '+MACRO_SNAP.regimeNote;
   const euUpd=document.getElementById('macro-eu-upd');
-  if(euUpd)euUpd.textContent='Aggiornato '+MACRO_SNAP.updatedAt+' · Fonte: Eurostat · BCE';
+  if(euUpd)euUpd.textContent=_t('macro.updated')+' '+MACRO_SNAP.updatedAt+' · Fonte: Eurostat · BCE';
 
   function renderList(items){
     return`<div style="display:flex;flex-direction:column;gap:1px">`+items.map(it=>{
