@@ -6036,7 +6036,18 @@ function _applyDynamicTranslations(){
     dailyTitle.textContent=_t('port.daily.title');
 }
 
-let currentLang=localStorage.getItem('fs_lang')||'it';
+// Detect language: URL param → localStorage → browser → fallback 'it'
+(function(){
+  const _LANGS=['it','en','de'];
+  const _urlParam=new URLSearchParams(window.location.search).get('lang');
+  if(_urlParam&&_LANGS.includes(_urlParam)){currentLang=_urlParam;localStorage.setItem('fs_lang',_urlParam);return;}
+  const _stored=localStorage.getItem('fs_lang');
+  if(_stored&&_LANGS.includes(_stored)){currentLang=_stored;return;}
+  const _nav=(navigator.language||'').slice(0,2).toLowerCase();
+  currentLang=_LANGS.includes(_nav)?_nav:'it';
+  localStorage.setItem('fs_lang',currentLang);
+})();
+let currentLang=currentLang||'it';
 let currentUser=null;
 let currentToken=null;
 let authTab='login';
