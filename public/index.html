@@ -14610,7 +14610,7 @@ function renderInsiderTable(transactions, filter, containerId, showSymbol, sort)
   const VISIBLE = 20;
   const visible = rows.slice(0, VISIBLE);
   const hidden  = rows.slice(VISIBLE);
-  const thead = `${showSymbol?'<th>Titolo</th>':''}<th>Data</th><th>Nome</th><th>Ruolo</th><th>Tipo</th><th style="text-align:right">Azioni</th><th style="text-align:right">Prezzo</th><th style="text-align:right">Valore</th>`;
+  const thead = `${showSymbol?`<th>${_t('ins.th.symbol')}</th>`:''}<th>${_t('ins.th.date')}</th><th>${_t('ins.th.name')}</th><th>${_t('ins.th.role')}</th><th>${_t('ins.th.type')}</th><th style="text-align:right">${_t('ins.th.shares')}</th><th style="text-align:right">${_t('ins.th.price')}</th><th style="text-align:right">${_t('ins.th.value')}</th>`;
 
   let html=`<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
     <span style="font-size:11px;font-family:var(--fm);background:rgba(5,150,105,.14);color:#059669;padding:4px 12px;border-radius:6px;font-weight:700">🟢 ${nBuy} acquisti · ${fmtInsValue(vBuy)}</span>
