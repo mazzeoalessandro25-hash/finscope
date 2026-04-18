@@ -7166,10 +7166,13 @@ async function executePacNow(id){
     renderPacLog();
     checkPacDue();
     // Toast di conferma
-    _showPacToast(`✓ Acquistato ${qty.toFixed(4)} quote di ${p.sym} a ${csym}${price.toFixed(2)} — ${csym}${p.amount} investiti`);
+    const ofLbl=currentLang==='de'?'von':currentLang==='en'?'of':'di';
+    const atLbl=currentLang==='de'?'zu':currentLang==='en'?'at':'a';
+    const invLbl=currentLang==='de'?'investiert':currentLang==='en'?'invested':'investiti';
+    _showPacToast(`✓ ${qty.toFixed(4)} ${ofLbl} ${p.sym} ${atLbl} ${csym}${price.toFixed(2)} — ${csym}${p.amount} ${invLbl}`);
   }catch(e){
-    if(execBtn){execBtn.disabled=false;execBtn.textContent='▶ Esegui acquisto';}
-    _showPacToast('Errore: '+e.message, true);
+    if(execBtn){execBtn.disabled=false;execBtn.textContent=_t('pac.execute');}
+    _showPacToast('⚠ '+e.message, true);
   }
 }
 
