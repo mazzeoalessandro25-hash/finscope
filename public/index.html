@@ -6687,6 +6687,46 @@ const _TRANS_MAP=[
   {s:'#port-daily-refresh-badge',k:'port.daily.badge',t:'t'},
 ];
 
+// ─── TEXT-NODE WALKER ──────────────────────────────────────────────────────
+// Builds a reverse lookup (Italian value → key) once, then walks all DOM text
+// nodes. On first encounter, stores the Italian original on the node itself
+// so subsequent language switches always resolve from the Italian source.
+let _itRev=null;
+function _getItRev(){
+  if(_itRev)return _itRev;
+  _itRev={};
+  Object.entries(TRANSLATIONS.it).forEach(([k,v])=>{
+    if(typeof v==='string'&&v.trim())_itRev[v.trim()]=k;
+  });
+  return _itRev;
+}
+const _SKIP_I18N=new Set(['SCRIPT','STYLE','TEXTAREA','CODE','PRE','SVG','CANVAS','NOSCRIPT']);
+function _walkAndTranslate(root){
+  const rev=_getItRev();
+  function walk(node){
+    if(node.nodeType===3){
+      const cur=node.textContent;
+      const trimmed=cur.trim();
+      if(!trimmed)return;
+      if(node._itOrig===undefined){
+        node._itOrig=rev[trimmed]?trimmed:null;
+        if(node._itOrig!==null){
+          const m=cur.match(/^(\s*)([\s\S]*?)(\s*)$/);
+          node._itPre=m?m[1]:'';node._itSuf=m?m[3]:'';
+        }
+      }
+      if(node._itOrig){
+        const key=rev[node._itOrig];
+        if(key){const t=_t(key);node.textContent=node._itPre+t+node._itSuf;}
+      }
+    }else if(node.nodeType===1&&!_SKIP_I18N.has(node.tagName)){
+      for(const c of node.childNodes)walk(c);
+    }
+  }
+  walk(root);
+}
+// ───────────────────────────────────────────────────────────────────────────
+
 function applyTranslations(){
   // 1. Elementi taggati con data-i18n (textContent)
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -6710,6 +6750,8 @@ function applyTranslations(){
     else if(t==='ti')el.title=_t(k);
   });
   _applyDynamicTranslations();
+  // 5. Text-node walker: traduce tutto il testo statico rimasto
+  _walkAndTranslate(document.body);
 }
 
 function _applyDynamicTranslations(){
