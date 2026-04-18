@@ -7028,7 +7028,7 @@ async function renderPortfolio(){
       const valEUR=e.valUSD/eurUsd;
       if(e.isOther) return `<div style="display:flex;align-items:center;gap:6px;padding:5px 0;min-width:0">
         <div style="width:8px;height:8px;border-radius:50%;background:var(--bd);flex-shrink:0"></div>
-        <div style="font-size:11px;color:var(--t3);flex:1">Altro</div>
+        <div style="font-size:11px;color:var(--t3);flex:1">${_t('port.other')}</div>
         <div style="font-size:10px;font-family:var(--fm);color:var(--t3);flex-shrink:0">€${fmt(valEUR,2)}</div>
         <div style="font-size:11px;font-family:var(--fm);font-weight:700;color:var(--t3);flex-shrink:0;min-width:28px;text-align:right">${pct}%</div>
       </div>`;
