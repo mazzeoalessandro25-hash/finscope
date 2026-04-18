@@ -707,30 +707,47 @@ const INDEX_DATA = {
    ───────────────────────────────────────────────────────── */
 const _timeout = (ms) => new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), ms));
 
+function _quoteToRow(q) {
+  return {
+    price:     q.regularMarketPrice            ?? null,
+    prev:      q.regularMarketPreviousClose    ?? null,
+    chg:       q.regularMarketChangePercent    ?? null,
+    pe:        q.trailingPE                    ?? null,
+    marketCap: q.marketCap                     ?? null,
+    volume:    q.regularMarketVolume           ?? null,
+    divAnnual: q.trailingAnnualDividendRate    ?? null,
+  };
+}
+
 async function fetchChunk(chunk) {
+  // Prima prova: batch (più veloce)
   try {
-    // Niente `fields` option: causa errori in yahoo-finance2 v3
-    // Timeout esplicito per evitare hang su Vercel (10s limit)
     const results = await Promise.race([
-      yf.quote(chunk),
-      _timeout(7000),
+      yf.quote(chunk, {}, { validateResult: false }),
+      _timeout(6000),
     ]);
     const arr = Array.isArray(results) ? results : [results];
     const m = {};
     arr.forEach(q => {
       if (!q?.symbol) return;
-      m[q.symbol] = {
-        price:     q.regularMarketPrice            ?? null,
-        prev:      q.regularMarketPreviousClose    ?? null,
-        chg:       q.regularMarketChangePercent    ?? null,
-        pe:        q.trailingPE                    ?? null,
-        marketCap: q.marketCap                     ?? null,
-        volume:    q.regularMarketVolume           ?? null,
-        divAnnual: q.trailingAnnualDividendRate    ?? null,
-      };
+      m[q.symbol] = _quoteToRow(q);
     });
-    return m;
-  } catch { return {}; }
+    // Se il batch ha restituito tutti i simboli richiesti, ottimo
+    if (Object.keys(m).length > 0) return m;
+  } catch { /* batch fallito, passa al fallback */ }
+
+  // Fallback: richieste individuali (più lento ma resistente a errori di validazione)
+  const m = {};
+  await Promise.all(chunk.map(async sym => {
+    try {
+      const q = await Promise.race([
+        yf.quote(sym, {}, { validateResult: false }),
+        _timeout(4000),
+      ]);
+      if (q?.regularMarketPrice != null) m[q.symbol || sym] = _quoteToRow(q);
+    } catch { /* simbolo non trovato, lascia null */ }
+  }));
+  return m;
 }
 
 async function yahooQuote(symbols) {
