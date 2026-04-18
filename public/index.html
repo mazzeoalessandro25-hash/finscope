@@ -7104,11 +7104,11 @@ function renderPacLog(){
   const csym=c=>c==='EUR'?'€':'$';
   el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px">
     <thead><tr style="color:var(--t3);font-family:var(--fm);font-size:10px;text-align:left;border-bottom:1px solid var(--bd)">
-      <th style="padding:8px 4px 8px 0">Data</th>
-      <th style="padding:8px 4px">Titolo</th>
-      <th style="padding:8px 4px;text-align:right">Importo</th>
-      <th style="padding:8px 4px;text-align:right">Prezzo acquisto</th>
-      <th style="padding:8px 4px;text-align:right">Quote acquistate</th>
+      <th style="padding:8px 4px 8px 0">${_t('pac.log.date')}</th>
+      <th style="padding:8px 4px">${_t('pac.log.asset')}</th>
+      <th style="padding:8px 4px;text-align:right">${_t('pac.log.amount')}</th>
+      <th style="padding:8px 4px;text-align:right">${_t('pac.log.price')}</th>
+      <th style="padding:8px 4px;text-align:right">${_t('pac.log.qty')}</th>
     </tr></thead>
     <tbody>${allLogs.map(l=>`<tr style="border-bottom:1px solid var(--bd)">
       <td style="padding:8px 4px 8px 0;color:var(--t3);white-space:nowrap">${l.date}</td>
