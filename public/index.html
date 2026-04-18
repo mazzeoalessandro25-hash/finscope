@@ -4190,6 +4190,24 @@ document.addEventListener('DOMContentLoaded',()=>{
     tc.addEventListener('mouseleave',()=>{if(!tapeRAF)runTape();});
   }
   loadInsiderFeed();
+  // Auto-tag tooltip elements with data-i18n-html keys (by DOM order)
+  const _SD_TIP_KEYS=[
+    'tip.sd.chart','tip.sd.keyData','tip.sd.analysts','tip.sd.valuation',
+    'tip.sd.profitability','tip.sd.growth','tip.sd.balance','tip.sd.etf',
+    'tip.sd.holdings','tip.sd.sectorAlloc','tip.sd.wyckoff','tip.sd.insider',
+    'tip.sd.company','tip.sd.news','tip.sd.score'
+  ];
+  const _INFO_TIP_KEYS=[
+    'tip.info.analysis','tip.info.risk','tip.info.stress','tip.info.corr',
+    'tip.info.perf','tip.info.returns','tip.info.targets','tip.info.myTargets',
+    'tip.info.div','tip.info.tax','tip.info.rebalance','tip.info.alerts','tip.info.pac'
+  ];
+  document.querySelectorAll('.sd-tip').forEach((el,i)=>{
+    if(_SD_TIP_KEYS[i])el.setAttribute('data-i18n-html',_SD_TIP_KEYS[i]);
+  });
+  document.querySelectorAll('.info-tip').forEach((el,i)=>{
+    if(_INFO_TIP_KEYS[i])el.setAttribute('data-i18n-html',_INFO_TIP_KEYS[i]);
+  });
   // Applica la lingua salvata all'avvio
   setLang(currentLang);
 });
