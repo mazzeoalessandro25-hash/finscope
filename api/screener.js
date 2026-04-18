@@ -520,7 +520,6 @@ const INDEX_DATA = {
     {s:'ML.PA',n:'Michelin',sec:'Consumer Cyclical',mkt:'EU'},
     {s:'STMPA.PA',n:'STMicroelectronics',sec:'Technology',mkt:'EU'},
     {s:'RWE.DE',n:'RWE',sec:'Utilities',mkt:'EU'},
-    {s:'AMS.AS',n:'Amsterdam Exchange',sec:'Technology',mkt:'EU'},
     {s:'ADYEN.AS',n:'Adyen',sec:'Technology',mkt:'EU'},
     {s:'NN.AS',n:'NN Group',sec:'Financial Services',mkt:'EU'},
     {s:'AD.AS',n:'Ahold Delhaize',sec:'Consumer Defensive',mkt:'EU'},
