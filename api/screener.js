@@ -378,7 +378,6 @@ const INDEX_DATA = {
     {s:'HEI.DE',n:'HeidelbergMaterials',sec:'Basic Materials',mkt:'EU'},
     {s:'DB1.DE',n:'Deutsche Börse',sec:'Financial Services',mkt:'EU'},
     {s:'EOAN.DE',n:'E.ON',sec:'Utilities',mkt:'EU'},
-    {s:'SHL.DE',n:'Siemens Healthineers',sec:'Healthcare',mkt:'EU'},
     {s:'PUM.DE',n:'Puma',sec:'Consumer Cyclical',mkt:'EU'},
     {s:'RHM.DE',n:'Rheinmetall',sec:'Industrials',mkt:'EU'},
     {s:'CBK.DE',n:'Commerzbank',sec:'Financial Services',mkt:'EU'},
