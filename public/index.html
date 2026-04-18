@@ -10010,7 +10010,7 @@ function _macroRenderAnalysis(d){
     stagflation:'Stagflazione: Crescita Bassa & Inflazione Alta'
   };
   const rt=document.getElementById('mac-regime-title');
-  if(rt)rt.textContent=titles[regime]||'Scenario Macro Incerto';
+  if(rt)rt.textContent=titles[regime]||_t('macro.regime.unknown');
   const sub1=spread!=null?(spread<-0.5?'Curva invertita':spread<0.2?'Curva piatta':'Curva normale'):'—';
   const sub2=dxyP!=null?(dxyP>103?'Dollaro forte':dxyP<98?'Dollaro debole':'Dollaro neutrale'):'—';
   const sub3=fedBias===1?`Fed hawkish (${fedRate}%)`:fedBias===-1?`Fed in taglio (${fedRate}%)`:`Fed in pausa (${fedRate}%)`;
