@@ -6921,7 +6921,7 @@ async function renderPortfolio(){
   const _lblEl=document.getElementById('ph-val-lbl');
   if(_lblEl)_lblEl.textContent=_isEUR?'Valore totale (EUR)':'Valore totale (USD)';
   setV('ph-count')(portfolio.length);
-  setV('ph-sectors')(allSects.length+' '+(allSects.length===1?'settore':'settori'));
+  setV('ph-sectors')(allSects.length+' '+(allSects.length===1?_t('port.sector.one'):_t('port.sector.many')));
   setC('ph-pnl')(((_heroUp?'+':'')+($=>'$'+fmt($,0))(_heroPnl)),_heroUp?'var(--g)':'var(--r)');
   setC('ph-pnl-pct')((_heroUp?'+':'')+fmt(_heroPnl/_heroInvUSD*100,2)+'%',_heroUp?'var(--g)':'var(--r)');
   setC('ph-rend')((_heroUp?'+':'')+fmt(_heroRend,2)+'%',_heroUp?'var(--g)':'var(--r)');
