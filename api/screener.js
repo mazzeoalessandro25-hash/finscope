@@ -333,7 +333,7 @@ const INDEX_DATA = {
     {s:'FBK.MI',n:'FinecoBank',sec:'Financial Services',mkt:'IT'},
     {s:'PST.MI',n:'Poste Italiane',sec:'Financial Services',mkt:'IT'},
     {s:'SPM.MI',n:'Saipem',sec:'Energy',mkt:'IT'},
-    {s:'EXO.MI',n:'Exor',sec:'Financial Services',mkt:'IT'},
+    {s:'EXO.AS',n:'Exor',sec:'Financial Services',mkt:'EU'},
     {s:'CNHI.MI',n:'CNH Industrial',sec:'Industrials',mkt:'IT'},
     {s:'NEXI.MI',n:'Nexi',sec:'Technology',mkt:'IT'},
     {s:'BMPS.MI',n:'Monte dei Paschi',sec:'Financial Services',mkt:'IT'},
