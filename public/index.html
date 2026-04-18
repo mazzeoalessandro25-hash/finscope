@@ -6196,9 +6196,9 @@ function updateNavUser(){
   if(currentUser){
     const display=currentUser.name||currentUser.email;
     area.innerHTML=`<span class="nav-user-email">Ciao, ${display}</span>
-      <button class="nav-logout-btn" onclick="logout()">Esci</button>`;
+      <button class="nav-logout-btn" onclick="logout()">${_t('nav.logout')}</button>`;
   } else {
-    area.innerHTML=`<button class="nav-login-btn" onclick="openAuthModal()">Accedi</button>`;
+    area.innerHTML=`<button class="nav-login-btn" onclick="openAuthModal()">${_t('nav.login')}</button>`;
   }
 }
 
