@@ -570,6 +570,17 @@ const TRANSLATIONS={
     'tip.info.rebalance':'Compares current allocation with your set targets. If a position drifts more than ±5% from target, it is flagged. Suggested orders show how much to buy or sell to return to balance.',
     'tip.info.alerts':'Set alerts when a position rises above or falls below a price. Alerts are checked at every portfolio update.',
     'tip.info.pac':'The savings plan (PAC) lets you invest a fixed amount on a monthly basis. The purchase is simulated on the first available business day of the month at the market price of that day.',
+    /* ── EXTRA STRINGS ── */
+    'hm.all':'🌍 All','hm.eu':'🇪🇺 Europe',
+    'period.1d':'1D','period.5d':'5D','period.1y':'1Y',
+    'ins.sort.recent':'📅 Most recent',
+    'ins.sort.valueDesc':'💰 Value ↓','ins.sort.valueAsc':'💰 Value ↑',
+    'ins.sort.sharesDesc':'📊 No. shares ↓',
+    'load.watchlist':'Loading watchlist...',
+    'load.wyckoff':'Loading Wyckoff analysis...',
+    'load.insider':'Loading insider transactions...',
+    'nav.logout':'Log out',
+    'common.clearHistory':'Clear history',
   },
   de:{
     /* NAV */
