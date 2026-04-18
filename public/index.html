@@ -6660,9 +6660,9 @@ async function submitAuth(){
   const okEl=document.getElementById('auth-ok');
   const btn=document.getElementById('auth-submit');
   errEl.classList.remove('show');okEl.classList.remove('show');
-  if(!email||!pwd){errEl.textContent='Inserisci email e password';errEl.classList.add('show');return;}
-  if(authTab==='register'&&!name){errEl.textContent='Inserisci il tuo nome';errEl.classList.add('show');return;}
-  btn.disabled=true;btn.textContent='Caricamento...';
+  if(!email||!pwd){errEl.textContent=_t('auth.err.emailPwd');errEl.classList.add('show');return;}
+  if(authTab==='register'&&!name){errEl.textContent=_t('auth.err.name');errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent=_t('auth.loading');
   try{
     const r=await fetch('/api/auth?action='+authTab,{
       method:'POST',
