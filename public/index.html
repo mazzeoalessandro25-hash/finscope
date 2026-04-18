@@ -11711,19 +11711,19 @@ async function loadWyckoffAnalysis(sym){
           <!-- Metriche colonna -->
           <div style="display:flex;flex-direction:column;gap:6px">
             <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
-              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend Prezzo</span>
-              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${pTrend>3?'var(--g)':pTrend<-3?'var(--r)':'var(--t)'}">${pTrend>3?'▲ Rialzista':pTrend<-3?'▼ Ribassista':'→ Laterale'} <span style="font-weight:400;font-size:10px">(${pChg>=0?'+':''}${pChg}%)</span></span>
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">${_t('wy.metric.ptrend')}</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${pTrend>3?'var(--g)':pTrend<-3?'var(--r)':'var(--t)'}">${pTrend>3?_t('wy.trend.bull'):pTrend<-3?_t('wy.trend.bear'):_t('wy.trend.lat')} <span style="font-weight:400;font-size:10px">(${pChg>=0?'+':''}${pChg}%)</span></span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
-              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Trend OBV</span>
-              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${oTrend>3?'var(--g)':oTrend<-3?'var(--r)':'var(--t)'}">${oTrend>3?'▲ Accumulaz.':oTrend<-3?'▼ Distribuz.':'→ Neutrale'}</span>
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">${_t('wy.metric.obvtrend')}</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${oTrend>3?'var(--g)':oTrend<-3?'var(--r)':'var(--t)'}">${oTrend>3?_t('wy.obv.acc'):oTrend<-3?_t('wy.obv.dist'):_t('wy.obv.neutral')}</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
-              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Posiz. vs SMA20</span>
-              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${aboveSma?'var(--g)':'var(--r)'}">${aboveSma?'▲ Sopra':'▼ Sotto'}</span>
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">${_t('wy.metric.sma20')}</span>
+              <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${aboveSma?'var(--g)':'var(--r)'}">${aboveSma?_t('wy.sma.above'):_t('wy.sma.below')}</span>
             </div>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
-              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Candele (6m)</span>
+              <span style="font-size:10px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">${_t('wy.metric.candles')}</span>
               <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:var(--t)">${pts.length}</span>
             </div>
           </div>
