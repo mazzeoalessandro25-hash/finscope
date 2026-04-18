@@ -4189,6 +4189,8 @@ document.addEventListener('DOMContentLoaded',()=>{
     tc.addEventListener('mouseleave',()=>{if(!tapeRAF)runTape();});
   }
   loadInsiderFeed();
+  // Applica la lingua salvata all'avvio
+  setLang(currentLang);
 });
 
 /* ── CHART HELPERS ── */
