@@ -14754,7 +14754,7 @@ async function loadInsiderForStock(sym){
     return;
   }
 
-  el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento transazioni insider...</div>';
+  el.innerHTML=`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('load.insider')}</div>`;
   try{
     const d=await fetch(`/api/insider?symbol=${encodeURIComponent(sym)}`).then(r=>r.json());
     _sdInsiderData=d.transactions||[];
