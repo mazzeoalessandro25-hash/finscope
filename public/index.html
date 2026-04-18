@@ -6037,17 +6037,20 @@ function _applyDynamicTranslations(){
 }
 
 // Detect language: URL param → localStorage → browser → fallback 'it'
-(function(){
-  const _LANGS=['it','en','de'];
-  const _urlParam=new URLSearchParams(window.location.search).get('lang');
-  if(_urlParam&&_LANGS.includes(_urlParam)){currentLang=_urlParam;localStorage.setItem('fs_lang',_urlParam);return;}
+const _LANGS_SUPPORTED=['it','en','de'];
+const _urlLangParam=new URLSearchParams(window.location.search).get('lang');
+let currentLang;
+if(_urlLangParam&&_LANGS_SUPPORTED.includes(_urlLangParam)){
+  currentLang=_urlLangParam;localStorage.setItem('fs_lang',_urlLangParam);
+}else{
   const _stored=localStorage.getItem('fs_lang');
-  if(_stored&&_LANGS.includes(_stored)){currentLang=_stored;return;}
-  const _nav=(navigator.language||'').slice(0,2).toLowerCase();
-  currentLang=_LANGS.includes(_nav)?_nav:'it';
-  localStorage.setItem('fs_lang',currentLang);
-})();
-let currentLang=currentLang||'it';
+  if(_stored&&_LANGS_SUPPORTED.includes(_stored)){currentLang=_stored;}
+  else{
+    const _nav=(navigator.language||'').slice(0,2).toLowerCase();
+    currentLang=_LANGS_SUPPORTED.includes(_nav)?_nav:'it';
+    localStorage.setItem('fs_lang',currentLang);
+  }
+}
 let currentUser=null;
 let currentToken=null;
 let authTab='login';
