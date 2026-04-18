@@ -337,7 +337,7 @@ const INDEX_DATA = {
     {s:'1CNHI.MI',n:'CNH Industrial',sec:'Industrials',mkt:'IT'},
     {s:'NEXI.MI',n:'Nexi',sec:'Technology',mkt:'IT'},
     {s:'BMPS.MI',n:'Monte dei Paschi',sec:'Financial Services',mkt:'IT'},
-    {s:'HERA.MI',n:'Hera',sec:'Utilities',mkt:'IT'},
+    {s:'HER.MI',n:'Hera',sec:'Utilities',mkt:'IT'},
   ],
 
   /* ── DAX 40 ── */
