@@ -586,7 +586,6 @@ const INDEX_DATA = {
     {s:'ZURN.SW',n:'Zurich Insurance',sec:'Financial Services',mkt:'EU'},
     {s:'SLHN.SW',n:'Swiss Life',sec:'Financial Services',mkt:'EU'},
     {s:'SCMN.SW',n:'Swisscom',sec:'Communication Services',mkt:'EU'},
-    {s:'CSGN.SW',n:'Credit Suisse',sec:'Financial Services',mkt:'EU'},
     {s:'LOGN.SW',n:'Logitech',sec:'Technology',mkt:'EU'},
     {s:'STMN.SW',n:'Straumann',sec:'Healthcare',mkt:'EU'},
     {s:'GEBN.SW',n:'Geberit',sec:'Industrials',mkt:'EU'},
