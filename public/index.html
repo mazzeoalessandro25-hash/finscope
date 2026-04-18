@@ -5253,18 +5253,10 @@ function calcSim(){
 async function runFA(){
   const ticker=(document.getElementById('fat').value||'').toUpperCase().trim();
   const el=document.getElementById('fa-res');
-  const aiBtn=document.getElementById('ai-btn');
-  const oldBox=document.getElementById('ai-result-box');
-  if(oldBox)oldBox.remove();
-  if(aiBtn)aiBtn.style.display='none';
   if(!ticker){el.innerHTML='<p style="color:var(--t3);font-size:12px;font-family:var(--fm)">Inserisci un ticker</p>';return;}
   el.innerHTML='<p class="ld">Caricamento da Yahoo Finance...</p>';
   const [qd,sd]=await Promise.all([api(ticker),api(ticker,'summary')]);
   if(!qd&&!sd){el.innerHTML='<div class="err-box">Ticker non trovato · Prova: AAPL · ENI.MI · MSFT · ASML</div>';return;}
-
-  // Memorizza per AI
-  _lastFA={qd,sd,ticker};
-  if(aiBtn)aiBtn.style.display='flex';
 
   const c=qd?chgPct(qd.price,qd.prev):null;const up=c==null||c>=0;
   const recMap={strongbuy:'Forte acquisto',buy:'Acquisto',hold:'Mantieni',sell:'Vendita',strongsell:'Forte vendita'};
