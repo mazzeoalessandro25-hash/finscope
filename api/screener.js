@@ -358,7 +358,7 @@ const INDEX_DATA = {
     {s:'IFX.DE',n:'Infineon',sec:'Technology',mkt:'EU'},
     {s:'BEI.DE',n:'Beiersdorf',sec:'Consumer Defensive',mkt:'EU'},
     {s:'CON.DE',n:'Continental',sec:'Consumer Cyclical',mkt:'EU'},
-    {s:'DAI.DE',n:'Daimler Truck',sec:'Industrials',mkt:'EU'},
+    {s:'DTG.DE',n:'Daimler Truck',sec:'Industrials',mkt:'EU'},
     {s:'HEN3.DE',n:'Henkel',sec:'Consumer Defensive',mkt:'EU'},
     {s:'HNR1.DE',n:'Hannover Rück',sec:'Financial Services',mkt:'EU'},
     {s:'FRE.DE',n:'Fresenius',sec:'Healthcare',mkt:'EU'},
