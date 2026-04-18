@@ -317,7 +317,7 @@ const INDEX_DATA = {
     {s:'BMED.MI',n:'Banca Mediolanum',sec:'Financial Services',mkt:'IT'},
     {s:'BZU.MI',n:'Buzzi',sec:'Basic Materials',mkt:'IT'},
     {s:'ERG.MI',n:'ERG',sec:'Utilities',mkt:'IT'},
-    {s:'FCA.MI',n:'Stellantis',sec:'Consumer Cyclical',mkt:'IT'},
+    {s:'STLAM.MI',n:'Stellantis',sec:'Consumer Cyclical',mkt:'IT'},
     {s:'PIRC.MI',n:'Pirelli',sec:'Consumer Cyclical',mkt:'IT'},
     {s:'BPER.MI',n:'BPER Banca',sec:'Financial Services',mkt:'IT'},
     {s:'AMP.MI',n:'Amplifon',sec:'Healthcare',mkt:'IT'},
