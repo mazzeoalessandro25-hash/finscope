@@ -6992,14 +6992,14 @@ async function renderPortfolio(){
   </div>`;
 
   const statsHtml=`
-    ${statRow('Valore totale (USD)', '$'+fmt(totalValUSD,0))}
-    ${statRow('Valore totale (EUR)', '€'+fmt(totalValEUR,0))}
-    ${statRow('Investito', '$'+fmt(totalInvUSD,0))}
+    ${statRow(_t('port.totalVal.usd'), '$'+fmt(totalValUSD,0))}
+    ${statRow(_t('port.totalVal.eur'), '€'+fmt(totalValEUR,0))}
+    ${statRow(_t('port.invested'), '$'+fmt(totalInvUSD,0))}
     ${statRow('P&L', (totalUp?'+':'')+fmt(totalPnlUSD,0)+' ('+fmt(totalPnlPct,1)+'%)', totalUp?'var(--g)':'var(--r)')}
-    ${statRow('Titoli', portfolio.length+'')}
-    ${statRow('Cambio EUR/USD', fmt(eurUsd,4))}
-    ${totalUSD_inv>0?statRow('USD — P&L', (upU?'+':'')+fmt(pnlU,0)+' ('+fmt(pctU,1)+'%)', upU?'var(--g)':'var(--r)'):''}
-    ${totalEUR_inv>0?statRow('EUR — P&L', (upE?'+':'')+fmt(pnlE,0)+' ('+fmt(pctE,1)+'%)', upE?'var(--g)':'var(--r)'):''}
+    ${statRow(_t('port.positions'), portfolio.length+'')}
+    ${statRow(_t('port.fxRate'), fmt(eurUsd,4))}
+    ${totalUSD_inv>0?statRow(_t('port.usdPnl'), (upU?'+':'')+fmt(pnlU,0)+' ('+fmt(pctU,1)+'%)', upU?'var(--g)':'var(--r)'):''}
+    ${totalEUR_inv>0?statRow(_t('port.eurPnl'), (upE?'+':'')+fmt(pnlE,0)+' ('+fmt(pctE,1)+'%)', upE?'var(--g)':'var(--r)'):''}
   `;
 
   // ── Legenda donut ──
