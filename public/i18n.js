@@ -278,6 +278,22 @@ const TRANSLATIONS={
     'tip.info.rebalance':'Confronta l\'allocazione attuale con i target che hai impostato. Se una posizione supera il ±5% dal target, viene segnalata. Gli ordini suggeriti indicano quanto acquistare o vendere per tornare in equilibrio.',
     'tip.info.alerts':'Imposta avvisi quando un titolo supera o scende sotto un prezzo. Gli alert vengono verificati ad ogni aggiornamento del portafoglio.',
     'tip.info.pac':'Il PAC (Piano di Accumulo del Capitale) consente di investire una somma fissa a cadenza mensile. L\'acquisto viene simulato il primo giorno lavorativo disponibile del mese al prezzo di mercato di quel giorno.',
+    /* ── STRINGHE NON CATTURATE DAL WALKER (mancanti da TRANSLATIONS.it) ── */
+    /* Heatmap geo buttons */
+    'hm.all':'🌍 Tutti','hm.eu':'🇪🇺 Europa',
+    /* Period abbreviations (IT uses G=Giorno, A=Anno; EN uses D=Day, Y=Year) */
+    'period.1d':'1G','period.5d':'5G','period.1y':'1A',
+    /* Insider sort options */
+    'ins.sort.recent':'📅 Più recenti',
+    'ins.sort.valueDesc':'💰 Valore ↓','ins.sort.valueAsc':'💰 Valore ↑',
+    'ins.sort.sharesDesc':'📊 N° azioni ↓',
+    /* Loading text */
+    'load.watchlist':'Caricamento watchlist...',
+    'load.wyckoff':'Caricamento analisi Wyckoff...',
+    'load.insider':'Caricamento transazioni insider...',
+    /* Nav / misc */
+    'nav.logout':'Esci',
+    'common.clearHistory':'Cancella storico',
   },
   en:{
     /* NAV */
