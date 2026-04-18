@@ -8836,7 +8836,7 @@ function renderPortAnalysis(portItems, quotes){
   const el=document.getElementById('port-analysis-content');
   if(!el)return;
   if(!portItems||!portItems.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli per vedere l\'analisi</div>';
+    el.innerHTML=`<div class="ld" style="padding:10px">${_t('port.noItems.analysis')}</div>`;
     return;
   }
 
