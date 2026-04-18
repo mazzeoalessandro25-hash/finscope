@@ -9983,7 +9983,7 @@ function _macroRenderAnalysis(d){
   }
   if(dxyP!=null){
     const sc=dxyP>104?'sig-danger':dxyP>101?'sig-warn':dxyP>98?'sig-neu':'sig-safe';
-    const st=dxyP>104?'Molto forte':dxyP>101?'Forte':dxyP>98?'Neutrale':'Debole';
+    const st=dxyP>104?_t('macro.rates.veryHigh'):dxyP>101?_t('macro.rates.high'):dxyP>98?_t('macro.rates.normal'):_t('macro.rates.low');
     const sc2=dxyP>104?'var(--r)':dxyP>101?'var(--o)':dxyP>98?'var(--t3)':'var(--g)';
     setStat('mss-dxy','mss-dxy-sub','mss-dxy-item',fmt(dxyP,2),st,sc2,sc);
   }
