@@ -6699,7 +6699,7 @@ async function submitForgotPw(){
   const okEl=document.getElementById('fp-ok');
   const btn=document.getElementById('fp-submit');
   errEl.classList.remove('show');okEl.classList.remove('show');
-  if(!email){errEl.textContent='Inserisci la tua email';errEl.classList.add('show');return;}
+  if(!email){errEl.textContent=_t('auth.err.email');errEl.classList.add('show');return;}
   btn.disabled=true;btn.textContent='Invio in corso...';
   try{
     const r=await fetch('/api/auth?action=forgot',{
