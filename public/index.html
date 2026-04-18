@@ -6832,7 +6832,7 @@ async function renderPortfolio(){
             <div style="min-width:0">
               <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
                 <span class="port-sym">${item.sym}</span>
-                <span class="port-cat-badge ${itemCat}">${itemCat==='stock'?'Azione':itemCat==='etf'?'ETF':itemCat==='crypto'?'Crypto':'Comm.'}</span>
+                <span class="port-cat-badge ${itemCat}">${itemCat==='stock'?_t('port.cat.stock'):itemCat==='etf'?'ETF':itemCat==='crypto'?'Crypto':_t('port.catComm')}</span>
               </div>
               <div class="port-name">${name}</div>
             </div>
