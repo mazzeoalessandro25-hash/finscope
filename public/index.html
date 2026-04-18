@@ -7028,7 +7028,7 @@ async function addPacPlan(){
 }
 
 async function deletePacPlan(id){
-  if(!confirm('Eliminare questo piano PAC?'))return;
+  if(!confirm(_t('pac.deleteConfirm')))return;
   pacPlans=pacPlans.filter(p=>p.id!==id);
   await savePacPlans();
   renderPacPlans();
