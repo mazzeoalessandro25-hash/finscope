@@ -14625,7 +14625,7 @@ function renderInsiderTable(transactions, filter, containerId, showSymbol, sort)
     html+=`<details style="margin-top:0">
       <summary style="cursor:pointer;padding:9px 8px;font-size:12px;font-family:var(--fm);color:var(--t2);border-top:1px solid var(--bd);list-style:none;display:flex;align-items:center;gap:6px;user-select:none">
         <span id="${containerId}-arrow" style="transition:transform .2s;display:inline-block">▶</span>
-        Mostra altre ${hidden.length} transazioni
+        ${_t('ins.showMore').replace('{n}',hidden.length)}
       </summary>
       <table class="ins-table"><tbody>${hidden.map(t=>_insRowHtml(t,showSymbol)).join('')}</tbody></table>
     </details>`;
