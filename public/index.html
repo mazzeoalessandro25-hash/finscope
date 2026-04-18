@@ -9807,7 +9807,7 @@ function _macroRenderSnapshot(){
     const rb={expansion:'rgba(5,150,105,.12)',slowdown:'rgba(217,119,6,.12)',contraction:'rgba(220,38,38,.12)',stagflation:'rgba(124,58,237,.12)'};
     const rbd={expansion:'rgba(5,150,105,.25)',slowdown:'rgba(217,119,6,.25)',contraction:'rgba(220,38,38,.25)',stagflation:'rgba(124,58,237,.25)'};
     const rico={expansion:'🟢',slowdown:'🟡',contraction:'🔴',stagflation:'🟠'};
-    const rlbl={expansion:'Espansione',slowdown:'Rallentamento',contraction:'Contrazione',stagflation:'Stagflazione'};
+    const rlbl={expansion:_t('macro.regime.expansion'),slowdown:_t('macro.regime.slowdown'),contraction:_t('macro.regime.contraction'),stagflation:_t('macro.regime.stagflation')};
     const r=MACRO_SNAP.regime;
     reg.innerHTML=`<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--fm);color:${rc[r]};background:${rb[r]};border:1px solid ${rbd[r]}">${rico[r]} ${rlbl[r]}</div>`;
   }
@@ -10025,7 +10025,7 @@ function _macroRenderAnalysis(d){
     const rb={expansion:'rgba(5,150,105,.12)',slowdown:'rgba(217,119,6,.12)',contraction:'rgba(220,38,38,.12)',stagflation:'rgba(124,58,237,.12)'};
     const rbd={expansion:'rgba(5,150,105,.28)',slowdown:'rgba(217,119,6,.28)',contraction:'rgba(220,38,38,.28)',stagflation:'rgba(124,58,237,.28)'};
     const rico={expansion:'🟢',slowdown:'🟡',contraction:'🔴',stagflation:'🟠'};
-    const rlbl={expansion:'Espansione',slowdown:'Rallentamento',contraction:'Contrazione',stagflation:'Stagflazione'};
+    const rlbl={expansion:_t('macro.regime.expansion'),slowdown:_t('macro.regime.slowdown'),contraction:_t('macro.regime.contraction'),stagflation:_t('macro.regime.stagflation')};
     const r=regime;
     regBadge.innerHTML=`<div style="display:inline-flex;align-items:center;gap:5px;padding:5px 14px;border-radius:100px;font-size:11px;font-weight:700;font-family:var(--fm);color:${rc[r]};background:${rb[r]};border:1.5px solid ${rbd[r]}">${rico[r]} ${rlbl[r]}</div>`;
   }
