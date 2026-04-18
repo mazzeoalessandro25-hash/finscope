@@ -11302,7 +11302,7 @@ async function renderCalendar(){
         earEvs=data.events;
         earningsCache[cacheKey]=earEvs;
         // Aggiorna subtitle con fonte
-        const srcMap={fmp:'dati live FMP',yahoo:'dati live Yahoo',hardcoded:'date indicative'};
+        const srcMap={fmp:_t('cal.src.fmp'),yahoo:_t('cal.src.yahoo'),hardcoded:_t('cal.src.hardcoded')};
         const bmo=earEvs.filter(e=>e.time==='bmo').length;
         const amc=earEvs.filter(e=>e.time==='amc').length;
         const subEl=document.getElementById('cal-sub-info');
