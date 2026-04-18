@@ -869,6 +869,7 @@ const TRANSLATIONS={
     'load.wyckoff':'Wyckoff-Analyse laden...',
     'load.insider':'Insider-Transaktionen laden...',
     'nav.logout':'Abmelden',
+    'nav.hello':'Hallo,',
     'common.clearHistory':'Verlauf löschen',
   }
 };
