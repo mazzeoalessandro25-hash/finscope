@@ -9977,7 +9977,7 @@ function _macroRenderAnalysis(d){
   }
   if(spread!=null){
     const sc=spread<-0.5?'sig-danger':spread<0?'sig-warn':spread<0.5?'sig-warn':'sig-safe';
-    const st=spread<-0.5?'Curva invertita':spread<0?'Lieve inversione':spread<0.5?'Curva piatta':'Curva normale';
+    const st=spread<-0.5?_t('macro.yield.inverted'):spread<0?_t('macro.yield.slightInv'):spread<0.5?_t('macro.yield.flat'):_t('macro.yield.normal');
     const sc2=spread<-0.5?'var(--r)':spread<0.5?'var(--o)':'var(--g)';
     setStat('mss-spread','mss-spread-sub','mss-spr-item',(spread>=0?'+':'')+fmt(spread,2)+'%',st,sc2,sc);
   }
