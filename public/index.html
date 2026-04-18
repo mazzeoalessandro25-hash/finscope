@@ -11372,7 +11372,7 @@ async function renderCalendar(){
         });
       }
       if(amcRows.length){
-        html+=`<div style="font-size:9px;font-weight:700;color:#1A56C4;margin:4px 0 2px;letter-spacing:.4px">🌙 DOPO CHIUSURA</div>`;
+        html+=`<div style="font-size:9px;font-weight:700;color:#1A56C4;margin:4px 0 2px;letter-spacing:.4px">${_t('cal.amc')}</div>`;
         amcRows.forEach(e=>{
           const eps=e.epsEstimate!=null?`<br><span style="opacity:.7">EPS est ${e.epsEstimate.toFixed(2)}</span>`:'';
           const beat=e.epsActual!=null&&e.epsEstimate!=null&&e.epsActual>e.epsEstimate;
