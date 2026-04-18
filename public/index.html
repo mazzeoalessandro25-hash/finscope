@@ -6719,7 +6719,7 @@ async function submitForgotPw(){
   }catch{
     errEl.textContent='Errore di connessione. Riprova.';errEl.classList.add('show');
   }
-  btn.disabled=false;btn.textContent='Invia codice di reset';
+  btn.disabled=false;btn.textContent=_t('auth.sendCode');
 }
 
 async function submitResetPw(){
@@ -6730,9 +6730,9 @@ async function submitResetPw(){
   const okEl=document.getElementById('rp-ok');
   const btn=document.getElementById('rp-submit');
   errEl.classList.remove('show');okEl.classList.remove('show');
-  if(!code||code.length!==6){errEl.textContent='Inserisci il codice a 6 cifre';errEl.classList.add('show');return;}
-  if(!pwd||pwd.length<8){errEl.textContent='La password deve essere di almeno 8 caratteri';errEl.classList.add('show');return;}
-  btn.disabled=true;btn.textContent='Aggiornamento...';
+  if(!code||code.length!==6){errEl.textContent=_t('auth.err.code');errEl.classList.add('show');return;}
+  if(!pwd||pwd.length<8){errEl.textContent=_t('auth.pwdPh.register');errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent=_t('auth.loading');
   try{
     const r=await fetch('/api/auth?action=reset',{
       method:'POST',headers:{'Content-Type':'application/json'},
