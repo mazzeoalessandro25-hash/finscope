@@ -14577,7 +14577,7 @@ function _insRowHtml(t, showSymbol){
     <td style="color:var(--t3);white-space:nowrap">${t.date||'—'}</td>
     <td style="font-weight:600;color:var(--t);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.name||'—'}</td>
     <td style="color:var(--t2);white-space:nowrap">${fmtInsRole(t.role)}</td>
-    <td><span class="ins-badge ${t.type}">${t.type==='buy'?'ACQUISTO':'VENDITA'}</span></td>
+    <td><span class="ins-badge ${t.type}">${t.type==='buy'?_t('ins.buy'):_t('ins.sell')}</span></td>
     <td style="text-align:right;font-family:var(--fm)">${fmtInsShares(t.shares)}</td>
     <td style="text-align:right;font-family:var(--fm)">${t.price>0?'$'+t.price.toFixed(2):'—'}</td>
     <td style="text-align:right;font-family:var(--fm);font-weight:700;color:${t.type==='buy'?'var(--g)':'var(--r)'}">${fmtInsValue(t.value)}</td>
