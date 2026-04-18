@@ -11391,9 +11391,9 @@ async function renderCalendar(){
         if(earRows.length) html+=`<div style="border-top:1px solid rgba(255,255,255,.15);margin:5px 0 3px"></div>`;
         macRows.forEach(e=>{
           const vals=[];
-          if(e.actual!=null)vals.push(`Eff: <b>${e.actual}${e.unit||''}</b>`);
-          if(e.estimate!=null)vals.push(`Stima: ${e.estimate}${e.unit||''}`);
-          if(e.prev!=null)vals.push(`Prec: ${e.prev}${e.unit||''}`);
+          if(e.actual!=null)vals.push(`${_t('cal.actual')}<b>${e.actual}${e.unit||''}</b>`);
+          if(e.estimate!=null)vals.push(`${_t('cal.estimate')}${e.estimate}${e.unit||''}`);
+          if(e.prev!=null)vals.push(`${_t('cal.previous')}${e.prev}${e.unit||''}`);
           html+=`<div class="cal-popup-row"><div class="cal-popup-dot cal-dot ${e.type}"></div><div class="cal-popup-text"><strong>${e.label}</strong>${vals.length?'<br><span style="opacity:.8">'+vals.join(' · ')+'</span>':''}</div></div>`;
         });
       }
