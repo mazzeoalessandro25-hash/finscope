@@ -6842,8 +6842,8 @@ async function renderPortfolio(){
                 ${dayChgPct!=null?`<div style="font-size:10px;font-family:var(--fm);font-weight:600;color:${dayUp?'var(--g)':'var(--r)'}">${dayUp?'+':''}${dayChgPct.toFixed(2)}${_t('port.today')}</div>`:`<div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${item.qty} × ${csym}${fmt(item.buyPrice,2)}</div>`}
               </div>
               <div style="display:flex;flex-direction:column;gap:2px">
-                <button class="port-del" onclick="event.stopPropagation();togglePortEdit(${i})" title="Modifica" style="color:var(--b)">✎</button>
-                <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="Rimuovi">✕</button>
+                <button class="port-del" onclick="event.stopPropagation();togglePortEdit(${i})" title="${_t('common.update')}" style="color:var(--b)">✎</button>
+                <button class="port-del" onclick="event.stopPropagation();removePortfolioItem(${i})" title="${_t('common.delete')}">✕</button>
               </div>
             </div>
           </div>
