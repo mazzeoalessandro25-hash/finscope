@@ -5877,6 +5877,14 @@ function setLang(lang){
   if(!TRANSLATIONS[lang])return;
   currentLang=lang;
   localStorage.setItem('fs_lang',lang);
+  // Update URL query param without reload
+  const _url=new URL(window.location.href);
+  _url.searchParams.set('lang',lang);
+  history.replaceState(null,'',_url.toString());
+  // Update og:locale meta tag
+  const _ogLocale=document.querySelector('meta[property="og:locale"]');
+  const _localeMap={it:'it_IT',en:'en_US',de:'de_DE'};
+  if(_ogLocale)_ogLocale.setAttribute('content',_localeMap[lang]||'it_IT');
   // Aggiorna bottoni bandiera
   ['it','en','de'].forEach(l=>{
     const b=document.getElementById('lang-btn-'+l);
