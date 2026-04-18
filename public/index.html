@@ -4872,23 +4872,27 @@ function renderMarketStocks(){
   const peF=document.getElementById('sc-pe-f')?.value||'';
   const capF=document.getElementById('sc-cap-f')?.value||'';
   const scoreF=parseInt(document.getElementById('sc-score-f')?.value)||0;
+  const _loading=s=>s.price==null; // dati non ancora arrivati → non escludere dai filtri numerici
   let list=dynamicStocks.filter(s=>{
     if(q&&!s.s.includes(q)&&!s.n.toUpperCase().includes(q)) return false;
     if(sec&&s.sec!==sec) return false;
     if(cntryF&&s.mkt!==cntryF) return false;
-    if(chgF==='pos'&&!(s.chg!=null&&s.chg>=0)) return false;
-    if(chgF==='neg'&&!(s.chg!=null&&s.chg<0)) return false;
-    if(chgF==='gt2'&&!(s.chg!=null&&s.chg>2)) return false;
-    if(chgF==='lt-2'&&!(s.chg!=null&&s.chg<-2)) return false;
-    if(peF==='value'&&!(s.pe!=null&&s.pe>0&&s.pe<15)) return false;
-    if(peF==='normal'&&!(s.pe!=null&&s.pe>=15&&s.pe<=30)) return false;
-    if(peF==='growth'&&!(s.pe!=null&&s.pe>30)) return false;
-    if(peF==='nope'&&s.pe!=null) return false;
-    if(capF==='mega'&&!(s.marketCap!=null&&s.marketCap>200e9)) return false;
-    if(capF==='large'&&!(s.marketCap!=null&&s.marketCap>10e9)) return false;
-    if(capF==='mid'&&!(s.marketCap!=null&&s.marketCap>2e9)) return false;
-    if(capF==='small'&&!(s.marketCap!=null&&s.marketCap<=2e9)) return false;
-    if(scoreF>0){const _sc=calcStockScore(s);if(_sc!=='load'&&!(_sc>=scoreF)) return false;}
+    // Filtri numerici: se i dati non sono arrivati, mantieni il titolo visibile
+    if(!_loading(s)){
+      if(chgF==='pos'&&!(s.chg!=null&&s.chg>=0)) return false;
+      if(chgF==='neg'&&!(s.chg!=null&&s.chg<0)) return false;
+      if(chgF==='gt2'&&!(s.chg!=null&&s.chg>2)) return false;
+      if(chgF==='lt-2'&&!(s.chg!=null&&s.chg<-2)) return false;
+      if(peF==='value'&&!(s.pe!=null&&s.pe>0&&s.pe<15)) return false;
+      if(peF==='normal'&&!(s.pe!=null&&s.pe>=15&&s.pe<=30)) return false;
+      if(peF==='growth'&&!(s.pe!=null&&s.pe>30)) return false;
+      if(peF==='nope'&&s.pe!=null) return false;
+      if(capF==='mega'&&!(s.marketCap!=null&&s.marketCap>200e9)) return false;
+      if(capF==='large'&&!(s.marketCap!=null&&s.marketCap>10e9)) return false;
+      if(capF==='mid'&&!(s.marketCap!=null&&s.marketCap>2e9)) return false;
+      if(capF==='small'&&!(s.marketCap!=null&&s.marketCap<=2e9)) return false;
+      if(scoreF>0){const _sc=calcStockScore(s);if(_sc!=='load'&&!(_sc>=scoreF)) return false;}
+    }
     return true;
   });
   list=[...list].sort((a,b)=>{
