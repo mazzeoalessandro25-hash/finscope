@@ -11788,7 +11788,7 @@ async function loadWyckoffAnalysis(sym){
 
   }catch(e){
     if(document.getElementById('sd-wyckoff-content')===el)
-      el.innerHTML='<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">Analisi Wyckoff non disponibile.</div>';
+      el.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('wy.unavailable')}</div>`;
   }
 }
 
