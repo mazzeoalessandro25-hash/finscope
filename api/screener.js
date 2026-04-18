@@ -499,7 +499,7 @@ const INDEX_DATA = {
     {s:'MUV2.DE',n:'Munich Re',sec:'Financial Services',mkt:'EU'},
     {s:'SAF.PA',n:'Safran',sec:'Industrials',mkt:'EU'},
     {s:'AI.PA',n:'Air Liquide',sec:'Basic Materials',mkt:'EU'},
-    {s:'SAN',n:'Santander',sec:'Financial Services',mkt:'EU'},
+    {s:'SAN.MC',n:'Santander',sec:'Financial Services',mkt:'EU'},
     {s:'IBE.MC',n:'Iberdrola',sec:'Utilities',mkt:'EU'},
     {s:'ITX.MC',n:'Inditex',sec:'Consumer Cyclical',mkt:'EU'},
     {s:'IFX.DE',n:'Infineon',sec:'Technology',mkt:'EU'},
