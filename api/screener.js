@@ -751,7 +751,7 @@ async function fetchChunk(chunk) {
 }
 
 async function yahooQuote(symbols) {
-  const CHUNK = 20;
+  const CHUNK = 10;
   const CONCURRENCY = 3; // max 3 richieste parallele per evitare rate limit
   const chunks = [];
   for (let i = 0; i < symbols.length; i += CHUNK) chunks.push(symbols.slice(i, i + CHUNK));
