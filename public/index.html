@@ -6685,11 +6685,11 @@ async function submitAuth(){
       showTransition(null);
     }
   }catch(e){
-    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.textContent=_t('auth.err.conn');
     errEl.classList.add('show');
   }
   btn.disabled=false;
-  btn.textContent=authTab==='login'?'Accedi':'Crea account';
+  btn.textContent=authTab==='login'?_t('auth.login'):_t('auth.register');
 }
 
 /* ── PASSWORD DIMENTICATA ── */
