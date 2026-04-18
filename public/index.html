@@ -9686,7 +9686,7 @@ function _macroRenderPulse(d){
 function _macroRenderCB(){
   const el=document.getElementById('macro-cb-content');if(!el)return;
   const biasCol={'-1':'var(--g)','0':'var(--t2)','1':'var(--r)'};
-  const biasLbl={'-1':'Accomodante','0':'Neutrale','1':'Hawkish'};
+  const biasLbl={'-1':_t('macro.cb.accommodative'),'0':_t('macro.rates.normal'),'1':'Hawkish'};
   el.innerHTML=MACRO_SNAP.cb.map(cb=>{
     const bc=biasCol[String(cb.biasDir)];
     return`<div class="macro-cb-item">
