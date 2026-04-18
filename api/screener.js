@@ -405,7 +405,6 @@ const INDEX_DATA = {
     {s:'ML.PA',n:'Michelin',sec:'Consumer Cyclical',mkt:'EU'},
     {s:'PUB.PA',n:'Publicis',sec:'Communication Services',mkt:'EU'},
     {s:'RMS.PA',n:'Hermès',sec:'Consumer Cyclical',mkt:'EU'},
-    {s:'FP.PA',n:'TotalEnergies ADR',sec:'Energy',mkt:'EU'},
     {s:'ERF.PA',n:'Eurofins Scientific',sec:'Healthcare',mkt:'EU'},
     {s:'ATO.PA',n:'Atos',sec:'Technology',mkt:'EU'},
     {s:'SU.PA',n:'Schneider Electric',sec:'Industrials',mkt:'EU'},
