@@ -11313,7 +11313,7 @@ async function renderCalendar(){
 
   // Aggiorna timestamp
   const tsEl=document.getElementById('cal-refresh-ts');
-  if(tsEl) tsEl.textContent='Aggiornato '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  if(tsEl) tsEl.textContent=_t('cal.updated')+new Date().toLocaleTimeString(_calLocale,{hour:'2-digit',minute:'2-digit'});
 
   // Applica filtro tab
   const showMacro    = calViewTab!=='earnings';
