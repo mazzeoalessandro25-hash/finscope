@@ -307,7 +307,7 @@ const INDEX_DATA = {
     {s:'ISP.MI',n:'Intesa Sanpaolo',sec:'Financial Services',mkt:'IT'},
     {s:'ENEL.MI',n:'Enel',sec:'Utilities',mkt:'IT'},
     {s:'RACE.MI',n:'Ferrari',sec:'Consumer Cyclical',mkt:'IT'},
-    {s:'STM.MI',n:'STMicroelectronics',sec:'Technology',mkt:'IT'},
+    {s:'STMMI.MI',n:'STMicroelectronics',sec:'Technology',mkt:'IT'},
     {s:'LDO.MI',n:'Leonardo',sec:'Industrials',mkt:'IT'},
     {s:'G.MI',n:'Assicurazioni Generali',sec:'Financial Services',mkt:'IT'},
     {s:'PRY.MI',n:'Prysmian',sec:'Industrials',mkt:'IT'},
