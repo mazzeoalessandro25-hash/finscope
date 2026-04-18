@@ -6850,7 +6850,7 @@ async function renderPortfolio(){
           <!-- Riga 2: data acquisto + durata -->
           ${dateDisplay?`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
             <span class="port-date-badge">📅 ${dateDisplay}</span>
-            ${holdStr?`<span style="font-size:9px;color:var(--t3);font-family:var(--fm)">· detenuto da ${holdStr}</span>`:''}
+            ${holdStr?`<span style="font-size:9px;color:var(--t3);font-family:var(--fm)">· ${_t('port.heldFor')} ${holdStr}</span>`:''}
           </div>`:''}
           <!-- Sparkline full-width -->
           <svg id="psp-${i}" width="100%" height="32" style="display:block;margin:4px 0 6px"></svg>
