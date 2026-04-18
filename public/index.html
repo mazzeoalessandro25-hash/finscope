@@ -11331,7 +11331,7 @@ async function renderCalendar(){
   const firstDay=new Date(calYear,calMonth,1);
   const lastDay=new Date(calYear,calMonth+1,0);
   let startDow=firstDay.getDay()-1; if(startDow<0)startDow=6;
-  const DOW=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+  const DOW=[0,1,2,3,4,5,6].map(i=>_t(`cal.dow.${i}`));
   let html='<div class="cal-grid">';
   DOW.forEach(d=>{html+=`<div class="cal-dow">${d}</div>`;});
   for(let i=0;i<startDow;i++) html+=`<div class="cal-day other-month"></div>`;
