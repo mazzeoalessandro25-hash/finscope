@@ -9841,7 +9841,7 @@ function _macroRenderForex(d){
   const dxy=d.dxy;
   const dxyChg=dxy?chgPct(dxy.price,dxy.prev):null;
   const dxyUp=dxyChg==null||dxyChg>=0;
-  const dxyNote=dxy?(dxy.price>104?'Dollaro molto forte':dxy.price>101?'Dollaro forte':dxy.price>98?'Neutrale':'Dollaro debole'):'—';
+  const dxyNote=dxy?(dxy.price>104?_t('macro.dxy.veryStrong'):dxy.price>101?_t('macro.dxy.strong'):dxy.price>98?_t('macro.dxy.neutral'):_t('macro.dxy.weak')):'—';
   const pairs=[
     {lbl:'EUR/USD',d:d.eurusd,dec:4,note:'Euro vs Dollaro'},
     {lbl:'GBP/USD',d:d.gbpusd,dec:4,note:'Sterlina vs Dollaro'},
