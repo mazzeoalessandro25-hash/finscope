@@ -14599,7 +14599,7 @@ function renderInsiderTable(transactions, filter, containerId, showSymbol, sort)
   let rows = filter==='all' ? transactions : transactions.filter(t=>t.type===filter);
   rows = _insSort(rows, sort);
   if(!rows.length){
-    el.innerHTML='<div class="ld" style="padding:16px">Nessuna transazione '+(filter==='buy'?'di acquisto':filter==='sell'?'di vendita':'')+' disponibile</div>';
+    el.innerHTML='<div class="ld" style="padding:16px">'+_t(filter==='buy'?'ins.empty.buy':filter==='sell'?'ins.empty.sell':'ins.empty.all')+'</div>';
     return;
   }
   const nBuy=rows.filter(t=>t.type==='buy').length;
