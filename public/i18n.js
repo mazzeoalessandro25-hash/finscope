@@ -293,6 +293,7 @@ const TRANSLATIONS={
     'load.insider':'Caricamento transazioni insider...',
     /* Nav / misc */
     'nav.logout':'Esci',
+    'nav.hello':'Ciao,',
     'common.clearHistory':'Cancella storico',
   },
   en:{
