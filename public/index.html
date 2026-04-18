@@ -9812,7 +9812,7 @@ function _macroRenderSnapshot(){
     reg.innerHTML=`<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--fm);color:${rc[r]};background:${rb[r]};border:1px solid ${rbd[r]}">${rico[r]} ${rlbl[r]}</div>`;
   }
   const usUpd=document.getElementById('macro-us-upd');
-  if(usUpd)usUpd.textContent='Aggiornato '+MACRO_SNAP.updatedAt+' · '+MACRO_SNAP.regimeNote;
+  if(usUpd)usUpd.textContent=_t('macro.updated')+' '+MACRO_SNAP.updatedAt+' · '+MACRO_SNAP.regimeNote;
   const euUpd=document.getElementById('macro-eu-upd');
   if(euUpd)euUpd.textContent='Aggiornato '+MACRO_SNAP.updatedAt+' · Fonte: Eurostat · BCE';
 
