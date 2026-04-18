@@ -6501,7 +6501,7 @@ function renderPacPlans(){
     const csym=p.currency==='EUR'?'€':'$';
     const statusText=p.active?(isDue?_t('pac.due'):_t('pac.active')):_t('pac.paused');
     const statusColor=p.active?(isDue?'var(--o)':'var(--g)'):'var(--t3)';
-    const purchaseLbl=currentLang==='de'?'Käufe':currentLang==='en'?'purchases':'acquisti';
+    const purchaseLbl=_t('ins.buysSum').toLowerCase();
     return `<div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin-bottom:10px">
       <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
         <div style="flex:1;min-width:200px">
