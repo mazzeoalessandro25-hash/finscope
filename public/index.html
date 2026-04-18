@@ -7150,7 +7150,7 @@ async function renderPortfolio(){
   // Update last-refresh timestamp
   _portLastUpdateTs=Date.now();
   const _lu=document.getElementById('port-last-update');
-  if(_lu){const _d=new Date(_portLastUpdateTs);_lu.textContent='Aggiornato alle '+_d.getHours().toString().padStart(2,'0')+':'+_d.getMinutes().toString().padStart(2,'0');}
+  if(_lu){const _d=new Date(_portLastUpdateTs);_lu.textContent=_t('port.updatedAt')+' '+_d.getHours().toString().padStart(2,'0')+':'+_d.getMinutes().toString().padStart(2,'0');}
   // Start/restart 15-min auto-refresh
   if(_portRefreshTimer)clearInterval(_portRefreshTimer);
   _portRefreshTimer=setInterval(()=>{if(portfolio.length)renderPortfolio();},15*60*1000);
