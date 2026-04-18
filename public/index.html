@@ -9971,7 +9971,7 @@ function _macroRenderAnalysis(d){
   }
   if(t10!=null){
     const sc=t10>4.8?'sig-danger':t10>4.0?'sig-warn':t10>3.0?'sig-neu':'sig-safe';
-    const st=t10>4.8?'Molto alto':t10>4.0?'Elevato':t10>3.0?'Normale':'Basso';
+    const st=t10>4.8?_t('macro.rates.veryHigh'):t10>4.0?_t('macro.rates.high'):t10>3.0?_t('macro.rates.normal'):_t('macro.rates.low');
     const sc2=t10>4.8?'var(--r)':t10>4.0?'var(--o)':t10>3.0?'var(--t3)':'var(--g)';
     setStat('mss-10y','mss-10y-sub','mss-10y-item',fmt(t10,2)+'%',st,sc2,sc);
   }
