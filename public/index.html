@@ -14563,9 +14563,10 @@ function fmtInsShares(s){
 function fmtInsRole(r){
   if(!r) return '';
   const map={
-    'director':'Direttore','officer':'Dirigente','10% owner':'Az. >10%',
-    'ceo':'CEO','cfo':'CFO','coo':'COO','president':'Presidente',
-    'general counsel':'Cons. Legale','vp':'VP','svp':'SVP','evp':'EVP'
+    'director':_t('ins.role.director'),'officer':_t('ins.role.officer'),
+    '10% owner':_t('ins.role.owner10'),'ceo':'CEO','cfo':'CFO','coo':'COO',
+    'president':_t('ins.role.president'),'general counsel':_t('ins.role.gc'),
+    'vp':'VP','svp':'SVP','evp':'EVP'
   };
   return map[r.toLowerCase()] || r.charAt(0).toUpperCase()+r.slice(1);
 }
