@@ -441,7 +441,6 @@ const INDEX_DATA = {
     {s:'NG.L',n:'National Grid',sec:'Utilities',mkt:'EU'},
     {s:'BHP.L',n:'BHP Group',sec:'Basic Materials',mkt:'EU'},
     {s:'GLEN.L',n:'Glencore',sec:'Basic Materials',mkt:'EU'},
-    {s:'RB.L',n:'Reckitt Benckiser',sec:'Consumer Defensive',mkt:'EU'},
     {s:'LSEG.L',n:'London Stock Exchange',sec:'Financial Services',mkt:'EU'},
     {s:'BA.L',n:'BAE Systems',sec:'Industrials',mkt:'EU'},
     {s:'LLOY.L',n:'Lloyds Banking',sec:'Financial Services',mkt:'EU'},
