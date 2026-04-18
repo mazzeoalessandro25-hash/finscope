@@ -160,7 +160,7 @@ const INDEX_DATA = {
     {s:'META',n:'Meta Platforms',sec:'Technology',mkt:'US'},
     {s:'GOOGL',n:'Alphabet (A)',sec:'Technology',mkt:'US'},
     {s:'GOOG',n:'Alphabet (C)',sec:'Technology',mkt:'US'},
-    {s:'BRK.B',n:'Berkshire Hathaway',sec:'Financial Services',mkt:'US'},
+    {s:'BRK-B',n:'Berkshire Hathaway',sec:'Financial Services',mkt:'US'},
     {s:'LLY',n:'Eli Lilly',sec:'Healthcare',mkt:'US'},
     {s:'TSLA',n:'Tesla',sec:'Consumer Cyclical',mkt:'US'},
     {s:'AVGO',n:'Broadcom',sec:'Technology',mkt:'US'},
