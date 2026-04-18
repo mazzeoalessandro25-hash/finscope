@@ -6757,7 +6757,7 @@ async function removePortfolioItem(idx){
 async function renderPortfolio(){
   const el=document.getElementById('port-list');
   if(!portfolio.length){
-    el.innerHTML='<div class="ld">Nessun titolo aggiunto · Clicca "＋ Aggiungi" per iniziare</div>';
+    el.innerHTML=`<div class="ld">${_t('port.empty')}</div>`;
     document.getElementById('port-summary').innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:4px 0">Nessun titolo nel portafoglio</div>';
     return;
   }
