@@ -581,6 +581,7 @@ const TRANSLATIONS={
     'load.wyckoff':'Loading Wyckoff analysis...',
     'load.insider':'Loading insider transactions...',
     'nav.logout':'Log out',
+    'nav.hello':'Hi,',
     'common.clearHistory':'Clear history',
   },
   de:{
