@@ -14613,8 +14613,8 @@ function renderInsiderTable(transactions, filter, containerId, showSymbol, sort)
   const thead = `${showSymbol?`<th>${_t('ins.th.symbol')}</th>`:''}<th>${_t('ins.th.date')}</th><th>${_t('ins.th.name')}</th><th>${_t('ins.th.role')}</th><th>${_t('ins.th.type')}</th><th style="text-align:right">${_t('ins.th.shares')}</th><th style="text-align:right">${_t('ins.th.price')}</th><th style="text-align:right">${_t('ins.th.value')}</th>`;
 
   let html=`<div style="display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap">
-    <span style="font-size:11px;font-family:var(--fm);background:rgba(5,150,105,.14);color:#059669;padding:4px 12px;border-radius:6px;font-weight:700">🟢 ${nBuy} acquisti · ${fmtInsValue(vBuy)}</span>
-    <span style="font-size:11px;font-family:var(--fm);background:rgba(220,38,38,.14);color:#DC2626;padding:4px 12px;border-radius:6px;font-weight:700">🔴 ${nSell} vendite · ${fmtInsValue(vSell)}</span>
+    <span style="font-size:11px;font-family:var(--fm);background:rgba(5,150,105,.14);color:#059669;padding:4px 12px;border-radius:6px;font-weight:700">🟢 ${nBuy} ${_t('ins.buysSum')} · ${fmtInsValue(vBuy)}</span>
+    <span style="font-size:11px;font-family:var(--fm);background:rgba(220,38,38,.14);color:#DC2626;padding:4px 12px;border-radius:6px;font-weight:700">🔴 ${nSell} ${_t('ins.sellsSum')} · ${fmtInsValue(vSell)}</span>
   </div>
   <div style="overflow-x:auto">
   <table class="ins-table"><thead><tr>${thead}</tr></thead>
