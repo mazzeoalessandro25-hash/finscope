@@ -11666,20 +11666,20 @@ async function loadWyckoffAnalysis(sym){
 
     let phase,phaseCol,phaseIcon,verdict;
     if(pTrend<-5&&oTrend>5){
-      phase='Accumulazione';phaseCol='#10B981';phaseIcon='◎';
-      verdict=`Divergenza <strong>rialzista</strong>: il prezzo scende ma l'OBV sale — possibile fase di accumulazione da parte degli istituzionali.`;
+      phase=_t('wy.phase.acc');phaseCol='#10B981';phaseIcon='◎';
+      verdict=_t('wy.verdict.acc');
     } else if(pTrend>5&&oTrend<-5){
-      phase='Distribuzione';phaseCol='#EF4444';phaseIcon='◉';
-      verdict=`Divergenza <strong>ribassista</strong>: il prezzo sale ma l'OBV cala — possibile distribuzione in corso, attenzione a un'inversione.`;
+      phase=_t('wy.phase.dist');phaseCol='#EF4444';phaseIcon='◉';
+      verdict=_t('wy.verdict.dist');
     } else if(pTrend>3&&oTrend>3){
-      phase='Markup';phaseCol='#1A56C4';phaseIcon='▲';
-      verdict=`Trend <strong>confermato</strong>: prezzo e OBV in salita simultanea — la forza del movimento è supportata dai volumi.`;
+      phase=_t('wy.phase.markup');phaseCol='#1A56C4';phaseIcon='▲';
+      verdict=_t('wy.verdict.markup');
     } else if(pTrend<-3&&oTrend<-3){
-      phase='Markdown';phaseCol='#F59E0B';phaseIcon='▼';
-      verdict=`Trend <strong>ribassista confermato</strong>: prezzo e OBV entrambi in discesa — pressione di vendita persistente.`;
+      phase=_t('wy.phase.markdown');phaseCol='#F59E0B';phaseIcon='▼';
+      verdict=_t('wy.verdict.markdown');
     } else {
-      phase='Laterale';phaseCol='#6B7280';phaseIcon='→';
-      verdict=`Movimento <strong>laterale</strong>: nessuna divergenza significativa — attesa di un breakout confermato da volume.`;
+      phase=_t('wy.phase.lateral');phaseCol='#6B7280';phaseIcon='→';
+      verdict=_t('wy.verdict.lateral');
     }
 
     // Calcola OBV change % e price change %
