@@ -326,7 +326,7 @@ const INDEX_DATA = {
     {s:'TIT.MI',n:'Telecom Italia',sec:'Communication Services',mkt:'IT'},
     {s:'DIA.MI',n:'DiaSorin',sec:'Healthcare',mkt:'IT'},
     {s:'INW.MI',n:'Inwit',sec:'Communication Services',mkt:'IT'},
-    {s:'TERNA.MI',n:'Terna',sec:'Utilities',mkt:'IT'},
+    {s:'TRN.MI',n:'Terna',sec:'Utilities',mkt:'IT'},
     {s:'A2A.MI',n:'A2A',sec:'Utilities',mkt:'IT'},
     {s:'IG.MI',n:'Italgas',sec:'Utilities',mkt:'IT'},
     {s:'REC.MI',n:'Recordati',sec:'Healthcare',mkt:'IT'},
