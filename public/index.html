@@ -5884,11 +5884,9 @@ function setLang(lang){
   const _ogLocale=document.querySelector('meta[property="og:locale"]');
   const _localeMap={it:'it_IT',en:'en_US',de:'de_DE'};
   if(_ogLocale)_ogLocale.setAttribute('content',_localeMap[lang]||'it_IT');
-  // Aggiorna bottoni bandiera
-  ['it','en','de'].forEach(l=>{
-    const b=document.getElementById('lang-btn-'+l);
-    if(b)b.classList.toggle('active',l===lang);
-  });
+  // Aggiorna dropdown lingua
+  const _sel=document.getElementById('lang-select');
+  if(_sel)_sel.value=lang;
   applyTranslations();
 }
 
