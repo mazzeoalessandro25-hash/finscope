@@ -7465,9 +7465,8 @@ async function loadPortfolioEarnings(assets){
   let allEvents = [];
   await Promise.all(months.map(async({year,month})=>{
     try {
-      const r = await fetch(`/api/earnings?year=${year}&month=${month}`);
-      const d = await r.json();
-      if(d.ok && Array.isArray(d.events)) allEvents.push(...d.events);
+      const evs = await _fetchEarn(year, month);
+      allEvents.push(...evs);
     } catch(_){}
   }));
 
