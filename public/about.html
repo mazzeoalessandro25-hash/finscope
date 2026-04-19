@@ -963,61 +963,9 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 
     <!-- ── 4. CALENDARIO ── -->
     <div class="feat-spot-row reveal">
-      <!-- CALENDAR MOCK -->
-      <div class="mock-shell">
-        <div class="mock-nav">
-          <div class="mock-nav-logo"><div class="mock-nav-dot"></div>FinEdge</div>
-          <div class="mock-nav-btns">
-            <span class="mock-nav-btn">Dashboard</span>
-            <span class="mock-nav-btn active">Calendario</span>
-            <span class="mock-nav-btn">Macro</span>
-          </div>
-        </div>
-        <div class="mock-body">
-          <div class="m-card" style="padding:12px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-              <div style="display:flex;gap:5px">
-                <span style="background:#1A56C4;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 10px;border-radius:100px">📊 Earnings</span>
-                <span style="background:#fff;border:1px solid #D8E2EF;color:#4A6080;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 10px;border-radius:100px">🏛 Macro</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:14px;color:#8499B0;cursor:pointer">←</span>
-                <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#0F1C2E">Aprile 2026</span>
-                <span style="font-size:14px;color:#8499B0;cursor:pointer">→</span>
-              </div>
-            </div>
-            <div class="m-cal-grid" style="margin-bottom:4px">
-              <div class="m-cal-dow">LUN</div><div class="m-cal-dow">MAR</div><div class="m-cal-dow">MER</div><div class="m-cal-dow">GIO</div><div class="m-cal-dow">VEN</div><div class="m-cal-dow">SAB</div><div class="m-cal-dow">DOM</div>
-            </div>
-            <div class="m-cal-grid">
-              <div class="m-cal-day empty"></div>
-              <div class="m-cal-day"><div class="m-cdn">1</div></div>
-              <div class="m-cal-day"><div class="m-cdn">2</div></div>
-              <div class="m-cal-day has-ev"><div class="m-cdn">3</div><div class="m-dots"><div class="m-dot-r"></div></div><div class="m-cel">NFP</div></div>
-              <div class="m-cal-day"><div class="m-cdn">4</div></div>
-              <div class="m-cal-day empty"></div><div class="m-cal-day empty"></div>
-              <div class="m-cal-day has-ev"><div class="m-cdn">7</div><div class="m-dots"><div class="m-dot-r"></div></div><div class="m-cel">CPI</div></div>
-              <div class="m-cal-day"><div class="m-cdn">8</div></div>
-              <div class="m-cal-day"><div class="m-cdn">9</div></div>
-              <div class="m-cal-day has-ev"><div class="m-cdn">10</div><div class="m-dots"><div class="m-dot-r"></div></div><div class="m-cel">CPI USA</div></div>
-              <div class="m-cal-day has-ev"><div class="m-cdn">11</div><div class="m-dots"><div class="m-dot-o"></div><div class="m-dot-o"></div></div><div class="m-cel">JPM WFC</div></div>
-              <div class="m-cal-day"><div class="m-cdn">12</div></div>
-              <div class="m-cal-day empty"></div><div class="m-cal-day empty"></div>
-              <div class="m-cal-day has-ev"><div class="m-cdn">14</div><div class="m-dots"><div class="m-dot-o"></div><div class="m-dot-o"></div></div><div class="m-cel">GS MS</div></div>
-              <div class="m-cal-day has-ev"><div class="m-cdn">15</div><div class="m-dots"><div class="m-dot-o"></div></div><div class="m-cel">JNJ BAC</div></div>
-              <div class="m-cal-day has-ev"><div class="m-cdn">16</div><div class="m-dots"><div class="m-dot-r"></div><div class="m-dot-b"></div></div><div class="m-cel">BCE NFLX</div></div>
-              <div class="m-cal-day"><div class="m-cdn">17</div></div>
-              <div class="m-cal-day empty"></div><div class="m-cal-day empty"></div>
-              <div class="m-cal-day today"><div class="m-cdn">19</div></div>
-              <div class="m-cal-day"><div class="m-cdn">20</div></div>
-            </div>
-            <div style="display:flex;gap:12px;margin-top:8px;justify-content:center">
-              <div style="display:flex;align-items:center;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8499B0"><div class="m-dot-o" style="width:8px;height:8px"></div>☀ Pre-Mkt</div>
-              <div style="display:flex;align-items:center;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8499B0"><div class="m-dot-b" style="width:8px;height:8px"></div>🌙 Post-Mkt</div>
-              <div style="display:flex;align-items:center;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:#8499B0"><div class="m-dot-r" style="width:8px;height:8px"></div>📊 Macro</div>
-            </div>
-          </div>
-        </div>
+      <!-- ── CALENDARIO PREVIEW (iframe live) ── -->
+      <div class="preview-frame">
+        <iframe src="./demo.html?freeze=5&embed=1" loading="lazy" title="FinEdge Calendario preview" scrolling="no"></iframe>
       </div>
       <div>
         <div class="fsr-tag">Calendario Earnings &amp; Macro</div>
