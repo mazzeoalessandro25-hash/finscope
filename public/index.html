@@ -4228,18 +4228,16 @@ async function loadTape(){
   const needNext=now.getDate()>lastDay-7;
   const nm=m===12?1:m+1, ny=m===12?y+1:y;
 
-  const safeFetch=u=>fetch(u).then(r=>r.ok?r.json():null).catch(()=>null);
-
-  const [priceResults, newsData, ecoData, earnData, ecoDataNext, earnDataNext] = await Promise.all([
+  const [priceResults, newsData, ecoThis, earnThis, ecoNext, earnNext] = await Promise.all([
     Promise.all(TAPE_ITEMS.map(item=>api(item.s).then(d=>({item,d})))),
     api('tapenews','tapenews'),
-    safeFetch(`/api/ecocal?year=${y}&month=${m}`),
-    safeFetch(`/api/earnings?year=${y}&month=${m}`),
-    needNext?safeFetch(`/api/ecocal?year=${ny}&month=${nm}`):Promise.resolve(null),
-    needNext?safeFetch(`/api/earnings?year=${ny}&month=${nm}`):Promise.resolve(null),
+    _fetchEco(y, m),
+    _fetchEarn(y, m),
+    needNext?_fetchEco(ny, nm):Promise.resolve([]),
+    needNext?_fetchEarn(ny, nm):Promise.resolve([]),
   ]);
 
-  const ecoEvents=[...(ecoData?.events||[]),...(ecoDataNext?.events||[])];
+  const ecoEvents=[...ecoThis,...ecoNext];
   const earnEvents=[...(earnData?.events||[]),...(earnDataNext?.events||[])];
 
   const priceHtml = priceResults.map(({item,d})=>{
