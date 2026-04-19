@@ -74,7 +74,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=1800');
+  res.setHeader('Cache-Control', 's-maxage=43200, stale-while-revalidate=3600');
 
   const now   = new Date();
   const year  = parseInt(req.query.year  || now.getFullYear(), 10);
