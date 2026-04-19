@@ -1,5 +1,4 @@
 // Dati hardcoded Q1/Q2 2026 — affidabili, sempre disponibili
-// (date approssimative basate sui pattern storici, aggiornare a ogni trimestre)
 const HARDCODED_EARNINGS = [
   // ── Q1 2026 — Aprile ──
   { date:'2026-04-11', symbol:'JPM',    name:'JPMorgan Chase',       time:'bmo' },
@@ -41,7 +40,7 @@ const HARDCODED_EARNINGS = [
   { date:'2026-05-26', symbol:'MRK',    name:'Merck',                 time:'bmo' },
   { date:'2026-05-28', symbol:'NVDA',   name:'NVIDIA',                time:'amc' },
   { date:'2026-05-29', symbol:'CRM',    name:'Salesforce',            time:'amc' },
-  { date:'2026-05-29', symbol:'STM.MI', name:'STMicroelectronics',    time:'bmo' },
+  { date:'2026-05-29', symbol:'STMMI.MI',name:'STMicroelectronics',   time:'bmo' },
   // ── Q2 2026 — Luglio ──
   { date:'2026-07-14', symbol:'JPM',    name:'JPMorgan Chase',        time:'bmo' },
   { date:'2026-07-15', symbol:'GS',     name:'Goldman Sachs',         time:'bmo' },
@@ -54,11 +53,20 @@ const HARDCODED_EARNINGS = [
   { date:'2026-07-29', symbol:'V',      name:'Visa',                  time:'amc' },
   { date:'2026-07-30', symbol:'AAPL',   name:'Apple',                 time:'amc' },
   { date:'2026-07-30', symbol:'AMZN',   name:'Amazon',                time:'amc' },
-  { date:'2026-07-30', symbol:'META',   name:'Meta Platforms',        time:'amc' },
   // ── Q2 2026 — Agosto ──
   { date:'2026-08-25', symbol:'NVDA',   name:'NVIDIA',                time:'amc' },
   { date:'2026-08-26', symbol:'CRM',    name:'Salesforce',            time:'amc' },
 ];
+
+// Simboli da mostrare nella tape (Finnhub usa simboli senza suffisso borsa per EU)
+const WATCH_SYMBOLS = new Set(HARDCODED_EARNINGS.map(e => e.symbol));
+// Aggiungi varianti senza suffisso .MI / .PA per matching con Finnhub
+const WATCH_BASE = new Set(
+  HARDCODED_EARNINGS.map(e => e.symbol.split('.')[0])
+);
+const NAME_MAP = Object.fromEntries(
+  HARDCODED_EARNINGS.map(e => [e.symbol, e.name])
+);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -76,40 +84,44 @@ export default async function handler(req, res) {
   const lastDay = new Date(year, month, 0).getDate();
   const to      = `${year}-${String(month).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
 
-  // ── 1. FMP earning_calendar — dati live con EPS e BMO/AMC ────────────────
-  const TOKEN = process.env.FMP_API_KEY;
+  // ── Finnhub earnings calendar ──
+  const TOKEN = process.env.FINNHUB_API_KEY;
   if (TOKEN) {
     try {
-      const url = `https://financialmodelingprep.com/api/v3/earning_calendar?from=${from}&to=${to}&apikey=${TOKEN}`;
+      const url = `https://finnhub.io/api/v1/calendar/earnings?from=${from}&to=${to}&token=${TOKEN}`;
       const r = await fetch(url, { signal: AbortSignal.timeout(7000) });
       if (r.ok) {
         const raw = await r.json();
-        if (Array.isArray(raw) && raw.length > 0) {
-          // Costruiamo un Set dei ticker hardcoded per filtrare solo aziende rilevanti
-          const watchSet = new Set(HARDCODED_EARNINGS.map(e => e.symbol));
-          const events = raw
-            .filter(e => e.symbol && e.date && watchSet.has(e.symbol))
-            .map(e => ({
-              date:            String(e.date).split(' ')[0],
-              symbol:          e.symbol,
-              name:            e.name || e.symbol,
-              epsEstimate:     e.epsEstimated  ?? null,
-              epsActual:       e.eps           ?? null,
-              revenueEstimate: e.revenueEstimated ?? null,
-              revenueActual:   e.revenue       ?? null,
-              time:            e.time          || null,
-            }))
-            .sort((a, b) => a.date.localeCompare(b.date));
+        const list = Array.isArray(raw.earningsCalendar) ? raw.earningsCalendar : [];
+        const events = list
+          .filter(e => {
+            const sym  = e.symbol || '';
+            const base = sym.split('.')[0];
+            return WATCH_SYMBOLS.has(sym) || WATCH_BASE.has(base);
+          })
+          .map(e => ({
+            date:            String(e.date || '').slice(0, 10),
+            symbol:          e.symbol,
+            name:            NAME_MAP[e.symbol] || NAME_MAP[e.symbol?.split('.')[0]] || e.symbol,
+            epsEstimate:     e.epsEstimate  ?? null,
+            epsActual:       e.epsActual    ?? null,
+            revenueEstimate: e.revenueEstimate ?? null,
+            revenueActual:   e.revenueActual   ?? null,
+            time:            e.hour         || null,
+          }))
+          .filter(e => e.date)
+          .sort((a, b) => a.date.localeCompare(b.date));
 
-          if (events.length > 0) {
-            return res.json({ ok: true, events, source: 'fmp', from, to });
-          }
+        if (events.length > 0) {
+          return res.json({ ok: true, events, source: 'finnhub', from, to });
         }
       }
-    } catch (_) { /* fall through */ }
+    } catch (_) {
+      // fall through to hardcoded
+    }
   }
 
-  // ── 2. Hardcoded fallback — sempre disponibile, ~0ms ─────────────────────
+  // ── Hardcoded fallback ──
   const events = HARDCODED_EARNINGS
     .filter(e => e.date >= from && e.date <= to)
     .map(e => ({
