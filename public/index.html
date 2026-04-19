@@ -7470,10 +7470,11 @@ async function loadPortfolioEarnings(assets){
     } catch(_){}
   }));
 
-  // Filtra solo ticker in portafoglio
+  // Filtra solo ticker in portafoglio (match anche su base symbol senza suffisso borsa)
+  const portBases = new Set(assets.map(a=>a.sym.split('.')[0]));
   const today = now.toISOString().slice(0,10);
   const relevant = allEvents
-    .filter(e => portSyms.has(e.symbol) && e.date >= today)
+    .filter(e => (portSyms.has(e.symbol) || portBases.has(e.symbol?.split('.')[0])) && e.date >= today)
     .sort((a,b) => a.date.localeCompare(b.date));
 
   if(relevant.length===0){
