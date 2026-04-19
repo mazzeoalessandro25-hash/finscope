@@ -993,67 +993,9 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
           <li>Aggiornato da Finnhub, dati istituzionali verificati</li>
         </ul>
       </div>
-      <!-- INSIDER MOCK -->
-      <div class="mock-shell">
-        <div class="mock-nav">
-          <div class="mock-nav-logo"><div class="mock-nav-dot"></div>FinEdge</div>
-          <div class="mock-nav-btns">
-            <span class="mock-nav-btn">Screener</span>
-            <span class="mock-nav-btn active">Insider</span>
-            <span class="mock-nav-btn">Macro</span>
-          </div>
-        </div>
-        <div class="mock-body">
-          <div class="m-card" style="padding:0;overflow:hidden">
-            <div style="padding:10px 14px;border-bottom:1px solid #D8E2EF;display:flex;justify-content:space-between;align-items:center">
-              <div><div class="m-ct">🕵️ Insider Transactions</div><div class="m-cs">Acquisti e vendite di dirigenti e CEO</div></div>
-              <div style="display:flex;gap:4px">
-                <span style="background:#1A56C4;color:#fff;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:100px">Tutti</span>
-                <span style="background:#fff;border:1px solid #D8E2EF;color:#4A6080;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:100px">🟢 Acq.</span>
-                <span style="background:#fff;border:1px solid #D8E2EF;color:#4A6080;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:3px 9px;border-radius:100px">🔴 Vend.</span>
-              </div>
-            </div>
-            <table class="m-tbl">
-              <thead><tr>
-                <th>DATA</th><th>TICKER</th><th>INSIDER</th><th>RUOLO</th><th>TIPO</th><th>VALORE</th>
-              </tr></thead>
-              <tbody>
-                <tr>
-                  <td>19 Apr</td>
-                  <td><span class="m-ins-pill">NVDA</span></td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">Jensen Huang</td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;color:#8499B0">CEO</td>
-                  <td><span class="m-ins-badge buy">ACQUISTO</span></td>
-                  <td class="m-up">+$2.4M</td>
-                </tr>
-                <tr>
-                  <td>17 Apr</td>
-                  <td><span class="m-ins-pill">MSFT</span></td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">Satya Nadella</td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;color:#8499B0">CEO</td>
-                  <td><span class="m-ins-badge buy">ACQUISTO</span></td>
-                  <td class="m-up">+$830K</td>
-                </tr>
-                <tr>
-                  <td>14 Apr</td>
-                  <td><span class="m-ins-pill">AAPL</span></td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">Tim Cook</td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;color:#8499B0">CEO</td>
-                  <td><span class="m-ins-badge buy">ACQUISTO</span></td>
-                  <td class="m-up">+$640K</td>
-                </tr>
-                <tr>
-                  <td>8 Apr</td>
-                  <td><span class="m-ins-pill" style="background:#4A6080">META</span></td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">M. Zuckerberg</td>
-                  <td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;color:#8499B0">CEO</td>
-                  <td><span class="m-ins-badge sell">VENDITA</span></td>
-                  <td class="m-dn">-$18.2M</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <!-- ── INSIDER PREVIEW (iframe live) ── -->
+      <div class="preview-frame">
+        <iframe src="./demo.html?freeze=6&embed=1" loading="lazy" title="FinEdge Insider preview" scrolling="no"></iframe>
       </div>
     </div>
 
