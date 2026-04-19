@@ -11430,36 +11430,19 @@ async function renderCalendar(){
   if(titleEl)titleEl.textContent=monthName.charAt(0).toUpperCase()+monthName.slice(1);
   el.innerHTML='<div class="ld">Caricamento...</div>';
   const m=calMonth+1;
-  const cacheKey=`${calYear}-${calMonth}`;
 
-  // Fetch macro events
-  let macroEvs=calCache[cacheKey];
-  if(!macroEvs){
-    try{
-      const r=await fetch(`/api/ecocal?year=${calYear}&month=${m}`);
-      const data=await r.json();
-      macroEvs=(data.ok&&Array.isArray(data.events))?data.events:[];
-      calCache[cacheKey]=macroEvs;
-    }catch(_){ macroEvs=[]; }
-  }
+  // Usa _fetchEco/_fetchEarn che condividono la cache con la tape
+  const [macroEvs, earEvs] = await Promise.all([
+    _fetchEco(calYear, m),
+    _fetchEarn(calYear, m),
+  ]);
 
-  // Fetch earnings
-  let earEvs=earningsCache[cacheKey];
-  if(!earEvs){
-    try{
-      const r=await fetch(`/api/earnings?year=${calYear}&month=${m}`);
-      const data=await r.json();
-      if(data.ok&&Array.isArray(data.events)){
-        earEvs=data.events;
-        earningsCache[cacheKey]=earEvs;
-        // Aggiorna subtitle con fonte
-        const srcMap={fmp:_t('cal.src.fmp'),yahoo:_t('cal.src.yahoo'),hardcoded:_t('cal.src.hardcoded')};
-        const bmo=earEvs.filter(e=>e.time==='bmo').length;
-        const amc=earEvs.filter(e=>e.time==='amc').length;
-        const subEl=document.getElementById('cal-sub-info');
-        if(subEl) subEl.textContent=`${earEvs.length} earnings (☀ ${bmo} pre · 🌙 ${amc} post) · ${macroEvs.length} macro · ${srcMap[data.source]||''}`;
-      } else { earEvs=[]; }
-    }catch(_){ earEvs=[]; }
+  // Aggiorna subtitle
+  const subEl=document.getElementById('cal-sub-info');
+  if(subEl){
+    const bmo=earEvs.filter(e=>e.time==='bmo').length;
+    const amc=earEvs.filter(e=>e.time==='amc').length;
+    subEl.textContent=`${earEvs.length} earnings (☀ ${bmo} pre · 🌙 ${amc} post) · ${macroEvs.length} macro`;
   }
 
   // Aggiorna timestamp
