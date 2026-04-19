@@ -925,39 +925,9 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 
     <!-- ── 2. SCREENER ── -->
     <div class="feat-spot-row reveal">
-      <!-- SCREENER MOCK -->
-      <div class="mock-shell">
-        <div class="mock-nav">
-          <div class="mock-nav-logo"><div class="mock-nav-dot"></div>FinEdge</div>
-          <div class="mock-nav-btns">
-            <span class="mock-nav-btn">Dashboard</span>
-            <span class="mock-nav-btn active">Screener</span>
-            <span class="mock-nav-btn">Portafoglio</span>
-          </div>
-        </div>
-        <div class="mock-body">
-          <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;align-items:center">
-            <select style="background:#fff;border:1px solid #D8E2EF;border-radius:8px;padding:5px 10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#0F1C2E;font-weight:600;outline:none"><option>🌐 Tutti i mercati</option></select>
-            <span style="background:#1A56C4;color:#fff;font-size:10px;font-weight:700;padding:4px 11px;border-radius:7px;cursor:pointer">Technology</span>
-            <span style="background:#fff;border:1px solid #D8E2EF;color:#4A6080;font-size:10px;font-weight:600;padding:4px 11px;border-radius:7px">Financial</span>
-            <span style="background:#fff;border:1px solid #D8E2EF;color:#4A6080;font-size:10px;font-weight:600;padding:4px 11px;border-radius:7px">Energy</span>
-            <input style="background:#fff;border:1px solid #D8E2EF;border-radius:8px;padding:5px 10px;font-size:11px;color:#8499B0;outline:none;width:130px" placeholder="🔍 Cerca ticker…" readonly/>
-          </div>
-          <div style="background:#fff;border:1px solid #D8E2EF;border-radius:14px;overflow:hidden">
-            <table class="m-tbl">
-              <thead><tr>
-                <th></th><th>TICKER</th><th>NOME</th><th>MKT</th><th>PREZZO</th><th>VAR 1G</th><th>P/E</th><th style="color:#1A56C4">SCORE</th>
-              </tr></thead>
-              <tbody>
-                <tr><td style="padding:7px 10px">⭐</td><td><span class="m-ins-pill">NVDA</span></td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#4A6080">NVIDIA Corp</td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">🇺🇸</td><td>$889.20</td><td class="m-up">▲+2.1%</td><td style="color:#8499B0">38.4</td><td><span class="m-score hi">91</span></td></tr>
-                <tr><td style="padding:7px 10px">⭐</td><td><span class="m-ins-pill">AAPL</span></td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#4A6080">Apple Inc</td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">🇺🇸</td><td>$193.40</td><td class="m-up">▲+0.4%</td><td style="color:#8499B0">29.1</td><td><span class="m-score hi">84</span></td></tr>
-                <tr><td style="padding:7px 10px">☆</td><td><span class="m-ins-pill">MSFT</span></td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#4A6080">Microsoft</td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">🇺🇸</td><td>$415.70</td><td class="m-up">▲+0.8%</td><td style="color:#8499B0">32.7</td><td><span class="m-score hi">79</span></td></tr>
-                <tr><td style="padding:7px 10px">☆</td><td><span class="m-ins-pill" style="background:#4A6080">META</span></td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#4A6080">Meta Platforms</td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">🇺🇸</td><td>$583.10</td><td class="m-dn">▼-0.4%</td><td style="color:#8499B0">26.3</td><td><span class="m-score mid">72</span></td></tr>
-                <tr><td style="padding:7px 10px">☆</td><td><span class="m-ins-pill" style="background:#4A6080">INTC</span></td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;color:#4A6080">Intel Corp</td><td style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px">🇺🇸</td><td>$21.40</td><td class="m-dn">▼-1.8%</td><td style="color:#8499B0">—</td><td><span class="m-score lo">34</span></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <!-- ── SCREENER PREVIEW (iframe live) ── -->
+      <div class="preview-frame">
+        <iframe src="./demo.html?freeze=3&embed=1" loading="lazy" title="FinEdge Screener preview" scrolling="no"></iframe>
       </div>
       <div>
         <div class="fsr-tag">Stock Screener</div>
