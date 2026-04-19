@@ -1090,21 +1090,8 @@ html.dark .auth-box{background:#1e293b}
 .cal-legend{display:flex;gap:14px;margin-top:12px;justify-content:center}
 .cal-legend-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);font-family:var(--fm)}
 .cal-legend-dot{width:9px;height:9px;border-radius:50%}
-/* popup */
-.cal-popup{position:absolute;z-index:999;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
-  background:#1e2330;color:#f0f4ff;border-radius:10px;padding:10px 13px;min-width:160px;max-width:220px;
-  box-shadow:0 8px 24px rgba(0,0,0,.35);pointer-events:none;opacity:0;transition:opacity .15s}
-.cal-day:hover .cal-popup{opacity:1}
-/* Popup sotto la cella per le prime righe (evita overflow sopra) */
-.cal-day.pop-below .cal-popup{bottom:auto;top:calc(100% + 6px)}
-/* Popup a destra se cella nella colonna sinistra */
-.cal-day.pop-right .cal-popup{left:0;transform:none}
-/* Popup a sinistra se cella nella colonna destra */
-.cal-day.pop-left .cal-popup{left:auto;right:0;transform:none}
-.cal-popup-title{font-size:12px;font-weight:700;margin-bottom:4px;font-family:var(--fm)}
-.cal-popup-row{display:flex;align-items:center;gap:6px;margin-top:5px}
-.cal-popup-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.cal-popup-text{font-size:10.5px;line-height:1.35}
+/* popup rimosso — il click apre direttamente il modal */
+.cal-popup{display:none}
 
 /* Earnings nel calendario */
 .cal-dot.earnings-bmo{background:#D97706}
