@@ -85,7 +85,7 @@ export default async function handler(req, res) {
   const to      = `${year}-${String(month).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
 
   // ── Finnhub earnings calendar ──
-  const TOKEN = process.env.FINNHUB_API_KEY;
+  const TOKEN = process.env.FINNHUB_KEY;
   if (TOKEN) {
     try {
       const url = `https://finnhub.io/api/v1/calendar/earnings?from=${from}&to=${to}&token=${TOKEN}`;
