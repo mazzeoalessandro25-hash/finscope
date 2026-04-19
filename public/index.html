@@ -4188,10 +4188,26 @@ updateHours();setInterval(updateHours,30000);
 let tapeRAF=null, tapeX=0, tapeSpeed=0.5, tapeHalfW=0;
 
 async function loadTape(){
-  const [priceResults, newsData] = await Promise.all([
+  const now=new Date();
+  const y=now.getFullYear(), m=now.getMonth()+1;
+  // Se siamo negli ultimi 7 giorni del mese, carica anche il mese successivo
+  const lastDay=new Date(y,m,0).getDate();
+  const needNext=now.getDate()>lastDay-7;
+  const nm=m===12?1:m+1, ny=m===12?y+1:y;
+
+  const safeFetch=u=>fetch(u).then(r=>r.ok?r.json():null).catch(()=>null);
+
+  const [priceResults, newsData, ecoData, earnData, ecoDataNext, earnDataNext] = await Promise.all([
     Promise.all(TAPE_ITEMS.map(item=>api(item.s).then(d=>({item,d})))),
-    api('tapenews','tapenews')
+    api('tapenews','tapenews'),
+    safeFetch(`/api/ecocal?year=${y}&month=${m}`),
+    safeFetch(`/api/earnings?year=${y}&month=${m}`),
+    needNext?safeFetch(`/api/ecocal?year=${ny}&month=${nm}`):Promise.resolve(null),
+    needNext?safeFetch(`/api/earnings?year=${ny}&month=${nm}`):Promise.resolve(null),
   ]);
+
+  const ecoEvents=[...(ecoData?.events||[]),...(ecoDataNext?.events||[])];
+  const earnEvents=[...(earnData?.events||[]),...(earnDataNext?.events||[])];
 
   const priceHtml = priceResults.map(({item,d})=>{
     if(!d)return'';
@@ -4212,7 +4228,7 @@ async function loadTape(){
     });
   }
 
-  const eventsHtml=getTapeEventHtml();
+  const eventsHtml=getTapeEventHtml(ecoEvents,earnEvents);
   const html=priceHtml+newsHtml+eventsHtml;
   if(!html)return;
 
