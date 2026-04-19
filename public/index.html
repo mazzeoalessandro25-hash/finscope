@@ -11319,6 +11319,64 @@ function setCalViewTab(tab,btn){
   renderCalendar();
 }
 
+let _calEvMap={};
+
+function openCalDayModal(dateStr){
+  const evs=_calEvMap[dateStr]||[];
+  if(!evs.length)return;
+  const d=new Date(dateStr+'T12:00:00');
+  const _loc=currentLang==='en'?'en-US':currentLang==='de'?'de-DE':'it-IT';
+  const title=d.toLocaleDateString(_loc,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('cal-dm-title').textContent=title.charAt(0).toUpperCase()+title.slice(1);
+
+  const earRows=evs.filter(e=>e._src==='earnings');
+  const macRows=evs.filter(e=>e._src==='macro');
+  const bmoRows=earRows.filter(e=>e.time==='bmo');
+  const amcRows=earRows.filter(e=>e.time==='amc');
+  const unkRows=earRows.filter(e=>e.time!=='bmo'&&e.time!=='amc');
+  const fedRows=macRows.filter(e=>e.type==='fed');
+  const bceRows=macRows.filter(e=>e.type==='bce');
+  const othRows=macRows.filter(e=>e.type!=='fed'&&e.type!=='bce');
+
+  const makeEarRow=e=>{
+    const beat=e.epsActual!=null&&e.epsEstimate!=null&&e.epsActual>e.epsEstimate;
+    const res=e.epsActual!=null?(beat?' ✅':' ❌'):'';
+    let sub='';
+    if(e.epsActual!=null)sub+=`EPS: <strong>${e.epsActual.toFixed(2)}</strong>`;
+    else if(e.epsEstimate!=null)sub+=`EPS est: ${e.epsEstimate.toFixed(2)}`;
+    if(e.revenueEstimate!=null){const rv=e.revenueEstimate>=1e9?(e.revenueEstimate/1e9).toFixed(1)+'B':(e.revenueEstimate/1e6).toFixed(0)+'M';sub+=(sub?' · ':'')+`Rev est: ${rv}`;}
+    const dotCol=e.time==='bmo'?'#D97706':e.time==='amc'?'#1A56C4':'#6B7280';
+    return`<div class="cal-dm-row"><div class="cal-dm-dot" style="background:${dotCol}"></div><div class="cal-dm-info"><div class="cal-dm-name">${e.name||e.symbol}${res} <span style="opacity:.55;font-size:11px">${e.symbol}</span></div>${sub?`<div class="cal-dm-sub">${sub}</div>`:''}</div></div>`;
+  };
+
+  const makeMacRow=e=>{
+    const impCol=e.impact==='High'?'#DC2626':e.impact==='Medium'?'#D97706':'#6B7280';
+    const dotCol=e.type==='fed'?'#1A56C4':e.type==='bce'?'#7C3AED':'#059669';
+    let sub='';
+    if(e.actual!=null)sub+=`Attuale: <strong>${e.actual}${e.unit||''}</strong>`;
+    if(e.estimate!=null)sub+=(sub?' · ':'')+`Stima: ${e.estimate}${e.unit||''}`;
+    if(e.prev!=null)sub+=(sub?' · ':'')+`Prec: ${e.prev}${e.unit||''}`;
+    return`<div class="cal-dm-row"><div class="cal-dm-dot" style="background:${dotCol}"></div><div class="cal-dm-info"><div class="cal-dm-name">${e.label}</div>${sub?`<div class="cal-dm-sub">${sub}</div>`:''}</div><span class="cal-dm-badge" style="background:${impCol}22;color:${impCol}">${e.impact}</span></div>`;
+  };
+
+  let html='';
+  if(bmoRows.length){html+=`<div class="cal-dm-section">☀ Pre-mercato (BMO)</div>`;bmoRows.forEach(e=>{html+=makeEarRow(e);});}
+  if(amcRows.length){html+=`<div class="cal-dm-section">🌙 Post-mercato (AMC)</div>`;amcRows.forEach(e=>{html+=makeEarRow(e);});}
+  if(unkRows.length){html+=`<div class="cal-dm-section">Utili</div>`;unkRows.forEach(e=>{html+=makeEarRow(e);});}
+  if(fedRows.length){html+=`<div class="cal-dm-section">🏛 Federal Reserve</div>`;fedRows.forEach(e=>{html+=makeMacRow(e);});}
+  if(bceRows.length){html+=`<div class="cal-dm-section">🇪🇺 Banca Centrale Europea</div>`;bceRows.forEach(e=>{html+=makeMacRow(e);});}
+  if(othRows.length){html+=`<div class="cal-dm-section">📊 Dati Macro</div>`;othRows.forEach(e=>{html+=makeMacRow(e);});}
+
+  document.getElementById('cal-dm-body').innerHTML=html||'<div style="color:var(--t3);font-size:13px">Nessun evento</div>';
+  document.getElementById('cal-dm-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+function closeCalDayModal(){
+  document.getElementById('cal-dm-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
 async function renderCalendar(){
   const el=document.getElementById('eco-calendar-content');
   const titleEl=document.getElementById('cal-month-title');
