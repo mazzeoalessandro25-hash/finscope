@@ -11305,6 +11305,49 @@ const ECO_EVENTS=[
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
 let calCache={}, earningsCache={}, calViewTab='all';
 
+// Cache condivisa con sessionStorage — evita chiamate duplicate tra tape e calendario
+// TTL: ecocal 6h, earnings 4h
+const _calApiCache={
+  _k:(type,y,m)=>`cal_${type}_${y}_${m}`,
+  get(type,y,m){
+    try{
+      const raw=sessionStorage.getItem(this._k(type,y,m));
+      if(!raw)return null;
+      const {data,exp}=JSON.parse(raw);
+      if(Date.now()>exp){sessionStorage.removeItem(this._k(type,y,m));return null;}
+      return data;
+    }catch{return null;}
+  },
+  set(type,y,m,data){
+    const ttl=type==='eco'?6*3600*1000:4*3600*1000;
+    try{sessionStorage.setItem(this._k(type,y,m),JSON.stringify({data,exp:Date.now()+ttl}));}catch{}
+  }
+};
+
+async function _fetchEco(y,m){
+  const cached=_calApiCache.get('eco',y,m);
+  if(cached)return cached;
+  try{
+    const r=await fetch(`/api/ecocal?year=${y}&month=${m}`);
+    const d=await r.json();
+    const evs=(d.ok&&Array.isArray(d.events))?d.events:[];
+    _calApiCache.set('eco',y,m,evs);
+    return evs;
+  }catch{return[];}
+}
+
+async function _fetchEarn(y,m){
+  const cached=_calApiCache.get('earn',y,m);
+  if(cached)return cached;
+  try{
+    const r=await fetch(`/api/earnings?year=${y}&month=${m}`);
+    const d=await r.json();
+    const evs=(d.ok&&Array.isArray(d.events))?d.events:[];
+    _calApiCache.set('earn',y,m,evs);
+    return evs;
+  }catch{return[];}
+}
+
 function calChangeMonth(d){
   calMonth+=d;
   if(calMonth>11){calMonth=0;calYear++;}
