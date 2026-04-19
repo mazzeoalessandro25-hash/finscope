@@ -4251,7 +4251,8 @@ async function loadTape(){
     });
   }
 
-  const html=priceHtml+newsHtml;
+  const eventsHtml=getTapeEventHtml();
+  const html=priceHtml+newsHtml+eventsHtml;
   if(!html)return;
 
   const track=document.getElementById('tape-track');
