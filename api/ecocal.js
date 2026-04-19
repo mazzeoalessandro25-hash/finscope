@@ -31,7 +31,7 @@ const HARDCODED_2026 = [
   {date:'2026-10-14',label:'CPI USA (Set)',type:'macro',impact:'High',country:'US',detail:'Inflazione al consumo'},
   {date:'2026-11-12',label:'CPI USA (Ott)',type:'macro',impact:'High',country:'US',detail:'Inflazione al consumo'},
   {date:'2026-12-10',label:'CPI USA (Nov)',type:'macro',impact:'High',country:'US',detail:'Inflazione al consumo'},
-  // ── NFP (Non-Farm Payrolls) — primo venerdì del mese ──
+  // ── NFP ──
   {date:'2026-01-09',label:'NFP USA (Dic)',type:'macro',impact:'High',country:'US',detail:'Buste paga non agricole'},
   {date:'2026-02-06',label:'NFP USA (Gen)',type:'macro',impact:'High',country:'US',detail:'Buste paga non agricole'},
   {date:'2026-03-06',label:'NFP USA (Feb)',type:'macro',impact:'High',country:'US',detail:'Buste paga non agricole'},
@@ -44,7 +44,7 @@ const HARDCODED_2026 = [
   {date:'2026-10-02',label:'NFP USA (Set)',type:'macro',impact:'High',country:'US',detail:'Buste paga non agricole'},
   {date:'2026-11-06',label:'NFP USA (Ott)',type:'macro',impact:'High',country:'US',detail:'Buste paga non agricole'},
   {date:'2026-12-04',label:'NFP USA (Nov)',type:'macro',impact:'High',country:'US',detail:'Buste paga non agricole'},
-  // ── PCE USA (ultimo venerdì del mese) ──
+  // ── PCE USA ──
   {date:'2026-01-30',label:'PCE USA (Dic)',type:'macro',impact:'High',country:'US',detail:'Inflazione preferita dalla Fed'},
   {date:'2026-02-27',label:'PCE USA (Gen)',type:'macro',impact:'High',country:'US',detail:'Inflazione preferita dalla Fed'},
   {date:'2026-03-27',label:'PCE USA (Feb)',type:'macro',impact:'High',country:'US',detail:'Inflazione preferita dalla Fed'},
@@ -57,12 +57,14 @@ const HARDCODED_2026 = [
   {date:'2026-10-30',label:'PCE USA (Set)',type:'macro',impact:'High',country:'US',detail:'Inflazione preferita dalla Fed'},
   {date:'2026-11-25',label:'PCE USA (Ott)',type:'macro',impact:'High',country:'US',detail:'Inflazione preferita dalla Fed'},
   {date:'2026-12-18',label:'PCE USA (Nov)',type:'macro',impact:'High',country:'US',detail:'Inflazione preferita dalla Fed'},
-  // ── PIL USA (GDP) — fine trimestre ──
+  // ── PIL USA (GDP) ──
   {date:'2026-01-29',label:'PIL USA Q3 (finale)',type:'macro',impact:'High',country:'US',detail:'GDP USA - dato finale'},
   {date:'2026-04-29',label:'PIL USA Q1 (prel.)',type:'macro',impact:'High',country:'US',detail:'GDP USA - stima preliminare'},
   {date:'2026-07-29',label:'PIL USA Q2 (prel.)',type:'macro',impact:'High',country:'US',detail:'GDP USA - stima preliminare'},
   {date:'2026-10-28',label:'PIL USA Q3 (prel.)',type:'macro',impact:'High',country:'US',detail:'GDP USA - stima preliminare'},
 ];
+
+const ALLOWED_COUNTRIES = new Set(['US', 'EU', 'DE', 'FR', 'IT']);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -80,48 +82,48 @@ export default async function handler(req, res) {
   const lastDay = new Date(year, month, 0).getDate();
   const to   = `${year}-${String(month).padStart(2,'0')}-${lastDay}`;
 
-  // Prova FMP se la chiave è configurata
-  const TOKEN = process.env.FMP_API_KEY;
+  // ── Finnhub economic calendar ──
+  const TOKEN = process.env.FINNHUB_API_KEY;
   if (TOKEN) {
     try {
-      const url = `https://financialmodelingprep.com/api/v3/economic_calendar?from=${from}&to=${to}&apikey=${TOKEN}`;
+      const url = `https://finnhub.io/api/v1/calendar/economic?from=${from}&to=${to}&token=${TOKEN}`;
       const r = await fetch(url, { signal: AbortSignal.timeout(6000) });
       if (r.ok) {
         const raw = await r.json();
-        const list = Array.isArray(raw) ? raw : [];
+        const list = Array.isArray(raw.economicCalendar) ? raw.economicCalendar : [];
         const events = list
           .filter(e => {
             const country = (e.country || '').toUpperCase();
             const impact  = (e.impact  || '').toLowerCase();
-            return (country === 'US' || country === 'EU' || country === 'DE' || country === 'FR')
-                && (impact === 'high' || impact === 'medium');
+            return ALLOWED_COUNTRIES.has(country) && (impact === 'high' || impact === 'medium');
           })
           .map(e => {
-            let type = 'macro';
-            const ev = (e.event || '').toLowerCase();
+            const date = String(e.time || e.date || '').slice(0, 10);
+            const ev   = (e.event || '').toLowerCase();
+            let type   = 'macro';
             if (ev.includes('fed') || ev.includes('fomc') || ev.includes('federal reserve')) type = 'fed';
-            else if (ev.includes('ecb') || ev.includes('european central bank') || ev.includes('bce')) type = 'bce';
+            else if (ev.includes('ecb') || ev.includes('european central') || ev.includes('bce')) type = 'bce';
             return {
-              date:    e.date,
-              label:   e.event,
+              date,
+              label:   e.event || '',
               type,
-              country: e.country || '',
-              impact:  e.impact  || '',
-              actual:  e.actual  ?? null,
-              estimate:e.estimate?? null,
-              prev:    e.previous?? null,
-              unit:    e.unit    || '',
+              country: (e.country || '').toUpperCase(),
+              impact:  e.impact === 'high' ? 'High' : 'Medium',
+              actual:  e.actual   ?? null,
+              estimate:e.estimate ?? null,
+              prev:    e.prev     ?? null,
+              unit:    e.unit     || '',
             };
           })
+          .filter(e => e.date && e.label)
           .sort((a, b) => a.date.localeCompare(b.date));
 
         if (events.length > 0) {
-          return res.json({ ok: true, events, source: 'fmp', from, to });
+          return res.json({ ok: true, events, source: 'finnhub', from, to });
         }
-        // FMP returned empty — fall through to hardcoded
       }
     } catch (_) {
-      // Fall through to hardcoded
+      // fall through to hardcoded
     }
   }
 
