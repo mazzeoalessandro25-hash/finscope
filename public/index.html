@@ -11365,11 +11365,17 @@ async function renderCalendar(){
     const isToday=new Date(calYear,calMonth,day).getTime()===today.getTime();
     const hasEv=evs.length>0;
 
+    // Calcola riga e colonna per posizionare il popup in modo intelligente
+    const gridIdx=startDow+day-1;
+    const row=Math.floor(gridIdx/7);
+    const col=gridIdx%7;
+    const popPos=(row<=1?' pop-below':'')+(col<=1?' pop-right':col>=5?' pop-left':'');
+
     // Separa earnings e macro per mostrare label diversi
     const earRows=evs.filter(e=>e._src==='earnings');
     const macRows=evs.filter(e=>e._src==='macro');
 
-    html+=`<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}">`;
+    html+=`<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}${hasEv?popPos:''}">`;
     html+=`<div class="cal-day-num">${day}</div>`;
     if(hasEv){
       // Dots: prima BMO (arancio), poi AMC (blu), poi macro
