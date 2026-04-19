@@ -3456,6 +3456,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
 <!-- ═══ CRYPTO DASHBOARD ═══ -->
 
+<!-- Modal dettaglio giorno calendario -->
+<div class="cal-dm-overlay" id="cal-dm-overlay" onclick="if(event.target===this)closeCalDayModal()">
+  <div class="cal-dm-box">
+    <div class="cal-dm-head">
+      <div class="cal-dm-title" id="cal-dm-title">—</div>
+      <button class="cal-dm-close" onclick="closeCalDayModal()">✕</button>
+    </div>
+    <div class="cal-dm-body" id="cal-dm-body"></div>
+  </div>
+</div>
+
 <footer>
   <div class="flogo">FinEdge</div>
   <p class="fnote">Dati da Yahoo Finance · Ritardo max 15 min durante sessioni di borsa · Solo uso informativo · Non costituisce consulenza finanziaria</p>
