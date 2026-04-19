@@ -11377,6 +11377,8 @@ async function renderCalendar(){
     const dotCls=e.time==='bmo'?'earnings-bmo':e.time==='amc'?'earnings-amc':'earnings';
     (evMap[e.date]||(evMap[e.date]=[])).push({...e,_src:'earnings',type:dotCls,label:e.name||e.symbol});
   });
+  // Salva mappa globale (usata da openCalDayModal)
+  _calEvMap=evMap;
 
   // Griglia calendario
   const firstDay=new Date(calYear,calMonth,1);
