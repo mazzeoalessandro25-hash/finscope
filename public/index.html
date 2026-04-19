@@ -3664,6 +3664,103 @@ const TAPE_ITEMS=[
   {s:'FTSEMIB.MI',l:'FTSE MIB',dec:0},{s:'GC=F',l:'ORO',dec:2},
 ];
 
+// Calendario eventi macro + earnings principali (aggiornare trimestralmente)
+// imp: 'alta' = rosso, 'media' = arancio, 'bassa' = grigio
+// t: 'MACRO' | 'UTILI'
+const TAPE_EVENTS=[
+  // ── MACRO USA ──
+  {d:'2026-04-21',l:'Indice Composito PMI Flash USA',t:'MACRO',imp:'media'},
+  {d:'2026-04-28',l:'GDP USA Q1 2026 – Stima Avanzata',t:'MACRO',imp:'alta'},
+  {d:'2026-04-30',l:'PCE USA (marzo) – Indicatore Fed',t:'MACRO',imp:'alta'},
+  {d:'2026-05-01',l:'NFP USA (aprile) – Buste Paga',t:'MACRO',imp:'alta'},
+  {d:'2026-05-07',l:'FOMC – Decisione tassi Federal Reserve',t:'MACRO',imp:'alta'},
+  {d:'2026-05-13',l:'CPI USA (aprile) – Inflazione',t:'MACRO',imp:'alta'},
+  {d:'2026-05-14',l:'PPI USA (aprile)',t:'MACRO',imp:'media'},
+  {d:'2026-05-15',l:'Retail Sales USA (aprile)',t:'MACRO',imp:'media'},
+  {d:'2026-05-22',l:'PMI Flash USA (maggio)',t:'MACRO',imp:'media'},
+  {d:'2026-05-29',l:'PCE USA (aprile)',t:'MACRO',imp:'alta'},
+  {d:'2026-06-05',l:'NFP USA (maggio)',t:'MACRO',imp:'alta'},
+  {d:'2026-06-11',l:'CPI USA (maggio)',t:'MACRO',imp:'alta'},
+  {d:'2026-06-17',l:'Retail Sales USA (maggio)',t:'MACRO',imp:'media'},
+  {d:'2026-06-18',l:'FOMC – Decisione tassi Federal Reserve',t:'MACRO',imp:'alta'},
+  {d:'2026-06-26',l:'PCE USA (maggio)',t:'MACRO',imp:'alta'},
+  {d:'2026-07-02',l:'NFP USA (giugno)',t:'MACRO',imp:'alta'},
+  {d:'2026-07-14',l:'CPI USA (giugno)',t:'MACRO',imp:'alta'},
+  {d:'2026-07-28',l:'GDP USA Q2 2026 – Stima Avanzata',t:'MACRO',imp:'alta'},
+  {d:'2026-07-29',l:'FOMC – Decisione tassi Federal Reserve',t:'MACRO',imp:'alta'},
+  // ── MACRO EU / ITALIA ──
+  {d:'2026-04-23',l:'PMI Flash Eurozona',t:'MACRO',imp:'media'},
+  {d:'2026-04-30',l:'PIL Eurozona Q1 2026 (flash)',t:'MACRO',imp:'alta'},
+  {d:'2026-05-07',l:'CPI Eurozona (aprile)',t:'MACRO',imp:'media'},
+  {d:'2026-05-21',l:'PMI Flash Eurozona (maggio)',t:'MACRO',imp:'media'},
+  {d:'2026-06-05',l:'ECB – Decisione tassi Banca Centrale Europea',t:'MACRO',imp:'alta'},
+  {d:'2026-06-17',l:'CPI Eurozona (maggio)',t:'MACRO',imp:'media'},
+  {d:'2026-07-24',l:'ECB – Decisione tassi Banca Centrale Europea',t:'MACRO',imp:'alta'},
+  // ── EARNINGS USA (Blue Chip) ──
+  {d:'2026-04-22',l:'Utili Tesla (TSLA)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-23',l:'Utili Alphabet / Google (GOOGL)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-23',l:'Utili Meta Platforms (META)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-24',l:'Utili Microsoft (MSFT)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-28',l:'Utili Apple (AAPL)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-30',l:'Utili Amazon (AMZN)',t:'UTILI',imp:'alta'},
+  {d:'2026-05-08',l:'Utili NVIDIA (NVDA)',t:'UTILI',imp:'alta'},
+  {d:'2026-05-15',l:'Utili Walmart (WMT)',t:'UTILI',imp:'media'},
+  {d:'2026-07-14',l:'Utili JPMorgan Chase (JPM)',t:'UTILI',imp:'alta'},
+  {d:'2026-07-15',l:'Utili Goldman Sachs (GS)',t:'UTILI',imp:'alta'},
+  {d:'2026-07-22',l:'Utili Tesla (TSLA)',t:'UTILI',imp:'alta'},
+  {d:'2026-07-24',l:'Utili Alphabet (GOOGL)',t:'UTILI',imp:'alta'},
+  {d:'2026-07-24',l:'Utili Meta Platforms (META)',t:'UTILI',imp:'alta'},
+  {d:'2026-07-25',l:'Utili Microsoft (MSFT)',t:'UTILI',imp:'alta'},
+  {d:'2026-07-28',l:'Utili Apple (AAPL)',t:'UTILI',imp:'alta'},
+  // ── EARNINGS EU / ITALIA ──
+  {d:'2026-04-23',l:'Utili Ferrari (RACE)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-24',l:'Utili STMicroelectronics (STMMI)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-28',l:'Utili LVMH',t:'UTILI',imp:'alta'},
+  {d:'2026-04-29',l:'Utili Stellantis (STLAM)',t:'UTILI',imp:'alta'},
+  {d:'2026-04-30',l:'Utili Eni',t:'UTILI',imp:'media'},
+  {d:'2026-05-06',l:'Utili UniCredit',t:'UTILI',imp:'media'},
+  {d:'2026-05-08',l:'Utili Intesa Sanpaolo',t:'UTILI',imp:'media'},
+  {d:'2026-05-13',l:'Utili Enel',t:'UTILI',imp:'media'},
+  {d:'2026-05-15',l:'Utili ASML',t:'UTILI',imp:'alta'},
+];
+
+function getTapeEventHtml(){
+  const now=new Date();
+  const toStr=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+  const todayStr=toStr(now);
+  const tom=new Date(now); tom.setDate(tom.getDate()+1);
+  const tomStr=toStr(tom);
+
+  // Priorità: oggi prima, poi domani (solo imp alta), poi prossimo entro 7 gg
+  let evts=TAPE_EVENTS.filter(e=>e.d===todayStr).map(e=>({...e,when:'OGGI'}));
+  if(!evts.length){
+    const tomHigh=TAPE_EVENTS.filter(e=>e.d===tomStr&&e.imp==='alta').map(e=>({...e,when:'DOMANI'}));
+    if(tomHigh.length)evts=tomHigh;
+  }
+  if(!evts.length){
+    // Prossimo evento alta imp nei prossimi 7 giorni
+    for(let i=2;i<=7;i++){
+      const fd=new Date(now); fd.setDate(fd.getDate()+i);
+      const fs=toStr(fd);
+      const found=TAPE_EVENTS.filter(e=>e.d===fs&&e.imp==='alta');
+      if(found.length){
+        const day=fd.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
+        evts=found.map(e=>({...e,when:day}));
+        break;
+      }
+    }
+  }
+  if(!evts.length)return'';
+
+  const impCol={alta:'#DC2626',media:'#D97706',bassa:'#6B7280'};
+  const typeCol={MACRO:'#1A56C4',UTILI:'#059669'};
+  let h=`<div class="ti" style="padding:0 20px;opacity:.4"><span style="font-size:16px;color:#3A5F8A">|</span></div>`;
+  evts.forEach(e=>{
+    h+=`<div class="ti-event"><span class="ti-event-when" style="background:${impCol[e.imp]||'#6B7280'}">${e.when}</span><span class="ti-event-type" style="color:${typeCol[e.t]||'#3A5F8A'}">${e.t}</span><span class="ti-event-txt">${e.l}</span></div>`;
+  });
+  return h;
+}
+
 const EXCHANGES=[
   {tz:'America/New_York',open:[9,30],close:[16,0]},
   {tz:'Europe/London',open:[8,0],close:[16,30]},
