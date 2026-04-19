@@ -11405,7 +11405,7 @@ async function renderCalendar(){
     const earRows=evs.filter(e=>e._src==='earnings');
     const macRows=evs.filter(e=>e._src==='macro');
 
-    html+=`<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}${hasEv?popPos:''}">`;
+    html+=`<div class="cal-day${isToday?' today':''}${hasEv?' has-event':''}${hasEv?popPos:''}"${hasEv?` onclick="openCalDayModal('${dateStr}')"`:''}>`;
     html+=`<div class="cal-day-num">${day}</div>`;
     if(hasEv){
       // Dots: prima BMO (arancio), poi AMC (blu), poi macro
