@@ -1404,8 +1404,49 @@ setInterval(updateClock,1000);
 updateClock();
 
 /* ---- Boot ---- */
-triggerScene(0);
-rafId = requestAnimationFrame(loop);
+(function(){
+  const p  = new URLSearchParams(location.search);
+  const fr = p.has('freeze') ? parseInt(p.get('freeze')) : -1;
+  if(p.has('embed')) document.body.classList.add('embed-mode');
+
+  if(fr >= 0){
+    isPlaying = false;
+    // Show the scene immediately in its final state (no animated delays)
+    const safe = Math.min(fr, 6);
+    resetAll();
+    if(fr < NAV_IDS.length) setNav(NAV_IDS[fr]);
+    document.querySelectorAll('.scene').forEach((s,idx)=> s.classList.toggle('active', idx===safe));
+    document.querySelectorAll('.dot-btn').forEach((d,idx)=> d.classList.toggle('active', idx===safe));
+
+    if(fr===0){
+      [0,1,2,3].forEach(n=>{ const el=document.getElementById('mv'+n); if(el) el.classList.add('in'); });
+    } else if(fr===1){
+      const arc=document.getElementById('scoreArc'),sn=document.getElementById('scoreNum'),CIRC=345.4,T=78;
+      if(arc){arc.style.transition='none';arc.style.strokeDashoffset=String(CIRC-CIRC*T/100);}
+      if(sn) sn.textContent=T;
+      const pr=document.getElementById('scorePulseRing');
+      if(pr){pr.setAttribute('stroke-opacity','0.5');pr.classList.add('pulse-anim');}
+      [72,92,75,80,60].forEach((v,i)=>{ const el=document.getElementById('dim'+i); if(el){el.style.transition='none';el.style.width=v+'%';} });
+    } else if(fr===2){
+      ['prow0','prow1','prow2','prow3'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('in'); });
+      const CIRC=301.6,sl=[{id:'dArc0',pct:.38},{id:'dArc1',pct:.24},{id:'dArc2',pct:.22},{id:'dArc3',pct:.16}];
+      let off=0;
+      sl.forEach(s=>{ const el=document.getElementById(s.id); if(!el)return; const dl=CIRC*s.pct; el.style.transition='none'; el.style.strokeDasharray=dl+' '+CIRC; el.style.strokeDashoffset=-off; el.style.opacity='1'; off+=dl; });
+      const vals={dVal:'€13.240',dPnl:'+€1.702',totEur:'€13.240',totUsd:'$14.350',totPnl:'+€1.702'};
+      Object.entries(vals).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.textContent=v; });
+    } else if(fr===3){
+      ['srow0','srow1','srow2','srow3','srow4'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('in'); });
+    } else if(fr===4){
+      const at=document.getElementById('aiText');
+      if(at) at.innerHTML='Apple Inc. presenta fondamentali eccezionali con un ROE del 147%, tra i più elevati del settore tecnologico globale. Il P/E di 28.4x risulta in linea con la media storica della società e non suggerisce sopravvalutazione significativa.<br><br>Il consensus degli analisti rimane costruttivo: 28 raccomandazioni Buy, 8 Hold, 2 Sell, con un target medio a $215 che implica un potenziale di rialzo del +16.6%. Il FinEdge Score di 78/100 riflette solidi fondamentali bilanciati da un momentum tecnico in fase di consolidamento.';
+      [88,58,45].forEach((v,i)=>{ const el=document.getElementById('ind'+i); if(el){el.style.transition='none';el.style.width=v+'%';} });
+    }
+    // Scenes 5 and 6 are static HTML — no JS needed
+  } else {
+    triggerScene(0);
+    rafId = requestAnimationFrame(loop);
+  }
+})();
 </script>
 </body>
 </html>
