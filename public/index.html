@@ -11369,8 +11369,9 @@ async function renderCalendar(){
   const showMacro    = calViewTab!=='earnings';
   const showEarnings = calViewTab!=='macro';
 
-  // Costruisci mappa per data
+  // Costruisci mappa per data (esposta globalmente per il modal)
   const evMap={};
+  _calEvMap={};
   if(showMacro)    macroEvs.forEach(e=>{(evMap[e.date]||(evMap[e.date]=[])).push({...e,_src:'macro'});});
   if(showEarnings) earEvs.forEach(e=>{
     const dotCls=e.time==='bmo'?'earnings-bmo':e.time==='amc'?'earnings-amc':'earnings';
