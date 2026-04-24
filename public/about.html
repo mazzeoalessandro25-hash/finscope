@@ -896,22 +896,34 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   <div class="hero-orb-1"></div>
   <div class="hero-orb-2"></div>
 
-  <!-- floating stat chips -->
-  <div class="hero-float" style="left:clamp(20px,4vw,54px);bottom:13%;animation:floatA 6s ease-in-out infinite;z-index:4">
+  <!-- floating stat chips — 3 cards, nessuna copre il contenuto principale -->
+  <!-- card 1: stock live — bottom-left, sotto la colonna testo -->
+  <div class="hero-float" style="left:clamp(20px,3vw,48px);bottom:9%;animation:floatA 6s ease-in-out infinite;z-index:4">
     <div class="hero-float-card">
       <div class="hfc-icon" style="background:rgba(52,211,153,.18)">📈</div>
       <div>
         <div class="hfc-label">NVDA · NASDAQ</div>
-        <div class="hfc-value">$875.40 <span class="hfc-tag pos">+3.1%</span></div>
+        <div class="hfc-value">$134.40 <span class="hfc-tag pos">+2.4%</span></div>
       </div>
     </div>
   </div>
-  <div class="hero-float" style="right:clamp(20px,4vw,54px);top:22%;animation:floatB 7s ease-in-out infinite 1s;z-index:4">
+  <!-- card 2: FinEdge Score — top-right, sopra il mockup -->
+  <div class="hero-float" style="right:clamp(20px,3vw,48px);top:18%;animation:floatB 7s ease-in-out infinite 1s;z-index:4">
     <div class="hero-float-card">
       <div class="hfc-icon" style="background:rgba(96,165,250,.18)">⭐</div>
       <div>
-        <div class="hfc-label">FinEdge Score</div>
-        <div class="hfc-value">78 / 100 <span class="hfc-tag neu">Ottimo</span></div>
+        <div class="hfc-label">FinEdge Score · AAPL</div>
+        <div class="hfc-value">74 / 100 <span class="hfc-tag neu">Ottimo</span></div>
+      </div>
+    </div>
+  </div>
+  <!-- card 3: Earnings alert — bottom-center, tra le due colonne -->
+  <div class="hero-float" style="left:50%;transform:translateX(-50%);bottom:4%;animation:floatA 8s ease-in-out infinite 2s;z-index:4;white-space:nowrap">
+    <div class="hero-float-card">
+      <div class="hfc-icon" style="background:rgba(217,119,6,.18)">📅</div>
+      <div>
+        <div class="hfc-label">Prossimi Earnings</div>
+        <div class="hfc-value">AAPL <span style="font-size:11px;color:rgba(255,255,255,.5)">fra 3 gg · EPS est. $1.64</span></div>
       </div>
     </div>
   </div>
