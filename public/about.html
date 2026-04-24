@@ -884,8 +884,8 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   <div class="hero-orb-1"></div>
   <div class="hero-orb-2"></div>
 
-  <!-- floating data cards -->
-  <div class="hero-float" style="left:clamp(20px,4vw,60px);bottom:12%;animation:floatA 6s ease-in-out infinite">
+  <!-- floating stat chips -->
+  <div class="hero-float" style="left:clamp(20px,4vw,54px);bottom:13%;animation:floatA 6s ease-in-out infinite;z-index:4">
     <div class="hero-float-card">
       <div class="hfc-icon" style="background:rgba(52,211,153,.18)">📈</div>
       <div>
@@ -894,7 +894,7 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
       </div>
     </div>
   </div>
-  <div class="hero-float" style="right:clamp(20px,4vw,60px);bottom:18%;animation:floatB 7s ease-in-out infinite 1s">
+  <div class="hero-float" style="right:clamp(20px,4vw,54px);top:22%;animation:floatB 7s ease-in-out infinite 1s;z-index:4">
     <div class="hero-float-card">
       <div class="hfc-icon" style="background:rgba(96,165,250,.18)">⭐</div>
       <div>
@@ -905,10 +905,11 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   </div>
 
   <div class="hero-inner">
+    <!-- LEFT: copy + stats -->
     <div class="hero-left">
       <div class="hero-badge"><div class="logo-dot"></div>Dati live · ogni 60s · IT · EN · DE</div>
       <h1>Investi con dati<br><em>veri e precisi</em></h1>
-      <p class="hero-sub">Dashboard professionale alimentato da <strong style="color:rgba(255,255,255,.85)">Yahoo Finance</strong> e <strong style="color:rgba(255,255,255,.85)">Finnhub</strong>. Screener con 600+ titoli pre-caricati e ricerca su qualsiasi mercato globale, portafoglio P&amp;L live, FinEdge Score proprietario, Insider Transactions e Calendario Earnings — tutto gratuito.</p>
+      <p class="hero-sub">Dashboard professionale alimentato da <strong style="color:rgba(255,255,255,.85)">Yahoo Finance</strong> e <strong style="color:rgba(255,255,255,.85)">Finnhub</strong>. Screener con 600+ titoli, portafoglio P&amp;L live, FinEdge Score proprietario, Insider Transactions e Calendario Earnings — tutto gratuito.</p>
       <div class="hero-actions">
         <a href="#register" class="btn-primary" onclick="scrollToForm()">Inizia gratis →</a>
         <a href="./demo.html" class="btn-secondary">Guarda la demo</a>
@@ -933,78 +934,57 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
       </div>
     </div>
 
-    <!-- AUTH FORM -->
-    <div id="auth-card" class="auth-card">
-      <div id="lp-card-title" class="auth-card-title">Inizia gratuitamente</div>
-      <div id="lp-card-sub" class="auth-card-sub">Zero costi · Nessuna carta richiesta</div>
-
-      <!-- VIEW 1: Login / Register -->
-      <div id="lp-main-view">
-        <div class="auth-tabs">
-          <button class="auth-tab" onclick="switchTab('login',this)">Accedi</button>
-          <button class="auth-tab active" onclick="switchTab('register',this)">Registrati</button>
+    <!-- RIGHT: app mockup -->
+    <div class="hero-mockup">
+      <div class="hm-window">
+        <!-- macOS chrome -->
+        <div class="hm-chrome">
+          <div class="hm-dots"><span></span><span></span><span></span></div>
+          <div class="hm-url">finedge.app · dashboard</div>
         </div>
-        <div class="auth-err" id="auth-err"></div>
-        <div class="auth-ok" id="auth-ok"></div>
-        <div class="auth-field" id="name-field-lp">
-          <label>Nome</label>
-          <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
-        </div>
-        <div class="auth-field">
-          <label>Email</label>
-          <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
-        </div>
-        <div class="auth-field">
-          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
-            <label style="margin-bottom:0;font-size:10px;color:rgba(255,255,255,.5);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase">Password</label>
-            <button class="forgot-link-lp" id="lp-forgot-link" onclick="showLpView('forgot')" style="display:none">Password dimenticata?</button>
+        <!-- app nav -->
+        <div class="hm-nav">
+          <div class="hm-nav-logo">FinEdge</div>
+          <div class="hm-tabs">
+            <span class="hm-tab active">Dashboard</span>
+            <span class="hm-tab">Screener</span>
+            <span class="hm-tab">Portfolio</span>
           </div>
-          <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
-            onkeydown="if(event.key==='Enter')submitAuth()"/>
         </div>
-        <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Crea account gratuito</button>
-        <p style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;line-height:1.5">
-          Continuando accetti la <a href="./privacy.html" target="_blank" style="color:rgba(255,255,255,.55)">Privacy Policy</a>. Conforme GDPR.
-        </p>
-      </div>
-
-      <!-- VIEW 2: Forgot Password -->
-      <div id="lp-forgot-view" style="display:none">
-        <div class="auth-err" id="lp-fp-err"></div>
-        <div class="auth-ok" id="lp-fp-ok"></div>
-        <div class="auth-field">
-          <label>Email del tuo account</label>
-          <input type="email" id="lp-fp-email" placeholder="la-tua@email.com" autocomplete="email"/>
+        <!-- ticker tape -->
+        <div class="hm-tape">S&amp;P500 +0.82% &nbsp;·&nbsp; NVDA +3.10% &nbsp;·&nbsp; AAPL −0.43% &nbsp;·&nbsp; BTC +1.27% &nbsp;·&nbsp; EUR/USD 1.085</div>
+        <!-- body -->
+        <div class="hm-body">
+          <div class="hm-kpis">
+            <div class="hm-kpi">
+              <div class="hm-kpi-l">Portafoglio P&amp;L</div>
+              <div class="hm-kpi-v">€12,480</div>
+              <div class="hm-kpi-d pos">+€342 oggi (+2.8%)</div>
+            </div>
+            <div class="hm-kpi">
+              <div class="hm-kpi-l">FinEdge Score top</div>
+              <div class="hm-kpi-v">82</div>
+              <div class="hm-kpi-d neu">NVDA · Eccellente</div>
+            </div>
+          </div>
+          <div class="hm-table-wrap">
+            <div class="hm-row hh">
+              <span>Titolo</span><span>Score</span><span>Prezzo</span><span>Var%</span>
+            </div>
+            <div class="hm-row">
+              <span style="font-weight:700;color:#fff">NVDA</span><span><span class="hm-score hi">82</span></span><span>$875</span><span class="pos">+3.1%</span>
+            </div>
+            <div class="hm-row">
+              <span style="font-weight:700;color:#fff">AAPL</span><span><span class="hm-score mid">76</span></span><span>$187</span><span class="neg">−0.4%</span>
+            </div>
+            <div class="hm-row">
+              <span style="font-weight:700;color:#fff">MSFT</span><span><span class="hm-score hi">71</span></span><span>$412</span><span class="pos">+0.8%</span>
+            </div>
+            <div class="hm-row">
+              <span style="font-weight:700;color:#fff">AMZN</span><span><span class="hm-score mid">68</span></span><span>$193</span><span class="pos">+1.2%</span>
+            </div>
+          </div>
         </div>
-        <button class="auth-submit" id="lp-fp-submit" onclick="submitLpForgot()">Invia codice di reset</button>
-        <button class="auth-back-btn-lp" onclick="showLpView('main')">← Torna al login</button>
-      </div>
-
-      <!-- VIEW 3: Reset Password -->
-      <div id="lp-reset-view" style="display:none">
-        <div class="auth-err" id="lp-rp-err"></div>
-        <div class="auth-ok" id="lp-rp-ok"></div>
-        <input type="hidden" id="lp-rp-email"/>
-        <div class="auth-field">
-          <label>Codice di reset (6 cifre)</label>
-          <input class="fp-code-inp-lp" type="text" id="lp-rp-code" maxlength="6" inputmode="numeric"
-            placeholder="000000" autocomplete="one-time-code"/>
-        </div>
-        <div class="auth-field">
-          <label>Nuova password</label>
-          <input type="password" id="lp-rp-pwd" placeholder="Minimo 8 caratteri"/>
-        </div>
-        <button class="auth-submit" id="lp-rp-submit" onclick="submitLpReset()">Aggiorna password</button>
-        <button class="auth-back-btn-lp" onclick="showLpView('forgot')">← Torna indietro</button>
-      </div>
-    </div>
-
-    <!-- GIÀ LOGGATO (banner compatto sopra il form) -->
-    <div id="logged-card" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 16px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-      <span id="logged-msg" style="color:rgba(255,255,255,.9);font-size:13px;font-weight:600;font-family:var(--ff)">Bentornato!</span>
-      <div style="display:flex;align-items:center;gap:8px">
-        <a href="./index.html" style="font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.2);border-radius:7px;padding:5px 12px;text-decoration:none;font-family:var(--ff)">Apri Dashboard →</a>
-        <button onclick="logout()" style="background:none;border:none;color:rgba(255,255,255,.45);font-size:11px;cursor:pointer;font-family:var(--ff);padding:4px">Esci</button>
       </div>
     </div>
   </div>
