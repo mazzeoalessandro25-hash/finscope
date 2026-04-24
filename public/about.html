@@ -259,10 +259,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;
 }
 
 /* ─── TRUST BAR ─── */
-.trust-bar{background:var(--card);border-top:3px solid var(--b);border-bottom:1px solid var(--bd);
-  padding:18px 40px;display:flex;justify-content:center;gap:40px;flex-wrap:wrap}
-.trust-item{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;color:var(--t2)}
-.trust-icon{font-size:16px}
+.trust-bar{
+  background:#0B1C36;border-bottom:1px solid rgba(255,255,255,.08);
+  padding:16px 40px;display:flex;justify-content:center;gap:0;flex-wrap:wrap}
+.trust-item{
+  display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;
+  color:rgba(255,255,255,.5);padding:4px 24px;
+  border-right:1px solid rgba(255,255,255,.07)}
+.trust-item:last-child{border-right:none}
+.trust-icon{font-size:15px;opacity:.85}
 
 /* ─── SECTION LAYOUT ─── */
 .section{padding:80px 40px;max-width:1080px;margin:0 auto}
