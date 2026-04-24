@@ -327,70 +327,97 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;
 .score-pt-val{font-family:var(--fm);font-size:18px;font-weight:700;color:#60A5FA}
 .score-pt-up{font-family:var(--fm);font-size:12px;color:#34D399}
 
-/* ─── HOW IT WORKS ─── */
-/* progress bar in cima */
-.how-progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:52px}
-.how-progress-step{display:flex;align-items:center;gap:10px}
-.how-progress-bubble{
-  width:36px;height:36px;border-radius:50%;
-  font-family:var(--fm);font-size:13px;font-weight:700;color:#fff;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.how-progress-label{font-size:12px;font-weight:600;color:var(--t2);white-space:nowrap}
-.how-progress-connector{
-  width:72px;height:2px;margin:0 8px;flex-shrink:0;
-  background:linear-gradient(90deg,var(--b),var(--b4))}
-/* flow container */
-.how-flow{display:flex;align-items:stretch;gap:0}
-/* arrow connector */
-.how-arrow{
-  flex-shrink:0;width:56px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:4px;padding-bottom:60px}
-.how-arrow-body{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  background:var(--s2);border:1px solid var(--bd);
-  border-radius:20px;padding:10px 8px}
-.how-arrow-poi{font-family:var(--fm);font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--t3)}
-.how-arrow-icon{font-size:20px;color:var(--b);line-height:1}
+/* ─── HOW IT WORKS — Journey ─── */
+.how-journey{
+  position:relative;
+  max-width:680px;margin:0 auto;
+  padding:4px 0 0}
+/* gradient path line */
+.how-journey::before{
+  content:'';
+  position:absolute;left:27px;top:28px;bottom:70px;width:2px;
+  background:linear-gradient(180deg,#1448A8 0%,#3B82F6 45%,#059669 85%,rgba(5,150,105,0) 100%);
+  border-radius:2px;z-index:0}
+/* step row */
+.how-step{
+  display:flex;gap:28px;align-items:flex-start;
+  position:relative;z-index:1}
+/* node */
+.how-node{flex-shrink:0;width:56px;display:flex;justify-content:center}
+.how-node-circle{
+  width:56px;height:56px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fm);font-size:20px;font-weight:900;color:#fff;
+  position:relative;z-index:2;flex-shrink:0}
 /* step card */
-.how-card{
+.how-step-card{
   flex:1;background:var(--card);border:1px solid var(--bd);border-radius:20px;
-  padding:0;overflow:hidden;position:relative;
-  transition:all .22s;cursor:default}
-.how-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(26,86,196,.1)}
-.how-card-top{height:5px;width:100%}
-.how-card-body{padding:28px 26px 24px}
-.how-card-bgnum{
-  position:absolute;top:2px;right:14px;
-  font-size:96px;font-weight:900;font-family:var(--fm);
-  line-height:1;pointer-events:none;user-select:none;
-  letter-spacing:-4px}
-.how-icon-wrap{
-  width:52px;height:52px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;font-size:26px;
-  margin-bottom:18px;position:relative;z-index:1}
-.how-step-tag{font-family:var(--fm);font-size:9px;letter-spacing:2px;text-transform:uppercase;
-  color:var(--t3);margin-bottom:8px;font-weight:600}
-.how-card h3{font-size:17px;font-weight:800;color:var(--t);letter-spacing:-.4px;margin-bottom:10px;position:relative;z-index:1}
-.how-card p{font-size:13px;color:var(--t2);line-height:1.72;margin-bottom:20px}
-.how-preview{
-  background:var(--s2);border:1px solid var(--bd);border-radius:10px;
-  padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
-  font-family:var(--fm);font-size:11px;color:var(--t2)}
-.how-preview-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
-.how-time{
-  display:inline-flex;align-items:center;gap:5px;margin-top:12px;
-  font-family:var(--fm);font-size:10px;color:var(--t3)}
-@media(max-width:900px){
-  .how-flow{flex-direction:column;gap:0}
-  .how-arrow{width:100%;height:44px;flex-direction:row;padding:0 0 0 24px}
-  .how-arrow-body{flex-direction:row;padding:6px 14px;border-radius:20px}
-  .how-arrow-icon{transform:rotate(90deg)}
-  .how-progress-connector{width:40px}
-  .how-progress-label{display:none}
-}
-@media(max-width:600px){
-  .how-progress{gap:0}
-  .how-progress-connector{width:24px}
+  padding:26px;position:relative;overflow:hidden;
+  transition:transform .22s,box-shadow .22s;cursor:default;
+  margin-bottom:0}
+.how-step-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(26,86,196,.1)}
+.how-step-bgnum{
+  position:absolute;top:-8px;right:12px;
+  font-size:88px;font-weight:900;font-family:var(--fm);
+  line-height:1;pointer-events:none;user-select:none;letter-spacing:-3px}
+.how-step-icon{font-size:30px;margin-bottom:14px;display:block;position:relative;z-index:1}
+.how-step-tag{
+  font-family:var(--fm);font-size:10px;text-transform:uppercase;
+  letter-spacing:1.5px;font-weight:700;margin-bottom:7px;position:relative;z-index:1}
+.how-step-card h3{
+  font-size:17px;font-weight:800;color:var(--t);
+  letter-spacing:-.4px;margin-bottom:10px;position:relative;z-index:1}
+.how-step-card p{
+  font-size:13.5px;color:var(--t2);line-height:1.72;
+  margin-bottom:16px;position:relative;z-index:1}
+/* chip */
+.how-chip{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--s2);border:1px solid var(--bd);border-radius:100px;
+  font-size:11px;font-weight:600;color:var(--t2);padding:5px 14px;
+  font-family:var(--fm);position:relative;z-index:1}
+.how-chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.how-step-meta{
+  font-family:var(--fm);font-size:11px;color:var(--t3);
+  margin-top:14px;display:flex;align-items:center;gap:5px;
+  position:relative;z-index:1}
+/* connector between steps */
+.how-connector{
+  display:flex;gap:28px;align-items:center;
+  padding:10px 0;position:relative;z-index:1}
+.how-connector-col{
+  width:56px;flex-shrink:0;display:flex;justify-content:center}
+.how-connector-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--bd);border:2px solid var(--s2);
+  position:relative;z-index:2}
+.how-connector-label{
+  font-family:var(--fm);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);
+  display:flex;align-items:center;gap:10px}
+.how-connector-label::after{
+  content:'';flex:1;height:1px;min-width:48px;
+  background:repeating-linear-gradient(90deg,var(--bd) 0,var(--bd) 4px,transparent 4px,transparent 9px)}
+/* destination */
+.how-destination{
+  display:flex;gap:28px;align-items:center;
+  position:relative;z-index:1;padding-top:6px}
+.how-destination-circle{
+  width:56px;height:56px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,#059669,#34D399);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 0 0 3px var(--s2),0 0 22px rgba(5,150,105,.35)}
+.how-destination-label{font-size:14px;font-weight:800;color:#34D399;letter-spacing:-.3px}
+.how-destination-sub{font-size:12px;color:var(--t3);margin-top:3px}
+@media(max-width:640px){
+  .how-journey::before{left:21px;top:22px}
+  .how-node{width:44px}
+  .how-node-circle{width:44px;height:44px;font-size:16px}
+  .how-step,.how-connector,.how-destination{gap:18px}
+  .how-connector-col{width:44px}
+  .how-destination-circle{width:44px;height:44px;font-size:18px}
+  .how-step-card{padding:20px}
+  .how-step-bgnum{font-size:64px}
 }
 
 /* ─── COMPARISON TABLE ─── */
