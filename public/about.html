@@ -1394,17 +1394,72 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 
 <!-- ═══ WHITELIST ═══ -->
 <section class="wl-section">
+  <!-- scan line effect -->
+  <div class="wl-scan"></div>
+
+  <!-- floating card LEFT: spots counter -->
+  <div class="wl-float" style="left:clamp(20px,5vw,80px);top:50%;transform:translateY(-50%);animation:wlFloat 7s ease-in-out infinite">
+    <div class="wl-card">
+      <div class="wl-card-label">Posti beta disponibili</div>
+      <div class="wl-card-val">53 <span style="font-size:14px;color:rgba(255,255,255,.3);font-weight:400">/ 100</span></div>
+      <div class="wl-card-bar"><div class="wl-card-bar-fill"></div></div>
+      <div class="wl-card-sub" style="margin-top:8px">47 posti già assegnati</div>
+      <div class="wl-card-badge">Beta attiva</div>
+    </div>
+  </div>
+
+  <!-- floating card RIGHT: recent signup -->
+  <div class="wl-float" style="right:clamp(20px,5vw,80px);top:50%;transform:translateY(-50%);animation:wlFloatB 9s ease-in-out infinite 1.5s">
+    <div class="wl-card">
+      <div class="wl-card-label">Ultima iscrizione</div>
+      <div class="wl-card-row">
+        <div class="wl-card-avatar">M</div>
+        <div>
+          <div class="wl-card-user" style="font-weight:600">Marco R.</div>
+          <div class="wl-card-time">2 minuti fa</div>
+        </div>
+      </div>
+      <div style="height:1px;background:rgba(255,255,255,.07);margin:14px 0"></div>
+      <div class="wl-card-row" style="margin-top:0">
+        <div class="wl-card-avatar" style="background:linear-gradient(135deg,#059669,#34D399)">G</div>
+        <div>
+          <div class="wl-card-user" style="font-weight:600">Giulia T.</div>
+          <div class="wl-card-time">18 minuti fa</div>
+        </div>
+      </div>
+      <div class="wl-card-badge" style="margin-top:14px">+12 oggi</div>
+    </div>
+  </div>
+
+  <!-- center -->
   <div class="wl-inner">
     <span class="wl-tag">Lista d'attesa · Beta</span>
-    <h2 class="wl-title">Blocca il tuo posto<br>prima del lancio ufficiale</h2>
-    <p class="wl-sub">Siamo in fase beta. Chi si iscrive ora accede alla piattaforma a prezzo bloccato per sempre — anche se i prezzi aumenteranno in futuro.</p>
-    <div class="wl-perks">
-      <div class="wl-perk"><div class="wl-perk-dot"></div>Prezzo beta garantito a vita</div>
-      <div class="wl-perk"><div class="wl-perk-dot"></div>Accesso prioritario a ogni nuova funzione</div>
-      <div class="wl-perk"><div class="wl-perk-dot"></div>Supporto diretto dal team</div>
+    <h2 class="wl-title">Blocca il tuo posto<br><span>prima del lancio</span></h2>
+    <p class="wl-sub">Siamo in fase beta chiusa. Chi si iscrive ora ottiene il prezzo bloccato per sempre — anche quando i piani aumenteranno.</p>
+
+    <div class="wl-benefits">
+      <div class="wl-benefit">
+        <span class="wl-benefit-icon">🔒</span>
+        <div class="wl-benefit-title">Prezzo garantito a vita</div>
+        <div class="wl-benefit-desc">Il piano scelto oggi rimane il tuo prezzo per sempre, senza rincari</div>
+      </div>
+      <div class="wl-benefit">
+        <span class="wl-benefit-icon">⚡</span>
+        <div class="wl-benefit-title">Accesso prioritario</div>
+        <div class="wl-benefit-desc">Ogni nuova funzione arriva prima agli utenti beta, mesi prima del lancio</div>
+      </div>
+      <div class="wl-benefit">
+        <span class="wl-benefit-icon">💬</span>
+        <div class="wl-benefit-title">Supporto diretto</div>
+        <div class="wl-benefit-desc">Linea diretta col team per feedback, richieste e priorità di sviluppo</div>
+      </div>
     </div>
-    <a href="#register" class="wl-btn" onclick="scrollToForm();return false">Unisciti alla whitelist →</a>
-    <p class="wl-note">Già <strong>600+</strong> investitori in lista &nbsp;·&nbsp; Nessuna carta richiesta</p>
+
+    <div class="wl-btn-wrap">
+      <a href="#register" class="wl-btn" onclick="scrollToForm();return false">Unisciti alla whitelist</a>
+      <a href="#" class="wl-btn-sec" onclick="scrollToForm();return false">Guarda i piani</a>
+    </div>
+    <p class="wl-note">Già <strong>600+</strong> investitori registrati &nbsp;·&nbsp; Nessuna carta richiesta &nbsp;·&nbsp; Cancellazione libera</p>
   </div>
 </section>
 
