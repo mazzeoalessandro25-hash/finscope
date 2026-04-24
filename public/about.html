@@ -551,26 +551,40 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 .forgot-link-lp:hover{color:rgba(255,255,255,.9)}
 
 /* ─── VS TABLE (confronto app) ─── */
-.vs-block{margin-top:64px;padding-top:64px;border-top:1px solid var(--bd)}
-.vs-intro{text-align:center;margin-bottom:40px}
-.vs-intro h2{font-size:clamp(24px,3vw,34px);font-weight:800;letter-spacing:-1px;margin-bottom:12px;color:var(--t)}
+.vs-block{margin-top:72px;padding-top:72px;border-top:1px solid var(--bd)}
+.vs-intro{text-align:center;margin-bottom:44px}
+.vs-intro h2{font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-1.2px;margin-bottom:12px;color:var(--t)}
 .vs-intro p{font-size:15px;color:var(--t2);max-width:520px;margin:0 auto;line-height:1.65}
-.vs-table-wrap{border-radius:16px;overflow:hidden;border:1px solid var(--bd);box-shadow:0 2px 8px rgba(0,0,0,.04)}
+/* pills count bar above table */
+.vs-pills{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:28px}
+.vs-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--bd);color:var(--t2);background:var(--card)}
+.vs-pill-cross{color:var(--r);font-size:11px}
+/* table */
+.vs-table-wrap{border-radius:18px;overflow:hidden;border:1px solid var(--bd);box-shadow:0 4px 20px rgba(0,0,0,.06)}
 .vs-table{width:100%;border-collapse:collapse;font-size:13px}
-.vs-table thead tr{background:var(--s2);border-bottom:2px solid var(--bd)}
+.vs-table thead tr{background:var(--s2)}
 .vs-table th{padding:14px 18px;font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);border-bottom:2px solid var(--bd)}
 .vs-table th:first-child{text-align:left}
 .vs-table th:nth-child(2){text-align:left;color:var(--r);background:rgba(220,38,38,.04)}
-.vs-table th.vs-hl{background:var(--b3);color:var(--b)!important;border-bottom-color:var(--b);text-align:center}
-.vs-table td{padding:11px 18px;border-bottom:1px solid var(--bd);color:var(--t2);font-size:13px}
+.vs-table th.vs-hl{background:linear-gradient(135deg,var(--b3),rgba(37,99,235,.08));color:var(--b)!important;border-bottom:2px solid var(--b);text-align:center}
+.vs-table td{padding:12px 18px;border-bottom:1px solid var(--bd);color:var(--t2);font-size:13px}
 .vs-table td:first-child{font-weight:600;color:var(--t)}
-.vs-table td:nth-child(2){color:var(--t3);font-family:var(--fm);font-size:11px;background:rgba(220,38,38,.02)}
-.vs-table td.vs-hl{background:rgba(26,86,196,.04);text-align:center;font-weight:700;color:var(--g)}
+.vs-table td:nth-child(2){color:var(--r);font-family:var(--fm);font-size:11px;background:rgba(220,38,38,.02)}
+.vs-table td.vs-hl{background:rgba(26,86,196,.03);text-align:center;font-weight:700;color:var(--g);border-left:2px solid rgba(26,86,196,.15);border-right:2px solid rgba(26,86,196,.15)}
 .vs-table tr:last-child td{border-bottom:none}
 .vs-table tr:hover td:not([colspan]){background:var(--s2)}
 .vs-table tr:hover td.vs-hl:not([colspan]){background:var(--b3)}
-.vs-bottom{text-align:center;margin-top:20px;font-size:14px;color:var(--t2)}
-.vs-bottom strong{color:var(--b)}
+/* price tag on competitor col */
+.vs-price{font-size:10px;color:var(--r);font-family:var(--fm);font-weight:700;background:rgba(220,38,38,.08);padding:1px 6px;border-radius:4px;margin-left:4px}
+/* bottom banner */
+.vs-bottom-banner{
+  margin-top:24px;background:linear-gradient(135deg,var(--b3),rgba(37,99,235,.06));
+  border:1px solid rgba(26,86,196,.18);border-radius:14px;
+  padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.vs-bottom-left{font-size:15px;font-weight:700;color:var(--t);letter-spacing:-.2px}
+.vs-bottom-left span{color:var(--b)}
+.vs-bottom-right{font-size:13px;color:var(--t2)}
+.vs-bottom-right strong{color:var(--g)}
 
 /* ─── WHITELIST ─── */
 @keyframes wlFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
