@@ -1440,13 +1440,126 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   </div>
 </div>
 
-<!-- ═══ FINAL CTA ═══ -->
-<div class="cta-section" id="register">
-  <h2>Inizia ad investire meglio,<br>oggi. Gratis.</h2>
-  <p>Unisciti agli investitori che usano FinEdge per prendere decisioni più informate ogni giorno.</p>
-  <a href="#" class="cta-btn" onclick="scrollToForm();return false">Crea il tuo account gratuito →</a>
-  <div class="cta-note">Nessuna carta · Nessun abbonamento · Pronto in 30 secondi</div>
-</div>
+<!-- ═══ AUTH SECTION ═══ -->
+<section class="auth-section" id="register">
+  <div class="auth-section-inner">
+
+    <!-- LEFT: value props -->
+    <div>
+      <div class="auth-section-tag">Accesso gratuito</div>
+      <h2 class="auth-section-title">Crea il tuo account.<br><span>Gratis, per sempre.</span></h2>
+      <div class="auth-reasons">
+        <div class="auth-reason">
+          <div class="auth-reason-icon">📊</div>
+          <div>
+            <div class="auth-reason-title">Dashboard live istantanea</div>
+            <div class="auth-reason-desc">S&amp;P 500, VIX, crypto e i tuoi titoli — aggiornati ogni 60 secondi</div>
+          </div>
+        </div>
+        <div class="auth-reason">
+          <div class="auth-reason-icon">⭐</div>
+          <div>
+            <div class="auth-reason-title">FinEdge Score proprietario</div>
+            <div class="auth-reason-desc">Un numero da 0 a 100 su ogni titolo. Nessuna opinione — solo dati ponderati</div>
+          </div>
+        </div>
+        <div class="auth-reason">
+          <div class="auth-reason-icon">💼</div>
+          <div>
+            <div class="auth-reason-title">Portafoglio P&amp;L live</div>
+            <div class="auth-reason-desc">Carica i tuoi titoli, guarda in tempo reale quanto stai guadagnando</div>
+          </div>
+        </div>
+        <div class="auth-reason">
+          <div class="auth-reason-icon">🔍</div>
+          <div>
+            <div class="auth-reason-title">Screener con 600+ titoli</div>
+            <div class="auth-reason-desc">Filtra per Score, settore, cap. Più ricerca globale su qualsiasi mercato</div>
+          </div>
+        </div>
+      </div>
+      <div class="auth-social-proof" id="user-count-text">Registrazione gratuita · Zero costi</div>
+    </div>
+
+    <!-- RIGHT: auth form -->
+    <div>
+      <!-- logged-in banner -->
+      <div id="logged-card" style="display:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:12px 16px;margin-bottom:16px;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <span id="logged-msg" style="color:rgba(255,255,255,.9);font-size:13px;font-weight:600;font-family:var(--ff)">Bentornato!</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <a href="./index.html" style="font-size:12px;font-weight:600;color:#fff;background:rgba(255,255,255,.2);border-radius:7px;padding:5px 12px;text-decoration:none;font-family:var(--ff)">Apri Dashboard →</a>
+          <button onclick="logout()" style="background:none;border:none;color:rgba(255,255,255,.45);font-size:11px;cursor:pointer;font-family:var(--ff);padding:4px">Esci</button>
+        </div>
+      </div>
+      <!-- auth card -->
+      <div id="auth-card" class="auth-card">
+        <div id="lp-card-title" class="auth-card-title">Inizia gratuitamente</div>
+        <div id="lp-card-sub" class="auth-card-sub">Zero costi · Nessuna carta richiesta</div>
+
+        <!-- VIEW 1: Login / Register -->
+        <div id="lp-main-view">
+          <div class="auth-tabs">
+            <button class="auth-tab" onclick="switchTab('login',this)">Accedi</button>
+            <button class="auth-tab active" onclick="switchTab('register',this)">Registrati</button>
+          </div>
+          <div class="auth-err" id="auth-err"></div>
+          <div class="auth-ok" id="auth-ok"></div>
+          <div class="auth-field" id="name-field-lp">
+            <label>Nome</label>
+            <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+          </div>
+          <div class="auth-field">
+            <label>Email</label>
+            <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
+          </div>
+          <div class="auth-field">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
+              <label style="margin-bottom:0;font-size:10px;color:rgba(255,255,255,.5);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase">Password</label>
+              <button class="forgot-link-lp" id="lp-forgot-link" onclick="showLpView('forgot')" style="display:none">Password dimenticata?</button>
+            </div>
+            <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
+              onkeydown="if(event.key==='Enter')submitAuth()"/>
+          </div>
+          <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Crea account gratuito</button>
+          <p style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;line-height:1.5">
+            Continuando accetti la <a href="./privacy.html" target="_blank" style="color:rgba(255,255,255,.55)">Privacy Policy</a>. Conforme GDPR.
+          </p>
+        </div>
+
+        <!-- VIEW 2: Forgot Password -->
+        <div id="lp-forgot-view" style="display:none">
+          <div class="auth-err" id="lp-fp-err"></div>
+          <div class="auth-ok" id="lp-fp-ok"></div>
+          <div class="auth-field">
+            <label>Email del tuo account</label>
+            <input type="email" id="lp-fp-email" placeholder="la-tua@email.com" autocomplete="email"/>
+          </div>
+          <button class="auth-submit" id="lp-fp-submit" onclick="submitLpForgot()">Invia codice di reset</button>
+          <button class="auth-back-btn-lp" onclick="showLpView('main')">← Torna al login</button>
+        </div>
+
+        <!-- VIEW 3: Reset Password -->
+        <div id="lp-reset-view" style="display:none">
+          <div class="auth-err" id="lp-rp-err"></div>
+          <div class="auth-ok" id="lp-rp-ok"></div>
+          <input type="hidden" id="lp-rp-email"/>
+          <div class="auth-field">
+            <label>Codice di reset (6 cifre)</label>
+            <input class="fp-code-inp-lp" type="text" id="lp-rp-code" maxlength="6" inputmode="numeric"
+              placeholder="000000" autocomplete="one-time-code"/>
+          </div>
+          <div class="auth-field">
+            <label>Nuova password</label>
+            <input type="password" id="lp-rp-pwd" placeholder="Minimo 8 caratteri"/>
+          </div>
+          <button class="auth-submit" id="lp-rp-submit" onclick="submitLpReset()">Aggiorna password</button>
+          <button class="auth-back-btn-lp" onclick="showLpView('forgot')">← Torna indietro</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 <!-- ═══ WHITELIST ═══ -->
 <section class="wl-section">
