@@ -327,97 +327,81 @@ nav{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;
 .score-pt-val{font-family:var(--fm);font-size:18px;font-weight:700;color:#60A5FA}
 .score-pt-up{font-family:var(--fm);font-size:12px;color:#34D399}
 
-/* ─── HOW IT WORKS — Journey ─── */
-.how-journey{
-  position:relative;
-  max-width:680px;margin:0 auto;
-  padding:4px 0 0}
-/* gradient path line */
-.how-journey::before{
-  content:'';
-  position:absolute;left:27px;top:28px;bottom:70px;width:2px;
-  background:linear-gradient(180deg,#1448A8 0%,#3B82F6 45%,#059669 85%,rgba(5,150,105,0) 100%);
-  border-radius:2px;z-index:0}
-/* step row */
-.how-step{
-  display:flex;gap:28px;align-items:flex-start;
-  position:relative;z-index:1}
-/* node */
-.how-node{flex-shrink:0;width:56px;display:flex;justify-content:center}
-.how-node-circle{
-  width:56px;height:56px;border-radius:50%;
+/* ─── HOW IT WORKS — Horizontal Track ─── */
+.how-track{
+  display:flex;align-items:center;gap:0;
+  max-width:980px;margin:0 auto}
+/* step card */
+.how-track-step{
+  flex:1;background:var(--card);border:1px solid var(--bd);border-radius:20px;
+  overflow:hidden;position:relative;
+  transition:transform .22s,box-shadow .22s;cursor:default;align-self:stretch}
+.how-track-step:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(26,86,196,.1)}
+.how-track-bar{height:4px;width:100%}
+.how-track-body{padding:28px 22px 26px;text-align:center}
+.how-track-bgnum{
+  position:absolute;bottom:-10px;right:8px;
+  font-size:76px;font-weight:900;font-family:var(--fm);
+  line-height:1;pointer-events:none;user-select:none;letter-spacing:-3px}
+.how-track-num{
+  width:52px;height:52px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   font-family:var(--fm);font-size:20px;font-weight:900;color:#fff;
-  position:relative;z-index:2;flex-shrink:0}
-/* step card */
-.how-step-card{
-  flex:1;background:var(--card);border:1px solid var(--bd);border-radius:20px;
-  padding:26px;position:relative;overflow:hidden;
-  transition:transform .22s,box-shadow .22s;cursor:default;
-  margin-bottom:0}
-.how-step-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(26,86,196,.1)}
-.how-step-bgnum{
-  position:absolute;top:-8px;right:12px;
-  font-size:88px;font-weight:900;font-family:var(--fm);
-  line-height:1;pointer-events:none;user-select:none;letter-spacing:-3px}
-.how-step-icon{font-size:30px;margin-bottom:14px;display:block;position:relative;z-index:1}
-.how-step-tag{
-  font-family:var(--fm);font-size:10px;text-transform:uppercase;
-  letter-spacing:1.5px;font-weight:700;margin-bottom:7px;position:relative;z-index:1}
-.how-step-card h3{
-  font-size:17px;font-weight:800;color:var(--t);
-  letter-spacing:-.4px;margin-bottom:10px;position:relative;z-index:1}
-.how-step-card p{
-  font-size:13.5px;color:var(--t2);line-height:1.72;
+  margin:0 auto 16px;position:relative;z-index:1}
+.how-track-icon{font-size:26px;margin-bottom:12px;display:block;position:relative;z-index:1}
+.how-track-label{
+  font-family:var(--fm);font-size:9px;text-transform:uppercase;
+  letter-spacing:1.8px;font-weight:700;margin-bottom:7px;position:relative;z-index:1}
+.how-track-step h3{
+  font-size:16px;font-weight:800;color:var(--t);letter-spacing:-.3px;
+  margin-bottom:9px;position:relative;z-index:1}
+.how-track-step p{
+  font-size:12.5px;color:var(--t2);line-height:1.68;
   margin-bottom:16px;position:relative;z-index:1}
-/* chip */
-.how-chip{
-  display:inline-flex;align-items:center;gap:7px;
+.how-track-chip{
+  display:inline-flex;align-items:center;gap:6px;
   background:var(--s2);border:1px solid var(--bd);border-radius:100px;
-  font-size:11px;font-weight:600;color:var(--t2);padding:5px 14px;
+  font-size:10.5px;font-weight:600;color:var(--t2);padding:5px 13px;
   font-family:var(--fm);position:relative;z-index:1}
-.how-chip-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.how-step-meta{
-  font-family:var(--fm);font-size:11px;color:var(--t3);
-  margin-top:14px;display:flex;align-items:center;gap:5px;
-  position:relative;z-index:1}
-/* connector between steps */
-.how-connector{
-  display:flex;gap:28px;align-items:center;
-  padding:10px 0;position:relative;z-index:1}
-.how-connector-col{
-  width:56px;flex-shrink:0;display:flex;justify-content:center}
-.how-connector-dot{
-  width:10px;height:10px;border-radius:50%;
-  background:var(--bd);border:2px solid var(--s2);
-  position:relative;z-index:2}
-.how-connector-label{
-  font-family:var(--fm);font-size:10px;font-weight:700;
-  text-transform:uppercase;letter-spacing:1.5px;color:var(--t3);
-  display:flex;align-items:center;gap:10px}
-.how-connector-label::after{
-  content:'';flex:1;height:1px;min-width:48px;
-  background:repeating-linear-gradient(90deg,var(--bd) 0,var(--bd) 4px,transparent 4px,transparent 9px)}
-/* destination */
-.how-destination{
-  display:flex;gap:28px;align-items:center;
-  position:relative;z-index:1;padding-top:6px}
-.how-destination-circle{
-  width:56px;height:56px;border-radius:50%;flex-shrink:0;
-  background:linear-gradient(135deg,#059669,#34D399);
-  display:flex;align-items:center;justify-content:center;font-size:22px;
-  box-shadow:0 0 0 3px var(--s2),0 0 22px rgba(5,150,105,.35)}
-.how-destination-label{font-size:14px;font-weight:800;color:#34D399;letter-spacing:-.3px}
-.how-destination-sub{font-size:12px;color:var(--t3);margin-top:3px}
-@media(max-width:640px){
-  .how-journey::before{left:21px;top:22px}
-  .how-node{width:44px}
-  .how-node-circle{width:44px;height:44px;font-size:16px}
-  .how-step,.how-connector,.how-destination{gap:18px}
-  .how-connector-col{width:44px}
-  .how-destination-circle{width:44px;height:44px;font-size:18px}
-  .how-step-card{padding:20px}
-  .how-step-bgnum{font-size:64px}
+.how-track-chip-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.how-track-time{
+  font-family:var(--fm);font-size:10px;color:var(--t3);
+  margin-top:10px;position:relative;z-index:1}
+/* arrow connector */
+.how-track-arrow{
+  flex-shrink:0;width:68px;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:0 4px}
+.how-track-arrow-head{
+  display:flex;align-items:center;gap:0;width:100%}
+.how-track-arrow-tail{
+  flex:1;height:2px;
+  background:repeating-linear-gradient(90deg,rgba(96,165,250,.4) 0,rgba(96,165,250,.4) 5px,transparent 5px,transparent 10px)}
+.how-track-arrow-tip{
+  width:0;height:0;flex-shrink:0;
+  border-top:5px solid transparent;
+  border-bottom:5px solid transparent;
+  border-left:8px solid rgba(96,165,250,.5)}
+.how-track-arrow-word{
+  font-family:var(--fm);font-size:9px;text-transform:uppercase;
+  letter-spacing:1.5px;color:var(--t3);font-weight:700}
+/* responsive */
+@media(max-width:860px){
+  .how-track{flex-direction:column;gap:0;max-width:460px}
+  .how-track-step{align-self:auto}
+  .how-track-arrow{width:100%;height:48px;flex-direction:row;
+    padding:0 20px;justify-content:flex-start;gap:8px}
+  .how-track-arrow-head{flex-direction:column;width:auto}
+  .how-track-arrow-tail{
+    width:2px;height:22px;
+    background:repeating-linear-gradient(180deg,rgba(96,165,250,.4) 0,rgba(96,165,250,.4) 5px,transparent 5px,transparent 10px)}
+  .how-track-arrow-tip{
+    border-left:5px solid transparent;border-right:5px solid transparent;
+    border-top:8px solid rgba(96,165,250,.5);border-bottom:none}
+}
+@media(max-width:520px){
+  .how-track-body{padding:22px 16px 20px}
+  .how-track-step h3{font-size:15px}
 }
 
 /* ─── COMPARISON TABLE ─── */
