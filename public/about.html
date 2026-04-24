@@ -986,6 +986,24 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   .datasrc-grid{grid-template-columns:repeat(2,1fr)}
   .preview-frame{max-width:100%}
 }
+/* ─── FINAL RESPONSIVE OVERRIDES (must come last — base styles are defined late) ─── */
+@media(max-width:1100px){
+  .testi-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:900px){
+  .testi-grid{grid-template-columns:1fr}
+  .pricing-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:600px){
+  .pricing-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto}
+  .pricing-card.featured{order:-1}
+  .testi-grid{grid-template-columns:1fr}
+  .datasrc-grid{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:390px){
+  .pricing-grid{max-width:100%}
+  .datasrc-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
