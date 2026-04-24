@@ -540,18 +540,28 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   .score-section{padding:48px 14px}
   .score-card{padding:18px 14px}
   .score-big{font-size:42px}
+  .score-grid{grid-template-columns:repeat(3,1fr)}
   .steps{gap:20px}
   .step{padding:0}
   .trust-bar{padding:12px 16px;gap:0;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;justify-content:flex-start}
   .trust-item{flex-shrink:0;padding:4px 16px;border-right:1px solid rgba(255,255,255,.07);font-size:11px}
   .story-inner{padding:40px 14px}
+  blockquote{font-size:14px;padding-left:16px}
   .testimonials-section{padding:40px 14px}
   .pricing-section{padding:40px 14px}
+  .pricing-grid{grid-template-columns:1fr;max-width:400px;margin-left:auto;margin-right:auto}
+  .pricing-card.featured{order:-1}
+  .auth-section{padding:56px 16px}
   .cta-section{padding:48px 14px;text-align:center}
   .cta-section h2{font-size:clamp(22px,6.5vw,32px)}
   .comp-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .comp-tbl{min-width:480px}
   .pricing-tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .vs-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .vs-table{min-width:480px}
+  .vs-pills{gap:6px}
+  .vs-pill{font-size:11px;padding:5px 10px}
+  .vs-bottom-banner{flex-direction:column;align-items:flex-start;gap:8px;padding:16px 18px}
   footer{padding:20px 14px}
   footer>div:first-child>div:last-child{flex-direction:column;gap:16px}
   footer>div:last-child{flex-direction:column;gap:4px}
@@ -565,6 +575,10 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   .section{padding:36px 12px}
   .section-title{font-size:21px}
   .cta-section h2{font-size:21px}
+  .score-grid{grid-template-columns:repeat(2,1fr)}
+  .pricing-grid{max-width:100%}
+  .datasrc-grid{grid-template-columns:1fr}
+  .trust-item{font-size:10px;padding:4px 10px}
 }
 
 /* ─── SCROLL REVEAL ─── */
