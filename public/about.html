@@ -1418,56 +1418,99 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 
 <!-- ═══ COME FUNZIONA ═══ -->
 <div class="section" id="come-funziona">
-  <div style="text-align:center;max-width:600px;margin:0 auto 52px" class="reveal">
+
+  <div style="text-align:center;max-width:600px;margin:0 auto 16px" class="reveal">
     <div class="section-tag" style="justify-content:center;display:flex">Come funziona</div>
-    <div class="section-title">Operativo in 3 minuti</div>
-    <div class="section-sub" style="margin:0 auto">Nessuna configurazione, nessuna carta di credito. Registrati e hai subito accesso a tutti gli strumenti.</div>
+    <div class="section-title">Il tuo percorso,<br>passo dopo passo</div>
+    <div class="section-sub" style="margin:0 auto">Nessuna configurazione, nessuna carta. In tre passaggi sei operativo con tutti gli strumenti.</div>
   </div>
-  <div class="steps">
 
-    <!-- STEP 1 -->
-    <div class="step reveal reveal-delay-1">
-      <div class="step-header">
-        <div class="step-num s1">1</div>
-        <div class="step-tag">30 secondi</div>
+  <!-- progress breadcrumb -->
+  <div class="how-progress reveal">
+    <div class="how-progress-step">
+      <div class="how-progress-bubble" style="background:var(--b)">1</div>
+      <div class="how-progress-label" style="color:var(--b)">Registrati</div>
+    </div>
+    <div class="how-progress-connector"></div>
+    <div class="how-progress-step">
+      <div class="how-progress-bubble" style="background:var(--b4)">2</div>
+      <div class="how-progress-label" style="color:var(--b4)">Personalizza</div>
+    </div>
+    <div class="how-progress-connector" style="background:linear-gradient(90deg,var(--b4),var(--g))"></div>
+    <div class="how-progress-step">
+      <div class="how-progress-bubble" style="background:var(--g)">3</div>
+      <div class="how-progress-label" style="color:var(--g)">Analizza</div>
+    </div>
+  </div>
+
+  <!-- flow -->
+  <div class="how-flow reveal">
+
+    <!-- ── STEP 1 ── -->
+    <div class="how-card">
+      <div class="how-card-top" style="background:linear-gradient(90deg,#1448A8,#2563EB)"></div>
+      <div class="how-card-body">
+        <div class="how-card-bgnum" style="color:rgba(20,72,168,.05)">01</div>
+        <div class="how-icon-wrap" style="background:#EFF6FF">🔐</div>
+        <div class="how-step-tag">Passo 1 · 30 secondi</div>
+        <h3>Registrati gratuitamente</h3>
+        <p>Email e password — nessun form lungo, nessuna carta richiesta. Sei dentro in meno di un minuto, da qualsiasi dispositivo.</p>
+        <div class="how-preview">
+          <div class="how-preview-dot" style="background:var(--g)"></div>
+          <span>email + password → <strong style="color:var(--t)">Account attivo</strong></span>
+        </div>
+        <div class="how-time">⏱ Tempo medio: 28 secondi</div>
       </div>
-      <h3>Registrati gratuitamente</h3>
-      <p>Email e password — nessun form lungo, nessuna carta richiesta. Sei dentro in meno di un minuto e puoi accedere da qualsiasi dispositivo.</p>
-      <div class="step-preview">
-        <div class="step-preview-dot" style="background:var(--g)"></div>
-        <span>email · password → <strong style="color:var(--t)">Account attivo</strong></span>
-      </div>
-      <div class="step-time">⏱ Tempo medio: 28 secondi</div>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="step reveal reveal-delay-2">
-      <div class="step-header">
-        <div class="step-num s2">2</div>
-        <div class="step-tag">Prima sessione</div>
+    <!-- connettore 1→2 -->
+    <div class="how-arrow">
+      <div class="how-arrow-body">
+        <div class="how-arrow-poi">poi</div>
+        <div class="how-arrow-icon">→</div>
       </div>
-      <h3>Aggiungi i titoli che segui</h3>
-      <p>Lo screener ha 600+ titoli pre-caricati. Aggiungili alla watchlist o al portafoglio in un click. Puoi anche cercare qualsiasi titolo globale tramite Yahoo Finance.</p>
-      <div class="step-preview">
-        <div class="step-preview-dot" style="background:var(--b)"></div>
-        <span><strong style="color:var(--t)">+ NVDA</strong> &nbsp;·&nbsp; <strong style="color:var(--t)">+ AAPL</strong> &nbsp;·&nbsp; <strong style="color:var(--t)">+ MSFT</strong> → Portafoglio</span>
-      </div>
-      <div class="step-time">⏱ Tempo medio: 2 minuti</div>
     </div>
 
-    <!-- STEP 3 -->
-    <div class="step reveal reveal-delay-3">
-      <div class="step-header">
-        <div class="step-num s3">3</div>
-        <div class="step-tag">Ogni mattina</div>
+    <!-- ── STEP 2 ── -->
+    <div class="how-card">
+      <div class="how-card-top" style="background:linear-gradient(90deg,#2563EB,#3B82F6)"></div>
+      <div class="how-card-body">
+        <div class="how-card-bgnum" style="color:rgba(37,99,235,.05)">02</div>
+        <div class="how-icon-wrap" style="background:#EEF2FF">📊</div>
+        <div class="how-step-tag">Passo 2 · Prima sessione</div>
+        <h3>Aggiungi i titoli che segui</h3>
+        <p>600+ titoli pre-caricati nello screener. Aggiungili alla watchlist o al portafoglio in un click. Oppure cerca qualsiasi mercato globale.</p>
+        <div class="how-preview">
+          <div class="how-preview-dot" style="background:var(--b)"></div>
+          <span><strong style="color:var(--t)">+ NVDA</strong> &nbsp;·&nbsp; <strong style="color:var(--t)">+ AAPL</strong> &nbsp;·&nbsp; <strong style="color:var(--t)">+ MSFT</strong> → Portafoglio</span>
+        </div>
+        <div class="how-time">⏱ Tempo medio: 2 minuti</div>
       </div>
-      <h3>Analizza con metodo, ogni giorno</h3>
-      <p>Score, Price Target, Insider Transactions, Earnings Calendar — tutto aggiornato ogni 60 secondi. Una schermata, tutte le risposte. Niente più tab aperte.</p>
-      <div class="step-preview">
-        <div class="step-preview-dot" style="background:var(--g)"></div>
-        <span>NVDA &nbsp;·&nbsp; Score <strong style="color:var(--g)">74</strong> &nbsp;·&nbsp; Target <strong style="color:var(--t)">$148</strong> &nbsp;·&nbsp; <strong style="color:var(--g)">Ottimo</strong></span>
+    </div>
+
+    <!-- connettore 2→3 -->
+    <div class="how-arrow">
+      <div class="how-arrow-body">
+        <div class="how-arrow-poi">infine</div>
+        <div class="how-arrow-icon">→</div>
       </div>
-      <div class="step-time">⏱ Aggiornato ogni 60s</div>
+    </div>
+
+    <!-- ── STEP 3 ── -->
+    <div class="how-card">
+      <div class="how-card-top" style="background:linear-gradient(90deg,#059669,#34D399)"></div>
+      <div class="how-card-body">
+        <div class="how-card-bgnum" style="color:rgba(5,150,105,.05)">03</div>
+        <div class="how-icon-wrap" style="background:#ECFDF5">⭐</div>
+        <div class="how-step-tag">Passo 3 · Ogni mattina</div>
+        <h3>Analizza con metodo, ogni giorno</h3>
+        <p>Score, Price Target, Insider, Earnings Calendar — tutto aggiornato ogni 60 secondi. Una schermata, tutte le risposte. Niente più tab aperte.</p>
+        <div class="how-preview">
+          <div class="how-preview-dot" style="background:var(--g)"></div>
+          <span>NVDA · Score <strong style="color:var(--g)">74</strong> · Target <strong style="color:var(--t)">$148</strong> · <strong style="color:var(--g)">Ottimo</strong></span>
+        </div>
+        <div class="how-time">⏱ Aggiornato ogni 60 secondi</div>
+      </div>
     </div>
 
   </div>
