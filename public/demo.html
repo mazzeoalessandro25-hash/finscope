@@ -331,6 +331,23 @@ body.embed-mode .caption-wrap,
 body.embed-mode .controls,
 body.embed-mode .orb{display:none!important}
 body.embed-mode .browser-wrap{width:1100px!important;margin:0!important;transform:none!important}
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  html,body{overflow-y:auto;overflow-x:hidden;height:auto}
+  .browser-wrap{width:96vw}
+  .browser-body{height:420px}
+  .page-nav{padding:12px 16px 8px;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+  .controls{width:min(500px,90vw)}
+  .caption-wrap{margin-top:8px}
+}
+@media(max-width:480px){
+  .browser-body{height:360px}
+  .caption-title{font-size:13px}
+  .caption-sub{font-size:11px}
+  .ctrl-btn{width:30px;height:30px;font-size:12px}
+  .ctrl-btn.play{width:36px;height:36px}
+}
 </style>
 </head>
 <body>
