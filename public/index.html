@@ -1381,8 +1381,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .vix-num{font-size:36px}
   .fng-score{font-size:22px}
   .hm-tree{font-size:8px}
-  /* Chart heights: risparmia spazio verticale */
-  #dashChart1,#dashChart2{height:220px}
+  /* Chart heights: sovrascrive l'attributo inline height:300px */
+  #dashChart1,#dashChart2{height:220px!important}
+  /* Chart card header: impila titolo e controlli verticalmente su mobile
+     (senza questo, justify-content:space-between crea un gap enorme tra
+      "S&P 500" a sinistra e i controlli a destra sulla stessa riga) */
+  .dash-charts .card .ch{flex-direction:column;align-items:stretch;gap:8px}
+  .dash-charts .card .ch > .cc-row{width:100%;min-width:0}
+  /* Clip qualsiasi overflow dentro le card dei grafici */
+  .dash-charts .card{overflow:hidden}
   /* Chart controls: limita larghezza sym-sel */
   .sym-sel{max-width:130px;font-size:12px!important}
   .chart-type-btn{font-size:11px}
