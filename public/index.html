@@ -6362,12 +6362,16 @@ async function submitResetPw(){
 
 function updateNavUser(){
   const area=document.getElementById('nav-user-area');
+  const mob=document.getElementById('mob-user-area');
   if(currentUser){
     const display=currentUser.name||currentUser.email;
     area.innerHTML=`<span class="nav-user-email">${_t('nav.hello')} ${display}</span>
       <button class="nav-logout-btn" onclick="logout()">${_t('nav.logout')}</button>`;
+    if(mob)mob.innerHTML=`<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;font-family:var(--fm)">${display}</div>
+      <button onclick="logout();closeMobileNav()" style="width:100%;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#F87171;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer">Esci</button>`;
   } else {
     area.innerHTML=`<button class="nav-login-btn" onclick="openAuthModal()">${_t('nav.login')}</button>`;
+    if(mob)mob.innerHTML=`<button onclick="openAuthModal();closeMobileNav()" style="width:100%;background:var(--b4);color:#fff;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer;border:none">Accedi</button>`;
   }
 }
 
