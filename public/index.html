@@ -102,7 +102,7 @@ nav{height:54px;background:var(--b2);
 .up{color:#059669}.down{color:#DC2626}
 
 /* PAGES */
-.page{display:none;padding:18px 28px 20px;margin-top:126px;flex:1}
+.page{display:none;padding:18px 28px 20px;margin-top:calc(126px + env(safe-area-inset-top,0px));flex:1}
 .page.active{display:block}
 .pg-title{font-size:20px;font-weight:700;letter-spacing:-.4px;margin-bottom:3px}
 .pg-sub{font-size:13px;color:var(--t2);margin-bottom:18px}
