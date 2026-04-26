@@ -128,8 +128,11 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   .wrap{padding:32px 16px 56px}
   .card{padding:22px 20px}
   .provider-grid,.rights-grid{grid-template-columns:1fr}
-  footer{padding:20px;flex-direction:column;align-items:flex-start;gap:16px}
+  footer{padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));flex-direction:column;align-items:flex-start;gap:16px}
   .foot-links{flex-direction:column;gap:10px}
+}
+@supports(padding:env(safe-area-inset-bottom)){
+  footer{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
 }
 </style>
 </head>
