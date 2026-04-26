@@ -4287,15 +4287,12 @@ function showPage(id,btn){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.mob-nav-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.mob-bnav-btn').forEach(b=>b.classList.remove('active'));
   const pageEl=document.getElementById('page-'+id);
   if(!pageEl)return;
   pageEl.classList.add('active');
   if(btn)btn.classList.add('active');
   const mobBtn=document.getElementById('mob-nb-'+id);
   if(mobBtn)mobBtn.classList.add('active');
-  const bnnBtn=document.getElementById('bnn-'+id);
-  if(bnnBtn)bnnBtn.classList.add('active');
   if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati');
   if(id==='screener'&&dynamicStocks.length===0)loadScreener();
   if(id==='screener'){updateScQuickCounts&&updateScQuickCounts();}
