@@ -2042,6 +2042,25 @@ html.dark .mob-bottom-nav{background:#0f1e35;border-top-color:rgba(255,255,255,.
 </div>
 </div>
 
+<!-- MOBILE BOTTOM NAV BAR — fuori da site-header per evitare bug iOS -->
+<nav class="mob-bottom-nav" id="mob-bottom-nav" aria-label="Navigazione principale">
+  <button class="mob-bnav-btn active" id="bnn-dashboard" onclick="showPage('dashboard',document.getElementById('nb-dashboard'))">
+    <span class="mob-bnav-icon">📊</span>Dashboard
+  </button>
+  <button class="mob-bnav-btn" id="bnn-screener" onclick="showPage('screener',document.getElementById('nb-screener'))">
+    <span class="mob-bnav-icon">🔍</span>Screener
+  </button>
+  <button class="mob-bnav-btn" id="bnn-portafoglio" onclick="showPage('portafoglio',document.getElementById('nb-portafoglio'))">
+    <span class="mob-bnav-icon">💼</span>Portfolio
+  </button>
+  <button class="mob-bnav-btn" id="bnn-news" onclick="showPage('news',document.getElementById('nb-news'))">
+    <span class="mob-bnav-icon">📰</span>News
+  </button>
+  <button class="mob-bnav-btn" id="bnn-macro" onclick="showPage('macro',document.getElementById('nb-macro'))">
+    <span class="mob-bnav-icon">🌐</span>Macro
+  </button>
+</nav>
+
 <!-- ═══ DASHBOARD ═══ -->
 <div class="page active" id="page-dashboard">
   <div class="pg-title">Dashboard</div>
