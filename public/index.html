@@ -1351,73 +1351,107 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .cry-signal-text{color:var(--t2);flex:1}
 .cry-signal-text strong{color:var(--t)}
 
-/* ═══ MOBILE BOTTOM NAV ═══ */
-.mob-bottom-nav{
-  display:none;
-  position:fixed;
-  bottom:0;left:0;right:0;
-  z-index:450;
-  background:var(--b2);
-  border-top:1px solid rgba(255,255,255,.12);
-  padding-bottom:env(safe-area-inset-bottom,0px);
-  flex-direction:row;
-  align-items:stretch;
-}
-html.dark .mob-bottom-nav{background:#0f1e35;border-top-color:rgba(255,255,255,.08)}
-.mob-bnav-btn{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2px;background:none;border:none;
-  color:rgba(255,255,255,.45);
-  font-size:9.5px;font-family:var(--ff);font-weight:600;letter-spacing:.1px;
-  cursor:pointer;padding:8px 2px 10px;
-  transition:color .15s,background .15s;
-  -webkit-tap-highlight-color:transparent;
-  min-height:52px;
-}
-.mob-bnav-btn.active{color:#fff}
-.mob-bnav-btn:active{background:rgba(255,255,255,.08)}
-.mob-bnav-icon{font-size:19px;line-height:1;display:block}
-
-/* ═══ FIX MOBILE ≤ 640px ═══ */
+/* ═══ OTTIMIZZAZIONE MOBILE ≤ 640px ═══ */
 @media(max-width:640px){
-  /* Prevenzione zoom iOS: tutti gli input/select devono essere ≥16px */
+  /* iOS: previeni zoom automatico sugli input */
   input,select,textarea{font-size:16px!important}
-  /* Mostra bottom nav */
-  .mob-bottom-nav{display:flex}
-  /* Spazio extra in fondo per il bottom nav */
-  .page{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
-  footer{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
-  /* Touch targets minimi 44px */
+
+  /* Touch targets minimi Apple HIG */
   .hamburger{min-height:44px;min-width:44px}
-  .modal-close{width:40px;height:40px;font-size:18px}
+  .modal-close{width:44px;height:44px;font-size:18px}
   .star-btn{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
-  .qa-btn{padding:8px 12px;font-size:12px;min-height:40px}
-  .nav-login-btn{min-height:40px;padding:8px 14px}
-  /* Scroll smooth nelle tabelle */
+  .qa-btn{padding:10px 14px;font-size:13px;min-height:44px}
+
+  /* Scroll orizzontale tabelle */
   .tbl-wrap{-webkit-overflow-scrolling:touch;overflow-x:auto}
-  /* News search in colonna */
-  .news-search-wrap{flex-direction:column;max-width:100%}
-  .news-search-inp,.news-search-btn{width:100%}
-  /* Stock detail: testo più leggibile */
-  .sd-hdr-price{font-size:20px}
-  /* Modal come bottom sheet: uso il flex parent, non position:fixed sul figlio */
+
+  /* Modal come bottom sheet */
   .modal-overlay{align-items:flex-end}
   .modal-box{
-    border-radius:20px 20px 0 0;
-    width:100%;
-    max-width:100%;
-    margin:0;
-    padding:20px 16px;
-    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+    border-radius:20px 20px 0 0;width:100%;max-width:100%;margin:0;
+    padding:20px 16px calc(20px + env(safe-area-inset-bottom,0px));
   }
-  #modal-chart{height:220px}
-  /* VIX più compatto */
-  .vix-num{font-size:40px}
-  /* Tooltip info: riposiziona a destra per non uscire dallo schermo */
-  .info-icon .info-tip{
-    left:auto;right:0;transform:none;
-    max-width:240px;
-  }
+  #modal-chart{height:200px}
+
+  /* ── DASHBOARD ── */
+  .dash-charts{grid-template-columns:1fr!important}
+  .dash-bot{grid-template-columns:1fr!important}
+  .grid3{grid-template-columns:1fr 1fr!important}
+  .grid2{grid-template-columns:1fr!important}
+  .vix-num{font-size:36px}
+  .fng-score{font-size:22px}
+  .hm-tree{font-size:8px}
+
+  /* ── SCREENER ── */
+  .tbl{min-width:600px}
+  .sc-quick-bar{flex-wrap:wrap;gap:8px}
+  .sc-quick-btn{font-size:13px;padding:8px 14px}
+
+  /* ── NEWS ── */
+  .news-search-wrap{flex-direction:column;max-width:100%}
+  .news-search-inp,.news-search-btn{width:100%}
+  .news-featured-grid{grid-template-columns:1fr!important}
+  .news-grid{grid-template-columns:1fr!important}
+  .news-hero{min-height:200px}
+
+  /* ── MACRO ── */
+  .macro-pulse-bar{grid-template-columns:1fr 1fr!important}
+  .macro-row-rates{grid-template-columns:1fr!important}
+  .mac-2col{grid-template-columns:1fr!important}
+  .mac-3col{grid-template-columns:1fr 1fr!important}
+  .mac-stats-strip{grid-template-columns:repeat(3,1fr)!important}
+
+  /* ── PORTAFOGLIO ── */
+  .port-kpi-row{grid-template-columns:1fr 1fr!important}
+  .port-hero{grid-template-columns:1fr 1fr!important}
+  .port-main-layout{grid-template-columns:1fr!important}
+  .port-analysis-2col{grid-template-columns:1fr!important}
+  .port-tabs{gap:0}
+  .port-tab{padding:8px 10px;font-size:11px}
+  .rb{flex-wrap:wrap;gap:4px}
+  .rb-btn{font-size:11px;padding:5px 10px}
+
+  /* ── STOCK DETAIL OVERLAY ── */
+  .sd-hdr-price{font-size:20px}
+  .sd-hdr-sym{font-size:15px}
+  .sd-top{grid-template-columns:1fr!important}
+  .sd-funds{grid-template-columns:1fr 1fr!important}
+  .sd-rec-grid{grid-template-columns:1fr 1fr!important}
+  .sd-body{padding:12px 14px}
+  .sd-header{padding:10px 14px}
+
+  /* ── LAB ── */
+  .sim-l{grid-template-columns:1fr!important}
+  .bt-layout{grid-template-columns:1fr!important}
+  .bt-kpi-grid{grid-template-columns:1fr 1fr!important}
+  .cmp-layout{grid-template-columns:1fr!important}
+  .fa-grid{grid-template-columns:1fr!important}
+  .res-row{grid-template-columns:1fr!important}
+
+  /* ── CARDS GENERICHE ── */
+  .card{padding:14px 12px}
+  .ch{flex-wrap:wrap;gap:8px}
+  .pg-title{font-size:17px}
+  .pg-sub{font-size:12px;margin-bottom:12px}
+
+  /* ── SEZIONI CRYPTO/COMMODITIES ── */
+  .cry-global-strip{grid-template-columns:repeat(3,1fr)!important}
+  .cry-gl-strip{grid-template-columns:1fr!important}
+  .com-grid{grid-template-columns:1fr 1fr!important}
+
+  /* ── CALENDARI / TABELLE ── */
+  .cal-nav{flex-wrap:wrap;gap:6px}
+  .reb-row{grid-template-columns:50px 1fr 55px auto!important;gap:6px}
+  .tax-row{grid-template-columns:1fr auto!important;gap:6px}
+  .bench-label{width:80px}
+
+  /* ── TOOLTIP ── */
+  .info-icon .info-tip{left:auto;right:0;transform:none;max-width:220px}
+  .pa-tip::after{left:auto;right:0;transform:none;min-width:160px;max-width:210px}
+
+  /* ── FOOTER ── */
+  footer{flex-direction:column;text-align:center;padding:16px;gap:12px}
+  footer{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
 }
 </style>
 </head>
