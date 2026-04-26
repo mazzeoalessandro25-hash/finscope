@@ -1433,13 +1433,33 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .rb-btn{font-size:11px;padding:5px 10px}
 
   /* ── STOCK DETAIL OVERLAY ── */
-  .sd-hdr-price{font-size:20px}
+  /* Header: porta i bottoni Portfolio/Alert su seconda riga */
+  .sd-header{padding:8px 12px;flex-wrap:wrap;gap:6px 10px}
+  .sd-header .qa-btn{flex:1;min-width:0;text-align:center;padding:8px 10px;font-size:12px}
+  .sd-hdr-price{font-size:18px}
   .sd-hdr-sym{font-size:15px}
+  .sd-hdr-name{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* Body layout */
+  .sd-body{padding:12px 12px}
   .sd-top{grid-template-columns:1fr!important}
+  /* Chart: sovrascrive inline style="height:300px" */
+  #sd-chart{height:220px!important}
+  /* Sezioni fondamentali */
   .sd-funds{grid-template-columns:1fr 1fr!important}
+  /* Analisti */
   .sd-rec-grid{grid-template-columns:1fr 1fr!important}
-  .sd-body{padding:12px 14px}
-  .sd-header{padding:10px 14px}
+  .sd-rec-labels{font-size:7px}
+  /* ETF: panoramica da 4 a 2 colonne (sovrascrive inline style) */
+  #sd-etf-section .sd-mg{grid-template-columns:1fr 1fr!important}
+  /* ETF: holdings+settori da affiancati a colonna singola */
+  #sd-etf-section > div:not(.sd-section){display:block!important}
+  #sd-etf-section > div:not(.sd-section) > .sd-section{margin-bottom:12px}
+  /* Insider: filtri vanno a capo (la select va sotto) */
+  #sd-insider-section .sd-section-title{flex-direction:column;align-items:flex-start;gap:8px}
+  #sd-insider-section .sd-section-title > div{flex-wrap:wrap;gap:4px}
+  /* Tooltip: previeni overflow sul bordo destro */
+  .sd-info-btn .sd-tip{left:auto;right:0;transform:none;width:min(220px,calc(100vw - 28px))}
+  .sd-tip::after{left:auto;right:10px;transform:none}
 
   /* ── LAB ── */
   .sim-l{grid-template-columns:1fr!important}
