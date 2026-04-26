@@ -1459,6 +1459,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   /* Insider: filtri vanno a capo (la select va sotto) */
   #sd-insider-section .sd-section-title{flex-direction:column;align-items:flex-start;gap:8px}
   #sd-insider-section .sd-section-title > div{flex-wrap:wrap;gap:4px}
+  /* Azienda + News: colonna singola (override inline style="grid-template-columns:1fr 1fr") */
+  #sd-bottom-row{grid-template-columns:1fr!important}
   /* Tooltip: previeni overflow sul bordo destro */
   .sd-info-btn .sd-tip{left:auto;right:0;transform:none;width:min(220px,calc(100vw - 28px))}
   .sd-tip::after{left:auto;right:10px;transform:none}
