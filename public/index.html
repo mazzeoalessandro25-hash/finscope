@@ -1334,6 +1334,79 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .cry-signal-icon{font-size:14px;flex-shrink:0;width:18px}
 .cry-signal-text{color:var(--t2);flex:1}
 .cry-signal-text strong{color:var(--t)}
+
+/* ═══ MOBILE BOTTOM NAV ═══ */
+.mob-bottom-nav{
+  display:none;
+  position:fixed;
+  bottom:0;left:0;right:0;
+  z-index:450;
+  background:var(--b2);
+  border-top:1px solid rgba(255,255,255,.12);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  flex-direction:row;
+  align-items:stretch;
+}
+html.dark .mob-bottom-nav{background:#0f1e35;border-top-color:rgba(255,255,255,.08)}
+.mob-bnav-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;background:none;border:none;
+  color:rgba(255,255,255,.45);
+  font-size:9.5px;font-family:var(--ff);font-weight:600;letter-spacing:.1px;
+  cursor:pointer;padding:8px 2px 10px;
+  transition:color .15s,background .15s;
+  -webkit-tap-highlight-color:transparent;
+  min-height:52px;
+}
+.mob-bnav-btn.active{color:#fff}
+.mob-bnav-btn:active{background:rgba(255,255,255,.08)}
+.mob-bnav-icon{font-size:19px;line-height:1;display:block}
+
+/* ═══ FIX MOBILE ≤ 640px ═══ */
+@media(max-width:640px){
+  /* Prevenzione zoom iOS: tutti gli input/select devono essere ≥16px */
+  input,select,textarea{font-size:16px!important}
+  /* Mostra bottom nav */
+  .mob-bottom-nav{display:flex}
+  /* Spazio extra in fondo per il bottom nav */
+  .page{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+  footer{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+  /* Touch targets minimi 44px */
+  .hamburger{min-height:44px;min-width:44px}
+  .modal-close{width:40px;height:40px;font-size:18px}
+  .star-btn{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center}
+  .qa-btn{padding:8px 12px;font-size:12px;min-height:40px}
+  .nav-login-btn{min-height:40px;padding:8px 14px}
+  /* Scroll smooth nelle tabelle */
+  .tbl-wrap{-webkit-overflow-scrolling:touch;overflow-x:auto}
+  /* News search in colonna */
+  .news-search-wrap{flex-direction:column;max-width:100%}
+  .news-search-inp,.news-search-btn{width:100%}
+  /* Stock detail: testo più leggibile */
+  .sd-hdr-price{font-size:20px}
+  /* Card modal più comoda */
+  .modal-box{
+    position:fixed;
+    inset:auto 0 0 0;
+    border-radius:20px 20px 0 0;
+    width:100%;
+    max-width:100%;
+    margin:0;
+    padding:20px 16px;
+    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+  }
+  #modal-chart{height:220px}
+  /* Screener: filtri in colonna */
+  .sc-f{flex-direction:column;align-items:stretch}
+  .fsel,.finp,.sc-btn{width:100%}
+  /* VIX più compatto */
+  .vix-num{font-size:40px}
+  /* Rimuovi hover per tooltip info → mostrato come testo inline */
+  .info-icon .info-tip{
+    left:auto;right:0;transform:none;
+    max-width:260px;
+  }
+}
 </style>
 </head>
 <body>
