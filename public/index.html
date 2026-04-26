@@ -707,20 +707,21 @@ html:not(.dark) .dm-toggle .dm-moon{opacity:0}
   .sd-header{padding:10px 16px}
   /* Bench */
   .bench-label{width:90px}
-  /* Nav — su mobile: stessa struttura della landing page.
-     Il .site-header wrapper viene bypassato, nav è direttamente position:fixed */
-  .site-header{position:static!important;height:0!important;overflow:visible!important}
-  nav{position:fixed!important;top:0!important;left:0!important;right:0!important;
-      z-index:400!important;height:54px!important;padding:0 16px!important}
-  .mobile-drawer{top:54px}
-  /* Nascondi tutto tranne logo e hamburger */
+  /* Nav mobile: solo logo + hamburger */
   .nav-items{display:none!important}
   .lang-select{display:none!important}
   .dm-toggle{display:none!important}
   nav .nav-right > div{display:none!important}
   .hamburger{display:flex!important;min-width:44px;min-height:44px}
-  /* Pagina inizia sotto il nav */
-  .page{margin-top:54px!important;padding:14px 16px 20px}
+  /* site-header: altezza esatta + padding per status bar iOS (viewport-fit=cover) */
+  .site-header{
+    height:calc(54px + env(safe-area-inset-top,0px))!important;
+    padding-top:env(safe-area-inset-top,0px)!important;
+    overflow:hidden!important;
+  }
+  nav{height:54px!important;padding:0 16px!important;flex-shrink:0!important}
+  .mobile-drawer{top:calc(54px + env(safe-area-inset-top,0px))}
+  .page{margin-top:calc(54px + env(safe-area-inset-top,0px))!important;padding:14px 16px 20px}
 }
 @media(max-width:600px){
   nav{padding:0 14px!important}
