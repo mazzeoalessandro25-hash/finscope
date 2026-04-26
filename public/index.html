@@ -1423,14 +1423,34 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .mac-stats-strip{grid-template-columns:repeat(3,1fr)!important}
 
   /* ── PORTAFOGLIO ── */
+  /* Colonne principali: rimuovi altezza fissa 580px (impilate → 1740px totali) */
+  .port-left,.port-center{height:auto}
+  /* Lista titoli: scrollabile con altezza massima */
+  #port-list{max-height:360px}
+  /* Riepilogo giornata: override inline style="height:580px" */
+  #port-daily-outer{height:auto!important}
+  /* KPI e hero: 2 colonne */
   .port-kpi-row{grid-template-columns:1fr 1fr!important}
+  .port-kpi-bar{grid-template-columns:1fr 1fr!important}
   .port-hero{grid-template-columns:1fr 1fr!important}
+  /* Layout analisi: tutto in colonna singola */
   .port-main-layout{grid-template-columns:1fr!important}
   .port-analysis-2col{grid-template-columns:1fr!important}
-  .port-tabs{gap:0}
-  .port-tab{padding:8px 10px;font-size:11px}
+  /* Griglia metriche posizione e performance: 3 col → 2 col */
+  .port-pos-grid{grid-template-columns:repeat(2,1fr)!important}
+  .port-metrics-grid{grid-template-columns:1fr 1fr!important}
+  /* Tabs: compatta e mantieni scroll touch */
+  .port-tabs{gap:0;-webkit-overflow-scrolling:touch}
+  .port-tab{padding:8px 7px;font-size:10px}
+  /* Range / rebalancing buttons */
   .rb{flex-wrap:wrap;gap:4px}
   .rb-btn{font-size:11px;padding:5px 10px}
+  /* PAC form: override griglie inline (1fr 1fr e 1fr 1fr 1fr → 1 colonna) */
+  #pac-add-form > div[style]{grid-template-columns:1fr!important}
+  /* Matrice correlazioni: scroll orizzontale su mobile */
+  #corr-content{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* Port analysis header: wrap su mobile */
+  .port-analysis-hdr{flex-wrap:wrap}
 
   /* ── STOCK DETAIL OVERLAY ── */
   /* Header: porta i bottoni Portfolio/Alert su seconda riga */
