@@ -1449,6 +1449,14 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .cry-global-strip{grid-template-columns:repeat(3,1fr)!important}
   .cry-gl-strip{grid-template-columns:1fr!important}
   .com-grid{grid-template-columns:1fr 1fr!important}
+  /* Commodities: riduce prezzo e sparkline per stare in 2 colonne */
+  .com-p{font-size:13px!important}
+  .com-spark{padding-left:4px}
+  .com-spark svg{width:54px!important;height:32px!important}
+  /* Crypto: nasconde sparkline centrale su 2 colonne (evita squeeze) */
+  .crypto-item .cry-mid{display:none!important}
+  .cry-r{min-width:50px}
+  .cry-p{font-size:12px}
 
   /* ── CALENDARI / TABELLE ── */
   .cal-nav{flex-wrap:wrap;gap:6px}
