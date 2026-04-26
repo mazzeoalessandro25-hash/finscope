@@ -578,8 +578,15 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   footer>div:last-child{flex-direction:column;gap:4px}
 }
 
+/* iOS zoom fix: input ≥16px */
+@media(max-width:900px){
+  input,select,textarea{font-size:16px!important}
+  /* Hero padding bottom per la mobile-cta-bar */
+  .hero{padding-bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+}
+
 @media(max-width:390px){
-  nav{padding:0 12px}
+  nav{padding:0 10px}
   .hero{padding:78px 12px 40px}
   .hero h1{font-size:26px}
   .auth-card{padding:18px 12px}
