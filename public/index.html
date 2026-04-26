@@ -707,9 +707,11 @@ html:not(.dark) .dm-toggle .dm-moon{opacity:0}
   .sd-header{padding:10px 16px}
   /* Bench */
   .bench-label{width:90px}
-  /* Nav */
-  .nav-items .nav-btn:not(.active){display:none}
+  /* Nav — su mobile la bottom nav gestisce la navigazione, nascondi tutto dal top nav */
+  .nav-items{display:none!important}
   .nav-user-email{display:none}
+  nav{overflow:hidden}
+  .site-header{overflow:hidden}
 }
 @media(max-width:600px){
   nav{padding:0 14px}
