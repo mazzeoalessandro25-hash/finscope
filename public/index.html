@@ -16163,65 +16163,114 @@ function crdQuickAlert(){
 const TUTORIAL_KEY = 'finedge_tutorial_done';
 
 const TUTORIAL_STEPS = [
+  // ── 1. BENVENUTO ────────────────────────────────────────────────
   {
     target: null,
     title: '👋 Benvenuto in FinEdge!',
-    desc: 'In circa 1 minuto ti mostriamo le funzionalità principali. Puoi saltare in qualsiasi momento con il pulsante in alto a destra.',
+    desc: 'Ti guidiamo in 2 minuti attraverso tutte le funzionalità. Puoi saltare o tornare indietro in qualsiasi momento.',
     pos: 'center'
   },
+  // ── 2. NAVIGAZIONE ──────────────────────────────────────────────
   {
     target: () => document.querySelector('.nav-items'),
     title: '🧭 Navigazione principale',
-    desc: 'Usa questi 6 pulsanti per spostarti tra Dashboard, Screener, Portafoglio, Lab, News e Macro.',
+    desc: 'Sei sezioni sempre accessibili: Dashboard (mercati live), Screener, Portafoglio, Lab (strumenti avanzati), News e Macro.',
     pos: 'bottom',
     page: 'dashboard'
   },
+  // ── 3. STATO BORSE ──────────────────────────────────────────────
+  {
+    target: () => document.querySelector('.hours-bar'),
+    title: '🕐 Stato delle borse',
+    desc: 'Qui vedi in tempo reale se NYSE/NASDAQ, Londra e Milano sono aperte o chiuse — con l\'orario locale di ciascuna piazza.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  // ── 4. GRAFICI INTERATTIVI ──────────────────────────────────────
+  {
+    target: () => document.querySelector('.dash-charts'),
+    title: '📈 Grafici interattivi',
+    desc: 'Due grafici configurabili: scegli qualsiasi indice, azione o crypto dal menu a tendina. Puoi scegliere candele o linea e cambiare il periodo.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  // ── 5. MIGLIORI E PEGGIORI ──────────────────────────────────────
   {
     target: () => document.getElementById('movers-top')?.closest('.card'),
-    title: '📊 Mercati in tempo reale',
-    desc: 'La Dashboard mostra migliori e peggiori del giorno, indici globali, commodities e crypto — aggiornati ogni minuto.',
+    title: '🏆 Migliori e Peggiori del giorno',
+    desc: 'Top 5 e Bottom 5 aggiornati in tempo reale tra i 150 principali titoli mondiali. Clicca su qualsiasi titolo per aprire il grafico completo.',
     pos: 'bottom',
     page: 'dashboard'
   },
+  // ── 6. INDICI GLOBALI ───────────────────────────────────────────
   {
-    target: () => document.getElementById('nb-screener'),
-    title: '🔍 Screener azionario',
-    desc: 'Filtra oltre 600 titoli da S&P 500, NASDAQ, DAX, FTSE MIB e molti altri indici. Salva i preferiti nella Watchlist con ★.',
+    target: () => document.getElementById('idx-list')?.closest('.card'),
+    title: '🌍 Indici globali',
+    desc: 'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei e molti altri indici in un\'unica lista. Clicca per aprire il grafico storico di ciascuno.',
     pos: 'bottom',
     page: 'dashboard'
   },
+  // ── 7. SCREENER ─────────────────────────────────────────────────
   {
-    target: () => document.getElementById('nb-portafoglio'),
-    title: '💼 Portafoglio personale',
-    desc: 'Inserisci i tuoi investimenti e monitora P&L live, analisi di rischio e suggerimenti basati sul tuo profilo investitore.',
+    target: () => document.getElementById('sc-idx-select'),
+    title: '🔍 Screener — Scegli il mercato',
+    desc: 'Seleziona l\'indice da analizzare: S&P 500, NASDAQ 100, DAX 40, FTSE MIB, CAC 40 e molti altri. La tabella si aggiorna istantaneamente.',
     pos: 'bottom',
-    page: 'dashboard'
+    page: 'screener'
   },
+  // ── 8. SCREENER WATCHLIST ───────────────────────────────────────
+  {
+    target: () => document.querySelector('.sc-quick-bar'),
+    title: '★ Watchlist personale',
+    desc: 'Clicca sulla stella ★ accanto a qualsiasi titolo nella tabella per salvarlo in Watchlist. Qui trovi sempre i tuoi titoli preferiti.',
+    pos: 'bottom',
+    page: 'screener'
+  },
+  // ── 9. PORTAFOGLIO INTRO ────────────────────────────────────────
+  {
+    target: () => document.getElementById('port-add-toggle'),
+    title: '💼 Portafoglio — Aggiungi titoli',
+    desc: 'Clicca qui per aggiungere un investimento: cerca il ticker, inserisci quantità, prezzo di acquisto e data. I dati vengono salvati nel cloud.',
+    pos: 'bottom',
+    page: 'portafoglio'
+  },
+  // ── 10. PORTAFOGLIO PANORAMICA ──────────────────────────────────
+  {
+    target: () => document.getElementById('port-panel-overview'),
+    title: '🍩 Panoramica portafoglio',
+    desc: 'Il grafico a torta mostra la distribuzione dei tuoi investimenti. Sotto trovi il P&L totale, il valore di mercato e la variazione giornaliera.',
+    pos: 'right',
+    page: 'portafoglio'
+  },
+  // ── 11. PORTAFOGLIO LISTA ───────────────────────────────────────
+  {
+    target: () => document.getElementById('port-cat-bar'),
+    title: '📋 Filtra per categoria',
+    desc: 'Usa questi filtri per vedere solo Azioni, ETF, Crypto o Commodities. Clicca su qualsiasi titolo nella lista per aprirne l\'analisi completa.',
+    pos: 'bottom',
+    page: 'portafoglio'
+  },
+  // ── 12. LAB ─────────────────────────────────────────────────────
   {
     target: () => document.getElementById('nb-lab'),
     title: '🧪 Lab — Strumenti avanzati',
-    desc: 'Simulatore Monte Carlo, Backtest di strategie di investimento e Comparatore titoli affiancato per analisi approfondite.',
+    desc: 'Tre tool per analisi approfondite: Simulatore Monte Carlo (scenari futuri), Backtest (strategie storiche) e Comparatore (affianca 2 titoli).',
     pos: 'bottom',
-    page: 'dashboard'
+    page: 'portafoglio'
   },
+  // ── 13. MACRO ───────────────────────────────────────────────────
   {
     target: () => document.getElementById('nb-macro'),
-    title: '🌐 Macro & Analisi Settoriale',
-    desc: 'Monitora il contesto macroeconomico globale, i cicli di mercato e l\'analisi dettagliata degli 11 settori GICS.',
+    title: '🌐 Macro & Settori',
+    desc: 'Analisi macroeconomica globale con indicatori chiave (VIX, yield, DXY) e breakdown dei 11 settori GICS con segnali di regime di mercato.',
     pos: 'bottom',
-    page: 'dashboard'
+    page: 'portafoglio'
   },
-  {
-    target: () => document.getElementById('nb-news'),
-    title: '📰 News finanziarie',
-    desc: 'Notizie aggiornate in tempo reale, filtrate per mercato e titolo, con link agli articoli originali.',
-    pos: 'bottom',
-    page: 'dashboard'
-  },
+  // ── 14. FINE ────────────────────────────────────────────────────
   {
     target: () => document.querySelector('.tut-help-btn'),
-    title: '🎉 Sei pronto!',
-    desc: 'Tour completato! Clicca su questo "?" in qualsiasi momento per rivedere la guida. Buon investimento!',
+    title: '🎉 Sei pronto a investire!',
+    desc: 'Tour completato. Clicca su "?" in qualsiasi momento per rivedere questa guida. Per supporto o suggerimenti, siamo qui. Buon investimento!',
     pos: 'bottom'
   }
 ];
