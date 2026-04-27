@@ -16375,20 +16375,23 @@ const TUTO = (() => {
     const box = document.getElementById('tut-box');
     if (!spotlight || !box) return;
 
+    const isMobile = window.innerWidth <= 640;
     const el = _el();
     const PAD = 8;
     const GAP = 12;
-    // Use actual rendered dimensions
-    const BW = box.getBoundingClientRect().width || 360;
-    const BH = box.getBoundingClientRect().height || 200;
     const VW = window.innerWidth;
     const VH = window.innerHeight;
 
     if (!el) {
-      // Centered modal, no spotlight
       spotlight.style.display = 'none';
-      box.style.left = Math.max(12, (VW - BW) / 2) + 'px';
-      box.style.top  = Math.max(12, Math.min(VH - BH - 12, (VH - BH) / 2)) + 'px';
+      if (!isMobile) {
+        // Centered modal on desktop
+        const BW = box.getBoundingClientRect().width || 360;
+        const BH = box.getBoundingClientRect().height || 200;
+        box.style.left = Math.max(12, (VW - BW) / 2) + 'px';
+        box.style.top  = Math.max(12, Math.min(VH - BH - 12, (VH - BH) / 2)) + 'px';
+      }
+      // On mobile, CSS bottom sheet handles positioning
       return;
     }
 
@@ -16402,13 +16405,18 @@ const TUTO = (() => {
     spotlight.style.width  = (rect.width  + PAD * 2) + 'px';
     spotlight.style.height = (rect.height + PAD * 2) + 'px';
 
+    // On mobile, CSS bottom sheet handles box position — nothing more to do
+    if (isMobile) return;
+
+    // Desktop: calculate box position relative to target
+    const BW = box.getBoundingClientRect().width || 360;
+    const BH = box.getBoundingClientRect().height || 200;
     const pos = TUTORIAL_STEPS[step].pos || 'bottom';
     let top, left;
 
     if (pos === 'bottom') {
       top  = rect.bottom + PAD + GAP;
       left = rect.left + rect.width / 2 - BW / 2;
-      // Se non c'è spazio sotto, vai sopra
       if (top + BH + 12 > VH) { top = rect.top - BH - PAD - GAP; }
     } else if (pos === 'top') {
       top  = rect.top - BH - PAD - GAP;
@@ -16424,7 +16432,7 @@ const TUTO = (() => {
       if (left < 12) { left = rect.right + PAD + GAP; }
     }
 
-    // Clamp finale al viewport
+    // Clamp to viewport
     left = Math.max(12, Math.min(VW - BW - 12, left));
     top  = Math.max(12, Math.min(VH - BH - 12, top));
 
