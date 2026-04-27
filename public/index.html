@@ -16289,23 +16289,23 @@ const TUTORIAL_STEPS = [
   },
   // ── 13. LAB ──────────────────────────────────────────────────────
   {
-    target: () => window.innerWidth <= 640 ? document.getElementById('mob-nb-lab') : document.getElementById('nb-lab'),
+    target: () => window.innerWidth <= 640
+      ? (document.querySelector('#page-lab .card') || document.getElementById('page-lab'))
+      : document.getElementById('nb-lab'),
     title: '🧪 Lab — Strumenti avanzati',
     desc: 'Tre tool per analisi approfondite: Simulatore Monte Carlo (scenari futuri), Backtest (strategie storiche) e Comparatore (affianca 2 titoli).',
     pos: 'bottom',
-    page: 'lab',
-    setup: () => { if (window.innerWidth <= 640) openMobileNav && openMobileNav(); },
-    teardown: () => { if (window.innerWidth <= 640) closeMobileNav && closeMobileNav(); }
+    page: 'lab'
   },
   // ── 14. MACRO ───────────────────────────────────────────────────
   {
-    target: () => window.innerWidth <= 640 ? document.getElementById('mob-nb-macro') : document.getElementById('nb-macro'),
+    target: () => window.innerWidth <= 640
+      ? (document.querySelector('#page-macro .card') || document.getElementById('page-macro'))
+      : document.getElementById('nb-macro'),
     title: '🌐 Macro & Settori',
     desc: 'Analisi macroeconomica globale con indicatori chiave (VIX, yield, DXY) e breakdown dei 11 settori GICS con segnali di regime di mercato.',
     pos: 'bottom',
-    page: 'macro',
-    setup: () => { if (window.innerWidth <= 640) openMobileNav && openMobileNav(); },
-    teardown: () => { if (window.innerWidth <= 640) closeMobileNav && closeMobileNav(); }
+    page: 'macro'
   },
   // ── 14. FINE ────────────────────────────────────────────────────
   {
