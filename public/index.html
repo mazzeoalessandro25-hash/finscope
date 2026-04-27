@@ -10903,11 +10903,80 @@ function _macroRenderSectors(){
 }
 
 function _macroToggleSec(id){
+  if(window.innerWidth<=640){_macroOpenSecMobile(id);return;}
   const card=document.getElementById('seccard-'+id);
   const arr=document.getElementById('sec-arr-'+id);
   if(!card)return;
   const open=card.classList.toggle('open');
   if(arr)arr.textContent=open?'▲':'▼';
+}
+
+function _macroSecClose(){
+  const ov=document.getElementById('sec-mob-overlay');
+  if(ov)ov.classList.remove('open');
+  document.body.style.overflow='';
+}
+
+function _macroOpenSecMobile(id){
+  const s=SECTOR_DATA.find(x=>x.id===id);
+  if(!s)return;
+  let ov=document.getElementById('sec-mob-overlay');
+  if(!ov){
+    ov=document.createElement('div');
+    ov.id='sec-mob-overlay';
+    ov.innerHTML=`<div id="sec-mob-sheet">
+      <div id="sec-mob-hdr">
+        <span id="sec-mob-hdr-ico"></span>
+        <div><div id="sec-mob-hdr-name"></div><div id="sec-mob-hdr-etf"></div></div>
+        <button id="sec-mob-close" onclick="_macroSecClose()">✕</button>
+      </div>
+      <div id="sec-mob-body"></div>
+    </div>`;
+    ov.addEventListener('click',e=>{if(e.target===ov)_macroSecClose();});
+    document.body.appendChild(ov);
+  }
+  const typeColLight=s.typeCol+'20';
+  document.getElementById('sec-mob-hdr-ico').textContent=s.ico;
+  document.getElementById('sec-mob-hdr-name').textContent=s.name;
+  document.getElementById('sec-mob-hdr-etf').textContent='ETF: '+s.etf+' · β '+s.beta;
+  document.getElementById('sec-mob-body').innerHTML=`
+    <div style="padding:12px 0;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--bd);margin:0 0 0 0">
+      <span style="font-size:10px;font-weight:700;font-family:var(--fm);padding:3px 10px;border-radius:4px;color:${s.typeCol};background:${typeColLight}">${s.type}</span>
+      <span style="font-size:10px;font-family:var(--fm);padding:3px 10px;border-radius:4px;background:var(--s2);color:var(--t3)">Tassi: ${s.rSens}</span>
+    </div>
+    <div style="padding:14px 0;font-size:13px;color:var(--t2);line-height:1.75;border-bottom:1px solid var(--bd)">${s.desc}</div>
+    <div style="padding:14px 0;border-bottom:1px solid var(--bd)">
+      <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Driver principali</div>
+      ${s.drivers.map(d=>`<div style="display:flex;gap:8px;font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:6px"><span style="color:var(--b);flex-shrink:0">•</span>${d}</div>`).join('')}
+    </div>
+    <div style="padding:14px 0;border-bottom:1px solid var(--bd)">
+      <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Metriche chiave</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${s.metrics.map(m=>`<span style="font-family:var(--fm);font-size:11px;padding:4px 10px;border-radius:5px;background:var(--s2);color:var(--t2)">${m}</span>`).join('')}</div>
+    </div>
+    <div style="padding:14px 0;border-bottom:1px solid var(--bd)">
+      <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Sensibilità ai tassi</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.65">${s.rSensNote}</div>
+    </div>
+    <div style="padding:14px 0;border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:8px">
+      <div style="padding:12px 14px;border-radius:10px;background:rgba(5,150,105,.07)">
+        <div style="font-size:9px;font-weight:700;color:#065F46;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Migliore scenario</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.55">${s.best}</div>
+      </div>
+      <div style="padding:12px 14px;border-radius:10px;background:rgba(220,38,38,.07)">
+        <div style="font-size:9px;font-weight:700;color:#B91C1C;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">Scenario peggiore</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.55">${s.worst}</div>
+      </div>
+    </div>
+    <div style="padding:14px 0">
+      <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">💡 Tips per investire</div>
+      ${s.tips.map(t=>`<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd);font-size:12px;color:var(--t2);line-height:1.6"><span style="color:var(--b);font-size:16px;flex-shrink:0;line-height:1.3">›</span>${t}</div>`).join('')}
+      <div style="margin-top:12px;padding:12px 14px;border-radius:10px;background:var(--b3);font-size:12px;color:var(--b)">
+        <strong>Esempi:</strong> ${s.ex}
+      </div>
+    </div>`;
+  document.getElementById('sec-mob-sheet').scrollTop=0;
+  ov.classList.add('open');
+  document.body.style.overflow='hidden';
 }
 
 /* ══════════════════════════════════════════
