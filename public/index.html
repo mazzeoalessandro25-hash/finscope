@@ -16175,9 +16175,11 @@ const TUTORIAL_STEPS = [
   },
   // ── 2. NAVIGAZIONE ──────────────────────────────────────────────
   {
-    target: () => document.querySelector('.nav-items'),
+    target: () => window.innerWidth <= 640 ? document.querySelector('.hamburger') : document.querySelector('.nav-items'),
     title: '🧭 Navigazione principale',
-    desc: 'Sei sezioni sempre accessibili: Dashboard (mercati live), Screener, Portafoglio, Lab (strumenti avanzati), News e Macro.',
+    desc: window.innerWidth <= 640
+      ? 'Tocca ☰ per aprire il menu: Dashboard, Screener, Portafoglio, Lab, News e Macro sempre accessibili.'
+      : 'Sei sezioni sempre accessibili: Dashboard (mercati live), Screener, Portafoglio, Lab (strumenti avanzati), News e Macro.',
     pos: 'bottom',
     page: 'dashboard'
   },
