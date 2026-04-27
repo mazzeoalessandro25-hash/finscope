@@ -16403,21 +16403,29 @@ const TUTO = (() => {
       return;
     }
 
-    // Scroll element into view — on mobile scroll to top so it's above the bottom sheet
-    el.scrollIntoView({ behavior: 'smooth', block: isMobile ? 'start' : 'nearest' });
+    // On mobile: scroll element to top so it shows above the bottom sheet, then update spotlight
+    if (isMobile) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        const r = el.getBoundingClientRect();
+        spotlight.style.display = 'block';
+        spotlight.style.top    = (r.top  - PAD) + 'px';
+        spotlight.style.left   = (r.left - PAD) + 'px';
+        spotlight.style.width  = (r.width  + PAD * 2) + 'px';
+        spotlight.style.height = (r.height + PAD * 2) + 'px';
+      }, 350);
+      return; // CSS handles box position
+    }
 
-    // Wait for scroll to settle before reading position
-    setTimeout(() => {
-      const rect2 = el.getBoundingClientRect();
-      spotlight.style.display = 'block';
-      spotlight.style.top    = (rect2.top  - PAD) + 'px';
-      spotlight.style.left   = (rect2.left - PAD) + 'px';
-      spotlight.style.width  = (rect2.width  + PAD * 2) + 'px';
-      spotlight.style.height = (rect2.height + PAD * 2) + 'px';
-    }, isMobile ? 350 : 0);
+    // Desktop: scroll then position synchronously
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 
-    // On mobile, CSS bottom sheet handles box position — nothing more to do
-    if (isMobile) return;
+    const rect = el.getBoundingClientRect();
+    spotlight.style.display = 'block';
+    spotlight.style.top    = (rect.top  - PAD) + 'px';
+    spotlight.style.left   = (rect.left - PAD) + 'px';
+    spotlight.style.width  = (rect.width  + PAD * 2) + 'px';
+    spotlight.style.height = (rect.height + PAD * 2) + 'px';
 
     // Desktop: calculate box position relative to target
     const BW = box.getBoundingClientRect().width || 360;
