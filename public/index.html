@@ -1419,8 +1419,24 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .macro-pulse-bar{grid-template-columns:1fr 1fr!important}
   .macro-row-rates{grid-template-columns:1fr!important}
   .mac-2col{grid-template-columns:1fr!important}
-  .mac-3col{grid-template-columns:1fr 1fr!important}
+  /* 3 blocchi analisi (testo lungo) → 1-col */
+  .mac-3col{grid-template-columns:1fr!important}
+  /* Stats strip: 3-col con valori compatti */
   .mac-stats-strip{grid-template-columns:repeat(3,1fr)!important}
+  .mac-stat-val{font-size:17px!important}
+  .mac-stat-item{padding:10px 8px!important}
+  .mac-stat-lbl{font-size:8px!important;letter-spacing:.2px!important}
+  /* Settori guida: 4-col inline → 2-col */
+  #macro-sectors-grid{grid-template-columns:1fr 1fr!important}
+  /* Guida edu: griglia 2-col → 1-col */
+  #macro-edu-body > div[style*="1fr 1fr"]{grid-template-columns:1fr!important}
+  /* Sezione divisore con bottone: wrap su mobile */
+  .sdiv{flex-wrap:wrap!important}
+  /* Hero title: font leggermente ridotto */
+  .mac-regime-title{font-size:17px!important}
+  /* Watchlist: padding ridotto */
+  .mac-wl-item{padding:8px 10px!important;gap:8px!important}
+  .mac-wl-left{min-width:54px!important}
 
   /* ── PORTAFOGLIO ── */
   /* Colonne principali: rimuovi altezza fissa 580px (impilate → 1740px totali) */
