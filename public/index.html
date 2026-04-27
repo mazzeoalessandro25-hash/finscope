@@ -16444,7 +16444,7 @@ const TUTO = (() => {
   function skip() { done(); }
 
   function restart() {
-    try { localStorage.removeItem(TUTORIAL_KEY); } catch(e) {}
+    // Non tocca localStorage — il flag rimane intatto, il restart è solo manuale
     start(0);
   }
 
