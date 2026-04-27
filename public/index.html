@@ -1472,6 +1472,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .port-target-row > div:nth-child(5){display:none!important}
   /* Analisi avanzata: blocco 3-col (1fr 1fr 1fr) → 1-col su mobile */
   #port-analysis-content > div[style*="1fr 1fr 1fr"]{grid-template-columns:1fr!important}
+  /* Analisi avanzata: card profilo investitore → select va sotto il nome */
+  #port-analysis-content div[style*="min-width:190px"]{flex-wrap:wrap!important;min-width:0!important}
+  /* Bottone "Scopri il tuo profilo": più compatto su mobile */
+  #port-analysis-content button[onclick*="openPQ"]{font-size:10px!important;padding:6px 10px!important}
   /* Ribilanciamento: KPI 3-col → 2-col */
   #rebalancing-content > div[style*="repeat(3,1fr)"]{grid-template-columns:1fr 1fr!important}
   /* Ribilanciamento: header inline 5-col → 3-col (allineato alle reb-row) */
