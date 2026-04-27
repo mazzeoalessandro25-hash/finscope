@@ -16184,8 +16184,9 @@ const TUTORIAL_STEPS = [
     target: () => window.innerWidth <= 640 ? document.querySelector('.hamburger') : document.querySelector('.nav-items'),
     title: '🧭 Navigazione principale',
     desc: () => window.innerWidth <= 640
-      ? 'Tocca ☰ per aprire il menu: Dashboard, Screener, Portafoglio, Lab, News e Macro sempre accessibili.'
+      ? 'Tocca ☰ in alto a destra per aprire il menu: Dashboard, Screener, Portafoglio, Lab, News e Macro.'
       : 'Sei sezioni sempre accessibili: Dashboard (mercati live), Screener, Portafoglio, Lab (strumenti avanzati), News e Macro.',
+    location: 'Barra di navigazione',
     pos: 'bottom',
     page: 'dashboard'
   },
@@ -16193,7 +16194,8 @@ const TUTORIAL_STEPS = [
   {
     target: () => document.querySelector('.hours-bar'),
     title: '🕐 Stato delle borse',
-    desc: 'Qui vedi in tempo reale se NYSE/NASDAQ, Londra e Milano sono aperte o chiuse — con l\'orario locale di ciascuna piazza.',
+    desc: 'Vedi in tempo reale se NYSE/NASDAQ, Londra e Milano sono aperte o chiuse — con l\'orario locale di ciascuna piazza.',
+    location: 'Dashboard › Stato borse',
     pos: 'bottom',
     page: 'dashboard'
   },
@@ -16202,6 +16204,7 @@ const TUTORIAL_STEPS = [
     target: () => document.querySelector('.dash-charts'),
     title: '📈 Grafici interattivi',
     desc: 'Due grafici configurabili: scegli qualsiasi indice, azione o crypto dal menu a tendina. Puoi scegliere candele o linea e cambiare il periodo.',
+    location: 'Dashboard › Grafici',
     pos: 'bottom',
     page: 'dashboard'
   },
@@ -16210,6 +16213,7 @@ const TUTORIAL_STEPS = [
     target: () => document.getElementById('movers-top')?.closest('.card'),
     title: '🏆 Migliori e Peggiori del giorno',
     desc: 'Top 5 e Bottom 5 aggiornati in tempo reale tra i 150 principali titoli mondiali. Clicca su qualsiasi titolo per aprire il grafico completo.',
+    location: 'Dashboard › Migliori / Peggiori',
     pos: 'bottom',
     page: 'dashboard'
   },
@@ -16217,7 +16221,8 @@ const TUTORIAL_STEPS = [
   {
     target: () => document.querySelector('#movers-top .mover-item') || document.getElementById('movers-top')?.closest('.card'),
     title: '🖱️ Clicca per l\'analisi completa',
-    desc: 'Clicca su qualsiasi titolo, indice, commodity o crypto in tutta l\'app per aprire un pannello con grafico interattivo, dati fondamentali e FinEdge Score.',
+    desc: 'Clicca su qualsiasi titolo in tutta l\'app per aprire un pannello con grafico interattivo, dati fondamentali e FinEdge Score.',
+    location: 'Dashboard › Migliori / Peggiori',
     pos: 'bottom',
     page: 'dashboard'
   },
@@ -16226,62 +16231,70 @@ const TUTORIAL_STEPS = [
     target: () => document.getElementById('idx-list')?.closest('.card'),
     title: '🌍 Indici globali',
     desc: 'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei e molti altri indici in un\'unica lista. Clicca per aprire il grafico storico di ciascuno.',
+    location: 'Dashboard › Indici globali',
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 7. SCREENER ─────────────────────────────────────────────────
+  // ── 8. SCREENER ─────────────────────────────────────────────────
   {
     target: () => document.getElementById('sc-idx-select'),
     title: '🔍 Screener — Scegli il mercato',
     desc: 'Seleziona l\'indice da analizzare: S&P 500, NASDAQ 100, DAX 40, FTSE MIB, CAC 40 e molti altri. La tabella si aggiorna istantaneamente.',
+    location: 'Screener › Selettore mercato',
     pos: 'bottom',
     page: 'screener'
   },
-  // ── 8. SCREENER — CLICK SUL TITOLO ──────────────────────────────
+  // ── 9. SCREENER — CLICK SUL TITOLO ──────────────────────────────
   {
     target: () => document.getElementById('sc-body')?.closest('table') || document.getElementById('sc-body'),
     title: '📄 Apri la scheda di un titolo',
-    desc: 'Clicca sul nome di qualsiasi titolo nella tabella per aprire la sua pagina completa: grafico storico, dati fondamentali, FinEdge Score, insider trading e molto altro.',
+    desc: 'Clicca sul nome di qualsiasi titolo nella tabella per aprire la sua pagina completa: grafico, dati fondamentali, FinEdge Score, insider trading e molto altro.',
+    location: 'Screener › Tabella titoli',
     pos: 'top',
     page: 'screener'
   },
-  // ── 9. SCREENER WATCHLIST ───────────────────────────────────────
+  // ── 10. SCREENER WATCHLIST ──────────────────────────────────────
   {
     target: () => document.querySelector('.sc-quick-bar'),
     title: '★ Watchlist personale',
-    desc: 'Clicca sulla stella ★ accanto a qualsiasi titolo nella tabella per salvarlo in Watchlist. Qui trovi sempre i tuoi titoli preferiti.',
+    desc: 'Clicca sulla stella ★ accanto a qualsiasi titolo per salvarlo in Watchlist. Qui trovi sempre i tuoi titoli preferiti.',
+    location: 'Screener › Watchlist',
     pos: 'bottom',
     page: 'screener'
   },
-  // ── 9. PORTAFOGLIO INTRO ────────────────────────────────────────
+  // ── 11. PORTAFOGLIO INTRO ───────────────────────────────────────
   {
     target: () => document.getElementById('port-add-toggle'),
     title: '💼 Portafoglio — Aggiungi titoli',
     desc: 'Clicca qui per aggiungere un investimento: cerca il ticker, inserisci quantità, prezzo di acquisto e data. I dati vengono salvati nel cloud.',
+    location: 'Portafoglio › Aggiungi',
     pos: 'bottom',
     page: 'portafoglio'
   },
-  // ── 10. PORTAFOGLIO PANORAMICA ──────────────────────────────────
+  // ── 12. PORTAFOGLIO PANORAMICA ──────────────────────────────────
   {
     target: () => document.getElementById('port-panel-overview'),
     title: '🍩 Panoramica portafoglio',
     desc: 'Il grafico a torta mostra la distribuzione dei tuoi investimenti. Sotto trovi il P&L totale, il valore di mercato e la variazione giornaliera.',
+    location: 'Portafoglio › Panoramica',
     pos: 'right',
     page: 'portafoglio'
   },
-  // ── 11. PORTAFOGLIO LISTA ───────────────────────────────────────
+  // ── 13. PORTAFOGLIO LISTA ───────────────────────────────────────
   {
     target: () => document.getElementById('port-cat-bar'),
     title: '📋 Filtra per categoria',
     desc: 'Usa questi filtri per vedere solo Azioni, ETF, Crypto o Commodities. Clicca su qualsiasi titolo nella lista per aprirne l\'analisi completa.',
+    location: 'Portafoglio › Lista titoli',
     pos: 'bottom',
     page: 'portafoglio'
   },
-  // ── 12. RIEPILOGO MERCATI ───────────────────────────────────────
+  // ── 14. RIEPILOGO MERCATI ───────────────────────────────────────
   {
     target: () => document.getElementById('port-daily-outer'),
     title: '📊 Riepilogo Mercati',
     desc: 'Ogni giorno FinEdge genera un briefing AI sui mercati legato ai titoli del tuo portafoglio: performance, notizie rilevanti e prossimi earnings.',
+    location: 'Portafoglio › Riepilogo mercati',
     pos: 'left',
     page: 'portafoglio',
     setup: () => {
@@ -16293,27 +16306,29 @@ const TUTORIAL_STEPS = [
       if (el && el._tut_forced) { el.style.display = 'none'; delete el._tut_forced; }
     }
   },
-  // ── 13. LAB ──────────────────────────────────────────────────────
+  // ── 15. LAB ──────────────────────────────────────────────────────
   {
     target: () => window.innerWidth <= 640
       ? (document.querySelector('#page-lab .card') || document.getElementById('page-lab'))
       : document.getElementById('nb-lab'),
     title: '🧪 Lab — Strumenti avanzati',
     desc: 'Tre tool per analisi approfondite: Simulatore Monte Carlo (scenari futuri), Backtest (strategie storiche) e Comparatore (affianca 2 titoli).',
+    location: 'Lab',
     pos: 'bottom',
     page: 'lab'
   },
-  // ── 14. MACRO ───────────────────────────────────────────────────
+  // ── 16. MACRO ───────────────────────────────────────────────────
   {
     target: () => window.innerWidth <= 640
       ? (document.querySelector('#page-macro .card') || document.getElementById('page-macro'))
       : document.getElementById('nb-macro'),
     title: '🌐 Macro & Settori',
     desc: 'Analisi macroeconomica globale con indicatori chiave (VIX, yield, DXY) e breakdown dei 11 settori GICS con segnali di regime di mercato.',
+    location: 'Macro & Settori',
     pos: 'bottom',
     page: 'macro'
   },
-  // ── 14. FINE ────────────────────────────────────────────────────
+  // ── 17. FINE ────────────────────────────────────────────────────
   {
     target: () => document.querySelector('.tut-help-btn'),
     title: '🎉 Sei pronto a investire!',
