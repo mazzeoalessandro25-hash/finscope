@@ -1639,9 +1639,14 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 #tut-overlay{display:none;position:fixed;inset:0;z-index:8997;pointer-events:all;cursor:default;background:transparent}
 #tut-spotlight{display:none;position:fixed;z-index:8998;pointer-events:none;border-radius:10px;box-shadow:0 0 0 4px rgba(96,165,250,.8),0 0 0 9999px rgba(0,0,0,.72);transition:top .3s ease,left .3s ease,width .3s ease,height .3s ease}
 #tut-box{display:none;position:fixed;z-index:8999;background:var(--card);border:1px solid var(--bd);border-radius:16px;width:min(360px,calc(100vw - 24px));max-height:calc(100vh - 48px);overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07);font-family:var(--ff);transition:top .3s ease,left .3s ease;box-sizing:border-box}
+@keyframes tut-pulse{0%,100%{box-shadow:0 0 0 4px rgba(96,165,250,.9),0 0 0 9999px rgba(0,0,0,.72)}50%{box-shadow:0 0 0 9px rgba(96,165,250,.4),0 0 0 9999px rgba(0,0,0,.72)}}
+#tut-spotlight{animation:tut-pulse 1.6s ease-in-out infinite}
+.tut-loc{display:none}
 @media(max-width:640px){
-  #tut-box{bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100%!important;max-width:100%!important;border-radius:20px 20px 0 0!important;border-bottom:none!important;max-height:72vh!important;padding-bottom:env(safe-area-inset-bottom,12px)!important}
+  #tut-box{bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100%!important;max-width:100%!important;border-radius:20px 20px 0 0!important;border-bottom:none!important;max-height:42vh!important;padding-bottom:env(safe-area-inset-bottom,12px)!important}
   .tut-dots{flex-wrap:wrap;max-width:260px}
+  .tut-loc{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:rgba(96,165,250,1);letter-spacing:.3px;padding:0 16px 8px;text-transform:uppercase}
+  .tut-loc::before{content:"↑";font-size:13px;line-height:1}
 }
 .tut-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0;gap:10px}
 .tut-step-lbl{font-family:var(--fm);font-size:10.5px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
