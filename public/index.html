@@ -16349,8 +16349,8 @@ const TUTO = (() => {
     if (s.setup) try { s.setup(); } catch(e) {}
 
     document.getElementById('tut-lbl').textContent = `Passo ${step + 1} di ${total}`;
-    document.getElementById('tut-ttl').textContent = s.title;
-    document.getElementById('tut-dsc').textContent = s.desc;
+    document.getElementById('tut-ttl').textContent = typeof s.title === 'function' ? s.title() : s.title;
+    document.getElementById('tut-dsc').textContent = typeof s.desc === 'function' ? s.desc() : s.desc;
 
     // Dots
     document.getElementById('tut-dots').innerHTML = TUTORIAL_STEPS
