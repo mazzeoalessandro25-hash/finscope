@@ -16462,6 +16462,11 @@ const TUTO = (() => {
     step = fromStep || 0;
     _active = true;
     document.body.style.overflow = 'hidden';
+    // Clear any stale inline position (e.g. switching from desktop to mobile)
+    if (window.innerWidth <= 640) {
+      const box = document.getElementById('tut-box');
+      if (box) { box.style.top = ''; box.style.left = ''; box.style.right = ''; }
+    }
     window.addEventListener('resize', _onResize);
     _render();
   }
