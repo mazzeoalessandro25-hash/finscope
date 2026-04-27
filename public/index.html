@@ -1449,13 +1449,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   #pac-add-form > div[style]{grid-template-columns:1fr!important}
   /* Matrice correlazioni: scroll orizzontale su mobile */
   #corr-content{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  /* Correlazione in Crisi: header flex → colonna verticale */
-  #corr-content div[style*="justify-content:space-between;align-items:flex-start"]{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
-  #corr-content div[style*="flex-shrink:0;margin-left:14px"]{flex-shrink:1!important;margin-left:0!important;text-align:left!important}
-  /* KPI 2-col (mercato normale / scenario crisi) → 1-col su mobile */
-  #corr-content div[style*="grid-template-columns:1fr 1fr;gap:10px"]{grid-template-columns:1fr!important}
-  /* Tabelle corr: celle più compatte su mobile */
-  #corr-content .corr-table th,#corr-content .corr-table td{padding:3px 5px!important;font-size:9px!important;min-width:34px!important}
+  /* Correlazione in Crisi (è dentro #port-analysis-content, non #corr-content) */
+  /* Contenitore rosso: non può uscire dallo schermo */
+  #port-analysis-content div[style*="rgba(239,68,68,0.05)"]{max-width:100%;overflow-x:hidden}
+  /* Header titolo + KPI perdita diversificazione → colonna verticale */
+  #port-analysis-content div[style*="rgba(239,68,68,0.05)"] > div[style*="justify-content:space-between"]{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+  #port-analysis-content div[style*="rgba(239,68,68,0.05)"] div[style*="text-align:right;flex-shrink:0"]{text-align:left!important;margin-left:0!important}
+  /* KPI 2-col → 1-col */
+  #port-analysis-content div[style*="rgba(239,68,68,0.05)"] div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+  /* Tabella crisi: scroll orizzontale */
+  #port-analysis-content div[style*="rgba(239,68,68,0.05)"] div[style*="overflow-x:auto"]{overflow-x:auto!important;max-width:100%}
+  /* Celle tabella crisi: più compatte */
+  #port-analysis-content div[style*="rgba(239,68,68,0.05)"] .corr-table th,
+  #port-analysis-content div[style*="rgba(239,68,68,0.05)"] .corr-table td{padding:3px 5px!important;font-size:9px!important;min-width:34px!important}
   /* Port analysis header: wrap su mobile */
   .port-analysis-hdr{flex-wrap:wrap}
   /* ── Contenuto dinamico: override griglie inline generate da JS ── */
