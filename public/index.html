@@ -16250,7 +16250,23 @@ const TUTORIAL_STEPS = [
     pos: 'bottom',
     page: 'portafoglio'
   },
-  // ── 12. LAB ─────────────────────────────────────────────────────
+  // ── 12. RIEPILOGO MERCATI ───────────────────────────────────────
+  {
+    target: () => document.getElementById('port-daily-outer'),
+    title: '📊 Riepilogo Mercati',
+    desc: 'Ogni giorno FinEdge genera un briefing AI sui mercati legato ai titoli del tuo portafoglio: performance, notizie rilevanti e prossimi earnings.',
+    pos: 'left',
+    page: 'portafoglio',
+    setup: () => {
+      const el = document.getElementById('port-daily-outer');
+      if (el && el.style.display === 'none') { el.style.display = 'block'; el._tut_forced = true; }
+    },
+    teardown: () => {
+      const el = document.getElementById('port-daily-outer');
+      if (el && el._tut_forced) { el.style.display = 'none'; delete el._tut_forced; }
+    }
+  },
+  // ── 13. LAB ─────────────────────────────────────────────────────
   {
     target: () => document.getElementById('nb-lab'),
     title: '🧪 Lab — Strumenti avanzati',
