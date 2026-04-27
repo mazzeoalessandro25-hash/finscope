@@ -16201,7 +16201,15 @@ const TUTORIAL_STEPS = [
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 6. INDICI GLOBALI ───────────────────────────────────────────
+  // ── 6. CLICK PER ANALISI COMPLETA ──────────────────────────────
+  {
+    target: () => document.querySelector('#movers-top .mover-item') || document.getElementById('movers-top')?.closest('.card'),
+    title: '🖱️ Clicca per l\'analisi completa',
+    desc: 'Clicca su qualsiasi titolo, indice, commodity o crypto in tutta l\'app per aprire un pannello con grafico interattivo, dati fondamentali e FinEdge Score.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  // ── 7. INDICI GLOBALI ───────────────────────────────────────────
   {
     target: () => document.getElementById('idx-list')?.closest('.card'),
     title: '🌍 Indici globali',
