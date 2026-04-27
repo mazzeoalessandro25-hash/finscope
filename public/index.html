@@ -16292,11 +16292,18 @@ const TUTO = (() => {
     const s = TUTORIAL_STEPS[step];
     const total = TUTORIAL_STEPS.length;
 
+    // Teardown previous step
+    const prev_s = step > 0 ? TUTORIAL_STEPS[step - 1] : null;
+    if (prev_s?.teardown) try { prev_s.teardown(); } catch(e) {}
+
     // Navigate to required page
     if (s.page) {
       const btn = document.getElementById('nb-' + s.page);
       if (btn) showPage(s.page, btn);
     }
+
+    // Run step setup (e.g. show hidden elements temporarily)
+    if (s.setup) try { s.setup(); } catch(e) {}
 
     document.getElementById('tut-lbl').textContent = `Passo ${step + 1} di ${total}`;
     document.getElementById('tut-ttl').textContent = s.title;
