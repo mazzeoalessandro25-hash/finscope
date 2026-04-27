@@ -1532,6 +1532,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .cmp-layout{grid-template-columns:1fr!important}
   .fa-grid{grid-template-columns:1fr!important}
   .res-row{grid-template-columns:1fr!important}
+  /* Lab tabs: 3 tab in una riga su telefono */
+  .lab-tab{font-size:10px!important;padding:7px 4px!important;letter-spacing:0!important}
+  /* Simulatore: colonna destra stacked → height:auto, poi canvas fisso */
+  .sim-l > div:last-child{height:auto!important}
+  #simChart{position:relative!important;top:auto!important;left:auto!important;height:240px!important}
+  /* Backtest results: larghezza piena quando visibili */
+  #bt-results-col,#cmp-results-col{width:100%!important;box-sizing:border-box}
+  /* Backtest: tabella operazioni con scroll orizzontale */
+  .bt-trades-tbl{font-size:10px!important}
+  .bt-trades-tbl th,.bt-trades-tbl td{padding:4px 6px!important}
+  /* Comparatore: tabella metriche scroll orizzontale (già ha wrapper overflow-x:auto) */
+  .cmp-tbl{font-size:11px!important}
+  .cmp-tbl th,.cmp-tbl td{padding:6px 8px!important}
 
   /* ── CARDS GENERICHE ── */
   .card{padding:14px 12px}
