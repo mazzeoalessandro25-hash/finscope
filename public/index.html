@@ -16177,7 +16177,7 @@ const TUTORIAL_STEPS = [
   {
     target: () => window.innerWidth <= 640 ? document.querySelector('.hamburger') : document.querySelector('.nav-items'),
     title: '🧭 Navigazione principale',
-    desc: window.innerWidth <= 640
+    desc: () => window.innerWidth <= 640
       ? 'Tocca ☰ per aprire il menu: Dashboard, Screener, Portafoglio, Lab, News e Macro sempre accessibili.'
       : 'Sei sezioni sempre accessibili: Dashboard (mercati live), Screener, Portafoglio, Lab (strumenti avanzati), News e Macro.',
     pos: 'bottom',
