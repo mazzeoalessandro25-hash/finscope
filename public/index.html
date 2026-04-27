@@ -1451,6 +1451,22 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   #corr-content{overflow-x:auto;-webkit-overflow-scrolling:touch}
   /* Port analysis header: wrap su mobile */
   .port-analysis-hdr{flex-wrap:wrap}
+  /* ── Contenuto dinamico: override griglie inline generate da JS ── */
+  /* Rischio & Volatilità: 5-col e 3-col → 2-col */
+  #risk-content > div[style]{grid-template-columns:1fr 1fr!important}
+  /* Monte Carlo 4-col (annidato) → 2-col */
+  #risk-content div[style*="repeat(4"]{grid-template-columns:1fr 1fr!important}
+  /* Stress Test: righe 4-col fisso (150px 55px 1fr 110px) → 2-col adattivo */
+  #stress-content div[style*="grid-template-columns:150px"]{grid-template-columns:1fr auto!important}
+  /* Dividendi: KPI 3-col → 2-col */
+  #div-tracker-content > div[style*="display:grid"]{grid-template-columns:1fr 1fr!important}
+  /* Performance CAGR: 5-col fisso → scroll orizzontale */
+  #port-cagr-content{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  #port-cagr-content div[style*="65px 1fr"]{min-width:360px}
+  /* Analisi portafoglio: radar labels 3-col → 2-col */
+  #port-analysis-content div[style*="repeat(3,1fr)"]{grid-template-columns:1fr 1fr!important}
+  /* Obiettivi prezzi: scroll orizzontale (righe multi-col inline) */
+  #port-targets-content{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
   /* ── STOCK DETAIL OVERLAY ── */
   /* Header: porta i bottoni Portfolio/Alert su seconda riga */
