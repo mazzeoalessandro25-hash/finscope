@@ -16345,8 +16345,12 @@ const TUTO = (() => {
 
     // Navigate to required page
     if (s.page) {
+      // Close mobile drawer first so it doesn't cover the content
+      if (window.innerWidth <= 640) try { closeMobileNav(); } catch(e) {}
       const btn = document.getElementById('nb-' + s.page);
       if (btn) showPage(s.page, btn);
+      // showPage resets body.overflow — re-lock it for the tutorial
+      document.body.style.overflow = 'hidden';
     }
 
     // Run step setup (e.g. show hidden elements temporarily)
