@@ -16135,6 +16135,255 @@ function crdQuickAlert(){
   </div>
 </div>
 
+<!-- ══ TUTORIAL ONBOARDING ══ -->
+<div id="tut-overlay" onclick="TUTO.skip()"></div>
+<div id="tut-spotlight"></div>
+<div id="tut-box" role="dialog" aria-modal="true" aria-labelledby="tut-ttl">
+  <div class="tut-hdr">
+    <span class="tut-step-lbl" id="tut-lbl">Passo 1 di 9</span>
+    <button class="tut-skip" onclick="TUTO.skip()">Salta tutorial</button>
+  </div>
+  <div class="tut-body">
+    <div class="tut-ttl" id="tut-ttl"></div>
+    <div class="tut-dsc" id="tut-dsc"></div>
+  </div>
+  <div class="tut-ftr">
+    <div class="tut-dots" id="tut-dots"></div>
+    <div class="tut-nav">
+      <button class="tut-back" id="tut-back" onclick="TUTO.prev()">← Indietro</button>
+      <button class="tut-fwd" id="tut-fwd" onclick="TUTO.next()">Avanti →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════
+   TUTORIAL ONBOARDING — TUTO
+══════════════════════════════════════════ */
+const TUTORIAL_KEY = 'finedge_tutorial_done';
+
+const TUTORIAL_STEPS = [
+  {
+    target: null,
+    title: '👋 Benvenuto in FinEdge!',
+    desc: 'In circa 1 minuto ti mostriamo le funzionalità principali. Puoi saltare in qualsiasi momento con il pulsante in alto a destra.',
+    pos: 'center'
+  },
+  {
+    target: () => document.querySelector('.nav-items'),
+    title: '🧭 Navigazione principale',
+    desc: 'Usa questi 6 pulsanti per spostarti tra Dashboard, Screener, Portafoglio, Lab, News e Macro.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  {
+    target: () => document.getElementById('movers-top')?.closest('.card'),
+    title: '📊 Mercati in tempo reale',
+    desc: 'La Dashboard mostra migliori e peggiori del giorno, indici globali, commodities e crypto — aggiornati ogni minuto.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  {
+    target: () => document.getElementById('nb-screener'),
+    title: '🔍 Screener azionario',
+    desc: 'Filtra oltre 600 titoli da S&P 500, NASDAQ, DAX, FTSE MIB e molti altri indici. Salva i preferiti nella Watchlist con ★.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  {
+    target: () => document.getElementById('nb-portafoglio'),
+    title: '💼 Portafoglio personale',
+    desc: 'Inserisci i tuoi investimenti e monitora P&L live, analisi di rischio e suggerimenti basati sul tuo profilo investitore.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  {
+    target: () => document.getElementById('nb-lab'),
+    title: '🧪 Lab — Strumenti avanzati',
+    desc: 'Simulatore Monte Carlo, Backtest di strategie di investimento e Comparatore titoli affiancato per analisi approfondite.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  {
+    target: () => document.getElementById('nb-macro'),
+    title: '🌐 Macro & Analisi Settoriale',
+    desc: 'Monitora il contesto macroeconomico globale, i cicli di mercato e l\'analisi dettagliata degli 11 settori GICS.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  {
+    target: () => document.getElementById('nb-news'),
+    title: '📰 News finanziarie',
+    desc: 'Notizie aggiornate in tempo reale, filtrate per mercato e titolo, con link agli articoli originali.',
+    pos: 'bottom',
+    page: 'dashboard'
+  },
+  {
+    target: () => document.querySelector('.tut-help-btn'),
+    title: '🎉 Sei pronto!',
+    desc: 'Tour completato! Clicca su questo "?" in qualsiasi momento per rivedere la guida. Buon investimento!',
+    pos: 'bottom'
+  }
+];
+
+const TUTO = (() => {
+  let step = 0;
+  let _active = false;
+  let _resizeT = null;
+
+  function _el() {
+    const s = TUTORIAL_STEPS[step];
+    if (!s.target) return null;
+    try {
+      return (typeof s.target === 'function' ? s.target() : document.querySelector(s.target)) || null;
+    } catch(e) { return null; }
+  }
+
+  function _render() {
+    const s = TUTORIAL_STEPS[step];
+    const total = TUTORIAL_STEPS.length;
+
+    // Navigate to required page
+    if (s.page) {
+      const btn = document.getElementById('nb-' + s.page);
+      if (btn) showPage(s.page, btn);
+    }
+
+    document.getElementById('tut-lbl').textContent = `Passo ${step + 1} di ${total}`;
+    document.getElementById('tut-ttl').textContent = s.title;
+    document.getElementById('tut-dsc').textContent = s.desc;
+
+    // Dots
+    document.getElementById('tut-dots').innerHTML = TUTORIAL_STEPS
+      .map((_, i) => `<div class="tut-dot${i === step ? ' on' : ''}"></div>`).join('');
+
+    // Buttons
+    const back = document.getElementById('tut-back');
+    const fwd = document.getElementById('tut-fwd');
+    back.disabled = step === 0;
+    fwd.textContent = step === total - 1 ? 'Fine ✓' : 'Avanti →';
+
+    // Show elements
+    document.getElementById('tut-overlay').style.display = 'block';
+    document.getElementById('tut-box').style.display = 'block';
+
+    // Position after short delay to let DOM settle
+    setTimeout(_position, 50);
+  }
+
+  function _position() {
+    const spotlight = document.getElementById('tut-spotlight');
+    const box = document.getElementById('tut-box');
+    if (!spotlight || !box) return;
+
+    const el = _el();
+    const PAD = 8;
+    const GAP = 14;
+    const BW = box.offsetWidth || 320;
+    const BH = box.offsetHeight || 200;
+    const VW = window.innerWidth;
+    const VH = window.innerHeight;
+
+    if (!el) {
+      // Centered modal, no spotlight
+      spotlight.style.display = 'none';
+      box.style.left = Math.max(12, (VW - BW) / 2) + 'px';
+      box.style.top = Math.max(12, (VH - BH) / 2) + 'px';
+      return;
+    }
+
+    // Scroll element into view if needed
+    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    const rect = el.getBoundingClientRect();
+    spotlight.style.display = 'block';
+    spotlight.style.top  = (rect.top  - PAD) + 'px';
+    spotlight.style.left = (rect.left - PAD) + 'px';
+    spotlight.style.width  = (rect.width  + PAD * 2) + 'px';
+    spotlight.style.height = (rect.height + PAD * 2) + 'px';
+
+    const pos = TUTORIAL_STEPS[step].pos || 'bottom';
+    let top, left;
+
+    if (pos === 'bottom') {
+      top  = rect.bottom + PAD + GAP;
+      left = rect.left + rect.width / 2 - BW / 2;
+    } else if (pos === 'top') {
+      top  = rect.top - BH - PAD - GAP;
+      left = rect.left + rect.width / 2 - BW / 2;
+    } else if (pos === 'right') {
+      top  = rect.top + rect.height / 2 - BH / 2;
+      left = rect.right + PAD + GAP;
+    } else if (pos === 'left') {
+      top  = rect.top + rect.height / 2 - BH / 2;
+      left = rect.left - BW - PAD - GAP;
+    }
+
+    // Clamp to viewport
+    left = Math.max(12, Math.min(VW - BW - 12, left));
+    top  = Math.max(12, Math.min(VH - BH - 12, top));
+
+    box.style.left = left + 'px';
+    box.style.top  = top  + 'px';
+  }
+
+  function _close() {
+    _active = false;
+    document.body.style.overflow = '';
+    window.removeEventListener('resize', _onResize);
+    ['tut-overlay','tut-spotlight','tut-box'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = 'none';
+    });
+  }
+
+  function _onResize() {
+    clearTimeout(_resizeT);
+    _resizeT = setTimeout(_position, 120);
+  }
+
+  function start(fromStep) {
+    step = fromStep || 0;
+    _active = true;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('resize', _onResize);
+    _render();
+  }
+
+  function next() {
+    if (step >= TUTORIAL_STEPS.length - 1) { done(); return; }
+    step++;
+    _render();
+  }
+
+  function prev() {
+    if (step <= 0) return;
+    step--;
+    _render();
+  }
+
+  function done() {
+    _close();
+    try { localStorage.setItem(TUTORIAL_KEY, '1'); } catch(e) {}
+  }
+
+  function skip() { done(); }
+
+  function restart() {
+    try { localStorage.removeItem(TUTORIAL_KEY); } catch(e) {}
+    start(0);
+  }
+
+  function autoStart() {
+    try {
+      if (!localStorage.getItem(TUTORIAL_KEY)) start(0);
+    } catch(e) {}
+  }
+
+  return { start, next, prev, skip, done, restart, autoStart };
+})();
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
