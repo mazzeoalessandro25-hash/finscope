@@ -1449,9 +1449,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   #pac-add-form > div[style]{grid-template-columns:1fr!important}
   /* Matrice correlazioni: scroll orizzontale su mobile */
   #corr-content{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  /* Correlazione in Crisi: header flex → wrap (titolo + KPI perdita) */
-  #corr-content div[style*="justify-content:space-between;align-items:flex-start"]{flex-wrap:wrap!important;gap:6px!important}
-  #corr-content div[style*="flex-shrink:0;margin-left:14px"]{flex-shrink:1!important;margin-left:0!important;text-align:left!important;width:100%!important}
+  /* Correlazione in Crisi: header flex → colonna verticale */
+  #corr-content div[style*="justify-content:space-between;align-items:flex-start"]{flex-direction:column!important;align-items:stretch!important;gap:8px!important}
+  #corr-content div[style*="flex-shrink:0;margin-left:14px"]{flex-shrink:1!important;margin-left:0!important;text-align:left!important}
+  /* KPI 2-col (mercato normale / scenario crisi) → 1-col su mobile */
+  #corr-content div[style*="grid-template-columns:1fr 1fr;gap:10px"]{grid-template-columns:1fr!important}
   /* Tabelle corr: celle più compatte su mobile */
   #corr-content .corr-table th,#corr-content .corr-table td{padding:3px 5px!important;font-size:9px!important;min-width:34px!important}
   /* Port analysis header: wrap su mobile */
