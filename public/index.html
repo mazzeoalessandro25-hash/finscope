@@ -6537,6 +6537,7 @@ async function submitAuth(){
       closeAuthModal();
       loadUserData();
       showTransition(null);
+      setTimeout(()=>TUTO.autoStart(),1000);
     }
   }catch(e){
     errEl.textContent=_t('auth.err.conn');
