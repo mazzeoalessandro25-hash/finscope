@@ -16365,6 +16365,8 @@ const TUTO = (() => {
     document.getElementById('tut-lbl').textContent = `Passo ${step + 1} di ${total}`;
     document.getElementById('tut-ttl').textContent = typeof s.title === 'function' ? s.title() : s.title;
     document.getElementById('tut-dsc').textContent = typeof s.desc === 'function' ? s.desc() : s.desc;
+    const locEl = document.getElementById('tut-loc');
+    if (locEl) locEl.textContent = s.location || '';
 
     // Dots
     document.getElementById('tut-dots').innerHTML = TUTORIAL_STEPS
