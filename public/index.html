@@ -6237,8 +6237,8 @@ async function loadMcap(region,btn){
 async function boot(){
   updateHours();
   await Promise.all([
-    loadDashChart(1,'^GSPC','1mo',null),
-    loadDashChart(2,'^NDX','1mo',null),
+    loadDashChart(1,'^GSPC','1y',null),
+    loadDashChart(2,'^NDX','1y',null),
     loadIndices(),
     loadVIX(),
     loadComs(),
