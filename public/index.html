@@ -1548,7 +1548,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .cal-legend{gap:8px;flex-wrap:wrap;justify-content:flex-start}
   .cal-legend-item{font-size:9px}
   .cal-refresh-info{display:none}
-  .reb-row{grid-template-columns:50px 1fr 55px auto!important;gap:6px}
+  /* reb-row: 3 colonne (sym | barra | input target%) — delta nascosto, ordine a riga intera */
+  .reb-row{grid-template-columns:40px 1fr 50px!important;gap:5px}
+  .reb-row > div:nth-child(4){display:none!important}
+  .reb-row > .reb-order{grid-column:1/-1!important;text-align:left!important;padding-top:2px}
   .tax-row{grid-template-columns:1fr auto!important;gap:6px}
   .bench-label{width:80px}
 
