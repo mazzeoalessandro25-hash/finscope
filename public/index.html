@@ -10284,14 +10284,6 @@ function _macroRenderLeading(d){
   </div>`;
 }
 
-function toggleMacroEdu(){
-  const body=document.getElementById('macro-edu-body');
-  const btn=document.getElementById('macro-edu-toggle');
-  if(!body||!btn)return;
-  const open=body.style.display==='none'||!body.style.display;
-  body.style.display=open?'block':'none';
-  btn.textContent=open?'Nascondi guida ▴':'Mostra guida ▾';
-}
 
 /* ══════════════════════════════════════════
    MACRO ANALYSIS — Narrativa contestuale
