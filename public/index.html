@@ -6623,7 +6623,10 @@ function updateNavUser(){
     const display=currentUser.name||currentUser.email;
     area.innerHTML=`<span class="nav-user-email">${_t('nav.hello')} ${display}</span>
       <button class="nav-logout-btn" onclick="logout()">${_t('nav.logout')}</button>`;
-    if(mob)mob.innerHTML=`<div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:8px;font-family:var(--fm)">${display}</div>
+    if(mob)mob.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-size:12px;color:rgba(255,255,255,.5);font-family:var(--fm)">${display}</div>
+        <button class="dm-toggle" onclick="toggleDark()" title="Tema chiaro/scuro" aria-label="Toggle tema" style="display:flex!important"><span class="dm-moon">🌙</span><span class="dm-track">☀</span><span class="dm-sun">☀</span></button>
+      </div>
       <button onclick="TUTO.restart();closeMobileNav()" style="width:100%;background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.3);color:#93C5FD;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer;margin-bottom:8px">? Guida introduttiva</button>
       <button onclick="logout();closeMobileNav()" style="width:100%;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#F87171;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer">Esci</button>`;
   } else {
