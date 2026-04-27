@@ -1638,19 +1638,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 /* ══ TUTORIAL ONBOARDING ══ */
 #tut-overlay{display:none;position:fixed;inset:0;z-index:8997;pointer-events:all;cursor:default;background:transparent}
 #tut-spotlight{display:none;position:fixed;z-index:8998;pointer-events:none;border-radius:10px;box-shadow:0 0 0 4px rgba(96,165,250,.8),0 0 0 9999px rgba(0,0,0,.72);transition:top .3s ease,left .3s ease,width .3s ease,height .3s ease}
-#tut-box{display:none;position:fixed;z-index:8999;background:var(--card);border:1px solid var(--bd);border-radius:16px;width:320px;max-width:calc(100vw - 24px);box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07);font-family:var(--ff);transition:top .3s ease,left .3s ease}
-.tut-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0}
-.tut-step-lbl{font-family:var(--fm);font-size:10.5px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase}
-.tut-skip{background:none;border:1px solid var(--bd);color:var(--t3);font-size:11px;font-family:var(--fm);padding:3px 9px;border-radius:6px;cursor:pointer;transition:all .15s}
+#tut-box{display:none;position:fixed;z-index:8999;background:var(--card);border:1px solid var(--bd);border-radius:16px;width:min(360px,calc(100vw - 24px));max-height:calc(100vh - 48px);overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07);font-family:var(--ff);transition:top .3s ease,left .3s ease;box-sizing:border-box}
+.tut-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 0;gap:10px}
+.tut-step-lbl{font-family:var(--fm);font-size:10.5px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+.tut-skip{background:none;border:1px solid var(--bd);color:var(--t3);font-size:11px;font-family:var(--fm);padding:3px 9px;border-radius:6px;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0}
 .tut-skip:hover{color:var(--t);border-color:var(--t2);background:var(--b3)}
 .tut-body{padding:12px 16px 10px}
-.tut-ttl{font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px;letter-spacing:-.2px}
-.tut-dsc{font-size:13px;color:var(--t2);line-height:1.55}
-.tut-ftr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 14px;border-top:1px solid var(--bd);margin-top:8px}
-.tut-dots{display:flex;gap:5px;align-items:center}
+.tut-ttl{font-size:15px;font-weight:700;color:var(--t);margin-bottom:7px;letter-spacing:-.2px;word-break:break-word;overflow-wrap:break-word}
+.tut-dsc{font-size:13px;color:var(--t2);line-height:1.6;word-break:break-word;overflow-wrap:break-word}
+.tut-ftr{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 14px;border-top:1px solid var(--bd);margin-top:8px;gap:8px;flex-wrap:wrap}
+.tut-dots{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 .tut-dot{width:7px;height:7px;border-radius:50%;background:var(--b3);transition:all .2s;flex-shrink:0}
 .tut-dot.on{background:var(--b);width:18px;border-radius:4px}
-.tut-nav{display:flex;gap:8px}
+.tut-nav{display:flex;gap:8px;flex-shrink:0}
 .tut-back,.tut-fwd{padding:7px 14px;border-radius:8px;font-size:13px;font-family:var(--ff);font-weight:600;cursor:pointer;transition:all .15s;line-height:1;white-space:nowrap}
 .tut-back{background:none;border:1px solid var(--bd);color:var(--t2)}
 .tut-back:hover:not(:disabled){background:var(--b3);color:var(--t)}
