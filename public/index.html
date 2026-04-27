@@ -16387,6 +16387,9 @@ const TUTO = (() => {
     _active = false;
     document.body.style.overflow = '';
     window.removeEventListener('resize', _onResize);
+    // Teardown current step if any
+    const cur = TUTORIAL_STEPS[step];
+    if (cur?.teardown) try { cur.teardown(); } catch(e) {}
     ['tut-overlay','tut-spotlight','tut-box'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = 'none';
