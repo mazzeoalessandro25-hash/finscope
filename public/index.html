@@ -1465,8 +1465,21 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   #port-cagr-content div[style*="65px 1fr"]{min-width:360px}
   /* Analisi portafoglio: radar labels 3-col → 2-col */
   #port-analysis-content div[style*="repeat(3,1fr)"]{grid-template-columns:1fr 1fr!important}
-  /* Obiettivi prezzi: scroll orizzontale (righe multi-col inline) */
+  /* Obiettivi prezzi: 5-col → 3-col (nasconde guadagno EUR e break-even) */
   #port-targets-content{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .port-target-row{grid-template-columns:auto 1fr auto!important}
+  .port-target-row > div:nth-child(4),
+  .port-target-row > div:nth-child(5){display:none!important}
+  /* Analisi avanzata: blocco 3-col (1fr 1fr 1fr) → 1-col su mobile */
+  #port-analysis-content > div[style*="1fr 1fr 1fr"]{grid-template-columns:1fr!important}
+  /* Ribilanciamento: KPI 3-col → 2-col */
+  #rebalancing-content > div[style*="repeat(3,1fr)"]{grid-template-columns:1fr 1fr!important}
+  /* Ribilanciamento: header inline 5-col → 3-col (allineato alle reb-row) */
+  #rebalancing-content div[style*="72px 1fr 72px"]{grid-template-columns:40px 1fr 50px!important;gap:5px!important}
+  #rebalancing-content div[style*="72px 1fr 72px"] > div:nth-child(4),
+  #rebalancing-content div[style*="72px 1fr 72px"] > div:nth-child(5){display:none!important}
+  /* Fisco: KPI 4-col → 2-col */
+  #fisco-content > div[style*="repeat(4,1fr)"]{grid-template-columns:1fr 1fr!important}
 
   /* ── STOCK DETAIL OVERLAY ── */
   /* Header: porta i bottoni Portfolio/Alert su seconda riga */
