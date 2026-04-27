@@ -16455,7 +16455,13 @@ const TUTO = (() => {
 
   function _onResize() {
     clearTimeout(_resizeT);
-    _resizeT = setTimeout(_position, 120);
+    _resizeT = setTimeout(() => {
+      if (window.innerWidth <= 640) {
+        const box = document.getElementById('tut-box');
+        if (box) { box.style.top = ''; box.style.left = ''; box.style.right = ''; }
+      }
+      _position();
+    }, 120);
   }
 
   function start(fromStep) {
