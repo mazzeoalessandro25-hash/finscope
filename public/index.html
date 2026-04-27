@@ -16225,7 +16225,15 @@ const TUTORIAL_STEPS = [
     pos: 'bottom',
     page: 'screener'
   },
-  // ── 8. SCREENER WATCHLIST ───────────────────────────────────────
+  // ── 8. SCREENER — CLICK SUL TITOLO ──────────────────────────────
+  {
+    target: () => document.getElementById('sc-body')?.closest('table') || document.getElementById('sc-body'),
+    title: '📄 Apri la scheda di un titolo',
+    desc: 'Clicca sul nome di qualsiasi titolo nella tabella per aprire la sua pagina completa: grafico storico, dati fondamentali, FinEdge Score, insider trading e molto altro.',
+    pos: 'top',
+    page: 'screener'
+  },
+  // ── 9. SCREENER WATCHLIST ───────────────────────────────────────
   {
     target: () => document.querySelector('.sc-quick-bar'),
     title: '★ Watchlist personale',
