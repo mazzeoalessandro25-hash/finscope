@@ -16321,7 +16321,13 @@ const TUTO = (() => {
     const s = TUTORIAL_STEPS[step];
     if (!s.target) return null;
     try {
-      return (typeof s.target === 'function' ? s.target() : document.querySelector(s.target)) || null;
+      const el = (typeof s.target === 'function' ? s.target() : document.querySelector(s.target)) || null;
+      if (!el) return null;
+      // Return null if element is invisible (hidden on mobile via CSS)
+      const rect = el.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return null;
+      if (window.getComputedStyle(el).display === 'none') return null;
+      return el;
     } catch(e) { return null; }
   }
 
