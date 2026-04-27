@@ -13237,13 +13237,13 @@ async function loadRiskMetrics(){
         <span style="font-size:9px;font-family:var(--fm);color:var(--t3)">${l} — ${d}</span>
       </div>`).join('')}
     <!-- Crisis Correlation -->
-    <div style="margin-top:14px;padding:12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:8px">
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
-        <div>
+    <div style="margin-top:14px;padding:12px;background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.2);border-radius:8px;width:100%;box-sizing:border-box;min-width:0">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap;gap:8px">
+        <div style="flex:1;min-width:0">
           <div style="font-size:10px;color:var(--r);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;font-weight:700">⚡ Correlazione in Crisi (stima)</div>
           <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px">Durante i crash di mercato la correlazione aumenta — la diversificazione si riduce. Stima basata su ricerca accademica (Longin & Solnik 2001).</div>
         </div>
-        <div style="text-align:right;flex-shrink:0;margin-left:14px">
+        <div style="text-align:right;flex-shrink:0">
           <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">Perdita diversificazione</div>
           <div style="font-size:20px;font-family:var(--fm);font-weight:700;color:var(--r)">-${fmt(divLoss,0)}%</div>
         </div>
