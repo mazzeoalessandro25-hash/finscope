@@ -3972,7 +3972,38 @@ const COM_S=['GC=F','BZ=F','PL=F','SI=F','NG=F','CC=F'];
 const CRYPTO_S=['BTC-USD','ETH-USD','SOL-USD','BNB-USD','XRP-USD','DOGE-USD'];
 
 /* Titoli per movers (S&P 500 noti) */
-const MOVERS_S=['AAPL','NVDA','MSFT','AMZN','GOOGL','META','TSLA','JPM','UNH','XOM','KO','WMT','GS','JNJ','AMD','INTC','NFLX','DIS','PYPL','BABA','V','MA','BAC','UBER','SHOP','CRM','ORCL','IBM','QCOM','MU','ENI.MI','UCG.MI','RACE.MI','ASML','LVMH.PA','STM.MI','SAP','SIE.DE','BNP.PA','TTE.PA'];
+const MOVERS_S=[
+  /* ── US Mega Cap Tech ── */
+  'AAPL','NVDA','MSFT','AMZN','GOOGL','META','TSLA','AMD','INTC','AVGO','ADBE','INTU','CRM','ORCL','IBM',
+  /* ── US Semiconduttori & Hardware ── */
+  'QCOM','MU','TXN','ADI','AMAT','LRCX','KLAC','MRVL','ARM','SMCI','ON','MCHP','TSM',
+  /* ── US Software & Cloud ── */
+  'NOW','WDAY','PANW','CRWD','DDOG','SNOW','NET','SQ','PLTR','SHOP','COIN','ZM',
+  /* ── US Media & Consumer Tech ── */
+  'NFLX','DIS','CMCSA','SPOT','SNAP','ROKU','RBLX','ABNB','UBER','LYFT','DASH','HOOD',
+  /* ── US Finance ── */
+  'JPM','BAC','MS','C','WFC','GS','BLK','AXP','V','MA','PYPL','SCHW','CME','SPGI','BRK-B',
+  /* ── US Healthcare & Pharma ── */
+  'UNH','LLY','ABBV','JNJ','MRK','PFE','AMGN','GILD','REGN','VRTX','MRNA','TMO','ELV',
+  /* ── US Consumer & Retail ── */
+  'KO','WMT','COST','HD','TGT','MCD','SBUX','NKE','LULU','CMG','PG','BABA',
+  /* ── US Energy & Industrial ── */
+  'XOM','CVX','COP','BA','LMT','CAT','GE','HON','F','GM','NEE',
+  /* ── US Telecom ── */
+  'T','VZ',
+  /* ── US EV & Mobility ── */
+  'RIVN','NIO',
+  /* ── Europa: Italia ── */
+  'ENI.MI','UCG.MI','RACE.MI','STM.MI','ENEL.MI','ISP.MI','LDO.MI',
+  /* ── Europa: Francia ── */
+  'LVMH.PA','BNP.PA','TTE.PA','SAN.PA','OR.PA','RMS.PA','AIR.PA','SU.PA','CAP.PA',
+  /* ── Europa: Germania ── */
+  'SAP','SIE.DE','BNP.PA','BMW.DE','BAYN.DE','VOW3.DE','ADS.DE','DTE.DE','DBK.DE','ALV.DE',
+  /* ── Europa: Altro ── */
+  'ASML','ABI.BR','NVO','SHEL','BP','AZN','GSK','HSBC','RIO',
+  /* ── Asia & LatAm ── */
+  'BIDU','JD','PDD','TM','SONY','VALE','PBR','ITUB','MUFG'
+];
 
 const TAPE_ITEMS=[
   {s:'EURUSD=X',l:'EUR/USD',dec:4},{s:'^GSPC',l:'S&P 500',dec:0},
