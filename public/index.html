@@ -16403,15 +16403,18 @@ const TUTO = (() => {
       return;
     }
 
-    // Scroll element into view if needed
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    // Scroll element into view — on mobile scroll to top so it's above the bottom sheet
+    el.scrollIntoView({ behavior: 'smooth', block: isMobile ? 'start' : 'nearest' });
 
-    const rect = el.getBoundingClientRect();
-    spotlight.style.display = 'block';
-    spotlight.style.top    = (rect.top  - PAD) + 'px';
-    spotlight.style.left   = (rect.left - PAD) + 'px';
-    spotlight.style.width  = (rect.width  + PAD * 2) + 'px';
-    spotlight.style.height = (rect.height + PAD * 2) + 'px';
+    // Wait for scroll to settle before reading position
+    setTimeout(() => {
+      const rect2 = el.getBoundingClientRect();
+      spotlight.style.display = 'block';
+      spotlight.style.top    = (rect2.top  - PAD) + 'px';
+      spotlight.style.left   = (rect2.left - PAD) + 'px';
+      spotlight.style.width  = (rect2.width  + PAD * 2) + 'px';
+      spotlight.style.height = (rect2.height + PAD * 2) + 'px';
+    }, isMobile ? 350 : 0);
 
     // On mobile, CSS bottom sheet handles box position — nothing more to do
     if (isMobile) return;
