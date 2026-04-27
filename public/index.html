@@ -16338,8 +16338,8 @@ const TUTO = (() => {
     document.getElementById('tut-overlay').style.display = 'block';
     document.getElementById('tut-box').style.display = 'block';
 
-    // Position after short delay to let DOM settle
-    setTimeout(_position, 50);
+    // Position after DOM has settled and box has its final height
+    setTimeout(_position, 100);
   }
 
   function _position() {
