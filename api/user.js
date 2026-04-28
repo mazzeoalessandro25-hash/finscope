@@ -33,8 +33,20 @@ async function getUserFromToken(req) {
   const auth = req.headers.authorization || '';
   const userId = auth.replace('Bearer ', '');
   if (!userId || !userId.startsWith('user_')) return null;
+
+  // Controlla cache
+  const hit = _tokenCache.get(userId);
+  if (hit && hit.expiry > Date.now()) return hit.user;
+
   try {
-    return await clerk.users.getUser(userId);
+    const user = await clerk.users.getUser(userId);
+    // Salva in cache + pulizia se troppo grande
+    _tokenCache.set(userId, { user, expiry: Date.now() + TOKEN_TTL });
+    if (_tokenCache.size > 500) {
+      const now = Date.now();
+      for (const [k, v] of _tokenCache) if (v.expiry < now) _tokenCache.delete(k);
+    }
+    return user;
   } catch { return null; }
 }
 
