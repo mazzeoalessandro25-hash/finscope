@@ -1455,7 +1455,7 @@ updateClock();
       const CIRC=301.6,sl=[{id:'dArc0',pct:.38},{id:'dArc1',pct:.24},{id:'dArc2',pct:.22},{id:'dArc3',pct:.16}];
       let off=0;
       sl.forEach(s=>{ const el=document.getElementById(s.id); if(!el)return; const dl=CIRC*s.pct; el.style.transition='none'; el.style.strokeDasharray=dl+' '+CIRC; el.style.strokeDashoffset=-off; el.style.opacity='1'; off+=dl; });
-      const vals={dVal:'€13.240',dPnl:'+€1.702',totEur:'€13.240',totUsd:'$14.350',totPnl:'+€1.702'};
+      const vals={dVal:'€14.620',dPnl:'+€1.933',totEur:'€14.620',totUsd:'$16.540',totPnl:'+€1.933'};
       Object.entries(vals).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.textContent=v; });
     } else if(fr===3){
       ['srow0','srow1','srow2','srow3','srow4'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('in'); });
