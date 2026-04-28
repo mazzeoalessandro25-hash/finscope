@@ -1444,7 +1444,7 @@ updateClock();
     if(fr===0){
       [0,1,2,3].forEach(n=>{ const el=document.getElementById('mv'+n); if(el) el.classList.add('in'); });
     } else if(fr===1){
-      const arc=document.getElementById('scoreArc'),sn=document.getElementById('scoreNum'),CIRC=345.4,T=78;
+      const arc=document.getElementById('scoreArc'),sn=document.getElementById('scoreNum'),CIRC=345.4,T=76;
       if(arc){arc.style.transition='none';arc.style.strokeDashoffset=String(CIRC-CIRC*T/100);}
       if(sn) sn.textContent=T;
       const pr=document.getElementById('scorePulseRing');
