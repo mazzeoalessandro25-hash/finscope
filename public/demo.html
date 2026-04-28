@@ -1240,40 +1240,6 @@ function runScene3(){
   });
 }
 
-function runScene4(){
-  const at = document.getElementById('aiText');
-  const full = [
-    "Apple Inc. presenta fondamentali eccezionali con un ROE del 147%, tra i pi\u00F9 elevati del settore tecnologico globale. Il P/E di 28.4x risulta in linea con la media storica della societ\u00E0 e non suggerisce sopravvalutazione significativa.",
-    "",
-    "Il consensus degli analisti rimane costruttivo: 28 raccomandazioni Buy, 8 Hold, 2 Sell, con un target medio a $240 che implica un potenziale di rialzo del +15.2%. Il FinEdge Score di 76/100 riflette solidi fondamentali bilanciati da un momentum tecnico in fase di consolidamento dopo il recente -0.3%."
-  ].join('\n');
-
-  let i=0;
-  function typeNext(){
-    if(i < full.length){
-      const ch = full[i];
-      if(ch==='\n'){
-        at.innerHTML = at.innerHTML.replace('<span class="ai-cursor"></span>','') + '<br>';
-      } else {
-        at.innerHTML = at.innerHTML.replace('<span class="ai-cursor"></span>','') + ch + '<span class="ai-cursor"></span>';
-      }
-      i++;
-      twTimeout = setTimeout(typeNext, 22);
-    } else {
-      at.innerHTML = at.innerHTML.replace('<span class="ai-cursor"></span>','');
-      // indicator bars
-      const indVals = [88,58,45];
-      indVals.forEach((val,idx)=>{
-        later(()=>{
-          const el = document.getElementById('ind'+idx);
-          if(el) el.style.width = val+'%';
-        }, 150 + idx*160);
-      });
-    }
-  }
-  twTimeout = setTimeout(typeNext, 300);
-}
-
 /* ---- Transition crossfade ---- */
 function doTransition(nextIdx, cb){
   const ov = document.getElementById('transOverlay');
