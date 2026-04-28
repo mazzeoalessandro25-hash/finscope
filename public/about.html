@@ -666,7 +666,8 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 .vs-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--bd);color:var(--t2);background:var(--card)}
 .vs-pill-cross{color:var(--r);font-size:11px}
 /* table */
-.vs-table-wrap{border-radius:18px;overflow:hidden;border:1px solid var(--bd);box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.vs-table-outer{border-radius:18px;overflow:hidden;border:1px solid var(--bd);box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.vs-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .vs-table{width:100%;border-collapse:collapse;font-size:13px}
 .vs-table thead tr{background:var(--s2)}
 .vs-table th{padding:14px 18px;font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);border-bottom:2px solid var(--bd)}
