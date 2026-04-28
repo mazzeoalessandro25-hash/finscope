@@ -26,8 +26,8 @@ export default async function handler(req, res) {
     res.setHeader('Cache-Control','public,s-maxage=120,stale-while-revalidate=60');
     try {
       const [mR,gR,fR]=await Promise.all([
-        fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=7d%2C30d%2C1y',{headers:{'User-Agent':'FinEdge/1.0'}}),
-        fetch('https://api.coingecko.com/api/v3/global',{headers:{'User-Agent':'FinEdge/1.0'}}),
+        cgFetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=7d%2C30d%2C1y'),
+        cgFetch('https://api.coingecko.com/api/v3/global'),
         fetch('https://api.alternative.me/fng/')
       ]);
       if(!mR.ok) return res.status(502).json({error:'markets error '+mR.status});
