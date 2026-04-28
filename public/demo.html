@@ -1109,7 +1109,7 @@ function countUp(el, target, durationMs, prefix, suffix){
 
 /* ---- nav state ---- */
 function setNav(btnId){
-  ['navMercati','navScreener','navPortfolio'].forEach(id=>{
+  ['navDashboard','navScreener','navPortfolio','navLab','navMacro'].forEach(id=>{
     const el = document.getElementById(id);
     if(el) el.classList.toggle('active', id === btnId);
   });
