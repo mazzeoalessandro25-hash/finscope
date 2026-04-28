@@ -1386,10 +1386,6 @@ updateClock();
       Object.entries(vals).forEach(([id,v])=>{ const el=document.getElementById(id); if(el) el.textContent=v; });
     } else if(fr===3){
       ['srow0','srow1','srow2','srow3','srow4'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('in'); });
-    } else if(fr===4){
-      const at=document.getElementById('aiText');
-      if(at) at.innerHTML='Apple Inc. presenta fondamentali eccezionali con un ROE del 147%, tra i più elevati del settore tecnologico globale. Il P/E di 28.4x risulta in linea con la media storica della società e non suggerisce sopravvalutazione significativa.<br><br>Il consensus degli analisti rimane costruttivo: 28 raccomandazioni Buy, 8 Hold, 2 Sell, con un target medio a $240 che implica un potenziale di rialzo del +15.2%. Il FinEdge Score di 76/100 riflette solidi fondamentali bilanciati da un momentum tecnico in fase di consolidamento.';
-      [88,58,45].forEach((v,i)=>{ const el=document.getElementById('ind'+i); if(el){el.style.transition='none';el.style.width=v+'%';} });
     }
     // Scenes 5 and 6 are static HTML — no JS needed
   } else {
