@@ -2,6 +2,10 @@ import { createClerkClient } from '@clerk/backend';
 
 const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
+// Cache in-memory dei token verificati — evita una chiamata Clerk per ogni request
+const _tokenCache = new Map(); // userId → { user, expiry }
+const TOKEN_TTL = 5 * 60 * 1000; // 5 minuti
+
 // Vercel KV helper
 async function kv(method, key, value) {
   const base = process.env.KV_REST_API_URL;
