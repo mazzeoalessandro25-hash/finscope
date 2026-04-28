@@ -44,7 +44,7 @@ export default async function handler(req, res) {
       const url=dParam==='max'
         ?`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/market_chart?vs_currency=usd&days=max`
         :`https://api.coingecko.com/api/v3/coins/${encodeURIComponent(id)}/market_chart?vs_currency=usd&days=${dParam}&interval=daily`;
-      const r=await fetch(url,{headers:{'User-Agent':'FinEdge/1.0'}});
+      const r=await cgFetch(url);
       if(!r.ok) return res.status(502).json({error:'chart error '+r.status});
       return res.json(await r.json());
     } catch(e){ return res.status(500).json({error:e.message}); }
