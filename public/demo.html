@@ -1449,7 +1449,7 @@ updateClock();
       if(sn) sn.textContent=T;
       const pr=document.getElementById('scorePulseRing');
       if(pr){pr.setAttribute('stroke-opacity','0.5');pr.classList.add('pulse-anim');}
-      [72,92,75,80,60].forEach((v,i)=>{ const el=document.getElementById('dim'+i); if(el){el.style.transition='none';el.style.width=v+'%';} });
+      [70,90,72,80,60].forEach((v,i)=>{ const el=document.getElementById('dim'+i); if(el){el.style.transition='none';el.style.width=v+'%';} });
     } else if(fr===2){
       ['prow0','prow1','prow2','prow3'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('in'); });
       const CIRC=301.6,sl=[{id:'dArc0',pct:.38},{id:'dArc1',pct:.24},{id:'dArc2',pct:.22},{id:'dArc3',pct:.16}];
