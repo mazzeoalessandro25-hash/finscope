@@ -1,5 +1,19 @@
 import { fetchQuoteSummary, fetchYahooQuote } from './_lib/yahoo.js';
 
+// ── CoinGecko helper: aggiunge API key se disponibile, riprova una volta su 429 ──
+async function cgFetch(url) {
+  const headers = { 'User-Agent': 'FinEdge/1.0' };
+  const key = process.env.COINGECKO_API_KEY;
+  if (key) headers['x-cg-demo-api-key'] = key;
+
+  let r = await fetch(url, { headers });
+  if (r.status === 429) {
+    await new Promise(res => setTimeout(res, 1500));
+    r = await fetch(url, { headers });
+  }
+  return r;
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
