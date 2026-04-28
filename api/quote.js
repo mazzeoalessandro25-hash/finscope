@@ -60,8 +60,8 @@ export default async function handler(req, res) {
       const d=valid.reduce((p,c)=>Math.abs(c-dParam)<Math.abs(p-dParam)?c:p);
       const base='https://api.coingecko.com/api/v3/coins/'+encodeURIComponent(id);
       const [ohlcR,volR]=await Promise.all([
-        fetch(`${base}/ohlc?vs_currency=usd&days=${d}`,{headers:{'User-Agent':'FinEdge/1.0'}}),
-        fetch(`${base}/market_chart?vs_currency=usd&days=${d}&interval=daily`,{headers:{'User-Agent':'FinEdge/1.0'}})
+        cgFetch(`${base}/ohlc?vs_currency=usd&days=${d}`),
+        cgFetch(`${base}/market_chart?vs_currency=usd&days=${d}&interval=daily`)
       ]);
       if(!ohlcR.ok) return res.status(502).json({error:'ohlc error '+ohlcR.status});
       const ohlc=await ohlcR.json();
