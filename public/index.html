@@ -5135,9 +5135,12 @@ async function loadComs(){
 
 /* ── CRYPTO ── */
 async function loadCrypto(){
-  const sparks=await Promise.all(CRYPTO_S.map(s=>fetchSparkData(s)));
+  const [sparks,quotes]=await Promise.all([
+    Promise.all(CRYPTO_S.map(s=>fetchSparkData(s))),
+    Promise.all(CRYPTO_S.map(s=>api(s).catch(()=>null))),
+  ]);
   for(let i=0;i<CRYPTO_S.length;i++){
-    const d=await api(CRYPTO_S[i]);const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+    const d=quotes[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
     const dec=CRYPTO_S[i].includes('XRP')||CRYPTO_S[i].includes('ADA')||CRYPTO_S[i].includes('DOGE')?4:CRYPTO_S[i].includes('SOL')||CRYPTO_S[i].includes('BNB')?2:0;
     document.getElementById('k'+i+'p').textContent=d?'$'+fmt(d.price,dec):'N/D';
     const ce=document.getElementById('k'+i+'c');ce.textContent=chgStr(c);ce.className='cry-c '+(up?'up':'down');
