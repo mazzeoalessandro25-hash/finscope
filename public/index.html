@@ -7175,17 +7175,13 @@ async function _backfillPacHistory(plan,startDateStr,dayOfMonth,freq){
       }
       if(!price)continue;
       const qty=plan.amount/price;
-      portfolio.push({
-        sym:plan.sym,qty,buyPrice:price,currency:plan.currency,
-        symbol:plan.currency==='EUR'?'€':'$',
-        cat:plan.cat||'etf',name:plan.name,
-        addedAt:Date.now(),buyDate:execDate,_pac:true
-      });
       plan.log.push({date:execDate,amount:plan.amount,price,qty});
       plan.lastExecuted=execDate;
     }
     // Storico ordinato dal più recente al meno recente
     plan.log.sort((a,b)=>b.date.localeCompare(a.date));
+    // Crea/aggiorna una singola entry aggregata nel portafoglio (prezzo medio ponderato)
+    _rebuildPacPortfolioEntry(plan);
   }catch{}
 }
 
