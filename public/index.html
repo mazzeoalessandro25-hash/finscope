@@ -7213,7 +7213,7 @@ function switchPortTab(name){
   if(name==='reddito'){loadDividendTracker();renderTaxDashboard();}
   if(name==='gestione'){renderRebalancing();renderTransactionHistory();renderPriceAlerts();}
   if(name==='news'){loadPortfolioNews();}
-  if(name==='pac'){renderPacPlans();renderPacLog();}
+  if(name==='pac'){renderPacPlans();renderPacLog();autoExecuteDuePacs();}
 }
 
 function setPortSort(key){
