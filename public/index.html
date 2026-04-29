@@ -5121,9 +5121,12 @@ async function fetchSparkData(sym){
 
 /* ── COMMODITIES ── */
 async function loadComs(){
-  const sparks=await Promise.all(COM_S.map(s=>fetchSparkData(s)));
+  const [sparks,quotes]=await Promise.all([
+    Promise.all(COM_S.map(s=>fetchSparkData(s))),
+    Promise.all(COM_S.map(s=>api(s).catch(()=>null))),
+  ]);
   for(let i=0;i<COM_S.length;i++){
-    const d=await api(COM_S[i]);const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
+    const d=quotes[i];const c=d?chgPct(d.price,d.prev):null;const up=c==null||c>=0;
     document.getElementById('c'+i+'p').textContent=d?'$'+fmt(d.price,2):'N/D';
     const ce=document.getElementById('c'+i+'c');ce.textContent=chgStr(c);ce.className='com-c '+(up?'up':'down');
     drawSparkline('sp-c'+i,sparks[i],up);
