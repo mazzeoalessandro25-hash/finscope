@@ -6243,11 +6243,6 @@ async function loadMcap(region,btn){
 /* ── BOOT ── */
 async function boot(){
   updateHours();
-  // Tape, heatmap e mcap partono subito — non dipendono dagli altri
-  loadTape();
-  loadHeatmap();
-  loadMcap('world');
-  renderCalendar(); // async, non serve await — si aggiorna da sola
   await Promise.all([
     loadDashChart(1,'^GSPC','1y',null),
     loadDashChart(2,'^NDX','1y',null),
@@ -6257,6 +6252,10 @@ async function boot(){
     loadCrypto(),
     loadMovers(),
   ]);
+  loadTape();
+  loadHeatmap();
+  loadMcap('world');
+  renderCalendar(); // async, non serve await — si aggiorna da sola
   document.getElementById('dash-ts').textContent='Aggiornato: '+now();
 }
 boot();
