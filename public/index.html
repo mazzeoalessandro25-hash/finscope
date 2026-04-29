@@ -7372,6 +7372,78 @@ function renderPacLog(){
   });
 }
 
+// Mostra edit inline del prezzo di un acquisto PAC
+function openPacEntryEdit(planId, entryDate){
+  const plan=pacPlans.find(p=>p.id===planId);
+  if(!plan)return;
+  const entry=(plan.log||[]).find(l=>l.date===entryDate);
+  if(!entry)return;
+  const row=document.getElementById('pac-row-'+planId+'-'+entryDate);
+  if(!row)return;
+  const c=plan.currency==='EUR'?'€':'$';
+  row.innerHTML=
+    '<td colspan="5" style="padding:6px 4px">'+
+      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
+        '<span style="font-size:11px;color:var(--t3);font-family:var(--fm)">'+entryDate+'</span>'+
+        '<span style="font-size:11px;color:var(--t2)">'+c+entry.amount+' →</span>'+
+        '<label style="font-size:11px;color:var(--t2)">Prezzo reale:</label>'+
+        '<input id="pac-edit-price-inp" type="number" step="0.0001" min="0.0001" value="'+entry.price.toFixed(4)+'" '+
+          'style="width:100px;padding:4px 8px;border:1px solid var(--bd);border-radius:6px;'+
+          'font-family:var(--fm);font-size:12px;background:var(--s2);color:var(--t)"/>'+
+        '<span id="pac-edit-qty-prev" style="font-size:10px;color:var(--t3);font-family:var(--fm)">'+
+          '= '+(entry.qty||0).toFixed(4)+' quote'+
+        '</span>'+
+      '</div>'+
+    '</td>'+
+    '<td style="padding:6px 4px;text-align:center;white-space:nowrap">'+
+      '<button onclick="savePacEntryEdit(\''+planId+'\',\''+entryDate+'\')" '+
+        'style="background:var(--g);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:11px;padding:3px 8px;font-weight:600;margin-right:3px">✓</button>'+
+      '<button onclick="renderPacLog()" '+
+        'style="background:none;border:1px solid var(--bd);border-radius:5px;cursor:pointer;font-size:11px;padding:3px 7px;color:var(--t3)">✕</button>'+
+    '</td>';
+  const inp=document.getElementById('pac-edit-price-inp');
+  const prev=document.getElementById('pac-edit-qty-prev');
+  if(inp&&prev){
+    inp.oninput=()=>{
+      const np=parseFloat(inp.value)||0;
+      prev.textContent=np>0?'= '+(entry.amount/np).toFixed(4)+' quote':'';
+    };
+    inp.focus();inp.select();
+    inp.onkeydown=e=>{if(e.key==='Enter')savePacEntryEdit(planId,entryDate);if(e.key==='Escape')renderPacLog();};
+  }
+}
+
+async function savePacEntryEdit(planId, entryDate){
+  const plan=pacPlans.find(p=>p.id===planId);
+  if(!plan)return;
+  const entry=(plan.log||[]).find(l=>l.date===entryDate);
+  if(!entry)return;
+  const inp=document.getElementById('pac-edit-price-inp');
+  if(!inp)return;
+  const newPrice=parseFloat(inp.value);
+  if(!newPrice||newPrice<=0)return;
+  const oldQty=entry.qty;
+  const newQty=entry.amount/newPrice;
+  // Aggiorna voce nel log PAC
+  entry.price=newPrice;
+  entry.qty=newQty;
+  // Trova e aggiorna la voce corrispondente nel portafoglio
+  // (stesso simbolo, stessa data di acquisto, flag _pac, quantità vicina a oldQty)
+  const portIdx=portfolio.findIndex(p=>
+    p.sym===plan.sym&&p.buyDate===entryDate&&p._pac===true&&
+    Math.abs((p.qty||0)-oldQty)<Math.max(oldQty*0.01,0.0001)
+  );
+  if(portIdx>=0){
+    portfolio[portIdx].buyPrice=newPrice;
+    portfolio[portIdx].qty=newQty;
+  }
+  await savePacPlans();
+  await savePortfolio();
+  renderPortfolio();
+  renderPacPlans();
+  renderPacLog();
+}
+
 // Badge rosso sul tab quando ci sono PAC in scadenza
 function checkPacDue(){
   const today=new Date().toISOString().split('T')[0];
