@@ -7542,19 +7542,14 @@ async function executePacNow(id){
     const today=new Date().toISOString().split('T')[0];
     const currency=p.currency||(p.sym.match(/\.(MI|PA|DE|SW|AS|MC|BR|VI|L)$/)?'EUR':'USD');
     const csym=currency==='EUR'?'€':'$';
-    // Aggiunge al portafoglio come acquisto reale
-    portfolio.push({
-      sym:p.sym, qty, buyPrice:price, currency, symbol:csym,
-      cat:p.cat||'etf', name:p.name,
-      addedAt:Date.now(), buyDate:today, _pac:true
-    });
-    await savePortfolio();
-    renderPortfolio();
-    // Registra esecuzione nel log PAC
+    // Registra esecuzione nel log PAC e aggiorna entry aggregata nel portafoglio
     if(!p.log)p.log=[];
     p.log.unshift({date:today, amount:p.amount, price, qty});
     p.lastExecuted=today;
     p.nextExecution=_nextPacDate(today, p.freq, p.dayOfMonth||null);
+    _rebuildPacPortfolioEntry(p);
+    await savePortfolio();
+    renderPortfolio();
     await savePacPlans();
     renderPacPlans();
     renderPacLog();
