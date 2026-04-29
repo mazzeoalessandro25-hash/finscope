@@ -7096,6 +7096,81 @@ function onPacSearchKey(e){
   else if(e.key==='Escape'){dd.innerHTML='';}
 }
 
+// Prima data di esecuzione futura (avanza finché non supera oggi)
+function _nextFutureExecDate(startDateStr,dayOfMonth,freq){
+  const today=new Date().toISOString().split('T')[0];
+  const d=new Date(startDateStr);
+  let c=dayOfMonth?_targetDayOfMonth(d.getFullYear(),d.getMonth(),dayOfMonth):_firstTradingDay(d.getFullYear(),d.getMonth());
+  let n=0;
+  while(c<=today&&n<120){c=_nextPacDate(c,freq,dayOfMonth);n++;}
+  return c;
+}
+
+// Tutte le date di esecuzione comprese tra startDate (incluso) e oggi (escluso)
+function _getPastExecDates(startDateStr,dayOfMonth,freq){
+  const today=new Date().toISOString().split('T')[0];
+  const d=new Date(startDateStr);
+  let c=dayOfMonth?_targetDayOfMonth(d.getFullYear(),d.getMonth(),dayOfMonth):_firstTradingDay(d.getFullYear(),d.getMonth());
+  const dates=[];
+  let n=0;
+  while(c<today&&n<60){dates.push(c);c=_nextPacDate(c,freq,dayOfMonth);n++;}
+  return dates;
+}
+
+// Recupera prezzi storici e crea tutti gli acquisti PAC passati
+async function _backfillPacHistory(plan,startDateStr,dayOfMonth,freq){
+  const pastDates=_getPastExecDates(startDateStr,dayOfMonth,freq);
+  if(!pastDates.length)return;
+  try{
+    // Scarica serie storica (max range = weekly — copre anni di storia)
+    const hr=await fetch('/api/quote?symbol='+encodeURIComponent(plan.sym)+'&type=history&range=max');
+    const hd=await hr.json();
+    const pts=(hd.points||[]).filter(p=>p.time&&p.close!=null);
+    // Costruisce serie ordinata per data
+    const series=pts.map(p=>({
+      date:new Date(p.time*1000).toISOString().split('T')[0],
+      price:p.close
+    })).sort((a,b)=>a.date.localeCompare(b.date));
+    // Prezzo corrente come fallback se la serie storica è vuota
+    let fallback=null;
+    if(!series.length){
+      const qr=await fetch('/api/quote?symbol='+encodeURIComponent(plan.sym));
+      const q=await qr.json();
+      fallback=q.price||null;
+    }
+    for(const execDate of pastDates){
+      let price=null;
+      if(series.length){
+        // Ricerca binaria: primo indice con date >= execDate
+        let lo=0,hi=series.length-1;
+        while(lo<hi){const mid=(lo+hi)>>1;if(series[mid].date<execDate)lo=mid+1;else hi=mid;}
+        // Confronta il punto trovato con quello precedente e prende il più vicino
+        const cands=[];
+        if(lo<series.length)cands.push(series[lo]);
+        if(lo>0)cands.push(series[lo-1]);
+        const best=cands.reduce((a,b)=>
+          Math.abs(new Date(a.date)-new Date(execDate))<Math.abs(new Date(b.date)-new Date(execDate))?a:b
+        );
+        if(Math.abs(new Date(best.date)-new Date(execDate))<=10*86400000)price=best.price;
+      }else{
+        price=fallback;
+      }
+      if(!price)continue;
+      const qty=plan.amount/price;
+      portfolio.push({
+        sym:plan.sym,qty,buyPrice:price,currency:plan.currency,
+        symbol:plan.currency==='EUR'?'€':'$',
+        cat:plan.cat||'etf',name:plan.name,
+        addedAt:Date.now(),buyDate:execDate,_pac:true
+      });
+      plan.log.push({date:execDate,amount:plan.amount,price,qty});
+      plan.lastExecuted=execDate;
+    }
+    // Storico ordinato dal più recente al meno recente
+    plan.log.sort((a,b)=>b.date.localeCompare(a.date));
+  }catch{}
+}
+
 async function addPacPlan(){
   if(!currentUser){openAuthModal();return;}
   const symRaw=(document.getElementById('pac-search')?.value||'').trim().toUpperCase();
@@ -7115,19 +7190,29 @@ async function addPacPlan(){
   const currency=isEU?'EUR':'USD';
   const cat=_pacCatCache[symRaw]||'etf';
   const name=_pacNameCache[symRaw]||symRaw;
-  const nextExecution=_firstExecDate(startDate, dayOfMonth, freq);
+  const today=new Date().toISOString().split('T')[0];
   const plan={
     id:'pac_'+Date.now(),
-    sym:symRaw, name, amount, currency, freq, dayOfMonth,
-    startDate, nextExecution,
-    lastExecuted:null, active:true, cat,
+    sym:symRaw,name,amount,currency,freq,dayOfMonth,
+    startDate,nextExecution:null,
+    lastExecuted:null,active:true,cat,
     log:[]
   };
+  // Se la data di inizio è nel passato, ricostruisce tutti gli acquisti storici
+  if(startDate<today){
+    const addBtn=document.querySelector('#pac-add-form .port-add-btn');
+    if(addBtn){addBtn.disabled=true;addBtn.textContent='Recupero storico prezzi…';}
+    await _backfillPacHistory(plan,startDate,dayOfMonth,freq);
+    if(addBtn){addBtn.disabled=false;addBtn.textContent='＋ Aggiungi PAC';}
+  }
+  plan.nextExecution=_nextFutureExecDate(startDate,dayOfMonth,freq);
   pacPlans.push(plan);
   await savePacPlans();
+  if(plan.log.length>0){await savePortfolio();renderPortfolio();}
   closePacForm();
   renderPacPlans();
   renderPacLog();
+  checkPacDue();
 }
 
 async function deletePacPlan(id){
