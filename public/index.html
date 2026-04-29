@@ -7084,6 +7084,45 @@ function checkPacDue(){
   }
 }
 
+// Esecuzione automatica PAC: gira al caricamento e all'apertura del tab
+async function autoExecuteDuePacs(){
+  if(!currentUser)return;
+  const today=new Date().toISOString().split('T')[0];
+  const due=pacPlans.filter(p=>p.active&&p.nextExecution<=today);
+  if(!due.length)return;
+  let count=0;
+  for(const p of due){
+    try{
+      const r=await fetch('/api/quote?symbol='+encodeURIComponent(p.sym));
+      const q=await r.json();
+      if(!q.price)continue;
+      const price=q.price;
+      const qty=p.amount/price;
+      const currency=p.currency||(p.sym.match(/\.(MI|PA|DE|SW|AS|MC|BR|VI|L)$/)?'EUR':'USD');
+      portfolio.push({
+        sym:p.sym,qty,buyPrice:price,currency,
+        symbol:currency==='EUR'?'€':'$',
+        cat:p.cat||'etf',name:p.name,
+        addedAt:Date.now(),buyDate:today,_pac:true
+      });
+      if(!p.log)p.log=[];
+      p.log.unshift({date:today,amount:p.amount,price,qty});
+      p.lastExecuted=today;
+      p.nextExecution=_nextPacDate(today,p.freq,p.dayOfMonth||null);
+      count++;
+    }catch{}
+  }
+  if(count>0){
+    await savePortfolio();
+    await savePacPlans();
+    renderPortfolio();
+    renderPacPlans();
+    renderPacLog();
+    checkPacDue();
+    _showPacToast('\u2713 '+count+' acquisto'+(count>1?'i':'')+' PAC eseguito'+(count>1?'i':'')+' automaticamente');
+  }
+}
+
 // Esecuzione PAC: fetch prezzo corrente → aggiunge al portafoglio → avanza data
 async function executePacNow(id){
   const p=pacPlans.find(x=>x.id===id);
