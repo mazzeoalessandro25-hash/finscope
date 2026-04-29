@@ -7293,7 +7293,7 @@ function renderPacPlans(){
           <span style="font-size:11px;font-family:var(--fm);color:${statusColor}">${statusText}</span>
           <div style="display:flex;gap:6px;align-items:center">
             ${isDue?`<button id="pac-exec-btn-${p.id}" onclick="executePacNow('${p.id}')" style="background:var(--b);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;padding:6px 14px;cursor:pointer;font-family:var(--fm)">${_t('pac.execute')}</button>`:''}
-            <button onclick="togglePacPlan('${p.id}')" title="${p.active?'Ferma i nuovi acquisti mensili (mantieni le posizioni nel portafoglio)':'Riprendi gli acquisti mensili'}" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;color:${p.active?'var(--o)':'var(--g)';font-family:var(--ff)}">${p.active?'⏸ Ferma':'▶ Riprendi'}</button>
+            <button onclick="togglePacPlan('${p.id}')" title="${p.active?'Ferma i nuovi acquisti (mantieni le posizioni nel portafoglio)':'Riprendi gli acquisti mensili'}" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;color:${p.active?'var(--o)':'var(--g)'};font-family:var(--ff)">${p.active?'⏸ Ferma':'▶ Riprendi'}</button>
             <button onclick="deletePacPlan('${p.id}')" title="Elimina il PAC e rimuovi le posizioni dal portafoglio" style="background:none;border:1px solid var(--r);border-radius:6px;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;color:var(--r);font-family:var(--ff)">✕ Elimina</button>
           </div>
         </div>
