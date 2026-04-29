@@ -7697,10 +7697,11 @@ function detectPortCat(sym){
 }
 
 function getPortCurrency(sym){
-  const isEU=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||
-    sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||
-    sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L');
-  return isEU?{code:'EUR',sym:'€'}:{code:'USD',sym:'$'};
+  if(sym.endsWith('.L'))return{code:'GBP',sym:'£'};
+  if(sym.endsWith('.SW'))return{code:'CHF',sym:'CHF '};
+  const isEUR=sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||
+    sym.endsWith('.AS')||sym.endsWith('.MC')||sym.endsWith('.BR')||sym.endsWith('.VI');
+  return isEUR?{code:'EUR',sym:'€'}:{code:'USD',sym:'$'};
 }
 
 function portFmtPrice(p){
