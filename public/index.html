@@ -7216,7 +7216,30 @@ async function addPacPlan(){
 }
 
 async function deletePacPlan(id){
-  if(!confirm(_t('pac.deleteConfirm')))return;
+  const plan=pacPlans.find(p=>p.id===id);
+  if(!plan)return;
+  // Trova le posizioni nel portafoglio create da questo PAC
+  const logDates=new Set((plan.log||[]).map(l=>l.date));
+  const linkedItems=portfolio.filter(p=>p._pac&&p.sym===plan.sym&&logDates.has(p.buyDate));
+  const n=linkedItems.length;
+  const msg=n>0
+    ?'Eliminare il piano PAC su '+plan.sym+'?\n\n'
+      +'Verranno rimosse anche le '+n+' posizioni nel portafoglio create da questo PAC.\n\n'
+      +'⏸  Per mantenere le posizioni e fermare solo i nuovi acquisti usa il pulsante "Ferma acquisti".'
+    :'Eliminare il piano PAC su '+plan.sym+'?';
+  if(!confirm(msg))return;
+  // Rimuovi dal portafoglio le posizioni associate a questo PAC (sym + data + qty corrispondente)
+  if(n>0){
+    portfolio=portfolio.filter(p=>{
+      if(!(p._pac&&p.sym===plan.sym&&logDates.has(p.buyDate)))return true;
+      const logEntry=(plan.log||[]).find(l=>l.date===p.buyDate);
+      if(!logEntry)return true;
+      // Mantieni solo se la quantità è significativamente diversa (potrebbe essere un acquisto manuale)
+      return Math.abs((p.qty||0)-(logEntry.qty||0))>Math.max((logEntry.qty||0)*0.01,0.00001);
+    });
+    await savePortfolio();
+    renderPortfolio();
+  }
   pacPlans=pacPlans.filter(p=>p.id!==id);
   await savePacPlans();
   renderPacPlans();
