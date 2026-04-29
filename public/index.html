@@ -8818,16 +8818,12 @@ async function loadHeatmap(){
   const container=document.getElementById('heatmap-container');
   container.innerHTML='<div class="ld" style="padding:20px">Caricamento heatmap...</div>';
   hmData={};
-  const BATCH=14;
-  for(let i=0;i<HM_STOCKS.length;i+=BATCH){
-    const batch=HM_STOCKS.slice(i,i+BATCH);
-    const quotes=await Promise.all(batch.map(st=>api(st.s)));
-    batch.forEach((st,j)=>{
-      const q=quotes[j];if(!q)return;
-      hmData[st.s]={chg:q.prev?((q.price-q.prev)/q.prev*100):0,price:q.price};
-    });
-    hmRender();
-  }
+  const quotes=await Promise.all(HM_STOCKS.map(st=>api(st.s).catch(()=>null)));
+  HM_STOCKS.forEach((st,j)=>{
+    const q=quotes[j];if(!q)return;
+    hmData[st.s]={chg:q.prev?((q.price-q.prev)/q.prev*100):0,price:q.price};
+  });
+  hmRender();
 }
 
 /* ══════════════════════════════════════════
