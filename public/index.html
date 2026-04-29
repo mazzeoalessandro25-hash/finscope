@@ -7118,6 +7118,24 @@ function _getPastExecDates(startDateStr,dayOfMonth,freq){
 }
 
 // Recupera prezzi storici e crea tutti gli acquisti PAC passati
+// Ricostruisce UN'UNICA entry aggregata nel portafoglio per un piano PAC
+// (prezzo medio ponderato su tutti gli acquisti del log, qtà totale)
+function _rebuildPacPortfolioEntry(plan){
+  // Rimuovi entry precedenti: sia nuovo formato (_pacId) sia vecchio (solo _pac+sym senza _pacId)
+  portfolio=portfolio.filter(p=>!(p._pac&&(p._pacId===plan.id||(!p._pacId&&p.sym===plan.sym))));
+  if(!plan.log||!plan.log.length)return;
+  const totalQty=plan.log.reduce((s,l)=>s+(l.qty||0),0);
+  const totalInvested=plan.log.reduce((s,l)=>s+(l.amount||0),0);
+  if(totalQty<=0)return;
+  const avgPrice=totalInvested/totalQty;
+  portfolio.push({
+    sym:plan.sym,qty:totalQty,buyPrice:avgPrice,
+    currency:plan.currency,symbol:plan.currency==='EUR'?'€':'$',
+    cat:plan.cat||'etf',name:plan.name,
+    addedAt:Date.now(),_pac:true,_pacId:plan.id
+  });
+}
+
 async function _backfillPacHistory(plan,startDateStr,dayOfMonth,freq){
   const pastDates=_getPastExecDates(startDateStr,dayOfMonth,freq);
   if(!pastDates.length)return;
