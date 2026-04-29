@@ -5061,9 +5061,10 @@ async function loadVIX(){
 
 /* ── MOVERS ── */
 async function loadMovers(){
+  const pairs=await Promise.all(MOVERS_S.map(s=>api(s).then(d=>({s,d})).catch(()=>({s,d:null}))));
   const results=[];
-  for(const s of MOVERS_S){
-    const d=await api(s);if(!d)continue;
+  for(const {s,d} of pairs){
+    if(!d)continue;
     const c=chgPct(d.price,d.prev);if(c==null)continue;
     const name=STOCKS.find(x=>x.s===s)?.n||s;
     results.push({s,name,c,price:d.price});
