@@ -6990,7 +6990,7 @@ function openPacForm(){
 function closePacForm(){
   document.getElementById('pac-add-form').style.display='none';
   ['pac-search','pac-amount','pac-day'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
-  document.getElementById('pac-dd').innerHTML='';
+  const _pd=document.getElementById('pac-dd');if(_pd){_pd.innerHTML='';_pd.classList.remove('open');}
   document.getElementById('pac-preview-line').style.display='none';
 }
 
