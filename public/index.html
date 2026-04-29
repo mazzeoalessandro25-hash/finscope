@@ -8877,6 +8877,10 @@ function hidePortDropdown(){
 
 document.addEventListener('click',e=>{
   if(!e.target.closest('#port-search')&&!e.target.closest('#port-dd'))hidePortDropdown();
+  if(!e.target.closest('#pac-search')&&!e.target.closest('#pac-dd')){
+    const pd=document.getElementById('pac-dd');
+    if(pd){pd.innerHTML='';pd.classList.remove('open');}
+  }
 });
 
 function checkPortAlertBadges(quotes){
