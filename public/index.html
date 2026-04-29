@@ -4181,13 +4181,12 @@ function _logoFmpTicker(ticker){
   return _LOGO_REMAP[clean]||clean;
 }
 function _logoOnError(img,ticker,smClass){
-  /* Fallback 1: Clearbit via website memorizzato in scData */
   const clean=cleanTicker(ticker);
-  const d=window.scData&&(window.scData[ticker]||window.scData[clean]);
-  if(d?.website){
-    const domain=d.website.replace(/^https?:\/\//,'').split('/')[0];
-    img.onerror=()=>{img.style.display='none';img.nextElementSibling&&(img.nextElementSibling.style.display='inline-flex');};
-    img.src=`https://logo.clearbit.com/${domain}`;
+  /* Fallback 1: FMP */
+  if(!img._fmpTried){
+    img._fmpTried=true;
+    img.onerror=()=>_logoOnError(img,ticker,smClass);
+    img.src=`https://financialmodelingprep.com/image-stock/${_logoFmpTicker(ticker)}.png`;
     return;
   }
   /* Fallback finale: iniziali colorate */
@@ -4195,7 +4194,8 @@ function _logoOnError(img,ticker,smClass){
   if(img.nextElementSibling)img.nextElementSibling.style.display='inline-flex';
 }
 function _logoSrc(ticker){
-  return`https://financialmodelingprep.com/image-stock/${_logoFmpTicker(ticker)}.png`;
+  const clean=cleanTicker(ticker);
+  return`https://assets.parqet.com/logos/symbol/${encodeURIComponent(clean)}?format=png`;
 }
 function logoHtml(ticker,name){
   const clean=cleanTicker(ticker);
