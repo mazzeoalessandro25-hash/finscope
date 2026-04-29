@@ -3120,8 +3120,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div>
                 <div class="port-inp-lbl">Strumento (ETF, Azione…)</div>
                 <div style="position:relative">
-                  <input class="port-inp" id="pac-search" type="text" placeholder="Cerca ticker o nome…" autocomplete="off"
-                    oninput="onPacSearchInput()" onkeydown="onPacSearchKey(event)" style="width:100%;box-sizing:border-box"/>
+                  <input class="port-inp" id="pac-search" type="text" placeholder="Cerca ETF (es. VWCE, iShares World, Amundi…)" autocomplete="off"
+                    oninput="onPacSearchInput()" onkeydown="onPacSearchKey(event)" onfocus="onPacSearchFocus()" style="width:100%;box-sizing:border-box"/>
                   <div id="pac-dd" class="port-dd"></div>
                 </div>
               </div>
