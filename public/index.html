@@ -9290,7 +9290,18 @@ function renderPortAnalysis(portItems, quotes){
   let totalInv=0;
   const items=portItems.map((item,i)=>{
     const q=quotes[i];
-    const info=allS.find(s=>s.s===item.sym)||{t:'growth',sec:'Other',mkt:'US'};
+    const info=allS.find(s=>s.s===item.sym)||(()=>{
+      const sd=scSummary[item.sym]||scData[item.sym];
+      const s2=item.sym.toUpperCase();
+      let detectedMkt='US';
+      if(s2.endsWith('.MI'))detectedMkt='IT';
+      else if(s2.endsWith('.PA')||s2.endsWith('.DE')||s2.endsWith('.AS')||s2.endsWith('.MC')||s2.endsWith('.BR')||s2.endsWith('.VI')||s2.endsWith('.SW'))detectedMkt='EU';
+      else if(s2.endsWith('.L'))detectedMkt='UK';
+      else if(s2.endsWith('.HK')||s2.endsWith('.T'))detectedMkt='AS';
+      const cat=item.cat||detectPortCat(item.sym);
+      const defType=cat==='etf'?'growth':cat==='crypto'?'growth':cat==='commodity'?'value':'growth';
+      return{t:defType,sec:sd?.sector||'Other',mkt:detectedMkt};
+    })();
     const invested=item.qty*item.buyPrice;
     totalInv+=invested;
     const summ=scSummary[item.sym]||scData[item.sym];
