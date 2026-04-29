@@ -7299,13 +7299,19 @@ function renderPacLog(){
     withCum.reverse();
     const nameSpan=p.name&&p.name!==p.sym?'<span style="font-size:11px;color:var(--t3);margin-left:6px">'+p.name+'</span>':'';
     const nAcq=p.log.length;
+    const pid=p.id;
     const rows=withCum.map(l=>
-      '<tr style="border-bottom:1px solid var(--bd)">'+
+      '<tr id="pac-row-'+pid+'-'+l.date+'" style="border-bottom:1px solid var(--bd)">'+
       '<td style="padding:7px 4px 7px 0;color:var(--t3);white-space:nowrap">'+l.date+'</td>'+
       '<td style="padding:7px 4px;text-align:right;font-weight:600;color:var(--t)">'+c+l.amount.toLocaleString('it-IT')+'</td>'+
       '<td style="padding:7px 4px;text-align:right;color:var(--t2)">'+c+(l.price||0).toFixed(2)+'</td>'+
       '<td style="padding:7px 4px;text-align:right;color:var(--t2);font-family:var(--fm)">'+(l.qty||0).toFixed(4)+'</td>'+
       '<td style="padding:7px 4px;text-align:right;font-weight:600;color:var(--b);font-family:var(--fm)">'+c+l.cumInv.toLocaleString('it-IT')+'</td>'+
+      '<td style="padding:7px 4px;text-align:center">'+
+        '<button onclick="openPacEntryEdit(\''+pid+'\',\''+l.date+'\')" '+
+          'style="background:none;border:1px solid var(--bd);border-radius:5px;cursor:pointer;'+
+          'font-size:11px;padding:2px 6px;color:var(--t3);line-height:1" title="Modifica prezzo di acquisto">✏</button>'+
+      '</td>'+
       '</tr>'
     ).join('');
     if(pi>0)html+='<hr style="border:none;border-top:1px solid var(--bd);margin:16px 0">';
