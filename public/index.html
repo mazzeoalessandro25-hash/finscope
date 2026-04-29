@@ -7046,29 +7046,86 @@ function renderPacLog(){
   const el=document.getElementById('pac-log-content');
   const card=document.getElementById('pac-log-card');
   if(!el||!card)return;
-  const allLogs=pacPlans.flatMap(p=>(p.log||[]).map(l=>({...l,sym:p.sym,name:p.name,currency:p.currency})));
-  allLogs.sort((a,b)=>b.date.localeCompare(a.date));
-  if(!allLogs.length){card.style.display='none';return;}
+  const plansWithLog=pacPlans.filter(p=>p.log&&p.log.length>0);
+  if(!plansWithLog.length){card.style.display='none';return;}
   card.style.display='block';
-  const totalByPlan={};
-  pacPlans.forEach(p=>{totalByPlan[p.sym]=(totalByPlan[p.sym]||0)+(p.log||[]).reduce((s,l)=>s+l.amount,0);});
   const csym=c=>c==='EUR'?'€':'$';
-  el.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:12px">
-    <thead><tr style="color:var(--t3);font-family:var(--fm);font-size:10px;text-align:left;border-bottom:1px solid var(--bd)">
-      <th style="padding:8px 4px 8px 0">${_t('pac.log.date')}</th>
-      <th style="padding:8px 4px">${_t('pac.log.asset')}</th>
-      <th style="padding:8px 4px;text-align:right">${_t('pac.log.amount')}</th>
-      <th style="padding:8px 4px;text-align:right">${_t('pac.log.price')}</th>
-      <th style="padding:8px 4px;text-align:right">${_t('pac.log.qty')}</th>
-    </tr></thead>
-    <tbody>${allLogs.map(l=>`<tr style="border-bottom:1px solid var(--bd)">
-      <td style="padding:8px 4px 8px 0;color:var(--t3);white-space:nowrap">${l.date}</td>
-      <td style="padding:8px 4px;font-weight:600;color:var(--t)">${l.sym}</td>
-      <td style="padding:8px 4px;text-align:right;color:var(--t);font-weight:600">${csym(l.currency)}${l.amount.toLocaleString('it-IT')}</td>
-      <td style="padding:8px 4px;text-align:right;color:var(--t2)">${csym(l.currency)}${(l.price||0).toFixed(2)}</td>
-      <td style="padding:8px 4px;text-align:right;color:var(--t2);font-family:var(--fm)">${(l.qty||0).toFixed(6)}</td>
-    </tr>`).join('')}</tbody>
-  </table>`;
+  let html='';
+  plansWithLog.forEach((p,pi)=>{
+    const c=csym(p.currency);
+    const totalInvested=p.log.reduce((s,l)=>s+l.amount,0);
+    const totalQty=p.log.reduce((s,l)=>s+(l.qty||0),0);
+    // Ordina per data crescente per calcolare il cumulato, poi ribalta per mostrare il più recente in cima
+    const sortedAsc=[...p.log].sort((a,b)=>a.date.localeCompare(b.date));
+    let cumInv=0;
+    const withCum=sortedAsc.map(l=>{cumInv+=l.amount;return Object.assign({},l,{cumInv});});
+    withCum.reverse();
+    const nameSpan=p.name&&p.name!==p.sym?'<span style="font-size:11px;color:var(--t3);margin-left:6px">'+p.name+'</span>':'';
+    const nAcq=p.log.length;
+    const rows=withCum.map(l=>
+      '<tr style="border-bottom:1px solid var(--bd)">'+
+      '<td style="padding:7px 4px 7px 0;color:var(--t3);white-space:nowrap">'+l.date+'</td>'+
+      '<td style="padding:7px 4px;text-align:right;font-weight:600;color:var(--t)">'+c+l.amount.toLocaleString('it-IT')+'</td>'+
+      '<td style="padding:7px 4px;text-align:right;color:var(--t2)">'+c+(l.price||0).toFixed(2)+'</td>'+
+      '<td style="padding:7px 4px;text-align:right;color:var(--t2);font-family:var(--fm)">'+(l.qty||0).toFixed(4)+'</td>'+
+      '<td style="padding:7px 4px;text-align:right;font-weight:600;color:var(--b);font-family:var(--fm)">'+c+l.cumInv.toLocaleString('it-IT')+'</td>'+
+      '</tr>'
+    ).join('');
+    if(pi>0)html+='<hr style="border:none;border-top:1px solid var(--bd);margin:16px 0">';
+    html+=
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:12px">'+
+        '<div><span style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">'+p.sym+'</span>'+nameSpan+'</div>'+
+        '<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">'+
+          '<div style="text-align:right">'+
+            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Investito totale</div>'+
+            '<div style="font-size:14px;font-weight:700;color:var(--t)">'+c+totalInvested.toLocaleString('it-IT')+'</div>'+
+            '<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">'+nAcq+' acquist'+(nAcq!==1?'i':'o')+'</div>'+
+          '</div>'+
+          '<div style="text-align:right">'+
+            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Quote tot.</div>'+
+            '<div style="font-size:14px;font-weight:700;color:var(--t)">'+totalQty.toFixed(4)+'</div>'+
+          '</div>'+
+          '<div style="text-align:right" id="pac-val-'+p.id+'">'+
+            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Valore attuale</div>'+
+            '<div style="font-size:14px;font-weight:700;color:var(--t3)">—</div>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch">'+
+      '<table style="width:100%;border-collapse:collapse;font-size:11px;min-width:320px">'+
+        '<thead><tr style="color:var(--t3);font-family:var(--fm);font-size:9px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd)">'+
+          '<th style="padding:6px 4px 6px 0;text-align:left">Data</th>'+
+          '<th style="padding:6px 4px;text-align:right">Importo</th>'+
+          '<th style="padding:6px 4px;text-align:right">Prezzo</th>'+
+          '<th style="padding:6px 4px;text-align:right">Quote</th>'+
+          '<th style="padding:6px 4px;text-align:right">Cumulato</th>'+
+        '</tr></thead>'+
+        '<tbody>'+rows+'</tbody>'+
+      '</table></div>';
+  });
+  el.innerHTML=html;
+  // Aggiorna il valore di mercato corrente in modo asincrono per ogni piano
+  plansWithLog.forEach(async p=>{
+    const valEl=document.getElementById('pac-val-'+p.id);
+    if(!valEl)return;
+    try{
+      const r=await fetch('/api/quote?symbol='+encodeURIComponent(p.sym));
+      const q=await r.json();
+      if(!q.price)return;
+      const totQty=p.log.reduce((s,l)=>s+(l.qty||0),0);
+      const totInv=p.log.reduce((s,l)=>s+l.amount,0);
+      const val=totQty*q.price;
+      const ret=val-totInv;
+      const retPct=totInv>0?ret/totInv*100:0;
+      const c=p.currency==='EUR'?'€':'$';
+      const col=ret>=0?'var(--g)':'var(--r)';
+      const sign=ret>=0?'+':'';
+      valEl.innerHTML=
+        '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Valore attuale</div>'+
+        '<div style="font-size:14px;font-weight:700;color:var(--t)">'+c+val.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div>'+
+        '<div style="font-size:10px;font-weight:600;color:'+col+';font-family:var(--fm)">'+sign+c+Math.abs(ret).toFixed(2)+' ('+sign+retPct.toFixed(1)+'%)</div>';
+    }catch{}
+  });
 }
 
 // Badge rosso sul tab quando ci sono PAC in scadenza
