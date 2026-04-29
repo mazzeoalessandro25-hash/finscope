@@ -7459,21 +7459,12 @@ async function savePacEntryEdit(planId, entryDate){
   if(!inp)return;
   const newPrice=parseFloat(inp.value);
   if(!newPrice||newPrice<=0)return;
-  const oldQty=entry.qty;
   const newQty=entry.amount/newPrice;
   // Aggiorna voce nel log PAC
   entry.price=newPrice;
   entry.qty=newQty;
-  // Trova e aggiorna la voce corrispondente nel portafoglio
-  // (stesso simbolo, stessa data di acquisto, flag _pac, quantità vicina a oldQty)
-  const portIdx=portfolio.findIndex(p=>
-    p.sym===plan.sym&&p.buyDate===entryDate&&p._pac===true&&
-    Math.abs((p.qty||0)-oldQty)<Math.max(oldQty*0.01,0.0001)
-  );
-  if(portIdx>=0){
-    portfolio[portIdx].buyPrice=newPrice;
-    portfolio[portIdx].qty=newQty;
-  }
+  // Ricalcola la entry aggregata nel portafoglio (prezzo medio ponderato su tutti gli acquisti)
+  _rebuildPacPortfolioEntry(plan);
   await savePacPlans();
   await savePortfolio();
   renderPortfolio();
