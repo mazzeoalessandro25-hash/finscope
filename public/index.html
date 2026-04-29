@@ -6998,27 +6998,51 @@ function onPacSearchInput(){
   clearTimeout(_pacSearchDelay);
   const q=(document.getElementById('pac-search')?.value||'').trim();
   document.getElementById('pac-preview-line').style.display='none';
-  if(q.length<2){document.getElementById('pac-dd').innerHTML='';return;}
+  if(q.length===0){showPacEtfSuggestions();return;}
+  const dd=document.getElementById('pac-dd');
+  if(q.length<2){if(dd){dd.innerHTML='';dd.classList.remove('open');}return;}
   _pacSearchDelay=setTimeout(async()=>{
     try{
       const r=await fetch('/api/quote?type=search&q='+encodeURIComponent(q));
       const d=await r.json();
-      const dd=document.getElementById('pac-dd');
       if(!dd)return;
       dd.innerHTML='';
-      (d.quotes||[]).forEach(x=>{
+      const quotes=d.quotes||[];
+      if(!quotes.length){dd.classList.remove('open');return;}
+      // Mostra ETF in cima, poi gli altri
+      const etfs=quotes.filter(x=>x.cat==='etf');
+      const others=quotes.filter(x=>x.cat!=='etf');
+      const sorted=[...etfs,...others];
+      if(etfs.length&&others.length){
+        const catEl=document.createElement('div');
+        catEl.className='port-dd-cat';
+        catEl.textContent='ETF';
+        dd.appendChild(catEl);
+      }
+      sorted.forEach((x,i)=>{
+        if(etfs.length&&others.length&&i===etfs.length){
+          const catEl=document.createElement('div');
+          catEl.className='port-dd-cat';
+          catEl.textContent='Azioni / Altro';
+          dd.appendChild(catEl);
+        }
         const el=document.createElement('div');
         el.className='port-dd-item';
-        el.textContent=x.symbol+(x.name&&x.name!==x.symbol?' — '+x.name:'');
+        const badge=x.cat==='etf'?'<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(59,130,246,.12);color:var(--b);font-family:var(--fm);font-weight:600;margin-left:6px">ETF</span>':'';
+        el.innerHTML='<span style="font-family:var(--fm);font-weight:700;font-size:12px">'+x.symbol+'</span>'
+          +badge
+          +(x.name&&x.name!==x.symbol?'<span style="font-size:11px;color:var(--t3);margin-left:6px">'+x.name+'</span>':'');
         el.onclick=()=>{
           document.getElementById('pac-search').value=x.symbol;
           _pacNameCache[x.symbol]=x.name||x.symbol;
           _pacCatCache[x.symbol]=x.cat||'etf';
           dd.innerHTML='';
+          dd.classList.remove('open');
           _fetchPacPreview(x.symbol);
         };
         dd.appendChild(el);
       });
+      dd.classList.add('open');
     }catch{}
   },300);
 }
