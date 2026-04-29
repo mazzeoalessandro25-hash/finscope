@@ -7877,7 +7877,7 @@ async function loadPortDailyAnalysis(assets, totalChgUSD, totalChgPct, totalValU
   schedulePortDailyRefresh();
 }
 
-async function loadPortfolioEarnings(assets){
+async function loadPortfolioEarnings(assets, noDailyData=false){
   const section = document.getElementById('port-earnings-section');
   const listEl  = document.getElementById('port-earnings-list');
   if(!section || !listEl || !assets || assets.length===0) return;
