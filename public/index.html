@@ -7937,6 +7937,16 @@ async function loadPortfolioEarnings(assets, noDailyData=false){
 
   listEl.innerHTML = rows;
   section.style.display = 'block';
+
+  // Se la card giornaliera è ancora nascosta (nessun dato daily), mostrala solo con gli earnings
+  if(noDailyData) {
+    const dailyOuter = document.getElementById('port-daily-outer');
+    if(dailyOuter && dailyOuter.style.display === 'none') {
+      dailyOuter.style.display = 'block';
+      const dailyText = document.getElementById('port-daily-text');
+      if(dailyText) dailyText.innerHTML = '<div style="font-size:11px;color:var(--t3);padding:4px 0">Analisi giornaliera non disponibile (dati di mercato assenti o mercato chiuso).</div>';
+    }
+  }
 }
 
 function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macroNews=[], indicesMap={}, totalValUSD=0, earningsCtx=null){
