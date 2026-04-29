@@ -8824,12 +8824,21 @@ async function loadHeatmap(){
   const container=document.getElementById('heatmap-container');
   container.innerHTML='<div class="ld" style="padding:20px">Caricamento heatmap...</div>';
   hmData={};
-  const quotes=await Promise.all(HM_STOCKS.map(st=>api(st.s).catch(()=>null)));
-  HM_STOCKS.forEach((st,j)=>{
-    const q=quotes[j];if(!q)return;
-    hmData[st.s]={chg:q.prev?((q.price-q.prev)/q.prev*100):0,price:q.price};
-  });
-  hmRender();
+  const BATCH=14;
+  const batchPromises=[];
+  for(let i=0;i<HM_STOCKS.length;i+=BATCH){
+    const batch=HM_STOCKS.slice(i,i+BATCH);
+    batchPromises.push(
+      Promise.all(batch.map(st=>api(st.s).catch(()=>null))).then(quotes=>{
+        batch.forEach((st,j)=>{
+          const q=quotes[j];if(!q)return;
+          hmData[st.s]={chg:q.prev?((q.price-q.prev)/q.prev*100):0,price:q.price};
+        });
+        hmRender();
+      })
+    );
+  }
+  await Promise.all(batchPromises);
 }
 
 /* ══════════════════════════════════════════
