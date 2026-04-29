@@ -1458,7 +1458,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
   /* ── PORTAFOGLIO ── */
   /* Colonne principali: rimuovi altezza fissa 580px (impilate → 1740px totali) */
-  .port-left,.port-center{height:auto}
+  .port-left,.port-center{height:auto;min-width:0}
+  /* Card analisi: evita overflow su contenuto dinamico JS */
+  .port-analysis-card{max-width:100%;overflow:hidden}
+  /* Porta summary e daily-outer a piena larghezza */
+  #port-summary,#port-daily-text{max-width:100%;overflow-x:hidden}
   /* Lista titoli: scrollabile con altezza massima */
   #port-list{max-height:360px}
   /* Riepilogo giornata: override inline style="height:580px" */
