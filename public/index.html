@@ -7508,17 +7508,11 @@ async function autoExecuteDuePacs(){
       if(!q.price)continue;
       const price=q.price;
       const qty=p.amount/price;
-      const currency=p.currency||(p.sym.match(/\.(MI|PA|DE|SW|AS|MC|BR|VI|L)$/)?'EUR':'USD');
-      portfolio.push({
-        sym:p.sym,qty,buyPrice:price,currency,
-        symbol:currency==='EUR'?'€':'$',
-        cat:p.cat||'etf',name:p.name,
-        addedAt:Date.now(),buyDate:today,_pac:true
-      });
       if(!p.log)p.log=[];
       p.log.unshift({date:today,amount:p.amount,price,qty});
       p.lastExecuted=today;
       p.nextExecution=_nextPacDate(today,p.freq,p.dayOfMonth||null);
+      _rebuildPacPortfolioEntry(p);
       count++;
     }catch{}
   }
