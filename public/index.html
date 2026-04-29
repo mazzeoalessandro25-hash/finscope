@@ -6852,6 +6852,133 @@ function _firstExecDate(startDateStr, dayOfMonth, freq){
 
 let _pacSearchDelay=null, _pacNameCache={}, _pacCatCache={};
 
+// Catalogo ETF suggeriti, organizzato per categoria
+const _ETF_CATALOG=[
+  {cat:'🌍 Azionari Globali',items:[
+    {s:'VWCE.DE',n:'Vanguard FTSE All-World Acc'},
+    {s:'VWRL.MI',n:'Vanguard FTSE All-World Dist'},
+    {s:'SWDA.MI',n:'iShares Core MSCI World'},
+    {s:'IWDA.AS',n:'iShares Core MSCI World (AMS)'},
+    {s:'ISAC.MI',n:'iShares MSCI ACWI'},
+    {s:'SSAC.MI',n:'SPDR MSCI ACWI IMI'},
+    {s:'LCUW.MI',n:'SPDR MSCI World'},
+    {s:'XDWD.DE',n:'Xtrackers MSCI World Swap'},
+    {s:'PAWD.MI',n:'Invesco MSCI World'},
+    {s:'LYWD.MI',n:'Amundi MSCI World'},
+  ]},
+  {cat:'🇺🇸 Azionari USA / S&P 500',items:[
+    {s:'VUAA.MI',n:'Vanguard S&P 500 Acc'},
+    {s:'VUSA.MI',n:'Vanguard S&P 500 Dist'},
+    {s:'CSPX.MI',n:'iShares Core S&P 500'},
+    {s:'SXR8.DE',n:'iShares Core S&P 500 (EUR H)'},
+    {s:'CSNDX.MI',n:'iShares NASDAQ-100'},
+    {s:'XDPG.DE',n:'Xtrackers S&P 500 Swap'},
+    {s:'LYPS.MI',n:'Amundi S&P 500 ESG'},
+    {s:'500.MI',n:'Lyxor S&P 500'},
+    {s:'SPY',n:'SPDR S&P 500 ETF Trust'},
+    {s:'VOO',n:'Vanguard S&P 500 ETF'},
+    {s:'QQQ',n:'Invesco QQQ Trust (NASDAQ-100)'},
+    {s:'VTI',n:'Vanguard Total Stock Market'},
+  ]},
+  {cat:'🇪🇺 Azionari Europa',items:[
+    {s:'MEUD.MI',n:'Amundi MSCI EMU'},
+    {s:'EXW1.DE',n:'iShares EURO STOXX 50'},
+    {s:'EXSA.DE',n:'iShares STOXX Europe 600'},
+    {s:'LCUL.MI',n:'SPDR MSCI Europe'},
+    {s:'IEUR.MI',n:'iShares Core MSCI Europe'},
+    {s:'EZU',n:'iShares MSCI Eurozone ETF'},
+    {s:'EXI1.DE',n:'iShares FTSE MIB (IT)'},
+  ]},
+  {cat:'🌏 Mercati Emergenti',items:[
+    {s:'EIMI.MI',n:'iShares Core EM IMI'},
+    {s:'EMIM.MI',n:'iShares Core EM IMI (AMS)'},
+    {s:'VFEM.MI',n:'Vanguard FTSE Emerging Markets'},
+    {s:'PAEEM.MI',n:'Amundi Prime Emerging Markets'},
+    {s:'XMME.DE',n:'Xtrackers MSCI Emerging Markets'},
+    {s:'EEM',n:'iShares MSCI Emerging Markets'},
+    {s:'VWO',n:'Vanguard FTSE Emerging Markets'},
+  ]},
+  {cat:'💼 Obbligazionari',items:[
+    {s:'AGGH.MI',n:'iShares Core Global Agg (EUR hdg)'},
+    {s:'VAGU.MI',n:'Vanguard Global Aggregate'},
+    {s:'IUSB.MI',n:'iShares Core Global Aggregate'},
+    {s:'IBGX.MI',n:'iShares Euro Govt Bond'},
+    {s:'XGIU.DE',n:'Xtrackers Global Govt Bond (EUR H)'},
+    {s:'TLT',n:'iShares 20+ Year Treasury Bond'},
+    {s:'BND',n:'Vanguard Total Bond Market'},
+    {s:'IEAG.MI',n:'iShares Euro Aggregate Bond'},
+    {s:'IBCI.MI',n:'iShares € Inflation Linked'},
+  ]},
+  {cat:'📈 Fattoriali / Smart Beta',items:[
+    {s:'IWFQ.MI',n:'iShares Edge MSCI World Quality'},
+    {s:'IWMO.MI',n:'iShares Edge MSCI World Momentum'},
+    {s:'IWVL.MI',n:'iShares Edge MSCI World Value'},
+    {s:'WSML.MI',n:'iShares MSCI World Small Cap'},
+    {s:'XDWM.DE',n:'Xtrackers MSCI World Minimum Volatility'},
+    {s:'MVOL.MI',n:'iShares Edge MSCI World Min Vol'},
+  ]},
+  {cat:'🏢 Immobiliare (REIT)',items:[
+    {s:'IWDP.MI',n:'iShares Developed World Property'},
+    {s:'IPRP.MI',n:'iShares European Property Yield'},
+    {s:'VNQ',n:'Vanguard Real Estate ETF'},
+    {s:'XREA.MI',n:'Xtrackers FTSE Developed Europe Real Estate'},
+  ]},
+  {cat:'🔮 Tematici / Settoriali',items:[
+    {s:'IQQH.DE',n:'iShares Global Clean Energy'},
+    {s:'XDWH.DE',n:'Xtrackers MSCI World Health Care'},
+    {s:'XDWT.DE',n:'Xtrackers MSCI World Technology'},
+    {s:'XDWF.DE',n:'Xtrackers MSCI World Financials'},
+    {s:'CIBR',n:'First Trust NASDAQ Cybersecurity'},
+    {s:'ESPO',n:'VanEck Video Gaming & eSports'},
+    {s:'HCAI.MI',n:'iShares Healthcare Innovation'},
+    {s:'DRIV',n:'Global X Autonomous & EV'},
+    {s:'FWRA.MI',n:'Invesco Morningstar US Energy Infra'},
+  ]},
+  {cat:'🥇 Materie Prime / Gold',items:[
+    {s:'SGLN.MI',n:'iShares Physical Gold ETC'},
+    {s:'PPFB.MI',n:'Invesco Physical Gold ETC'},
+    {s:'4GLD.DE',n:'Xetra-Gold ETC'},
+    {s:'GLD',n:'SPDR Gold Shares'},
+    {s:'IAU',n:'iShares Gold Trust'},
+    {s:'GSG',n:'iShares S&P GSCI Commodity-Indexed'},
+    {s:'CMOD.MI',n:'iShares Diversified Commodity Swap'},
+  ]},
+];
+
+function showPacEtfSuggestions(){
+  const dd=document.getElementById('pac-dd');
+  if(!dd)return;
+  dd.innerHTML='';
+  _ETF_CATALOG.forEach(group=>{
+    const catEl=document.createElement('div');
+    catEl.className='port-dd-cat';
+    catEl.textContent=group.cat;
+    dd.appendChild(catEl);
+    group.items.forEach(etf=>{
+      const item=document.createElement('div');
+      item.className='port-dd-item';
+      item.innerHTML='<span style="font-family:var(--fm);font-weight:700;font-size:12px;color:var(--t)">'+etf.s+'</span>'
+        +'<span style="font-size:11px;color:var(--t3);margin-left:8px">'+etf.n+'</span>';
+      item.onclick=()=>{
+        const inp=document.getElementById('pac-search');
+        if(inp)inp.value=etf.s;
+        _pacNameCache[etf.s]=etf.n;
+        _pacCatCache[etf.s]='etf';
+        dd.innerHTML='';
+        dd.classList.remove('open');
+        _fetchPacPreview(etf.s);
+      };
+      dd.appendChild(item);
+    });
+  });
+  dd.classList.add('open');
+}
+
+function onPacSearchFocus(){
+  const q=(document.getElementById('pac-search')?.value||'').trim();
+  if(!q)showPacEtfSuggestions();
+}
+
 function openPacForm(){
   if(!currentUser){openAuthModal();return;}
   document.getElementById('pac-add-form').style.display='block';
