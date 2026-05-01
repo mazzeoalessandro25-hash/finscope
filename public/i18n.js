@@ -445,6 +445,7 @@ const TRANSLATIONS={
     'risk.oppTotalPos':'Il portafoglio ha generato',
     'risk.oppTotalNeg':'Il portafoglio ha perso',
     'risk.oppVsSpy':'rispetto a un investimento equivalente in SPY.',
+    'risk.oppFooter':'Calcolo basato sugli ultimi 12 mesi · Non tiene conto dei costi di transazione',
     'risk.volTitle':'📊 Volatilità per titolo (12 mesi)',
     'risk.corrTitle':'Matrice di correlazione (12 mesi) — valori da -1 a +1',
     'risk.corrHighPos':'Correlazione molto alta — rischio concentrazione',
