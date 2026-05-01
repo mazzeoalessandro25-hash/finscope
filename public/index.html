@@ -13874,38 +13874,50 @@ async function loadRiskMetrics(){
   }
 
   // ── Metrics ──
-  const annRet=_mean(portRets)*252;
+  const n=portRets.length;
+  // Sharpe: usa rendimento aritmetico annualizzato (standard CFA per expected excess return)
+  const annRetArith=_mean(portRets)*252;
   const annVol=_std(portRets)*Math.sqrt(252);
-  const sharpe=annVol>0?(annRet-RISK_FREE)/annVol:0;
+  const sharpe=annVol>0?(annRetArith-RISK_FREE)/annVol:0;
 
-  // Max Drawdown
+  // Rendimento annualizzato GEOMETRICO — corretto per display e Calmar
+  const compRet=portRets.reduce((acc,r)=>acc*(1+r),1)-1;
+  const annRetGeom=n>0?Math.pow(1+compRet,252/n)-1:0;
+
+  // Max Drawdown (su rendimenti composti — corretto)
   let peak=1,maxDD=0,cum=1;
   portRets.forEach(r=>{cum*=(1+r);if(cum>peak)peak=cum;const dd=(peak-cum)/peak;if(dd>maxDD)maxDD=dd;});
 
   // VaR 95% historical
   const sorted=[...portRets].sort((a,b)=>a-b);
-  const var95=sorted[Math.floor(sorted.length*0.05)]||0;
-  const portVal=portfolio.reduce((s,item,i)=>s+item.qty*(quotes[i]?.price??item.buyPrice),0);
+  const var95=sorted[Math.floor(n*0.05)]||0;
+  // portVal in USD con FX conversion (coerente con donut)
+  const portVal=portfolio.reduce((s,item,i)=>{
+    const q=quotes[i];const isEUR=(q?.currency||item.currency||'USD')==='EUR';
+    return s+item.qty*(q?.price??item.buyPrice)*(isEUR?_fxR2:1);
+  },0);
   const var95Abs=Math.abs(var95)*portVal;
 
-  // Beta vs SPY
+  // Beta vs SPY (covarianza/varianza — n si cancella, invariante rispetto a pop/sample)
   const spyLen=Math.min(portRets.length,spyRets.length);
   let beta=1;
   if(spyLen>=10){
     const pS=portRets.slice(0,spyLen),sS=spyRets.slice(0,spyLen);
     const pm=_mean(pS),sm=_mean(sS);
-    const cov=pS.reduce((s,r,i)=>s+(r-pm)*(sS[i]-sm),0)/spyLen;
-    const sv=sS.reduce((s,r)=>s+(r-sm)**2,0)/spyLen;
+    const cov=pS.reduce((s,r,i)=>s+(r-pm)*(sS[i]-sm),0)/(spyLen-1);
+    const sv=sS.reduce((s,r)=>s+(r-sm)**2,0)/(spyLen-1);
     if(sv>0)beta=cov/sv;
   }
 
-  // Sortino (downside deviation)
-  const negRets=portRets.filter(r=>r<0);
-  const downDev=negRets.length?_std(negRets)*Math.sqrt(252):0;
-  const sortino=downDev>0?(annRet-RISK_FREE)/downDev:0;
+  // Sortino Ratio — downside deviation rispetto al MAR (risk-free giornaliero)
+  // Formula corretta: RMS delle deviazioni sotto MAR su TUTTI i giorni (non solo negativi)
+  const dailyRF=RISK_FREE/252;
+  const downsideSq=portRets.reduce((s,r)=>s+Math.pow(Math.min(r-dailyRF,0),2),0)/(n-1||1);
+  const downDev=Math.sqrt(downsideSq)*Math.sqrt(252);
+  const sortino=downDev>0?(annRetArith-RISK_FREE)/downDev:0;
 
-  // Calmar
-  const calmar=maxDD>0?annRet/maxDD:0;
+  // Calmar — rendimento geometrico annualizzato / max drawdown (entrambi composti)
+  const calmar=maxDD>0?annRetGeom/maxDD:0;
 
   // Correlation matrix
   const corrM=portfolio.map((_,a)=>portfolio.map((_2,b)=>{
