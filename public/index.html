@@ -15178,6 +15178,14 @@ function renderStressTest(){
     {label:'Bull (+20%)',market:20,color:'#059669'},
     {label:'Euforia (+30%)',market:30,color:'#065F46'},
   ];
+  // Scenari storici calibrati su SPX peak-to-trough
+  const historicalScenarios=[
+    {label:'2008 — Crisi finanziaria',market:-56,note:'S&P 500 −56% (Oct 2007 → Mar 2009)',color:'#7F0000'},
+    {label:'2020 — COVID crash',market:-34,note:'S&P 500 −34% in 33 giorni (Feb–Mar 2020)',color:'#B91C1C'},
+    {label:'2022 — Bear rate hike',market:-25,note:'S&P 500 −25% (Jan–Oct 2022)',color:'#DC2626'},
+    {label:'2000 — Dot-com bust',market:-49,note:'S&P 500 −49% (Mar 2000 → Oct 2002)',color:'#991B1B'},
+    {label:'1987 — Black Monday',market:-34,note:'S&P 500 −34% in 2 mesi (Aug–Oct 1987)',color:'#7F1D1D'},
+  ];
   el.innerHTML=`
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
       <div class="rb" style="flex:1;min-width:120px"><div class="rl">BETA PORTAFOGLIO</div><div class="rv2 a" style="font-size:20px">${portfolioBeta.toFixed(2)}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${portfolioBeta>1.2?'Alta sensibilità':portfolioBeta<0.8?'Bassa sensibilità':'Sensibilità moderata'}</div></div>
