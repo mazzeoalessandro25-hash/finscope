@@ -14044,55 +14044,55 @@ async function loadRiskMetrics(){
     <!-- 6 KPI principali -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
       <div class="rb">
-        <div class="rl" style="display:flex;align-items:center">SHARPE RATIO${tip('Rendimento in eccesso rispetto al tasso privo di rischio (4,5% T-Bill USA), diviso per la volatilità annualizzata. Formula: (Rendimento annuo − 4,5%) ÷ Volatilità. >1,5 = eccellente · 1–1,5 = buono · 0,5–1 = sufficiente · <0,5 = da migliorare. Pesi per valore corrente di mercato, std dev campionaria (÷n−1).')}</div>
+        <div class="rl" style="display:flex;align-items:center">${_t('risk.sharpe')}${tip(_t('risk.tip.sharpe'))}</div>
         <div class="rv2" style="color:${shCol};font-size:20px">${fmt(sharpe,2)}</div>
         <div style="font-size:9px;font-family:var(--fm);color:${shCol}">${shLbl}</div>
       </div>
       <div class="rb">
-        <div class="rl" style="display:flex;align-items:center">MAX DRAWDOWN${tip('La perdita massima registrata dal picco al minimo successivo nell\'intero periodo analizzato. Calcolato su rendimenti composti giornalieri. Esempio: se il portafoglio passa da 100 a 70, il Max Drawdown è −30%. Misura il peggior scenario storico vissuto.')}</div>
+        <div class="rl" style="display:flex;align-items:center">${_t('risk.maxDD')}${tip(_t('risk.tip.maxDD'))}</div>
         <div class="rv2 down" style="font-size:20px">-${fmt(maxDD*100,1)}%</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">picco → minimo</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${_t('risk.ddSub')}</div>
       </div>
       <div class="rb">
-        <div class="rl" style="display:flex;align-items:center">VOLATILITÀ ANNUA${tip('Deviazione standard dei rendimenti giornalieri, annualizzata moltiplicando per √252 (giorni di borsa in un anno). Formula: σ_giornaliera × √252. Misura quanto i rendimenti si discostano dalla media. <15% = bassa · 15–30% = media · >30% = alta. Calcolata con varianza campionaria (÷n−1).')}</div>
+        <div class="rl" style="display:flex;align-items:center">${_t('risk.vol')}${tip(_t('risk.tip.vol'))}</div>
         <div class="rv2" style="color:${vCol};font-size:20px">${fmt(annVol*100,1)}%</div>
         <div style="font-size:9px;font-family:var(--fm);color:${vCol}">${vLbl}</div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       <div class="rb">
-        <div class="rl" style="display:flex;align-items:center">VaR 95% (1g)${tip('Value at Risk al 95% di confidenza, metodo storico. Risponde a: "Qual è la perdita massima giornaliera nel 95% dei giorni?" Calcolato come il 5° percentile dei rendimenti giornalieri storici. Il 5% restante dei giorni può superare questa soglia.')}</div>
+        <div class="rl" style="display:flex;align-items:center">${_t('risk.var')}${tip(_t('risk.tip.var'))}</div>
         <div class="rv2 down" style="font-size:20px">-${fmt(Math.abs(var95)*100,2)}%</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -$${fmt(var95Abs,0)}/giorno</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -$${fmt(var95Abs,0)}/${_t('risk.varSub')}</div>
       </div>
       <div class="rb">
-        <div class="rl" style="display:flex;align-items:center">CVaR 95% (1g)${tip('Expected Shortfall (CVaR) al 95%: la MEDIA delle perdite nei giorni peggiori del 5%. A differenza del VaR che è una soglia, il CVaR risponde a "quanto perdo IN MEDIA quando le cose vanno male?". Standard Basel III / FRTB. Sempre ≥ VaR in valore assoluto. Più conservativo e realistico.')}</div>
+        <div class="rl" style="display:flex;align-items:center">${_t('risk.cvar')}${tip(_t('risk.tip.cvar'))}</div>
         <div class="rv2 down" style="font-size:20px">-${fmt(Math.abs(cvar95)*100,2)}%</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -$${fmt(cvar95Abs,0)}/giorno</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -$${fmt(cvar95Abs,0)}/${_t('risk.varSub')}</div>
       </div>
       <div class="rb">
-        <div class="rl" style="display:flex;align-items:center">BETA VS S&P 500${tip('Sensibilità del portafoglio ai movimenti dell\'S&P 500 (via ETF SPY). Calcolato come Cov(portafoglio, SPY) ÷ Var(SPY) sugli ultimi 12 mesi. Beta = 1: si muove come il mercato. Beta > 1: amplifica i movimenti (più rischioso). Beta < 1: più stabile del mercato. Beta negativo: si muove in direzione opposta.')}</div>
+        <div class="rl" style="display:flex;align-items:center">${_t('risk.beta')}${tip(_t('risk.tip.beta'))}</div>
         <div class="rv2 ${beta>1.3?'down':beta<0.7?'b':'a'}" style="font-size:20px">${fmt(beta,2)}</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${beta>1?'Più volatile':'Meno volatile'} del mercato</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${beta>1?_t('risk.betaMoreVol'):_t('risk.betaLessVol')}</div>
       </div>
     </div>
 
     <!-- 3 metriche avanzate -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
       <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">Sortino Ratio${tip('Come lo Sharpe, ma penalizza SOLO le perdite, non la volatilità positiva. Denominatore = downside deviation: radice della media dei quadrati dei ritorni SOTTO il tasso privo di rischio (4,5%÷252 al giorno), su tutti i giorni — non solo quelli negativi. Formula CFA corretta. >1 = buono.')}</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">${_t('risk.sortino')}${tip(_t('risk.tip.sortino'))}</div>
         <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${sortino>=1?'var(--g)':sortino>=0.5?'var(--o)':'var(--r)'}">${fmt(sortino,2)}</div>
-        <div style="font-size:10px;color:var(--t2);margin-top:4px">Solo rischio di perdita · >1 = buono</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">${_t('risk.sortinoSub')}</div>
       </div>
       <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">Calmar Ratio${tip('Rendimento annualizzato (CAGR geometrico) diviso per il Max Drawdown. Risponde a: "Per ogni punto percentuale di perdita massima subita, quanto hai guadagnato annualmente?" Entrambe le grandezze usano rendimenti composti per coerenza. >1 = buono: guadagni più di quanto hai perso nel peggior momento.')}</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">${_t('risk.calmar')}${tip(_t('risk.tip.calmar'))}</div>
         <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${calmar>=1?'var(--g)':calmar>=0.5?'var(--o)':'var(--r)'}">${fmt(calmar,2)}</div>
-        <div style="font-size:10px;color:var(--t2);margin-top:4px">CAGR ÷ Max Drawdown · >1 = buono</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">${_t('risk.calmarSub')}</div>
       </div>
       <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">Rendimento annualizzato${tip('CAGR geometrico: (1 + rendimento_composto_12mesi)^(252÷giorni) − 1. Il metodo geometrico è corretto perché tiene conto del compounding — es. +10% e −10% in due giorni = −1% reale, non 0%. Basato sugli ultimi 12 mesi di dati.')}</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">${_t('risk.annRet')}${tip(_t('risk.tip.annRet'))}</div>
         <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${annRetGeom>=0?'var(--g)':'var(--r)'}">${annRetGeom>=0?'+':''}${fmt(annRetGeom*100,1)}%</div>
-        <div style="font-size:10px;color:var(--t2);margin-top:4px">CAGR geometrico · ultimi 12 mesi</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">${_t('risk.annRetSub')}</div>
       </div>
     </div>
 
