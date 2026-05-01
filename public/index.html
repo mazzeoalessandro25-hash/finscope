@@ -13888,15 +13888,20 @@ async function loadRiskMetrics(){
   let peak=1,maxDD=0,cum=1;
   portRets.forEach(r=>{cum*=(1+r);if(cum>peak)peak=cum;const dd=(peak-cum)/peak;if(dd>maxDD)maxDD=dd;});
 
-  // VaR 95% historical
+  // VaR 95% e CVaR 95% (Expected Shortfall) — metodo storico
+  // CVaR = media delle perdite peggiori del 5%: lo standard Basel III / FRTB
   const sorted=[...portRets].sort((a,b)=>a-b);
-  const var95=sorted[Math.floor(n*0.05)]||0;
+  const varIdx=Math.floor(n*0.05);
+  const var95=sorted[varIdx]||0;
+  // CVaR: media di tutti i ritorni sotto il VaR threshold (tail mean)
+  const cvar95=varIdx>0?sorted.slice(0,varIdx).reduce((s,v)=>s+v,0)/varIdx:var95;
   // portVal in USD con FX conversion (coerente con donut)
   const portVal=portfolio.reduce((s,item,i)=>{
     const q=quotes[i];const isEUR=(q?.currency||item.currency||'USD')==='EUR';
     return s+item.qty*(q?.price??item.buyPrice)*(isEUR?_fxR2:1);
   },0);
   const var95Abs=Math.abs(var95)*portVal;
+  const cvar95Abs=Math.abs(cvar95)*portVal;
 
   // Beta vs SPY (covarianza/varianza — n si cancella, invariante rispetto a pop/sample)
   const spyLen=Math.min(portRets.length,spyRets.length);
