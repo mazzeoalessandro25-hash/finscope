@@ -1800,35 +1800,35 @@ document.addEventListener('DOMContentLoaded',()=>{
       </div>
       <!-- auth card -->
       <div id="auth-card" class="auth-card">
-        <div id="lp-card-title" class="auth-card-title">Inizia gratuitamente</div>
-        <div id="lp-card-sub" class="auth-card-sub">Zero costi · Nessuna carta richiesta</div>
+        <div id="lp-card-title" class="auth-card-title" data-i18n="lp.auth.cardTitle">Inizia gratuitamente</div>
+        <div id="lp-card-sub" class="auth-card-sub" data-i18n="lp.auth.cardSub">Zero costi · Nessuna carta richiesta</div>
 
         <!-- VIEW 1: Login / Register -->
         <div id="lp-main-view">
           <div class="auth-tabs">
-            <button class="auth-tab" onclick="switchTab('login',this)">Accedi</button>
-            <button class="auth-tab active" onclick="switchTab('register',this)">Registrati</button>
+            <button class="auth-tab" onclick="switchTab('login',this)" data-i18n="lp.auth.tabLogin">Accedi</button>
+            <button class="auth-tab active" onclick="switchTab('register',this)" data-i18n="lp.auth.tabRegister">Registrati</button>
           </div>
           <div class="auth-err" id="auth-err"></div>
           <div class="auth-ok" id="auth-ok"></div>
           <div class="auth-field" id="name-field-lp">
-            <label>Nome</label>
-            <input type="text" id="auth-name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+            <label data-i18n="lp.auth.labelName">Nome</label>
+            <input type="text" id="auth-name" data-i18n-ph="lp.auth.namePh" placeholder="Come ti chiami?" autocomplete="given-name"/>
           </div>
           <div class="auth-field">
-            <label>Email</label>
+            <label data-i18n="lp.auth.labelEmail">Email</label>
             <input type="email" id="auth-email" placeholder="la-tua@email.com" autocomplete="email"/>
           </div>
           <div class="auth-field">
             <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px">
-              <label style="margin-bottom:0;font-size:10px;color:rgba(255,255,255,.5);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase">Password</label>
-              <button class="forgot-link-lp" id="lp-forgot-link" onclick="showLpView('forgot')" style="display:none">Password dimenticata?</button>
+              <label style="margin-bottom:0;font-size:10px;color:rgba(255,255,255,.5);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase" data-i18n="lp.auth.labelPwd">Password</label>
+              <button class="forgot-link-lp" id="lp-forgot-link" onclick="showLpView('forgot')" style="display:none" data-i18n="lp.auth.forgotPwd">Password dimenticata?</button>
             </div>
-            <input type="password" id="auth-pwd" placeholder="Minimo 8 caratteri" autocomplete="current-password"
+            <input type="password" id="auth-pwd" data-i18n-ph="lp.auth.pwdPh" placeholder="Minimo 8 caratteri" autocomplete="current-password"
               onkeydown="if(event.key==='Enter')submitAuth()"/>
           </div>
-          <button class="auth-submit" id="auth-submit" onclick="submitAuth()">Crea account gratuito</button>
-          <p style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;line-height:1.5">
+          <button class="auth-submit" id="auth-submit" onclick="submitAuth()" data-i18n="lp.auth.btnRegister">Crea account gratuito</button>
+          <p style="font-size:10px;color:rgba(255,255,255,.35);text-align:center;margin-top:12px;line-height:1.5" data-i18n-html="lp.auth.gdpr">
             Continuando accetti la <a href="./privacy.html" target="_blank" style="color:rgba(255,255,255,.55)">Privacy Policy</a>. Conforme GDPR.
           </p>
         </div>
@@ -1838,11 +1838,11 @@ document.addEventListener('DOMContentLoaded',()=>{
           <div class="auth-err" id="lp-fp-err"></div>
           <div class="auth-ok" id="lp-fp-ok"></div>
           <div class="auth-field">
-            <label>Email del tuo account</label>
+            <label data-i18n="lp.auth.fpLabel">Email del tuo account</label>
             <input type="email" id="lp-fp-email" placeholder="la-tua@email.com" autocomplete="email"/>
           </div>
-          <button class="auth-submit" id="lp-fp-submit" onclick="submitLpForgot()">Invia codice di reset</button>
-          <button class="auth-back-btn-lp" onclick="showLpView('main')">← Torna al login</button>
+          <button class="auth-submit" id="lp-fp-submit" onclick="submitLpForgot()" data-i18n="lp.auth.fpBtn">Invia codice di reset</button>
+          <button class="auth-back-btn-lp" onclick="showLpView('main')" data-i18n="lp.auth.fpBack">← Torna al login</button>
         </div>
 
         <!-- VIEW 3: Reset Password -->
@@ -1851,16 +1851,16 @@ document.addEventListener('DOMContentLoaded',()=>{
           <div class="auth-ok" id="lp-rp-ok"></div>
           <input type="hidden" id="lp-rp-email"/>
           <div class="auth-field">
-            <label>Codice di reset (6 cifre)</label>
+            <label data-i18n="lp.auth.rpLabel1">Codice di reset (6 cifre)</label>
             <input class="fp-code-inp-lp" type="text" id="lp-rp-code" maxlength="6" inputmode="numeric"
               placeholder="000000" autocomplete="one-time-code"/>
           </div>
           <div class="auth-field">
-            <label>Nuova password</label>
-            <input type="password" id="lp-rp-pwd" placeholder="Minimo 8 caratteri"/>
+            <label data-i18n="lp.auth.rpLabel2">Nuova password</label>
+            <input type="password" id="lp-rp-pwd" data-i18n-ph="lp.auth.pwdPh" placeholder="Minimo 8 caratteri"/>
           </div>
-          <button class="auth-submit" id="lp-rp-submit" onclick="submitLpReset()">Aggiorna password</button>
-          <button class="auth-back-btn-lp" onclick="showLpView('forgot')">← Torna indietro</button>
+          <button class="auth-submit" id="lp-rp-submit" onclick="submitLpReset()" data-i18n="lp.auth.rpBtn">Aggiorna password</button>
+          <button class="auth-back-btn-lp" onclick="showLpView('forgot')" data-i18n="lp.auth.rpBack">← Torna indietro</button>
         </div>
       </div>
     </div>
