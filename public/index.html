@@ -14009,10 +14009,16 @@ async function loadRiskMetrics(){
   const totalOppCost=oppCostData.reduce((s,x)=>s+x.costUSD,0);
 
   // ── Crisis Correlation ──
+  // Formula basata su Longin & Solnik (2001) e Ang & Chen (2002):
+  // Le correlazioni aumentano durante i crash. Anche coppie negative convergono verso 0.
+  // Formula: max(pavimento_convergenza, v + 0.28 + (1-v)*0.15)
+  // Pavimento: v*0.3 + 0.25 garantisce che ρ=-0.5 → crisi≈0.10 (non 0.005)
   const crisisCorrM=corrM.map(row=>row.map(v=>{
     if(v===null)return null;
     if(v>=1)return 1;
-    return Math.min(0.96,v+0.28+(1-v)*0.15);
+    const raw=v+0.28+(1-v)*0.15;
+    const floor=v*0.3+0.25; // convergenza verso neutro per ρ negativi
+    return Math.min(0.96,Math.max(floor,raw));
   }));
   const avgNormalCorr=(()=>{let s=0,c=0;corrM.forEach((row,a)=>row.forEach((v,b)=>{if(a!==b&&v!==null){s+=v;c++;}}));return c>0?s/c:0;})();
   const avgCrisisCorr=(()=>{let s=0,c=0;crisisCorrM.forEach((row,a)=>row.forEach((v,b)=>{if(a!==b&&v!==null){s+=v;c++;}}));return c>0?s/c:0;})();
