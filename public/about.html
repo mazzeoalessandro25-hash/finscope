@@ -1625,10 +1625,10 @@ document.addEventListener('DOMContentLoaded',()=>{
       <!-- PIANO BASE -->
       <div class="pricing-card">
         <div class="pricing-color-bar" style="background:var(--bd)"></div>
-        <div class="pricing-tier">Base</div>
-        <div class="pricing-name">Starter</div>
-        <div class="pricing-price"><sup>€</sup>1<span>/mese</span></div>
-        <div class="pricing-desc">Per chi vuole iniziare ad analizzare il mercato senza impegno.</div>
+        <div class="pricing-tier" data-i18n="lp.pricing.base.tier">Base</div>
+        <div class="pricing-name" data-i18n="lp.pricing.base.name">Starter</div>
+        <div class="pricing-price" data-i18n-html="lp.pricing.base.price"><sup>€</sup>1<span>/mese</span></div>
+        <div class="pricing-desc" data-i18n="lp.pricing.base.desc">Per chi vuole iniziare ad analizzare il mercato senza impegno.</div>
         <ul class="pricing-features">
           <li>Dashboard live (indici, crypto, news)</li>
           <li>Screener 600+ titoli + ricerca globale</li>
@@ -1636,17 +1636,17 @@ document.addEventListener('DOMContentLoaded',()=>{
           <li>Grafici TradingView (7 timeframe)</li>
           <li>News filtrate per categoria</li>
         </ul>
-        <button class="pricing-btn outline" onclick="scrollToForm()">Inizia gratis →</button>
+        <button class="pricing-btn outline" onclick="scrollToForm()" data-i18n="lp.pricing.base.btn">Inizia gratis →</button>
       </div>
 
       <!-- PIANO INVESTOR — FEATURED -->
       <div class="pricing-card featured">
-        <div class="pricing-badge">✦ Consigliato</div>
+        <div class="pricing-badge" data-i18n="lp.pricing.badge">✦ Consigliato</div>
         <div class="pricing-color-bar" style="background:var(--b)"></div>
-        <div class="pricing-tier" style="color:var(--b)">Investor</div>
-        <div class="pricing-name" style="color:var(--b)">Pro</div>
-        <div class="pricing-price" style="color:var(--b)"><sup>€</sup>3<span>/mese</span></div>
-        <div class="pricing-desc">Il piano completo per l'investitore serio. Tutto quello che serve, niente di superfluo.</div>
+        <div class="pricing-tier" style="color:var(--b)" data-i18n="lp.pricing.pro.tier">Investor</div>
+        <div class="pricing-name" style="color:var(--b)" data-i18n="lp.pricing.pro.name">Pro</div>
+        <div class="pricing-price" style="color:var(--b)" data-i18n-html="lp.pricing.pro.price"><sup>€</sup>3<span>/mese</span></div>
+        <div class="pricing-desc" data-i18n="lp.pricing.pro.desc">Il piano completo per l'investitore serio. Tutto quello che serve, niente di superfluo.</div>
         <ul class="pricing-features">
           <li>Tutto il piano Base</li>
           <li>Portafoglio P&amp;L live (EUR + USD)</li>
@@ -1656,16 +1656,16 @@ document.addEventListener('DOMContentLoaded',()=>{
           <li>Insider Transactions (SEC)</li>
           <li>Export CSV portafoglio</li>
         </ul>
-        <button class="pricing-btn primary" onclick="scrollToForm()">Prenota a €3/mese →</button>
+        <button class="pricing-btn primary" onclick="scrollToForm()" data-i18n="lp.pricing.pro.btn">Prenota a €3/mese →</button>
       </div>
 
       <!-- PIANO FULL ACCESS -->
       <div class="pricing-card">
         <div class="pricing-color-bar" style="background:var(--o)"></div>
-        <div class="pricing-tier">Full Access</div>
-        <div class="pricing-name">Advanced</div>
-        <div class="pricing-price"><sup>€</sup>5<span>/mese</span></div>
-        <div class="pricing-desc">Per chi vuole ogni strumento disponibile, inclusi analytics avanzati e lab.</div>
+        <div class="pricing-tier" data-i18n="lp.pricing.adv.tier">Full Access</div>
+        <div class="pricing-name" data-i18n="lp.pricing.adv.name">Advanced</div>
+        <div class="pricing-price" data-i18n-html="lp.pricing.adv.price"><sup>€</sup>5<span>/mese</span></div>
+        <div class="pricing-desc" data-i18n="lp.pricing.adv.desc">Per chi vuole ogni strumento disponibile, inclusi analytics avanzati e lab.</div>
         <ul class="pricing-features">
           <li>Tutto il piano Investor</li>
           <li>Risk Analytics (Sharpe, VaR, Beta)</li>
@@ -1674,7 +1674,7 @@ document.addEventListener('DOMContentLoaded',()=>{
           <li>Dashboard Fiscale Italia (26%)</li>
           <li>Accesso anticipato nuove funzioni</li>
         </ul>
-        <button class="pricing-btn outline" style="border-color:var(--o);color:var(--o)" onclick="scrollToForm()">Prenota a €5/mese →</button>
+        <button class="pricing-btn outline" style="border-color:var(--o);color:var(--o)" onclick="scrollToForm()" data-i18n="lp.pricing.adv.btn">Prenota a €5/mese →</button>
       </div>
 
     </div>
