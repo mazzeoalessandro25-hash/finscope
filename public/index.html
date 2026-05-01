@@ -14003,7 +14003,7 @@ async function loadRiskMetrics(){
   const avgCrisisCorr=(()=>{let s=0,c=0;crisisCorrM.forEach((row,a)=>row.forEach((v,b)=>{if(a!==b&&v!==null){s+=v;c++;}}));return c>0?s/c:0;})();
   const divLoss=avgNormalCorr<1?((avgCrisisCorr-avgNormalCorr)/Math.max(0.001,1-avgNormalCorr)*100):0;
 
-  const tip=t=>`<span class="pa-tip" data-tip="${t}" style="margin-left:4px">i</span>`;
+  const tip=t=>`<span class="pa-tip" data-tip="${t.replace(/"/g,'&quot;')}" style="margin-left:4px">i</span>`;
   el.innerHTML=`
     <!-- 5 KPI principali -->
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:14px">
