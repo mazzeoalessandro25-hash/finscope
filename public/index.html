@@ -9938,9 +9938,10 @@ function renderPortAnalysis(portItems, quotes){
   }
 
   // --- Calcola dati base ---
-  // I pesi usano il VALORE CORRENTE DI MERCATO (non il costo storico):
-  // questo è lo standard industry — il rischio esposto è proporzionale al valore attuale.
+  // I pesi usano il VALORE CORRENTE DI MERCATO in USD (stesso metodo del grafico a torta):
+  // titoli EUR × tasso EUR/USD, tutto il resto rimane in USD.
   const allS=STOCKS.concat(customStocks);
+  const _fxR=_lastFxRate||1.08; // EUR→USD, coerente con il donut
   let totalMktVal=0, totalInv=0;
   const items=portItems.map((item,i)=>{
     const q=quotes[i];
@@ -9957,8 +9958,9 @@ function renderPortAnalysis(portItems, quotes){
       return{t:defType,sec:sd?.sector||'Other',mkt:detectedMkt};
     })();
     const curPrice=q?.price??item.buyPrice;
-    const mktVal=item.qty*curPrice;     // valore attuale di mercato (per pesi)
-    const invested=item.qty*item.buyPrice; // costo storico (solo per P&L)
+    const isEUR=(q?.currency||item.currency||'USD')==='EUR';
+    const mktVal=item.qty*curPrice*(isEUR?_fxR:1); // convertito in USD, identico al donut
+    const invested=item.qty*item.buyPrice*(isEUR?_fxR:1); // costo in USD (solo per P&L)
     totalMktVal+=mktVal;
     totalInv+=invested;
     const summ=scSummary[item.sym]||scData[item.sym];
