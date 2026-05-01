@@ -15193,28 +15193,27 @@ function renderStressTest(){
   const portfolioBeta=totalValUSD>0?items.reduce((s,it)=>s+it.beta*(it.val/totalValUSD),0):1;
   const totalValEUR=totalValUSD/eurUsd;
   const scenarios=[
-    {label:'Crash (-30%)',market:-30,color:'#7F0000'},
-    {label:'Bear (-20%)',market:-20,color:'#DC2626'},
-    {label:'Correzione (-10%)',market:-10,color:'#F59E0B'},
-    {label:'Neutro (0%)',market:0,color:'#8499B0'},
-    {label:'Rally (+10%)',market:10,color:'#10B981'},
-    {label:'Bull (+20%)',market:20,color:'#059669'},
-    {label:'Euforia (+30%)',market:30,color:'#065F46'},
+    {label:_t('stress.s.crash'),market:-30,color:'#7F0000'},
+    {label:_t('stress.s.bear'),market:-20,color:'#DC2626'},
+    {label:_t('stress.s.correction'),market:-10,color:'#F59E0B'},
+    {label:_t('stress.s.neutral'),market:0,color:'#8499B0'},
+    {label:_t('stress.s.rally'),market:10,color:'#10B981'},
+    {label:_t('stress.s.bull'),market:20,color:'#059669'},
+    {label:_t('stress.s.euphoria'),market:30,color:'#065F46'},
   ];
-  // Scenari storici calibrati su SPX peak-to-trough
   const historicalScenarios=[
-    {label:'2008 — Crisi finanziaria',market:-56,note:'S&P 500 −56% (Oct 2007 → Mar 2009)',color:'#7F0000'},
-    {label:'2020 — COVID crash',market:-34,note:'S&P 500 −34% in 33 giorni (Feb–Mar 2020)',color:'#B91C1C'},
-    {label:'2022 — Bear rate hike',market:-25,note:'S&P 500 −25% (Jan–Oct 2022)',color:'#DC2626'},
-    {label:'2000 — Dot-com bust',market:-49,note:'S&P 500 −49% (Mar 2000 → Oct 2002)',color:'#991B1B'},
-    {label:'1987 — Black Monday',market:-34,note:'S&P 500 −34% in 2 mesi (Aug–Oct 1987)',color:'#7F1D1D'},
+    {label:_t('stress.h.2008'),market:-56,note:_t('stress.h.2008note'),color:'#7F0000'},
+    {label:_t('stress.h.covid'),market:-34,note:_t('stress.h.covidnote'),color:'#B91C1C'},
+    {label:_t('stress.h.2022'),market:-25,note:_t('stress.h.2022note'),color:'#DC2626'},
+    {label:_t('stress.h.dotcom'),market:-49,note:_t('stress.h.dotcomnote'),color:'#991B1B'},
+    {label:_t('stress.h.1987'),market:-34,note:_t('stress.h.1987note'),color:'#7F1D1D'},
   ];
   el.innerHTML=`
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-      <div class="rb" style="flex:1;min-width:120px"><div class="rl">BETA PORTAFOGLIO</div><div class="rv2 a" style="font-size:20px">${portfolioBeta.toFixed(2)}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${portfolioBeta>1.2?'Alta sensibilità':portfolioBeta<0.8?'Bassa sensibilità':'Sensibilità moderata'}</div></div>
-      <div class="rb" style="flex:1;min-width:120px"><div class="rl">VALORE ATTUALE</div><div class="rv2 b" style="font-size:20px">€${fmt(totalValEUR,0)}</div></div>
+      <div class="rb" style="flex:1;min-width:120px"><div class="rl">${_t('stress.betaLabel')}</div><div class="rv2 a" style="font-size:20px">${portfolioBeta.toFixed(2)}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${portfolioBeta>1.2?_t('stress.betaHigh'):portfolioBeta<0.8?_t('stress.betaLow'):_t('stress.betaMid')}</div></div>
+      <div class="rb" style="flex:1;min-width:120px"><div class="rl">${_t('stress.currentVal')}</div><div class="rv2 b" style="font-size:20px">€${fmt(totalValEUR,0)}</div></div>
     </div>
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Scenari di mercato</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${_t('stress.scenariosTitle')}</div>
     ${scenarios.map(s=>{
       const portChange=portfolioBeta*s.market;
       const newValEUR=totalValEUR*(1+portChange/100);
