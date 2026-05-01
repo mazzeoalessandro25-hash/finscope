@@ -14178,7 +14178,7 @@ async function loadRiskMetrics(){
 
     <!-- Correlation matrix -->
     ${portfolio.length>=2?`
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center">Matrice di correlazione (3 mesi) — valori da -1 a +1${tip('Misura quanto due titoli si muovono insieme. +1 = perfettamente correlati (si muovono sempre nello stesso senso). 0 = nessuna relazione. −1 = perfettamente inversi. Colori: rosso scuro = alta correlazione (poca diversificazione). Blu = bassa/negativa (buona diversificazione). Ideale: correlazioni basse tra titoli diversi.')}</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center">Matrice di correlazione (12 mesi) — valori da -1 a +1${tip('Misura quanto due titoli si muovono insieme. +1 = perfettamente correlati (si muovono sempre nello stesso senso). 0 = nessuna relazione. −1 = perfettamente inversi. Colori: rosso scuro = alta correlazione (poca diversificazione). Blu = bassa/negativa (buona diversificazione). Ideale: correlazioni basse tra titoli diversi.')}</div>
     <div style="overflow-x:auto;margin-bottom:10px">
       <table class="corr-table">
         <thead>
