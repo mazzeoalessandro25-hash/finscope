@@ -2083,7 +2083,7 @@ async function submitAuth(){
       showTransition(()=>{ window.location.href='./index.html'; });
     }
   }catch(e){
-    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.textContent=_t('auth.err.conn');
     errEl.classList.add('show');
   }
   btn.disabled=false;
