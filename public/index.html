@@ -14200,7 +14200,7 @@ async function loadRiskMetrics(){
       </table>
     </div>
     <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px">
-      ${[['≥ 0.8','#7F1D1D','Correlazione molto alta — rischio concentrazione'],['0.4–0.8','#F97316','Correlazione media'],['−0.2–0.4','#64748B','Correlazione bassa — buona diversificazione'],['< −0.2','#3B82F6','Correlazione negativa — hedge naturale']].map(([l,c,d])=>`
+      ${[['≥ 0.8','#7F1D1D',_t('risk.corrHighPos')],['0.4–0.8','#F97316',_t('risk.corrMed')],['−0.2–0.4','#64748B',_t('risk.corrLow')],['< −0.2','#3B82F6',_t('risk.corrNeg')]].map(([l,c,d])=>`
       <div style="display:flex;align-items:center;gap:5px">
         <div style="width:10px;height:10px;border-radius:2px;background:${c};flex-shrink:0"></div>
         <span style="font-size:9px;font-family:var(--fm);color:var(--t3)">${l} — ${d}</span>
