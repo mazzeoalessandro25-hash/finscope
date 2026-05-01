@@ -14096,10 +14096,10 @@ async function loadRiskMetrics(){
       </div>
     </div>
 
-    <!-- VaR spiegazione -->
+    <!-- VaR + CVaR spiegazione -->
     <div style="padding:10px 14px;background:var(--b3);border-radius:8px;border-left:3px solid var(--b);margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.6;font-family:var(--fm)">
-      <strong style="color:var(--t)">VaR 95%: ${fmt(Math.abs(var95)*100,2)}% al giorno</strong> — Con il 95% di probabilità la perdita giornaliera non supera
-      <strong>$${fmt(var95Abs,0)}</strong>. Il restante 5% dei giorni (≈1 ogni 20) potrebbe registrare perdite superiori.
+      <strong style="color:var(--t)">VaR 95%: −${fmt(Math.abs(var95)*100,2)}% al giorno</strong> — Con il 95% di probabilità la perdita giornaliera non supera <strong>$${fmt(var95Abs,0)}</strong>. Il restante 5% dei giorni (≈1 ogni 20) può superare questa soglia.<br>
+      <strong style="color:var(--t)">CVaR 95%: −${fmt(Math.abs(cvar95)*100,2)}% al giorno</strong> — Nei giorni del peggior 5%, la perdita media attesa è <strong>$${fmt(cvar95Abs,0)}</strong>. Questo è il numero che usano le banche per il capitale regolatorio (Basel III).
     </div>
 
     <!-- Monte Carlo -->
