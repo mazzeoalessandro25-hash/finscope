@@ -2123,21 +2123,21 @@ async function submitLpReset(){
   const okEl=document.getElementById('lp-rp-ok');
   const btn=document.getElementById('lp-rp-submit');
   errEl.classList.remove('show');okEl.classList.remove('show');
-  if(!code||code.length!==6){errEl.textContent='Codice 6 cifre richiesto';errEl.classList.add('show');return;}
-  if(!pwd||pwd.length<8){errEl.textContent='Password minimo 8 caratteri';errEl.classList.add('show');return;}
-  btn.disabled=true;btn.textContent='Aggiornamento...';
+  if(!code||code.length!==6){errEl.textContent=_t('auth.err.code');errEl.classList.add('show');return;}
+  if(!pwd||pwd.length<8){errEl.textContent=_t('auth.err.pwdLength');errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent=_t('auth.loading');
   try{
     const r=await fetch('/api/auth?action=reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,code,newPassword:pwd})});
     const d=await r.json();
     if(!r.ok||!d.ok){errEl.textContent=d.error||'Errore';errEl.classList.add('show');return;}
-    okEl.textContent='Password aggiornata! Effettua il login.';
+    okEl.textContent=currentLang==='en'?'Password updated! Please log in.':'Password aggiornata! Effettua il login.';
     okEl.classList.add('show');
     setTimeout(()=>showLpView('main'),2000);
   }catch{
-    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.textContent=_t('auth.err.conn');
     errEl.classList.add('show');
   }
-  btn.disabled=false;btn.textContent='Aggiorna password';
+  btn.disabled=false;btn.textContent=_t('lp.auth.rpBtn');
 }
 
 function logout(){
