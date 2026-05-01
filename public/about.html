@@ -2046,7 +2046,7 @@ function switchTab(tab,btn){
   authTab=tab;
   document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('auth-submit').textContent=tab==='login'?'Accedi':'Crea account gratuito';
+  document.getElementById('auth-submit').textContent=_t(tab==='login'?'lp.auth.tabLogin':'lp.auth.btnRegister');
   document.getElementById('auth-err').classList.remove('show');
   document.getElementById('auth-ok').classList.remove('show');
   document.getElementById('name-field-lp').style.display=tab==='register'?'block':'none';
