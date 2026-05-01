@@ -4652,10 +4652,15 @@ function updateHours(){
     const loc=new Date(new Date().toLocaleString('en-US',{timeZone:ex.tz}));
     const h=loc.getHours(),m=loc.getMinutes(),day=loc.getDay();
     const isWe=day===0||day===6;
+    // Controlla festività: costruisce la data locale come stringa YYYY-MM-DD
+    const yy=loc.getFullYear(),mm=String(loc.getMonth()+1).padStart(2,'0'),dd=String(loc.getDate()).padStart(2,'0');
+    const dateStr=`${yy}-${mm}-${dd}`;
+    const isHoliday=_HOL[ex.hol]?.has(dateStr)||false;
     const after=h>ex.open[0]||(h===ex.open[0]&&m>=ex.open[1]);
     const before=h<ex.close[0]||(h===ex.close[0]&&m<ex.close[1]);
     let st,cls;
-    if(isWe){st='Chiusa';cls='closed';}
+    if(isHoliday){st='Festività';cls='closed';}
+    else if(isWe){st='Chiusa';cls='closed';}
     else if(after&&before){st='Aperta';cls='open';}
     else if(!after&&h===ex.open[0]-1&&m>=30){st='Pre-market';cls='prepost';}
     else if(!before&&h===ex.close[0]&&m<60){st='After-hours';cls='prepost';}
@@ -4663,7 +4668,8 @@ function updateHours(){
     document.getElementById('d'+i).className='hb-dot '+cls;
     document.getElementById('s'+i).textContent=st;
     document.getElementById('s'+i).className='hb-st '+cls;
-    document.getElementById('t'+i).textContent=loc.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    // Mostra orario locale solo se non è weekend/festività
+    document.getElementById('t'+i).textContent=(isHoliday||isWe)?'':loc.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
   });
 }
 updateHours();setInterval(updateHours,30000);
