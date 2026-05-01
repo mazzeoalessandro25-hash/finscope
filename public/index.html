@@ -13951,28 +13951,36 @@ async function loadRiskMetrics(){
   const vCol=annVol*100>30?'var(--r)':annVol*100>15?'var(--o)':'var(--g)';
   const vLbl=annVol*100>30?'Alta':annVol*100>15?'Media':'Bassa';
 
-  // ── Monte Carlo Simulation — Geometric Brownian Motion (GBM) ──
-  // Formula corretta: dS = S·exp((μ - ½σ²)dt + σ·√dt·Z)
-  // La correzione di Itô (-½σ²) riduce il drift composto ed evita la sovrastima.
-  // Garantisce prezzi sempre positivi (impossibile con il modello aritmetico).
+  // ── Monte Carlo Simulation — GBM con distribuzione t(5) (code grasse) ──
+  // Distribuzione normale assume kurtosi=3; i ritorni reali hanno kurtosi >3 (eventi estremi
+  // più frequenti). t(5) ha kurtosi=9 e si avvicina a quella osservata nei mercati azionari.
+  // Formula: dS = S·exp((μ - ½σ²)dt + σ·√dt·t₅)
   const MC_SIMS=5000,MC_DAYS=252,MC_STEPS=20;
   const mcSigma=_std(portRets);
-  // Drift "recente": media daily degli ultimi 3 mesi (annualizzato e ri-convertito a daily)
   const mcMuRecent=_mean(portRets);
-  // Drift "prudente": rendimento atteso di lungo periodo azionario (10% annuo / 252)
-  // Usato come cap per evitare proiezioni basate su trend eccezionali non sostenibili
   const mcMuLT=0.10/252;
-  // Drift effettivo: il minore tra recente e 10% annuo (conservativo ma non arbitrario)
   const mcMu=Math.min(mcMuRecent,mcMuLT);
-  // Drift GBM con correzione di Itô
   const mcDrift=mcMu-0.5*mcSigma*mcSigma;
+
+  // Pre-genera pool di campioni t(5) standardizzati (varianza=1)
+  // t(ν) = Z / √(χ²(ν)/ν), standardizzato: × √((ν-2)/ν)
+  // Per ν=5: fattore = √(3/5) ≈ 0.7746
+  const MC_NU=5;
+  const MC_STD_FACTOR=Math.sqrt((MC_NU-2)/MC_NU); // standardizzazione a varianza=1
+  const MC_POOL_SIZE=MC_SIMS*MC_DAYS; // un campione per ogni step simulato
+  const _tPool=new Float32Array(MC_POOL_SIZE);
+  const _bm=()=>{const u1=Math.random()||1e-10;return Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*Math.random());};
+  for(let i=0;i<MC_POOL_SIZE;i++){
+    const z=_bm();
+    let chi2=0;for(let k=0;k<MC_NU;k++){const zk=_bm();chi2+=zk*zk;}
+    _tPool[i]=z/Math.sqrt(chi2/MC_NU)*MC_STD_FACTOR;
+  }
+  let _tIdx=0;
   const mcFinals=[],allMcPaths=[];
   for(let s=0;s<MC_SIMS;s++){
     let v=1;const path=[1];
     for(let d=1;d<=MC_DAYS;d++){
-      const u1=Math.random()||1e-10,u2=Math.random()||1e-10;
-      const z=Math.sqrt(-2*Math.log(u1))*Math.cos(2*Math.PI*u2);
-      // GBM: moltiplicazione per exp() — mai negativo, log-normale
+      const z=_tPool[_tIdx++];
       v*=Math.exp(mcDrift+mcSigma*z);
       if(d%(MC_DAYS/MC_STEPS)===0)path.push(v);
     }
