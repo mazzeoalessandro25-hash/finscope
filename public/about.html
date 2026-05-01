@@ -2033,8 +2033,8 @@ function showLpView(view){
   });
   const target=document.getElementById(view==='main'?'lp-main-view':view==='forgot'?'lp-forgot-view':'lp-reset-view');
   if(target){target.style.display='';target.classList.add('auth-view-transition');}
-  const titles={main:'Inizia gratuitamente',forgot:'Recupera password',reset:'Nuova password'};
-  const subs={main:'Zero costi · Nessuna carta richiesta',forgot:'Inserisci la tua email per ricevere il codice',reset:'Inserisci il codice ricevuto'};
+  const titles={main:_t('lp.view.main.title'),forgot:_t('lp.view.forgot.title'),reset:_t('lp.view.reset.title')};
+  const subs={main:_t('lp.view.main.sub'),forgot:_t('auth.sub.forgot'),reset:_t('auth.sub.reset')};
   document.getElementById('lp-card-title').textContent=titles[view]||'';
   document.getElementById('lp-card-sub').textContent=subs[view]||'';
   ['lp-fp-err','lp-fp-ok','lp-rp-err','lp-rp-ok'].forEach(id=>{
