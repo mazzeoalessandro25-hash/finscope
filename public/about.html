@@ -1020,7 +1020,34 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   .pricing-grid{max-width:100%}
   .datasrc-grid{grid-template-columns:1fr}
 }
+/* ─── LANG SELECT ─── */
+.lang-select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.8);
+  border-radius:7px;padding:5px 8px;font-size:12px;font-family:var(--fm);cursor:pointer;outline:none}
+.lang-select:hover{border-color:rgba(255,255,255,.4)}
 </style>
+<script src="/i18n.js"></script>
+<script>
+// ─── i18n setup for landing page ───
+let currentLang=localStorage.getItem('fs_lang')||'it';
+function _t(k){return(typeof TRANSLATIONS!=='undefined'&&TRANSLATIONS[currentLang]?.[k])||
+  (typeof TRANSLATIONS!=='undefined'&&TRANSLATIONS.it[k])||k;}
+function setLangAbout(lang){
+  if(typeof TRANSLATIONS==='undefined'||!TRANSLATIONS[lang])return;
+  currentLang=lang;localStorage.setItem('fs_lang',lang);
+  document.documentElement.lang=lang;
+  ['lang-select-lp','lang-select-lp-mob'].forEach(id=>{const s=document.getElementById(id);if(s)s.value=lang;});
+  applyAboutTranslations();
+}
+function applyAboutTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=_t(el.getAttribute('data-i18n')));
+  document.querySelectorAll('[data-i18n-html]').forEach(el=>el.innerHTML=_t(el.getAttribute('data-i18n-html')));
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>el.placeholder=_t(el.getAttribute('data-i18n-ph')));
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  ['lang-select-lp','lang-select-lp-mob'].forEach(id=>{const s=document.getElementById(id);if(s)s.value=currentLang;});
+  if(currentLang!=='it')applyAboutTranslations();
+});
+</script>
 </head>
 <body>
 
