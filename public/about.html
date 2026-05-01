@@ -2097,26 +2097,22 @@ async function submitLpForgot(){
   const okEl=document.getElementById('lp-fp-ok');
   const btn=document.getElementById('lp-fp-submit');
   errEl.classList.remove('show');okEl.classList.remove('show');
-  if(!email){errEl.textContent='Inserisci la tua email';errEl.classList.add('show');return;}
-  btn.disabled=true;btn.textContent='Invio...';
+  if(!email){errEl.textContent=_t('auth.err.email');errEl.classList.add('show');return;}
+  btn.disabled=true;btn.textContent=_t('auth.loading');
   try{
     const r=await fetch('/api/auth?action=forgot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
     const d=await r.json();
     if(!r.ok){errEl.textContent=d.error||'Errore';errEl.classList.add('show');return;}
     document.getElementById('lp-rp-email').value=email;
-    if(d.code){
-      okEl.textContent=`Codice: ${d.code} — inseriscilo nel prossimo step`;
-      okEl.classList.add('show');
-    } else {
-      okEl.textContent='Se l\'email è registrata, riceverai il codice di reset';
-      okEl.classList.add('show');
-    }
+    okEl.textContent=currentLang==='en'?'If the email is registered, you will receive the reset code':
+      'Se l\'email è registrata, riceverai il codice di reset';
+    okEl.classList.add('show');
     setTimeout(()=>showLpView('reset'),1600);
   }catch{
-    errEl.textContent='Errore di connessione. Riprova.';
+    errEl.textContent=_t('auth.err.conn');
     errEl.classList.add('show');
   }
-  btn.disabled=false;btn.textContent='Invia codice di reset';
+  btn.disabled=false;btn.textContent=_t('lp.auth.fpBtn');
 }
 
 async function submitLpReset(){
