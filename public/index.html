@@ -10029,23 +10029,58 @@ function renderPortAnalysis(portItems, quotes){
   function getRecs(profKey){
     const prof=INVESTOR_PROFILES[profKey];
     const recs=[];
-    const td=byType.dividend||0,tg=byType.growth||0;
-    if(profKey==='conservative'&&tg>0.25)
-      recs.push({cls:'bad',txt:`⚠ Hai ${fmt(tg*100,0)}% in titoli growth — un Conservativo dovrebbe stare sotto il 10%. Valuta di ridurre posizioni volatili.`});
-    if(profKey==='aggressive'&&td>0.20)
-      recs.push({cls:'warn',txt:`ℹ Hai ${fmt(td*100,0)}% in dividendi — per un profilo Aggressivo potrebbe limitare il potenziale di crescita.`});
+    const td=byType.dividend||0,tv=byType.value||0,tg=byType.growth||0;
+
+    // ── Composizione vs profilo ──────────────────────────────────────────
+    // Income: troppo poco dividendo (target 80%, soglia warning <50%)
+    if(profKey==='income'&&td<0.50)
+      recs.push({cls:'bad',txt:`⚠ Solo ${fmt(td*100,0)}% in dividendi — un profilo Income punta all'80%+. Aggiungi titoli ad alto dividendo.`});
+    // Conservative/Income: troppo growth (soglia = target + 5pp)
+    if((profKey==='conservative'||profKey==='income')&&tg>prof.types.growth+0.05)
+      recs.push({cls:'bad',txt:`⚠ ${fmt(tg*100,0)}% in titoli growth — il profilo ${prof.name} punta al ${fmt(prof.types.growth*100,0)}%. Valuta di ridurre posizioni ad alta volatilità.`});
+    // Aggressive/Speculative: troppi dividendi (target basso, soglia = target + 10pp)
+    if((profKey==='aggressive'||profKey==='speculative')&&td>prof.types.dividend+0.10)
+      recs.push({cls:'warn',txt:`ℹ ${fmt(td*100,0)}% in dividendi — per un profilo ${prof.name} (target ${fmt(prof.types.dividend*100,0)}%) può limitare il potenziale di crescita.`});
+    // Moderate/BalancedGrowth/Dynamic: segnala se composizione è molto distante dal profilo
+    if(['moderate','balanced_growth','dynamic'].includes(profKey)){
+      const diff=Math.abs(td-prof.types.dividend)+Math.abs(tv-prof.types.value)+Math.abs(tg-prof.types.growth);
+      if(diff>0.40)
+        recs.push({cls:'warn',txt:`ℹ Composizione (${fmt(td*100,0)}% Div / ${fmt(tv*100,0)}% Val / ${fmt(tg*100,0)}% Gro) distante dal target del profilo ${prof.name} (${fmt(prof.types.dividend*100,0)}%/${fmt(prof.types.value*100,0)}%/${fmt(prof.types.growth*100,0)}%).`});
+    }
+
+    // ── Beta ────────────────────────────────────────────────────────────
     if(weightedBeta>prof.maxBeta)
-      recs.push({cls:'warn',txt:`⚠ Beta medio ${fmt(weightedBeta,2)} > target ${fmt(prof.maxBeta,2)} per questo profilo. Il portafoglio è più volatile del tuo profilo.`});
-    if(maxConc>0.40)
-      recs.push({cls:'bad',txt:`⚠ Concentrazione alta: ${items.find(it=>totalInv>0&&it.invested/totalInv>=maxConc-0.001)?.sym} pesa ${fmt(maxConc*100,1)}% del portafoglio. Considera di diversificare.`});
+      recs.push({cls:'warn',txt:`⚠ Beta ponderato ${fmt(weightedBeta,2)} supera il target ${fmt(prof.maxBeta,2)} del profilo ${prof.name}. Il portafoglio è più volatile del previsto.`});
+    if(profKey==='income'&&weightedBeta>0.80)
+      recs.push({cls:'warn',txt:`ℹ Beta ${fmt(weightedBeta,2)} elevato per un profilo Income — considera titoli più difensivi (utilities, consumer staples).`});
+
+    // ── Concentrazione singolo titolo ────────────────────────────────────
+    if(maxConc>0.40){
+      const topSym=items.find(it=>totalInv>0&&it.invested/totalInv>=maxConc-0.001)?.sym||'';
+      recs.push({cls:'bad',txt:`⚠ ${topSym} pesa ${fmt(maxConc*100,1)}% del portafoglio — concentrazione eccessiva. Regola generale: nessun titolo oltre il 20-25%.`});
+    } else if(maxConc>0.25){
+      const topSym=items.find(it=>totalInv>0&&it.invested/totalInv>=maxConc-0.001)?.sym||'';
+      recs.push({cls:'warn',txt:`ℹ ${topSym} pesa ${fmt(maxConc*100,1)}% — posizione significativa. Monitora la correlazione con il resto del portafoglio.`});
+    }
+
+    // ── Concentrazione settoriale ─────────────────────────────────────────
+    const maxSecConc=Math.max(...Object.values(bySec));
+    if(maxSecConc>0.45){
+      const topSec=Object.entries(bySec).find(([,v])=>v>=maxSecConc-0.001)?.[0]||'';
+      recs.push({cls:'bad',txt:`⚠ ${fmt(maxSecConc*100,0)}% concentrato in ${topSec} — rischio settoriale elevato. Una soglia prudente è max 30-35% per settore.`});
+    }
+
+    // ── Diversificazione ─────────────────────────────────────────────────
     if(nSectors<3)
-      recs.push({cls:'bad',txt:`⚠ Solo ${nSectors} settore/i — scarsa diversificazione settoriale. Aggiungi titoli di settori diversi.`});
+      recs.push({cls:'bad',txt:`⚠ Solo ${nSectors} settore/i rappresentato/i — diversificazione insufficiente. Mira ad almeno 4-5 settori non correlati.`});
     if(nStocks<5)
-      recs.push({cls:'warn',txt:`ℹ Solo ${nStocks} titoli in portafoglio. Una buona diversificazione richiede almeno 8-10 titoli.`});
+      recs.push({cls:'warn',txt:`ℹ ${nStocks} titoli in portafoglio — una diversificazione efficace richiede almeno 8-10 posizioni su settori diversi.`});
+
+    // ── Esito positivo ───────────────────────────────────────────────────
     if(!recs.length){
       const score=calcScore(profKey);
-      if(score>=80)recs.push({cls:'ok',txt:`✓ Ottimo allineamento con il profilo ${prof.name}! Il portafoglio è ben costruito per i tuoi obiettivi.`});
-      else recs.push({cls:'ok',txt:`✓ Portafoglio discretamente allineato. Piccoli aggiustamenti possono migliorare il punteggio.`});
+      if(score>=80)recs.push({cls:'ok',txt:`✓ Ottimo allineamento con il profilo ${prof.name} (${score}/100). Il portafoglio è ben strutturato per i tuoi obiettivi.`});
+      else recs.push({cls:'ok',txt:`✓ Buon allineamento con il profilo ${prof.name} (${score}/100). Piccoli aggiustamenti possono ottimizzare ulteriormente.`});
     }
     return recs;
   }
