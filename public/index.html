@@ -13919,16 +13919,18 @@ async function loadRiskMetrics(){
   // Calmar — rendimento geometrico annualizzato / max drawdown (entrambi composti)
   const calmar=maxDD>0?annRetGeom/maxDD:0;
 
-  // Correlation matrix
+  // Correlation matrix — usa slice(-len) per prendere gli N dati più recenti
+  // (coerente con renderCorrelationMatrix e più rilevante per l'analisi attuale)
   const corrM=portfolio.map((_,a)=>portfolio.map((_2,b)=>{
     if(a===b)return 1;
     const rA=stockRets[a],rB=stockRets[b];
     const len=Math.min(rA.length,rB.length);
     if(len<5)return null;
-    const mA=_mean(rA.slice(0,len)),mB=_mean(rB.slice(0,len));
-    const num=rA.slice(0,len).reduce((s,r,i)=>s+(r-mA)*(rB[i]-mB),0);
-    const dA=Math.sqrt(rA.slice(0,len).reduce((s,r)=>s+(r-mA)**2,0));
-    const dB=Math.sqrt(rB.slice(0,len).reduce((s,r)=>s+(r-mB)**2,0));
+    const aS=rA.slice(-len),bS=rB.slice(-len);
+    const mA=_mean(aS),mB=_mean(bS);
+    const num=aS.reduce((s,r,i)=>s+(r-mA)*(bS[i]-mB),0);
+    const dA=Math.sqrt(aS.reduce((s,r)=>s+(r-mA)**2,0));
+    const dB=Math.sqrt(bS.reduce((s,r)=>s+(r-mB)**2,0));
     return(dA*dB)>0?num/(dA*dB):0;
   }));
 
