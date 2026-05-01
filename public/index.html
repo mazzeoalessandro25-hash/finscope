@@ -13975,6 +13975,8 @@ async function loadRiskMetrics(){
   const mcPGain20=mcFinals.filter(v=>v>=1.20).length/MC_SIMS*100;
 
   // ── Opportunity Cost vs SPY ──
+  // Base corretta: valore della posizione a INIZIO del periodo di 3 mesi (non buyPrice)
+  // Usiamo il primo prezzo disponibile nella serie storica × quantità (con FX)
   const oppCostData=portfolio.map((item,pi)=>{
     const r=stockRets[pi];
     const len=Math.min(r.length,spyRets.length);
@@ -13982,8 +13984,12 @@ async function loadRiskMetrics(){
     const sr2=r.slice(0,len).reduce((acc,x)=>acc*(1+x),1)-1;
     const spy2=spyRets.slice(0,len).reduce((acc,x)=>acc*(1+x),1)-1;
     const diff=sr2-spy2;
-    const invested=item.qty*item.buyPrice;
-    return{sym:item.sym,stockRet:sr2,spyRet:spy2,diff,costUSD:diff*invested,len};
+    // Prezzo di inizio periodo (primo punto della serie storica 3m)
+    const startPrice=histData[pi]?.points?.[0]?.close??item.buyPrice;
+    const q=quotes[pi];
+    const isEUR=(q?.currency||item.currency||'USD')==='EUR';
+    const startVal=item.qty*startPrice*(isEUR?_fxR2:1);
+    return{sym:item.sym,stockRet:sr2,spyRet:spy2,diff,costUSD:diff*startVal,len};
   }).sort((a,b)=>b.costUSD-a.costUSD);
   const totalOppCost=oppCostData.reduce((s,x)=>s+x.costUSD,0);
 
