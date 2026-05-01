@@ -14219,7 +14219,7 @@ async function loadRiskMetrics(){
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
         <div style="padding:8px 12px;background:var(--s2);border-radius:6px;border:1px solid var(--bd)">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">CORRELAZIONE MEDIA — MERCATO NORMALE</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">${_t('risk.crisisNormal')}</div>
           <div style="font-size:18px;font-family:var(--fm);font-weight:700;color:${avgNormalCorr<0.4?'var(--g)':avgNormalCorr<0.7?'var(--o)':'var(--r)'}">${fmt(avgNormalCorr,2)}</div>
         </div>
         <div style="padding:8px 12px;background:rgba(239,68,68,0.08);border-radius:6px;border:1px solid rgba(239,68,68,0.3)">
