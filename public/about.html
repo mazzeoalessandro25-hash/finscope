@@ -1947,8 +1947,8 @@ async function loadStats(isFirstLoad){
     // Badge testuale
     const badge=document.getElementById('user-count-text');
     if(badge){
-      if(users>=1) badge.textContent=users.toLocaleString('it-IT')+' investitori iscritti';
-      else badge.textContent='Registrazione gratuita · Zero costi';
+      if(users>=1) badge.textContent=users.toLocaleString('en-US')+' '+_t('lp.stat.usersLabel');
+      else badge.textContent=_t('lp.stat.free');
     }
 
     // Stat box utenti iscritti
