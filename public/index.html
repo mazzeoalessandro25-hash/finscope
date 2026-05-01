@@ -14152,11 +14152,11 @@ async function loadRiskMetrics(){
           <div style="padding:2px 7px;border-radius:6px;font-size:9px;font-family:var(--fm);font-weight:700;background:${beating?'rgba(16,185,129,0.15)':'rgba(239,68,68,0.15)'};color:${beating?'#10B981':'#EF4444'};flex-shrink:0;white-space:nowrap">${beating?'BEATING':'LAGGING'}</div>
         </div>`;
       }).join('')}
-      <div style="margin-top:4px;font-size:10px;color:var(--t3);font-family:var(--fm)">Calcolo basato sugli ultimi 12 mesi · Non tiene conto dei costi di transazione</div>
+      <div style="margin-top:4px;font-size:10px;color:var(--t3);font-family:var(--fm)">${_t('risk.oppFooter')}</div>
     </div>
 
     <!-- Volatilità per titolo -->
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center">Volatilità per titolo (annualizzata, 3 mesi)${tip('Deviazione standard dei rendimenti giornalieri di ogni singolo titolo, annualizzata (×√252). Mostra quanto oscilla ogni posizione indipendentemente dalle altre. Non considera la correlazione tra titoli — la volatilità del portafoglio può essere inferiore alla media delle singole volatilità se i titoli non sono correlati. <20% bassa · 20–40% media · >40% alta.')}</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center">${_t('risk.volTitle')}${tip(_t('risk.tip.volTitle'))}</div>
     <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
       ${portfolio.map((item,pi)=>{
         const r=stockRets[pi];
