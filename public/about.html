@@ -1055,14 +1055,19 @@ document.addEventListener('DOMContentLoaded',()=>{
 <nav>
   <a href="./about.html" class="logo"><img src="/logo-icon.png" alt="" style="height:26px;width:auto;vertical-align:middle;margin-right:6px"/>FinEdge</a>
   <div class="nav-links">
-    <a href="#features" class="nav-link">Funzionalità</a>
-    <a href="#come-funziona" class="nav-link">Come funziona</a>
-    <a href="#pricing" class="nav-link">Piani</a>
-    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#features" class="nav-link" data-i18n="lp.nav.features">Funzionalità</a>
+    <a href="#come-funziona" class="nav-link" data-i18n="lp.nav.how">Come funziona</a>
+    <a href="#pricing" class="nav-link" data-i18n="lp.nav.pricing">Piani</a>
+    <a href="#faq" class="nav-link" data-i18n="lp.nav.faq">FAQ</a>
   </div>
   <div style="display:flex;align-items:center;gap:10px">
-    <button class="nav-login" id="nav-login-btn" onclick="scrollToLogin()">Accedi</button>
-    <a href="./index.html" class="nav-cta" id="nav-dashboard-btn">Apri la Dashboard →</a>
+    <select class="lang-select" id="lang-select-lp" onchange="setLangAbout(this.value)">
+      <option value="it">🇮🇹 IT</option>
+      <option value="en">🇬🇧 EN</option>
+      <option value="de">🇩🇪 DE</option>
+    </select>
+    <button class="nav-login" id="nav-login-btn" onclick="scrollToLogin()" data-i18n="lp.nav.login">Accedi</button>
+    <a href="./index.html" class="nav-cta" id="nav-dashboard-btn" data-i18n="lp.nav.openDash">Apri la Dashboard →</a>
     <button class="nav-burger" id="nav-burger" onclick="toggleAboutNav()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -1070,11 +1075,16 @@ document.addEventListener('DOMContentLoaded',()=>{
 </nav>
 <!-- Mobile nav drawer -->
 <div class="nav-drawer" id="nav-drawer">
-  <a href="#features" class="nav-drawer-link" onclick="closeAboutNav()">Funzionalità</a>
-  <a href="#come-funziona" class="nav-drawer-link" onclick="closeAboutNav()">Come funziona</a>
-  <a href="#pricing" class="nav-drawer-link" onclick="closeAboutNav()">Piani</a>
-  <a href="#faq" class="nav-drawer-link" onclick="closeAboutNav()">FAQ</a>
-  <a href="./index.html" class="nav-drawer-cta">Apri la Dashboard →</a>
+  <a href="#features" class="nav-drawer-link" onclick="closeAboutNav()" data-i18n="lp.nav.features">Funzionalità</a>
+  <a href="#come-funziona" class="nav-drawer-link" onclick="closeAboutNav()" data-i18n="lp.nav.how">Come funziona</a>
+  <a href="#pricing" class="nav-drawer-link" onclick="closeAboutNav()" data-i18n="lp.nav.pricing">Piani</a>
+  <a href="#faq" class="nav-drawer-link" onclick="closeAboutNav()" data-i18n="lp.nav.faq">FAQ</a>
+  <select class="lang-select" id="lang-select-lp-mob" onchange="setLangAbout(this.value)" style="margin:8px 0">
+    <option value="it">🇮🇹 Italiano</option>
+    <option value="en">🇬🇧 English</option>
+    <option value="de">🇩🇪 Deutsch</option>
+  </select>
+  <a href="./index.html" class="nav-drawer-cta" data-i18n="lp.nav.openDash">Apri la Dashboard →</a>
 </div>
 
 <!-- ═══ HERO ═══ -->
