@@ -2158,7 +2158,8 @@ if(savedUser){
   try{
     const user=JSON.parse(savedUser);
     document.getElementById('logged-card').style.display='flex';
-    document.getElementById('logged-msg').textContent=`Ciao, ${user.name||user.email}!`;
+    const greeting=currentLang==='en'?'Hi':'Ciao';
+    document.getElementById('logged-msg').textContent=`${greeting}, ${user.name||user.email}!`;
     const nb=document.getElementById('nav-login-btn');if(nb)nb.style.display='none';
   }catch{}
 }
