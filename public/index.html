@@ -5243,16 +5243,41 @@ async function loadVIX(){
 
 /* ── MOVERS ── */
 async function loadMovers(){
-  // Filtra solo i ticker le cui borse hanno già aperto la sessione oggi
-  const activeTickers=MOVERS_S.filter(s=>_marketActiveToday(_tickerExIdx(s)));
   const topEl=document.getElementById('movers-top');
   const botEl=document.getElementById('movers-bot');
+  const noteEl=document.getElementById('movers-note');
+
+  const renderMovers=(list,el)=>{
+    if(!el)return;
+    el.innerHTML=list.map(m=>`
+      <div class="mover-item" onclick="openModal('${m.s}','${m.name}')">
+        <div><div class="mv-sym">${m.s}</div><div class="mv-name">${m.name}</div></div>
+        <span class="mv-chg ${m.c>=0?'up':'down'}">${chgStr(m.c)}</span>
+      </div>`).join('');
+  };
+
+  // Filtra solo i ticker le cui borse hanno già aperto la sessione oggi
+  const activeTickers=MOVERS_S.filter(s=>_marketActiveToday(_tickerExIdx(s)));
+
   if(!activeTickers.length){
-    const msg='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:12px 4px">Nessuna borsa attiva al momento</div>';
-    if(topEl)topEl.innerHTML=msg;
+    // Nessun mercato attivo: mostra dati dalla cache (sessione precedente)
+    try{
+      const cached=JSON.parse(localStorage.getItem('_movers_cache')||'null');
+      if(cached?.top5?.length){
+        renderMovers(cached.top5,topEl);
+        renderMovers(cached.bot5,botEl);
+        const d=new Date(cached.ts);
+        const dateLabel=d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+        if(noteEl){noteEl.textContent='Borse chiuse · dati sessione del '+dateLabel;noteEl.style.display='block';}
+        return;
+      }
+    }catch{}
+    // Cache assente: mostra placeholder minimo
+    if(topEl)topEl.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:12px 4px">Borse chiuse</div>';
     if(botEl)botEl.innerHTML='';
     return;
   }
+
   const pairs=await Promise.all(activeTickers.map(s=>api(s).then(d=>({s,d})).catch(()=>({s,d:null}))));
   const results=[];
   for(const {s,d} of pairs){
@@ -5264,16 +5289,13 @@ async function loadMovers(){
   results.sort((a,b)=>b.c-a.c);
   const top5=results.slice(0,5);
   const bot5=results.slice(-5).reverse();
-  const renderMovers=(list,el)=>{
-    if(!el)return;
-    el.innerHTML=list.map(m=>`
-      <div class="mover-item" onclick="openModal('${m.s}','${m.name}')">
-        <div><div class="mv-sym">${m.s}</div><div class="mv-name">${m.name}</div></div>
-        <span class="mv-chg ${m.c>=0?'up':'down'}">${chgStr(m.c)}</span>
-      </div>`).join('');
-  };
+
+  // Salva in cache per quando i mercati sono chiusi
+  try{localStorage.setItem('_movers_cache',JSON.stringify({top5,bot5,ts:Date.now()}));}catch{}
+
   renderMovers(top5,topEl);
   renderMovers(bot5,botEl);
+  if(noteEl){noteEl.textContent='';noteEl.style.display='none';}
 }
 
 /* ── SPARKLINE ── */
