@@ -15210,7 +15210,30 @@ function renderStressTest(){
         </div>
       </div>`;
     }).join('')}
-    <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">⚠ Stima basata sul beta ponderato. I rendimenti reali dipendono dalla correlazione effettiva dei titoli col mercato.</div>`;
+    <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--bd)">
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Scenari storici calibrati — S&P 500 peak-to-trough</div>
+      ${historicalScenarios.map(s=>{
+        const portChange=portfolioBeta*s.market;
+        const newValEUR=totalValEUR*(1+portChange/100);
+        const deltaEUR=newValEUR-totalValEUR;
+        const barW=Math.min(Math.abs(portChange)/65*100,100);
+        return`<div style="display:grid;grid-template-columns:1fr 55px 1fr 110px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)">
+          <div>
+            <div style="font-size:11px;color:var(--t2)">${s.label}</div>
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${s.note}</div>
+          </div>
+          <div style="font-size:11px;font-weight:700;font-family:var(--fm);color:${s.color}">${s.market}%</div>
+          <div style="background:var(--s2);border-radius:4px;height:8px;overflow:hidden">
+            <div style="height:8px;width:${barW}%;background:${s.color};border-radius:4px;margin-left:auto"></div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;font-weight:700;font-family:var(--fm);color:var(--r)">${fmt(portChange,1)}% → €${fmt(newValEUR,0)}</div>
+            <div style="font-size:10px;font-family:var(--fm);color:var(--r)">−€${fmt(Math.abs(deltaEUR),0)}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">⚠ Stima basata sul beta ponderato vs S&P 500. I rendimenti reali dipendono dalla correlazione effettiva e dalla volatilità idiosincratica dei singoli titoli. Gli scenari storici sono peak-to-trough su periodi di mesi/anni, non movimenti giornalieri.</div>`;
 }
 
 /* ══════════════════════════════════════════
