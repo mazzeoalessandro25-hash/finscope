@@ -4176,35 +4176,88 @@ function getTapeEventHtml(ecoEvents, earnEvents){
   return h;
 }
 
-// Calendari festività ufficiali 2025–2026
-const _HOL={
-  nyse:new Set([
-    // NYSE/Nasdaq 2025
-    '2025-01-01','2025-01-20','2025-02-17','2025-04-18',
-    '2025-05-26','2025-06-19','2025-07-04','2025-09-01',
-    '2025-11-27','2025-12-25',
-    // NYSE/Nasdaq 2026
-    '2026-01-01','2026-01-19','2026-02-16','2026-04-03',
-    '2026-05-25','2026-06-19','2026-07-03','2026-09-07',
-    '2026-11-26','2026-12-25',
-  ]),
-  lse:new Set([
-    // LSE 2025
-    '2025-01-01','2025-04-18','2025-04-21','2025-05-05',
-    '2025-05-26','2025-08-25','2025-12-25','2025-12-26',
-    // LSE 2026
-    '2026-01-01','2026-04-03','2026-04-06','2026-05-04',
-    '2026-05-25','2026-08-31','2026-12-25','2026-12-28',
-  ]),
-  milan:new Set([
-    // Euronext Milan 2025
-    '2025-01-01','2025-04-18','2025-04-21','2025-05-01',
-    '2025-12-25','2025-12-26',
-    // Euronext Milan 2026
-    '2026-01-01','2026-04-03','2026-04-06','2026-05-01',
-    '2026-12-25','2026-12-26',
-  ]),
-};
+// Calcola automaticamente le festività per qualsiasi anno — nessuna manutenzione manuale
+(function(){
+  // Algoritmo di Meeus/Jones/Butcher per la data di Pasqua
+  function easter(y){
+    const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4;
+    const f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3);
+    const h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4;
+    const l=(32+2*e+2*i-h-k)%7,m2=Math.floor((a+11*h+22*l)/451);
+    const mo=Math.floor((h+l-7*m2+114)/31),da=((h+l-7*m2+114)%31)+1;
+    return new Date(y,mo-1,da);
+  }
+  // n-esimo giorno della settimana nel mese (wd: 0=Dom … 6=Sab)
+  function nth(y,mo,wd,n){
+    const d=new Date(y,mo-1,1);let cnt=0;
+    while(cnt<n){if(d.getDay()===wd)cnt++;if(cnt<n)d.setDate(d.getDate()+1);}
+    return d;
+  }
+  // Ultimo giorno della settimana nel mese
+  function last(y,mo,wd){
+    const d=new Date(y,mo,0);
+    while(d.getDay()!==wd)d.setDate(d.getDate()-1);
+    return d;
+  }
+  // Regola "observed": Sab→Ven, Dom→Lun
+  function obs(d){
+    const w=d.getDay();
+    if(w===6){const r=new Date(d);r.setDate(d.getDate()-1);return r;}
+    if(w===0){const r=new Date(d);r.setDate(d.getDate()+1);return r;}
+    return d;
+  }
+  function df(d){
+    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  }
+  function fix(y,mo,da){return obs(new Date(y,mo-1,da));}
+
+  function buildYear(y){
+    const es=easter(y);
+    const gf=new Date(es);gf.setDate(es.getDate()-2);   // Venerdì Santo
+    const em=new Date(es);em.setDate(es.getDate()+1);   // Lunedì di Pasqua
+    return{
+      nyse:new Set([
+        df(fix(y,1,1)),           // Capodanno
+        df(nth(y,1,1,3)),         // MLK Day (3° Lun Gen)
+        df(nth(y,2,1,3)),         // Presidents' Day (3° Lun Feb)
+        df(gf),                   // Good Friday
+        df(last(y,5,1)),          // Memorial Day (ult. Lun Mag)
+        df(fix(y,6,19)),          // Juneteenth
+        df(fix(y,7,4)),           // Independence Day
+        df(nth(y,9,1,1)),         // Labor Day (1° Lun Set)
+        df(nth(y,11,4,4)),        // Thanksgiving (4° Gio Nov)
+        df(fix(y,12,25)),         // Natale
+      ]),
+      lse:new Set([
+        df(fix(y,1,1)),           // Capodanno
+        df(gf),                   // Good Friday
+        df(em),                   // Easter Monday
+        df(nth(y,5,1,1)),         // Early May Bank Holiday (1° Lun Mag)
+        df(last(y,5,1)),          // Spring Bank Holiday (ult. Lun Mag)
+        df(last(y,8,1)),          // Summer Bank Holiday (ult. Lun Ago)
+        df(fix(y,12,25)),         // Christmas
+        df(fix(y,12,26)),         // Boxing Day
+      ]),
+      milan:new Set([
+        df(fix(y,1,1)),           // Capodanno
+        df(gf),                   // Venerdì Santo
+        df(em),                   // Lunedì di Pasqua
+        df(fix(y,5,1)),           // Festa del Lavoro
+        df(fix(y,12,25)),         // Natale
+        df(fix(y,12,26)),         // Santo Stefano
+      ]),
+    };
+  }
+
+  // Costruisce il Set unendo anno corrente + prossimo (copertura rolling 2 anni)
+  const y=new Date().getFullYear();
+  const curr=buildYear(y),next=buildYear(y+1);
+  window._HOL={
+    nyse:new Set([...curr.nyse,...next.nyse]),
+    lse: new Set([...curr.lse, ...next.lse]),
+    milan:new Set([...curr.milan,...next.milan]),
+  };
+})();
 
 const EXCHANGES=[
   {tz:'America/New_York',open:[9,30],close:[16,0],hol:'nyse'},
