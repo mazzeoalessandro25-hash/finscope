@@ -14092,7 +14092,7 @@ async function loadRiskMetrics(){
       <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
         <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">Rendimento annualizzato${tip('CAGR geometrico: (1 + rendimento_composto_3mesi)^(252÷giorni) − 1. Il metodo geometrico è corretto perché tiene conto del compounding — es. +10% e −10% in due giorni = −1% reale, non 0%. Basato sugli ultimi 3 mesi di dati: interpretare con cautela su periodi brevi.')}</div>
         <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${annRetGeom>=0?'var(--g)':'var(--r)'}">${annRetGeom>=0?'+':''}${fmt(annRetGeom*100,1)}%</div>
-        <div style="font-size:10px;color:var(--t2);margin-top:4px">CAGR geometrico · ultimi 3 mesi</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">CAGR geometrico · ultimi 12 mesi</div>
       </div>
     </div>
 
