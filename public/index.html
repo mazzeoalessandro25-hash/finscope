@@ -14111,7 +14111,7 @@ async function loadRiskMetrics(){
     </div>
 
     <!-- Volatilità per titolo -->
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Volatilità per titolo (annualizzata, 3 mesi)</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center">Volatilità per titolo (annualizzata, 3 mesi)${tip('Deviazione standard dei rendimenti giornalieri di ogni singolo titolo, annualizzata (×√252). Mostra quanto oscilla ogni posizione indipendentemente dalle altre. Non considera la correlazione tra titoli — la volatilità del portafoglio può essere inferiore alla media delle singole volatilità se i titoli non sono correlati. <20% bassa · 20–40% media · >40% alta.')}</div>
     <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
       ${portfolio.map((item,pi)=>{
         const r=stockRets[pi];
