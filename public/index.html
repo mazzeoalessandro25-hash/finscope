@@ -15233,7 +15233,7 @@ function renderStressTest(){
       </div>`;
     }).join('')}
     <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--bd)">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Scenari storici calibrati — S&P 500 peak-to-trough</div>
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${_t('stress.histTitle')}</div>
       ${historicalScenarios.map(s=>{
         const portChange=portfolioBeta*s.market;
         const newValEUR=totalValEUR*(1+portChange/100);
