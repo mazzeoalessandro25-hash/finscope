@@ -15150,11 +15150,21 @@ function renderStressTest(){
   if(!quotes){el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';return;}
   const eurUsd=_lastFxRate||1.08;
   let totalValUSD=0;
+  // Beta di default per asset class note quando Yahoo non restituisce dati
+  // Bond ETF hanno beta ~0–0.1 (spesso salgono nei crash), oro ~-0.1
+  const _KNOWN_BETAS={
+    TLT:-0.1,IEF:0.0,SHY:0.0,BND:0.05,AGG:0.05,VGIT:0.05,VGLT:-0.05,
+    EDV:-0.15,ZROZ:-0.15,TMF:-0.30,// bond
+    GLD:-0.05,IAU:-0.05,SLV:0.2,  // metalli
+    LQD:0.35,HYG:0.55,JNK:0.55,   // credito
+    UUP:-0.15,                      // dollaro
+  };
   const items=portfolio.map((item,i)=>{
     const q=quotes[i];const price=q?.price??item.buyPrice;
     const fx=(item.currency==='EUR')?eurUsd:1;
     const val=item.qty*price*fx;totalValUSD+=val;
-    const beta=q?.beta??(scSummary[item.sym]||scData[item.sym])?.beta??1.0;
+    const betaFallback=_KNOWN_BETAS[item.sym]??((scSummary[item.sym]||scData[item.sym])?.beta??1.0);
+    const beta=q?.beta??betaFallback;
     return{sym:item.sym,val,beta};
   });
   const portfolioBeta=totalValUSD>0?items.reduce((s,it)=>s+it.beta*(it.val/totalValUSD),0):1;
