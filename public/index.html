@@ -14231,6 +14231,7 @@ async function loadRiskMetrics(){
         <table class="corr-table">
           <thead><tr><th style="text-align:left;padding:4px 10px;min-width:60px;color:var(--r);font-size:9px;letter-spacing:.4px">CRISI</th>${portfolio.map(it=>`<th style="color:var(--r)">${it.sym}</th>`).join('')}</tr></thead>
           <tbody>${portfolio.map((itA,a)=>`<tr><th style="text-align:left;padding:4px 10px;color:var(--r);font-size:11px;font-family:var(--fm);white-space:nowrap">${itA.sym}</th>${portfolio.map((_,b)=>{const v=crisisCorrM[a][b];return`<td style="background:${corrBg(v)};color:${corrTxt(v)};padding:5px 8px;border-radius:4px">${v!==null?fmt(v,2):'—'}</td>`;}).join('')}</tr>`).join('')}</tbody>
+          <thead><tr><th style="text-align:left;padding:4px 10px;min-width:60px;color:var(--r);font-size:9px;letter-spacing:.4px">${_t('risk.crisisLabel')}</th>${portfolio.map(it=>`<th style="color:var(--r)">${it.sym}</th>`).join('')}</tr></thead>
         </table>
       </div>
     </div>`:'<div style="font-size:12px;color:var(--t3);padding:8px 0;font-family:var(--fm)">Aggiungi almeno 2 titoli per vedere la matrice di correlazione.</div>'}
