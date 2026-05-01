@@ -2087,7 +2087,7 @@ async function submitAuth(){
     errEl.classList.add('show');
   }
   btn.disabled=false;
-  btn.textContent=authTab==='login'?'Accedi':'Crea account gratuito';
+  btn.textContent=_t(authTab==='login'?'lp.auth.tabLogin':'lp.auth.btnRegister');
 }
 
 // ─── Forgot / Reset Password ───
