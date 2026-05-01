@@ -9938,8 +9938,10 @@ function renderPortAnalysis(portItems, quotes){
   }
 
   // --- Calcola dati base ---
+  // I pesi usano il VALORE CORRENTE DI MERCATO (non il costo storico):
+  // questo è lo standard industry — il rischio esposto è proporzionale al valore attuale.
   const allS=STOCKS.concat(customStocks);
-  let totalInv=0;
+  let totalMktVal=0, totalInv=0;
   const items=portItems.map((item,i)=>{
     const q=quotes[i];
     const info=allS.find(s=>s.s===item.sym)||(()=>{
@@ -9954,20 +9956,23 @@ function renderPortAnalysis(portItems, quotes){
       const defType=cat==='etf'?'growth':cat==='crypto'?'growth':cat==='commodity'?'value':'growth';
       return{t:defType,sec:sd?.sector||'Other',mkt:detectedMkt};
     })();
-    const invested=item.qty*item.buyPrice;
+    const curPrice=q?.price??item.buyPrice;
+    const mktVal=item.qty*curPrice;     // valore attuale di mercato (per pesi)
+    const invested=item.qty*item.buyPrice; // costo storico (solo per P&L)
+    totalMktVal+=mktVal;
     totalInv+=invested;
     const summ=scSummary[item.sym]||scData[item.sym];
     const beta=q?.beta??summ?.beta??1.0;
-    return{sym:item.sym,invested,type:info.t||'growth',sec:info.sec||'Other',mkt:info.mkt||'US',beta};
+    return{sym:item.sym,mktVal,invested,type:info.t||'growth',sec:info.sec||'Other',mkt:info.mkt||'US',beta};
   });
 
-  // --- Distribuzioni pesate ---
+  // --- Distribuzioni pesate per valore corrente di mercato ---
   const byType={dividend:0,value:0,growth:0};
   const bySec={};
   const byMkt={US:0,IT:0,EU:0,UK:0,AS:0};
   let weightedBeta=0,maxConc=0;
   items.forEach(it=>{
-    const w=totalInv>0?it.invested/totalInv:0;
+    const w=totalMktVal>0?it.mktVal/totalMktVal:0;
     byType[it.type]=(byType[it.type]||0)+w;
     bySec[it.sec]=(bySec[it.sec]||0)+w;
     byMkt[it.mkt]=(byMkt[it.mkt]||0)+w;
