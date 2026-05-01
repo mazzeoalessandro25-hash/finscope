@@ -13816,12 +13816,12 @@ async function loadRiskMetrics(){
   if(!portfolio.length){
     el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per calcolare le metriche di rischio</div>';return;
   }
-  el.innerHTML='<div class="ld" style="padding:10px">Recupero 3 mesi di dati storici...</div>';
+  el.innerHTML='<div class="ld" style="padding:10px">Recupero 12 mesi di dati storici...</div>';
 
   const RISK_FREE=0.045; // 4.5% risk-free (US 3m T-bill)
   const [spyHist,...histData]=await Promise.all([
-    api('SPY','history&range=3mo'),
-    ...portfolio.map(item=>api(item.sym,'history&range=3mo'))
+    api('SPY','history&range=1y'),
+    ...portfolio.map(item=>api(item.sym,'history&range=1y'))
   ]);
   const quotes=_lastPortQuotes.length===portfolio.length
     ?_lastPortQuotes
