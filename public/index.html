@@ -14098,28 +14098,28 @@ async function loadRiskMetrics(){
 
     <!-- VaR + CVaR spiegazione -->
     <div style="padding:10px 14px;background:var(--b3);border-radius:8px;border-left:3px solid var(--b);margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.6;font-family:var(--fm)">
-      <strong style="color:var(--t)">VaR 95%: −${fmt(Math.abs(var95)*100,2)}% al giorno</strong> — Con il 95% di probabilità la perdita giornaliera non supera <strong>$${fmt(var95Abs,0)}</strong>. Il restante 5% dei giorni (≈1 ogni 20) può superare questa soglia.<br>
-      <strong style="color:var(--t)">CVaR 95%: −${fmt(Math.abs(cvar95)*100,2)}% al giorno</strong> — Nei giorni del peggior 5%, la perdita media attesa è <strong>$${fmt(cvar95Abs,0)}</strong>. Questo è il numero che usano le banche per il capitale regolatorio (Basel III).
+      <strong style="color:var(--t)">VaR 95%: −${fmt(Math.abs(var95)*100,2)}%/${_t('risk.varSub')}</strong> — ${_t('risk.varExplain').replace('{p}','95')} <strong>$${fmt(var95Abs,0)}</strong>. ${_t('risk.varExplain2')}<br>
+      <strong style="color:var(--t)">CVaR 95%: −${fmt(Math.abs(cvar95)*100,2)}%/${_t('risk.varSub')}</strong> — ${_t('risk.cvarExplain')} <strong>$${fmt(cvar95Abs,0)}</strong>. ${_t('risk.cvarExplain2')}
     </div>
 
     <!-- Monte Carlo -->
     <div style="margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center">🎲 Simulazione Monte Carlo — 5.000 scenari, 1 anno${tip('Simula 5.000 possibili percorsi del portafoglio nel prossimo anno, usando il rendimento medio giornaliero e la volatilità degli ultimi 3 mesi come parametri. Ogni giorno viene estratto un rendimento casuale dalla distribuzione normale. I percentili mostrano la distribuzione degli esiti: il 10° è il caso pessimista, il 90° l\'ottimista.')}</div>
-      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:8px">Distribuzione probabilistica del valore del portafoglio nei prossimi 12 mesi. Modello GBM con correzione di Itô e distribuzione t(5) per code grasse. Parametri calibrati su ultimi 12 mesi.</div>
-      ${mcDriftCapped?`<div style="padding:7px 10px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.35);border-radius:7px;font-size:10px;font-family:var(--fm);color:#92400E;margin-bottom:10px">⚠ Il rendimento degli ultimi 12 mesi (${fmt(mcMuRecent*252*100,0)}% annualizzato) supera la media storica azionaria di lungo periodo. La simulazione usa il 10% annuo come drift per evitare proiezioni non realistiche basate su un trend eccezionale e non sostenibile.</div>`:''}
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center">${_t('risk.mcTitle')}${tip(_t('risk.tip.mc'))}</div>
+      <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:8px">${_t('risk.mcSub')}</div>
+      ${mcDriftCapped?`<div style="padding:7px 10px;background:rgba(245,158,11,.10);border:1px solid rgba(245,158,11,.35);border-radius:7px;font-size:10px;font-family:var(--fm);color:#92400E;margin-bottom:10px">⚠ ${_t('risk.mcDriftCap').replace('{r}',fmt(mcMuRecent*252*100,0))}</div>`:''}
       <div style="font-size:11px;color:var(--t3);font-family:var(--fm);margin-bottom:12px"></div>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
-        <div class="rb"><div class="rl">SCENARIO PESSIMISTA (10°)</div><div class="rv2 down" style="font-size:17px">${mcP10>=1?'+':''}${fmt((mcP10-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP10,0)}</div></div>
-        <div class="rb"><div class="rl">SCENARIO MEDIANO (50°)</div><div class="rv2 ${mcP50>=1?'g':'down'}" style="font-size:17px">${mcP50>=1?'+':''}${fmt((mcP50-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP50,0)}</div></div>
-        <div class="rb"><div class="rl">SCENARIO OTTIMISTA (90°)</div><div class="rv2 g" style="font-size:17px">+${fmt((mcP90-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP90,0)}</div></div>
-        <div class="rb"><div class="rl">PROB. PERDITA</div><div class="rv2 down" style="font-size:17px">${fmt(mcPLoss,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">prob. chiudere in rosso</div></div>
+        <div class="rb"><div class="rl">${_t('risk.mcPessimist')}</div><div class="rv2 down" style="font-size:17px">${mcP10>=1?'+':''}${fmt((mcP10-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP10,0)}</div></div>
+        <div class="rb"><div class="rl">${_t('risk.mcMedian')}</div><div class="rv2 ${mcP50>=1?'g':'down'}" style="font-size:17px">${mcP50>=1?'+':''}${fmt((mcP50-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP50,0)}</div></div>
+        <div class="rb"><div class="rl">${_t('risk.mcOptimist')}</div><div class="rv2 g" style="font-size:17px">+${fmt((mcP90-1)*100,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">$${fmt(portVal*mcP90,0)}</div></div>
+        <div class="rb"><div class="rl">${_t('risk.mcLoss')}</div><div class="rv2 down" style="font-size:17px">${fmt(mcPLoss,1)}%</div><div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${_t('risk.mcLossSub')}</div></div>
       </div>
       <canvas id="mc-canvas" width="600" height="180" style="width:100%;height:180px;border-radius:8px;background:var(--s2)"></canvas>
       <div style="display:flex;gap:16px;margin-top:6px;flex-wrap:wrap;align-items:center">
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:8px;background:rgba(16,185,129,0.15);border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">10°–90° percentile</span></div>
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:8px;background:rgba(16,185,129,0.35);border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">25°–75° percentile</span></div>
-        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:3px;background:#10B981;border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">Mediana</span></div>
-        <div style="margin-left:auto;font-size:9px;color:var(--t3);font-family:var(--fm)">Prob. +20%: <strong>${fmt(mcPGain20,1)}%</strong></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:8px;background:rgba(16,185,129,0.15);border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">${_t('risk.mcLegP10')}</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:8px;background:rgba(16,185,129,0.35);border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">${_t('risk.mcLegP25')}</span></div>
+        <div style="display:flex;align-items:center;gap:5px"><div style="width:20px;height:3px;background:#10B981;border-radius:2px"></div><span style="font-size:9px;color:var(--t3);font-family:var(--fm)">${_t('risk.mcLegMed')}</span></div>
+        <div style="margin-left:auto;font-size:9px;color:var(--t3);font-family:var(--fm)">${_t('risk.mcGain20')} <strong>${fmt(mcPGain20,1)}%</strong></div>
       </div>
     </div>
 
