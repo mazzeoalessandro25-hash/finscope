@@ -931,6 +931,7 @@ const TRANSLATIONS={
     'risk.oppTotalPos':'The portfolio generated',
     'risk.oppTotalNeg':'The portfolio lost',
     'risk.oppVsSpy':'compared to an equivalent investment in SPY.',
+    'risk.oppFooter':'Calculation based on the last 12 months · Does not account for transaction costs',
     'risk.volTitle':'📊 Volatility by position (12 months)',
     'risk.corrTitle':'Correlation matrix (12 months) — values from -1 to +1',
     'risk.corrHighPos':'Very high correlation — concentration risk',
