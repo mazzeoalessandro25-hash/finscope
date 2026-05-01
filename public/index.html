@@ -10064,7 +10064,8 @@ function renderPortAnalysis(portItems, quotes){
   const dash=score/100*C2;
 
   // --- Calcolo segnali acquisto aggregati portafoglio ---
-  let avgPnlPct=0,avgUpside=0,avgFinScore=0,nWithScore=0,nWithUpside=0;
+  let avgPnlPct=0,avgUpside=0,avgFinScore=0,avgDailyChg=0;
+  let totalScoreWeight=0,nWithUpside=0;
   portItems.forEach((item,i)=>{
     const q=quotes[i];
     const sd2=scSummary[item.sym]||scData[item.sym];
@@ -10072,22 +10073,33 @@ function renderPortAnalysis(portItems, quotes){
     const pnlPct2=item.buyPrice>0?((curP-item.buyPrice)/item.buyPrice*100):0;
     const w=totalInv>0?(item.qty*item.buyPrice)/totalInv:1/portItems.length;
     avgPnlPct+=pnlPct2*w;
+    // Momentum: variazione giornaliera ponderata (oggi vs chiusura precedente)
+    if(q?.price&&q?.prev&&q.prev>0) avgDailyChg+=((q.price-q.prev)/q.prev*100)*w;
+    // Qualità: normalizza sul peso effettivo dei titoli con dati disponibili
     const fss2=sd2?calcFinEdgeScore(sd2,q):null;
-    if(fss2?.total!=null){avgFinScore+=fss2.total*w;nWithScore++;}
+    if(fss2?.total!=null){avgFinScore+=fss2.total*w;totalScoreWeight+=w;}
     const target2=(q?.target||sd2?.targetPrice)||null;
     if(target2&&curP>0){avgUpside+=((target2-curP)/curP*100)*w;nWithUpside++;}
   });
-  if(!nWithScore)avgFinScore=50;
+  // Normalizza il FinEdge Score sul peso effettivo dei titoli con dati
+  if(totalScoreWeight>0) avgFinScore=avgFinScore/totalScoreWeight;
+  else avgFinScore=50;
 
   const stabBeta=Math.max(0,Math.min(100,100-(weightedBeta-0.5)*60));
 
-  // Assi radar (0–100)
+  // Assi radar (0–100) — ogni metrica è distinta e finanziariamente corretta
+  // Rendimento: P&L totale vs prezzo di carico (scala: -50%→0, 0%→50, +50%→100)
   const radarReturn=Math.max(0,Math.min(100,Math.round(50+avgPnlPct)));
+  // Diversificazione: settori (max 8) + titoli (max 15), peso uguale
   const radarDiversif=Math.min(100,Math.round((nSectors/8*50)+(Math.min(nStocks,15)/15*50)));
+  // Qualità: FinEdge Score medio ponderato (già 0-100), normalizzato sul peso reale
   const radarQuality=Math.max(0,Math.min(100,Math.round(avgFinScore)));
-  const radarMomentum=Math.max(0,Math.min(100,Math.round(50+avgPnlPct*0.6)));
+  // Momentum: variazione % giornaliera ponderata (scala: -5%→0, 0%→50, +5%→100)
+  const radarMomentum=Math.max(0,Math.min(100,Math.round(50+avgDailyChg*10)));
+  // Stabilità: da beta (beta=0.5→100, beta=1.0→70, beta=1.5→40, beta=2.0+→10)
   const radarStability=Math.max(0,Math.min(100,Math.round(stabBeta)));
-  const radarIncome=Math.max(0,Math.min(100,Math.round(avgYield*1000)));
+  // Reddito: yield dividendi (scala: 0%→0, 3%→50, 6%→100 — 6% = massimo realistico diversificato)
+  const radarIncome=Math.max(0,Math.min(100,Math.round((avgYield/0.06)*100)));
 
   // Percentuali colorate sotto i donut (senza legenda laterale)
   const PALETTE=['#1A56C4','#059669','#D97706','#7C3AED','#DB2777','#0891B2','#65A30D','#DC2626','#F59E0B','#10B981'];
