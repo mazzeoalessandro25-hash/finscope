@@ -1717,32 +1717,32 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- ═══ FAQ ═══ -->
 <div class="section" id="faq">
-  <div class="section-tag">Domande frequenti</div>
-  <div class="section-title">Hai dubbi? Ti rispondiamo</div>
+  <div class="section-tag" data-i18n="lp.faq.tag">Domande frequenti</div>
+  <div class="section-title" data-i18n="lp.faq.title">Hai dubbi? Ti rispondiamo</div>
   <div class="faq-list">
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">È davvero gratuito? Ci sono costi nascosti? <span class="faq-arr">▾</span></button>
-      <div class="faq-a">FinEdge è attualmente gratuito durante la fase beta. Non ci sono costi nascosti né carta di credito richiesta. In futuro potremmo introdurre piani a pagamento: alcune funzionalità potrebbero diventare parte di un piano premium, con prezzi e dettagli che comunicheremo in anticipo.</div>
+      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q1">È davvero gratuito? Ci sono costi nascosti?</span> <span class="faq-arr">▾</span></button>
+      <div class="faq-a" data-i18n="lp.faq.a1">FinEdge è attualmente gratuito durante la fase beta. Non ci sono costi nascosti né carta di credito richiesta. In futuro potremmo introdurre piani a pagamento: alcune funzionalità potrebbero diventare parte di un piano premium, con prezzi e dettagli che comunicheremo in anticipo.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Come viene calcolato il FinEdge Score? <span class="faq-arr">▾</span></button>
-      <div class="faq-a">Il FinEdge Score è una metrica proprietaria che valuta ogni titolo su 5 dimensioni: <strong>Valutazione</strong> (25pt) basata su P/E e P/B, <strong>Redditività</strong> (25pt) da ROE ed EPS, <strong>Momentum</strong> (20pt) dalla posizione nel range 52 settimane, <strong>Consensus</strong> (20pt) dagli analisti, e <strong>Stabilità</strong> (10pt) dal beta. Totale: 100 punti.</div>
+      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q2">Come viene calcolato il FinEdge Score?</span> <span class="faq-arr">▾</span></button>
+      <div class="faq-a" data-i18n-html="lp.faq.a2">Il FinEdge Score è una metrica proprietaria che valuta ogni titolo su 5 dimensioni: <strong>Valutazione</strong> (25pt) basata su P/E e P/B, <strong>Redditività</strong> (25pt) da ROE ed EPS, <strong>Momentum</strong> (20pt) dalla posizione nel range 52 settimane, <strong>Consensus</strong> (20pt) dagli analisti, e <strong>Stabilità</strong> (10pt) dal beta. Totale: 100 punti.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">Come viene calcolato il FinEdge Price Target? <span class="faq-arr">▾</span></button>
-      <div class="faq-a">Il FinEdge Price Target è una media ponderata di tre metodi: la <strong>Formula di Graham modificata</strong> (peso 40%) — EPS × (8,5 + 2×10%) × (4,4/4,5%) — il <strong>P/E normalizzato</strong> (25%) e il <strong>Consensus degli analisti</strong> (35%) quando disponibile. È una stima indicativa, non una raccomandazione di investimento.</div>
+      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q3">Come viene calcolato il FinEdge Price Target?</span> <span class="faq-arr">▾</span></button>
+      <div class="faq-a" data-i18n-html="lp.faq.a3">Il FinEdge Price Target è una media ponderata di tre metodi: la <strong>Formula di Graham modificata</strong> (peso 40%) — EPS × (8,5 + 2×10%) × (4,4/4,5%) — il <strong>P/E normalizzato</strong> (25%) e il <strong>Consensus degli analisti</strong> (35%) quando disponibile. È una stima indicativa, non una raccomandazione di investimento.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">I dati sono affidabili e aggiornati? <span class="faq-arr">▾</span></button>
-      <div class="faq-a">I dati provengono da Yahoo Finance, aggiornati ogni 60 secondi. Durante le sessioni di borsa possono esserci ritardi fino a 15 minuti. FinEdge è uno strumento informativo — non adatto a trading ad alta frequenza. Per investimento a medio-lungo termine è più che sufficiente.</div>
+      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q4">I dati sono affidabili e aggiornati?</span> <span class="faq-arr">▾</span></button>
+      <div class="faq-a" data-i18n="lp.faq.a4">I dati provengono da Yahoo Finance, aggiornati ogni 60 secondi. Durante le sessioni di borsa possono esserci ritardi fino a 15 minuti. FinEdge è uno strumento informativo — non adatto a trading ad alta frequenza. Per investimento a medio-lungo termine è più che sufficiente.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">I miei dati (portafoglio, watchlist) sono al sicuro? <span class="faq-arr">▾</span></button>
-      <div class="faq-a">Sì. Le password sono gestite da Clerk (cifrate con bcrypt, noi non le vediamo mai). Portafoglio e watchlist sono salvati su Upstash Redis con accesso autenticato. Tutti i dati viaggiano su HTTPS. Siamo conformi al GDPR.</div>
+      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q5">I miei dati (portafoglio, watchlist) sono al sicuro?</span> <span class="faq-arr">▾</span></button>
+      <div class="faq-a" data-i18n="lp.faq.a5">Sì. Le password sono gestite da Clerk (cifrate con bcrypt, noi non le vediamo mai). Portafoglio e watchlist sono salvati su Upstash Redis con accesso autenticato. Tutti i dati viaggiano su HTTPS. Siamo conformi al GDPR.</div>
     </div>
     <div class="faq-item">
-      <button class="faq-q" onclick="toggleFaq(this)">FinEdge costituisce consulenza finanziaria? <span class="faq-arr">▾</span></button>
-      <div class="faq-a">No. FinEdge è uno strumento di informazione e monitoraggio. Nessun contenuto costituisce consulenza finanziaria ai sensi del TUF e della Direttiva MiFID II. Il fondatore non è un consulente OCF abilitato. Ogni decisione di investimento è di esclusiva responsabilità dell'utente.</div>
+      <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q6">FinEdge costituisce consulenza finanziaria?</span> <span class="faq-arr">▾</span></button>
+      <div class="faq-a" data-i18n="lp.faq.a6">No. FinEdge è uno strumento di informazione e monitoraggio. Nessun contenuto costituisce consulenza finanziaria ai sensi del TUF e della Direttiva MiFID II. Il fondatore non è un consulente OCF abilitato. Ogni decisione di investimento è di esclusiva responsabilità dell'utente.</div>
     </div>
   </div>
 </div>
