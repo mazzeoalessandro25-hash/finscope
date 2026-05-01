@@ -10010,15 +10010,19 @@ function renderPortAnalysis(portItems, quotes){
   })();
   const avgYield=portYield; // alias per compatibilità con il codice esistente
 
-  // --- Score ---
+  // --- Score allineamento profilo (0-100) ---
+  // Pesi: composizione tipo 60pt + beta 25pt + diversificazione 15pt
   function calcScore(profKey){
     const prof=INVESTOR_PROFILES[profKey];
     const td=byType.dividend||0,tv=byType.value||0,tg=byType.growth||0;
+    // diff max teorico = 2.0 (es. 100% dividend vs 100% growth); scala lineare 0→60
     const diff=Math.abs(td-prof.types.dividend)+Math.abs(tv-prof.types.value)+Math.abs(tg-prof.types.growth);
-    const typeScore=Math.max(0,60*(1-diff/1.5));
+    const typeScore=Math.max(0,60*(1-diff/2.0));
+    // Beta: 25pt se sotto il target, penalità lineare oltre
     const betaScore=weightedBeta<=prof.maxBeta?25:Math.max(0,25-(weightedBeta-prof.maxBeta)*18);
-    const divScore=nStocks>=5?15:nStocks>=3?10:5;
-    return Math.min(100,Math.round(typeScore+betaScore+divScore));
+    // Diversificazione: 10pt titoli + 5pt settori (rinominato da divScore)
+    const diversScore=(nStocks>=10?10:nStocks>=5?7:nStocks>=3?4:1)+(nSectors>=5?5:nSectors>=3?3:1);
+    return Math.min(100,Math.round(typeScore+betaScore+diversScore));
   }
 
   // --- Raccomandazioni ---
