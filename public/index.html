@@ -15267,7 +15267,7 @@ async function renderCorrelationMatrix(){
   if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
   const uniqueSyms=[...new Set(portfolio.map(p=>p.sym))];
   if(uniqueSyms.length<2){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi almeno 2 titoli diversi per vedere la matrice di correlazione</div>';return;}
-  el.innerHTML='<div class="ld" style="padding:10px">Caricamento dati storici (12 mesi)...</div>';
+  el.innerHTML=`<div class="ld" style="padding:10px">${_t('corr.loading')}</div>`;
   try{
     const histData=await Promise.all(uniqueSyms.map(sym=>api(sym,'history&range=1y')));
     const returns={};
