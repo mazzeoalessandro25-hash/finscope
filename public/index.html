@@ -13833,10 +13833,11 @@ async function loadRiskMetrics(){
 
   const spyPts=spyHist.points;
   const _mean=arr=>arr.length?arr.reduce((s,v)=>s+v,0)/arr.length:0;
+  // Deviazione standard CAMPIONARIA (Bessel's correction: /n-1) — standard CFA/Bloomberg
   const _std=arr=>{
     if(arr.length<2)return 0;
     const m=_mean(arr);
-    return Math.sqrt(arr.reduce((s,v)=>s+(v-m)**2,0)/arr.length);
+    return Math.sqrt(arr.reduce((s,v)=>s+(v-m)**2,0)/(arr.length-1));
   };
 
   // Daily returns per holding
@@ -13847,14 +13848,21 @@ async function loadRiskMetrics(){
     return r;
   });
 
-  // Portfolio daily returns (weighted by invested value)
-  let totalInv=0;
-  const wts=portfolio.map(item=>{const v=item.qty*item.buyPrice;totalInv+=v;return v;});
+  // Portfolio daily returns — pesati per VALORE CORRENTE DI MERCATO (standard industry)
+  const _fxR2=_lastFxRate||1.08;
+  const curVals=portfolio.map((item,pi)=>{
+    const q=quotes[pi];
+    const curP=q?.price??item.buyPrice;
+    const isEUR=(q?.currency||item.currency||'USD')==='EUR';
+    return item.qty*curP*(isEUR?_fxR2:1);
+  });
+  const totalCurVal2=curVals.reduce((s,v)=>s+v,0)||1;
+  const wts=curVals.map(v=>v/totalCurVal2);
   const minLen=stockRets.reduce((mn,r)=>r.length?Math.min(mn,r.length):mn,999);
   const portRets=[];
   for(let di=0;di<minLen&&minLen<999;di++){
     let wr=0;
-    portfolio.forEach((_,pi)=>{wr+=(stockRets[pi][di]??0)*(wts[pi]/totalInv);});
+    portfolio.forEach((_,pi)=>{wr+=(stockRets[pi][di]??0)*wts[pi];});
     portRets.push(wr);
   }
 
