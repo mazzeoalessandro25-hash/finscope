@@ -4727,6 +4727,26 @@ function updateHours(){
 }
 updateHours();setInterval(updateHours,30000);
 
+// Restituisce true se la borsa (per indice EXCHANGES) ha già aperto la sessione oggi
+// (giorno lavorativo + orario apertura già passato in timezone locale)
+function _marketActiveToday(exIdx){
+  const ex=EXCHANGES[exIdx];
+  const loc=new Date(new Date().toLocaleString('en-US',{timeZone:ex.tz}));
+  const day=loc.getDay();
+  if(day===0||day===6)return false;
+  const yy=loc.getFullYear(),mm=String(loc.getMonth()+1).padStart(2,'0'),dd=String(loc.getDate()).padStart(2,'0');
+  if(window._HOL?.[ex.hol]?.has(`${yy}-${mm}-${dd}`))return false;
+  const h=loc.getHours(),m=loc.getMinutes();
+  return h>ex.open[0]||(h===ex.open[0]&&m>=ex.open[1]);
+}
+
+// Mappa un ticker all'indice della borsa in EXCHANGES (0=NYSE, 1=LSE, 2=Europa/Milan)
+function _tickerExIdx(sym){
+  if(/\.(MI|PA|DE|AS|BR|MC|SW|VI|AM|LS|ST|CO|HE|OL)$/.test(sym))return 2;
+  if(sym.endsWith('.L'))return 1;
+  return 0;
+}
+
 /* ── TAPE — scroll fluido con rAF ── */
 let tapeRAF=null, tapeX=0, tapeSpeed=0.5, tapeHalfW=0;
 
