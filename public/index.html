@@ -10115,7 +10115,8 @@ function renderPortAnalysis(portItems, quotes){
     const sd2=scSummary[item.sym]||scData[item.sym];
     const curP=q?.price??item.buyPrice;
     const pnlPct2=item.buyPrice>0?((curP-item.buyPrice)/item.buyPrice*100):0;
-    const w=totalInv>0?(item.qty*item.buyPrice)/totalInv:1/portItems.length;
+    // Peso per valore corrente di mercato (coerente con donut e distribuzioni sopra)
+    const w=totalMktVal>0?(item.qty*curP)/totalMktVal:1/portItems.length;
     avgPnlPct+=pnlPct2*w;
     // Momentum: variazione giornaliera ponderata (oggi vs chiusura precedente)
     if(q?.price&&q?.prev&&q.prev>0) avgDailyChg+=((q.price-q.prev)/q.prev*100)*w;
