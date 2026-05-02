@@ -6663,7 +6663,7 @@ function _applyDynamicTranslations(){
 }
 
 // Detect language: URL param → localStorage → browser → fallback 'it'
-const _LANGS_SUPPORTED=['it','en','de'];
+const _LANGS_SUPPORTED=['it','en'];
 const _urlLangParam=new URLSearchParams(window.location.search).get('lang');
 let currentLang;
 if(_urlLangParam&&_LANGS_SUPPORTED.includes(_urlLangParam)){
