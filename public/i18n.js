@@ -1165,7 +1165,11 @@ const TRANSLATIONS={
     /* LANDING PAGE (about.html) */
     'lp.nav.features':'Features','lp.nav.how':'How it works','lp.nav.pricing':'Plans','lp.nav.faq':'FAQ',
     'lp.nav.login':'Sign in','lp.nav.openDash':'Open Dashboard →',
-    'lp.hero.badge':'Live data · every 60s · IT · EN · DE',
+    'lp.hero.badge':'Live data · every 60s · 🇮🇹 IT · 🇬🇧 EN',
+    'lp.hero.mock.kpiL':'Portfolio P&L',
+    'lp.hero.mock.kpiD':'+€174 today (+2.2%)',
+    'lp.hero.mock.score':'Excellent',
+    'lp.hero.mock.scoreD':'MSFT · Excellent',
     'lp.hero.h1':'Invest with data<br><em>real and precise</em>',
     'lp.hero.sub':'Professional dashboard powered by <strong style="color:rgba(255,255,255,.85)">Yahoo Finance</strong> and <strong style="color:rgba(255,255,255,.85)">Finnhub</strong>. Screener with 600+ stocks, live P&amp;L portfolio, proprietary FinEdge Score, Insider Transactions and Earnings Calendar — all free.',
     'lp.hero.cta1':'Start for free →','lp.hero.cta2':'Watch the demo',
