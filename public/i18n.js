@@ -675,7 +675,7 @@ const TRANSLATIONS={
     'lp.spots.s5.b3':'Valore transazione, quantità azioni e prezzo medio',
     'lp.spots.s5.b4':'Aggiornato da Finnhub, dati istituzionali verificati',
     /* FOOTER SUBTITLE */
-    'lp.footer.sub':'Dashboard per investitori · 🇮🇹 IT · 🇬🇧 EN · 🇩🇪 DE',
+    'lp.footer.sub':'Dashboard per investitori · 🇮🇹 IT · 🇬🇧 EN',
   },
   en:{
     /* NAV */
