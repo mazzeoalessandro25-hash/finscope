@@ -1306,6 +1306,13 @@ const TRANSLATIONS={
     'lp.vs.incl':'✓ Included','lp.vs.score':'✓ + Proprietary Score',
     /* STORY */
     'lp.story.tag':'Why FinEdge exists',
+    'lp.story.h2':'I opened ten tabs.<br>After an hour, I still hadn\'t answered a simple question.',
+    'lp.story.p1':'I was evaluating a stock. Price on Yahoo Finance, fundamentals on Morningstar, chart on TradingView, news on CNBC — then an Excel spreadsheet to see the impact on my portfolio. Five sites, no overview. In the end, I postponed the decision. Not for lack of information, but because there was too much of it, scattered, often contradictory.',
+    'lp.story.p2':'I study Economics and Management at LUISS Guido Carli. Every day I analyze balance sheets, ratios, cash flow. <strong style="color:var(--t)">I know the tools — and yet even I was losing hours piecing together data that should have been in the same place.</strong> A stock\'s P/E was 28 on one site, 31 on another. News was generic, not filtered to what I held in my portfolio. Serious fundamental analysis was all behind a paywall.',
+    'lp.story.quote':'"I stopped looking for the right tool and started building it. Not to start a company — to stop wasting time every time I wanted to make a decision."',
+    'lp.story.p3':'The <strong style="color:var(--t)">FinEdge Score</strong> was born from a precise question: <em>"Is this stock really worth buying right now?"</em> I didn\'t want an opinion — I wanted a number built on real data: valuation (P/E, P/B), profitability (ROE, EPS), momentum, analyst consensus, beta stability. Zero subjectivity. Just a clear starting point to reason from.',
+    'lp.story.p4':'Today I have a method. Before any decision I look at the Score, the Price Target calculated with Graham\'s formula, and check if there have been insider moves in the preceding weeks. It doesn\'t replace reasoning — it makes it faster and more structured. I stopped reacting to news and started analyzing data.',
+    'lp.story.p5':'I use FinEdge every morning. The portfolio is updated in real time. News is filtered only to the stocks I follow. The calendar alerts me to earnings for every position I\'m watching. I built the tool I needed — and decided to make it available to anyone who wants to invest with more method and less noise.',
     'lp.story.authorRole':'Founder of FinEdge · Economics and Management, LUISS Guido Carli',
     /* SPOTLIGHT BULLETS */
     'lp.spots.s1.b1':'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei, BTC and Gold',
