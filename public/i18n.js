@@ -1344,7 +1344,7 @@ const TRANSLATIONS={
     'lp.spots.s5.b3':'Transaction value, share quantity and average price',
     'lp.spots.s5.b4':'Updated from Finnhub, verified institutional data',
     /* FOOTER SUBTITLE */
-    'lp.footer.sub':'Investor dashboard · 🇮🇹 IT · 🇬🇧 EN · 🇩🇪 DE',
+    'lp.footer.sub':'Investor dashboard · 🇮🇹 IT · 🇬🇧 EN',
   },
   de:{
     /* NAV */
