@@ -1030,6 +1030,7 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 <script>
 // ─── i18n setup for landing page ───
 let currentLang=localStorage.getItem('fs_lang')||'it';
+if(currentLang==='de'){currentLang='it';localStorage.setItem('fs_lang','it');}
 function _t(k){return(typeof TRANSLATIONS!=='undefined'&&TRANSLATIONS[currentLang]?.[k])||
   (typeof TRANSLATIONS!=='undefined'&&TRANSLATIONS.it[k])||k;}
 function setLangAbout(lang){
