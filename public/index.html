@@ -12519,7 +12519,7 @@ function openCalDayModal(dateStr){
   const evs=_calEvMap[dateStr]||[];
   if(!evs.length)return;
   const d=new Date(dateStr+'T12:00:00');
-  const _loc=currentLang==='en'?'en-US':currentLang==='de'?'de-DE':'it-IT';
+  const _loc=currentLang==='en'?'en-US':'it-IT';
   const title=d.toLocaleDateString(_loc,{weekday:'long',day:'numeric',month:'long',year:'numeric'});
   document.getElementById('cal-dm-title').textContent=title.charAt(0).toUpperCase()+title.slice(1);
 
@@ -12576,7 +12576,7 @@ async function renderCalendar(){
   const titleEl=document.getElementById('cal-month-title');
   if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
-  const _calLocale=currentLang==='en'?'en-US':currentLang==='de'?'de-DE':'it-IT';
+  const _calLocale=currentLang==='en'?'en-US':'it-IT';
   const monthName=new Date(calYear,calMonth,1).toLocaleDateString(_calLocale,{month:'long',year:'numeric'});
   if(titleEl)titleEl.textContent=monthName.charAt(0).toUpperCase()+monthName.slice(1);
   el.innerHTML='<div class="ld">Caricamento...</div>';
