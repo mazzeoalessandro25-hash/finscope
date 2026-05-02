@@ -7418,7 +7418,7 @@ function renderPacPlans(){
     const totalInvested=(p.log||[]).reduce((s,l)=>s+l.amount,0);
     const execCount=(p.log||[]).length;
     const freqLabel=p.freq==='quarterly'?_t('pac.freq.quarterly'):_t('pac.freq.monthly');
-    const dayLabel=p.dayOfMonth?` · ${currentLang==='de'?'Tag':currentLang==='en'?'day':'giorno'} ${p.dayOfMonth}`:'';
+    const dayLabel=p.dayOfMonth?` · ${currentLang==='en'?'day':'giorno'} ${p.dayOfMonth}`:'';
     const csym=p.currency==='EUR'?'€':'$';
     const statusText=p.active?(isDue?_t('pac.due'):_t('pac.active')):_t('pac.paused');
     const statusColor=p.active?(isDue?'var(--o)':'var(--g)'):'var(--t3)';
