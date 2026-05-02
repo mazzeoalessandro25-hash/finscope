@@ -7681,8 +7681,8 @@ async function executePacNow(id){
     renderPacLog();
     checkPacDue();
     // Toast di conferma
-    const ofLbl=currentLang==='de'?'von':currentLang==='en'?'of':'di';
-    const atLbl=currentLang==='de'?'zu':currentLang==='en'?'at':'a';
+    const ofLbl=currentLang==='en'?'of':'di';
+    const atLbl=currentLang==='en'?'at':'a';
     const invLbl=currentLang==='de'?'investiert':currentLang==='en'?'invested':'investiti';
     _showPacToast(`✓ ${qty.toFixed(4)} ${ofLbl} ${p.sym} ${atLbl} ${csym}${price.toFixed(2)} — ${csym}${p.amount} ${invLbl}`);
   }catch(e){
