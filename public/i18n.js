@@ -641,6 +641,13 @@ const TRANSLATIONS={
     'lp.vs.incl':'✓ Incluso','lp.vs.score':'✓ + Score proprietario',
     /* STORY */
     'lp.story.tag':'Perché esiste FinEdge',
+    'lp.story.h2':'Ho aperto dieci tab.<br>Dopo un\'ora, non avevo ancora risposto a una domanda semplice.',
+    'lp.story.p1':'Stavo valutando un\'azione. Prezzo su Yahoo Finance, fondamentali su Morningstar, grafico su TradingView, news su CNBC — poi un foglio Excel per vedere l\'impatto sul portafoglio. Cinque siti, nessuna visione d\'insieme. Alla fine ho rimandato la decisione. Non per mancanza di informazioni, ma perché erano troppe, sparse, spesso contraddittorie tra loro.',
+    'lp.story.p2':'Studio Economia e Management alla LUISS Guido Carli. Ogni giorno analizzo bilanci, ratio, cash flow. <strong style="color:var(--t)">Conosco gli strumenti — eppure anche io perdevo ore a mettere insieme dati che avrebbero dovuto stare nello stesso posto.</strong> Il P/E di un titolo era 28 su un sito, 31 su un altro. Le notizie erano generaliste, non filtrate su quello che avevo in portafoglio. L\'analisi fondamentale seria era tutta dietro paywall.',
+    'lp.story.quote':'"Ho smesso di cercare lo strumento giusto e ho iniziato a costruirlo. Non per fare una startup — per smettere di perdere tempo ogni volta che volevo prendere una decisione."',
+    'lp.story.p3':'Il <strong style="color:var(--t)">FinEdge Score</strong> è nato da una domanda precisa: <em>"Vale davvero la pena comprare questo titolo adesso?"</em> Non volevo un\'opinione — volevo un numero costruito su dati reali: valutazione (P/E, P/B), redditività (ROE, EPS), momentum, consensus degli analisti, stabilità del beta. Zero soggettività. Solo un punto di partenza chiaro da cui ragionare.',
+    'lp.story.p4':'Oggi ho un metodo. Prima di qualsiasi decisione guardo lo Score, il Price Target calcolato con la formula di Graham, e verifico se ci sono stati movimenti di insider nelle settimane precedenti. Non sostituisce il ragionamento — lo rende più veloce e più strutturato. Ho smesso di reagire alle notizie e ho iniziato ad analizzare i dati.',
+    'lp.story.p5':'Uso FinEdge ogni mattina. Il portafoglio è aggiornato in tempo reale. Le news sono filtrate solo sui titoli che seguo. Il calendario mi avvisa degli earnings di ogni posizione che tengo d\'occhio. Ho costruito lo strumento che mi serviva — e ho deciso di renderlo disponibile a chiunque voglia investire con più metodo e meno rumore.',
     'lp.story.authorRole':'Fondatore di FinEdge · Economia e Management, LUISS Guido Carli',
     /* SPOTLIGHT BULLETS */
     'lp.spots.s1.b1':'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei, BTC e Gold',
