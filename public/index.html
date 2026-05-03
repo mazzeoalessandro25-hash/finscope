@@ -10349,6 +10349,9 @@ function renderPortAnalysis(portItems, quotes){
       </div>
     </div>
   `;
+  // Assicura che il select mostri il profilo corrente (robustezza contro parsing innerHTML)
+  const _pSel=el.querySelector('select[onchange*="setSelectedProfile"]');
+  if(_pSel)_pSel.value=selectedProfile;
 
   // Inizializza radar chart dopo il render
   setTimeout(()=>{
