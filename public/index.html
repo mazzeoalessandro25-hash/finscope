@@ -8043,7 +8043,7 @@ async function renderPortfolio(){
   setS('psb-oggi-inline',(dailyUp?'+':'')+'€'+fmt(dailyPnlUSD/eurUsd,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
   // Mostra la card full-width giornata
   const dailyOuter=document.getElementById('port-daily-outer');
-  if(dailyOuter&&dailyItems.length>0) dailyOuter.style.display='block';
+  if(dailyOuter&&dailyItems.length>0){dailyOuter.style.display='block';setTimeout(_syncPortColHeights,0);}
 
   const dailySection='';
 
