@@ -8233,6 +8233,18 @@ async function renderPortfolio(){
   // Start/restart 15-min auto-refresh
   if(_portRefreshTimer)clearInterval(_portRefreshTimer);
   _portRefreshTimer=setInterval(()=>{if(portfolio.length)renderPortfolio();},15*60*1000);
+  // Sync column heights: port-left e port-daily-outer = altezza di port-center (donut)
+  setTimeout(_syncPortColHeights, 0);
+}
+
+function _syncPortColHeights(){
+  const center=document.querySelector('.port-center');
+  const left=document.querySelector('.port-left');
+  const daily=document.getElementById('port-daily-outer');
+  if(!center||!left)return;
+  const h=center.offsetHeight;
+  left.style.height=h+'px';
+  if(daily&&daily.style.display!=='none')daily.style.height=h+'px';
 }
 
 async function refreshPortfolio(){
