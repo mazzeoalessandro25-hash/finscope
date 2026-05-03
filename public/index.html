@@ -541,10 +541,10 @@ footer{border-top:1px solid var(--bd);padding:18px 28px;background:var(--card);d
 @media(max-width:700px){.port-kpi-bar{grid-template-columns:1fr 1fr}}
 /* Layout 2 colonne */
 .port-2col{display:grid;grid-template-columns:300px minmax(0,480px) 1fr;gap:14px;align-items:start;margin-bottom:10px}
-.port-left{display:flex;flex-direction:column;gap:7px;height:580px;overflow-y:hidden}
-.port-center{display:flex;flex-direction:column;gap:10px;min-width:0;height:580px;overflow-y:hidden}
-/* Lista asset: contenitore scrollabile con bordo */
-#port-list{background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow-y:auto;flex:1;min-height:0;max-height:420px}
+.port-left{display:flex;flex-direction:column;gap:7px}
+.port-center{display:flex;flex-direction:column;gap:10px;min-width:0;height:580px;overflow-y:auto}
+/* Lista asset */
+#port-list{background:var(--card);border:1px solid var(--bd);border-radius:12px}
 @media(max-width:1100px){.port-2col{grid-template-columns:300px 1fr}}
 @media(max-width:700px){.port-2col{grid-template-columns:1fr}.port-left,.port-center{height:auto;min-width:0}.port-left{width:100%;box-sizing:border-box}.port-2col>*{max-width:100%;box-sizing:border-box}}
 .port-add-form{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:10px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
