@@ -8244,7 +8244,8 @@ function _syncPortColHeights(){
   if(!center||!left)return;
   const h=center.offsetHeight;
   left.style.height=h+'px';
-  if(daily&&daily.style.display!=='none')daily.style.height=h+'px';
+  if(daily&&daily.style.display!=='none')
+    daily.style.setProperty('height',h+'px','important');
 }
 
 async function refreshPortfolio(){
