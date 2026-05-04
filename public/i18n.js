@@ -1209,7 +1209,7 @@ const TRANSLATIONS={
     'lp.pricing.base.tier':'Base','lp.pricing.base.name':'Starter','lp.pricing.base.price':'Free',
     'lp.pricing.base.desc':'For those who want to start analysing the market with no commitment.','lp.pricing.base.btn':'Start for free →',
     'lp.pricing.pro.tier':'Investor','lp.pricing.pro.name':'Investor','lp.pricing.pro.price':'€3<span>/month</span>',
-    'lp.pricing.pro.desc':'The complete plan for the serious investor. Everything you need, nothing superfluous.','lp.pricing.pro.btn':'Pre-order at €3/month →',
+    'lp.pricing.pro.desc':'The plan designed to manage your portfolio with real data. Live P&L, automatic alerts, risk analytics and tax dashboard — all in one place.','lp.pricing.pro.btn':'Pre-order at €3/month →',
     'lp.pricing.adv.tier':'Analyst','lp.pricing.adv.name':'Analyst','lp.pricing.adv.price':'€5<span>/month</span>',
     'lp.pricing.adv.desc':'For those who want every available tool, including advanced analytics and lab.','lp.pricing.adv.btn':'Pre-order at €5/month →',
     'lp.faq.tag':'Frequently asked questions','lp.faq.title':'Have questions? We\'ll answer them',
