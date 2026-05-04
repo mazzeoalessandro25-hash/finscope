@@ -530,7 +530,7 @@ const TRANSLATIONS={
     'lp.how.step1.p':'Email e password, nessuna carta richiesta. Sei dentro in meno di un minuto, da qualsiasi dispositivo.',
     'lp.how.step1.chip':'Account attivo in <strong style="color:var(--t)">28 sec</strong>','lp.how.step1.time':'⏱ 30 secondi',
     'lp.how.step2.label':'Passo 2','lp.how.step2.h3':'Aggiungi i titoli che segui',
-    'lp.how.step2.p':'600+ titoli già caricati. Aggiungili alla watchlist o al portafoglio in un click. Cerca qualsiasi mercato globale.',
+    'lp.how.step2.p':'Cerca qualsiasi ticker su qualsiasi mercato globale. Aggiungilo alla watchlist o al portafoglio in un click.',
     'lp.how.step2.time':'⏱ Prima sessione · ~2 min',
     'lp.how.step3.label':'Passo 3','lp.how.step3.h3':'Analizza con metodo, ogni giorno',
     'lp.how.step3.p':'Score, Price Target, Insider, Earnings — tutto aggiornato ogni 60 secondi. Una schermata, tutte le risposte.',
