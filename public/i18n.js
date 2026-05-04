@@ -1199,7 +1199,7 @@ const TRANSLATIONS={
     'lp.how.step1.p':'Email and password, no card required. You\'re in in less than a minute, from any device.',
     'lp.how.step1.chip':'Account active in <strong style="color:var(--t)">28 sec</strong>','lp.how.step1.time':'⏱ 30 seconds',
     'lp.how.step2.label':'Step 2','lp.how.step2.h3':'Add the stocks you follow',
-    'lp.how.step2.p':'600+ stocks already loaded. Add them to watchlist or portfolio in one click. Search any global market.',
+    'lp.how.step2.p':'Search any ticker on any global market. Add it to your watchlist or portfolio in one click.',
     'lp.how.step2.time':'⏱ First session · ~2 min',
     'lp.how.step3.label':'Step 3','lp.how.step3.h3':'Analyse methodically, every day',
     'lp.how.step3.p':'Score, Price Target, Insider, Earnings — all updated every 60 seconds. One screen, all the answers.',
