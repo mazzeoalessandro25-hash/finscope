@@ -625,7 +625,7 @@ const TRANSLATIONS={
     'lp.spots.s1.title':'I mercati globali,<br>a colpo d\'occhio',
     'lp.spots.s1.sub':'La prima cosa che vedi ogni mattina: indici USA, Europa e Asia, VIX, oro, petrolio, Bitcoin — aggiornati in tempo reale. La barra scorrevole in alto mostra prezzi live, ultime news ed eventi del giorno (CPI, FOMC, earnings).',
     'lp.spots.s2.tag':'Stock Screener',
-    'lp.spots.s2.title':'600+ titoli pre-caricati,<br>ricerca su qualsiasi mercato',
+    'lp.spots.s2.title':'Screener su<br>qualsiasi mercato globale',
     'lp.spots.s2.sub':'Naviga l\'universo investibile per settore (Technology, Energy, Finance…), mercato (USA, Italia, Europa) e tipo (Growth, Value, Dividend). Ogni titolo mostra prezzo live, variazione, P/E e FinEdge Score. Un click per l\'analisi completa.',
     'lp.spots.s3.tag':'Portafoglio',
     'lp.spots.s3.title':'Il tuo portafoglio,<br>sempre aggiornato',
