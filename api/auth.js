@@ -102,9 +102,8 @@ export default async function handler(req, res) {
       const result = await clerk.users.getUserList({ emailAddress: [email], limit: 1 });
       const users = result.data ?? result;
       if (!Array.isArray(users) || !users.length) {
-        // Non rivelare se l'email esiste (sicurezza), ma per questa app personale
-        // restituiamo un messaggio generico senza codice
-        return res.json({ ok: true, code: null });
+        // Non rivelare se l'email esiste (sicurezza)
+        return res.json({ ok: true });
       }
 
       const user = users[0];
@@ -119,9 +118,33 @@ export default async function handler(req, res) {
         },
       });
 
-      // Nota: in produzione integrare un servizio email (es. Resend) per inviare il codice.
-      // Per ora il codice viene restituito nella risposta per uso senza email.
-      return res.json({ ok: true, code });
+      // Invia codice via email con Resend
+      const RESEND_KEY = process.env.RESEND_API_KEY;
+      if (RESEND_KEY) {
+        const resend = new Resend(RESEND_KEY);
+        await resend.emails.send({
+          from: 'FinEdge <noreply@finscope.vercel.app>',
+          to: email,
+          subject: 'Il tuo codice di reset password — FinEdge',
+          html: `
+            <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#F0F4FA;border-radius:12px">
+              <div style="font-size:22px;font-weight:800;color:#1448A8;margin-bottom:8px">FinEdge</div>
+              <h2 style="font-size:18px;font-weight:700;color:#0F1C2E;margin-bottom:16px">Reset della password</h2>
+              <p style="color:#4A6080;font-size:14px;margin-bottom:24px">
+                Hai richiesto il reset della password. Usa il codice qui sotto — valido per 15 minuti.
+              </p>
+              <div style="background:#fff;border:1px solid #D8E2EF;border-radius:10px;padding:24px;text-align:center;margin-bottom:24px">
+                <div style="font-family:monospace;font-size:36px;font-weight:700;letter-spacing:8px;color:#1448A8">${code}</div>
+              </div>
+              <p style="color:#8499B0;font-size:12px">
+                Se non hai richiesto il reset della password, ignora questa email. Il tuo account è al sicuro.
+              </p>
+            </div>
+          `,
+        });
+      }
+
+      return res.json({ ok: true });
     } catch (e) {
       return res.status(500).json({ error: 'Errore del server: ' + e.message });
     }
