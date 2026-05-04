@@ -502,7 +502,7 @@ const TRANSLATIONS={
     'lp.hero.mock.score':'Ottimo',
     'lp.hero.mock.scoreD':'MSFT · Ottimo',
     'lp.hero.h1':'Investi con dati<br><em>veri e precisi</em>',
-    'lp.hero.sub':'Dashboard professionale alimentato da <strong style="color:rgba(255,255,255,.85)">Yahoo Finance</strong> e <strong style="color:rgba(255,255,255,.85)">Finnhub</strong>. Screener con 600+ titoli, portafoglio P&amp;L live, FinEdge Score proprietario, Insider Transactions e Calendario Earnings — tutto gratuito.',
+    'lp.hero.sub':'Dashboard professionale alimentato da <strong style="color:rgba(255,255,255,.85)">Yahoo Finance</strong> e <strong style="color:rgba(255,255,255,.85)">Finnhub</strong>. Screener su qualsiasi mercato globale, portafoglio P&amp;L live, FinEdge Score proprietario, Insider Transactions e Calendario Earnings — tutto gratuito.',
     'lp.hero.cta1':'Inizia gratis →','lp.hero.cta2':'Guarda la demo',
     'lp.hero.proof1':'Gratuito al 100%','lp.hero.proof2':'Nessuna carta richiesta','lp.hero.proof3':'Pronto in 30 secondi',
     'lp.hero.statUsers':'Investitori iscritti','lp.hero.statViews':'Visite totali',
