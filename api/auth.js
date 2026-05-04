@@ -1,6 +1,7 @@
 import { createClerkClient } from '@clerk/backend';
 import { scrypt, randomBytes, timingSafeEqual } from 'crypto';
 import { promisify } from 'util';
+import { Resend } from 'resend';
 
 const scryptAsync = promisify(scrypt);
 
