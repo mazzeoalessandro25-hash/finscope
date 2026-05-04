@@ -1171,7 +1171,7 @@ const TRANSLATIONS={
     'lp.hero.mock.score':'Excellent',
     'lp.hero.mock.scoreD':'MSFT · Excellent',
     'lp.hero.h1':'Invest with data<br><em>real and precise</em>',
-    'lp.hero.sub':'Professional dashboard powered by <strong style="color:rgba(255,255,255,.85)">Yahoo Finance</strong> and <strong style="color:rgba(255,255,255,.85)">Finnhub</strong>. Screener with 600+ stocks, live P&amp;L portfolio, proprietary FinEdge Score, Insider Transactions and Earnings Calendar — all free.',
+    'lp.hero.sub':'Professional dashboard powered by <strong style="color:rgba(255,255,255,.85)">Yahoo Finance</strong> and <strong style="color:rgba(255,255,255,.85)">Finnhub</strong>. Screener on any global market, live P&amp;L portfolio, proprietary FinEdge Score, Insider Transactions and Earnings Calendar — all free.',
     'lp.hero.cta1':'Start for free →','lp.hero.cta2':'Watch the demo',
     'lp.hero.proof1':'100% free','lp.hero.proof2':'No credit card required','lp.hero.proof3':'Ready in 30 seconds',
     'lp.hero.statUsers':'Registered investors','lp.hero.statViews':'Total visits',
