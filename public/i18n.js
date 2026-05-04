@@ -583,7 +583,7 @@ const TRANSLATIONS={
     'lp.logged.open':'Apri Dashboard →','lp.logged.logout':'Esci',
     /* PRICING FEATURE LISTS */
     'lp.pricing.base.f1':'Dashboard live (indici, crypto, news)',
-    'lp.pricing.base.f2':'Screener 600+ titoli + ricerca globale',
+    'lp.pricing.base.f2':'Screener su qualsiasi mercato globale',
     'lp.pricing.base.f3':'FinEdge Score su ogni titolo',
     'lp.pricing.base.f4':'Grafici TradingView (7 timeframe)',
     'lp.pricing.base.f5':'News filtrate per categoria',
