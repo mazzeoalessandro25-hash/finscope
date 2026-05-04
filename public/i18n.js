@@ -541,7 +541,7 @@ const TRANSLATIONS={
     'lp.pricing.base.tier':'Base','lp.pricing.base.name':'Starter','lp.pricing.base.price':'Gratis',
     'lp.pricing.base.desc':'Per chi vuole iniziare ad analizzare il mercato senza impegno.','lp.pricing.base.btn':'Inizia gratis →',
     'lp.pricing.pro.tier':'Investor','lp.pricing.pro.name':'Investor','lp.pricing.pro.price':'€3<span>/mese</span>',
-    'lp.pricing.pro.desc':'Il piano completo per l\'investitore serio. Tutto quello che serve, niente di superfluo.','lp.pricing.pro.btn':'Prenota a €3/mese →',
+    'lp.pricing.pro.desc':'Il piano pensato per gestire il tuo portafoglio con dati reali. P&L live, alert automatici, risk analytics e analisi fiscale — tutto in un unico posto.','lp.pricing.pro.btn':'Prenota a €3/mese →',
     'lp.pricing.adv.tier':'Analyst','lp.pricing.adv.name':'Analyst','lp.pricing.adv.price':'€5<span>/mese</span>',
     'lp.pricing.adv.desc':'Per chi vuole ogni strumento disponibile, inclusi analytics avanzati e lab.','lp.pricing.adv.btn':'Prenota a €5/mese →',
     'lp.faq.tag':'Domande frequenti','lp.faq.title':'Hai dubbi? Ti rispondiamo',
