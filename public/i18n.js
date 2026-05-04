@@ -1252,7 +1252,7 @@ const TRANSLATIONS={
     'lp.logged.open':'Open Dashboard →','lp.logged.logout':'Sign out',
     /* PRICING FEATURE LISTS */
     'lp.pricing.base.f1':'Live dashboard (indices, crypto, news)',
-    'lp.pricing.base.f2':'600+ stock screener + global search',
+    'lp.pricing.base.f2':'Screener on any global market',
     'lp.pricing.base.f3':'FinEdge Score on every stock',
     'lp.pricing.base.f4':'TradingView charts (7 timeframes)',
     'lp.pricing.base.f5':'News filtered by category',
