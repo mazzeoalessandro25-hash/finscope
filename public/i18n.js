@@ -1294,7 +1294,7 @@ const TRANSLATIONS={
     'lp.spots.s1.title':'Global markets,<br>at a glance',
     'lp.spots.s1.sub':'The first thing you see every morning: US, European and Asian indices, VIX, gold, oil, Bitcoin — updated in real time. The scrolling bar at the top shows live prices, latest news and events of the day (CPI, FOMC, earnings).',
     'lp.spots.s2.tag':'Stock Screener',
-    'lp.spots.s2.title':'600+ pre-loaded stocks,<br>search any market',
+    'lp.spots.s2.title':'Screener on<br>any global market',
     'lp.spots.s2.sub':'Browse the investable universe by sector (Technology, Energy, Finance…), market (USA, Italy, Europe) and type (Growth, Value, Dividend). Each stock shows live price, change, P/E and FinEdge Score. One click for full analysis.',
     'lp.spots.s3.tag':'Portfolio',
     'lp.spots.s3.title':'Your portfolio,<br>always up to date',
