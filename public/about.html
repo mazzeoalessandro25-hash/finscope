@@ -2090,10 +2090,18 @@ async function submitLpForgot(){
     const d=await r.json();
     if(!r.ok){errEl.textContent=d.error||'Errore';errEl.classList.add('show');return;}
     document.getElementById('lp-rp-email').value=email;
-    okEl.textContent=currentLang==='en'?'If the email is registered, you will receive the reset code':
-      'Se l\'email è registrata, riceverai il codice di reset';
+    if(d.code){
+      okEl.textContent=currentLang==='en'
+        ?`Reset code: ${d.code} (valid 15 min)`
+        :`Codice di reset: ${d.code} (valido 15 min)`;
+      document.getElementById('lp-rp-code').value=d.code;
+    } else {
+      okEl.textContent=currentLang==='en'
+        ?'If the email is registered, you will receive the reset code'
+        :'Se l\'email è registrata, riceverai il codice di reset';
+    }
     okEl.classList.add('show');
-    setTimeout(()=>showLpView('reset'),1600);
+    setTimeout(()=>showLpView('reset'),2500);
   }catch{
     errEl.textContent=_t('auth.err.conn');
     errEl.classList.add('show');
