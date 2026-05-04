@@ -1230,7 +1230,7 @@ const TRANSLATIONS={
     'lp.auth.r1.title':'Instant live dashboard','lp.auth.r1.desc':'S&P 500, VIX, crypto and your stocks — updated every 60 seconds',
     'lp.auth.r2.title':'Proprietary FinEdge Score','lp.auth.r2.desc':'A number from 0 to 100 on every stock. No opinions — only weighted data',
     'lp.auth.r3.title':'Live P&L portfolio','lp.auth.r3.desc':'Add your stocks, see in real time how much you\'re earning',
-    'lp.auth.r4.title':'Screener with 600+ stocks','lp.auth.r4.desc':'Filter by Score, sector, cap. Plus global search on any market',
+    'lp.auth.r4.title':'Global screener','lp.auth.r4.desc':'Filter by Score, sector, cap. Search on any global market',
     'lp.auth.proof':'Open beta · No card required',
     'lp.auth.cardTitle':'Start for free','lp.auth.cardSub':'Zero cost · No card required',
     'lp.auth.tabLogin':'Sign in','lp.auth.tabRegister':'Register',
