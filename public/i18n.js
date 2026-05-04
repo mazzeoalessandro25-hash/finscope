@@ -561,7 +561,7 @@ const TRANSLATIONS={
     'lp.auth.r1.title':'Dashboard live istantanea','lp.auth.r1.desc':'S&P 500, VIX, crypto e i tuoi titoli — aggiornati ogni 60 secondi',
     'lp.auth.r2.title':'FinEdge Score proprietario','lp.auth.r2.desc':'Un numero da 0 a 100 su ogni titolo. Nessuna opinione — solo dati ponderati',
     'lp.auth.r3.title':'Portafoglio P&L live','lp.auth.r3.desc':'Carica i tuoi titoli, guarda in tempo reale quanto stai guadagnando',
-    'lp.auth.r4.title':'Screener con 600+ titoli','lp.auth.r4.desc':'Filtra per Score, settore, cap. Più ricerca globale su qualsiasi mercato',
+    'lp.auth.r4.title':'Screener globale','lp.auth.r4.desc':'Filtra per Score, settore, cap. Ricerca su qualsiasi mercato globale',
     'lp.auth.proof':'Beta aperta · Nessuna carta richiesta',
     'lp.auth.cardTitle':'Inizia gratuitamente','lp.auth.cardSub':'Zero costi · Nessuna carta richiesta',
     'lp.auth.tabLogin':'Accedi','lp.auth.tabRegister':'Registrati',
