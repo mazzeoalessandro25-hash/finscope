@@ -13939,7 +13939,7 @@ async function loadSdData(sym){
   }
   if(sdSym!==sym)return;
   if(!d||d.error){
-    if(!cachedFund) document.getElementById('sd-description').textContent='Dati non disponibili al momento.';
+    if(!cachedFund) document.getElementById('sd-description').textContent=_t('common.noneData');
     if(!cachedFund) document.getElementById('sd-news-list').innerHTML='';
     return;
   }
