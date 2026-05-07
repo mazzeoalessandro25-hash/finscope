@@ -10257,7 +10257,7 @@ function renderPortAnalysis(portItems, quotes){
           <div style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">${_t(prof.nameKey)}</div>
         </div>
         <select onchange="setSelectedProfile(this.value);renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:7px;color:var(--t);font-family:var(--fm);font-size:11px;cursor:pointer;flex-shrink:0">
-          ${profKeys.map(k=>`<option value="${k}"${k===selectedProfile?' selected':''}>${INVESTOR_PROFILES[k].emoji} ${INVESTOR_PROFILES[k].name}</option>`).join('')}
+          ${profKeys.map(k=>`<option value="${k}"${k===selectedProfile?' selected':''}>${INVESTOR_PROFILES[k].emoji} ${_t(INVESTOR_PROFILES[k].nameKey)}</option>`).join('')}
         </select>
       </div>
       <button onclick="openPQ()" style="display:flex;align-items:center;gap:6px;padding:9px 13px;background:linear-gradient(135deg,#1A56C4,#7C3AED);color:#fff;border:none;border-radius:10px;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">
