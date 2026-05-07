@@ -11143,37 +11143,37 @@ function _macroRenderLeading(d){
   const oi=oil?chgPct(oil.price,oil.prev):null;
   el.innerHTML=`
   <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
-    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">🥇 Rame — Dr. Copper</div>
+    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">🥇 ${_L({it:'Rame — Dr. Copper',en:'Copper — Dr. Copper'})}</div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <div>
         <div style="font-family:var(--fm);font-size:20px;font-weight:700;color:var(--t)">${copper?'$'+fmt(copper.price,2):'—'}<span style="font-size:11px;color:var(--t3);margin-left:4px">/lb</span></div>
-        <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${cu!=null&&cu>=0?'var(--g)':'var(--r)'};margin-top:2px">${cu!=null?chgStr(cu)+' oggi':'—'}</div>
+        <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${cu!=null&&cu>=0?'var(--g)':'var(--r)'};margin-top:2px">${cu!=null?chgStr(cu)+' '+_L({it:'oggi',en:'today'}):'—'}</div>
       </div>
-      <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">Il rame è il "termometro" dell'economia globale: la domanda anticipa cicli di espansione e recessione.</div>
+      <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">${_L({it:'Il rame è il "termometro" dell\'economia globale: la domanda anticipa cicli di espansione e recessione.',en:'Copper is the "thermometer" of the global economy: demand anticipates expansion and recession cycles.'})}</div>
     </div>
     ${copper?`<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">
-      ${copper.price>4.5?'⬆ Rame forte — segnale di crescita industriale':copper.price>4.0?'Livello neutro — crescita moderata':'⬇ Rame debole — possibile rallentamento domanda'}
+      ${copper.price>4.5?_L({it:'⬆ Rame forte — segnale di crescita industriale',en:'⬆ Strong copper — industrial growth signal'}):copper.price>4.0?_L({it:'Livello neutro — crescita moderata',en:'Neutral level — moderate growth'}):_L({it:'⬇ Rame debole — possibile rallentamento domanda',en:'⬇ Weak copper — possible demand slowdown'})}
     </div>`:''}
   </div>
   <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
-    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">🛢 Petrolio Brent — Input inflazione</div>
+    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">🛢 ${_L({it:'Petrolio Brent — Input inflazione',en:'Brent Oil — Inflation Input'})}</div>
     <div style="display:flex;justify-content:space-between;align-items:center">
       <div>
         <div style="font-family:var(--fm);font-size:20px;font-weight:700;color:var(--t)">${oil?'$'+fmt(oil.price,2):'—'}<span style="font-size:11px;color:var(--t3);margin-left:4px">/bbl</span></div>
-        <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${oi!=null&&oi>=0?'var(--g)':'var(--r)'};margin-top:2px">${oi!=null?chgStr(oi)+' oggi':'—'}</div>
+        <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${oi!=null&&oi>=0?'var(--g)':'var(--r)'};margin-top:2px">${oi!=null?chgStr(oi)+' '+_L({it:'oggi',en:'today'}):'—'}</div>
       </div>
-      <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">Influenza l'inflazione headline, i costi di trasporto e la politica monetaria delle banche centrali.</div>
+      <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">${_L({it:'Influenza l\'inflazione headline, i costi di trasporto e la politica monetaria delle banche centrali.',en:'Influences headline inflation, transportation costs and the monetary policy of central banks.'})}</div>
     </div>
   </div>
   <div>
-    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">⚖️ Ratio Gold/Copper — Paura vs Crescita</div>
+    <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.7px;text-transform:uppercase;margin-bottom:10px">⚖️ ${_L({it:'Ratio Gold/Copper — Paura vs Crescita',en:'Gold/Copper Ratio — Fear vs Growth'})}</div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <div style="font-family:var(--fm);font-size:22px;font-weight:700;color:${gcCol}">${gcRatio!=null?fmt(gcRatio,0):'—'}</div>
       <div style="font-size:10px;color:var(--t2);text-align:right;max-width:160px;line-height:1.5">${gcInterp}</div>
     </div>
     <div style="background:var(--s2);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:5px">
-      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--r)">Ratio alto (&gt;600)</span> → oro sovraperforma il rame = avversione al rischio</div>
-      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--g)">Ratio basso (&lt;400)</span> → rame sovraperforma l'oro = fiducia nella crescita</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--r)">${_L({it:'Ratio alto (>600)',en:'High ratio (>600)'})}</span> → ${_L({it:'oro sovraperforma il rame = avversione al rischio',en:'gold outperforms copper = risk aversion'})}</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--g)">${_L({it:'Ratio basso (<400)',en:'Low ratio (<400)'})}</span> → ${_L({it:'rame sovraperforma l\'oro = fiducia nella crescita',en:'copper outperforms gold = confidence in growth'})}</div>
     </div>
   </div>`;
 }
