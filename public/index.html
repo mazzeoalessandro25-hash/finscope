@@ -15242,7 +15242,7 @@ function cmpRenderChart(results){
     handleScroll:true,handleScale:true,
   });
 
-  const periodLabel={'1mo':'1 Mese','3mo':'3 Mesi','6mo':'6 Mesi','1y':'1 Anno','3y':'3 Anni','5y':'5 Anni'};
+  const periodLabel={'1mo':_t('period.1mo'),'3mo':_t('period.3mo'),'6mo':_t('period.6mo'),'1y':_t('period.1y.long'),'3y':_t('period.3y'),'5y':_t('period.5y')};
   if(subDiv)subDiv.textContent=`Base 100 · Performance relativa — ${periodLabel[cmpPeriod]||cmpPeriod}`;
 
   const legendItems=[];
