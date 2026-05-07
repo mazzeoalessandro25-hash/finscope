@@ -8678,10 +8678,10 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
       else if(Math.abs(gcC)>0.3) commodityLine=_L({it:`L'oro si è mosso di ${s(gcC)}, un dato da tenere d'occhio come indicatore del sentiment macro complessivo. `,en:`Gold moved by ${s(gcC)}, a figure worth watching as an indicator of overall macro sentiment. `});
     }
     if(clC!=null){
-      if(clC>1.5)       commodityLine+=`Il petrolio ha avuto un'accelerazione decisa (${s(clC)}): un rialzo energetico di questa portata può alimentare timori inflazionistici e comprimere i margini delle aziende più energivore. `;
-      else if(clC>0.5)  commodityLine+=`Il petrolio è salito moderatamente (${s(clC)}), segnalando aspettative di domanda sostenuta o tensioni sull'offerta. `;
-      else if(clC<-1.5) commodityLine+=`Il petrolio ha perso quota in modo significativo (${s(clC)}): una buona notizia per il fronte inflazionistico, che potrebbe ridurre la pressione sui costi energetici e allentare la stretta sulle politiche monetarie. `;
-      else if(clC<-0.5) commodityLine+=`Il petrolio ha ceduto (${s(clC)}), contribuendo a un quadro macro leggermente più favorevole sul versante dell'inflazione. `;
+      if(clC>1.5)       commodityLine+=_L({it:`Il petrolio ha avuto un'accelerazione decisa (${s(clC)}): un rialzo energetico di questa portata può alimentare timori inflazionistici e comprimere i margini delle aziende più energivore. `,en:`Oil surged sharply (${s(clC)}): an energy rally of this magnitude can fuel inflationary fears and compress margins for energy-intensive companies. `});
+      else if(clC>0.5)  commodityLine+=_L({it:`Il petrolio è salito moderatamente (${s(clC)}), segnalando aspettative di domanda sostenuta o tensioni sull'offerta. `,en:`Oil rose moderately (${s(clC)}), signaling expectations of sustained demand or supply tensions. `});
+      else if(clC<-1.5) commodityLine+=_L({it:`Il petrolio ha perso quota in modo significativo (${s(clC)}): una buona notizia per il fronte inflazionistico, che potrebbe ridurre la pressione sui costi energetici e allentare la stretta sulle politiche monetarie. `,en:`Oil fell significantly (${s(clC)}): good news on the inflation front, which could reduce pressure on energy costs and ease monetary policy tightening. `});
+      else if(clC<-0.5) commodityLine+=_L({it:`Il petrolio ha ceduto (${s(clC)}), contribuendo a un quadro macro leggermente più favorevole sul versante dell'inflazione. `,en:`Oil gave ground (${s(clC)}), contributing to a slightly more favorable macro picture on the inflation front. `});
     }
     macro+=commodityLine;
   }
