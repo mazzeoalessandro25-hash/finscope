@@ -10528,7 +10528,7 @@ async function runWhatIf(){
         <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Prezzo: <strong style="color:var(--t)">$${fmt(newQ.price,2)}</strong></span>
       </div>
     </div>`;
-  }catch(e){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">Errore: ${e.message}</div>`;}
+  }catch(e){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">${_t('err.analysis')}${e.message}</div>`;}
 }
 
 /* ══════════════════════════════════════════
