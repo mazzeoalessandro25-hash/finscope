@@ -7784,11 +7784,11 @@ function showPortfolioState(){
   const sub=document.getElementById('port-sub');
   if(currentUser){
     logMsg.style.display='none';content.style.display='block';
-    if(sub)sub.textContent=`${currentUser.name||currentUser.email} · ${portfolio.length} titoli`;
+    if(sub)sub.textContent=`${currentUser.name||currentUser.email} · ${portfolio.length}${_t('port.sub.suffix')}`;
     renderPortfolio();
   } else {
     logMsg.style.display='block';content.style.display='none';
-    if(sub)sub.textContent='Accedi per salvare e monitorare i tuoi titoli';
+    if(sub)sub.textContent=_t('port.sub.guest');
   }
 }
 
