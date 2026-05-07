@@ -8596,7 +8596,7 @@ async function loadPortfolioEarnings(assets, noDailyData=false){
     if(dailyOuter && dailyOuter.style.display === 'none') {
       dailyOuter.style.display = 'block';
       const dailyText = document.getElementById('port-daily-text');
-      if(dailyText) dailyText.innerHTML = '<div style="font-size:11px;color:var(--t3);padding:4px 0">Analisi giornaliera non disponibile (dati di mercato assenti o mercato chiuso).</div>';
+      if(dailyText) dailyText.innerHTML = '<div style="font-size:11px;color:var(--t3);padding:4px 0">'+_t('status.daily.unavail')+'</div>';
     }
   }
 }
