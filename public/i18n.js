@@ -2389,6 +2389,8 @@ const TRANSLATIONS={
     /* ── MISC ── */
     'sd.div.none':'Keine',
     'ins.updated':'Aktualisiert: ',
+    /* ── CRYPTO ATH/ATL ── */
+    'crypto.from.ath':'vom ATH','crypto.from.atl':'vom ATL',
     /* ── SIGNALS & REC ── */
     'sig.buy':'KAUFEN','sig.sell':'VERKAUFEN','sig.hold':'HALTEN',
     /* ── VIX LABELS ── */
