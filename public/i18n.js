@@ -2256,6 +2256,9 @@ const TRANSLATIONS={
     'status.updated':'Aktualisiert: ',
     'status.mcap.note':'Marktkapitalisierung in USD · Live-Wechselkurs von Yahoo Finance · aktualisiert ',
     'status.daily.unavail':'Tagesanalyse nicht verfügbar (Marktdaten fehlen oder Markt geschlossen).',
+    'status.closed':'Märkte geschlossen',
+    'status.closed.date':'Märkte geschlossen · Sitzungsdaten vom ',
+    'status.balance.at':'Bilanzdaten zum: ',
     'status.sync.err':'⚠ Sync-Fehler',
     /* ── AUTH EXTRA ── */
     'auth.pwd.updated':'Passwort erfolgreich aktualisiert! Mit neuen Anmeldedaten einloggen.',
