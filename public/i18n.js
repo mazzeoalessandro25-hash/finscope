@@ -911,6 +911,7 @@ const TRANSLATIONS={
     'sig.buy':'COMPRA','sig.sell':'VENDI','sig.hold':'MANTIENI',
     /* ── TRANSACTIONS ── */
     'tx.buy':'ACQ','tx.sell':'VEND','tx.edit':'MOD',
+    'tx.col.type':'Tipo','tx.col.stock':'Titolo','tx.col.qty':'Qtà','tx.col.total':'Totale',
     /* ── ANALYSTS ── */
     'sd.nanalysts.suffix':' analisti coprono il titolo',
     /* ── FA DIMENSIONS ── */
