@@ -6220,11 +6220,11 @@ function loadNewsSearch(q){
 }
 async function _renderNews(category){
   const grid=document.getElementById('news-grid');
-  grid.innerHTML='<div class="ld">Caricamento notizie...</div>';
+  grid.innerHTML='<div class="ld">'+_t('load.news2')+'</div>';
   try{
     const r=await fetch('/api/news?category='+encodeURIComponent(category));
     const data=await r.json();
-    if(!data?.news?.length){grid.innerHTML='<div class="ld">Nessuna notizia disponibile</div>';return;}
+    if(!data?.news?.length){grid.innerHTML='<div class="ld">'+_t('empty.news.avail')+'</div>';return;}
     _newsAllItems=data.news;
     _newsSetTimestamp();
     // Featured 2+1: primo card grande a sx, due piccoli a dx
