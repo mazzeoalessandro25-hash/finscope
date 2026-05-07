@@ -15082,7 +15082,7 @@ function btRenderResults(sym,strategy,capital,pts,result){
   const retEl=document.getElementById('bt-kpi-ret');
   if(retEl){retEl.textContent=(returnPct>=0?'+':'')+returnPct.toFixed(2)+'%';retEl.style.color=returnPct>=0?'var(--g)':'var(--r)';}
   const valEl=document.getElementById('bt-kpi-val');
-  if(valEl){valEl.textContent='€'+Math.round(finalValue).toLocaleString('it-IT');valEl.style.color=finalValue>=capital?'var(--g)':'var(--r)';}
+  if(valEl){valEl.textContent='€'+Math.round(finalValue).toLocaleString(currentLang==='en'?'en-GB':'it-IT');valEl.style.color=finalValue>=capital?'var(--g)':'var(--r)';}
   const tradesEl=document.getElementById('bt-kpi-trades');
   if(tradesEl)tradesEl.textContent=trades.length;
   const ddEl=document.getElementById('bt-kpi-dd');
