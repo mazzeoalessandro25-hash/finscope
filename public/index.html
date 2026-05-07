@@ -10428,7 +10428,7 @@ function renderPortAnalysis(portItems, quotes){
     rc._chartInst=new Chart(rc.getContext('2d'),{
       type:'radar',
       data:{
-        labels:['Rendimento','Diversif.','Qualità','Momentum','Stabilità','Reddito'],
+        labels:[_t('radar.return'),_t('radar.diversif'),_t('radar.quality'),_t('radar.momentum'),_t('radar.stability'),_t('radar.income')],
         datasets:[{
           data:[radarReturn,radarDiversif,radarQuality,radarMomentum,radarStability,radarIncome],
           backgroundColor:'rgba(26,86,196,.15)',
