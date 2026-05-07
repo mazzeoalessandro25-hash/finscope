@@ -15466,7 +15466,7 @@ async function renderCorrelationMatrix(){
       returns[sym]=rets.length>=5?rets:null;
     });
     const syms=uniqueSyms.filter(s=>returns[s]!==null);
-    if(syms.length<2){el.innerHTML='<div class="ld" style="padding:10px">Dati storici insufficienti per calcolare le correlazioni</div>';return;}
+    if(syms.length<2){el.innerHTML='<div class="ld" style="padding:10px">'+_t('empty.corr')+'</div>';return;}
     function pearson(a,b){
       const n=Math.min(a.length,b.length);if(n<5)return null;
       const ax=a.slice(-n),bx=b.slice(-n);
