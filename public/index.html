@@ -9679,7 +9679,7 @@ function renderAlerts(){
       <div style="flex:1;min-width:0">
         <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${a.sym}</div>
         <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">
-          ${a.condition==='above'?'↑ Sopra':'↓ Sotto'} $${fmt(a.target,2)}
+          ${a.condition==='above'?'↑ '+_t('alert.above'):'↓ '+_t('alert.below')} $${fmt(a.target,2)}
           ${a.label?'· '+a.label:''}
         </div>
       </div>
