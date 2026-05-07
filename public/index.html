@@ -14001,9 +14001,9 @@ async function loadRiskMetrics(){
   const el=document.getElementById('risk-content');
   if(!el)return;
   if(!portfolio.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per calcolare le metriche di rischio</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.risk')+'</div>';return;
   }
-  el.innerHTML='<div class="ld" style="padding:10px">Recupero 12 mesi di dati storici...</div>';
+  el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.history12')+'</div>';
 
   const RISK_FREE=0.045; // 4.5% risk-free (US 3m T-bill)
   const [spyHist,...histData]=await Promise.all([
