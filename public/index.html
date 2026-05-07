@@ -8726,13 +8726,13 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
 
   // Ampiezza della performance: quanti titoli hanno partecipato
   if(nUp===tot)
-    portText+=`La performance è stata trasversale: tutti i ${tot} titoli in portafoglio hanno chiuso in verde, un segnale di forza ampia e non concentrata su un singolo nome. `;
+    portText+=_L({it:`La performance è stata trasversale: tutti i ${tot} titoli in portafoglio hanno chiuso in verde, un segnale di forza ampia e non concentrata su un singolo nome. `,en:`Performance was broad-based: all ${tot} holdings closed in the green, a signal of broad strength not concentrated on a single name. `});
   else if(nDown===tot)
-    portText+=`Giornata uniforme in negativo: nessuna posizione è riuscita a portarsi in territorio positivo. Un'ampiezza così negativa suggerisce che la pressione di vendita ha coinvolto l'intero portafoglio, indipendentemente dalle caratteristiche dei singoli titoli. `;
+    portText+=_L({it:`Giornata uniforme in negativo: nessuna posizione è riuscita a portarsi in territorio positivo. Un'ampiezza così negativa suggerisce che la pressione di vendita ha coinvolto l'intero portafoglio, indipendentemente dalle caratteristiche dei singoli titoli. `,en:`A uniformly negative day: no position managed to move into positive territory. Such negative breadth suggests selling pressure affected the entire portfolio, regardless of individual holding characteristics. `});
   else if(nUp>nDown)
-    portText+=`${nUp} posizioni su ${tot} hanno terminato in rialzo, a testimonianza di una performance ampiamente condivisa anche se non universale. `;
+    portText+=_L({it:`${nUp} posizioni su ${tot} hanno terminato in rialzo, a testimonianza di una performance ampiamente condivisa anche se non universale. `,en:`${nUp} out of ${tot} positions ended higher, testament to a broadly shared performance even if not universal. `});
   else
-    portText+=`Solo ${nUp} posizion${nUp===1?'e':'i'} su ${tot} ha chiuso in positivo: la debolezza è stata diffusa, con ${nDown} titoli in calo a pesare sul risultato complessivo. `;
+    portText+=_L({it:`Solo ${nUp} posizion${nUp===1?'e':'i'} su ${tot} ha chiuso in positivo: la debolezza è stata diffusa, con ${nDown} titoli in calo a pesare sul risultato complessivo. `,en:`Only ${nUp} position${nUp===1?'':'s'} out of ${tot} closed positive: weakness was widespread, with ${nDown} holdings in decline weighing on the overall result. `});
 
   // Concentrazione: quanto ha pesato il titolo migliore/peggiore
   if(best && tot>1){
