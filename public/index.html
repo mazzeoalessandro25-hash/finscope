@@ -5894,13 +5894,13 @@ async function loadBondScreener(){
   }));
   rateGrid.innerHTML=BOND_RATE_TICKERS.map((t,i)=>{
     const d=rateResults[i];
-    if(!d||!d.price) return `<div class="bond-rate-card"><div class="br-label">${t.label}</div><div class="br-val">—</div><div class="br-name">${t.name}</div></div>`;
+    if(!d||!d.price) return `<div class="bond-rate-card"><div class="br-label">${_t(t.labelKey)}</div><div class="br-val">—</div><div class="br-name">${t.name}</div></div>`;
     const chg=d.price-(d.prev||d.price);
     const chgPct=d.prev?((chg/d.prev)*100):0;
     const col=chg>=0?'var(--g)':'var(--r)';
     const sign=chg>=0?'+':'';
     return `<div class="bond-rate-card">
-      <div class="br-label">${t.label}</div>
+      <div class="br-label">${_t(t.labelKey)}</div>
       <div class="br-val">${d.price.toFixed(2)}%</div>
       <div class="br-chg" style="color:${col}">${sign}${chgPct.toFixed(2)}%</div>
       <div class="br-name">${t.name}</div>
