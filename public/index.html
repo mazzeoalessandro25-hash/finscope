@@ -9668,8 +9668,8 @@ function renderAlerts(){
   const cnt=document.getElementById('alerts-count');
   if(!el)return;
   if(!alerts.length){
-    el.innerHTML='<div class="ld">Nessun alert configurato · Usa il form sopra per aggiungere</div>';
-    if(cnt)cnt.textContent='Nessun alert attivo';
+    el.innerHTML='<div class="ld">'+_t('empty.alerts2')+'</div>';
+    if(cnt)cnt.textContent=_t('empty.alerts3');
     return;
   }
   if(cnt)cnt.textContent=alerts.length+' alert attivi';
