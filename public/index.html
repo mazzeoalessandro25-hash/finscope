@@ -10330,7 +10330,7 @@ function renderPortAnalysis(portItems, quotes){
           <canvas id="port-radar-canvas" width="200" height="180"></canvas>
         </div>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:3px;margin-top:6px">
-          ${[['Rendimento',radarReturn],['Diversif.',radarDiversif],['Qualità',radarQuality],['Momentum',radarMomentum],['Stabilità',radarStability],['Reddito',radarIncome]].map(([l,v])=>`<div style="text-align:center;padding:3px;background:var(--s);border-radius:5px"><div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${l}</div><div style="font-size:11px;font-weight:700;font-family:var(--fm);color:${v>=70?'var(--g)':v>=45?'var(--o)':'var(--r)'}">${v}</div></div>`).join('')}
+          ${[[_t('radar.return'),radarReturn],[_t('radar.diversif'),radarDiversif],[_t('radar.quality'),radarQuality],[_t('radar.momentum'),radarMomentum],[_t('radar.stability'),radarStability],[_t('radar.income'),radarIncome]].map(([l,v])=>`<div style="text-align:center;padding:3px;background:var(--s);border-radius:5px"><div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${l}</div><div style="font-size:11px;font-weight:700;font-family:var(--fm);color:${v>=70?'var(--g)':v>=45?'var(--o)':'var(--r)'}">${v}</div></div>`).join('')}
         </div>
       </div>
     </div>
