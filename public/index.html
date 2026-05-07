@@ -12505,7 +12505,7 @@ async function _importAutoSearchTickers(total){
     }catch(e){if(ico)ico.textContent='⚠️';}
   }
   const cnt=document.getElementById('port-import-count');
-  if(cnt)cnt.textContent=`${total} titoli — ${resolved}/${total} ticker trovati automaticamente${resolved<total?' · correggi i ❓ manualmente':''}`;
+  if(cnt)cnt.textContent=`${total}${_t('import.tickers.done.pre')}${resolved}/${total} ${_t('import.tickers.done.auto')}${resolved<total?_t('import.tickers.fix'):''}`;
   const confirmBtn=document.getElementById('port-import-confirm-btn');
   if(confirmBtn){confirmBtn.disabled=false;confirmBtn.style.opacity='1';}
 }
