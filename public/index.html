@@ -16638,7 +16638,7 @@ function _populateCryptoHeader(c){
     const badge=el('crd-ath-badge');
     const athChg=c.ath_change_percentage;
     if(badge&&athChg!=null){
-      badge.textContent=athChg.toFixed(1)+'% dall\'ATH';
+      badge.textContent=athChg.toFixed(1)+'% '+_t('crypto.from.ath');
       badge.style.color=athChg>-10?'var(--o)':'var(--r)';
     }
   }
