@@ -6010,7 +6010,7 @@ async function runFA(){
   const sc=fss.total;
   const scCol=sc!=null?getScoreColor(sc):'var(--t3)';
 
-  const dimLabels={valutazione:'Valutazione',redditivita:'Redditività',momentum:'Momentum',consensus:'Consensus',stabilita:'Stabilità'};
+  const dimLabels={valutazione:_t('fa.dim.valutazione'),redditivita:_t('fa.dim.redditivita'),momentum:_t('fa.dim.momentum'),consensus:_t('fa.dim.consensus'),stabilita:_t('fa.dim.stabilita')};
   const dimMax={valutazione:25,redditivita:25,momentum:20,consensus:20,stabilita:10};
 
   const scoreBlock=sc!=null?`
