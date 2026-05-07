@@ -11097,12 +11097,12 @@ function _macroRenderForex(d){
   const dxyUp=dxyChg==null||dxyChg>=0;
   const dxyNote=dxy?(dxy.price>104?_t('macro.dxy.veryStrong'):dxy.price>101?_t('macro.dxy.strong'):dxy.price>98?_t('macro.dxy.neutral'):_t('macro.dxy.weak')):'—';
   const pairs=[
-    {lbl:'EUR/USD',d:d.eurusd,dec:4,note:'Euro vs Dollaro'},
-    {lbl:'GBP/USD',d:d.gbpusd,dec:4,note:'Sterlina vs Dollaro'},
-    {lbl:'USD/JPY',d:d.usdjpy,dec:2,note:'Dollaro vs Yen · risk barometer'},
-    {lbl:'USD/CHF',d:d.usdchf,dec:4,note:'Dollaro vs Franco Svizzero · safe haven'},
-    {lbl:'AUD/USD',d:d.audusd,dec:4,note:'AUD vs Dollaro · commodity FX'},
-    {lbl:'USD/CNY',d:d.usdcny,dec:4,note:'Dollaro vs Yuan Cinese'},
+    {lbl:'EUR/USD',d:d.eurusd,dec:4,note:_t('fx.eurusd')},
+    {lbl:'GBP/USD',d:d.gbpusd,dec:4,note:_t('fx.gbpusd')},
+    {lbl:'USD/JPY',d:d.usdjpy,dec:2,note:_t('fx.usdjpy')+' · risk barometer'},
+    {lbl:'USD/CHF',d:d.usdchf,dec:4,note:_t('fx.usdchf')+' · safe haven'},
+    {lbl:'AUD/USD',d:d.audusd,dec:4,note:_t('fx.audusd')+' · commodity FX'},
+    {lbl:'USD/CNY',d:d.usdcny,dec:4,note:_t('fx.usdcny')},
   ];
   el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--b3);border-radius:10px;margin-bottom:14px;border:1px solid rgba(26,86,196,.15)">
     <div>
