@@ -6184,7 +6184,7 @@ function _populateNewsPills(){
     const port=JSON.parse(localStorage.getItem('fs_portfolio')||'[]');
     const syms=[...new Set(port.map(p=>p.sym))].slice(0,8);
     if(!syms.length){el.style.display='none';return;}
-    el.innerHTML='<span style="font-size:10px;font-weight:700;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;flex-shrink:0">Il tuo portafoglio:</span>'+
+    el.innerHTML='<span style="font-size:10px;font-weight:700;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;flex-shrink:0">'+_t('port.header')+'</span>'+
       syms.map(s=>`<button class="news-port-pill" onclick="loadNewsSearch('${s}')">${s}</button>`).join('');
     el.style.display='flex';
   }catch{el.style.display='none';}
