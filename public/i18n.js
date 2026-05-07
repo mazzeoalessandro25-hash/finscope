@@ -1897,6 +1897,10 @@ const TRANSLATIONS={
     'cry.sig.vol.high.t':'High liquidity: Vol/MCap {0}%','cry.sig.vol.high.d':'Active market with high relative trading volume. Easy to enter and exit the position.',
     'cry.sig.vol.low.t':'Low liquidity: Vol/MCap {0}%','cry.sig.vol.low.d':'Low volume relative to market cap. Possible sharp price moves on small orders.',
     'cry.sig.none':'No signals available.',
+    /* ── INVESTOR PROFILES ── */
+    'prof.income':'Income','prof.conservative':'Conservative','prof.moderate':'Moderate',
+    'prof.balanced_growth':'Balanced Growth','prof.dynamic':'Dynamic',
+    'prof.aggressive':'Aggressive','prof.speculative':'Speculative',
     /* ── SIGNALS & REC ── */
     'sig.buy':'BUY','sig.sell':'SELL','sig.hold':'HOLD',
     /* ── VIX LABELS ── */
