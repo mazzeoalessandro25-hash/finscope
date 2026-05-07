@@ -14057,7 +14057,7 @@ async function loadRiskMetrics(){
   for(let i=1;i<spyPts.length;i++){const p=spyPts[i-1].close;if(p>0)spyRets.push((spyPts[i].close-p)/p);}
 
   if(!portRets.length){
-    el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">Dati storici insufficienti (meno di 2 punti). Aggiungi titoli con più storico.</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">'+_t('port.hint.insufficient')+'</div>';return;
   }
 
   // ── Metrics ──
