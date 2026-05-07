@@ -5881,8 +5881,8 @@ const BOND_ETFS=[
 async function loadBondScreener(){
   const rateGrid=document.getElementById('bond-rate-grid');
   const etfBody=document.getElementById('bond-etf-body');
-  rateGrid.innerHTML='<div class="bond-rate-card ld" style="grid-column:1/-1">Caricamento tassi…</div>';
-  etfBody.innerHTML='<tr><td colspan="8" class="ld">Caricamento ETF…</td></tr>';
+  rateGrid.innerHTML='<div class="bond-rate-card ld" style="grid-column:1/-1">'+_t('load.rates.data')+'</div>';
+  etfBody.innerHTML='<tr><td colspan="8" class="ld">'+_t('load.etf.data')+'</td></tr>';
 
   // Fetch yield curve
   const rateResults=await Promise.all(BOND_RATE_TICKERS.map(async t=>{
