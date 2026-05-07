@@ -13851,7 +13851,7 @@ function renderSdTechSignals(){
     const ema=calcEMA(closes,20);
     if(ema.length){
       const last=ema[ema.length-1].value;
-      signals.push({label:'EMA20',text:lastPrice>last?'Prezzo sopra EMA — trend positivo':'Prezzo sotto EMA — pressione ribassista',type:lastPrice>last?'bull':'bear'});
+      signals.push({label:'EMA20',text:lastPrice>last?_L({it:'Prezzo sopra EMA — trend positivo',en:'Price above EMA — positive trend'}):_L({it:'Prezzo sotto EMA — pressione ribassista',en:'Price below EMA — bearish pressure'}),type:lastPrice>last?'bull':'bear'});
     }
   }
   if(sdIndicators.has('macd')){
