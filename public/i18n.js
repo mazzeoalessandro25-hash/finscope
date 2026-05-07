@@ -2423,6 +2423,22 @@ const TRANSLATIONS={
     'ins.updated':'Aktualisiert: ',
     /* ── CRYPTO ATH/ATL ── */
     'crypto.from.ath':'vom ATH','crypto.from.atl':'vom ATL',
+    /* ── CRYPTO SIGNALS ── */
+    'cry.sig.ath.near.t':' nahe ATH','cry.sig.ath.near.d':'Kurs bei {0}% des Allzeithochs. Widerstandszone — möglicher Verkaufsdruck von Gewinnhaltern.',
+    'cry.sig.ath.mod.t':'Moderate Korrektur vom ATH','cry.sig.ath.mod.d':'{0}% unter dem Allzeithoch. Zwischenzone, kurzfristigen Trend bewerten.',
+    'cry.sig.ath.deep.t':'Tiefe Korrektur — Chance?','cry.sig.ath.deep.d':'{0}% unter dem ATH. Preise weit entfernt von vergangener Euphorie — interessant für mittel/langfristig wenn Fundamentaldaten stimmen.',
+    'cry.sig.ath.crash.t':'Erheblicher Einbruch vom ATH','cry.sig.ath.crash.d':'{0}% unter dem Allzeithoch. Sorgfältig bewerten vor dem Einstieg.',
+    'cry.sig.btc.high.t':'Hohe BTC-Dominanz: {0}%','cry.sig.btc.high.d':'Crypto Risk-off Phase. Kapitalflüsse konzentrieren sich auf Bitcoin — historisch ungünstig für Altcoins.',
+    'cry.sig.btc.low.t':'Mögliche Altseason: BTC Dom {0}%','cry.sig.btc.low.d':'BTC-Dominanz ist niedrig — historisch ein Signal für Rotation zu Altcoins.',
+    'cry.sig.btc.neutral.t':'Ausgewogener Markt: BTC Dom {0}%','cry.sig.btc.neutral.d':'Keine klare Richtung zwischen Bitcoin und Altcoins.',
+    'cry.sig.fng.fear.t':'Extreme Angst: {0}/100','cry.sig.fng.fear.d':'Stimmung auf Tiefs. Historisch sind diesen Niveaus deutliche Erholungen gefolgt — langfristige Chance.',
+    'cry.sig.fng.low.t':'Marktangst: {0}/100','cry.sig.fng.low.d':'Weit verbreitete negative Stimmung. Investoren sind vorsichtig — mögliche selektive Chancen.',
+    'cry.sig.fng.neutral.t':'Neutrale Stimmung: {0}/100','cry.sig.fng.neutral.d':'Markt im Gleichgewicht ohne Übertreibungen.',
+    'cry.sig.fng.greed.t':'Gier: {0}/100','cry.sig.fng.greed.d':'Positive Stimmung und günstiger Momentum. Auf mögliche kurzfristige Korrekturen achten.',
+    'cry.sig.fng.extreme.t':'Euphorie: {0}/100','cry.sig.fng.extreme.d':'Überhitzter Markt. Historisch mit kurzfristigen Hochs verbunden — Vorsicht erhöhen.',
+    'cry.sig.vol.high.t':'Hohe Liquidität: Vol/MCap {0}%','cry.sig.vol.high.d':'Aktiver Markt mit hohem relativem Handelsvolumen. Einfacher Ein- und Ausstieg.',
+    'cry.sig.vol.low.t':'Niedrige Liquidität: Vol/MCap {0}%','cry.sig.vol.low.d':'Geringes Volumen im Verhältnis zur Marktkapitalisierung. Mögliche starke Preisbewegungen bei kleinen Orders.',
+    'cry.sig.none':'Keine Signale verfügbar.',
     /* ── SIGNALS & REC ── */
     'sig.buy':'KAUFEN','sig.sell':'VERKAUFEN','sig.hold':'HALTEN',
     /* ── VIX LABELS ── */
