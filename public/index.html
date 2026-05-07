@@ -9582,9 +9582,9 @@ async function loadBenchmark(){
   const el=document.getElementById('bench-content');
   if(!el)return;
   if(!portfolio.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per il confronto</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.comparison')+'</div>';return;
   }
-  el.innerHTML='<div class="ld" style="padding:10px">Caricamento...</div>';
+  el.innerHTML='<div class="ld" style="padding:10px">'+_t('common.loading')+'</div>';
   const BENCHMARKS=[
     {s:'^GSPC',n:'S&P 500',flag:'🇺🇸'},
     {s:'FTSEMIB.MI',n:'FTSE MIB',flag:'🇮🇹'},
