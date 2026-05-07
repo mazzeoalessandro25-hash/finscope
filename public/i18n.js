@@ -1764,6 +1764,9 @@ const TRANSLATIONS={
     'val.ticker.both':'Enter both tickers.',
     'val.ticker.diff':'Tickers must be different.',
     'val.ticker.enter':'Enter a ticker',
+    'val.notin.port':'is not in portfolio.',
+    'val.ticker.pre':'Ticker ',
+    'val.ticker.notfound2':'not found or unavailable.',
     /* ── STATUS ── */
     'status.updated.at':'Updated at ',
     'status.updated':'Updated: ',
