@@ -5827,7 +5827,7 @@ const ETF_LIST=[
 async function loadETFScreener(){
   const loadId=++_screenerLoadId;
   const body=document.getElementById('sc-body');
-  body.innerHTML='<tr><td colspan="12" class="ld">Caricamento ETF…</td></tr>';
+  body.innerHTML='<tr><td colspan="12" class="ld">'+_t('load.etf.data')+'</td></tr>';
   document.getElementById('sc-cnt').textContent='—';
 
   // Popola subito con dati statici (senza prezzi)
