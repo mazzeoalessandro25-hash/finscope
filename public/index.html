@@ -11250,10 +11250,10 @@ function _macroRenderAnalysis(d){
 
   // ── B: Regime title + subtitle ──
   const titles={
-    expansion:fedBias===1?'Espansione con Fed Restrittiva':'Espansione Economica',
-    slowdown:fedBias===-1?'Rallentamento — Fed in Taglio':'Rallentamento Economico',
-    contraction:'Contrazione — Fase Recessiva',
-    stagflation:'Stagflazione: Crescita Bassa & Inflazione Alta'
+    expansion:fedBias===1?_t('macro.regime.title.expansion.hawkish'):_t('macro.regime.title.expansion'),
+    slowdown:fedBias===-1?_t('macro.regime.title.slowdown.dovish'):_t('macro.regime.title.slowdown'),
+    contraction:_t('macro.regime.title.contraction'),
+    stagflation:_t('macro.regime.title.stagflation')
   };
   const rt=document.getElementById('mac-regime-title');
   if(rt)rt.textContent=titles[regime]||_t('macro.regime.unknown');
