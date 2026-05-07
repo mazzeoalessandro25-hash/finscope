@@ -1877,6 +1877,22 @@ const TRANSLATIONS={
     'ins.updated':'Updated: ',
     /* ── CRYPTO ATH/ATL ── */
     'crypto.from.ath':'from ATH','crypto.from.atl':'from ATL',
+    /* ── CRYPTO SIGNALS ── */
+    'cry.sig.ath.near.t':' near ATH','cry.sig.ath.near.d':'Price at {0}% of all-time high. Resistance zone — potential selling pressure from profitable holders.',
+    'cry.sig.ath.mod.t':'Moderate correction from ATH','cry.sig.ath.mod.d':'{0}% below all-time high. Intermediate zone, evaluate short-term trend.',
+    'cry.sig.ath.deep.t':'Deep correction — opportunity?','cry.sig.ath.deep.d':'{0}% below ATH. Prices far from past euphoria — interesting for medium/long term if fundamentals hold.',
+    'cry.sig.ath.crash.t':'Significant crash from ATH','cry.sig.ath.crash.d':'{0}% below all-time high. Evaluate carefully before taking a position.',
+    'cry.sig.btc.high.t':'High BTC Dominance: {0}%','cry.sig.btc.high.d':'Crypto risk-off phase. Flows concentrating on Bitcoin — historically unfavorable for altcoins.',
+    'cry.sig.btc.low.t':'Possible Altseason: BTC Dom {0}%','cry.sig.btc.low.d':'BTC dominance is low — historically a signal of rotation toward altcoins.',
+    'cry.sig.btc.neutral.t':'Balanced market: BTC Dom {0}%','cry.sig.btc.neutral.d':'No clear direction between Bitcoin and altcoins.',
+    'cry.sig.fng.fear.t':'Extreme Fear: {0}/100','cry.sig.fng.fear.d':'Sentiment at lows. Historically these levels have preceded significant recoveries — long-term opportunity.',
+    'cry.sig.fng.low.t':'Market Fear: {0}/100','cry.sig.fng.low.d':'Widespread negative sentiment. Investors are cautious — possible selective opportunities.',
+    'cry.sig.fng.neutral.t':'Neutral sentiment: {0}/100','cry.sig.fng.neutral.d':'Market in balance with no excesses in either direction.',
+    'cry.sig.fng.greed.t':'Greed: {0}/100','cry.sig.fng.greed.d':'Positive sentiment and favorable momentum. Watch for possible short-term corrections.',
+    'cry.sig.fng.extreme.t':'Euphoria: {0}/100','cry.sig.fng.extreme.d':'Overheated market. Historically associated with short-term peaks — increase caution.',
+    'cry.sig.vol.high.t':'High liquidity: Vol/MCap {0}%','cry.sig.vol.high.d':'Active market with high relative trading volume. Easy to enter and exit the position.',
+    'cry.sig.vol.low.t':'Low liquidity: Vol/MCap {0}%','cry.sig.vol.low.d':'Low volume relative to market cap. Possible sharp price moves on small orders.',
+    'cry.sig.none':'No signals available.',
     /* ── SIGNALS & REC ── */
     'sig.buy':'BUY','sig.sell':'SELL','sig.hold':'HOLD',
     /* ── VIX LABELS ── */
