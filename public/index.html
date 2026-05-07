@@ -8746,11 +8746,11 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   // Confronto col mercato con lettura più dettagliata
   if(equityVals.length){
     const diff=totalChgPct-avgIdx;
-    if(diff>1)         portText+=`Rispetto al mercato generale, il portafoglio ha sovraperformato di circa ${diff.toFixed(1)} punti percentuali: una differenza rilevante che premia la scelta dei titoli effettuata. `;
-    else if(diff>0.3)  portText+=`Il portafoglio ha fatto leggermente meglio del mercato generale (differenziale di ${diff.toFixed(1)}%), segnale di una composizione efficace per la giornata. `;
-    else if(diff>-0.3) portText+=`La performance del portafoglio è risultata allineata all'andamento generale degli indici, senza divergenze significative. `;
-    else if(diff>-1)   portText+=`Il portafoglio ha leggermente sottoperformato il mercato di ${Math.abs(diff).toFixed(1)} punti percentuali: una divergenza contenuta, ma da monitorare se dovesse persistere nelle prossime sedute. `;
-    else               portText+=`Il portafoglio ha sottoperformato il mercato in modo marcato (−${Math.abs(diff).toFixed(1)}% rispetto agli indici): vale la pena analizzare quali posizioni hanno generato questa divergenza negativa. `;
+    if(diff>1)         portText+=_L({it:`Rispetto al mercato generale, il portafoglio ha sovraperformato di circa ${diff.toFixed(1)} punti percentuali: una differenza rilevante che premia la scelta dei titoli effettuata. `,en:`Relative to the broader market, the portfolio outperformed by about ${diff.toFixed(1)} percentage points: a significant gap that rewards the stock selection made. `});
+    else if(diff>0.3)  portText+=_L({it:`Il portafoglio ha fatto leggermente meglio del mercato generale (differenziale di ${diff.toFixed(1)}%), segnale di una composizione efficace per la giornata. `,en:`The portfolio did slightly better than the broader market (differential of ${diff.toFixed(1)}%), signaling an effective composition for the day. `});
+    else if(diff>-0.3) portText+=_L({it:`La performance del portafoglio è risultata allineata all'andamento generale degli indici, senza divergenze significative. `,en:`Portfolio performance was aligned with the general trend of indices, without significant divergences. `});
+    else if(diff>-1)   portText+=_L({it:`Il portafoglio ha leggermente sottoperformato il mercato di ${Math.abs(diff).toFixed(1)} punti percentuali: una divergenza contenuta, ma da monitorare se dovesse persistere nelle prossime sedute. `,en:`The portfolio slightly underperformed the market by ${Math.abs(diff).toFixed(1)} percentage points: a contained divergence, but worth monitoring if it persists in coming sessions. `});
+    else               portText+=_L({it:`Il portafoglio ha sottoperformato il mercato in modo marcato (−${Math.abs(diff).toFixed(1)}% rispetto agli indici): vale la pena analizzare quali posizioni hanno generato questa divergenza negativa. `,en:`The portfolio markedly underperformed the market (−${Math.abs(diff).toFixed(1)}% vs indices): it is worth analyzing which positions generated this negative divergence. `});
   }
 
   // ── SEZIONE 3: Titoli in evidenza (più testo per asset) ──
