@@ -2358,10 +2358,14 @@ const TRANSLATIONS={
     'fx.usdjpy':'Dollar vs Yen','fx.usdchf':'Dollar vs Schweizer Franken',
     'fx.audusd':'AUD vs Dollar','fx.usdcny':'Dollar vs Chinesischer Yuan',
     /* ── MACRO REGIME TITLES ── */
-    'macro.regime.title.expansion':'Expansion — Wachstum & Momentum',
-    'macro.regime.title.slowdown':'Abschwächung — Wachstum verlangsamt',
+    'macro.regime.title.expansion':'Wirtschaftliche Expansion',
+    'macro.regime.title.expansion.hawkish':'Expansion mit restriktiver Fed',
+    'macro.regime.title.slowdown':'Wirtschaftliche Abschwächung',
+    'macro.regime.title.slowdown.dovish':'Abschwächung — Fed senkt Zinsen',
     'macro.regime.title.contraction':'Kontraktion — Rezessionsphase',
     'macro.regime.title.stagflation':'Stagflation: Geringes Wachstum & Hohe Inflation',
+    /* ── MACRO FED SUB ── */
+    'macro.fed.hawkish':'Fed restriktiv','macro.fed.cutting':'Fed senkt','macro.fed.pause':'Fed pausiert',
     /* ── MACRO CURVE / DXY SUB ── */
     'macro.curve.inverted':'Invertierte Kurve','macro.curve.flat':'Flache Kurve','macro.curve.normal':'Normale Kurve',
     'macro.dxy.sub.strong':'Starker Dollar','macro.dxy.sub.weak':'Schwacher Dollar','macro.dxy.sub.neutral':'Neutraler Dollar',
