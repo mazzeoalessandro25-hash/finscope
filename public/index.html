@@ -15770,7 +15770,7 @@ function renderTransactionHistory(){
       <button onclick="clearTransactionHistory()" style="background:var(--s2);border:1px solid var(--bd);color:var(--t3);padding:5px 12px;border-radius:6px;font-size:10px;font-family:var(--fm);cursor:pointer">${_t('common.clearHistory')}</button>
     </div>
     <div style="display:grid;grid-template-columns:90px 44px 80px 80px 70px 90px;gap:6px;padding:0 0 6px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--bd);margin-bottom:4px">
-      <div>Data</div><div>Tipo</div><div>Titolo</div><div style="text-align:right">Prezzo</div><div style="text-align:right">Qtà</div><div style="text-align:right">Totale</div>
+      <div>${_t('common.date')}</div><div>${_t('tx.col.type')}</div><div>${_t('tx.col.stock')}</div><div style="text-align:right">${_t('common.price')}</div><div style="text-align:right">${_t('tx.col.qty')}</div><div style="text-align:right">${_t('tx.col.total')}</div>
     </div>
     ${_transactions.slice(0,50).map(tx=>{
       const d=new Date(tx.date).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'});
