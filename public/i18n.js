@@ -2376,6 +2376,19 @@ const TRANSLATIONS={
     'ins.updated':'Aktualisiert: ',
     /* ── SIGNALS & REC ── */
     'sig.buy':'KAUFEN','sig.sell':'VERKAUFEN','sig.hold':'HALTEN',
+    /* ── VIX LABELS ── */
+    'vix.label.calm':'Ruhiger Markt — Anleger wenig besorgt',
+    'vix.label.normal':'Normale Volatilität — ausgewogener Markt',
+    'vix.label.high':'Hohe Volatilität — offene Positionen beobachten',
+    'vix.label.extreme':'Extreme Angst — historisch mögliche Erholungszone',
+    /* ── HEATMAP UP/DN ── */
+    'hm.up.label':'hoch','hm.dn.label':'runter',
+    /* ── WATCHLIST ALREADY IN ── */
+    'wl.alreadyIn':' ist bereits in Ihrer Watchlist.',
+    /* ── CALENDAR HOLIDAY ── */
+    'cal.holiday':'Feiertag',
+    /* ── PORTFOLIO ALLOCATION LABELS ── */
+    'alloc.equityEtf':'Aktien-ETF','alloc.bonds':'Anleihen','alloc.cash':'Liquidität',
     /* ── TRANSACTIONS ── */
     'tx.buy':'KAUF','tx.sell':'VERK','tx.edit':'BEARB',
     'tx.col.type':'Typ','tx.col.stock':'Titel','tx.col.qty':'Mng','tx.col.total':'Gesamt',
