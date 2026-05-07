@@ -5861,10 +5861,10 @@ async function loadETFScreener(){
 }
 
 const BOND_RATE_TICKERS=[
-  {sym:'^IRX',label:()=>_t('bond.3m'),name:'T-Bill 3M'},
-  {sym:'^FVX',label:()=>_t('bond.5y'),name:'T-Note 5Y'},
-  {sym:'^TNX',label:()=>_t('bond.10y'),name:'T-Note 10Y'},
-  {sym:'^TYX',label:()=>_t('bond.30y'),name:'T-Bond 30Y'},
+  {sym:'^IRX',labelKey:'bond.3m',name:'T-Bill 3M'},
+  {sym:'^FVX',labelKey:'bond.5y',name:'T-Note 5Y'},
+  {sym:'^TNX',labelKey:'bond.10y',name:'T-Note 10Y'},
+  {sym:'^TYX',labelKey:'bond.30y',name:'T-Bond 30Y'},
 ];
 const BOND_ETFS=[
   {sym:'TLT',  name:'iShares 20+ Year Treasury Bond', cat:'Gov. USA Lungo'},
