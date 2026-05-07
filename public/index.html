@@ -4470,7 +4470,7 @@ function renderScreenerAlertList(){
   const badge=document.getElementById('sc-al-badge');
   if(badge){badge.textContent=alerts.length;badge.style.display=alerts.length?'inline':'none';}
   if(!alerts.length){
-    el.innerHTML='<div class="ld">Nessun alert impostato · Inserisci ticker, prezzo e condizione sopra</div>';
+    el.innerHTML='<div class="ld">'+_t('empty.alerts')+'</div>';
     return;
   }
   el.innerHTML=alerts.map((a,i)=>`
