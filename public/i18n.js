@@ -1200,6 +1200,9 @@ const TRANSLATIONS={
     'pac.log.date':'Date','pac.log.asset':'Asset','pac.log.amount':'Amount',
     'pac.log.price':'Buy price','pac.log.qty':'Shares purchased',
     'pac.deleteConfirm':'Delete this savings plan?',
+    'pac.deleteConfirm.sym':'Delete the savings plan for ',
+    'pac.deleteConfirm.posRemoved':'The aggregated portfolio position created by this plan will also be removed.',
+    'pac.deleteConfirm.pause':'⏸  To keep the position and stop only future purchases, use the "Pause purchases" button.',
     'pac.freq.monthly':'Monthly','pac.freq.quarterly':'Quarterly',
     'pac.tag':'ETF Plan',
     /* ── TOOLTIPS — SD OVERLAY ── */
