@@ -909,6 +909,19 @@ const TRANSLATIONS={
     'ins.updated':'Aggiornato: ',
     /* ── SIGNALS & REC ── */
     'sig.buy':'COMPRA','sig.sell':'VENDI','sig.hold':'MANTIENI',
+    /* ── VIX LABELS ── */
+    'vix.label.calm':'Mercato sereno — investitori poco preoccupati',
+    'vix.label.normal':'Volatilità nella norma — mercato bilanciato',
+    'vix.label.high':'Alta volatilità — attenzione alle posizioni aperte',
+    'vix.label.extreme':'Paura estrema — storicamente zona di possibile rimbalzo',
+    /* ── HEATMAP UP/DN ── */
+    'hm.up.label':'su','hm.dn.label':'giù',
+    /* ── WATCHLIST ALREADY IN ── */
+    'wl.alreadyIn':' è già nella watchlist.',
+    /* ── CALENDAR HOLIDAY ── */
+    'cal.holiday':'Festività',
+    /* ── PORTFOLIO ALLOCATION LABELS ── */
+    'alloc.equityEtf':'Azioni ETF','alloc.bonds':'Obbligazioni','alloc.cash':'Liquidità',
     /* ── TRANSACTIONS ── */
     'tx.buy':'ACQ','tx.sell':'VEND','tx.edit':'MOD',
     'tx.col.type':'Tipo','tx.col.stock':'Titolo','tx.col.qty':'Qtà','tx.col.total':'Totale',
