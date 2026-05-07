@@ -16643,7 +16643,7 @@ function _populateCryptoHeader(c){
     }
   }
   if(el('crd-atl-val'))el('crd-atl-val').textContent=_fmtCryptoPrice(c.atl);
-  if(el('crd-atl-date')&&c.atl_date)el('crd-atl-date').textContent=new Date(c.atl_date).toLocaleDateString('it-IT',{month:'short',year:'numeric'});
+  if(el('crd-atl-date')&&c.atl_date)el('crd-atl-date').textContent=new Date(c.atl_date).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{month:'short',year:'numeric'});
   const atlChg=c.atl_change_percentage;
   if(el('crd-atl-chg')&&atlChg!=null)el('crd-atl-chg').textContent='+'+Math.round(atlChg).toLocaleString(currentLang==='en'?'en-GB':'it-IT')+'% '+_t('crypto.from.atl');
   if(el('crd-price-center'))el('crd-price-center').textContent=_fmtCryptoPrice(price);
