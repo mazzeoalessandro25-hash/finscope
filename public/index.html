@@ -8663,8 +8663,8 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   // Dow Jones: cicliche vs tech
   if(djC!=null && nqC!=null && spC!=null){
     const diffDJ=djC-nqC;
-    if(diffDJ>0.8) macro+=`Il Dow Jones (${s(djC)}) ha guidato i rialzi rispetto al Nasdaq, segnale di una preferenza degli investitori per i settori industriali e finanziari rispetto al tech. `;
-    else if(diffDJ<-0.8) macro+=`Le blue chip industriali del Dow Jones (${s(djC)}) hanno faticato più del tech, una dinamica che spesso accompagna fasi di mercato a forte componente speculativa o di crescita. `;
+    if(diffDJ>0.8) macro+=_L({it:`Il Dow Jones (${s(djC)}) ha guidato i rialzi rispetto al Nasdaq, segnale di una preferenza degli investitori per i settori industriali e finanziari rispetto al tech. `,en:`The Dow Jones (${s(djC)}) led gains relative to the Nasdaq, signaling investor preference for industrial and financial sectors over tech. `});
+    else if(diffDJ<-0.8) macro+=_L({it:`Le blue chip industriali del Dow Jones (${s(djC)}) hanno faticato più del tech, una dinamica che spesso accompagna fasi di mercato a forte componente speculativa o di crescita. `,en:`The Dow Jones (${s(djC)}) industrial blue chips struggled more than tech, a dynamic that often accompanies market phases with a strong speculative or growth component. `});
   }
 
   // Oro e Petrolio: lettura macro approfondita
