@@ -1852,6 +1852,19 @@ const TRANSLATIONS={
     'ins.updated':'Updated: ',
     /* ── SIGNALS & REC ── */
     'sig.buy':'BUY','sig.sell':'SELL','sig.hold':'HOLD',
+    /* ── VIX LABELS ── */
+    'vix.label.calm':'Calm market — investors not worried',
+    'vix.label.normal':'Normal volatility — balanced market',
+    'vix.label.high':'High volatility — watch open positions',
+    'vix.label.extreme':'Extreme fear — historically a potential bounce zone',
+    /* ── HEATMAP UP/DN ── */
+    'hm.up.label':'up','hm.dn.label':'down',
+    /* ── WATCHLIST ALREADY IN ── */
+    'wl.alreadyIn':' is already in your watchlist.',
+    /* ── CALENDAR HOLIDAY ── */
+    'cal.holiday':'Holiday',
+    /* ── PORTFOLIO ALLOCATION LABELS ── */
+    'alloc.equityEtf':'Equity ETF','alloc.bonds':'Bonds','alloc.cash':'Cash',
     /* ── TRANSACTIONS ── */
     'tx.buy':'BUY','tx.sell':'SELL','tx.edit':'EDIT',
     'tx.col.type':'Type','tx.col.stock':'Stock','tx.col.qty':'Qty','tx.col.total':'Total',
