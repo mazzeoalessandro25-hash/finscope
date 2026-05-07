@@ -11382,7 +11382,7 @@ function _macroRenderAnalysis(d){
     secEl.innerHTML=SECTORS.map(sec=>{
       const sc=sectorScore(sec.n);
       const cls=sc>=2?'ow':sc===1?'ow1':sc<=-2?'uw':sc===-1?'uw1':'neu';
-      const lbl=sc>=2?'Sovrappeso':sc===1?'Lieve OW':sc<=-2?'Sottopeso':sc===-1?'Lieve UW':'Neutrale';
+      const lbl=sc>=2?_t('mac.pos.ow2'):sc===1?_t('mac.pos.ow1'):sc<=-2?_t('mac.pos.uw2'):sc===-1?_t('mac.pos.uw1'):_t('mac.pos.neu');
       const nm=sec.n.length>14?sec.n.slice(0,13)+'\u2026':sec.n;
       return`<div class="mac-sec-row ${cls}"><span class="mac-sec-ico">${sec.ico}</span><span class="mac-sec-name" title="${sec.n}">${nm}</span><span class="mac-sec-lbl2 ${cls}">${lbl}</span></div>`;
     }).join('');
