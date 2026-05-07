@@ -14823,10 +14823,10 @@ async function loadPortfolioNews(){
   const el=document.getElementById('portnews-content');
   if(!el)return;
   if(!portfolio.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per vedere le news</div>';
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.news')+'</div>';
     return;
   }
-  el.innerHTML='<div class="ld">Caricamento news del portafoglio...</div>';
+  el.innerHTML='<div class="ld">'+_t('load.port.news')+'</div>';
 
   // Fetch parallelo: una chiamata per ticker
   const results=await Promise.all(portfolio.map(async item=>{
