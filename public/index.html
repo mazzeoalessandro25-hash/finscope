@@ -16902,7 +16902,7 @@ async function loadCryptoChart(days, btn){
     _crdChart=chart;
     new ResizeObserver(()=>{chart.applyOptions({width:chartEl.clientWidth});}).observe(chartEl);
   }catch(e){
-    chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--r)">Errore caricamento grafico</div>';
+    chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--r)">'+_t('err.load.chart')+'</div>';
   }
 }
 
