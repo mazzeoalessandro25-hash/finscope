@@ -208,7 +208,7 @@ const TRANSLATIONS={
     'macro.ratesCardSub':'Tassi & Rendimenti',
     /* ALERTS */
     'alert.title':'🔔 Price Alert','alert.target':'🎯 Prezzo obiettivo',
-    'alert.above':'Sopra','alert.below':'Sotto','alert.set':'Imposta Alert',
+    'alert.above':'Sopra','alert.below':'Sotto','alert.set':'Imposta Alert','alert.remove':'Rimuovi alert',
     'alert.created':'✓ Alert creato!','alert.empty':'Nessun alert configurato',
     /* QM MODAL */
     'qm.addPortfolio':'＋ Aggiungi al Portafoglio','qm.setAlert':'🔔 Imposta Alert Prezzo',
