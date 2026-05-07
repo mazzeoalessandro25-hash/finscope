@@ -16734,7 +16734,7 @@ function _renderFngGauge(fng){
     el('crd-fng-lbl').style.color=v<25?'var(--r)':v<45?'var(--o)':v<55?'var(--t2)':'var(--g)';
   }
   if(el('crd-fng-date')&&fng.timestamp){
-    el('crd-fng-date').textContent='Aggiornato: '+new Date(fng.timestamp*1000).toLocaleDateString('it-IT');
+    el('crd-fng-date').textContent=_t('ins.updated')+new Date(fng.timestamp*1000).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT');
   }
 }
 
