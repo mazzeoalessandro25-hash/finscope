@@ -5713,7 +5713,7 @@ async function fetchSearchSuggestions(q){
   try{
     const r=await fetch('/api/screener?q='+encodeURIComponent(q));
     const data=await r.json();
-    if(!data.quotes?.length){dd.innerHTML='<div class="sd-hint">Nessun risultato per "'+q+'"</div>';return;}
+    if(!data.quotes?.length){dd.innerHTML='<div class="sd-hint">'+_t('empty.result').split(' · ')[0]+' "'+q+'"</div>';return;}
     const lh=typeof logoHtmlSm==='function'?logoHtmlSm:()=>'';
     dd.innerHTML=data.quotes.map(item=>`
       <div class="sd-item" onclick="selectSearchTicker('${item.symbol}','${(item.name||'').replace(/['"]/g,'')}','${(item.exchange||'').replace(/'/g,'')}')">
@@ -5722,7 +5722,7 @@ async function fetchSearchSuggestions(q){
         <span class="sd-name">${item.name||item.symbol}</span>
         <span class="sd-ex">${item.exchange||''}</span>
       </div>`).join('');
-  }catch{dd.innerHTML='<div class="sd-hint">Errore di rete</div>';}
+  }catch{dd.innerHTML='<div class="sd-hint">'+_t('err.network')+'</div>';}
 }
 
 function hideSearchDropdown(){
