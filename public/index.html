@@ -13408,7 +13408,7 @@ function renderValuation(d, cur){
   // Raccomandazione
   const recEl=document.getElementById('sdm-rec');
   if(d.rec){
-    const recMap={strongbuy:'Forte Acquisto',buy:'Acquisto',hold:'Neutrale',sell:'Vendita',strongsell:'Forte Vendita'};
+    const recMap={strongbuy:_t('sd.rec.strongBuy'),buy:_t('sd.rec.buy'),hold:_t('sd.rec.neutral'),sell:_t('sd.rec.sell'),strongsell:_t('sd.rec.strongSell')};
     const key=d.rec.replace('-','');
     const cls={strongbuy:'strongbuy',buy:'buy',hold:'hold',sell:'sell',strongsell:'strongsell'}[key]||'hold';
     recEl.innerHTML=`<span class="sd-rec-badge ${cls}">${recMap[key]||d.rec}</span>`;
