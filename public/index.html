@@ -9896,10 +9896,10 @@ async function renderWatchlistPort(){
   const el=document.getElementById('wl-list-port');
   if(!el)return;
   if(!watchlist.length){
-    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">Aggiungi titoli allo screener con ★</div>';
+    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm)">'+_t('wl.hint.star')+'</div>';
     return;
   }
-  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">Caricamento prezzi...</div>';
+  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">'+_t('load.prices')+'</div>';
   const quotes=await Promise.all(watchlist.map(s=>api(s)));
   const sparks=await Promise.all(watchlist.map(s=>fetchSparkData(s)));
   const stockInfo=s=>STOCKS.find(x=>x.s===s);
