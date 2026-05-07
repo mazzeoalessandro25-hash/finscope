@@ -9684,8 +9684,8 @@ function renderAlerts(){
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-        <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString('it-IT')}</span>
-        <button class="port-del" onclick="removeAlert(${i})" title="Rimuovi alert">✕</button>
+        <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT')}</span>
+        <button class="port-del" onclick="removeAlert(${i})" title="${_t('alert.remove')||'✕'}">✕</button>
       </div>
     </div>`).join('');
 }
