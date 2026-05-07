@@ -912,6 +912,22 @@ const TRANSLATIONS={
     'ins.updated':'Aggiornato: ',
     /* ── CRYPTO ATH/ATL ── */
     'crypto.from.ath':'dall\'ATH','crypto.from.atl':'dall\'ATL',
+    /* ── CRYPTO SIGNALS ── */
+    'cry.sig.ath.near.t':' vicino all\'ATH','cry.sig.ath.near.d':'Prezzo al {0}% del massimo storico. Zona di resistenza — potenziale pressione di vendita da chi è in profitto.',
+    'cry.sig.ath.mod.t':'Correzione moderata dall\'ATH','cry.sig.ath.mod.d':'{0}% sotto il massimo storico. Zona intermedia, valutare il trend di breve.',
+    'cry.sig.ath.deep.t':'Profonda correzione — opportunità?','cry.sig.ath.deep.d':'{0}% sotto l\'ATH. Prezzi lontani dall\'euforia passata — interessante per il medio/lungo termine se i fondamentali reggono.',
+    'cry.sig.ath.crash.t':'Crollo significativo dall\'ATH','cry.sig.ath.crash.d':'{0}% sotto il massimo storico. Valutare attentamente prima di posizionarsi.',
+    'cry.sig.btc.high.t':'BTC Dominance alta: {0}%','cry.sig.btc.high.d':'Fase risk-off crypto. I flussi si concentrano su Bitcoin — storicamente sfavorevole per le altcoin.',
+    'cry.sig.btc.low.t':'Possibile Altseason: BTC Dom {0}%','cry.sig.btc.low.d':'La dominanza BTC è bassa — storicamente un segnale di rotazione verso le altcoin.',
+    'cry.sig.btc.neutral.t':'Mercato bilanciato: BTC Dom {0}%','cry.sig.btc.neutral.d':'Nessuna direzione chiara tra Bitcoin e altcoin.',
+    'cry.sig.fng.fear.t':'Paura estrema: {0}/100','cry.sig.fng.fear.d':'Sentiment ai minimi. Storicamente questi livelli hanno preceduto recuperi significativi — opportunità per il lungo termine.',
+    'cry.sig.fng.low.t':'Paura di mercato: {0}/100','cry.sig.fng.low.d':'Sentiment negativo diffuso. Gli investitori sono cauti — possibili opportunità selettive.',
+    'cry.sig.fng.neutral.t':'Sentiment neutro: {0}/100','cry.sig.fng.neutral.d':'Mercato in equilibrio senza eccessi in nessuna direzione.',
+    'cry.sig.fng.greed.t':'Greed: {0}/100','cry.sig.fng.greed.d':'Sentiment positivo e momentum favorevole. Attenzione a possibili correzioni di breve.',
+    'cry.sig.fng.extreme.t':'Euforia: {0}/100','cry.sig.fng.extreme.d':'Mercato surriscaldato. Storicamente associato a picchi di breve — aumentare la cautela.',
+    'cry.sig.vol.high.t':'Alta liquidità: Vol/MCap {0}%','cry.sig.vol.high.d':'Mercato attivo con elevati scambi relativi. Facile entrare e uscire dalla posizione.',
+    'cry.sig.vol.low.t':'Bassa liquidità: Vol/MCap {0}%','cry.sig.vol.low.d':'Volumi ridotti rispetto alla capitalizzazione. Possibili movimenti di prezzo bruschi su ordini di piccole dimensioni.',
+    'cry.sig.none':'Nessun segnale disponibile.',
     /* ── SIGNALS & REC ── */
     'sig.buy':'COMPRA','sig.sell':'VENDI','sig.hold':'MANTIENI',
     /* ── VIX LABELS ── */
