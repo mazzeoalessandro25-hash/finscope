@@ -15762,7 +15762,7 @@ function renderTransactionHistory(){
     el.innerHTML='<div class="ld" style="padding:10px">'+_t('empty.trades')+'</div>';
     return;
   }
-  const aLabel={buy:'ACQ',sell:'VEND',edit:'MOD'};
+  const aLabel={buy:_t('tx.buy'),sell:_t('tx.sell'),edit:_t('tx.edit')};
   const aBg={buy:'var(--g2)',sell:'var(--r2)',edit:'var(--o2)'};
   const aCol={buy:'var(--g)',sell:'var(--r)',edit:'var(--o)'};
   el.innerHTML=`
