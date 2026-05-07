@@ -9300,7 +9300,7 @@ function renderWatchlistPort(){
   const el=document.getElementById('wl-list-port');
   if(!el)return;
   if(!watchlist.length){
-    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:8px 0">Aggiungi titoli allo screener con ★</div>';
+    el.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:8px 0">'+_t('wl.hint.star')+'</div>';
     return;
   }
   el.innerHTML=watchlist.map(sym=>`
