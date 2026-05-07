@@ -4430,10 +4430,10 @@ async function renderScreenerWatchlist(){
   const badge=document.getElementById('sc-wl-badge');
   if(badge){badge.textContent=watchlist.length;badge.style.display=watchlist.length?'inline':'none';}
   if(!watchlist.length){
-    el.innerHTML='<div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nella tabella sopra</div>';
+    el.innerHTML='<div class="ld">'+_t('wl.empty')+'</div>';
     return;
   }
-  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">Caricamento prezzi...</div>';
+  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">'+_t('load.prices')+'</div>';
   const quotes=await Promise.all(watchlist.map(s=>api(s)));
   el.innerHTML=watchlist.map((sym,i)=>{
     const d=quotes[i];
