@@ -5312,20 +5312,31 @@ async function loadMovers(){
         return;
       }
     }catch{}
-    // Cache assente: mostra placeholder minimo
     if(topEl)topEl.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:12px 4px">Borse chiuse</div>';
     if(botEl)botEl.innerHTML='';
     return;
   }
 
-  const pairs=await Promise.all(activeTickers.map(s=>api(s).then(d=>({s,d})).catch(()=>({s,d:null}))));
-  const results=[];
-  for(const {s,d} of pairs){
-    if(!d)continue;
-    const c=chgPct(d.price,d.prev);if(c==null)continue;
-    const name=STOCKS.find(x=>x.s===s)?.n||s;
-    results.push({s,name,c,price:d.price});
+  // Chiamata batch unica — un solo fetch per tutti i ticker
+  let results=[];
+  try{
+    const r=await fetch('/api/quote?type=batch&symbols='+activeTickers.join(','));
+    if(r.ok){
+      const data=await r.json();
+      results=(data||[]).filter(q=>q&&q.chgPct!=null).map(q=>({
+        s:q.s,name:q.name||q.s,c:q.chgPct,price:q.price
+      }));
+    }
+  }catch(e){console.warn('[movers batch]',e);}
+
+  // Fallback per eventuale errore batch: prova cache
+  if(!results.length){
+    try{
+      const cached=JSON.parse(localStorage.getItem('_movers_cache')||'null');
+      if(cached?.top5?.length){renderMovers(cached.top5,topEl);renderMovers(cached.bot5,botEl);return;}
+    }catch{}
   }
+
   results.sort((a,b)=>b.c-a.c);
   const top5=results.slice(0,5);
   const bot5=results.slice(-5).reverse();
