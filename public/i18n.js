@@ -1864,6 +1864,7 @@ const TRANSLATIONS={
     'wl.alreadyIn':' is already in your watchlist.',
     /* ── CALENDAR HOLIDAY ── */
     'cal.holiday':'Holiday',
+    'exch.open':'Open','exch.closed':'Closed',
     /* ── PORTFOLIO ALLOCATION LABELS ── */
     'alloc.equityEtf':'Equity ETF','alloc.bonds':'Bonds','alloc.cash':'Cash',
     /* ── TRANSACTIONS ── */
