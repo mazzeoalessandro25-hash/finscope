@@ -14848,7 +14848,7 @@ async function loadPortfolioNews(){
     });
 
   if(!groups.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Nessuna notizia recente trovata per i titoli in portafoglio</div>';
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('empty.news.port')+'</div>';
     return;
   }
 
