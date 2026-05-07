@@ -2197,5 +2197,66 @@ const TRANSLATIONS={
     'mac.pos.ow2':'Übergewichten','mac.pos.ow1':'Leicht OW','mac.pos.uw2':'Untergewichten',
     'mac.pos.uw1':'Leicht UW','mac.pos.neu':'Neutral',
     'watch.imp.alta':'Hoch','watch.imp.media':'Mittel','watch.imp.bassa':'Niedrig',
+    /* ── LOAD EXTRA ── */
+    'load.chart':'Chart laden...',
+    'load.dashboard':'Dashboard laden...',
+    'load.price':'Preis laden…',
+    'load.history12':'12 Monate historische Daten abrufen...',
+    'load.history':'Kursverlauf abrufen…',
+    'load.analysis':'Analyse läuft...',
+    /* ── EMPTY STATES ── */
+    'empty.alerts':'Keine Alarme gesetzt · Ticker, Preis und Bedingung oben eingeben',
+    'empty.alerts2':'Keine Alarme konfiguriert · Formular oben verwenden',
+    'empty.alerts3':'Keine aktiven Alarme',
+    'empty.result':'Keine Ergebnisse · Index ändern oder Filter anpassen',
+    'empty.news.avail':'Keine Nachrichten verfügbar',
+    'empty.news.recent':'Keine aktuellen Nachrichten.',
+    'empty.news.port':'Keine aktuellen Nachrichten für Portfolio-Positionen gefunden',
+    'empty.news.found':'Keine Nachrichten gefunden.',
+    'empty.data.valid':'Keine gültigen Daten gefunden. Format prüfen oder Typ manuell auswählen.',
+    'empty.divs.port':'Keine dividendenzahlenden Positionen im Portfolio · Daten von Yahoo Finance',
+    'empty.trades':'Keine Transaktionen aufgezeichnet · Zukünftige Portfolio-Änderungen werden hier automatisch protokolliert',
+    'empty.corr':'Unzureichende historische Daten für Korrelationsberechnung',
+    'empty.corr2':'Mindestens 2 verschiedene Positionen für die Korrelationsmatrix hinzufügen',
+    /* ── ERRORS ── */
+    'err.connect':'Verbindungsfehler. Bitte erneut versuchen.',
+    'err.network':'Netzwerkfehler',
+    'err.ticker.notfound':'Ticker nicht gefunden · Versuche: AAPL · ENI.MI · MSFT · ASML',
+    'err.load.hist':'Fehler beim Laden historischer Daten',
+    'err.load.chart':'Fehler beim Laden des Charts',
+    'err.load.crypto':'Fehler beim Laden von Krypto-Daten. Bitte wiederholen.',
+    'err.hist.nodata':'Historische Daten nicht verfügbar. Bitte in einem Moment erneut versuchen.',
+    'err.analysis':'Analysefehler: ',
+    /* ── VALIDATION ── */
+    'val.ticker.required':'Gültigen Ticker eingeben.',
+    'val.ticker.both':'Beide Ticker eingeben.',
+    'val.ticker.diff':'Ticker müssen verschieden sein.',
+    'val.ticker.enter':'Ticker eingeben',
+    /* ── STATUS ── */
+    'status.updated.at':'Aktualisiert um ',
+    'status.updated':'Aktualisiert: ',
+    'status.mcap.note':'Marktkapitalisierung in USD · Live-Wechselkurs von Yahoo Finance · aktualisiert ',
+    'status.daily.unavail':'Tagesanalyse nicht verfügbar (Marktdaten fehlen oder Markt geschlossen).',
+    'status.sync.err':'⚠ Sync-Fehler',
+    /* ── AUTH EXTRA ── */
+    'auth.pwd.updated':'Passwort erfolgreich aktualisiert! Mit neuen Anmeldedaten einloggen.',
+    /* ── PORTFOLIO EXTRA ── */
+    'port.header':'Dein Portfolio:',
+    'port.sub.guest':'Anmelden, um Positionen zu speichern und zu verfolgen',
+    'port.sub.suffix':' Positionen',
+    'port.perf.label':'Portfolio: ',
+    /* ── YIELD CURVE ── */
+    'yc.inv.deep':'<strong style="color:var(--r)">⚠ Tiefe Inversion.</strong> Die Kurve ist stark invertiert — historisch geht eine Rezession 12–18 Monate danach.',
+    'yc.inv.mild':'<strong style="color:var(--o)">⚠ Leichte Inversion.</strong> Kurzfristige Zinsen übersteigen langfristige: Markt preist Zinssenkungen oder Abschwächung ein.',
+    /* ── IMPORT ── */
+    'import.tickers.debug':'0 Ticker gefunden — Debug oben ansehen',
+    'import.tickers.searching':' Ticker — Ticker-Symbole suchen…',
+    'import.tickers.done.pre':' Ticker — ','import.tickers.done.auto':' Ticker automatisch gefunden',
+    'import.tickers.fix':' · ❓ manuell korrigieren',
+    'import.nodata':'Keine gültigen Daten gefunden. Format prüfen oder Typ manuell auswählen.',
+    'import.notickers':'0 Ticker gefunden',
+    /* ── MISC ── */
+    'sd.div.none':'Keine',
+    'ins.updated':'Aktualisiert: ',
   }
 };
