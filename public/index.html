@@ -14015,7 +14015,7 @@ async function loadRiskMetrics(){
     :await Promise.all(portfolio.map(item=>api(item.sym)));
 
   if(!spyHist?.points?.length){
-    el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">Dati storici non disponibili. Riprova tra qualche secondo.</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">'+_t('err.hist.nodata')+'</div>';return;
   }
 
   const spyPts=spyHist.points;
