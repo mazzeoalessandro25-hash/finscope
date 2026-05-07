@@ -161,6 +161,30 @@ export default async function handler(req, res) {
     }
   }
 
+  // BATCH QUOTES — one call for all movers symbols
+  if (type === 'batch') {
+    res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=30');
+    try {
+      const syms = String(req.query.symbols || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 600);
+      if (!syms.length) return res.json([]);
+      const raw = await Promise.race([
+        yf.quote(syms),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('batch timeout')), 20000))
+      ]);
+      const arr = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+      const results = arr.filter(q => q && q.regularMarketPrice != null).map(q => ({
+        s: q.symbol,
+        name: q.shortName || q.longName || q.symbol,
+        price: q.regularMarketPrice,
+        prev: q.regularMarketPreviousClose ?? null,
+        chgPct: q.regularMarketChangePercent ?? null,
+      }));
+      return res.json(results);
+    } catch (e) {
+      return res.status(500).json({ error: e.message });
+    }
+  }
+
   if (!symbol) return res.status(400).json({ error: 'symbol required' });
 
   try {
