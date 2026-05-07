@@ -11757,50 +11757,52 @@ function _macroRenderSectors(){
   const el=document.getElementById('macro-sectors-grid');if(!el)return;
   el.innerHTML=SECTOR_DATA.map(s=>{
     const typeColLight=s.typeCol+'20';
+    const drivers=_LA(s.drivers);
+    const tips=_LA(s.tips);
     return`<div class="sec-card" id="seccard-${s.id}">
       <div class="sec-card-hd" onclick="_macroToggleSec('${s.id}')">
         <span class="sec-card-ico">${s.ico}</span>
         <div class="sec-card-info">
-          <div class="sec-card-name">${s.name}</div>
+          <div class="sec-card-name">${_L(s.name)}</div>
           <div class="sec-card-etf">ETF: ${s.etf} · β ${s.beta}</div>
           <div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">
-            <span style="font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 7px;border-radius:3px;color:${s.typeCol};background:${typeColLight}">${s.type}</span>
-            <span style="font-size:9px;font-family:var(--fm);padding:1px 7px;border-radius:3px;background:var(--s2);color:var(--t3)">Tassi: ${s.rSens}</span>
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 7px;border-radius:3px;color:${s.typeCol};background:${typeColLight}">${_L(s.type)}</span>
+            <span style="font-size:9px;font-family:var(--fm);padding:1px 7px;border-radius:3px;background:var(--s2);color:var(--t3)">${_t('macro.rates.label')} ${_L(s.rSens)}</span>
           </div>
         </div>
         <span style="font-size:10px;color:var(--t3);flex-shrink:0;margin-left:4px" id="sec-arr-${s.id}">▼</span>
       </div>
       <div class="sec-card-body">
-        <div style="padding:10px 0;font-size:10px;color:var(--t2);line-height:1.6;border-bottom:1px solid var(--bd)">${s.desc}</div>
+        <div style="padding:10px 0;font-size:10px;color:var(--t2);line-height:1.6;border-bottom:1px solid var(--bd)">${_L(s.desc)}</div>
         <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Driver principali</div>
-          ${s.drivers.map(d=>`<div style="display:flex;gap:5px;font-size:10px;color:var(--t2);line-height:1.5;margin-bottom:3px"><span style="color:var(--b);flex-shrink:0">•</span>${d}</div>`).join('')}
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${_t('macro.sec.drivers')}</div>
+          ${drivers.map(d=>`<div style="display:flex;gap:5px;font-size:10px;color:var(--t2);line-height:1.5;margin-bottom:3px"><span style="color:var(--b);flex-shrink:0">•</span>${d}</div>`).join('')}
         </div>
         <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Metriche chiave</div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${_t('macro.sec.metrics')}</div>
           <div style="display:flex;flex-wrap:wrap;gap:4px">${s.metrics.map(m=>`<span style="font-family:var(--fm);font-size:9px;padding:2px 7px;border-radius:4px;background:var(--s2);color:var(--t2)">${m}</span>`).join('')}</div>
         </div>
         <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Sensibilità ai tassi</div>
-          <div style="font-size:10px;color:var(--t2);line-height:1.5">${s.rSensNote}</div>
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${_t('macro.sec.ratesens')}</div>
+          <div style="font-size:10px;color:var(--t2);line-height:1.5">${_L(s.rSensNote)}</div>
         </div>
         <div style="padding:10px 0;border-bottom:1px solid var(--bd)">
           <div style="display:flex;gap:10px">
             <div style="flex:1;padding:8px 10px;border-radius:7px;background:rgba(5,150,105,.07)">
-              <div style="font-size:9px;font-weight:700;color:#065F46;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Migliore scenario</div>
-              <div style="font-size:10px;color:var(--t2);line-height:1.4">${s.best}</div>
+              <div style="font-size:9px;font-weight:700;color:#065F46;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">${_t('macro.sec.best')}</div>
+              <div style="font-size:10px;color:var(--t2);line-height:1.4">${_L(s.best)}</div>
             </div>
             <div style="flex:1;padding:8px 10px;border-radius:7px;background:rgba(220,38,38,.07)">
-              <div style="font-size:9px;font-weight:700;color:#B91C1C;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">Scenario peggiore</div>
-              <div style="font-size:10px;color:var(--t2);line-height:1.4">${s.worst}</div>
+              <div style="font-size:9px;font-weight:700;color:#B91C1C;font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px">${_t('macro.sec.worst')}</div>
+              <div style="font-size:10px;color:var(--t2);line-height:1.4">${_L(s.worst)}</div>
             </div>
           </div>
         </div>
         <div style="padding-top:10px">
-          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">💡 Tips per investire</div>
-          ${s.tips.map(t=>`<div class="sec-tip"><span style="color:var(--b);font-size:14px;flex-shrink:0;line-height:1.3">›</span>${t}</div>`).join('')}
+          <div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${_t('macro.sec.tips')}</div>
+          ${tips.map(t=>`<div class="sec-tip"><span style="color:var(--b);font-size:14px;flex-shrink:0;line-height:1.3">›</span>${t}</div>`).join('')}
           <div style="margin-top:10px;padding:8px 10px;border-radius:7px;background:var(--b3);font-size:10px;color:var(--b)">
-            <strong>Esempi:</strong> ${s.ex}
+            <strong>${_t('macro.sec.examples')}</strong> ${s.ex}
           </div>
         </div>
       </div>
