@@ -5641,7 +5641,7 @@ function renderMarketStocks(){
   });
   document.getElementById('sc-cnt').textContent=list.length+' titoli';
   const body=document.getElementById('sc-body');
-  if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:24px;color:var(--t3);font-size:12px">Nessun risultato · Cambia indice o modifica i filtri</td></tr>';return;}
+  if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:24px;color:var(--t3);font-size:12px">'+_t('empty.result')+'</td></tr>';return;}
   const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺',AS:'🇯🇵',CA:'🇨🇦',UK:'🇬🇧',CH:'🇨🇭'};
   // Determina valuta dal suffisso del ticker (più affidabile del campo mkt)
   function stockCur(sym){
