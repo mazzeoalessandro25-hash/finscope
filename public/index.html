@@ -11373,36 +11373,36 @@ function _macroRenderAnalysis(d){
   const G=SIG.pos,Or=SIG.cau,R=SIG.neg,N=SIG.neu;
 
   let eq;
-  if(regime==='expansion'&&fedBias<=0)eq={cls:'pos',sig:'POSITIVO',s:G,n:`Espansione + Fed accomodante: il miglior contesto storico per le azioni. Multipli in espansione, utili in crescita. Preferire ciclici e growth.`};
-  else if(regime==='expansion'&&fedBias===1)eq={cls:'neu',sig:'NEUTRALE',s:N,n:`Espansione ma Fed hawkish: utili in crescita ma multipli compressi dai tassi. Selettivit\xE0 necessaria — privilegiare value, qualit\xE0 e basso leverage.`};
-  else if(regime==='slowdown')eq={cls:'cau',sig:'CAUTELA',s:Or,n:`Rallentamento: utili forward in revisione al ribasso. Ridurre il beta, aumentare i difensivi (healthcare, utilities, staples).`};
-  else if(regime==='contraction')eq={cls:'neg',sig:'NEGATIVO',s:R,n:`Recessione: utili in calo del 15\u201330% storicamente. Le azioni scendono prima della fine del ciclo — qualit\xE0 e timing sono cruciali.`};
-  else eq={cls:'neg',sig:'ATTENZIONE',s:R,n:`Stagflazione: solo energia, value con pricing power e commodity reali tengono. Evitare growth e bond a lunga duration.`};
+  if(regime==='expansion'&&fedBias<=0)eq={cls:'pos',sig:_L({it:'POSITIVO',en:'POSITIVE'}),s:G,n:_L({it:'Espansione + Fed accomodante: il miglior contesto storico per le azioni. Multipli in espansione, utili in crescita. Preferire ciclici e growth.',en:'Expansion + accommodative Fed: historically the best context for equities. Expanding multiples, growing earnings. Prefer cyclicals and growth.'})};
+  else if(regime==='expansion'&&fedBias===1)eq={cls:'neu',sig:_L({it:'NEUTRALE',en:'NEUTRAL'}),s:N,n:_L({it:'Espansione ma Fed hawkish: utili in crescita ma multipli compressi dai tassi. Selettività necessaria — privilegiare value, qualità e basso leverage.',en:'Expansion but hawkish Fed: earnings growing but multiples compressed by rates. Selectivity required — favor value, quality and low leverage.'})};
+  else if(regime==='slowdown')eq={cls:'cau',sig:_L({it:'CAUTELA',en:'CAUTION'}),s:Or,n:_L({it:'Rallentamento: utili forward in revisione al ribasso. Ridurre il beta, aumentare i difensivi (healthcare, utilities, staples).',en:'Slowdown: forward earnings under downward revision. Reduce beta, increase defensives (healthcare, utilities, staples).'})};
+  else if(regime==='contraction')eq={cls:'neg',sig:_L({it:'NEGATIVO',en:'NEGATIVE'}),s:R,n:_L({it:'Recessione: utili in calo del 15–30% storicamente. Le azioni scendono prima della fine del ciclo — qualità e timing sono cruciali.',en:'Recession: earnings historically down 15–30%. Equities fall before the cycle ends — quality and timing are crucial.'})};
+  else eq={cls:'neg',sig:_L({it:'ATTENZIONE',en:'CAUTION'}),s:R,n:_L({it:'Stagflazione: solo energia, value con pricing power e commodity reali tengono. Evitare growth e bond a lunga duration.',en:'Stagflation: only energy, value with pricing power and real commodities hold up. Avoid growth and long-duration bonds.'})};
 
   let bg;
-  if(fedBias===1&&t10!=null&&t10>4.0)bg={cls:'pos',sig:'OPPORTUNIT\xC0',s:G,n:`10Y al ${fmt(t10,2)}%: rendimenti reali positivi. Momento ideale per bloccare yield elevati prima del pivot Fed.`};
-  else if(fedBias===-1)bg={cls:'pos',sig:'POSITIVO',s:G,n:`Fed in taglio: i prezzi dei bond salgono. La duration lunga (TLT, BTP 10Y) beneficia di pi\xF9 dei tagli successivi.`};
-  else if(spread!=null&&spread<0)bg={cls:'pos',sig:'INTERESSANTE',s:G,n:`Curva invertita: i bond a breve (3\u20136M) offrono rendimenti superiori ai lunghi con minore rischio di duration.`};
-  else bg={cls:'neu',sig:'NEUTRALE',s:N,n:`Bond governativi con rendimento adeguato. Utili per la diversificazione ma senza catalyst immediato per un rally.`};
+  if(fedBias===1&&t10!=null&&t10>4.0)bg={cls:'pos',sig:_L({it:'OPPORTUNITÀ',en:'OPPORTUNITY'}),s:G,n:_L({it:`10Y al ${fmt(t10,2)}%: rendimenti reali positivi. Momento ideale per bloccare yield elevati prima del pivot Fed.`,en:`10Y at ${fmt(t10,2)}%: positive real yields. Ideal moment to lock in elevated yields before the Fed pivot.`})};
+  else if(fedBias===-1)bg={cls:'pos',sig:_L({it:'POSITIVO',en:'POSITIVE'}),s:G,n:_L({it:'Fed in taglio: i prezzi dei bond salgono. La duration lunga (TLT, BTP 10Y) beneficia di più dei tagli successivi.',en:'Fed cutting: bond prices rising. Long duration (TLT, 10Y govts) benefits most from subsequent cuts.'})};
+  else if(spread!=null&&spread<0)bg={cls:'pos',sig:_L({it:'INTERESSANTE',en:'INTERESTING'}),s:G,n:_L({it:'Curva invertita: i bond a breve (3–6M) offrono rendimenti superiori ai lunghi con minore rischio di duration.',en:'Inverted curve: short bonds (3–6M) offer higher yields than longs with lower duration risk.'})};
+  else bg={cls:'neu',sig:_L({it:'NEUTRALE',en:'NEUTRAL'}),s:N,n:_L({it:'Bond governativi con rendimento adeguato. Utili per la diversificazione ma senza catalyst immediato per un rally.',en:'Government bonds with adequate yield. Useful for diversification but no immediate catalyst for a rally.'})};
 
   let corp;
-  if(hygChg!=null&&lqdChg!=null&&hygChg>0&&(hygChg-lqdChg)>0.1)corp={cls:'pos',sig:'RISK-ON',s:G,n:`Spread HY in restringimento: buon momento per il credito corporate. Il mercato non sconta stress creditizio.`};
-  else if(regime==='contraction'||(hygChg!=null&&lqdChg!=null&&hygChg<lqdChg-0.1))corp={cls:'neg',sig:'CAUTELA',s:R,n:`Spread in allargamento: evitare HY e aziende ad alto leverage. Preferire emittenti IG con bilanci solidi.`};
-  else corp={cls:'neu',sig:'NEUTRALE',s:N,n:`Condizioni bilanciate. IG offre carry decente. Per HY: selezione rigorosa per settore e qualit\xE0 del bilancio.`};
+  if(hygChg!=null&&lqdChg!=null&&hygChg>0&&(hygChg-lqdChg)>0.1)corp={cls:'pos',sig:'RISK-ON',s:G,n:_L({it:'Spread HY in restringimento: buon momento per il credito corporate. Il mercato non sconta stress creditizio.',en:'HY spreads tightening: good moment for corporate credit. The market is not pricing credit stress.'})};
+  else if(regime==='contraction'||(hygChg!=null&&lqdChg!=null&&hygChg<lqdChg-0.1))corp={cls:'neg',sig:_L({it:'CAUTELA',en:'CAUTION'}),s:R,n:_L({it:'Spread in allargamento: evitare HY e aziende ad alto leverage. Preferire emittenti IG con bilanci solidi.',en:'Spreads widening: avoid HY and high-leverage companies. Prefer IG issuers with solid balance sheets.'})};
+  else corp={cls:'neu',sig:_L({it:'NEUTRALE',en:'NEUTRAL'}),s:N,n:_L({it:'Condizioni bilanciate. IG offre carry decente. Per HY: selezione rigorosa per settore e qualità del bilancio.',en:'Balanced conditions. IG offers decent carry. For HY: rigorous selection by sector and balance sheet quality.'})};
 
   let com;
-  if(regime==='stagflation'||(oilP!=null&&oilP>90&&copperP!=null&&copperP>4.0))com={cls:'pos',sig:'POSITIVO',s:G,n:`Energia e metalli in forza${oilP?` (Brent $${fmt(oilP,0)})`:''}: inflazione persistente favorisce le commodity reali.`};
-  else if(dxyP!=null&&dxyP>104)com={cls:'neg',sig:'PRESSIONE',s:R,n:`Dollaro molto forte (${fmt(dxyP,1)}): commodity in USD sotto pressione — petrolio, oro e rame scontano il biglietto verde.`};
-  else if(copperP!=null&&copperP>4.2)com={cls:'pos',sig:'MODERATO',s:G,n:`Rame elevato ($${fmt(copperP,2)}/lb): domanda industriale solida. L'oro mantiene il suo ruolo di hedging geopolitico.`};
-  else com={cls:'neu',sig:'NEUTRALE',s:N,n:`Nessun trend direzionale dominante. L'oro resta un valido hedging sull'incertezza e i picchi di inflazione.`};
+  if(regime==='stagflation'||(oilP!=null&&oilP>90&&copperP!=null&&copperP>4.0))com={cls:'pos',sig:_L({it:'POSITIVO',en:'POSITIVE'}),s:G,n:_L({it:`Energia e metalli in forza${oilP?` (Brent $${fmt(oilP,0)})`:''}: inflazione persistente favorisce le commodity reali.`,en:`Energy and metals strong${oilP?` (Brent $${fmt(oilP,0)})`:''}: persistent inflation favors real commodities.`})};
+  else if(dxyP!=null&&dxyP>104)com={cls:'neg',sig:_L({it:'PRESSIONE',en:'PRESSURE'}),s:R,n:_L({it:`Dollaro molto forte (${fmt(dxyP,1)}): commodity in USD sotto pressione — petrolio, oro e rame scontano il biglietto verde.`,en:`Very strong dollar (${fmt(dxyP,1)}): USD-denominated commodities under pressure — oil, gold and copper discounting the greenback.`})};
+  else if(copperP!=null&&copperP>4.2)com={cls:'pos',sig:_L({it:'MODERATO',en:'MODERATE'}),s:G,n:_L({it:`Rame elevato ($${fmt(copperP,2)}/lb): domanda industriale solida. L'oro mantiene il suo ruolo di hedging geopolitico.`,en:`High copper ($${fmt(copperP,2)}/lb): solid industrial demand. Gold maintains its geopolitical hedging role.`})};
+  else com={cls:'neu',sig:_L({it:'NEUTRALE',en:'NEUTRAL'}),s:N,n:_L({it:"Nessun trend direzionale dominante. L'oro resta un valido hedging sull'incertezza e i picchi di inflazione.",en:'No dominant directional trend. Gold remains a valid hedge against uncertainty and inflation spikes.'})};
 
   let cash;
-  if(t3!=null&&t3>4.5)cash={cls:'pos',sig:'ATTRAENTE',s:G,n:`T-bill e money market al ${fmt(t3,2)}%: il cash genera rendimento reale. Riserva tattica del 10\u201320% razionale in questa fase.`};
-  else if(fedBias===-1)cash={cls:'neg',sig:'IN CALO',s:R,n:`Fed in taglio: i rendimenti del money market scendono progressivamente. Reimpiegare il cash prima che il carry si comprima.`};
-  else cash={cls:'neu',sig:'MODERATO',s:N,n:`Cash con rendimento${t3!=null?` del ${fmt(t3,2)}%`:''}: competitivo ma non sufficiente per battere l'inflazione a lungo termine.`};
+  if(t3!=null&&t3>4.5)cash={cls:'pos',sig:_L({it:'ATTRAENTE',en:'ATTRACTIVE'}),s:G,n:_L({it:`T-bill e money market al ${fmt(t3,2)}%: il cash genera rendimento reale. Riserva tattica del 10–20% razionale in questa fase.`,en:`T-bills and money market at ${fmt(t3,2)}%: cash generates real return. A tactical 10–20% reserve is rational at this stage.`})};
+  else if(fedBias===-1)cash={cls:'neg',sig:_L({it:'IN CALO',en:'DECLINING'}),s:R,n:_L({it:'Fed in taglio: i rendimenti del money market scendono progressivamente. Reimpiegare il cash prima che il carry si comprima.',en:'Fed cutting: money market yields declining progressively. Redeploy cash before carry compresses.'})};
+  else cash={cls:'neu',sig:_L({it:'MODERATO',en:'MODERATE'}),s:N,n:_L({it:`Cash con rendimento${t3!=null?` del ${fmt(t3,2)}%`:''}: competitivo ma non sufficiente per battere l'inflazione a lungo termine.`,en:`Cash yielding${t3!=null?` ${fmt(t3,2)}%`:''}: competitive but not sufficient to beat inflation over the long term.`})};
 
   const acEl=document.getElementById('mac-ac-list');
-  if(acEl)acEl.innerHTML=acItem('📈','Azioni',eq.cls,eq.sig,eq.s.c,eq.s.bg,eq.n)+acItem('🏛','Bond Governativi',bg.cls,bg.sig,bg.s.c,bg.s.bg,bg.n)+acItem('🏢','Bond Corporate',corp.cls,corp.sig,corp.s.c,corp.s.bg,corp.n)+acItem('🛢','Commodities',com.cls,com.sig,com.s.c,com.s.bg,com.n)+acItem('💵','Liquidit\xE0 / Cash',cash.cls,cash.sig,cash.s.c,cash.s.bg,cash.n);
+  if(acEl)acEl.innerHTML=acItem('📈',_L({it:'Azioni',en:'Equities'}),eq.cls,eq.sig,eq.s.c,eq.s.bg,eq.n)+acItem('🏛',_L({it:'Bond Governativi',en:'Government Bonds'}),bg.cls,bg.sig,bg.s.c,bg.s.bg,bg.n)+acItem('🏢',_L({it:'Bond Corporate',en:'Corporate Bonds'}),corp.cls,corp.sig,corp.s.c,corp.s.bg,corp.n)+acItem('🛢','Commodities',com.cls,com.sig,com.s.c,com.s.bg,com.n)+acItem('💵',_L({it:'Liquidità / Cash',en:'Cash / Liquidity'}),cash.cls,cash.sig,cash.s.c,cash.s.bg,cash.n);
 
   // ── G: Sector grid ──
   function sectorScore(name){
