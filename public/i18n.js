@@ -1726,6 +1726,67 @@ const TRANSLATIONS={
     'wl.hint.star':'Add stocks to screener with ★',
     'wl.hint.star2':'Add positions',
     'load.corr.hist':'Loading historical data',
+    /* ── LOAD EXTRA ── */
+    'load.chart':'Loading chart...',
+    'load.dashboard':'Loading dashboard...',
+    'load.price':'Loading price…',
+    'load.history12':'Fetching 12 months of historical data...',
+    'load.history':'Fetching price history…',
+    'load.analysis':'Analyzing...',
+    /* ── EMPTY STATES ── */
+    'empty.alerts':'No alerts set · Enter ticker, price and condition above',
+    'empty.alerts2':'No alerts configured · Use the form above to add one',
+    'empty.alerts3':'No active alerts',
+    'empty.result':'No results · Change index or adjust filters',
+    'empty.news.avail':'No news available',
+    'empty.news.recent':'No recent news.',
+    'empty.news.port':'No recent news found for portfolio positions',
+    'empty.news.found':'No news found.',
+    'empty.data.valid':'No valid data found. Check format or select type manually.',
+    'empty.divs.port':'No dividend-paying positions in portfolio · Data from Yahoo Finance summaries',
+    'empty.trades':'No transactions recorded · Future portfolio changes will be logged here automatically',
+    'empty.corr':'Insufficient historical data to calculate correlations',
+    'empty.corr2':'Add at least 2 different positions to view the correlation matrix',
+    /* ── ERRORS ── */
+    'err.connect':'Connection error. Please try again.',
+    'err.network':'Network error',
+    'err.ticker.notfound':'Ticker not found · Try: AAPL · ENI.MI · MSFT · ASML',
+    'err.load.hist':'Error loading historical data',
+    'err.load.chart':'Error loading chart',
+    'err.load.crypto':'Error loading crypto data. Please retry.',
+    'err.hist.nodata':'Historical data not available. Please retry in a moment.',
+    'err.analysis':'Analysis error: ',
+    /* ── VALIDATION ── */
+    'val.ticker.required':'Enter a valid ticker.',
+    'val.ticker.both':'Enter both tickers.',
+    'val.ticker.diff':'Tickers must be different.',
+    'val.ticker.enter':'Enter a ticker',
+    /* ── STATUS ── */
+    'status.updated.at':'Updated at ',
+    'status.updated':'Updated: ',
+    'status.mcap.note':'Market cap in USD · live exchange rate from Yahoo Finance · updated ',
+    'status.daily.unavail':'Daily analysis not available (market data missing or market closed).',
+    'status.sync.err':'⚠ sync error',
+    /* ── AUTH EXTRA ── */
+    'auth.pwd.updated':'Password updated successfully! Log in with your new credentials.',
+    /* ── PORTFOLIO EXTRA ── */
+    'port.header':'Your portfolio:',
+    'port.sub.guest':'Log in to save and track your positions',
+    'port.sub.suffix':' positions',
+    'port.perf.label':'Portfolio: ',
+    /* ── YIELD CURVE ── */
+    'yc.inv.deep':'<strong style="color:var(--r)">⚠ Deep inversion.</strong> The curve is sharply inverted — historically precedes a recession by 12–18 months.',
+    'yc.inv.mild':'<strong style="color:var(--o)">⚠ Mild inversion.</strong> Short-term rates exceed long-term rates: market pricing in rate cuts or an economic slowdown.',
+    /* ── IMPORT ── */
+    'import.tickers.debug':'0 tickers found — see debug above',
+    'import.tickers.searching':' tickers — searching ticker symbols…',
+    'import.tickers.done.pre':' tickers — ','import.tickers.done.auto':' tickers found automatically',
+    'import.tickers.fix':' · fix ❓ manually',
+    'import.nodata':'No valid data found. Check format or select type manually.',
+    'import.notickers':'0 tickers found',
+    /* ── MISC ── */
+    'sd.div.none':'None',
+    'ins.updated':'Updated: ',
   },
   de:{
     /* NAV */
