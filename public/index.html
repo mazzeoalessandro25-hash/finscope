@@ -13844,7 +13844,7 @@ function renderSdTechSignals(){
       const bw=+((bb.upper-bb.lower)/bb.middle*100).toFixed(1);
       const pos=+((lastPrice-bb.lower)/(bb.upper-bb.lower)*100).toFixed(0);
       const type=lastPrice>=bb.upper?'bear':lastPrice<=bb.lower?'bull':'neutral';
-      signals.push({label:'BB',text:lastPrice>=bb.upper?`Prezzo al limite superiore (largh. ${bw}%)`:lastPrice<=bb.lower?`Prezzo al limite inferiore (largh. ${bw}%)`:`Posizione ${pos}% nel canale (largh. ${bw}%)`,type});
+      signals.push({label:'BB',text:lastPrice>=bb.upper?_L({it:`Prezzo al limite superiore (largh. ${bw}%)`,en:`Price at upper band (width ${bw}%)`}):lastPrice<=bb.lower?_L({it:`Prezzo al limite inferiore (largh. ${bw}%)`,en:`Price at lower band (width ${bw}%)`}):_L({it:`Posizione ${pos}% nel canale (largh. ${bw}%)`,en:`Position ${pos}% in channel (width ${bw}%)`}),type});
     }
   }
   if(sdIndicators.has('ema20')){
