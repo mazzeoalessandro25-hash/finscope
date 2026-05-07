@@ -8766,11 +8766,11 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     const news=newsMap[a.sym]||[];
     let comment='';
     if(role==='best'){
-      comment=a.chgPct>3?'Contributo determinante al portafoglio':a.chgPct>1?'Buon contributo positivo':'Leggero rialzo nella seduta';
+      comment=a.chgPct>3?_L({it:'Contributo determinante al portafoglio',en:'Decisive contribution to the portfolio'}):a.chgPct>1?_L({it:'Buon contributo positivo',en:'Good positive contribution'}):_L({it:'Leggero rialzo nella seduta',en:'Slight rise in the session'});
     } else if(role==='worst'){
-      comment=a.chgPct<-3?'Flessione rilevante, ha pesato sul risultato':a.chgPct<-1?'Calo moderato che ha frenato la performance':'Piccola perdita giornaliera';
+      comment=a.chgPct<-3?_L({it:'Flessione rilevante, ha pesato sul risultato',en:'Significant decline, weighed on the result'}):a.chgPct<-1?_L({it:'Calo moderato che ha frenato la performance',en:'Moderate decline that held back performance'}):_L({it:'Piccola perdita giornaliera',en:'Small daily loss'});
     } else {
-      comment=assetUp?'Positivo nella seduta':'In flessione nella seduta';
+      comment=assetUp?_L({it:'Positivo nella seduta',en:'Positive in the session'}):_L({it:'In flessione nella seduta',en:'In decline in the session'});
     }
     let line=`• <strong>${a.sym}</strong>`;
     if(a.name&&a.name!==a.sym) line+=` (${a.name})`;
