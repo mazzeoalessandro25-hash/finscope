@@ -6522,11 +6522,11 @@ async function boot(){
   loadHeatmap();
   loadMcap('world');
   renderCalendar(); // async, non serve await — si aggiorna da sola
-  document.getElementById('dash-ts').textContent='Aggiornato: '+now();
+  document.getElementById('dash-ts').textContent=_t('status.updated')+now();
 }
 boot();
 calcSim();
-setInterval(()=>{loadIndices();loadComs();loadCrypto();loadVIX();document.getElementById('dash-ts').textContent='Aggiornato: '+now();},60000);
+setInterval(()=>{loadIndices();loadComs();loadCrypto();loadVIX();document.getElementById('dash-ts').textContent=_t('status.updated')+now();},60000);
 
 /* ══════════════════════════════════════════
    AUTH — login / register / session
