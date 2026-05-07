@@ -928,6 +928,10 @@ const TRANSLATIONS={
     'cry.sig.vol.high.t':'Alta liquidità: Vol/MCap {0}%','cry.sig.vol.high.d':'Mercato attivo con elevati scambi relativi. Facile entrare e uscire dalla posizione.',
     'cry.sig.vol.low.t':'Bassa liquidità: Vol/MCap {0}%','cry.sig.vol.low.d':'Volumi ridotti rispetto alla capitalizzazione. Possibili movimenti di prezzo bruschi su ordini di piccole dimensioni.',
     'cry.sig.none':'Nessun segnale disponibile.',
+    /* ── INVESTOR PROFILES ── */
+    'prof.income':'Income','prof.conservative':'Conservativo','prof.moderate':'Moderato',
+    'prof.balanced_growth':'Crescita Bilanciata','prof.dynamic':'Dinamico',
+    'prof.aggressive':'Aggressivo','prof.speculative':'Speculativo',
     /* ── SIGNALS & REC ── */
     'sig.buy':'COMPRA','sig.sell':'VENDI','sig.hold':'MANTIENI',
     /* ── VIX LABELS ── */
