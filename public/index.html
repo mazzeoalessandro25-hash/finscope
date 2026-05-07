@@ -8738,9 +8738,9 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   if(best && tot>1){
     const bestShare=totalChgUSD!==0?Math.abs(best.chgUSD/totalChgUSD*100):0;
     if(bestShare>60 && up)
-      portText+=`Vale la pena notare che la maggior parte del guadagno odierno è riconducibile a ${best.sym}, che da solo ha generato circa il ${Math.round(bestShare)}% della variazione positiva: una concentrazione elevata che evidenzia la dipendenza del risultato da un singolo nome. `;
+      portText+=_L({it:`Vale la pena notare che la maggior parte del guadagno odierno è riconducibile a ${best.sym}, che da solo ha generato circa il ${Math.round(bestShare)}% della variazione positiva: una concentrazione elevata che evidenzia la dipendenza del risultato da un singolo nome. `,en:`It is worth noting that most of today's gain is attributable to ${best.sym}, which alone generated about ${Math.round(bestShare)}% of the positive change: a high concentration that highlights dependence on a single name. `});
     else if(bestShare>60 && !up && worst)
-      portText+=`Il risultato negativo è fortemente influenzato da ${worst.sym}, che ha pesato per circa il ${Math.round(Math.abs(worst.chgUSD/totalChgUSD*100))}% sulla perdita complessiva. `;
+      portText+=_L({it:`Il risultato negativo è fortemente influenzato da ${worst.sym}, che ha pesato per circa il ${Math.round(Math.abs(worst.chgUSD/totalChgUSD*100))}% sulla perdita complessiva. `,en:`The negative result is heavily influenced by ${worst.sym}, which accounted for about ${Math.round(Math.abs(worst.chgUSD/totalChgUSD*100))}% of the overall loss. `});
   }
 
   // Confronto col mercato con lettura più dettagliata
