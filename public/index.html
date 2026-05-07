@@ -10177,9 +10177,9 @@ function renderPortAnalysis(portItems, quotes){
   }
 
   // Dati per i 3 grafici
-  const typeEntries=[['Dividendo',byType.dividend||0],['Value',byType.value||0],['Growth',byType.growth||0]].filter(([,v])=>v>0.005);
+  const typeEntries=[[_L({it:'Dividendo',en:'Dividend'}),byType.dividend||0],['Value',byType.value||0],['Growth',byType.growth||0]].filter(([,v])=>v>0.005);
   const typePal=['#10B981','#1A56C4','#F59E0B'];
-  const mktLabels={US:'USA 🇺🇸',IT:'Italia 🇮🇹',EU:'Europa 🇪🇺',UK:'UK 🇬🇧',AS:'Asia 🌏'};
+  const mktLabels={US:'USA 🇺🇸',IT:_L({it:'Italia 🇮🇹',en:'Italy 🇮🇹'}),EU:_L({it:'Europa 🇪🇺',en:'Europe 🇪🇺'}),UK:'UK 🇬🇧',AS:'Asia 🌏'};
   const mktEntries=Object.entries(byMkt).map(([k,v])=>[mktLabels[k]||k,v]).filter(([,v])=>v>0.005).sort((a,b)=>b[1]-a[1]);
   const secEntries=Object.entries(bySec).filter(([,v])=>v>0.005).sort((a,b)=>b[1]-a[1]);
 
