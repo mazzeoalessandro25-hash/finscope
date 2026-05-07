@@ -13874,9 +13874,9 @@ function renderSdTechSignals(){
       const prev=st.length>1?st[st.length-2]:last;
       const type=last.k>=80?'bear':last.k<=20?'bull':last.k>50?'bull':'bear';
       const cross=prev.k<prev.d&&last.k>last.d?'bull':prev.k>prev.d&&last.k<last.d?'bear':null;
-      if(cross==='bull')signals.push({label:'Stoch',text:`%K incrocia sopra %D a ${last.k.toFixed(0)} — segnale di acquisto`,type:'bull'});
-      else if(cross==='bear')signals.push({label:'Stoch',text:`%K incrocia sotto %D a ${last.k.toFixed(0)} — segnale di vendita`,type:'bear'});
-      else signals.push({label:`Stoch ${last.k.toFixed(0)}`,text:last.k>=80?'Ipercomprato — possibile inversione':last.k<=20?'Ipervenduto — possibile rimbalzo':last.k>50?'Zona positiva':'Zona negativa',type});
+      if(cross==='bull')signals.push({label:'Stoch',text:_L({it:`%K incrocia sopra %D a ${last.k.toFixed(0)} — segnale di acquisto`,en:`%K crosses above %D at ${last.k.toFixed(0)} — buy signal`}),type:'bull'});
+      else if(cross==='bear')signals.push({label:'Stoch',text:_L({it:`%K incrocia sotto %D a ${last.k.toFixed(0)} — segnale di vendita`,en:`%K crosses below %D at ${last.k.toFixed(0)} — sell signal`}),type:'bear'});
+      else signals.push({label:`Stoch ${last.k.toFixed(0)}`,text:last.k>=80?_L({it:'Ipercomprato — possibile inversione',en:'Overbought — possible reversal'}):last.k<=20?_L({it:'Ipervenduto — possibile rimbalzo',en:'Oversold — possible bounce'}):last.k>50?_L({it:'Zona positiva',en:'Positive zone'}):_L({it:'Zona negativa',en:'Negative zone'}),type});
     }
   }
 
