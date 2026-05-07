@@ -15507,7 +15507,7 @@ async function renderCorrelationMatrix(){
         <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:rgba(220,38,38,.75)"></div><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${_t('corr.negLabel')}</span></div>
         <div style="display:flex;align-items:center;gap:5px"><div style="width:12px;height:12px;border-radius:3px;background:var(--s2);border:1px solid var(--bd)"></div><span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${_t('corr.naLabel')}</span></div>
       </div>`;
-  }catch(e){el.innerHTML='<div class="ld" style="padding:10px">Errore caricamento dati storici</div>';}
+  }catch(e){el.innerHTML='<div class="ld" style="padding:10px">'+_t('err.load.hist')+'</div>';}
 }
 
 /* ══════════════════════════════════════════
