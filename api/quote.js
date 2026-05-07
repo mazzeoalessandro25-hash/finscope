@@ -1,4 +1,4 @@
-import { fetchQuoteSummary, fetchYahooQuote } from './_lib/yahoo.js';
+import { fetchQuoteSummary, fetchYahooQuote, yf } from './_lib/yahoo.js';
 
 // ── CoinGecko helper: aggiunge API key se disponibile, riprova una volta su 429 ──
 async function cgFetch(url) {
