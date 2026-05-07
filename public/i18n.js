@@ -2352,6 +2352,7 @@ const TRANSLATIONS={
     'sig.buy':'KAUFEN','sig.sell':'VERKAUFEN','sig.hold':'HALTEN',
     /* ── TRANSACTIONS ── */
     'tx.buy':'KAUF','tx.sell':'VERK','tx.edit':'BEARB',
+    'tx.col.type':'Typ','tx.col.stock':'Titel','tx.col.qty':'Mng','tx.col.total':'Gesamt',
     /* ── ANALYSTS ── */
     'sd.nanalysts.suffix':' Analysten decken die Aktie',
     /* ── FA DIMENSIONS ── */
