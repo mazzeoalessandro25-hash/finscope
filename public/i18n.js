@@ -905,6 +905,31 @@ const TRANSLATIONS={
     /* ── MISC ── */
     'sd.div.none':'Nessuno',
     'ins.updated':'Aggiornato: ',
+    /* ── SIGNALS & REC ── */
+    'sig.buy':'COMPRA','sig.sell':'VENDI','sig.hold':'MANTIENI',
+    /* ── TRANSACTIONS ── */
+    'tx.buy':'ACQ','tx.sell':'VEND','tx.edit':'MOD',
+    /* ── ANALYSTS ── */
+    'sd.nanalysts.suffix':' analisti coprono il titolo',
+    /* ── FA DIMENSIONS ── */
+    'fa.dim.valutazione':'Valutazione','fa.dim.redditivita':'Redditività',
+    'fa.dim.momentum':'Momentum','fa.dim.consensus':'Consensus','fa.dim.stabilita':'Stabilità',
+    /* ── BOND / RATE LABELS ── */
+    'bond.3m':'3 Mesi','bond.5y':'5 Anni','bond.10y':'10 Anni','bond.30y':'30 Anni',
+    /* ── BACKTESTER RANGE ── */
+    'period.2y':'2 Anni',
+    /* ── FX NOTES ── */
+    'fx.eurusd':'Euro vs Dollaro','fx.gbpusd':'Sterlina vs Dollaro',
+    'fx.usdjpy':'Dollaro vs Yen','fx.usdchf':'Dollaro vs Franco Svizzero',
+    'fx.audusd':'AUD vs Dollaro','fx.usdcny':'Dollaro vs Yuan Cinese',
+    /* ── MACRO REGIME TITLES ── */
+    'macro.regime.title.expansion':'Espansione — Crescita e Momentum',
+    'macro.regime.title.slowdown':'Rallentamento — Crescita in Frenata',
+    'macro.regime.title.contraction':'Contrazione — Fase Recessiva',
+    'macro.regime.title.stagflation':'Stagflazione: Crescita Bassa & Inflazione Alta',
+    /* ── MACRO CURVE / DXY SUB ── */
+    'macro.curve.inverted':'Curva invertita','macro.curve.flat':'Curva piatta','macro.curve.normal':'Curva normale',
+    'macro.dxy.sub.strong':'Dollaro forte','macro.dxy.sub.weak':'Dollaro debole','macro.dxy.sub.neutral':'Dollaro neutrale',
   },
   en:{
     /* NAV */
