@@ -5999,7 +5999,7 @@ async function runFA(){
   if(!qd&&!sd){el.innerHTML='<div class="err-box">'+_t('err.ticker.notfound')+'</div>';return;}
 
   const c=qd?chgPct(qd.price,qd.prev):null;const up=c==null||c>=0;
-  const recMap={strongbuy:'Forte acquisto',buy:'Acquisto',hold:'Mantieni',sell:'Vendita',strongsell:'Forte vendita'};
+  const recMap={strongbuy:_t('sd.rec.strongBuy'),buy:_t('sd.rec.buy'),hold:_t('sd.rec.neutral'),sell:_t('sd.rec.sell'),strongsell:_t('sd.rec.strongSell')};
   const recCol={strongbuy:'var(--g)',buy:'var(--g)',hold:'var(--o)',sell:'var(--r)',strongsell:'var(--r)'};
   const rec=sd?.rec||'hold';
 
