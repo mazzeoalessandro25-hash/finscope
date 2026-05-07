@@ -12471,7 +12471,7 @@ function _portShowImportPreview(parsed){
     </tr>`).join('')}</tbody>
   </table>`;
   if(prev)prev.style.display='block';
-  if(cnt)cnt.textContent=`${parsed.length} titoli — ricerca ticker in corso…`;
+  if(cnt)cnt.textContent=`${parsed.length}${_t('import.tickers.searching')}`;
   if(confirmBtn){confirmBtn.disabled=true;confirmBtn.style.opacity='0.5';}
   _importAutoSearchTickers(parsed.length);
 }
