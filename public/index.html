@@ -9086,7 +9086,7 @@ async function loadPortChart(sym,range){
     portChart=chart;
     const ro=new ResizeObserver(()=>{if(el.clientWidth)chart.applyOptions({width:el.clientWidth});});
     ro.observe(el);
-  }catch(e){el.innerHTML='<div class="ld" style="padding:20px;text-align:center">Errore caricamento</div>';}
+  }catch(e){el.innerHTML='<div class="ld" style="padding:20px;text-align:center">'+_t('err.load.chart')+'</div>';}
 }
 
 function setPortChartType(type,btn){
