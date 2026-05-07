@@ -13048,7 +13048,7 @@ function openStockDetail(sym){
   adaptOverlayForAssetType(sym);
   // Reset header
   document.getElementById('sd-sym').textContent=sym;
-  document.getElementById('sd-name').textContent='Caricamento...';
+  document.getElementById('sd-name').textContent=_t('common.loading');
   document.getElementById('sd-hdr-price').textContent='—';
   document.getElementById('sd-hdr-chg').textContent='';
   document.getElementById('sd-wl-btn').classList.toggle('active',watchlist.includes(sym));
