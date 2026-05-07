@@ -7003,7 +7003,7 @@ async function savePortfolio(){
     });
     if(statusEl){statusEl.textContent='✓ sincronizzato';statusEl.style.color='var(--g)';setTimeout(()=>{if(statusEl)statusEl.textContent='';},3000);}
   }catch(e){
-    if(statusEl){statusEl.textContent='⚠ errore sync';statusEl.style.color='var(--r)';}
+    if(statusEl){statusEl.textContent=_t('status.sync.err');statusEl.style.color='var(--r)';}
   }
 }
 
