@@ -5004,7 +5004,7 @@ async function loadDashChart(n,sym,range,btn){
   if(btn){btn.closest('.cc-row').querySelectorAll('.cc-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
   const data=await api(s.sym,'history&range='+s.range);
   const sub=document.getElementById(`ch${n}-sub`);
-  if(!data?.points?.length){sub.textContent='Dati non disponibili';return;}
+  if(!data?.points?.length){sub.textContent=_t('common.noneData');return;}
   const pts=data.points;
   const last=pts[pts.length-1].close,first=pts[0].close;
   const ch=((last-first)/first*100);
@@ -5210,7 +5210,7 @@ async function loadModalChart(sym,range,btn){
   if(btn){document.querySelectorAll('.modal-controls .cc-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
   const data=await api(modalSym,'history&range='+modalRange);
   const sub=document.getElementById('modal-sub');
-  if(!data?.points?.length){sub.textContent='Dati non disponibili';return;}
+  if(!data?.points?.length){sub.textContent=_t('common.noneData');return;}
   const pts=data.points;
   const last=pts[pts.length-1].close,first=pts[0].close;
   const ch=((last-first)/first*100);
