@@ -16304,7 +16304,7 @@ async function loadInsiderFeed(forceRefresh){
     }catch(_){}
   }
 
-  el.innerHTML='<div class="ld">Caricamento ultime transazioni insider...</div>';
+  el.innerHTML='<div class="ld">'+_t('load.insider.dash')+'</div>';
   try{
     const d=await fetch('/api/insider').then(r=>r.json());
     _insiderFeedCache=d.transactions||[];
@@ -16316,7 +16316,7 @@ async function loadInsiderFeed(forceRefresh){
     renderInsiderTable(_insiderFeedCache,_insiderFilter,'insider-dash-content',true,_insiderSort);
     _insUpdateLastRefresh(Date.now());
   }catch(e){
-    el.innerHTML='<div class="ld">Errore: '+e.message+'</div>';
+    el.innerHTML='<div class="ld">'+_t('err.analysis')+e.message+'</div>';
   }
 }
 
@@ -16324,7 +16324,8 @@ function _insUpdateLastRefresh(ts){
   const el=document.getElementById('ins-last-refresh');
   if(!el||!ts) return;
   const d=new Date(ts);
-  el.textContent='Aggiornato: '+d.toLocaleDateString('it-IT')+' '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  const loc=currentLang==='en'?'en-GB':'it-IT';
+  el.textContent=_t('ins.updated')+d.toLocaleDateString(loc)+' '+d.toLocaleTimeString(loc,{hour:'2-digit',minute:'2-digit'});
 }
 
 // ── Dettaglio singolo titolo ───────────────────────────────────────────────
