@@ -11626,23 +11626,35 @@ const SECTOR_DATA=[
 ];
 
 const _PHASE_MAP={
-  expansion:{idx:0,label:'Espansione',ico:'🟢',col:'#059669',bg:'rgba(5,150,105,.09)',
-    desc:'Alta crescita, inflazione moderata. Tassi stabili o in moderato rialzo.',
-    action:'Sovrappesa settori ciclici e growth. Riduci difensivi e bond proxy.',
-    sectors:'Tech ↑↑ · Industriali ↑↑ · Finanziari ↑↑ · Beni Discrez. ↑↑'},
-  slowdown:{idx:1,label:'Peak / Surriscaldamento',ico:'🟡',col:'#B45309',bg:'rgba(217,119,6,.09)',
-    desc:'Crescita ai massimi, inflazione in rialzo. La Fed inizia a inasprire la politica monetaria.',
-    action:'Ruota verso Energy, Materiali e Healthcare. Riduci esposizione Tech e Real Estate.',
-    sectors:'Energy ↑↑ · Materiali ↑↑ · Finanziari ↑ · Healthcare ↑'},
-  contraction:{idx:2,label:'Contrazione / Recessione',ico:'🔴',col:'#B91C1C',bg:'rgba(220,38,38,.09)',
-    desc:'Crescita in calo, inflazione in discesa. La Fed inizia a tagliare i tassi.',
-    action:'Sovrappesa difensivi (Consumer Def., Utilities, Healthcare). Tieni liquidità e bond.',
-    sectors:'Consumer Def. ↑↑ · Utilities ↑↑ · Healthcare ↑↑ · Real Estate ↑'},
-  stagflation:{idx:3,label:'Stagflazione',ico:'🟠',col:'#7C3AED',bg:'rgba(124,58,237,.09)',
-    desc:'Bassa crescita + alta inflazione: lo scenario peggiore per gli investitori.',
-    action:'Real asset: Energy, Materiali, Oro. Riduci fortemente Tech, Growth e Real Estate.',
-    sectors:'Energy ↑↑ · Materiali ↑ · Consumer Def. ↑ · Oro (hedge)'},
+  expansion:{idx:0,ico:'🟢',col:'#059669',bg:'rgba(5,150,105,.09)',
+    label:{it:'Espansione',en:'Expansion'},
+    desc:{it:'Alta crescita, inflazione moderata. Tassi stabili o in moderato rialzo.',en:'High growth, moderate inflation. Rates stable or moderately rising.'},
+    action:{it:'Sovrappesa settori ciclici e growth. Riduci difensivi e bond proxy.',en:'Overweight cyclical and growth sectors. Reduce defensives and bond proxies.'},
+    sectors:{it:'Tech ↑↑ · Industriali ↑↑ · Finanziari ↑↑ · Beni Discrez. ↑↑',en:'Tech ↑↑ · Industrials ↑↑ · Financials ↑↑ · Cons. Discr. ↑↑'}},
+  slowdown:{idx:1,ico:'🟡',col:'#B45309',bg:'rgba(217,119,6,.09)',
+    label:{it:'Peak / Surriscaldamento',en:'Peak / Overheating'},
+    desc:{it:'Crescita ai massimi, inflazione in rialzo. La Fed inizia a inasprire la politica monetaria.',en:'Growth at peaks, rising inflation. The Fed begins tightening monetary policy.'},
+    action:{it:'Ruota verso Energy, Materiali e Healthcare. Riduci esposizione Tech e Real Estate.',en:'Rotate into Energy, Materials and Healthcare. Reduce Tech and Real Estate exposure.'},
+    sectors:{it:'Energy ↑↑ · Materiali ↑↑ · Finanziari ↑ · Healthcare ↑',en:'Energy ↑↑ · Materials ↑↑ · Financials ↑ · Healthcare ↑'}},
+  contraction:{idx:2,ico:'🔴',col:'#B91C1C',bg:'rgba(220,38,38,.09)',
+    label:{it:'Contrazione / Recessione',en:'Contraction / Recession'},
+    desc:{it:'Crescita in calo, inflazione in discesa. La Fed inizia a tagliare i tassi.',en:'Declining growth, falling inflation. The Fed starts cutting rates.'},
+    action:{it:'Sovrappesa difensivi (Consumer Def., Utilities, Healthcare). Tieni liquidità e bond.',en:'Overweight defensives (Consumer Staples, Utilities, Healthcare). Hold cash and bonds.'},
+    sectors:{it:'Consumer Def. ↑↑ · Utilities ↑↑ · Healthcare ↑↑ · Real Estate ↑',en:'Consumer Def. ↑↑ · Utilities ↑↑ · Healthcare ↑↑ · Real Estate ↑'}},
+  stagflation:{idx:3,ico:'🟠',col:'#7C3AED',bg:'rgba(124,58,237,.09)',
+    label:{it:'Stagflazione',en:'Stagflation'},
+    desc:{it:'Bassa crescita + alta inflazione: lo scenario peggiore per gli investitori.',en:'Low growth + high inflation: the worst scenario for investors.'},
+    action:{it:'Real asset: Energy, Materiali, Oro. Riduci fortemente Tech, Growth e Real Estate.',en:'Real assets: Energy, Materials, Gold. Sharply reduce Tech, Growth and Real Estate.'},
+    sectors:{it:'Energy ↑↑ · Materiali ↑ · Consumer Def. ↑ · Oro (hedge)',en:'Energy ↑↑ · Materials ↑ · Consumer Def. ↑ · Gold (hedge)'}},
 };
+
+const _MACRO_PRINCIPLES=[
+  {ic:'📊',t:{it:'Anticipa il ciclo',en:'Anticipate the cycle'},d:{it:'I mercati scontano la fase successiva 3–6 mesi in anticipo. Non investire in base a dove siamo oggi, ma a dove saremo tra 2 trimestri.',en:'Markets price in the next phase 3–6 months ahead. Do not invest based on where we are today, but on where we will be in 2 quarters.'}},
+  {ic:'💱',t:{it:'Osserva la Fed',en:'Watch the Fed'},d:{it:'La politica monetaria è il driver principale: primo taglio dei tassi = segnale di acquisto sui growth, primo rialzo = ruota verso difensivi e commodity.',en:'Monetary policy is the key driver: first rate cut = buy signal for growth, first hike = rotate to defensives and commodities.'}},
+  {ic:'📈',t:{it:'Yield Curve',en:'Yield Curve'},d:{it:'Quando la curva si re-inverte (da invertita a normale) è uno dei segnali più affidabili di fine recessione e inizio ripresa.',en:'When the curve re-steepens (from inverted to normal) it is one of the most reliable signals of recession end and recovery beginning.'}},
+  {ic:'🥇',t:{it:'Gold/Copper Ratio',en:'Gold/Copper Ratio'},d:{it:'Il rapporto oro/rame misura la paura vs crescita globale. In calo = fiducia nella ripresa. In rialzo = avversione al rischio crescente.',en:'The gold/copper ratio measures fear vs global growth. Falling = confidence in recovery. Rising = growing risk aversion.'}},
+  {ic:'⚠',t:{it:'Non market-time',en:"Don't market-time"},d:{it:'La rotazione settoriale è un framework di lungo periodo: cercare di fare timing perfetto è controproducente. Pesi graduali, non switch totali.',en:'Sector rotation is a long-term framework: trying to time it perfectly is counterproductive. Gradual weights, not total switches.'}},
+];
 
 function _macroRenderEdu(){
   _macroRenderCycle();
