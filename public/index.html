@@ -15073,7 +15073,7 @@ async function executeBacktest(){
 
 function btRenderResults(sym,strategy,capital,pts,result){
   const{finalValue,returnPct,maxDD,trades,portValues,closes}=result;
-  const stratNames={buyhold:'Buy & Hold',sma_cross:'Incrocio SMA (20/50)',rsi_rev:'RSI Mean Reversion (14)'};
+  const stratNames={buyhold:_t('lab.bt.bh').replace(/^[^\s]+\s/,''),sma_cross:_t('lab.bt.sma').replace(/^[^\s]+\s/,''),rsi_rev:_t('lab.bt.rsi').replace(/^[^\s]+\s/,'')};
   const rangeLabel={'1y':_t('period.1y.long'),'2y':_t('period.2y'),'5y':_t('period.5y'),'max':'Max'};
   document.getElementById('bt-res-title').textContent=sym+' — '+stratNames[strategy];
   document.getElementById('bt-res-sub').textContent=`${rangeLabel[btPeriod]||btPeriod} · Capitale iniziale €${capital.toLocaleString('it-IT')}`;
