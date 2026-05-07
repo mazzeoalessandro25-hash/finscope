@@ -10127,20 +10127,20 @@ function renderPortAnalysis(portItems, quotes){
       recs.push({cls:'bad',txt:`⚠ Solo ${fmt(td*100,0)}% in dividendi — un profilo Income punta all'80%+. Aggiungi titoli ad alto dividendo.`});
     // Conservative/Income: troppo growth (soglia = target + 5pp)
     if((profKey==='conservative'||profKey==='income')&&tg>prof.types.growth+0.05)
-      recs.push({cls:'bad',txt:`⚠ ${fmt(tg*100,0)}% in titoli growth — il profilo ${prof.name} punta al ${fmt(prof.types.growth*100,0)}%. Valuta di ridurre posizioni ad alta volatilità.`});
+      recs.push({cls:'bad',txt:`⚠ ${fmt(tg*100,0)}% in titoli growth — il profilo ${_t(prof.nameKey)} punta al ${fmt(prof.types.growth*100,0)}%. Valuta di ridurre posizioni ad alta volatilità.`});
     // Aggressive/Speculative: troppi dividendi (target basso, soglia = target + 10pp)
     if((profKey==='aggressive'||profKey==='speculative')&&td>prof.types.dividend+0.10)
-      recs.push({cls:'warn',txt:`ℹ ${fmt(td*100,0)}% in dividendi — per un profilo ${prof.name} (target ${fmt(prof.types.dividend*100,0)}%) può limitare il potenziale di crescita.`});
+      recs.push({cls:'warn',txt:`ℹ ${fmt(td*100,0)}% in dividendi — per un profilo ${_t(prof.nameKey)} (target ${fmt(prof.types.dividend*100,0)}%) può limitare il potenziale di crescita.`});
     // Moderate/BalancedGrowth/Dynamic: segnala se composizione è molto distante dal profilo
     if(['moderate','balanced_growth','dynamic'].includes(profKey)){
       const diff=Math.abs(td-prof.types.dividend)+Math.abs(tv-prof.types.value)+Math.abs(tg-prof.types.growth);
       if(diff>0.40)
-        recs.push({cls:'warn',txt:`ℹ Composizione (${fmt(td*100,0)}% Div / ${fmt(tv*100,0)}% Val / ${fmt(tg*100,0)}% Gro) distante dal target del profilo ${prof.name} (${fmt(prof.types.dividend*100,0)}%/${fmt(prof.types.value*100,0)}%/${fmt(prof.types.growth*100,0)}%).`});
+        recs.push({cls:'warn',txt:`ℹ Composizione (${fmt(td*100,0)}% Div / ${fmt(tv*100,0)}% Val / ${fmt(tg*100,0)}% Gro) distante dal target del profilo ${_t(prof.nameKey)} (${fmt(prof.types.dividend*100,0)}%/${fmt(prof.types.value*100,0)}%/${fmt(prof.types.growth*100,0)}%).`});
     }
 
     // ── Beta ────────────────────────────────────────────────────────────
     if(weightedBeta>prof.maxBeta)
-      recs.push({cls:'warn',txt:`⚠ Beta ponderato ${fmt(weightedBeta,2)} supera il target ${fmt(prof.maxBeta,2)} del profilo ${prof.name}. Il portafoglio è più volatile del previsto.`});
+      recs.push({cls:'warn',txt:`⚠ Beta ponderato ${fmt(weightedBeta,2)} supera il target ${fmt(prof.maxBeta,2)} del profilo ${_t(prof.nameKey)}. Il portafoglio è più volatile del previsto.`});
     if(profKey==='income'&&weightedBeta>0.80)
       recs.push({cls:'warn',txt:`ℹ Beta ${fmt(weightedBeta,2)} elevato per un profilo Income — considera titoli più difensivi (utilities, consumer staples).`});
 
@@ -10169,8 +10169,8 @@ function renderPortAnalysis(portItems, quotes){
     // ── Esito positivo ───────────────────────────────────────────────────
     if(!recs.length){
       const score=calcScore(profKey);
-      if(score>=80)recs.push({cls:'ok',txt:`✓ Ottimo allineamento con il profilo ${prof.name} (${score}/100). Il portafoglio è ben strutturato per i tuoi obiettivi.`});
-      else recs.push({cls:'ok',txt:`✓ Buon allineamento con il profilo ${prof.name} (${score}/100). Piccoli aggiustamenti possono ottimizzare ulteriormente.`});
+      if(score>=80)recs.push({cls:'ok',txt:`✓ Ottimo allineamento con il profilo ${_t(prof.nameKey)} (${score}/100). Il portafoglio è ben strutturato per i tuoi obiettivi.`});
+      else recs.push({cls:'ok',txt:`✓ Buon allineamento con il profilo ${_t(prof.nameKey)} (${score}/100). Piccoli aggiustamenti possono ottimizzare ulteriormente.`});
     }
     return recs;
   }
@@ -10254,7 +10254,7 @@ function renderPortAnalysis(portItems, quotes){
         <span style="font-size:22px;line-height:1;flex-shrink:0">${prof.emoji}</span>
         <div style="flex:1;min-width:0">
           <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center">Profilo investitore ${tip('Il profilo determina come valutare il portafoglio. Ogni profilo ha target diversi per tipo di titoli, beta massimo e rendimento atteso. Usa il quiz per trovare il tuo.')}</div>
-          <div style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">${prof.name}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">${_t(prof.nameKey)}</div>
         </div>
         <select onchange="setSelectedProfile(this.value);renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:7px;color:var(--t);font-family:var(--fm);font-size:11px;cursor:pointer;flex-shrink:0">
           ${profKeys.map(k=>`<option value="${k}"${k===selectedProfile?' selected':''}>${INVESTOR_PROFILES[k].emoji} ${INVESTOR_PROFILES[k].name}</option>`).join('')}
