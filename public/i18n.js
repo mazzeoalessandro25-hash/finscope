@@ -2238,6 +2238,9 @@ const TRANSLATIONS={
     'val.ticker.both':'Beide Ticker eingeben.',
     'val.ticker.diff':'Ticker müssen verschieden sein.',
     'val.ticker.enter':'Ticker eingeben',
+    'val.notin.port':'ist nicht im Portfolio.',
+    'val.ticker.pre':'Ticker ',
+    'val.ticker.notfound2':'nicht gefunden oder nicht verfügbar.',
     /* ── STATUS ── */
     'status.updated.at':'Aktualisiert um ',
     'status.updated':'Aktualisiert: ',
