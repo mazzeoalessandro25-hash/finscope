@@ -6076,7 +6076,7 @@ async function runFA(){
       radarCI=new Chart(radarCtx,{
         type:'radar',
         data:{
-          labels:['Valutazione','Redditività','Momentum','Consensus','Stabilità'],
+          labels:[_t('fa.dim.valutazione'),_t('fa.dim.redditivita'),_t('fa.dim.momentum'),_t('fa.dim.consensus'),_t('fa.dim.stabilita')],
           datasets:[{
             data:[
               Math.round((fss.details.valutazione||0)/25*100),
