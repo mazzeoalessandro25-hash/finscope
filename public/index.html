@@ -4481,7 +4481,7 @@ function renderScreenerAlertList(){
         <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${a.condition==='above'?'↑ '+_t('alert.above'):'↓ '+_t('alert.below')} $${fmt(a.target,2)}${a.label?' · '+a.label:''}</div>
       </div>
       <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT')}</span>
-      <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0" onclick="removeAlertFromScreener(${i})" title="${_t('alert.remove')||'✕'}">✕</button>
+      <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0" onclick="removeAlertFromScreener(${i})" title="${_t('alert.remove')}">✕</button>
     </div>`).join('');
 }
 
@@ -9685,7 +9685,7 @@ function renderAlerts(){
       </div>
       <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
         <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT')}</span>
-        <button class="port-del" onclick="removeAlert(${i})" title="${_t('alert.remove')||'✕'}">✕</button>
+        <button class="port-del" onclick="removeAlert(${i})" title="${_t('alert.remove')}">✕</button>
       </div>
     </div>`).join('');
 }
