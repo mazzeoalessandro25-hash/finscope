@@ -167,7 +167,7 @@ const TRANSLATIONS={
     'lab.bt.ticker':'TITOLO / ETF','lab.bt.tickerPh':'Es: AAPL, MSFT, SPY…',
     'lab.bt.period':'PERIODO STORICO','lab.bt.strategy':'STRATEGIA',
     'lab.bt.bh':'📈 Buy & Hold','lab.bt.sma':'〜 Incrocio SMA (20/50)',
-    'lab.bt.rsi':'↕ RSI Mean Reversion (14)','lab.bt.capital':'CAPITALE INIZIALE (€)',
+    'lab.bt.rsi':'↕ RSI Mean Reversion (14)','lab.bt.capital':'CAPITALE INIZIALE (€)','lab.bt.initialCapital':'Capitale iniziale',
     'lab.bt.run':'▶ Esegui Backtest','lab.bt.loading':'⏳ Caricamento dati storici…',
     'lab.bt.results':'Risultati','lab.bt.totalReturn':'Rendimento Totale',
     'lab.bt.finalVal':'Valore Finale','lab.bt.trades':'N° Operazioni',
