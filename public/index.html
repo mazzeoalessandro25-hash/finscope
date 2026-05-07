@@ -13418,7 +13418,7 @@ function renderValuation(d, cur){
     const marker=document.getElementById('sd-rec-marker');
     if(marker)marker.style.left=pct+'%';
   } else { recEl.textContent='—'; }
-  sdSet('sdm-nanalysts', d.numAnalysts!=null ? d.numAnalysts+' analisti coprono il titolo' : '');
+  sdSet('sdm-nanalysts', d.numAnalysts!=null ? d.numAnalysts+_t('sd.nanalysts.suffix') : '');
   if(d.targetPrice&&d.price){
     const upside=((d.targetPrice-d.price)/d.price*100);
     const tel=document.getElementById('sdm-target');
