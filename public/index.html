@@ -9106,7 +9106,7 @@ function setPortRange(range,btn){
 async function loadPortMetrics(sym){
   const el=document.getElementById('port-metrics');
   if(!el)return;
-  el.innerHTML='<div class="ld" style="padding:10px;text-align:center;font-size:11px">Caricamento metriche...</div>';
+  el.innerHTML='<div class="ld" style="padding:10px;text-align:center;font-size:11px">'+_t('load.metrics')+'</div>';
   try{
     const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=summary`);
     const d=await r.json();
