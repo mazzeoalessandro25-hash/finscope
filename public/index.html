@@ -9057,13 +9057,13 @@ function updatePortAnalysisHeader(item,q,idx){
 async function loadPortChart(sym,range){
   const el=document.getElementById('port-chart');
   if(!el)return;
-  el.innerHTML='<div class="ld" style="padding:20px;text-align:center">Caricamento...</div>';
+  el.innerHTML='<div class="ld" style="padding:20px;text-align:center">'+_t('common.loading')+'</div>';
   if(portChart){try{portChart.remove();}catch(e){}portChart=null;}
   try{
     const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=history&range=${range}`);
     const d=await r.json();
     const pts=d?.points||[];
-    if(!pts.length){el.innerHTML='<div class="ld" style="padding:20px;text-align:center">Nessun dato disponibile</div>';return;}
+    if(!pts.length){el.innerHTML='<div class="ld" style="padding:20px;text-align:center">'+_t('common.noneData')+'</div>';return;}
     el.innerHTML='';
     const isDark=document.documentElement.getAttribute('data-theme')==='dark';
     const chart=LightweightCharts.createChart(el,{
