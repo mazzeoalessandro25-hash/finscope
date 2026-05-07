@@ -9762,7 +9762,7 @@ async function loadDividendTracker(){
     rows.push({sym:item.sym,qty:item.qty,divYield,annualIncome,annualNet,annualIncomeEUR,annualNetEUR,curVal,curValEUR,currency:item.currency,curSym,withholdFactor,taxLabel});
   });
   if(!rows.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Nessun titolo con dividendi nel portafoglio · I dati vengono dai summary Yahoo Finance</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('empty.divs.port')+'</div>';return;
   }
   const avgYield=totalInvestedEUR>0?totalWeightedYield/totalInvestedEUR:0;
   // Calendario mensile (tutto in EUR per il grafico)
