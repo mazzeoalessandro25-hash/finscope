@@ -6392,7 +6392,7 @@ async function loadMcap(region,btn){
   if(btn){document.querySelectorAll('.mcap-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
   const list=document.getElementById('mcap-list');
   if(!list)return;
-  list.innerHTML='<div class="ld">Caricamento capitalizzazioni live...</div>';
+  list.innerHTML=`<div class="ld">${_t('load.mcap')}</div>`;
   const base=MCAP_DATA[mcapCurrentRegion]||MCAP_DATA.world;
   // Fetch market cap live per tutti i simboli in parallelo
   const quotes=await Promise.all(base.map(it=>api(it.sym).catch(()=>null)));
