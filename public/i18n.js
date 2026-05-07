@@ -836,6 +836,67 @@ const TRANSLATIONS={
     'wl.hint.star':'Aggiungi titoli allo screener con ★',
     'wl.hint.star2':'Aggiungi titoli',
     'load.corr.hist':'Caricamento dati storici',
+    /* ── LOAD EXTRA ── */
+    'load.chart':'Caricamento grafico...',
+    'load.dashboard':'Caricamento dashboard...',
+    'load.price':'Caricamento prezzo…',
+    'load.history12':'Recupero 12 mesi di dati storici...',
+    'load.history':'Recupero storico prezzi…',
+    'load.analysis':'Analisi in corso...',
+    /* ── EMPTY STATES ── */
+    'empty.alerts':'Nessun alert impostato · Inserisci ticker, prezzo e condizione sopra',
+    'empty.alerts2':'Nessun alert configurato · Usa il form sopra per aggiungere',
+    'empty.alerts3':'Nessun alert attivo',
+    'empty.result':'Nessun risultato · Cambia indice o modifica i filtri',
+    'empty.news.avail':'Nessuna notizia disponibile',
+    'empty.news.recent':'Nessuna notizia recente.',
+    'empty.news.port':'Nessuna notizia recente trovata per i titoli in portafoglio',
+    'empty.news.found':'Nessuna notizia trovata.',
+    'empty.data.valid':'Nessun dato valido trovato. Controlla formato o seleziona manualmente il tipo.',
+    'empty.divs.port':'Nessun titolo con dividendi nel portafoglio · I dati vengono dai summary Yahoo Finance',
+    'empty.trades':'Nessuna transazione registrata · Le prossime modifiche al portafoglio verranno registrate qui automaticamente',
+    'empty.corr':'Dati storici insufficienti per calcolare le correlazioni',
+    'empty.corr2':'Aggiungi almeno 2 titoli diversi per vedere la matrice di correlazione',
+    /* ── ERRORS ── */
+    'err.connect':'Errore di connessione. Riprova.',
+    'err.network':'Errore di rete',
+    'err.ticker.notfound':'Ticker non trovato · Prova: AAPL · ENI.MI · MSFT · ASML',
+    'err.load.hist':'Errore caricamento dati storici',
+    'err.load.chart':'Errore caricamento grafico',
+    'err.load.crypto':'Errore caricamento dati crypto. Riprovare.',
+    'err.hist.nodata':'Dati storici non disponibili. Riprova tra qualche secondo.',
+    'err.analysis':'Errore analisi: ',
+    /* ── VALIDATION ── */
+    'val.ticker.required':'Inserisci un ticker valido.',
+    'val.ticker.both':'Inserisci entrambi i ticker.',
+    'val.ticker.diff':'I ticker devono essere diversi.',
+    'val.ticker.enter':'Inserisci un ticker',
+    /* ── STATUS ── */
+    'status.updated.at':'Aggiornate alle ',
+    'status.updated':'Aggiornato: ',
+    'status.mcap.note':'Market cap in USD · tasso di cambio live da Yahoo Finance · aggiornato ',
+    'status.daily.unavail':'Analisi giornaliera non disponibile (dati di mercato assenti o mercato chiuso).',
+    'status.sync.err':'⚠ errore sync',
+    /* ── AUTH EXTRA ── */
+    'auth.pwd.updated':'Password aggiornata con successo! Accedi con le nuove credenziali.',
+    /* ── PORTFOLIO EXTRA ── */
+    'port.header':'Il tuo portafoglio:',
+    'port.sub.guest':'Accedi per salvare e monitorare i tuoi titoli',
+    'port.sub.suffix':' titoli',
+    'port.perf.label':'Portafoglio: ',
+    /* ── YIELD CURVE ── */
+    'yc.inv.deep':'<strong style="color:var(--r)">⚠ Inversione profonda.</strong> La curva è marcatamente invertita — storicamente precede una recessione con 12–18 mesi di anticipo.',
+    'yc.inv.mild':'<strong style="color:var(--o)">⚠ Inversione lieve.</strong> I tassi a breve superano i tassi a lungo: mercato sconta taglio dei tassi o rallentamento economico.',
+    /* ── IMPORT ── */
+    'import.tickers.debug':'0 titoli trovati — vedi debug sopra',
+    'import.tickers.searching':' titoli — ricerca ticker in corso…',
+    'import.tickers.done.pre':' titoli — ','import.tickers.done.auto':' ticker trovati automaticamente',
+    'import.tickers.fix':' · correggi i ❓ manualmente',
+    'import.nodata':'Nessun dato valido trovato. Controlla formato o seleziona manualmente il tipo.',
+    'import.notickers':'0 titoli trovati',
+    /* ── MISC ── */
+    'sd.div.none':'Nessuno',
+    'ins.updated':'Aggiornato: ',
   },
   en:{
     /* NAV */
