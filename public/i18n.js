@@ -2072,6 +2072,8 @@ const TRANSLATIONS={
     /* ALERTS */
     'alert.title':'🔔 Kursalarm','alert.target':'🎯 Kursziel',
     'alert.above':'Über','alert.below':'Unter','alert.set':'Alarm setzen','alert.remove':'Alarm entfernen',
+    'alert.notif.price':'Aktueller Kurs','alert.notif.is':'ist','alert.notif.target':'das Ziel',
+    'alert.above.short':'über','alert.below.short':'unter',
     'alert.created':'✓ Alarm erstellt!','alert.empty':'Keine Alarme konfiguriert',
     /* QM MODAL */
     'qm.addPortfolio':'＋ Zum Portfolio hinzufügen','qm.setAlert':'🔔 Kursalarm setzen',
