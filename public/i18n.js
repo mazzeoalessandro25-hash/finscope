@@ -1136,7 +1136,7 @@ const TRANSLATIONS={
     'macro.ratesCardSub':'Rates & Yields',
     /* ALERTS */
     'alert.title':'🔔 Price Alert','alert.target':'🎯 Target price',
-    'alert.above':'Above','alert.below':'Below','alert.set':'Set Alert',
+    'alert.above':'Above','alert.below':'Below','alert.set':'Set Alert','alert.remove':'Remove alert',
     'alert.created':'✓ Alert created!','alert.empty':'No alerts configured',
     /* QM MODAL */
     'qm.addPortfolio':'＋ Add to Portfolio','qm.setAlert':'🔔 Set Price Alert',
