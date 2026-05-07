@@ -879,6 +879,9 @@ const TRANSLATIONS={
     'status.updated':'Aggiornato: ',
     'status.mcap.note':'Market cap in USD · tasso di cambio live da Yahoo Finance · aggiornato ',
     'status.daily.unavail':'Analisi giornaliera non disponibile (dati di mercato assenti o mercato chiuso).',
+    'status.closed':'Borse chiuse',
+    'status.closed.date':'Borse chiuse · dati sessione del ',
+    'status.balance.at':'Dati bilancio al: ',
     'status.sync.err':'⚠ errore sync',
     /* ── AUTH EXTRA ── */
     'auth.pwd.updated':'Password aggiornata con successo! Accedi con le nuove credenziali.',
