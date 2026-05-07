@@ -10457,14 +10457,14 @@ async function runWhatIf(){
   const newSym=(document.getElementById('whatif-new')?.value||'').trim().toUpperCase();
   const el=document.getElementById('whatif-result');
   if(!el)return;
-  if(!oldSym||!newSym){el.innerHTML='<div style="font-size:11px;color:var(--r);font-family:var(--fm)">Inserisci entrambi i ticker.</div>';return;}
-  if(oldSym===newSym){el.innerHTML='<div style="font-size:11px;color:var(--o);font-family:var(--fm)">I ticker devono essere diversi.</div>';return;}
+  if(!oldSym||!newSym){el.innerHTML='<div style="font-size:11px;color:var(--r);font-family:var(--fm)">'+_t('val.ticker.both')+'</div>';return;}
+  if(oldSym===newSym){el.innerHTML='<div style="font-size:11px;color:var(--o);font-family:var(--fm)">'+_t('val.ticker.diff')+'</div>';return;}
   const pos=portfolio.find(p=>p.sym===oldSym);
-  if(!pos){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">${oldSym} non è nel portafoglio.</div>`;return;}
-  el.innerHTML='<div class="ld" style="padding:8px">Analisi in corso...</div>';
+  if(!pos){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">${oldSym} ${_t('val.ticker.required').replace('Inserisci un ticker valido.','non è nel portafoglio.').replace('Enter a valid ticker.','is not in portfolio.').replace('Gültigen Ticker eingeben.','ist nicht im Portfolio.')}</div>`;return;}
+  el.innerHTML='<div class="ld" style="padding:8px">'+_t('load.analysis')+'</div>';
   try{
     const [newQ,newSum]=await Promise.all([api(newSym),api(newSym,'summary')]);
-    if(!newQ?.price){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">Ticker ${newSym} non trovato o non disponibile.</div>`;return;}
+    if(!newQ?.price){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">${_t('err.ticker.notfound').split(' · ')[0].replace('Ticker non trovato','Ticker '+newSym+' non trovato').replace('Ticker not found','Ticker '+newSym+' not found').replace('Ticker nicht gefunden','Ticker '+newSym+' nicht gefunden')}</div>`;return;}
     const allS2=STOCKS.concat(customStocks);
     const totalInv2=portfolio.reduce((s,item)=>s+item.qty*item.buyPrice,0);
     const posWeight=totalInv2>0?(pos.qty*pos.buyPrice)/totalInv2:0;
