@@ -1785,6 +1785,8 @@ const TRANSLATIONS={
     /* ── YIELD CURVE ── */
     'yc.inv.deep':'<strong style="color:var(--r)">⚠ Deep inversion.</strong> The curve is sharply inverted — historically precedes a recession by 12–18 months.',
     'yc.inv.mild':'<strong style="color:var(--o)">⚠ Mild inversion.</strong> Short-term rates exceed long-term rates: market pricing in rate cuts or an economic slowdown.',
+    'yc.flat':'<strong style="color:var(--o)">Flat curve.</strong> Tight spread: expectations of stable rates with downside risks for growth.',
+    'yc.normal':'<strong style="color:var(--g)">Normal curve.</strong> Long-term rates exceed short-term: ordinary conditions with positive growth expectations.',
     /* ── IMPORT ── */
     'import.tickers.debug':'0 tickers found — see debug above',
     'import.tickers.searching':' tickers — searching ticker symbols…',
