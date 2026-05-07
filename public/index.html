@@ -15140,7 +15140,7 @@ function btRenderResults(sym,strategy,capital,pts,result){
       if(t.type==='SELL')prevVal=t.portVal;
       const pnlStr=pnl!=null?(pnl>=0?`<span style="color:var(--g)">+€${Math.round(pnl).toLocaleString(currentLang==='en'?'en-GB':'it-IT')}</span>`:`<span style="color:var(--r)">-€${Math.round(Math.abs(pnl)).toLocaleString(currentLang==='en'?'en-GB':'it-IT')}</span>`):'—';
       const typeCol=t.type==='BUY'?'var(--g)':'var(--r)';
-      const dateStr=pts[t.idx]?.date||new Date(pts[t.idx]?.time*1000).toLocaleDateString('it-IT')||'—';
+      const dateStr=pts[t.idx]?.date||new Date(pts[t.idx]?.time*1000).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT')||'—';
       return `<tr><td style="color:var(--t3)">${i+1}</td><td style="font-weight:700;color:${typeCol}">${t.type}</td><td>${dateStr}</td><td style="font-family:var(--fm)">€${t.price?.toFixed(2)||'—'}</td><td style="font-family:var(--fm)">€${Math.round(t.portVal||0).toLocaleString(currentLang==='en'?'en-GB':'it-IT')}</td><td>${pnlStr}</td></tr>`;
     }).join('');
   } else if(tradesCard) tradesCard.style.display='none';
