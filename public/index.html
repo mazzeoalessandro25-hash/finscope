@@ -6897,7 +6897,7 @@ async function submitResetPw(){
     if(!r.ok||!d.ok){
       errEl.textContent=d.error||'Codice non valido o scaduto.';errEl.classList.add('show');
     } else {
-      okEl.textContent='Password aggiornata con successo! Accedi con le nuove credenziali.';
+      okEl.textContent=_t('auth.pwd.updated');
       okEl.classList.add('show');
       setTimeout(()=>showAuthView('main'),2500);
     }
