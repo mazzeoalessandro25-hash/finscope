@@ -10930,7 +10930,7 @@ function _macroRenderPulse(d){
     const c=document.getElementById('mps-dxy-chg');
     if(c){c.className='mps-chg '+(chg>=0?'up':'down');c.textContent=chgStr(chg)+' oggi';}
     const desc=document.getElementById('mps-dxy-desc');
-    if(desc)desc.textContent=dxy.price>104?'Dollaro molto forte':dxy.price>101?'Dollaro forte':dxy.price>98?'Neutrale':'Dollaro debole';
+    if(desc)desc.textContent=dxy.price>104?_t('macro.dxy.veryStrong'):dxy.price>101?_t('macro.dxy.strong'):dxy.price>98?_t('macro.dxy.neutral'):_t('macro.dxy.weak');
   }
   // Fed rate (hardcoded)
   const fv=document.getElementById('mps-fed-val');if(fv)fv.textContent=MACRO_SNAP.cb[0].rate+'%';
