@@ -13498,7 +13498,7 @@ function renderFundamentals(d, cur){
     document.getElementById('sd-website').innerHTML=
       `<a href="${d.website}" target="_blank" rel="noopener" style="font-size:11px;color:var(--b);text-decoration:none;font-family:var(--fm)">🔗 ${d.website}</a>`;
   const badge=document.getElementById('sd-fund-badge');
-  if(badge)badge.textContent='Dati bilancio al: '+new Date(d._ts||Date.now()).toLocaleDateString('it-IT');
+  if(badge)badge.textContent=_t('status.balance.at')+new Date(d._ts||Date.now()).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT');
   const newsList=document.getElementById('sd-news-list');
   if(newsList){
     if(d.news&&d.news.length){
