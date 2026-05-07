@@ -16865,7 +16865,7 @@ async function loadCryptoChart(days, btn){
     } else {
       const prices=(data.prices||[]);
       const pts=dedup(prices.map(([ts,p])=>({time:Math.floor(ts/1000),value:p})));
-      if(!pts.length){chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--t3)">Nessun dato disponibile</div>';return;}
+      if(!pts.length){chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--t3)">'+_t('common.noneData')+'</div>';return;}
       const isUp=(pts[pts.length-1]?.value||0)>=(pts[0]?.value||0);
       const series=chart.addAreaSeries({
         lineColor:isUp?'#16A34A':'#DC2626',
