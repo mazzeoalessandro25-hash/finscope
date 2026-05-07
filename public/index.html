@@ -12928,9 +12928,9 @@ function adaptOverlayForAssetType(sym){
      'etfm-inception','etfm-type','etfm-pe','etfm-pb','etfm-stock-pos','etfm-bond-pos'
     ].forEach(id=>{const e=document.getElementById(id);if(e){e.textContent='···';e.className='sd-m-val';}});
     const h=document.getElementById('sd-etf-holdings');
-    if(h)h.innerHTML='<div class="ld">Caricamento...</div>';
+    if(h)h.innerHTML='<div class="ld">'+_t('common.loading')+'</div>';
     const s=document.getElementById('sd-etf-sectors');
-    if(s)s.innerHTML='<div class="ld">Caricamento...</div>';
+    if(s)s.innerHTML='<div class="ld">'+_t('common.loading')+'</div>';
   }
 }
 
