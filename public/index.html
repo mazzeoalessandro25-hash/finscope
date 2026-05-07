@@ -6872,7 +6872,7 @@ async function submitForgotPw(){
       setTimeout(()=>showAuthView('reset'),1800);
     }
   }catch{
-    errEl.textContent='Errore di connessione. Riprova.';errEl.classList.add('show');
+    errEl.textContent=_t('err.connect');errEl.classList.add('show');
   }
   btn.disabled=false;btn.textContent=_t('auth.sendCode');
 }
@@ -6902,7 +6902,7 @@ async function submitResetPw(){
       setTimeout(()=>showAuthView('main'),2500);
     }
   }catch{
-    errEl.textContent='Errore di connessione. Riprova.';errEl.classList.add('show');
+    errEl.textContent=_t('err.connect');errEl.classList.add('show');
   }
   btn.disabled=false;btn.textContent='Aggiorna password';
 }
