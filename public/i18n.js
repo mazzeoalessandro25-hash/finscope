@@ -1828,6 +1828,31 @@ const TRANSLATIONS={
     /* ── MISC ── */
     'sd.div.none':'None',
     'ins.updated':'Updated: ',
+    /* ── SIGNALS & REC ── */
+    'sig.buy':'BUY','sig.sell':'SELL','sig.hold':'HOLD',
+    /* ── TRANSACTIONS ── */
+    'tx.buy':'BUY','tx.sell':'SELL','tx.edit':'EDIT',
+    /* ── ANALYSTS ── */
+    'sd.nanalysts.suffix':' analysts cover this stock',
+    /* ── FA DIMENSIONS ── */
+    'fa.dim.valutazione':'Valuation','fa.dim.redditivita':'Profitability',
+    'fa.dim.momentum':'Momentum','fa.dim.consensus':'Consensus','fa.dim.stabilita':'Stability',
+    /* ── BOND / RATE LABELS ── */
+    'bond.3m':'3 Months','bond.5y':'5 Years','bond.10y':'10 Years','bond.30y':'30 Years',
+    /* ── BACKTESTER RANGE ── */
+    'period.2y':'2 Years',
+    /* ── FX NOTES ── */
+    'fx.eurusd':'Euro vs Dollar','fx.gbpusd':'Pound vs Dollar',
+    'fx.usdjpy':'Dollar vs Yen','fx.usdchf':'Dollar vs Swiss Franc',
+    'fx.audusd':'AUD vs Dollar','fx.usdcny':'Dollar vs Chinese Yuan',
+    /* ── MACRO REGIME TITLES ── */
+    'macro.regime.title.expansion':'Expansion — Growth & Momentum',
+    'macro.regime.title.slowdown':'Slowdown — Growth Decelerating',
+    'macro.regime.title.contraction':'Contraction — Recessionary Phase',
+    'macro.regime.title.stagflation':'Stagflation: Low Growth & High Inflation',
+    /* ── MACRO CURVE / DXY SUB ── */
+    'macro.curve.inverted':'Inverted curve','macro.curve.flat':'Flat curve','macro.curve.normal':'Normal curve',
+    'macro.dxy.sub.strong':'Strong dollar','macro.dxy.sub.weak':'Weak dollar','macro.dxy.sub.neutral':'Neutral dollar',
   },
   de:{
     /* NAV */
