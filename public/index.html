@@ -9993,7 +9993,7 @@ function svgGauge(score,label,sublabel){
   const pct=Math.max(0,Math.min(Math.round(score),100));
   const active=pct/100*Cs;
   const col=pct>=67?'#10B981':pct>=34?'#F59E0B':'#EF4444';
-  const sig=pct>=67?'COMPRA':pct>=34?'NEUTRALE':'VENDI';
+  const sig=pct>=67?_t('sig.buy'):pct>=34?_t('macro.signal.neutral'):_t('sig.sell');
   const ang=(1-pct/100)*Math.PI;
   const nx=(cx+48*Math.cos(ang)).toFixed(1);
   const ny=(cy-48*Math.sin(ang)).toFixed(1);
