@@ -4751,12 +4751,12 @@ function updateHours(){
     const after=h>ex.open[0]||(h===ex.open[0]&&m>=ex.open[1]);
     const before=h<ex.close[0]||(h===ex.close[0]&&m<ex.close[1]);
     let st,cls;
-    if(isHoliday){st='Festività';cls='closed';}
-    else if(isWe){st='Chiusa';cls='closed';}
-    else if(after&&before){st='Aperta';cls='open';}
+    if(isHoliday){st=_t('cal.holiday');cls='closed';}
+    else if(isWe){st=_t('exch.closed');cls='closed';}
+    else if(after&&before){st=_t('exch.open');cls='open';}
     else if(!after&&h===ex.open[0]-1&&m>=30){st='Pre-market';cls='prepost';}
     else if(!before&&h===ex.close[0]&&m<60){st='After-hours';cls='prepost';}
-    else{st='Chiusa';cls='closed';}
+    else{st=_t('exch.closed');cls='closed';}
     document.getElementById('d'+i).className='hb-dot '+cls;
     document.getElementById('s'+i).textContent=st;
     document.getElementById('s'+i).className='hb-st '+cls;
