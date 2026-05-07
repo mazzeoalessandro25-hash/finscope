@@ -4081,38 +4081,74 @@ const ALL_IDX=[
 const COM_S=['GC=F','BZ=F','PL=F','SI=F','NG=F','CC=F'];
 const CRYPTO_S=['BTC-USD','ETH-USD','SOL-USD','BNB-USD','XRP-USD','DOGE-USD'];
 
-/* Titoli per movers (S&P 500 noti) */
+/* Titoli per movers — lista ampia, caricata con un'unica chiamata batch */
 const MOVERS_S=[
   /* ── US Mega Cap Tech ── */
   'AAPL','NVDA','MSFT','AMZN','GOOGL','META','TSLA','AMD','INTC','AVGO','ADBE','INTU','CRM','ORCL','IBM',
   /* ── US Semiconduttori & Hardware ── */
-  'QCOM','MU','TXN','ADI','AMAT','LRCX','KLAC','MRVL','ARM','SMCI','ON','MCHP','TSM',
+  'QCOM','MU','TXN','ADI','AMAT','LRCX','KLAC','MRVL','ARM','SMCI','ON','MCHP','TSM','HPQ','DELL','WDC',
   /* ── US Software & Cloud ── */
-  'NOW','WDAY','PANW','CRWD','DDOG','SNOW','NET','SQ','PLTR','SHOP','COIN','ZM',
+  'NOW','WDAY','PANW','CRWD','DDOG','SNOW','NET','SQ','PLTR','SHOP','COIN','ZM','TEAM','MDB','HUBS','TTD',
   /* ── US Media & Consumer Tech ── */
-  'NFLX','DIS','CMCSA','SPOT','SNAP','ROKU','RBLX','ABNB','UBER','LYFT','DASH','HOOD',
+  'NFLX','DIS','CMCSA','SPOT','SNAP','ROKU','RBLX','ABNB','UBER','LYFT','DASH','HOOD','PINS','RDDT',
   /* ── US Finance ── */
   'JPM','BAC','MS','C','WFC','GS','BLK','AXP','V','MA','PYPL','SCHW','CME','SPGI','BRK-B',
+  'PGR','AFL','TRV','ALL','MET','CB','HIG','ICE','MSCI','COF','DFS','SYF',
   /* ── US Healthcare & Pharma ── */
   'UNH','LLY','ABBV','JNJ','MRK','PFE','AMGN','GILD','REGN','VRTX','MRNA','TMO','ELV',
+  'ISRG','BSX','MDT','SYK','ABT','BMY','CI','HUM','CVS','ZTS','DXCM','IQV',
   /* ── US Consumer & Retail ── */
   'KO','WMT','COST','HD','TGT','MCD','SBUX','NKE','LULU','CMG','PG','BABA',
+  'TJX','DLTR','DG','EL','CL','MNST','PM','MO','LVS','MGM','MAR','HLT','BKNG',
   /* ── US Energy & Industrial ── */
-  'XOM','CVX','COP','BA','LMT','CAT','GE','HON','F','GM','NEE',
-  /* ── US Telecom ── */
-  'T','VZ',
+  'XOM','CVX','COP','BA','LMT','CAT','GE','HON','F','GM','NEE','SLB','HAL','BKR',
+  'MMM','ETN','EMR','RTX','NOC','GD','DE','UPS','FDX','CSX','NSC','UNP',
+  /* ── US Telecom & Utilities ── */
+  'T','VZ','TMUS','D','DUK','SO','AEP','PCG','EXC',
   /* ── US EV & Mobility ── */
-  'RIVN','NIO',
-  /* ── Europa: Italia ── */
+  'RIVN','NIO','LCID','F',
+  /* ── US REIT ── */
+  'PLD','AMT','EQIX','SPG','O','WPC','DLR',
+
+  /* ── Europa: Italia — FTSE MIB completo ── */
   'ENI.MI','UCG.MI','RACE.MI','STM.MI','ENEL.MI','ISP.MI','LDO.MI',
-  /* ── Europa: Francia ── */
-  'LVMH.PA','BNP.PA','TTE.PA','SAN.PA','OR.PA','RMS.PA','AIR.PA','SU.PA','CAP.PA',
-  /* ── Europa: Germania ── */
+  'CPR.MI','BAMI.MI','NEXI.MI','PRY.MI','PST.MI','MB.MI','G.MI','FBK.MI',
+  'CNHI.MI','AMP.MI','AZM.MI','MONC.MI','BMED.MI','SRG.MI','REC.MI','SPM.MI',
+  'TIT.MI','IP.MI','PIRC.MI','SOL.MI','EXO.MI','INWIT.MI','DIA.MI',
+
+  /* ── Europa: Francia — CAC 40 ── */
+  'MC.PA','BNP.PA','TTE.PA','SAN.PA','OR.PA','RMS.PA','AIR.PA','SU.PA','CAP.PA',
+  'ACA.PA','CS.PA','KER.PA','SGO.PA','VIE.PA','BN.PA','EL.PA','DSY.PA',
+  'LR.PA','RI.PA','GLE.PA','PUB.PA','AI.PA','SW.PA','DG.PA','RNO.PA','EN.PA',
+
+  /* ── Europa: Germania — DAX 40 ── */
   'SAP','SIE.DE','BMW.DE','BAYN.DE','VOW3.DE','ADS.DE','DTE.DE','DBK.DE','ALV.DE',
-  /* ── Europa: Altro ── */
-  'ASML','ABI.BR','NVO','SHEL','BP','AZN','GSK','HSBC','RIO',
-  /* ── Asia & LatAm ── */
-  'BIDU','JD','PDD','TM','SONY','VALE','PBR','ITUB','MUFG'
+  'MRK.DE','IFX.DE','HEN3.DE','BEI.DE','MTX.DE','RWE.DE','CON.DE','MUV2.DE',
+  'FRE.DE','FME.DE','ZAL.DE','EOAN.DE','RHM.DE','DHL.DE','SHL.DE','PAH3.DE',
+  'HEI.DE','1COV.DE','PUM.DE','QIA.DE','VNA.DE',
+
+  /* ── Europa: UK — FTSE 100 ── */
+  'SHEL','BP','AZN','GSK','HSBC','RIO',
+  'ULVR.L','DGE.L','REL.L','BHP.L','BATS.L','LLOY.L','BARC.L','NWG.L',
+  'VOD.L','BT-A.L','TSCO.L','RR.L','IAG.L','EXPN.L','STAN.L','LSEG.L',
+  'PRU.L','NG.L','SSE.L','IMB.L','CPG.L','WPP.L','SGE.L','HLMA.L',
+
+  /* ── Europa: Spagna — IBEX 35 ── */
+  'ITX.MC','BBVA.MC','TEF.MC','IBE.MC','REP.MC','AMS.MC','FER.MC','SAN.MC',
+  'CLNX.MC','ENG.MC','GRF.MC','MAP.MC','ACX.MC',
+
+  /* ── Europa: Svizzera / Altro ── */
+  'ASML','ABI.BR','NOVN.SW','ROG.SW','NESN.SW','ABB','GIVN.SW','LONN.SW',
+
+  /* ── Europa: Nordics ── */
+  'NVO','ERIC-B.ST','VOLV-B.ST','SAND.ST','ALFA.ST','NESTE.HE','DSV.CO',
+
+  /* ── Asia ── */
+  'BIDU','JD','PDD','TM','SONY','9984.T','7203.T','6758.T','005930.KS',
+  '700.HK','9999.HK','1299.HK','388.HK',
+
+  /* ── LatAm & Emerging ── */
+  'VALE','PBR','ITUB','MUFG','BSBR','GGB','SID','GGAL','YPF'
 ];
 
 const TAPE_ITEMS=[
