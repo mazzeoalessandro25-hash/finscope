@@ -10727,11 +10727,11 @@ async function loadPortPerf(range,btn){
   const canvas=document.getElementById('portPerfChart');
   if(!canvas||!portfolio.length)return;
   const sub=document.getElementById('port-perf-sub');
-  if(sub)sub.textContent=`Caricamento...`;
+  if(sub)sub.textContent=_t('common.loading');
 
   canvas.parentElement.style.position='relative';
   let loadDiv=canvas.parentElement.querySelector('.perf-loading');
-  if(!loadDiv){loadDiv=document.createElement('div');loadDiv.className='perf-loading';loadDiv.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:12px;font-size:12px;color:var(--t3);font-family:var(--fm)';loadDiv.textContent='Caricamento...';canvas.parentElement.appendChild(loadDiv);}
+  if(!loadDiv){loadDiv=document.createElement('div');loadDiv.className='perf-loading';loadDiv.style.cssText='position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:var(--card);border-radius:12px;font-size:12px;color:var(--t3);font-family:var(--fm)';loadDiv.textContent=_t('common.loading');canvas.parentElement.appendChild(loadDiv);}
   loadDiv.style.display='flex';
 
   try{
