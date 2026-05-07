@@ -9194,7 +9194,7 @@ function renderPortAlloc(items,quotes){
 function renderPortRisk(items,quotes){
   const el=document.getElementById('port-risk');
   if(!el)return;
-  if(!items.length){el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Aggiungi titoli</div>';return;}
+  if(!items.length){el.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">'+_t('wl.hint.star2')+'</div>';return;}
   let usdVal=0,eurVal=0,bestSym='',bestPct=-Infinity,worstSym='',worstPct=Infinity;
   const cats={};
   items.forEach((item,i)=>{
