@@ -2261,6 +2261,8 @@ const TRANSLATIONS={
     /* ── YIELD CURVE ── */
     'yc.inv.deep':'<strong style="color:var(--r)">⚠ Tiefe Inversion.</strong> Die Kurve ist stark invertiert — historisch geht eine Rezession 12–18 Monate danach.',
     'yc.inv.mild':'<strong style="color:var(--o)">⚠ Leichte Inversion.</strong> Kurzfristige Zinsen übersteigen langfristige: Markt preist Zinssenkungen oder Abschwächung ein.',
+    'yc.flat':'<strong style="color:var(--o)">Flache Kurve.</strong> Enger Spread: Erwartungen stabiler Zinsen mit Abwärtsrisiken für Wachstum.',
+    'yc.normal':'<strong style="color:var(--g)">Normale Kurve.</strong> Langfristige Zinsen übersteigen kurzfristige: normale Bedingungen mit positiven Wachstumserwartungen.',
     /* ── IMPORT ── */
     'import.tickers.debug':'0 Ticker gefunden — Debug oben ansehen',
     'import.tickers.searching':' Ticker — Ticker-Symbole suchen…',
