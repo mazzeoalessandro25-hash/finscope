@@ -5185,7 +5185,7 @@ function renderDashTechOverlays(n,onlyKey){
 async function openModal(sym,label){
   modalSym=sym;modalRange='1mo';
   document.getElementById('modal-title').textContent=label;
-  document.getElementById('modal-sub').textContent='Caricamento...';
+  document.getElementById('modal-sub').textContent=_t('common.loading');
   document.getElementById('modal').classList.add('open');
   document.body.style.overflow='hidden';
   // reset range buttons
