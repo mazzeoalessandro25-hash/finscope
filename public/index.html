@@ -13442,7 +13442,7 @@ function renderValuation(d, cur){
   const divEl=document.getElementById('sdm-div');
   if(divEl){
     if(d.dividend&&d.dividend>0){divEl.textContent=fmt(d.dividend*100,2)+'%';divEl.className='sd-m-val up';}
-    else{divEl.textContent='Nessuno';divEl.className='sd-m-val';}
+    else{divEl.textContent=_t('sd.div.none');divEl.className='sd-m-val';}
   }
   sdSet('sdm-shares',d.sharesOutstanding?fmtLg(d.sharesOutstanding):'—');
   sdSet('sdm-float',d.floatShares?fmtLg(d.floatShares):'—');
