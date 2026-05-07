@@ -16852,7 +16852,7 @@ async function loadCryptoChart(days, btn){
     if(isCandle){
       const raw=(data.ohlc||[]);
       const ohlcPts=dedup(raw.map(([ts,o,h,l,c])=>({time:Math.floor(ts/1000),open:o,high:h,low:l,close:c})),'time');
-      if(!ohlcPts.length){chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--t3)">Nessun dato disponibile</div>';return;}
+      if(!ohlcPts.length){chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center;color:var(--t3)">'+_t('common.noneData')+'</div>';return;}
       const series=chart.addCandlestickSeries({
         upColor:'#16A34A',downColor:'#DC2626',
         borderUpColor:'#16A34A',borderDownColor:'#DC2626',
