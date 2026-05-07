@@ -4517,10 +4517,10 @@ async function renderWlaWatchlist(){
   if(!el)return;
   updateScQuickCounts();
   if(!watchlist.length){
-    el.innerHTML='<div class="ld">Nessun titolo in watchlist · Aggiungi tramite ★ nello Screener</div>';
+    el.innerHTML='<div class="ld">'+_t('wl.hint.star')+'</div>';
     return;
   }
-  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">Caricamento prezzi...</div>';
+  el.innerHTML='<div class="ld" style="font-size:11px;padding:8px">'+_t('load.prices')+'</div>';
   const quotes=await Promise.all(watchlist.map(s=>api(s)));
   const sparks=typeof fetchSparkData==='function'?await Promise.all(watchlist.map(s=>fetchSparkData(s))):[];
   const stockInfo=s=>STOCKS.find(x=>x.s===s);
