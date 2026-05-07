@@ -10572,7 +10572,7 @@ async function loadPortTargets(){
 
   let totalCurVal=0,totalTargetVal=0,totalInv=0,coverageCount=0;
   const recColors={strongbuy:'#059669',buy:'#10B981',hold:'#CA8A04',sell:'#EF4444',strongsell:'#7F0000'};
-  const recLabels={strongbuy:'Forte Acq.',buy:'Acquisto',hold:'Neutrale',sell:'Vendita',strongsell:'Forte Vend.'};
+  const recLabels={strongbuy:_t('sd.rec.strongBuy'),buy:_t('sd.rec.buy'),hold:_t('sd.rec.neutral'),sell:_t('sd.rec.sell'),strongsell:_t('sd.rec.strongSell')};
 
   const rows=portfolio.map((item,i)=>{
     const q=quotes[i];
