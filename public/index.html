@@ -5308,11 +5308,11 @@ async function loadMovers(){
         renderMovers(cached.bot5,botEl);
         const d=new Date(cached.ts);
         const dateLabel=d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
-        if(noteEl){noteEl.textContent='Borse chiuse · dati sessione del '+dateLabel;noteEl.style.display='block';}
+        if(noteEl){noteEl.textContent=_t('status.closed.date')+dateLabel;noteEl.style.display='block';}
         return;
       }
     }catch{}
-    if(topEl)topEl.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:12px 4px">Borse chiuse</div>';
+    if(topEl)topEl.innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:12px 4px">'+_t('status.closed')+'</div>';
     if(botEl)botEl.innerHTML='';
     return;
   }
