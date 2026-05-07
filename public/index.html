@@ -7448,10 +7448,10 @@ async function deletePacPlan(id){
   const linkedItems=portfolio.filter(p=>p._pac&&(p._pacId===plan.id||(!p._pacId&&p.sym===plan.sym)));
   const hasPositions=linkedItems.length>0;
   const msg=hasPositions
-    ?'Eliminare il piano PAC su '+plan.sym+'?\n\n'
-      +'Verrà rimossa anche la posizione aggregata nel portafoglio creata da questo PAC.\n\n'
-      +'⏸  Per mantenere la posizione e fermare solo i nuovi acquisti usa il pulsante "Ferma acquisti".'
-    :'Eliminare il piano PAC su '+plan.sym+'?';
+    ?_t('pac.deleteConfirm.sym')+plan.sym+'?\n\n'
+      +_t('pac.deleteConfirm.posRemoved')+'\n\n'
+      +_t('pac.deleteConfirm.pause')
+    :_t('pac.deleteConfirm.sym')+plan.sym+'?';
   if(!confirm(msg))return;
   // Rimuovi la entry aggregata dal portafoglio
   if(hasPositions){
