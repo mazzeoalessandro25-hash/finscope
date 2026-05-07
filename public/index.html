@@ -11137,7 +11137,7 @@ function _macroRenderLeading(d){
   const el=document.getElementById('macro-leading-content');if(!el)return;
   const copper=d.copper,oil=d.oil,gold=d.gold;
   const gcRatio=gold&&copper?(gold.price/copper.price):null;
-  const gcInterp=gcRatio==null?'—':gcRatio>600?'Elevato — avversione al rischio prevalente':gcRatio>450?'Neutro — equilibrio crescita/paura':'Basso — ottimismo sulla crescita globale';
+  const gcInterp=gcRatio==null?'—':gcRatio>600?_L({it:'Elevato — avversione al rischio prevalente',en:'High — risk aversion prevailing'}):gcRatio>450?_L({it:'Neutro — equilibrio crescita/paura',en:'Neutral — growth/fear balance'}):_L({it:'Basso — ottimismo sulla crescita globale',en:'Low — optimism about global growth'});
   const gcCol=gcRatio==null?'var(--t)':gcRatio>600?'var(--r)':gcRatio>450?'var(--o)':'var(--g)';
   const cu=copper?chgPct(copper.price,copper.prev):null;
   const oi=oil?chgPct(oil.price,oil.prev):null;
