@@ -10125,53 +10125,53 @@ function renderPortAnalysis(portItems, quotes){
     // ── Composizione vs profilo ──────────────────────────────────────────
     // Income: troppo poco dividendo (target 80%, soglia warning <50%)
     if(profKey==='income'&&td<0.50)
-      recs.push({cls:'bad',txt:`⚠ Solo ${fmt(td*100,0)}% in dividendi — un profilo Income punta all'80%+. Aggiungi titoli ad alto dividendo.`});
+      recs.push({cls:'bad',txt:_L({it:`⚠ Solo ${fmt(td*100,0)}% in dividendi — un profilo Income punta all'80%+. Aggiungi titoli ad alto dividendo.`,en:`⚠ Only ${fmt(td*100,0)}% in dividend stocks — an Income profile targets 80%+. Add high-dividend holdings.`})});
     // Conservative/Income: troppo growth (soglia = target + 5pp)
     if((profKey==='conservative'||profKey==='income')&&tg>prof.types.growth+0.05)
-      recs.push({cls:'bad',txt:`⚠ ${fmt(tg*100,0)}% in titoli growth — il profilo ${_t(prof.nameKey)} punta al ${fmt(prof.types.growth*100,0)}%. Valuta di ridurre posizioni ad alta volatilità.`});
+      recs.push({cls:'bad',txt:_L({it:`⚠ ${fmt(tg*100,0)}% in titoli growth — il profilo ${_t(prof.nameKey)} punta al ${fmt(prof.types.growth*100,0)}%. Valuta di ridurre posizioni ad alta volatilità.`,en:`⚠ ${fmt(tg*100,0)}% in growth stocks — the ${_t(prof.nameKey)} profile targets ${fmt(prof.types.growth*100,0)}%. Consider reducing high-volatility positions.`})});
     // Aggressive/Speculative: troppi dividendi (target basso, soglia = target + 10pp)
     if((profKey==='aggressive'||profKey==='speculative')&&td>prof.types.dividend+0.10)
-      recs.push({cls:'warn',txt:`ℹ ${fmt(td*100,0)}% in dividendi — per un profilo ${_t(prof.nameKey)} (target ${fmt(prof.types.dividend*100,0)}%) può limitare il potenziale di crescita.`});
+      recs.push({cls:'warn',txt:_L({it:`ℹ ${fmt(td*100,0)}% in dividendi — per un profilo ${_t(prof.nameKey)} (target ${fmt(prof.types.dividend*100,0)}%) può limitare il potenziale di crescita.`,en:`ℹ ${fmt(td*100,0)}% in dividend stocks — for a ${_t(prof.nameKey)} profile (target ${fmt(prof.types.dividend*100,0)}%) this may limit growth potential.`})});
     // Moderate/BalancedGrowth/Dynamic: segnala se composizione è molto distante dal profilo
     if(['moderate','balanced_growth','dynamic'].includes(profKey)){
       const diff=Math.abs(td-prof.types.dividend)+Math.abs(tv-prof.types.value)+Math.abs(tg-prof.types.growth);
       if(diff>0.40)
-        recs.push({cls:'warn',txt:`ℹ Composizione (${fmt(td*100,0)}% Div / ${fmt(tv*100,0)}% Val / ${fmt(tg*100,0)}% Gro) distante dal target del profilo ${_t(prof.nameKey)} (${fmt(prof.types.dividend*100,0)}%/${fmt(prof.types.value*100,0)}%/${fmt(prof.types.growth*100,0)}%).`});
+        recs.push({cls:'warn',txt:_L({it:`ℹ Composizione (${fmt(td*100,0)}% Div / ${fmt(tv*100,0)}% Val / ${fmt(tg*100,0)}% Gro) distante dal target del profilo ${_t(prof.nameKey)} (${fmt(prof.types.dividend*100,0)}%/${fmt(prof.types.value*100,0)}%/${fmt(prof.types.growth*100,0)}%).`,en:`ℹ Allocation (${fmt(td*100,0)}% Div / ${fmt(tv*100,0)}% Val / ${fmt(tg*100,0)}% Gro) is far from the ${_t(prof.nameKey)} profile target (${fmt(prof.types.dividend*100,0)}%/${fmt(prof.types.value*100,0)}%/${fmt(prof.types.growth*100,0)}%).`})});
     }
 
     // ── Beta ────────────────────────────────────────────────────────────
     if(weightedBeta>prof.maxBeta)
-      recs.push({cls:'warn',txt:`⚠ Beta ponderato ${fmt(weightedBeta,2)} supera il target ${fmt(prof.maxBeta,2)} del profilo ${_t(prof.nameKey)}. Il portafoglio è più volatile del previsto.`});
+      recs.push({cls:'warn',txt:_L({it:`⚠ Beta ponderato ${fmt(weightedBeta,2)} supera il target ${fmt(prof.maxBeta,2)} del profilo ${_t(prof.nameKey)}. Il portafoglio è più volatile del previsto.`,en:`⚠ Weighted beta ${fmt(weightedBeta,2)} exceeds the ${_t(prof.nameKey)} profile target of ${fmt(prof.maxBeta,2)}. The portfolio is more volatile than expected.`})});
     if(profKey==='income'&&weightedBeta>0.80)
-      recs.push({cls:'warn',txt:`ℹ Beta ${fmt(weightedBeta,2)} elevato per un profilo Income — considera titoli più difensivi (utilities, consumer staples).`});
+      recs.push({cls:'warn',txt:_L({it:`ℹ Beta ${fmt(weightedBeta,2)} elevato per un profilo Income — considera titoli più difensivi (utilities, consumer staples).`,en:`ℹ Beta ${fmt(weightedBeta,2)} is high for an Income profile — consider more defensive holdings (utilities, consumer staples).`})});
 
     // ── Concentrazione singolo titolo ────────────────────────────────────
     if(maxConc>0.40){
       const topSym=items.find(it=>totalInv>0&&it.invested/totalInv>=maxConc-0.001)?.sym||'';
-      recs.push({cls:'bad',txt:`⚠ ${topSym} pesa ${fmt(maxConc*100,1)}% del portafoglio — concentrazione eccessiva. Regola generale: nessun titolo oltre il 20-25%.`});
+      recs.push({cls:'bad',txt:_L({it:`⚠ ${topSym} pesa ${fmt(maxConc*100,1)}% del portafoglio — concentrazione eccessiva. Regola generale: nessun titolo oltre il 20-25%.`,en:`⚠ ${topSym} represents ${fmt(maxConc*100,1)}% of the portfolio — excessive concentration. General rule: no single holding above 20-25%.`})});
     } else if(maxConc>0.25){
       const topSym=items.find(it=>totalInv>0&&it.invested/totalInv>=maxConc-0.001)?.sym||'';
-      recs.push({cls:'warn',txt:`ℹ ${topSym} pesa ${fmt(maxConc*100,1)}% — posizione significativa. Monitora la correlazione con il resto del portafoglio.`});
+      recs.push({cls:'warn',txt:_L({it:`ℹ ${topSym} pesa ${fmt(maxConc*100,1)}% — posizione significativa. Monitora la correlazione con il resto del portafoglio.`,en:`ℹ ${topSym} represents ${fmt(maxConc*100,1)}% — a significant position. Monitor its correlation with the rest of the portfolio.`})});
     }
 
     // ── Concentrazione settoriale ─────────────────────────────────────────
     const maxSecConc=Math.max(...Object.values(bySec));
     if(maxSecConc>0.45){
       const topSec=Object.entries(bySec).find(([,v])=>v>=maxSecConc-0.001)?.[0]||'';
-      recs.push({cls:'bad',txt:`⚠ ${fmt(maxSecConc*100,0)}% concentrato in ${topSec} — rischio settoriale elevato. Una soglia prudente è max 30-35% per settore.`});
+      recs.push({cls:'bad',txt:_L({it:`⚠ ${fmt(maxSecConc*100,0)}% concentrato in ${topSec} — rischio settoriale elevato. Una soglia prudente è max 30-35% per settore.`,en:`⚠ ${fmt(maxSecConc*100,0)}% concentrated in ${topSec} — high sector risk. A prudent limit is 30-35% per sector.`})});
     }
 
     // ── Diversificazione ─────────────────────────────────────────────────
     if(nSectors<3)
-      recs.push({cls:'bad',txt:`⚠ Solo ${nSectors} settore/i rappresentato/i — diversificazione insufficiente. Mira ad almeno 4-5 settori non correlati.`});
+      recs.push({cls:'bad',txt:_L({it:`⚠ Solo ${nSectors} settore/i rappresentato/i — diversificazione insufficiente. Mira ad almeno 4-5 settori non correlati.`,en:`⚠ Only ${nSectors} sector(s) represented — insufficient diversification. Aim for at least 4-5 uncorrelated sectors.`})});
     if(nStocks<5)
-      recs.push({cls:'warn',txt:`ℹ ${nStocks} titoli in portafoglio — una diversificazione efficace richiede almeno 8-10 posizioni su settori diversi.`});
+      recs.push({cls:'warn',txt:_L({it:`ℹ ${nStocks} titoli in portafoglio — una diversificazione efficace richiede almeno 8-10 posizioni su settori diversi.`,en:`ℹ ${nStocks} holdings in portfolio — effective diversification requires at least 8-10 positions across different sectors.`})});
 
     // ── Esito positivo ───────────────────────────────────────────────────
     if(!recs.length){
       const score=calcScore(profKey);
-      if(score>=80)recs.push({cls:'ok',txt:`✓ Ottimo allineamento con il profilo ${_t(prof.nameKey)} (${score}/100). Il portafoglio è ben strutturato per i tuoi obiettivi.`});
-      else recs.push({cls:'ok',txt:`✓ Buon allineamento con il profilo ${_t(prof.nameKey)} (${score}/100). Piccoli aggiustamenti possono ottimizzare ulteriormente.`});
+      if(score>=80)recs.push({cls:'ok',txt:_L({it:`✓ Ottimo allineamento con il profilo ${_t(prof.nameKey)} (${score}/100). Il portafoglio è ben strutturato per i tuoi obiettivi.`,en:`✓ Excellent alignment with the ${_t(prof.nameKey)} profile (${score}/100). The portfolio is well-structured for your goals.`})});
+      else recs.push({cls:'ok',txt:_L({it:`✓ Buon allineamento con il profilo ${_t(prof.nameKey)} (${score}/100). Piccoli aggiustamenti possono ottimizzare ulteriormente.`,en:`✓ Good alignment with the ${_t(prof.nameKey)} profile (${score}/100). Small adjustments can further optimize it.`})});
     }
     return recs;
   }
