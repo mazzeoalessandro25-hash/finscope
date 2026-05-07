@@ -9129,7 +9129,7 @@ async function loadPortMetrics(sym){
 async function loadPortNews(sym){
   const el=document.getElementById('port-news');
   if(!el)return;
-  el.innerHTML='<div class="ld" style="padding:8px;font-size:11px">Caricamento news...</div>';
+  el.innerHTML='<div class="ld" style="padding:8px;font-size:11px">'+_t('load.news.dyn')+'</div>';
   try{
     const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=news`);
     const d=await r.json();
