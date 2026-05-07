@@ -1850,10 +1850,14 @@ const TRANSLATIONS={
     'fx.usdjpy':'Dollar vs Yen','fx.usdchf':'Dollar vs Swiss Franc',
     'fx.audusd':'AUD vs Dollar','fx.usdcny':'Dollar vs Chinese Yuan',
     /* ── MACRO REGIME TITLES ── */
-    'macro.regime.title.expansion':'Expansion — Growth & Momentum',
-    'macro.regime.title.slowdown':'Slowdown — Growth Decelerating',
+    'macro.regime.title.expansion':'Economic Expansion',
+    'macro.regime.title.expansion.hawkish':'Expansion with Restrictive Fed',
+    'macro.regime.title.slowdown':'Economic Slowdown',
+    'macro.regime.title.slowdown.dovish':'Slowdown — Fed Cutting',
     'macro.regime.title.contraction':'Contraction — Recessionary Phase',
     'macro.regime.title.stagflation':'Stagflation: Low Growth & High Inflation',
+    /* ── MACRO FED SUB ── */
+    'macro.fed.hawkish':'Fed hawkish','macro.fed.cutting':'Fed cutting','macro.fed.pause':'Fed on hold',
     /* ── MACRO CURVE / DXY SUB ── */
     'macro.curve.inverted':'Inverted curve','macro.curve.flat':'Flat curve','macro.curve.normal':'Normal curve',
     'macro.dxy.sub.strong':'Strong dollar','macro.dxy.sub.weak':'Weak dollar','macro.dxy.sub.neutral':'Neutral dollar',
