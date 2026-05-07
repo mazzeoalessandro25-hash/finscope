@@ -9517,7 +9517,7 @@ function hmRender(){
   if(ncEl)ncEl.textContent=`— ${nc} flat`;
 
   if(!Object.keys(secMap).length){
-    container.innerHTML='<div class="ld" style="padding:20px">Caricamento in corso...</div>';return;
+    container.innerHTML='<div class="ld" style="padding:20px">'+_t('load.ongoing')+'</div>';return;
   }
 
   // Treemap: righe → settori proporzionali → celle
