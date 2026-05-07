@@ -8806,14 +8806,15 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     upcoming.forEach(e=>{
       const dt = new Date(e.date+'T12:00:00');
       const diffDays = Math.round((dt - _eNow) / 86400000);
-      const whenStr = diffDays===0 ? 'oggi'
-                    : diffDays===1 ? 'domani'
-                    : `tra ${diffDays} giorni (${dt.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})})`;
+      const _eLoc=currentLang==='en'?'en-GB':'it-IT';
+      const whenStr = diffDays===0 ? _L({it:'oggi',en:'today'})
+                    : diffDays===1 ? _L({it:'domani',en:'tomorrow'})
+                    : _L({it:`tra ${diffDays} giorni (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`,en:`in ${diffDays} days (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`});
       const timingStr = e.time==='bmo'
-        ? `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(217,119,6,.15);color:#D97706;font-weight:600">☀ pre-apertura</span>`
-        : `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(26,86,196,.12);color:#1A56C4;font-weight:600">🌙 post-chiusura</span>`;
+        ? `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(217,119,6,.15);color:#D97706;font-weight:600">☀ ${_L({it:'pre-apertura',en:'pre-market'})}</span>`
+        : `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(26,86,196,.12);color:#1A56C4;font-weight:600">🌙 ${_L({it:'post-chiusura',en:'post-close'})}</span>`;
       const nameStr = e.name&&e.name!==e.symbol ? ` (${e.name})` : '';
-      earningsText += `• <strong>${e.symbol}</strong>${nameStr} riporterà i risultati trimestrali <strong>${whenStr}</strong> ${timingStr}\n`;
+      earningsText += `• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'riporterà i risultati trimestrali',en:'will report quarterly results'})} <strong>${whenStr}</strong> ${timingStr}\n`;
     });
 
     // Risultati recenti (ultimi 7 giorni)
