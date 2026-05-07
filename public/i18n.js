@@ -2059,7 +2059,7 @@ const TRANSLATIONS={
     'macro.ratesCardSub':'Zinsen & Renditen',
     /* ALERTS */
     'alert.title':'🔔 Kursalarm','alert.target':'🎯 Kursziel',
-    'alert.above':'Über','alert.below':'Unter','alert.set':'Alarm setzen',
+    'alert.above':'Über','alert.below':'Unter','alert.set':'Alarm setzen','alert.remove':'Alarm entfernen',
     'alert.created':'✓ Alarm erstellt!','alert.empty':'Keine Alarme konfiguriert',
     /* QM MODAL */
     'qm.addPortfolio':'＋ Zum Portfolio hinzufügen','qm.setAlert':'🔔 Kursalarm setzen',
