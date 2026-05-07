@@ -1777,6 +1777,9 @@ const TRANSLATIONS={
     'status.updated':'Updated: ',
     'status.mcap.note':'Market cap in USD · live exchange rate from Yahoo Finance · updated ',
     'status.daily.unavail':'Daily analysis not available (market data missing or market closed).',
+    'status.closed':'Markets closed',
+    'status.closed.date':'Markets closed · session data from ',
+    'status.balance.at':'Balance data as of: ',
     'status.sync.err':'⚠ sync error',
     /* ── AUTH EXTRA ── */
     'auth.pwd.updated':'Password updated successfully! Log in with your new credentials.',
