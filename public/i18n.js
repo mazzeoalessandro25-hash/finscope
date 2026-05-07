@@ -910,6 +910,8 @@ const TRANSLATIONS={
     /* ── MISC ── */
     'sd.div.none':'Nessuno',
     'ins.updated':'Aggiornato: ',
+    /* ── CRYPTO ATH/ATL ── */
+    'crypto.from.ath':'dall\'ATH','crypto.from.atl':'dall\'ATL',
     /* ── SIGNALS & REC ── */
     'sig.buy':'COMPRA','sig.sell':'VENDI','sig.hold':'MANTIENI',
     /* ── VIX LABELS ── */
