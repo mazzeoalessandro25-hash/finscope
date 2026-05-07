@@ -4843,6 +4843,8 @@ document.addEventListener('DOMContentLoaded',()=>{
   });
   // Applica la lingua salvata all'avvio
   setLang(currentLang);
+  // Avvia l'observer per contenuto generato dinamicamente (API calls, render JS)
+  _i18nObserver.observe(document.body,{childList:true,subtree:true});
 });
 
 /* ── CHART HELPERS ── */
