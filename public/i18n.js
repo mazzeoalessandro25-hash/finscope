@@ -248,6 +248,9 @@ const TRANSLATIONS={
     'pac.log.date':'Data','pac.log.asset':'Titolo','pac.log.amount':'Importo',
     'pac.log.price':'Prezzo acquisto','pac.log.qty':'Quote acquistate',
     'pac.deleteConfirm':'Eliminare questo piano PAC?',
+    'pac.deleteConfirm.sym':'Eliminare il piano PAC su ',
+    'pac.deleteConfirm.posRemoved':'Verrà rimossa anche la posizione aggregata nel portafoglio creata da questo PAC.',
+    'pac.deleteConfirm.pause':'⏸  Per mantenere la posizione e fermare solo i nuovi acquisti usa il pulsante "Ferma acquisti".',
     'pac.freq.monthly':'Mensile','pac.freq.quarterly':'Trimestrale',
     'pac.tag':'ETF PAC',
     /* ── TOOLTIPS — SD OVERLAY (ordine DOM) ── */
