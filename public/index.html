@@ -8821,7 +8821,7 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     recent.forEach(e=>{
       const dt = new Date(e.date+'T12:00:00');
       const diffDays = Math.round((_eNow - dt) / 86400000);
-      const whenStr = diffDays===0 ? 'oggi' : diffDays===1 ? 'ieri' : `${diffDays} giorni fa`;
+      const whenStr = diffDays===0 ? _L({it:'oggi',en:'today'}) : diffDays===1 ? _L({it:'ieri',en:'yesterday'}) : _L({it:`${diffDays} giorni fa`,en:`${diffDays} days ago`});
       const nameStr = e.name&&e.name!==e.symbol ? ` (${e.name})` : '';
       let resultsStr = '';
 
@@ -8834,7 +8834,7 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
               : ` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(220,38,38,.1);color:#DC2626;font-weight:600">▼ miss ${beatPct.toFixed(1)}%</span>`)
           : '';
         resultsStr += `EPS <strong>$${e.epsActual.toFixed(2)}</strong>`;
-        if(e.epsEstimate!=null) resultsStr += ` vs stima $${e.epsEstimate.toFixed(2)}`;
+        if(e.epsEstimate!=null) resultsStr += ` vs ${_L({it:'stima',en:'est.'})} $${e.epsEstimate.toFixed(2)}`;
         resultsStr += beatBadge;
       }
 
@@ -8847,9 +8847,9 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
 
       const quarterStr = e.quarter ? ` — ${e.quarter}${e.fiscalYear?' '+e.fiscalYear:''}` : '';
       if(resultsStr){
-        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ha riportato ${whenStr}${quarterStr}: ${resultsStr}\n`;
+        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr}: ${resultsStr}\n`;
       } else {
-        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ha riportato ${whenStr}${quarterStr} — dati non ancora disponibili\n`;
+        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr} — ${_L({it:'dati non ancora disponibili',en:'data not yet available'})}\n`;
       }
     });
   }
