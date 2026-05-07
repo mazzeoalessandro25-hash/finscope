@@ -1365,7 +1365,7 @@ updateClock();
     const safe = Math.min(fr, 6);
     resetAll();
     if(fr < NAV_IDS.length) setNav(NAV_IDS[fr]);
-    document.querySelectorAll('.scene').forEach((s,idx)=> s.classList.toggle('active', idx===safe));
+    document.querySelectorAll('.scene').forEach((s)=> s.classList.toggle('active', s.id==='scene'+safe));
     document.querySelectorAll('.dot-btn').forEach((d,idx)=> d.classList.toggle('active', idx===safe));
 
     if(fr===0){
