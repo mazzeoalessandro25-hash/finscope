@@ -890,6 +890,8 @@ const TRANSLATIONS={
     /* ── YIELD CURVE ── */
     'yc.inv.deep':'<strong style="color:var(--r)">⚠ Inversione profonda.</strong> La curva è marcatamente invertita — storicamente precede una recessione con 12–18 mesi di anticipo.',
     'yc.inv.mild':'<strong style="color:var(--o)">⚠ Inversione lieve.</strong> I tassi a breve superano i tassi a lungo: mercato sconta taglio dei tassi o rallentamento economico.',
+    'yc.flat':'<strong style="color:var(--o)">Curva piatta.</strong> Spread contenuto: aspettative di tassi stabili con rischi al ribasso per la crescita.',
+    'yc.normal':'<strong style="color:var(--g)">Curva normale.</strong> I tassi a lungo superano i brevi: condizioni ordinarie con aspettative di crescita positive.',
     /* ── IMPORT ── */
     'import.tickers.debug':'0 titoli trovati — vedi debug sopra',
     'import.tickers.searching':' titoli — ricerca ticker in corso…',
