@@ -8653,11 +8653,11 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   // Divergenza Nasdaq vs S&P: tech vs mercato ampio
   if(spC!=null && nqC!=null){
     const diff=nqC-spC;
-    if(diff>0.8)       macro+=`Si nota una chiara leadership del comparto tecnologico: il Nasdaq (${s(nqC)}) ha sovraperformato l'S&P 500 (${s(spC)}) di circa ${Math.abs(diff).toFixed(1)} punti percentuali, segnalando un appetite per i titoli growth e tech in particolare. `;
-    else if(diff>0.3)  macro+=`Il settore tecnologico ha mostrato una certa forza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) leggermente meglio dell'S&P 500 (${s(spC)}). `;
-    else if(diff<-0.8) macro+=`Interessante la divergenza tra indici: il Nasdaq (${s(nqC)}) ha sottoperformato in modo marcato rispetto all'S&P 500 (${s(spC)}), suggerendo pressioni specifiche sui titoli tecnologici o una rotazione verso settori più ciclici e value. `;
-    else if(diff<-0.3) macro+=`Il tech ha mostrato una leggera debolezza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) in ritardo sull'S&P 500 (${s(spC)}). `;
-    else if(equityVals.length>=2) macro+=`S&P 500 (${s(spC)}) e Nasdaq (${s(nqC)}) si sono mossi in modo coerente, senza divergenze significative tra i vari comparti di mercato. `;
+    if(diff>0.8)       macro+=_L({it:`Si nota una chiara leadership del comparto tecnologico: il Nasdaq (${s(nqC)}) ha sovraperformato l'S&P 500 (${s(spC)}) di circa ${Math.abs(diff).toFixed(1)} punti percentuali, segnalando un appetite per i titoli growth e tech in particolare. `,en:`There is clear leadership from the tech sector: Nasdaq (${s(nqC)}) outperformed S&P 500 (${s(spC)}) by about ${Math.abs(diff).toFixed(1)} percentage points, signaling appetite for growth and tech stocks in particular. `});
+    else if(diff>0.3)  macro+=_L({it:`Il settore tecnologico ha mostrato una certa forza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) leggermente meglio dell'S&P 500 (${s(spC)}). `,en:`The tech sector showed relative strength versus the broad market, with Nasdaq (${s(nqC)}) slightly ahead of S&P 500 (${s(spC)}). `});
+    else if(diff<-0.8) macro+=_L({it:`Interessante la divergenza tra indici: il Nasdaq (${s(nqC)}) ha sottoperformato in modo marcato rispetto all'S&P 500 (${s(spC)}), suggerendo pressioni specifiche sui titoli tecnologici o una rotazione verso settori più ciclici e value. `,en:`Notable divergence between indices: Nasdaq (${s(nqC)}) significantly underperformed S&P 500 (${s(spC)}), suggesting specific pressure on tech stocks or rotation toward more cyclical and value sectors. `});
+    else if(diff<-0.3) macro+=_L({it:`Il tech ha mostrato una leggera debolezza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) in ritardo sull'S&P 500 (${s(spC)}). `,en:`Tech showed slight relative weakness versus the broad market, with Nasdaq (${s(nqC)}) trailing S&P 500 (${s(spC)}). `});
+    else if(equityVals.length>=2) macro+=_L({it:`S&P 500 (${s(spC)}) e Nasdaq (${s(nqC)}) si sono mossi in modo coerente, senza divergenze significative tra i vari comparti di mercato. `,en:`S&P 500 (${s(spC)}) and Nasdaq (${s(nqC)}) moved coherently, without significant divergences between market segments. `});
   }
 
   // Dow Jones: cicliche vs tech
