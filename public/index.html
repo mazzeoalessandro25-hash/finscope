@@ -12436,9 +12436,9 @@ function _portShowImportPreview(parsed){
   const cnt=document.getElementById('port-import-count');
   const confirmBtn=document.getElementById('port-import-confirm-btn');
   if(!parsed.length){
-    if(tbl)tbl.innerHTML='<div style="padding:12px;color:var(--r);font-size:12px">Nessun dato valido trovato. Controlla formato o seleziona manualmente il tipo.</div>';
+    if(tbl)tbl.innerHTML='<div style="padding:12px;color:var(--r);font-size:12px">'+_t('import.nodata')+'</div>';
     if(prev)prev.style.display='block';
-    if(cnt)cnt.textContent='0 titoli trovati';
+    if(cnt)cnt.textContent=_t('import.notickers');
     return;
   }
   // Determina se i nomi sembrano ticker già pronti o nomi azienda
