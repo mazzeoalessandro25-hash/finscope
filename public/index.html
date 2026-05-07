@@ -4540,9 +4540,9 @@ async function renderWlaWatchlist(){
         ? symAlerts.map(a=>`
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
               <span style="font-size:10px;font-family:var(--fm);color:var(--t2);flex:1">
-                🔔 ${a.condition==='above'?'↑ Sopra':'↓ Sotto'} ${cur}${fmt(a.target,2)}${a.label?' · '+a.label:''}
+                🔔 ${a.condition==='above'?'↑ '+_t('alert.above'):'↓ '+_t('alert.below')} ${cur}${fmt(a.target,2)}${a.label?' · '+a.label:''}
               </span>
-              <button onclick="removeAlertForCard(${a.idx})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px;padding:0 2px;line-height:1" title="Rimuovi alert">✕</button>
+              <button onclick="removeAlertForCard(${a.idx})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px;padding:0 2px;line-height:1" title="${_t('alert.remove')}">✕</button>
             </div>`).join('')
         : '';
       return`<div class="wl-card">
