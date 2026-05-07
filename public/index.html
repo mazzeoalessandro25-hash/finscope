@@ -10367,10 +10367,10 @@ function renderPortAnalysis(portItems, quotes){
             if(beta<=prof2.maxBeta)ok++;else bad++;
             if(pnlPct>0)ok++;else if(pnlPct<-20)bad++;
             let sig,sigCol,sigBg;
-            if(bad===0&&ok>=3){sig='COMPRA';sigCol='#065F46';sigBg='rgba(5,150,105,.12)';}
-            else if(bad===0&&ok>=2){sig='MANTIENI';sigCol='#047857';sigBg='rgba(16,185,129,.10)';}
-            else if(bad>=2){sig='ATTENZIONE';sigCol='#B91C1C';sigBg='rgba(220,38,38,.10)';}
-            else{sig='NEUTRALE';sigCol='#92400E';sigBg='rgba(245,158,11,.10)';}
+            if(bad===0&&ok>=3){sig=_t('sig.buy');sigCol='#065F46';sigBg='rgba(5,150,105,.12)';}
+            else if(bad===0&&ok>=2){sig=_t('sig.hold');sigCol='#047857';sigBg='rgba(16,185,129,.10)';}
+            else if(bad>=2){sig=_t('macro.signal.watch');sigCol='#B91C1C';sigBg='rgba(220,38,38,.10)';}
+            else{sig=_t('macro.signal.neutral');sigCol='#92400E';sigBg='rgba(245,158,11,.10)';}
             return`<div style="background:${sigBg};border:1px solid var(--bd);border-radius:8px;padding:9px 10px">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                 <span style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${item.sym}</span>
