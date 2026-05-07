@@ -16812,7 +16812,7 @@ async function loadCryptoChart(days, btn){
   if(!_crdCurrentId)return;
   const chartEl=document.getElementById('crd-chart');
   if(!chartEl)return;
-  chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center">Caricamento grafico...</div>';
+  chartEl.innerHTML='<div class="ld" style="padding:80px;text-align:center">'+_t('load.chart')+'</div>';
   if(_crdChart){try{_crdChart.remove();}catch(e){}_crdChart=null;}
   try{
     const isCandle=_crdChartMode==='candle';
