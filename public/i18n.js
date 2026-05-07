@@ -2389,6 +2389,7 @@ const TRANSLATIONS={
     'wl.alreadyIn':' ist bereits in Ihrer Watchlist.',
     /* ── CALENDAR HOLIDAY ── */
     'cal.holiday':'Feiertag',
+    'exch.open':'Geöffnet','exch.closed':'Geschlossen',
     /* ── PORTFOLIO ALLOCATION LABELS ── */
     'alloc.equityEtf':'Aktien-ETF','alloc.bonds':'Anleihen','alloc.cash':'Liquidität',
     /* ── TRANSACTIONS ── */
