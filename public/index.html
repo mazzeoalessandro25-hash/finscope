@@ -16652,7 +16652,7 @@ function _populateCryptoHeader(c){
     el('crd-price-center-chg').style.color=chg>=0?'var(--g)':'var(--r)';
   }
   if(el('crd-ath-val'))el('crd-ath-val').textContent=_fmtCryptoPrice(c.ath);
-  if(el('crd-ath-date')&&c.ath_date)el('crd-ath-date').textContent=new Date(c.ath_date).toLocaleDateString('it-IT',{month:'short',year:'numeric'});
+  if(el('crd-ath-date')&&c.ath_date)el('crd-ath-date').textContent=new Date(c.ath_date).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{month:'short',year:'numeric'});
   if(el('crd-ath-chg')&&c.ath_change_percentage!=null)el('crd-ath-chg').textContent=c.ath_change_percentage.toFixed(1)+'%';
   // Metriche
   if(el('crd-mcap'))el('crd-mcap').textContent=_fmtCryptoCap(mcap);
