@@ -1841,6 +1841,7 @@ const TRANSLATIONS={
     'sig.buy':'BUY','sig.sell':'SELL','sig.hold':'HOLD',
     /* ── TRANSACTIONS ── */
     'tx.buy':'BUY','tx.sell':'SELL','tx.edit':'EDIT',
+    'tx.col.type':'Type','tx.col.stock':'Stock','tx.col.qty':'Qty','tx.col.total':'Total',
     /* ── ANALYSTS ── */
     'sd.nanalysts.suffix':' analysts cover this stock',
     /* ── FA DIMENSIONS ── */
