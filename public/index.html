@@ -15563,7 +15563,7 @@ function _savePersonalTargets(obj){localStorage.setItem('fs_personal_targets',JS
 function renderPersonalTargets(){
   const el=document.getElementById('personal-targets-content');
   if(!el)return;
-  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
+  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.full')+'</div>';return;}
   const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
   const targets=_loadPersonalTargets();
   const uniqueSyms=[...new Set(portfolio.map(p=>p.sym))];
