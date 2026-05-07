@@ -1696,6 +1696,7 @@ const TRANSLATIONS={
     /* ── PORTFOLIO — ANALYSIS & RADAR ── */
     'radar.return':'Return','radar.diversif':'Diversif.',
     'radar.quality':'Quality','radar.income':'Income',
+    'radar.momentum':'Momentum','radar.stability':'Stability',
     'port.exp.usd':'USD Exposure','port.exp.eur':'EUR Exposure',
     'port.best':'Best','port.worst':'Worst',
     'port.label.year':'year','port.label.type':'Type',
