@@ -1143,6 +1143,8 @@ const TRANSLATIONS={
     /* ALERTS */
     'alert.title':'🔔 Price Alert','alert.target':'🎯 Target price',
     'alert.above':'Above','alert.below':'Below','alert.set':'Set Alert','alert.remove':'Remove alert',
+    'alert.notif.price':'Current price','alert.notif.is':'is','alert.notif.target':'target',
+    'alert.above.short':'above','alert.below.short':'below',
     'alert.created':'✓ Alert created!','alert.empty':'No alerts configured',
     /* QM MODAL */
     'qm.addPortfolio':'＋ Add to Portfolio','qm.setAlert':'🔔 Set Price Alert',
