@@ -10934,7 +10934,7 @@ function _macroRenderPulse(d){
   }
   // Fed rate (hardcoded)
   const fv=document.getElementById('mps-fed-val');if(fv)fv.textContent=MACRO_SNAP.cb[0].rate+'%';
-  const fn=document.getElementById('mps-fed-next');if(fn)fn.textContent='Prossima FOMC: '+MACRO_SNAP.cb[0].next;
+  const fn=document.getElementById('mps-fed-next');if(fn)fn.textContent=_t('macro.cb.next')+' FOMC: '+MACRO_SNAP.cb[0].next;
 }
 
 function _macroRenderCB(){
