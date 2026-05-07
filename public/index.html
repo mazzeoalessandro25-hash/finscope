@@ -10559,9 +10559,9 @@ async function loadPortTargets(){
   const el=document.getElementById('port-targets-content');
   if(!el)return;
   if(!portfolio.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.full')+'</div>';return;
   }
-  el.innerHTML='<div class="ld" style="padding:10px">Recupero prezzi target analisti...</div>';
+  el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.prices')+'</div>';
 
   const [summaries,quotes]=await Promise.all([
     Promise.all(portfolio.map(item=>api(item.sym,'summary'))),
