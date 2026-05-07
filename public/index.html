@@ -9512,8 +9512,8 @@ function hmRender(){
     if(st.chg>0.05)up++;else if(st.chg<-0.05)dn++;else nc++;
   }));
   const upEl=document.getElementById('hm-up'),dnEl=document.getElementById('hm-dn'),ncEl=document.getElementById('hm-nc');
-  if(upEl)upEl.textContent=`▲ ${up} su`;
-  if(dnEl)dnEl.textContent=`▼ ${dn} giù`;
+  if(upEl)upEl.textContent=`▲ ${up} ${_t('hm.up.label')}`;
+  if(dnEl)dnEl.textContent=`▼ ${dn} ${_t('hm.dn.label')}`;
   if(ncEl)ncEl.textContent=`— ${nc} flat`;
 
   if(!Object.keys(secMap).length){
