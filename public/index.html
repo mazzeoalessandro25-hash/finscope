@@ -7427,9 +7427,9 @@ async function addPacPlan(){
   // Se la data di inizio è nel passato, ricostruisce tutti gli acquisti storici
   if(startDate<today){
     const addBtn=document.querySelector('#pac-add-form .port-add-btn');
-    if(addBtn){addBtn.disabled=true;addBtn.textContent='Recupero storico prezzi…';}
+    if(addBtn){addBtn.disabled=true;addBtn.textContent=_t('load.history');}
     await _backfillPacHistory(plan,startDate,dayOfMonth,freq);
-    if(addBtn){addBtn.disabled=false;addBtn.textContent='＋ Aggiungi PAC';}
+    if(addBtn){addBtn.disabled=false;addBtn.textContent=_t('pac.addPlan');}
   }
   plan.nextExecution=_nextFutureExecDate(startDate,dayOfMonth,freq);
   pacPlans.push(plan);
