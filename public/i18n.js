@@ -209,6 +209,8 @@ const TRANSLATIONS={
     /* ALERTS */
     'alert.title':'🔔 Price Alert','alert.target':'🎯 Prezzo obiettivo',
     'alert.above':'Sopra','alert.below':'Sotto','alert.set':'Imposta Alert','alert.remove':'Rimuovi alert',
+    'alert.notif.price':'Prezzo attuale','alert.notif.is':'è','alert.notif.target':'il target',
+    'alert.above.short':'sopra','alert.below.short':'sotto',
     'alert.created':'✓ Alert creato!','alert.empty':'Nessun alert configurato',
     /* QM MODAL */
     'qm.addPortfolio':'＋ Aggiungi al Portafoglio','qm.setAlert':'🔔 Imposta Alert Prezzo',
