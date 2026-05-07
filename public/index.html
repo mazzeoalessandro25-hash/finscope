@@ -15355,9 +15355,9 @@ verifySession();
 function renderStressTest(){
   const el=document.getElementById('stress-content');
   if(!el)return;
-  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
+  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.full')+'</div>';return;}
   const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
-  if(!quotes){el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';return;}
+  if(!quotes){el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.prices')+'</div>';return;}
   const eurUsd=_lastFxRate||1.08;
   let totalValUSD=0;
   // Beta di default per asset class note quando Yahoo non restituisce dati
@@ -15516,9 +15516,9 @@ async function renderCorrelationMatrix(){
 function renderPortPerfSummary(){
   const el=document.getElementById('port-cagr-content');
   if(!el)return;
-  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio</div>';return;}
+  if(!portfolio.length){el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.full')+'</div>';return;}
   const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
-  if(!quotes){el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';return;}
+  if(!quotes){el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.prices')+'</div>';return;}
   const now=Date.now();
   const rows=portfolio.map((item,i)=>{
     const q=quotes[i];const curPrice=q?.price??item.buyPrice;
