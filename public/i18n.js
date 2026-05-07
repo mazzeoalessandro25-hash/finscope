@@ -2229,6 +2229,9 @@ const TRANSLATIONS={
     'tip.info.alerts':'Alarme setzen, wenn eine Position einen Kurs über- oder unterschreitet. Alarme werden bei jeder Portfolio-Aktualisierung geprüft.',
     'tip.info.pac':'Der Sparplan ermöglicht es, monatlich einen festen Betrag zu investieren. Der Kauf wird am ersten verfügbaren Geschäftstag des Monats zum Marktpreis simuliert.',
     /* ── EXTRA STRINGS ── */
+    'radar.return':'Rendite','radar.diversif':'Diversif.',
+    'radar.quality':'Qualität','radar.income':'Einkommen',
+    'radar.momentum':'Momentum','radar.stability':'Stabilität',
     'hm.all':'🌍 Alle','hm.eu':'🇪🇺 Europa',
     'period.1d':'1T','period.5d':'5T','period.1y':'1J',
     'ins.sort.recent':'📅 Neueste',
