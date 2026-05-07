@@ -13862,9 +13862,9 @@ function renderSdTechSignals(){
       const macdVal=md.macd.length?md.macd[md.macd.length-1].value:null;
       const sigVal=md.signal.length?md.signal[md.signal.length-1].value:null;
       const cross=prev<0&&last>0?'bull':prev>0&&last<0?'bear':null;
-      if(cross==='bull')signals.push({label:'MACD',text:'Incrocio rialzista — MACD sopra la linea Signal',type:'bull'});
-      else if(cross==='bear')signals.push({label:'MACD',text:'Incrocio ribassista — MACD sotto la linea Signal',type:'bear'});
-      else if(macdVal!==null&&sigVal!==null)signals.push({label:`MACD ${macdVal.toFixed(2)}`,text:macdVal>sigVal?'MACD sopra Signal — momentum positivo':'MACD sotto Signal — momentum negativo',type:macdVal>sigVal?'bull':'bear'});
+      if(cross==='bull')signals.push({label:'MACD',text:_L({it:'Incrocio rialzista — MACD sopra la linea Signal',en:'Bullish crossover — MACD above Signal line'}),type:'bull'});
+      else if(cross==='bear')signals.push({label:'MACD',text:_L({it:'Incrocio ribassista — MACD sotto la linea Signal',en:'Bearish crossover — MACD below Signal line'}),type:'bear'});
+      else if(macdVal!==null&&sigVal!==null)signals.push({label:`MACD ${macdVal.toFixed(2)}`,text:macdVal>sigVal?_L({it:'MACD sopra Signal — momentum positivo',en:'MACD above Signal — positive momentum'}):_L({it:'MACD sotto Signal — momentum negativo',en:'MACD below Signal — negative momentum'}),type:macdVal>sigVal?'bull':'bear'});
     }
   }
   if(sdIndicators.has('stoch')){
