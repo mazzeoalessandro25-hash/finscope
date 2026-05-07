@@ -13021,7 +13021,7 @@ function renderETFData(etf){
           </div>`;
         }).join('');
       }else{
-        sectEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati non disponibili.</div>';
+        sectEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">'+_t('common.noneData')+'</div>';
       }
     }else{
       sectEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Dati non disponibili per questo ETF.</div>';
