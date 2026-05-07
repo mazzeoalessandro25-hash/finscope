@@ -13080,9 +13080,9 @@ function openStockDetail(sym){
   });
   document.getElementById('sdm-rec').textContent='···';
   document.getElementById('sd-sector-bar').style.display='none';
-  document.getElementById('sd-description').textContent='Caricamento...';
+  document.getElementById('sd-description').textContent=_t('common.loading');
   document.getElementById('sd-website').innerHTML='';
-  document.getElementById('sd-news-list').innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento...</div>';
+  document.getElementById('sd-news-list').innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">'+_t('common.loading')+'</div>';
   // Reset range buttons
   document.querySelectorAll('#stock-detail-overlay .cc-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById('sd-range-1mo').classList.add('active');
