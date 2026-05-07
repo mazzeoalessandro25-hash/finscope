@@ -871,6 +871,9 @@ const TRANSLATIONS={
     'val.ticker.both':'Inserisci entrambi i ticker.',
     'val.ticker.diff':'I ticker devono essere diversi.',
     'val.ticker.enter':'Inserisci un ticker',
+    'val.notin.port':'non è nel portafoglio.',
+    'val.ticker.pre':'Ticker ',
+    'val.ticker.notfound2':'non trovato o non disponibile.',
     /* ── STATUS ── */
     'status.updated.at':'Aggiornate alle ',
     'status.updated':'Aggiornato: ',
