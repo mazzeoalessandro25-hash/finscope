@@ -13881,7 +13881,7 @@ function renderSdTechSignals(){
   }
 
   el.style.display='block';
-  el.innerHTML=`<div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px">Segnali tecnici</div>
+  el.innerHTML=`<div style="font-size:9px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;margin-bottom:7px">${_L({it:'Segnali tecnici',en:'Technical Signals'})}</div>
     <div style="display:flex;flex-wrap:wrap;gap:5px">${signals.map(s=>{
       const[bg,col,icon]=s.type==='bull'?['rgba(5,150,105,.1)','#059669','▲']:s.type==='bear'?['rgba(220,38,38,.1)','#dc2626','▼']:['var(--s2)','var(--t3)','●'];
       return `<div style="display:inline-flex;align-items:center;gap:5px;background:${bg};border:1px solid ${col}33;border-radius:6px;padding:4px 9px">
