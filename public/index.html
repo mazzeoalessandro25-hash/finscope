@@ -7262,7 +7262,7 @@ function onPacSearchInput(){
 async function _fetchPacPreview(sym){
   const previewEl=document.getElementById('pac-preview-line');
   if(!previewEl)return;
-  previewEl.textContent='Caricamento prezzo…';
+  previewEl.textContent=_t('load.price');
   previewEl.style.display='block';
   try{
     const r=await fetch('/api/quote?symbol='+encodeURIComponent(sym));
