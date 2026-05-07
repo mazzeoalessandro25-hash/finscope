@@ -920,6 +920,7 @@ const TRANSLATIONS={
     'wl.alreadyIn':' è già nella watchlist.',
     /* ── CALENDAR HOLIDAY ── */
     'cal.holiday':'Festività',
+    'exch.open':'Aperta','exch.closed':'Chiusa',
     /* ── PORTFOLIO ALLOCATION LABELS ── */
     'alloc.equityEtf':'Azioni ETF','alloc.bonds':'Obbligazioni','alloc.cash':'Liquidità',
     /* ── TRANSACTIONS ── */
