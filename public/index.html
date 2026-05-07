@@ -6665,6 +6665,24 @@ function _applyDynamicTranslations(){
     dailyTitle.textContent=_t('port.daily.title');
 }
 
+// ── AUTO-TRANSLATE DYNAMIC CONTENT ──────────────────────────────────────────
+// Re-runs the text-node walker on any new DOM nodes added after initial render
+// (API responses, dynamic renders, etc.) so they get translated immediately.
+let _i18nMutDebounce=null;
+const _i18nObserver=new MutationObserver(mutations=>{
+  if(currentLang==='it')return;
+  clearTimeout(_i18nMutDebounce);
+  _i18nMutDebounce=setTimeout(()=>{
+    mutations.forEach(m=>{
+      m.addedNodes.forEach(n=>{
+        if(n.nodeType===1)_walkAndTranslate(n);
+      });
+    });
+  },80);
+});
+// Avviato dopo il DOMContentLoaded (vedi sotto)
+// ─────────────────────────────────────────────────────────────────────────────
+
 // Detect language: URL param → localStorage → browser → fallback 'it'
 const _LANGS_SUPPORTED=['it','en'];
 const _urlLangParam=new URLSearchParams(window.location.search).get('lang');
