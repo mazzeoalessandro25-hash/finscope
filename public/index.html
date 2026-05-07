@@ -8854,11 +8854,11 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   }
 
   return [
-    macro.trim() ? `**Contesto di mercato**\n${macro.trim()}` : '',
-    earningsText.trim() ? `**📊 Earnings**\n${earningsText.trim()}` : '',
-    `**Il tuo portafoglio**\n${portText.trim()}`,
-    evidenzaText.trim() ? `**Titoli in evidenza**\n${evidenzaText.trim()}` : '',
-    `**Sintesi**\n${sintesi}`
+    macro.trim() ? `**${_L({it:'Contesto di mercato',en:'Market Context'})}**\n${macro.trim()}` : '',
+    earningsText.trim() ? `**📊 ${_L({it:'Earnings',en:'Earnings'})}**\n${earningsText.trim()}` : '',
+    `**${_L({it:'Il tuo portafoglio',en:'Your Portfolio'})}**\n${portText.trim()}`,
+    evidenzaText.trim() ? `**${_L({it:'Titoli in evidenza',en:'Stocks in Focus'})}**\n${evidenzaText.trim()}` : '',
+    `**${_L({it:'Sintesi',en:'Summary'})}**\n${sintesi}`
   ].filter(Boolean).join('\n\n');
 }
 
