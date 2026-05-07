@@ -15759,7 +15759,7 @@ function renderTransactionHistory(){
   if(!el)return;
   _loadTransactions();
   if(!_transactions.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Nessuna transazione registrata · Le prossime modifiche al portafoglio verranno registrate qui automaticamente</div>';
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('empty.trades')+'</div>';
     return;
   }
   const aLabel={buy:'ACQ',sell:'VEND',edit:'MOD'};
