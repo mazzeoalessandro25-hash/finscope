@@ -4478,7 +4478,7 @@ function renderScreenerAlertList(){
       ${logoHtmlSm(a.sym,a.sym)}
       <div style="flex:1;min-width:0">
         <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:var(--t)">${a.sym}</div>
-        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${a.condition==='above'?'↑ Sopra':'↓ Sotto'} $${fmt(a.target,2)}${a.label?' · '+a.label:''}</div>
+        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${a.condition==='above'?'↑ '+_t('alert.above'):'↓ '+_t('alert.below')} $${fmt(a.target,2)}${a.label?' · '+a.label:''}</div>
       </div>
       <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${new Date(a.addedAt).toLocaleDateString('it-IT')}</span>
       <button style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0" onclick="removeAlertFromScreener(${i})" title="Rimuovi alert">✕</button>
