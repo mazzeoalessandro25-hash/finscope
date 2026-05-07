@@ -9721,9 +9721,9 @@ async function loadDividendTracker(){
   const el=document.getElementById('div-tracker-content');
   if(!el)return;
   if(!portfolio.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per vedere i dividendi</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.dividends')+'</div>';return;
   }
-  el.innerHTML='<div class="ld" style="padding:10px">Caricamento dati dividendi...</div>';
+  el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.div')+'</div>';
   const summaries=await Promise.all(portfolio.map(item=>api(item.sym,'summary')));
   // Usa prezzi correnti da _lastPortQuotes se disponibili, altrimenti ri-fetch
   const quotes=_lastPortQuotes.length===portfolio.length
