@@ -14655,11 +14655,11 @@ function renderTaxDashboard(){
   const el=document.getElementById('fisco-content');
   if(!el)return;
   if(!portfolio.length){
-    el.innerHTML='<div class="ld" style="padding:10px">Aggiungi titoli al portafoglio per vedere la situazione fiscale</div>';return;
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.tax')+'</div>';return;
   }
   const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
   if(!quotes){
-    el.innerHTML='<div class="ld" style="padding:10px">Caricamento prezzi...</div>';
+    el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.prices')+'</div>';
     Promise.all(portfolio.map(item=>api(item.sym))).then(q=>{_lastPortQuotes=q;renderTaxDashboard();});
     return;
   }
