@@ -783,6 +783,13 @@ const TRANSLATIONS={
     /* ── PDF EXPORT ── */
     'pdf.disclaimer':'Il presente documento è generato automaticamente da FinEdge a scopo esclusivamente informativo e non costituisce in alcun modo un consiglio finanziario, un\'offerta o una sollecitazione all\'investimento ai sensi della Direttiva MiFID II. I dati mostrati potrebbero non essere aggiornati in tempo reale.',
     'pdf.markets.title':'Dashboard Mercati Finanziari',
+    /* ── TOP CAP — SETTORI EXTRA ── */
+    'topcap.finanza':'Finanza','topcap.farmaceutica':'Farmaceutica',
+    'topcap.lusso':'Lusso','beni.consumo':'Beni consumo',
+    'topcap.banca':'Banca','topcap.assicurazioni':'Assicurazioni',
+    'topcap.difesa':'Difesa','topcap.conglomerato':'Conglomerato',
+    'topcap.matprime2':'🥇 Materie Prime / Gold',
+    'load.mcap':'Caricamento capitalizzazioni live...',
   },
   en:{
     /* NAV */
