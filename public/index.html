@@ -15067,7 +15067,7 @@ async function executeBacktest(){
     if(resCol){resCol.style.display='flex';}
   }catch(e){
     if(loadEl)loadEl.style.display='none';
-    if(errEl){errEl.style.display='block';errEl.textContent='Errore: '+e.message;}
+    if(errEl){errEl.style.display='block';errEl.textContent=_t('err.analysis')+e.message;}
   }
 }
 
