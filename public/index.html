@@ -16441,7 +16441,7 @@ async function loadCryptoDashboard(){
     _renderCryptoTable('cry-page-body',d.coins);
   }catch(e){
     const el=document.getElementById('cry-page-body');
-    if(el)el.innerHTML='<tr><td colspan="10" class="ld" style="color:var(--r)">Errore caricamento dati crypto. Riprovare.</td></tr>';
+    if(el)el.innerHTML='<tr><td colspan="10" class="ld" style="color:var(--r)">'+_t('err.load.crypto')+'</td></tr>';
   }
 }
 
