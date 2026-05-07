@@ -2147,6 +2147,9 @@ const TRANSLATIONS={
     'pac.log.date':'Datum','pac.log.asset':'Wert','pac.log.amount':'Betrag',
     'pac.log.price':'Kaufpreis','pac.log.qty':'Gekaufte Anteile',
     'pac.deleteConfirm':'Diesen Sparplan löschen?',
+    'pac.deleteConfirm.sym':'Sparplan für löschen ',
+    'pac.deleteConfirm.posRemoved':'Die durch diesen Plan erstellte aggregierte Portfolioposition wird ebenfalls entfernt.',
+    'pac.deleteConfirm.pause':'⏸  Um die Position zu behalten und nur zukünftige Käufe zu stoppen, verwende die Schaltfläche "Käufe pausieren".',
     'pac.freq.monthly':'Monatlich','pac.freq.quarterly':'Vierteljährlich',
     'pac.tag':'ETF-Sparplan',
     /* ── TOOLTIPS — SD OVERLAY ── */
