@@ -10790,7 +10790,7 @@ async function loadPortPerf(range,btn){
 
     if(sub){
       const parts=benchResults.map(b=>`${b.def.label}: ${b.final>=0?'+':''}${b.final.toFixed(1)}%`);
-      sub.textContent=`Portafoglio: ${portFinal>=0?'+':''}${portFinal.toFixed(2)}% · ${parts.join(' · ')}`;
+      sub.textContent=`${_t('port.perf.label')}${portFinal>=0?'+':''}${portFinal.toFixed(2)}% · ${parts.join(' · ')}`;
     }
 
     if(portPerfCI){portPerfCI.destroy();portPerfCI=null;}
