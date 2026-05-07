@@ -12767,7 +12767,7 @@ async function renderCalendar(){
   const _calLocale=currentLang==='en'?'en-US':'it-IT';
   const monthName=new Date(calYear,calMonth,1).toLocaleDateString(_calLocale,{month:'long',year:'numeric'});
   if(titleEl)titleEl.textContent=monthName.charAt(0).toUpperCase()+monthName.slice(1);
-  el.innerHTML='<div class="ld">Caricamento...</div>';
+  el.innerHTML='<div class="ld">'+_t('common.loading')+'</div>';
   const m=calMonth+1;
 
   // Usa _fetchEco/_fetchEarn che condividono la cache con la tape
