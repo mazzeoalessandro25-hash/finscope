@@ -6503,7 +6503,7 @@ async function loadMcap(region,btn){
   const note=document.createElement('div');
   note.className='mcap-ref-note';
   const ts=now();
-  note.textContent=`Market cap in USD · tasso di cambio live da Yahoo Finance · aggiornato ${ts} · clicca per il grafico`;
+  note.textContent=_t('status.mcap.note')+ts+' · '+_t('dash.topCapSub').split(' · ').pop();
   list.appendChild(note);
 }
 /* ── BOOT ── */
