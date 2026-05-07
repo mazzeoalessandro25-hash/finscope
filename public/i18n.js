@@ -764,6 +764,25 @@ const TRANSLATIONS={
     'hm.sect.materials.it':'Materiali','hm.sect.industrials.it':'Industriali',
     'hm.sect.consumer.disc.it':'Beni Discrezionali',
     'hm.sect.consumer.stap.it':'Beni di Prima Necessità',
+    /* ── SETTORI HEATMAP (mapping Yahoo Finance) ── */
+    'hm.map.tech':'Tecnologia','hm.map.fin':'Finanziari',
+    'hm.map.health':'Salute','hm.map.disc':'Beni Discrezionali',
+    'hm.map.stap':'Necessità','hm.map.energy':'Energia',
+    'hm.map.ind':'Industriali','hm.map.mat':'Materiali',
+    'hm.map.re':'Immobiliare','hm.map.matprime':'Mat. Prime',
+    'hm.map.comm':'Comunicazioni','hm.map.commserv':'Comm. Servizi',
+    /* ── STOCK DETAIL — LIQUIDITÀ ── */
+    'sd.liq.high':'Alta liquidità','sd.liq.mid':'Liquidità media',
+    'sd.liq.low':'Liquidità bassa','sd.liq.na':'Dati non disp.',
+    /* ── MACRO SETTORI POSIZIONAMENTO ── */
+    'macro.sect.tech':'Tecnologia','macro.sect.fin':'Finanziari',
+    'macro.sect.health':'Salute','macro.sect.disc':'Beni Discrezionali',
+    'macro.sect.stap':'Necessità','macro.sect.energy':'Energia',
+    'macro.sect.ind':'Industriali','macro.sect.mat':'Materiali',
+    'macro.sect.re':'Real Estate','macro.sect.util':'Utilities',
+    /* ── PDF EXPORT ── */
+    'pdf.disclaimer':'Il presente documento è generato automaticamente da FinEdge a scopo esclusivamente informativo e non costituisce in alcun modo un consiglio finanziario, un\'offerta o una sollecitazione all\'investimento ai sensi della Direttiva MiFID II. I dati mostrati potrebbero non essere aggiornati in tempo reale.',
+    'pdf.markets.title':'Dashboard Mercati Finanziari',
   },
   en:{
     /* NAV */
