@@ -15773,8 +15773,8 @@ function renderTransactionHistory(){
       <div>Data</div><div>Tipo</div><div>Titolo</div><div style="text-align:right">Prezzo</div><div style="text-align:right">Qtà</div><div style="text-align:right">Totale</div>
     </div>
     ${_transactions.slice(0,50).map(tx=>{
-      const d=new Date(tx.date).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'});
-      const t=new Date(tx.date).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      const d=new Date(tx.date).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'});
+      const t=new Date(tx.date).toLocaleTimeString(currentLang==='en'?'en-GB':'it-IT',{hour:'2-digit',minute:'2-digit'});
       const cur=tx.currency==='EUR'?'€':'$';
       return`<div style="display:grid;grid-template-columns:90px 44px 80px 80px 70px 90px;gap:6px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)">
         <div><div style="font-size:10px;font-family:var(--fm);color:var(--t2)">${d}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${t}</div></div>
