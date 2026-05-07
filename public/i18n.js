@@ -726,6 +726,7 @@ const TRANSLATIONS={
     /* ── PORTAFOGLIO — ANALISI & RADAR ── */
     'radar.return':'Rendimento','radar.diversif':'Diversif.',
     'radar.quality':'Qualità','radar.income':'Reddito',
+    'radar.momentum':'Momentum','radar.stability':'Stabilità',
     'port.exp.usd':'Esposizione USD','port.exp.eur':'Esposizione EUR',
     'port.best':'Migliore','port.worst':'Peggiore',
     'port.label.year':'anno','port.label.type':'Tipo',
