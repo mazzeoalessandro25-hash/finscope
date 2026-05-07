@@ -11003,8 +11003,8 @@ function _macroRenderYieldCurve(d){
     if(interp){
       if(spread<-1)interp.innerHTML=_t('yc.inv.deep');
       else if(spread<0)interp.innerHTML=_t('yc.inv.mild');
-      else if(spread<0.5)interp.innerHTML='<strong style="color:var(--o)">Curva piatta.</strong> Spread contenuto: aspettative di tassi stabili con rischi al ribasso per la crescita.';
-      else interp.innerHTML='<strong style="color:var(--g)">Curva normale.</strong> I tassi a lungo superano i brevi: condizioni ordinarie con aspettative di crescita positive.';
+      else if(spread<0.5)interp.innerHTML=_t('yc.flat');
+      else interp.innerHTML=_t('yc.normal');
     }
   }
 }
