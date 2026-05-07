@@ -1119,7 +1119,7 @@ const TRANSLATIONS={
     'lab.bt.ticker':'STOCK / ETF','lab.bt.tickerPh':'E.g.: AAPL, MSFT, SPY…',
     'lab.bt.period':'HISTORICAL PERIOD','lab.bt.strategy':'STRATEGY',
     'lab.bt.bh':'📈 Buy & Hold','lab.bt.sma':'〜 SMA Crossover (20/50)',
-    'lab.bt.rsi':'↕ RSI Mean Reversion (14)','lab.bt.capital':'INITIAL CAPITAL (€)',
+    'lab.bt.rsi':'↕ RSI Mean Reversion (14)','lab.bt.capital':'INITIAL CAPITAL (€)','lab.bt.initialCapital':'Initial capital',
     'lab.bt.run':'▶ Run Backtest','lab.bt.loading':'⏳ Loading historical data…',
     'lab.bt.results':'Results','lab.bt.totalReturn':'Total Return',
     'lab.bt.finalVal':'Final Value','lab.bt.trades':'# Trades',
