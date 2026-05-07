@@ -13447,7 +13447,7 @@ function renderValuation(d, cur){
   sdSet('sdm-shares',d.sharesOutstanding?fmtLg(d.sharesOutstanding):'—');
   sdSet('sdm-float',d.floatShares?fmtLg(d.floatShares):'—');
   const badge=document.getElementById('sd-val-badge');
-  if(badge)badge.textContent='Aggiornato: '+new Date(d._ts||Date.now()).toLocaleDateString('it-IT');
+  if(badge)badge.textContent=_t('ins.updated')+new Date(d._ts||Date.now()).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT');
   sdLastValData=d;
   renderSdFinEdgeScore();
 }
