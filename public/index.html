@@ -9556,7 +9556,7 @@ function hmRender(){
 
 async function loadHeatmap(){
   const container=document.getElementById('heatmap-container');
-  container.innerHTML='<div class="ld" style="padding:20px">Caricamento heatmap...</div>';
+  container.innerHTML='<div class="ld" style="padding:20px">'+_t('load.heatmap')+'</div>';
   hmData={};
   const BATCH=14;
   const batchPromises=[];
