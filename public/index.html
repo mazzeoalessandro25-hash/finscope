@@ -10802,7 +10802,7 @@ async function loadPortPerf(range,btn){
       data:{
         labels,
         datasets:[
-          {label:'Portafoglio',data:portReturns,borderColor:'#1A56C4',borderWidth:2.5,fill:true,
+          {label:_L({it:'Portafoglio',en:'Portfolio'}),data:portReturns,borderColor:'#1A56C4',borderWidth:2.5,fill:true,
             backgroundColor:cx=>{const g=cx.chart.ctx.createLinearGradient(0,0,0,220);g.addColorStop(0,'rgba(26,86,196,.18)');g.addColorStop(1,'rgba(26,86,196,0)');return g;},
             tension:.35,pointRadius:0,pointHoverRadius:5,order:0},
           ...benchResults.map((b,i)=>({
