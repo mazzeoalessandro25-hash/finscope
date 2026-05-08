@@ -983,6 +983,18 @@ const TRANSLATIONS={
     'com.copper':'Rame (Copper)','com.wheat':'Frumento',
     /* ── MACRO CB ── */
     'macro.cb.name.bce':'Banca Centrale Europea',
+    /* ── VIX PANEL ── */
+    'vix.title':'VIX — Volatilità di mercato','vix.chart.btn':'↗ Grafico',
+    'vix.subtitle':'CBOE Volatility Index · S&P 500 · clicca per aprire il grafico',
+    'vix.zone.calm':'Calmo','vix.zone.normal':'Normale','vix.zone.tension':'Tensione','vix.zone.fear':'Paura',
+    'vix.guide.title':'Guida alle zone VIX',
+    'vix.guide.calm':'Mercato sereno, bassa volatilità attesa',
+    'vix.guide.normal':'Volatilità normale, mercato stabile',
+    'vix.guide.high':'Alta volatilità, incertezza crescente',
+    'vix.guide.extreme':'Paura estrema, possibile opportunità contrarian',
+    /* ── DASHBOARD MOVERS ── */
+    'dash.movers.title':'Migliori e peggiori del giorno',
+    'dash.movers.sub':'Top 5 · Bottom 5 · clicca per grafico',
   },
   en:{
     /* NAV */
