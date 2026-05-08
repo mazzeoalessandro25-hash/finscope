@@ -7276,7 +7276,7 @@ async function _fetchPacPreview(sym){
                sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L');
     const csym=isEU?'€':'$';
     const qty=(amount/q.price).toFixed(4);
-    previewEl.textContent=`Prezzo attuale: ${csym}${q.price.toFixed(2)} · Con ${csym}${amount} compreresti circa ${qty} quote`;
+    previewEl.textContent=_L({it:`Prezzo attuale: ${csym}${q.price.toFixed(2)} · Con ${csym}${amount} compreresti circa ${qty} quote`,en:`Current price: ${csym}${q.price.toFixed(2)} · With ${csym}${amount} you would buy approx. ${qty} units`});
     // aggiorna preview se l'utente cambia l'importo
     if(amountEl){
       amountEl._pacSym=sym;
