@@ -16676,7 +16676,7 @@ function _populateCryptoHeader(c){
   const supplyPct=c.max_supply?(c.circulating_supply/c.max_supply*100):null;
   if(el('crd-supply'))el('crd-supply').textContent=c.circulating_supply?new Intl.NumberFormat('it-IT',{notation:'compact',maximumFractionDigits:2}).format(c.circulating_supply):'—';
   if(el('crd-supply-sub')){
-    if(!c.max_supply)el('crd-supply-sub').textContent='Supply illimitata ♾';
+    if(!c.max_supply)el('crd-supply-sub').textContent=_L({it:'Supply illimitata ♾',en:'Unlimited supply ♾'});
     else el('crd-supply-sub').textContent=supplyPct.toFixed(1)+'% del max emessa';
   }
   // Performance con barre
