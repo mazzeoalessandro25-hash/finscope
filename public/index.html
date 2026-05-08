@@ -17421,7 +17421,7 @@ const TUTO = (() => {
     // Run step setup (e.g. show hidden elements temporarily)
     if (s.setup) try { s.setup(); } catch(e) {}
 
-    document.getElementById('tut-lbl').textContent = `Passo ${step + 1} di ${total}`;
+    document.getElementById('tut-lbl').textContent = _L({it:`Passo ${step + 1} di ${total}`,en:`Step ${step + 1} of ${total}`});
     document.getElementById('tut-ttl').textContent = typeof s.title === 'function' ? s.title() : s.title;
     document.getElementById('tut-dsc').textContent = typeof s.desc === 'function' ? s.desc() : s.desc;
     const locEl = document.getElementById('tut-loc');
