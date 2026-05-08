@@ -4305,10 +4305,10 @@ const EXCHANGES=[
 ];
 
 const ALLOC={
-  balanced:{l:['Azioni ETF','Obbligazioni','Commodities','Liquidità'],p:[60,25,10,5],c:['#1A56C4','#0EA5E9','#F59E0B','#6B7280']},
-  growth:{l:['Growth Stocks','ETF Nasdaq','Obbligazioni'],p:[60,25,15],c:['#1A56C4','#0EA5E9','#6B7280']},
-  conservative:{l:['Obbligazioni','Bond ETF','Liquidità','Azioni'],p:[45,25,20,10],c:['#0EA5E9','#1A56C4','#6B7280','#059669']},
-  etf:{l:['ETF Globale','ETF Obbligazionario'],p:[70,30],c:['#1A56C4','#0EA5E9']},
+  balanced:{l:[{it:'Azioni ETF',en:'Equity ETF'},{it:'Obbligazioni',en:'Bonds'},{it:'Commodities',en:'Commodities'},{it:'Liquidità',en:'Cash'}],p:[60,25,10,5],c:['#1A56C4','#0EA5E9','#F59E0B','#6B7280']},
+  growth:{l:['Growth Stocks','ETF Nasdaq',{it:'Obbligazioni',en:'Bonds'}],p:[60,25,15],c:['#1A56C4','#0EA5E9','#6B7280']},
+  conservative:{l:[{it:'Obbligazioni',en:'Bonds'},'Bond ETF',{it:'Liquidità',en:'Cash'},{it:'Azioni',en:'Equities'}],p:[45,25,20,10],c:['#0EA5E9','#1A56C4','#6B7280','#059669']},
+  etf:{l:[{it:'ETF Globale',en:'Global ETF'},{it:'ETF Obbligazionario',en:'Bond ETF'}],p:[70,30],c:['#1A56C4','#0EA5E9']},
 };
 
 let scData={}, scSummary={}, customStocks=[], scSummaryLoading=false, _lastPortQuotes=[];
