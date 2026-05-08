@@ -15247,7 +15247,7 @@ function cmpRenderChart(results){
   });
 
   const periodLabel={'1mo':_t('period.1mo'),'3mo':_t('period.3mo'),'6mo':_t('period.6mo'),'1y':_t('period.1y.long'),'3y':_t('period.3y'),'5y':_t('period.5y')};
-  if(subDiv)subDiv.textContent=`Base 100 · Performance relativa — ${periodLabel[cmpPeriod]||cmpPeriod}`;
+  if(subDiv)subDiv.textContent=`Base 100 · ${_L({it:'Performance relativa',en:'Relative performance'})} — ${periodLabel[cmpPeriod]||cmpPeriod}`;
 
   const legendItems=[];
   results.forEach((item,i)=>{
