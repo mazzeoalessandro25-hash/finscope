@@ -7831,7 +7831,7 @@ function togglePortCurrency(){
   const lblEl=document.getElementById('ph-val-lbl');
   if(mainEl)mainEl.textContent=isEUR?'€'+fmt(_portHeroEUR,0):'$'+fmt(_portHeroUSD,0);
   if(subEl)subEl.textContent=isEUR?'≈ $'+fmt(_portHeroUSD,0):'≈ €'+fmt(_portHeroEUR,0);
-  if(lblEl)lblEl.textContent=isEUR?'Valore totale (EUR)':'Valore totale (USD)';
+  if(lblEl)lblEl.textContent=isEUR?_L({it:'Valore totale (EUR)',en:'Total value (EUR)'}):_L({it:'Valore totale (USD)',en:'Total value (USD)'});
 }
 function switchPortTab(name){
   _portActiveTab=name;
