@@ -11550,10 +11550,6 @@ function _macroRenderAnalysis(d){
    MACRO EDU — Dati settoriali e ciclo
 ══════════════════════════════════════════ */
 
-// Bilingual field selector — picks currentLang value or falls back to 'it'
-const _L=o=>o&&typeof o==='object'&&!Array.isArray(o)?(o[typeof currentLang!=='undefined'?currentLang:'it']||o.it):o;
-const _LA=a=>{if(!a)return[];if(Array.isArray(a))return a;const l=typeof currentLang!=='undefined'?currentLang:'it';return a[l]||a.it||[];};
-
 // cycle: { expansion, peak, contraction, recovery } → -2..2 (OW/UW)
 const SECTOR_DATA=[
   {id:'tech',
