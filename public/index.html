@@ -6809,6 +6809,9 @@ if(_urlLangParam&&_LANGS_SUPPORTED.includes(_urlLangParam)){
     localStorage.setItem('fs_lang',currentLang);
   }
 }
+// Bilingual helpers — must be here, before any function that calls them (e.g. calcSim)
+const _L=o=>o&&typeof o==='object'&&!Array.isArray(o)?(o[typeof currentLang!=='undefined'?currentLang:'it']||o.it):o;
+const _LA=a=>{if(!a)return[];if(Array.isArray(a))return a;const l=typeof currentLang!=='undefined'?currentLang:'it';return a[l]||a.it||[];};
 let currentUser=null;
 let currentToken=null;
 let authTab='login';
