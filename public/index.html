@@ -3869,6 +3869,9 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 })();
 
 const API='/api/quote';
+// _L/_LA declared here (top of script) to avoid TDZ — calcSim() and others call them early
+const _L=o=>o&&typeof o==='object'&&!Array.isArray(o)?(o[typeof currentLang!=='undefined'?currentLang:'it']||o.it):o;
+const _LA=a=>{if(!a)return[];if(Array.isArray(a))return a;const l=typeof currentLang!=='undefined'?currentLang:'it';return a[l]||a.it||[];};
 
 const STOCKS=[
   // ── USA · Technology ──
