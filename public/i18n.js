@@ -977,6 +977,12 @@ const TRANSLATIONS={
     /* ── MACRO CURVE / DXY SUB ── */
     'macro.curve.inverted':'Curva invertita','macro.curve.flat':'Curva piatta','macro.curve.normal':'Curva normale',
     'macro.dxy.sub.strong':'Dollaro forte','macro.dxy.sub.weak':'Dollaro debole','macro.dxy.sub.neutral':'Dollaro neutrale',
+    /* ── COMMODITY LABELS ── */
+    'com.gold':'Oro · XAU/USD','com.oil':'Petrolio Brent','com.platinum':'Platino · XPT/USD',
+    'com.silver':'Argento · XAG/USD','com.natgas':'Gas naturale','com.cocoa':'Cacao · CC=F',
+    'com.copper':'Rame (Copper)','com.wheat':'Frumento',
+    /* ── MACRO CB ── */
+    'macro.cb.name.bce':'Banca Centrale Europea',
   },
   en:{
     /* NAV */
