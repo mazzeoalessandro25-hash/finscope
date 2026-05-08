@@ -1971,6 +1971,18 @@ const TRANSLATIONS={
     'com.copper':'Copper','com.wheat':'Wheat',
     /* ── MACRO CB ── */
     'macro.cb.name.bce':'European Central Bank',
+    /* ── VIX PANEL ── */
+    'vix.title':'VIX — Market Volatility','vix.chart.btn':'↗ Chart',
+    'vix.subtitle':'CBOE Volatility Index · S&P 500 · click to open chart',
+    'vix.zone.calm':'Calm','vix.zone.normal':'Normal','vix.zone.tension':'Tension','vix.zone.fear':'Fear',
+    'vix.guide.title':'VIX Zones Guide',
+    'vix.guide.calm':'Calm market, low expected volatility',
+    'vix.guide.normal':'Normal volatility, stable market',
+    'vix.guide.high':'High volatility, growing uncertainty',
+    'vix.guide.extreme':'Extreme fear, possible contrarian opportunity',
+    /* ── DASHBOARD MOVERS ── */
+    'dash.movers.title':'Top & Bottom of the Day',
+    'dash.movers.sub':'Top 5 · Bottom 5 · click for chart',
   },
   de:{
     /* NAV */
