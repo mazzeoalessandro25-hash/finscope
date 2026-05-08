@@ -4886,35 +4886,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   // Avvia l'observer per contenuto generato dinamicamente (API calls, render JS)
   _i18nObserver.observe(document.body,{childList:true,subtree:true});
 
-  // ── DIAGNOSTICA AVVIO ──
-  (async function diagBoot(){
-    const bar=document.createElement('div');
-    bar.id='_diag_bar';
-    bar.style.cssText='position:fixed;bottom:12px;right:12px;z-index:99999;background:#1e293b;color:#e2e8f0;font-size:11px;font-family:monospace;padding:10px 14px;border-radius:8px;max-width:340px;line-height:1.8;border:1px solid #334155';
-    bar.innerHTML='⏳ Avvio diagnostica...';
-    document.body.appendChild(bar);
-    const lines=[];
-    // 1. localStorage
-    const tok=localStorage.getItem('fs_token');
-    const usr=localStorage.getItem('fs_user');
-    lines.push(tok?'✅ Token: '+tok.slice(0,14)+'...':'❌ Token: MANCANTE');
-    lines.push(usr?'✅ User LS: OK':'❌ User LS: MANCANTE');
-    // 2. currentUser (set by verifySession)
-    lines.push(typeof currentUser!=='undefined'&&currentUser?'✅ Session: '+((currentUser.name||currentUser.email)||'ok'):'❌ Session: NULL (verifySession fallita?)');
-    // 3. API test
-    try{
-      const r=await fetch('/api/quote?symbol=%5EGSPC');
-      if(r.ok){const d=await r.json();lines.push('✅ API: $'+d.price);}
-      else lines.push('❌ API: HTTP '+r.status);
-    }catch(e){lines.push('❌ API: '+e.message);}
-    // 4. Auth API test
-    try{
-      const r2=await fetch('/api/auth?action=verify',{headers:{Authorization:'Bearer '+(tok||'')}});
-      lines.push(r2.ok?'✅ Auth API: ok':'❌ Auth API: HTTP '+r2.status);
-    }catch(e){lines.push('❌ Auth API: '+e.message);}
-    bar.innerHTML=lines.join('<br>');
-    setTimeout(()=>{if(bar.parentNode)bar.parentNode.removeChild(bar);},25000);
-  })();
 });
 
 /* ── CHART HELPERS ── */
