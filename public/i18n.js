@@ -1953,6 +1953,12 @@ const TRANSLATIONS={
     /* ── MACRO CURVE / DXY SUB ── */
     'macro.curve.inverted':'Inverted curve','macro.curve.flat':'Flat curve','macro.curve.normal':'Normal curve',
     'macro.dxy.sub.strong':'Strong dollar','macro.dxy.sub.weak':'Weak dollar','macro.dxy.sub.neutral':'Neutral dollar',
+    /* ── COMMODITY LABELS ── */
+    'com.gold':'Gold · XAU/USD','com.oil':'Brent Oil','com.platinum':'Platinum · XPT/USD',
+    'com.silver':'Silver · XAG/USD','com.natgas':'Natural Gas','com.cocoa':'Cocoa · CC=F',
+    'com.copper':'Copper','com.wheat':'Wheat',
+    /* ── MACRO CB ── */
+    'macro.cb.name.bce':'European Central Bank',
   },
   de:{
     /* NAV */
