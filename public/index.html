@@ -7294,7 +7294,7 @@ function onPacAmountInput(){
   if(!amount){previewEl.style.display='none';return;}
   const csym=amountEl._pacIsEU?'€':'$';
   const qty=(amount/amountEl._pacPrice).toFixed(4);
-  previewEl.textContent=`Prezzo attuale: ${csym}${amountEl._pacPrice.toFixed(2)} · Con ${csym}${amount} compreresti circa ${qty} quote`;
+  previewEl.textContent=_L({it:`Prezzo attuale: ${csym}${amountEl._pacPrice.toFixed(2)} · Con ${csym}${amount} compreresti circa ${qty} quote`,en:`Current price: ${csym}${amountEl._pacPrice.toFixed(2)} · With ${csym}${amount} you would buy approx. ${qty} units`});
   previewEl.style.display='block';
 }
 
