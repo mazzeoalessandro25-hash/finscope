@@ -10951,7 +10951,7 @@ function _macroRenderCB(){
         <div class="cb-detail">${cb.short} · ${_t('macro.cb.next')} <strong>${cb.next}</strong></div>
         <div style="margin-top:4px;display:flex;align-items:center;gap:6px">
           <span style="font-size:9px;font-weight:700;font-family:var(--fm);padding:1px 7px;border-radius:3px;color:${bc};background:${bc}18;border:1px solid ${bc}30">${biasLbl[String(cb.biasDir)]}</span>
-          <span style="font-size:9px;color:var(--t3);font-family:var(--fm)">ult. ${cb.lastChg}</span>
+          <span style="font-size:9px;color:var(--t3);font-family:var(--fm)">${_L({it:'ult.',en:'last'})} ${cb.lastChg}</span>
         </div>
       </div>
       <div class="cb-rate">${cb.rate}%</div>
