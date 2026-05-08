@@ -16142,7 +16142,7 @@ function pqNext(){
   const maxScore=(PQ_QUESTIONS.length-1)*3;
   // Nascondi domanda e nav, mostra risultato
   document.getElementById('pq-progbar').style.width='100%';
-  document.getElementById('pq-counter').textContent='Completato ✓';
+  document.getElementById('pq-counter').textContent=_L({it:'Completato ✓',en:'Completed ✓'});
   document.getElementById('pq-q').style.display='none';
   document.getElementById('pq-opts').innerHTML='';
   document.getElementById('pq-nav').style.display='none';
