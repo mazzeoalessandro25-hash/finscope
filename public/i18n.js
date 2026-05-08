@@ -1062,6 +1062,15 @@ const TRANSLATIONS={
     'port.tab.reddito':'💰 Reddito & Fisco',
     'port.tab.gestione':'⚖️ Ribilanciamento',
     'port.tab.pac':'📅 PAC',
+    /* ── SECTION DIVIDERS ── */
+    'dash.crypto.title':'Criptovalute',
+    'dash.mktcap.title':'Top 10 Capitalizzazione',
+    'dash.cal.divider':'Calendario Mercati & Earnings',
+    'macro.rates.title':'Tassi & Rendimenti',
+    'macro.global.title':'Economia & Mercati Globali',
+    'macro.forex.title':'Forex & Indicatori Leading',
+    'macro.guide.title':'Guida Macro & Analisi Settoriale',
+    'macro.sectors.title':'Analisi Settoriale — 11 Settori GICS',
     /* ── PORTFOLIO CARD TITLES ── */
     'port.ct.analysis':'📊 Analisi del portafoglio',
     'port.ct.risk':'📉 Rischio & Volatilità',
