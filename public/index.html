@@ -5985,8 +5985,9 @@ function calcSim(){
   const al=ALLOC[strat];
   const pCtx=document.getElementById('pieChart').getContext('2d');
   if(pieCI)pieCI.destroy();
-  pieCI=new Chart(pCtx,{type:'doughnut',data:{labels:al.l,datasets:[{data:al.p,backgroundColor:al.c,borderColor:'#fff',borderWidth:3}]},options:{responsive:true,cutout:'70%',plugins:{legend:{display:false}}}});
-  document.getElementById('pie-leg').innerHTML=al.l.map((l,i)=>`<div class="pi"><div class="pi-dot" style="background:${al.c[i%al.c.length]}"></div><span class="pi-name">${l}</span><span class="pi-pct">${al.p[i]}%</span></div>`).join('');
+  const _alLabels=al.l.map(l=>typeof l==='object'?_L(l):l);
+  pieCI=new Chart(pCtx,{type:'doughnut',data:{labels:_alLabels,datasets:[{data:al.p,backgroundColor:al.c,borderColor:'#fff',borderWidth:3}]},options:{responsive:true,cutout:'70%',plugins:{legend:{display:false}}}});
+  document.getElementById('pie-leg').innerHTML=_alLabels.map((l,i)=>`<div class="pi"><div class="pi-dot" style="background:${al.c[i%al.c.length]}"></div><span class="pi-name">${l}</span><span class="pi-pct">${al.p[i]}%</span></div>`).join('');
 }
 
 /* ── FA ── */
