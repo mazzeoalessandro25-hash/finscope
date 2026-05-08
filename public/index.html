@@ -11442,8 +11442,8 @@ function _macroRenderAnalysis(d){
   const CB=MACRO_SNAP.cb;
   const WATCH=[
     {date:{it:'7 Mag',en:'7 May'},title:'FOMC \u2014 Federal Reserve',
-     note:{it:`Tassi al ${CB[0].rate}%, bias ${CB[0].bias}. Qualsiasi variazione del dot plot o del tono comunicativo muoverà bond e azioni. Il mercato dei future prezza già le aspettative di taglio.`,
-           en:`Rates at ${CB[0].rate}%, bias ${CB[0].bias}. Any change in the dot plot or communication tone will move bonds and equities. The futures market already prices in cut expectations.`},
+     note:{it:`Tassi al ${CB[0].rate}%, bias ${_L(CB[0].bias)}. Qualsiasi variazione del dot plot o del tono comunicativo muoverà bond e azioni. Il mercato dei future prezza già le aspettative di taglio.`,
+           en:`Rates at ${CB[0].rate}%, bias ${_L(CB[0].bias)}. Any change in the dot plot or communication tone will move bonds and equities. The futures market already prices in cut expectations.`},
      imp:'alta'},
     {date:{it:'5 Giu',en:'5 Jun'},title:'ECB \u2014 European Central Bank',
      note:{it:`Deposit rate al ${CB[1].rate}%, orientamento ${CB[1].bias}. La BCE è in ciclo di taglio: monitorare la divergenza con la Fed. EUR/USD debole avvantaggia gli esportatori europei.`,
