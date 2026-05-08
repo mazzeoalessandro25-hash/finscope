@@ -2833,6 +2833,15 @@ const TRANSLATIONS={
     'port.tab.reddito':'💰 Erträge & Steuern',
     'port.tab.gestione':'⚖️ Neugewichtung',
     'port.tab.pac':'📅 Sparplan',
+    /* ── SECTION DIVIDERS ── */
+    'dash.crypto.title':'Kryptowährungen',
+    'dash.mktcap.title':'Top 10 Marktkapitalisierung',
+    'dash.cal.divider':'Märkte & Earnings Kalender',
+    'macro.rates.title':'Zinsen & Renditen',
+    'macro.global.title':'Wirtschaft & Globale Märkte',
+    'macro.forex.title':'Forex & Frühindikatoren',
+    'macro.guide.title':'Makro-Leitfaden & Sektoranalyse',
+    'macro.sectors.title':'Sektoranalyse — 11 GICS-Sektoren',
     /* ── PORTFOLIO CARD TITLES ── */
     'port.ct.analysis':'📊 Portfolioanalyse',
     'port.ct.risk':'📉 Risiko & Volatilität',
