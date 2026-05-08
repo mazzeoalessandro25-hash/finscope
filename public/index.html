@@ -8876,8 +8876,8 @@ function renderPortDailyText(el, payload){
     {sym:'^GSPC', label:'S&P 500'},
     {sym:'^IXIC', label:'Nasdaq'},
     {sym:'^DJI',  label:'Dow'},
-    {sym:'GC=F',  label:'Oro'},
-    {sym:'CL=F',  label:'Petrolio'},
+    {sym:'GC=F',  label:_L({it:'Oro',en:'Gold'})},
+    {sym:'CL=F',  label:_L({it:'Petrolio',en:'Oil'})},
   ];
   const idxBadges=IDX.map(({sym,label})=>{
     const d=indicesMap[sym];
