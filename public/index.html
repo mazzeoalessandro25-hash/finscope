@@ -4881,6 +4881,29 @@ document.addEventListener('DOMContentLoaded',()=>{
   setLang(currentLang);
   // Avvia l'observer per contenuto generato dinamicamente (API calls, render JS)
   _i18nObserver.observe(document.body,{childList:true,subtree:true});
+
+  // ── DIAGNOSTICA AVVIO ──
+  (async function diagBoot(){
+    const bar=document.createElement('div');
+    bar.id='_diag_bar';
+    bar.style.cssText='position:fixed;bottom:12px;right:12px;z-index:99999;background:#1e293b;color:#e2e8f0;font-size:11px;font-family:monospace;padding:10px 14px;border-radius:8px;max-width:320px;line-height:1.6;border:1px solid #334155';
+    bar.innerHTML='⏳ Avvio diagnostica...';
+    document.body.appendChild(bar);
+    const lines=[];
+    // 1. Sessione
+    const tok=localStorage.getItem('fs_token');
+    const usr=localStorage.getItem('fs_user');
+    lines.push(tok?'✅ Token: '+tok.slice(0,14)+'...':'❌ Token: MANCANTE');
+    lines.push(usr?'✅ User: OK':'❌ User: MANCANTE');
+    // 2. API test
+    try{
+      const r=await fetch('/api/quote?symbol=%5EGSPC');
+      if(r.ok){const d=await r.json();lines.push('✅ API: $'+d.price);}
+      else lines.push('❌ API: HTTP '+r.status);
+    }catch(e){lines.push('❌ API: '+e.message);}
+    bar.innerHTML=lines.join('<br>');
+    setTimeout(()=>{if(bar.parentNode)bar.parentNode.removeChild(bar);},15000);
+  })();
 });
 
 /* ── CHART HELPERS ── */
