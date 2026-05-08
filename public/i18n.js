@@ -2542,5 +2542,17 @@ const TRANSLATIONS={
     'com.copper':'Kupfer','com.wheat':'Weizen',
     /* ── MACRO CB ── */
     'macro.cb.name.bce':'Europäische Zentralbank',
+    /* ── VIX PANEL ── */
+    'vix.title':'VIX — Marktvolatilität','vix.chart.btn':'↗ Diagramm',
+    'vix.subtitle':'CBOE Volatility Index · S&P 500 · klicken für Diagramm',
+    'vix.zone.calm':'Ruhig','vix.zone.normal':'Normal','vix.zone.tension':'Anspannung','vix.zone.fear':'Angst',
+    'vix.guide.title':'VIX-Zonen Leitfaden',
+    'vix.guide.calm':'Ruhiger Markt, geringe erwartete Volatilität',
+    'vix.guide.normal':'Normale Volatilität, stabiler Markt',
+    'vix.guide.high':'Hohe Volatilität, wachsende Unsicherheit',
+    'vix.guide.extreme':'Extreme Angst, mögliche Contrarian-Chance',
+    /* ── DASHBOARD MOVERS ── */
+    'dash.movers.title':'Beste & Schlechteste des Tages',
+    'dash.movers.sub':'Top 5 · Flop 5 · klicken für Diagramm',
   }
 };
