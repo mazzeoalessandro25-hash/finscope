@@ -7732,7 +7732,7 @@ async function executePacNow(id){
   try{
     const r=await fetch('/api/quote?symbol='+encodeURIComponent(p.sym));
     const q=await r.json();
-    if(!q.price)throw new Error('Prezzo non disponibile per '+p.sym);
+    if(!q.price)throw new Error(_L({it:'Prezzo non disponibile per ',en:'Price not available for '})+p.sym);
     const price=q.price;
     const qty=p.amount/price;
     const today=new Date().toISOString().split('T')[0];
