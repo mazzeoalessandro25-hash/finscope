@@ -8065,7 +8065,7 @@ async function renderPortfolio(){
   setV('ph-val-usd')(_isEUR?'€'+fmt(_heroValEUR,0):'$'+fmt(_heroValUSD,0));
   setV('ph-val-eur')(_isEUR?'≈ $'+fmt(_heroValUSD,0):'≈ €'+fmt(_heroValEUR,0));
   const _lblEl=document.getElementById('ph-val-lbl');
-  if(_lblEl)_lblEl.textContent=_isEUR?'Valore totale (EUR)':'Valore totale (USD)';
+  if(_lblEl)_lblEl.textContent=_isEUR?_L({it:'Valore totale (EUR)',en:'Total value (EUR)'}):_L({it:'Valore totale (USD)',en:'Total value (USD)'});
   setV('ph-count')(portfolio.length);
   setV('ph-sectors')(allSects.length+' '+(allSects.length===1?_t('port.sector.one'):_t('port.sector.many')));
   setC('ph-pnl')(((_heroUp?'+':'')+($=>'$'+fmt($,0))(_heroPnl)),_heroUp?'var(--g)':'var(--r)');
