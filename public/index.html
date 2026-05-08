@@ -16115,7 +16115,7 @@ function closePQ(){document.getElementById('pq-overlay').style.display='none';}
 function _pqRender(){
   const n=PQ_QUESTIONS.length,q=PQ_QUESTIONS[_pqIdx];
   document.getElementById('pq-progbar').style.width=((_pqIdx/n)*100)+'%';
-  document.getElementById('pq-counter').textContent='Domanda '+(_pqIdx+1)+' di '+n;
+  document.getElementById('pq-counter').textContent=_L({it:'Domanda ',en:'Question '})+(_pqIdx+1)+_L({it:' di ',en:' of '})+n;
   document.getElementById('pq-q').textContent=q.q;
   document.getElementById('pq-opts').innerHTML=q.opts.map((o,i)=>
     '<button class="pq-opt'+(_pqA[_pqIdx]===i?' pq-sel':'')+'" onclick="_pqSel('+i+')">'+o+'</button>'
