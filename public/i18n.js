@@ -2156,6 +2156,15 @@ const TRANSLATIONS={
     'port.tab.reddito':'💰 Income & Taxes',
     'port.tab.gestione':'⚖️ Rebalancing',
     'port.tab.pac':'📅 DCA',
+    /* ── SECTION DIVIDERS ── */
+    'dash.crypto.title':'Cryptocurrencies',
+    'dash.mktcap.title':'Top 10 Market Cap',
+    'dash.cal.divider':'Markets & Earnings Calendar',
+    'macro.rates.title':'Rates & Yields',
+    'macro.global.title':'Economy & Global Markets',
+    'macro.forex.title':'Forex & Leading Indicators',
+    'macro.guide.title':'Macro Guide & Sector Analysis',
+    'macro.sectors.title':'Sector Analysis — 11 GICS Sectors',
     /* ── PORTFOLIO CARD TITLES ── */
     'port.ct.analysis':'📊 Portfolio Analysis',
     'port.ct.risk':'📉 Risk & Volatility',
