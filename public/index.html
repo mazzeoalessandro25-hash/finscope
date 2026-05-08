@@ -5492,7 +5492,7 @@ async function loadMarketScreener(reset=true){
     stocks=data.stocks||[];
   }catch(e){
     body.innerHTML=`<tr><td colspan="12"><div class="sc-market-err">⚠ ${e.message}</div></td></tr>`;
-    if(loadBtn){loadBtn.disabled=false;loadBtn.textContent='Riprova';}
+    if(loadBtn){loadBtn.disabled=false;loadBtn.textContent=_L({it:'Riprova',en:'Retry'});}
     return;
   }
 
