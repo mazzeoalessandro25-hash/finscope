@@ -10700,12 +10700,12 @@ async function loadPortTargets(){
 let portPerfCI=null;
 // Benchmark famosi: sym → { label, sublabel, color, dash }
 const BENCH_DEFS={
-  'SPY':  {label:'S&P 500',     sub:'Mercato USA (500 aziende)',          color:'#8499B0',dash:[5,3]},
+  'SPY':  {label:'S&P 500',     sub:_L({it:'Mercato USA (500 aziende)',en:'US Market (500 companies)'}),          color:'#8499B0',dash:[5,3]},
   'BRK-B':{label:'Buffett',     sub:'Berkshire Hathaway — Warren Buffett',color:'#F59E0B',dash:[4,3]},
   'QQQ':  {label:'Nasdaq 100',  sub:'Big Tech & Growth',                  color:'#8B5CF6',dash:[5,3]},
   'ARKK': {label:'Cathie Wood', sub:'ARK Innovation ETF',                 color:'#EF4444',dash:[4,2]},
-  'ACWI': {label:'MSCI World',  sub:'1600+ aziende globali',              color:'#10B981',dash:[5,3]},
-  'GLD':  {label:'Oro',         sub:'Asset rifugio — All-Weather',        color:'#D97706',dash:[3,3]},
+  'ACWI': {label:'MSCI World',  sub:_L({it:'1600+ aziende globali',en:'1600+ global companies'}),              color:'#10B981',dash:[5,3]},
+  'GLD':  {label:_L({it:'Oro',en:'Gold'}),         sub:_L({it:'Asset rifugio — All-Weather',en:'Safe-haven asset — All-Weather'}),        color:'#D97706',dash:[3,3]},
 };
 let _activeBenches=new Set(['SPY','BRK-B']);
 function togglePerfBench(sym,btn){
