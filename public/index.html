@@ -11067,24 +11067,26 @@ function _macroRenderSnapshot(){
     reg.innerHTML=`<div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:100px;font-size:10px;font-weight:700;font-family:var(--fm);color:${rc[r]};background:${rb[r]};border:1px solid ${rbd[r]}">${rico[r]} ${rlbl[r]}</div>`;
   }
   const usUpd=document.getElementById('macro-us-upd');
-  if(usUpd)usUpd.textContent=_t('macro.updated')+' '+MACRO_SNAP.updatedAt+' · '+MACRO_SNAP.regimeNote;
+  if(usUpd)usUpd.textContent=_t('macro.updated')+' '+MACRO_SNAP.updatedAt+' · '+_L(MACRO_SNAP.regimeNote);
   const euUpd=document.getElementById('macro-eu-upd');
-  if(euUpd)euUpd.textContent=_t('macro.updated')+' '+MACRO_SNAP.updatedAt+' · Fonte: Eurostat · BCE';
+  if(euUpd)euUpd.textContent=_t('macro.updated')+' '+MACRO_SNAP.updatedAt+' · '+_L({it:'Fonte: Eurostat · BCE',en:'Source: Eurostat · ECB'});
 
   function renderList(items){
     return`<div style="display:flex;flex-direction:column;gap:1px">`+items.map(it=>{
       const arrow=it.dir==='up'?'▲':'▼';
       const col=it.better?'var(--g)':'var(--r)';
-      return`<div class="macro-mdi" title="${it.tip}">
-        <span class="macro-mdi-lbl">${it.l}</span>
+      const lbl=typeof it.l==='object'?_L(it.l):it.l;
+      const tip=typeof it.tip==='object'?_L(it.tip):it.tip;
+      return`<div class="macro-mdi" title="${tip}">
+        <span class="macro-mdi-lbl">${lbl}</span>
         <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">prec. ${it.p}</span>
+          <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${_L({it:'prec.',en:'prev.'})} ${it.p}</span>
           <span style="font-family:var(--fm);font-size:11px;font-weight:700;color:${col}">${arrow} ${it.v}</span>
         </div>
       </div>`;
     }).join('')+`</div>
     <div style="margin-top:10px;padding:8px 10px;background:var(--s2);border-radius:7px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.4px">
-      ▲▼ Direzione vs dato precedente · 🟢 Cambiamento favorevole · 🔴 Cambiamento sfavorevole
+      ${_L({it:'▲▼ Direzione vs dato precedente · 🟢 Cambiamento favorevole · 🔴 Cambiamento sfavorevole',en:'▲▼ Direction vs previous reading · 🟢 Favorable change · 🔴 Unfavorable change'})}
     </div>`;
   }
   const usEl=document.getElementById('macro-us-content');if(usEl)usEl.innerHTML=renderList(MACRO_SNAP.us);
