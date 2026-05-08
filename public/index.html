@@ -3837,36 +3837,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   }catch(e){}
 })();
 
-// ── PANNELLO DIAGNOSTICO IMMEDIATO ──
-(function(){
-  var d=document.createElement('div');
-  d.id='_diag2';
-  d.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:999999;background:#0f172a;color:#e2e8f0;font-size:12px;font-family:monospace;padding:10px 16px;border-top:2px solid #ef4444;line-height:1.8';
-  d.innerHTML='🔍 DIAG: tok='+(localStorage.getItem('fs_token')||'NULL').slice(0,16)+
-    ' | user='+(localStorage.getItem('fs_user')?'OK':'NULL')+
-    ' | <span id="_diag2_cur">session=caricamento...</span>'+
-    ' &nbsp;<button onclick="document.getElementById(\'_diag2\').remove()" style="float:right;background:#ef4444;color:#fff;border:none;padding:2px 8px;border-radius:4px;cursor:pointer;font-size:11px">✕</button>';
-  document.body.appendChild(d);
-  // Aggiorna stato currentUser dopo che verifySession ha avuto il tempo di girare
-  setTimeout(function(){
-    var s=document.getElementById('_diag2_cur');
-    if(!s)return;
-    try{
-      s.textContent='session='+(typeof currentUser!=='undefined'&&currentUser
-        ?'✅ '+(currentUser.name||currentUser.email)
-        :'❌ NULL');
-    }catch(e){s.textContent='❌ err:'+e.message;}
-  },2000);
-  // Cattura errori JS globali
-  window.addEventListener('error',function(ev){
-    var d2=document.getElementById('_diag2');
-    if(!d2)return;
-    var e=document.createElement('div');
-    e.style.color='#f87171';
-    e.textContent='⚠ JS: '+(ev.message||'?')+' (L'+ev.lineno+')';
-    d2.appendChild(e);
-  });
-})();
 
 const API='/api/quote';
 // _L/_LA declared here (top of script) to avoid TDZ — calcSim() and others call them early
