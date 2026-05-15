@@ -337,6 +337,47 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   <div class="foot-note">© 2026 Alessandro Mazzeo · Tutti i diritti riservati · v1.1 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
 
+<script>
+(function(){
+  if(localStorage.getItem('fs_lang')!=='en')return;
+  document.documentElement.lang='en';
+  document.title='Disclaimer — FinEdge';
+  var q=function(s){return document.querySelector(s);};
+  var qa=function(s){return Array.from(document.querySelectorAll(s));};
+  var t=function(s,v){var e=q(s);if(e)e.textContent=v;};
+  var h=function(s,v){var e=q(s);if(e)e.innerHTML=v;};
+  h('.back','← Back to home');
+  t('.hero-tag','Legal document');
+  t('.hero h1','Legal disclaimer');
+  t('.hero-sub','Last updated: April 2026 · v1.1 · Pursuant to D.Lgs. 58/1998 (TUF) and MiFID II Directive');
+  t('.summary-label','First of all — please read it');
+  t('.summary h2','FinEdge is not a financial advisor. Ever.');
+  t('.summary p','What you see on FinEdge — scores, price targets, charts, news — is data and informational tools, not advice on what to buy or sell. Investment decisions are yours and yours alone. Investing always carries the risk of losing money.');
+  t('.toc-label','Contents');
+  var ti=qa('.toc-item');
+  [['01','Not financial advice'],['02','Investment risks'],['03','Data accuracy'],['04','Limitation of liability'],['05','What FinEdge is (and is not)'],['06','Applicable regulations']].forEach(function(v,i){if(ti[i])ti[i].innerHTML='<span class="toc-num">0'+(i+1)+'</span>'+v[1];});
+  var cn=qa('.card-num');
+  ['01 — NATURE OF THE SERVICE','02 — INVESTMENT RISKS','03 — DATA ACCURACY','04 — LIMITATION OF LIABILITY','05 — NATURE OF THE TOOL','06 — APPLICABLE REGULATIONS'].forEach(function(v,i){if(cn[i])cn[i].textContent=v;});
+  var h2=qa('.card h2');
+  ['FinEdge is not financial advice','Investing involves real risks','Data is informational, not certified','What we cannot guarantee','What FinEdge is (and is not)','Legislative references'].forEach(function(v,i){if(h2[i])h2[i].textContent=v;});
+  var pl=qa('.plain-label');
+  Array(6).fill('In plain terms').forEach(function(v,i){if(pl[i])pl[i].textContent=v;});
+  var pp=qa('.plain p');
+  ['A FinEdge Score of "85/100" on a stock is not a buy recommendation. It is a processed data point. The final decision — buy, sell, wait — is always yours.','You can lose money investing. This is always true, regardless of what any tool says — including FinEdge. Never invest more than you can afford to lose.','Prices you see may be a few minutes delayed. Do not use FinEdge for intraday trading or decisions requiring certified real-time data.','If you lose money in the market after using FinEdge, we cannot be held liable. The tool helps you analyse — but the choice to invest and the resulting risk are yours.','FinEdge is a tool that helps you understand the stocks you are evaluating better. It does not tell you what to do. You are the investor.','These are the Italian and European laws that define what a tool like FinEdge can and cannot do. We comply with them.'].forEach(function(v,i){if(pp[i])pp[i].textContent=v;});
+  var nd=qa('.norm-code');
+  ['✓ WHAT IT IS','✗ WHAT IT IS NOT','✓ WHO IT IS FOR','✗ NOT SUITABLE FOR'].forEach(function(v,i){if(nd[i])nd[i].textContent=v;});
+  var ndc=qa('.norm-desc');
+  ['An information, monitoring, and quantitative analysis tool for individual investors.','A financial advisory service, an asset manager, a trading platform.','Informed investors who want to aggregate and analyse public data efficiently.','High-frequency trading, decisions based on certified real-time data, management of third-party assets.'].forEach(function(v,i){if(ndc[i])ndc[i].textContent=v;});
+  t('.safe-label','What you can do with FinEdge');
+  t('.safe-box p','Analyse stocks with aggregated fundamental data, monitor your portfolio in real time, explore investment ideas with the screener, simulate the growth of your savings over time. All of this, with critical thinking and awareness of the risks.');
+  qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
+  t('.foot-note','© 2026 Alessandro Mazzeo · All rights reserved · v1.1 · info@finedge.it');
+  var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
+  var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
+})();
+</script>
 <!-- ═══ COOKIE CONSENT BANNER ═══ -->
 <style>
 #ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;

@@ -287,6 +287,58 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
 </footer>
 
 <script>
+(function(){
+  if(localStorage.getItem('fs_lang')!=='en')return;
+  document.documentElement.lang='en';
+  document.title='Contact — FinEdge';
+  var q=function(s){return document.querySelector(s);};
+  var qa=function(s){return Array.from(document.querySelectorAll(s));};
+  var t=function(s,v){var e=q(s);if(e)e.textContent=v;};
+  var h=function(s,v){var e=q(s);if(e)e.innerHTML=v;};
+  h('.back','← Back to home');
+  t('.hero-tag','Support');
+  t('.hero h1','Contact');
+  h('.hero-sub','Have a question, a bug to report, or want to give us feedback? We\'re here — <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.75);font-weight:600;text-decoration:none">info@finedge.it</a>');
+  var ct=qa('.channel-title'),cd=qa('.channel-desc'),ctm=qa('.channel-time');
+  ['Contact form','Report a bug','Suggest a feature'].forEach(function(v,i){if(ct[i])ct[i].textContent=v;});
+  ['Fill in the form below for any request','Something not working? Select "Bug" in the form','The best ideas come from users — write to us'].forEach(function(v,i){if(cd[i])cd[i].textContent=v;});
+  ['Response within 24–48h','High priority','Read carefully'].forEach(function(v,i){if(ctm[i])ctm[i].textContent=v;});
+  t('.faq-label','Direct email contact');
+  if(ct[3])ct[3].textContent='Support and general requests';
+  if(cd[3])cd[3].textContent='Technical support, privacy, account, feedback';
+  if(ct[4])ct[4].textContent='Partnership and affiliations';
+  if(cd[4])cd[4].innerHTML='Subject: "Partnership" · response within 2–3 business days';
+  t('.form-title','Write to us');
+  t('.form-sub','All fields marked with * are required');
+  var ln=q('label[for="nome"]');if(ln)ln.innerHTML='Name <span>*</span>';
+  var le=q('label[for="email"]');if(le)le.innerHTML='Email <span>*</span>';
+  var lob=q('label[for="oggetto"]');if(lob)lob.innerHTML='Subject <span>*</span>';
+  var lm=q('label[for="messaggio"]');if(lm)lm.innerHTML='Message <span>*</span>';
+  var ni=document.getElementById('nome');if(ni)ni.placeholder='Your name';
+  var mi=document.getElementById('messaggio');if(mi)mi.placeholder='Describe your request in detail...';
+  var sel=document.getElementById('oggetto');
+  if(sel){
+    var opts=sel.options;
+    var om={'Seleziona un argomento...':'Select a subject...','Supporto tecnico':'Technical support','Segnalazione bug':'Bug report','Suggerimento funzionalità':'Feature suggestion','Problema con l\'account':'Account issue','Richiesta privacy / GDPR':'Privacy / GDPR request','Partnership o collaborazione':'Partnership or collaboration','Domanda su link affiliati':'Affiliate link question','Altro':'Other'};
+    for(var i=0;i<opts.length;i++){if(om[opts[i].text])opts[i].text=om[opts[i].text];}
+  }
+  var cb=q('label[for="privacy-consent"]');
+  if(cb)cb.innerHTML='I have read and accept the <a href="./privacy.html" target="_blank">Privacy Policy</a>. My data will be used solely to respond to my request.';
+  var sb=document.getElementById('submit-btn');if(sb)sb.textContent='Send message →';
+  var fsi=q('.form-success h3');if(fsi)fsi.textContent='Message sent!';
+  var fsp=q('.form-success p');if(fsp)fsp.textContent='Thank you for writing to us. We will reply to the email address provided within 24–48 business hours.';
+  var fq=q('.faq-label+.faq-grid~.faq-label')||qa('.faq-label')[1];
+  if(fq)fq.textContent='Frequently asked questions';
+  var fqq=qa('.faq-q'),fqa=qa('.faq-a');
+  ['How do I delete my account?','How do I exercise my GDPR rights?','Is market data delayed?','Is FinEdge a financial advisor?'].forEach(function(v,i){if(fqq[i])fqq[i].textContent=v;});
+  ['Send us a request via this form selecting "Account issue". We will process it within 48h and delete all your data within 30 days.','Select "Privacy / GDPR request" in the form. For details on your rights, see the <a href="./privacy.html">Privacy Policy</a>.','Yes, stock data from Yahoo Finance may be delayed by up to 15 minutes during trading sessions. Crypto data from CoinGecko is near real-time.','No. FinEdge is an informational tool. No content constitutes advice. Read the <a href="./disclaimer.html">full Disclaimer</a>.'].forEach(function(v,i){if(fqa[i])fqa[i].innerHTML=v;});
+  qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
+  var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
+  var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
+})();
+
 const form = document.getElementById('contact-form');
 const btn = document.getElementById('submit-btn');
 const success = document.getElementById('form-success');
@@ -294,8 +346,9 @@ const success = document.getElementById('form-success');
 if (form) {
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
+    var isEn=localStorage.getItem('fs_lang')==='en';
     btn.disabled = true;
-    btn.textContent = 'Invio in corso...';
+    btn.textContent = isEn?'Sending...':'Invio in corso...';
     try {
       const res = await fetch(form.action, {
         method: 'POST',
@@ -307,13 +360,13 @@ if (form) {
         success.style.display = 'block';
       } else {
         btn.disabled = false;
-        btn.textContent = 'Errore — riprova';
-        setTimeout(() => { btn.textContent = 'Invia messaggio →'; }, 3000);
+        btn.textContent = isEn?'Error — try again':'Errore — riprova';
+        setTimeout(() => { btn.textContent = isEn?'Send message →':'Invia messaggio →'; }, 3000);
       }
     } catch {
       btn.disabled = false;
-      btn.textContent = 'Errore di rete — riprova';
-      setTimeout(() => { btn.textContent = 'Invia messaggio →'; }, 3000);
+      btn.textContent = isEn?'Network error — try again':'Errore di rete — riprova';
+      setTimeout(() => { btn.textContent = isEn?'Send message →':'Invia messaggio →'; }, 3000);
     }
   });
 }

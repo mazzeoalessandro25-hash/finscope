@@ -1101,6 +1101,16 @@ const TRANSLATIONS={
     'port.cs.alerts':'Notifiche visive al raggiungimento del prezzo · Gestione alert attivi',
     'port.cs.news':'Le ultime news per le aziende e gli ETF che hai in portafoglio',
     'port.cs.pac':'Investimento automatico mensile · Primo giorno lavorativo del mese · Prezzo di mercato',
+    /* ── SIM TYPE DROPDOWN ── */
+    'sim.group.stocks':'Azioni','sim.group.etf':'ETF','sim.group.funds':'Fondi','sim.group.pension':'Previdenza',
+    'sim.opt.balanced':'Portafoglio Bilanciato (60/40)','sim.opt.growth':'Portafoglio Growth (80/20)',
+    'sim.opt.conservative':'Portafoglio Conservativo (40/60)','sim.opt.dividend':'Portafoglio Dividendi',
+    'sim.opt.etf':'ETF Globale (MSCI World)','sim.opt.etf_eu':'ETF Europa',
+    'sim.opt.etf_em':'ETF Mercati Emergenti','sim.opt.etf_bond':'ETF Obbligazionario',
+    'sim.opt.fund_eq':'Fondo Azionario Attivo','sim.opt.fund_mix':'Fondo Misto Bilanciato',
+    'sim.opt.fund_bond':'Fondo Obbligazionario',
+    'sim.opt.pension_pip':'Piano Individuale Pensionistico (PIP)',
+    'sim.opt.pension_fop':'Fondo Pensione Aperto','sim.opt.pension_fch':'Fondo Pensione Chiuso (Categoria)',
   },
   en:{
     /* NAV */
@@ -2195,6 +2205,16 @@ const TRANSLATIONS={
     'port.cs.alerts':'Visual notifications when price is reached · Manage active alerts',
     'port.cs.news':'Latest news for companies and ETFs in your portfolio',
     'port.cs.pac':'Monthly automatic investment · First business day of month · Market price',
+    /* ── SIM TYPE DROPDOWN ── */
+    'sim.group.stocks':'Stocks','sim.group.etf':'ETF','sim.group.funds':'Funds','sim.group.pension':'Pension',
+    'sim.opt.balanced':'Balanced Portfolio (60/40)','sim.opt.growth':'Growth Portfolio (80/20)',
+    'sim.opt.conservative':'Conservative Portfolio (40/60)','sim.opt.dividend':'Dividend Portfolio',
+    'sim.opt.etf':'Global ETF (MSCI World)','sim.opt.etf_eu':'European ETF',
+    'sim.opt.etf_em':'Emerging Markets ETF','sim.opt.etf_bond':'Bond ETF',
+    'sim.opt.fund_eq':'Active Equity Fund','sim.opt.fund_mix':'Balanced Mixed Fund',
+    'sim.opt.fund_bond':'Bond Fund',
+    'sim.opt.pension_pip':'Individual Pension Plan (PIP)',
+    'sim.opt.pension_fop':'Open Pension Fund','sim.opt.pension_fch':'Closed Pension Fund (Category)',
   },
   de:{
     /* NAV */

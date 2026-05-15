@@ -433,6 +433,50 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   <div class="foot-note">© 2026 Alessandro Mazzeo · Conforme GDPR · v1.2 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
 
+<script>
+(function(){
+  if(localStorage.getItem('fs_lang')!=='en')return;
+  document.documentElement.lang='en';
+  document.title='Privacy Policy — FinEdge';
+  var q=function(s){return document.querySelector(s);};
+  var qa=function(s){return Array.from(document.querySelectorAll(s));};
+  var t=function(s,v){var e=q(s);if(e)e.textContent=v;};
+  var h=function(s,v){var e=q(s);if(e)e.innerHTML=v;};
+  h('.back','← Back to home');
+  t('.hero-tag','Legal document');
+  t('.hero-sub','Last updated: May 2026 · v1.2 · GDPR compliant (EU Reg. 2016/679)');
+  t('.summary-label','In brief — no legalese');
+  t('.summary h2','What do we do with your data? The honest answer.');
+  t('.summary p','We collect only what is needed to run your account: email, password (encrypted, we never see it), and data you enter yourself (portfolio and watchlist). We do not sell personal data. The site may show ads (Google AdSense) and contain affiliate links to partner brokers and platforms — always with your explicit consent via the cookie banner. You can request deletion of your data at any time.');
+  t('.toc-label','Contents');
+  var ti=qa('.toc-item');
+  [['#titolare','01','Data controller'],['#base','02','Legal basis'],['#dati','03','Data collected'],['#utilizzo','04','How we use data'],['#provider','05','Third-party providers'],['#conservazione','06','Data retention'],['#diritti','07','Your GDPR rights'],['#cookie','08','Cookies'],['#contatti','09','Contact']].forEach(function(v,i){if(ti[i])ti[i].innerHTML='<span class="toc-num">'+v[1]+'</span>'+v[2];});
+  var cn=qa('.card-num');
+  ['01 — DATA CONTROLLER','02 — LEGAL BASIS','03 — DATA COLLECTED','04 — DATA USE','05 — THIRD-PARTY PROVIDERS','06 — DATA RETENTION','07 — USER RIGHTS','08 — COOKIES','09 — CONTACT'].forEach(function(v,i){if(cn[i])cn[i].textContent=v;});
+  var h2=qa('.card h2');
+  ['Who is responsible for your data','Why we are authorised to process your data','What we collect exactly','What we use your data for','External services we use','How long we retain data','Your rights guaranteed by GDPR','What they are and which we use','How to reach us'].forEach(function(v,i){if(h2[i])h2[i].textContent=v;});
+  var pl=qa('.plain-label');
+  Array(9).fill('In plain terms').forEach(function(v,i){if(pl[i])pl[i].textContent=v;});
+  var pp=qa('.plain p');
+  ['Alessandro Mazzeo is the individual who manages FinEdge. If you have questions about your data, he is your direct point of contact.','We process your data because it is essential for you to use FinEdge. Without an email you cannot log in; without a saved portfolio you have no service. Nothing more.','We collect the bare minimum. There is no internal behavioural tracking, no profile built on you. The site may show ads (AdSense) and affiliate links with your consent — but your portfolio data is never used for advertising purposes.','Your data is used only to make FinEdge work for you. Full stop.','We use reliable, widely-adopted tools. Yahoo Finance and CoinGecko never receive your personal data — only anonymous requests for public prices. For other US-based providers, legal agreements are in place that protect your data outside the EU.','We keep your data as long as you use the service. If you delete your account, we delete everything within a month.','You have full control over your data. A single email is enough to request anything: a copy, a correction, or complete deletion.','Technical cookies keep you logged in — mandatory. Advertising (AdSense) and affiliate cookies are activated only if you give consent via the banner. We do not build profiles on you, we do not sell your data. If you click a partner link, the broker can know you arrived from FinEdge: that is how affiliate marketing works, declared and transparent.',''].forEach(function(v,i){if(pp[i]&&v)pp[i].textContent=v;});
+  var lt=qa('.legal-text');
+  if(lt[0])lt[0].innerHTML='The Data Controller pursuant to art. 4 no. 7 of EU Reg. 2016/679 (GDPR) is <strong>Alessandro Mazzeo</strong>, founder and developer of FinEdge. For any enquiry, contact the Controller via the support form available in the application.';
+  if(lt[1])h('.card:nth-of-type(2) ul','<li><strong>Performance of contract (art. 6.1.b GDPR)</strong> — account data is necessary to provide you with the service.</li><li><strong>Legitimate interest (art. 6.1.f GDPR)</strong> — anonymous technical logs serve to maintain the security and correct functioning of the platform.</li><li><strong>Consent (art. 6.1.a GDPR)</strong> — for any optional communication by email, if we were ever to activate it.</li>');
+  if(lt[3])h('.card:nth-of-type(3) ul','<li><strong>Email</strong> — used for login and password recovery. Not used for marketing.</li><li><strong>Password</strong> — never stored in plain text. Encrypted with <strong>bcrypt</strong> by Clerk before being saved. Not even we can see it.</li><li><strong>Portfolio and watchlist</strong> — data you enter voluntarily: tickers, quantities, purchase prices.</li><li><strong>Price alerts</strong> — price notifications you voluntarily set on individual financial instruments.</li><li><strong>PAC plans</strong> — accumulation plan configurations you enter voluntarily (ticker, amount, frequency).</li><li><strong>Anonymous technical logs</strong> — automatically generated by Vercel (anonymised IP, request path, timestamp). Used only for security and diagnostics.</li>');
+  var prov=qa('.provider-role');
+  ['Authentication & account management','Hosting and infrastructure','Portfolio & watchlist database','Stock market data (read-only)','Crypto market data (read-only)'].forEach(function(v,i){if(prov[i])prov[i].textContent=v;});
+  if(lt[6])lt[6].innerHTML='The providers listed above (except Yahoo Finance and CoinGecko, which receive only anonymous requests for public data) act as Data Processors pursuant to art. 28 GDPR. Clerk, Vercel, and Upstash are based in the United States: data transfers occur in compliance with the guarantees provided under Chapter V GDPR, via <strong>Standard Contractual Clauses (SCC)</strong> adopted by the European Commission and/or EU-U.S. Data Privacy Framework certification where applicable.';
+  var rn=qa('.right-name'),rd=qa('.right-desc');
+  ['Access (art. 15)','Rectification (art. 16)','Erasure (art. 17)','Portability (art. 20)','Objection (art. 21)','Restriction (art. 18)'].forEach(function(v,i){if(rn[i])rn[i].textContent=v;});
+  ['You can request a copy of all data we hold about you.','You can correct inaccurate or incomplete data.','You can ask to have all your data deleted ("right to be forgotten").','You can receive your data in a readable format and transfer it elsewhere.','You can object to processing based on legitimate interest.','You can ask to temporarily block the processing.'].forEach(function(v,i){if(rd[i])rd[i].textContent=v;});
+  t('.contact-box p','Have a question about your privacy or want to exercise your rights?');
+  qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
+  var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
+  var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
+})();
+</script>
 <!-- ═══ COOKIE CONSENT BANNER ═══ -->
 <style>
 #ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;

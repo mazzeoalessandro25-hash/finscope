@@ -472,6 +472,57 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · v1.0 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
 
+<script>
+(function(){
+  if(localStorage.getItem('fs_lang')!=='en')return;
+  document.documentElement.lang='en';
+  document.title='Cookie Policy — FinEdge';
+  var q=function(s){return document.querySelector(s);};
+  var qa=function(s){return Array.from(document.querySelectorAll(s));};
+  var t=function(s,v){var e=q(s);if(e)e.textContent=v;};
+  var h=function(s,v){var e=q(s);if(e)e.innerHTML=v;};
+  h('.back','← Back to home');
+  t('.hero-tag','Legal document');
+  t('.hero h1','Cookie Policy');
+  t('.hero-sub','Last updated: May 2026 · v1.0 · GDPR compliant (EU Reg. 2016/679) and ePrivacy Directive 2002/58/EC');
+  t('.summary-label','In brief');
+  t('.summary h2','What you\'ll find on this page.');
+  t('.summary p','FinEdge uses technical cookies necessary for account functionality, anonymous aggregate analytics (Vercel Analytics), and — if you have consented — Google AdSense advertising cookies to show relevant ads. You can manage or refuse non-essential cookies at any time.');
+  t('.toc-label','Contents');
+  var ti=qa('.toc-item');
+  [['01','What cookies are'],['02','Technical and functional cookies'],['03','Analytics cookies'],['04','Advertising cookies (Google AdSense)'],['05','How to opt out'],['06','Browser management'],['07','Updates']].forEach(function(v,i){if(ti[i])ti[i].innerHTML='<span class="toc-num">0'+(i+1)+'</span>'+v[1];});
+  var cn=qa('.card-num');
+  ['01 — WHAT COOKIES ARE','02 — TECHNICAL AND FUNCTIONAL COOKIES','03 — ANALYTICS COOKIES','04 — ADVERTISING COOKIES','05 — OPT-OUT','06 — BROWSER MANAGEMENT','07 — UPDATES'].forEach(function(v,i){if(cn[i])cn[i].textContent=v;});
+  var h2=qa('.card h2');
+  ['A brief technical explanation','Required for the service to work','Understanding how the site works (anonymously)','Google AdSense — relevant ads','How to refuse or disable advertising cookies','Deleting or blocking cookies from your browser','How we keep this policy up to date'].forEach(function(v,i){if(h2[i])h2[i].textContent=v;});
+  var pl=qa('.plain-label');
+  Array(7).fill('In plain terms').forEach(function(v,i){if(pl[i])pl[i].textContent=v;});
+  var pp=qa('.plain p');
+  ['Cookies are like a sticky note the site leaves in your browser. Some are essential to keep you logged in, others help us understand how the site is performing, others are used to show advertising.','Without these cookies you cannot stay logged in, we cannot remember your language, and the theme resets every time. They are the essential technical minimum.','We know how many people visit FinEdge, but not who they are. No cookies, no profiles, no personal data. It is like counting customers in a shop without taking their names.','Google uses these cookies to show you ads more relevant to your interests, by remembering the sites you have visited. You can disable them at any time — see the next section.','Click one of the links above to manage your preferences. You will still be able to use FinEdge normally — you will just see non-personalised ads.','If you want to clear everything, go to your browser settings and search for "Cookies". You can delete only finedge.it cookies without touching other sites.',''].forEach(function(v,i){if(pp[i]&&v)pp[i].textContent=v;});
+  var th=qa('.cookie-table th');
+  ['Name','Provider','Purpose','Duration','Type','Tool','Provider','Purpose','Cookies?','Type','Name','Domain','Purpose','Duration','Tool','Provider','Purpose','Cookies?','Type'].forEach(function(v,i){if(th[i])th[i].textContent=v;});
+  var btd=qa('.cookie-table td');
+  var tdMap={'Mantiene attiva la sessione di login':'Keeps login session active','Timestamp ultimo aggiornamento account':'Last account update timestamp','Token di autenticazione (localStorage)':'Authentication token (localStorage)','Dati utente base per la UI (localStorage)':'Basic user data for the UI (localStorage)','Preferenza tema chiaro/scuro (localStorage)':'Light/dark theme preference (localStorage)','Preferenza lingua selezionata (localStorage)':'Selected language preference (localStorage)','Sessione':'Session','Persistente':'Persistent','Statistiche aggregate di utilizzo (anonime, no profilo)':'Aggregate usage statistics (anonymous, no profile)','No (cookieless)':'No (cookieless)','Registra le interazioni con gli annunci per evitare di mostrare lo stesso annuncio troppe volte':'Records ad interactions to avoid showing the same ad too many times','Identifica il browser per la personalizzazione degli annunci':'Identifies the browser for ad personalisation','Riduce la frequenza di visualizzazione degli annunci':'Reduces ad display frequency','Identifica l\'utente nei siti partner di Google Display Network':'Identifies the user on Google Display Network partner sites','Registra e riporta le azioni dell\'utente dopo aver visto o cliccato un annuncio':'Records and reports user actions after viewing or clicking an ad','Verifica che il browser supporti i cookie':'Checks that the browser supports cookies','13 mesi':'13 months','2 settimane':'2 weeks'};
+  btd.forEach(function(td){if(tdMap[td.textContent])td.textContent=tdMap[td.textContent];});
+  var oh=qa('.optout-box h3');
+  ['Google — Personalised ad settings','YourOnlineChoices / AboutAds','Google Analytics Opt-out'].forEach(function(v,i){if(oh[i])oh[i].textContent=v;});
+  var op=qa('.optout-box p');
+  if(op[0])op[0].textContent='You can disable Google ad personalisation for all sites using AdSense from the official Google page:';
+  if(op[2])op[2].textContent='Or from the dedicated ad settings page:';
+  if(op[4])op[4].textContent='You can manage preferences for all major ad networks (including Google) via the industry self-regulation portals:';
+  if(op[7])op[7].textContent='If you do not want your data used by Google Analytics on any site, you can install the official browser add-on:';
+  var bn=qa('.browser-name'),bp=qa('.browser-path');
+  if(bp[0])bp[0].textContent='Settings → Privacy and security → Cookies and other site data';
+  if(bp[1])bp[1].textContent='Settings → Privacy & Security → Cookies and Site Data';
+  if(bp[2])bp[2].textContent='Preferences → Privacy → Manage Website Data';
+  if(bp[3])bp[3].textContent='Settings → Cookies and site permissions → Cookies and stored data';
+  qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
+  var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
+  var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
+})();
+</script>
 <!-- ═══ COOKIE CONSENT BANNER ═══ -->
 <style>
 #ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;

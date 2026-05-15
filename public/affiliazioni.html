@@ -493,6 +493,47 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · v1.0 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
 
+<script>
+(function(){
+  if(localStorage.getItem('fs_lang')!=='en')return;
+  document.documentElement.lang='en';
+  document.title='Affiliate Transparency — FinEdge';
+  var q=function(s){return document.querySelector(s);};
+  var qa=function(s){return Array.from(document.querySelectorAll(s));};
+  var t=function(s,v){var e=q(s);if(e)e.textContent=v;};
+  var h=function(s,v){var e=q(s);if(e)e.innerHTML=v;};
+  h('.back','← Back to home');
+  t('.hero-tag','Informational document');
+  t('.hero h1','Affiliate transparency');
+  t('.hero-sub','Last updated: May 2026 · v1.0 · Compliant with D.Lgs. 145/2007 · Consumer Code · FTC Endorsement Guidelines · EU Reg. 2019/2161');
+  t('.summary-label','In brief — no legalese');
+  t('.summary h2','What you\'ll find on this page.');
+  t('.summary p','FinEdge may contain links to partner brokers, exchanges, and platforms. If you click and open an account, FinEdge may receive a commission from the partner — with no additional cost to you. Prices and conditions for the user remain identical. Our analyses, Score, and screener are never influenced by who is a partner: we state that here, clearly.');
+  t('.toc-label','Contents');
+  var ti=qa('.toc-item');
+  [['01','What affiliate links are'],['02','No additional cost to you'],['03','Editorial independence'],['04','How to recognise affiliate links'],['05','Current partners'],['06','How we choose partners'],['07','Your rights as a user'],['08','CFD and leverage disclaimer'],['09','Contact and reports']].forEach(function(v,i){if(ti[i])ti[i].innerHTML='<span class="toc-num">0'+(i+1)+'</span>'+v[1];});
+  var cn=qa('.card-num');
+  ['01 — WHAT AFFILIATE LINKS ARE','02 — NO ADDITIONAL COST TO YOU','03 — EDITORIAL INDEPENDENCE','04 — HOW TO RECOGNISE AFFILIATE LINKS','05 — CURRENT PARTNERS','06 — HOW WE CHOOSE PARTNERS','07 — YOUR RIGHTS AS A USER','08 — CFD AND LEVERAGE DISCLAIMER','09 — CONTACT AND REPORTS'].forEach(function(v,i){if(cn[i])cn[i].textContent=v;});
+  var h2=qa('.card h2');
+  ['How the mechanism works, no magic','The price you pay is identical. Always.','Affiliations do not influence the analyses. Ever.','We make them visible. Always.','Who are FinEdge\'s partners','Selection criteria — not the commission','Freedom of choice, always','High-risk products — read first','How to reach us'].forEach(function(v,i){if(h2[i])h2[i].textContent=v;});
+  var pl=qa('.plain-label');
+  Array(9).fill('In plain terms').forEach(function(v,i){if(pl[i])pl[i].textContent=v;});
+  var pp=qa('.plain p');
+  ['It works like a referral code: FinEdge refers, the broker pays FinEdge for the referral. You open an account on the same terms you would get visiting the site directly. No magic, no hidden costs.','Clicking an affiliate link costs you nothing extra. It often benefits you, because some partners reserve better conditions for users arriving through selected partners like FinEdge.','If tomorrow a broker offers us an astronomical commission but has terrible reviews or weak regulation, we will not accept it. And if a non-partner broker gets a very high score on FinEdge, the score stays very high. Money does not buy the algorithm.','We will never hide that a link is affiliated. If it is, you will find it written next to the link — without needing to read a 20-page policy to discover it.','These are the brokers and platforms we partner with or are evaluating a partnership with. You can freely use others — no pressure.','If a broker pays well but is not regulated or has a poor reputation, we will not accept it. Commission comes after quality — not before.','You use FinEdge to analyse, not to be directed where it suits us. You choose. Always.','CFDs cause losses for the majority of retail investors. This is not an opinion: it is a figure brokers are legally required to disclose. If you have no experience with leverage, avoid these products.',''].forEach(function(v,i){if(pp[i]&&v)pp[i].textContent=v;});
+  var pc=qa('.partner-cat');
+  ['Italian brokers','European brokers','Global brokers','Crypto exchanges','Hardware wallets','Tools and analysis','Affiliate networks'].forEach(function(v,i){if(pc[i])pc[i].textContent=v;});
+  var cc=qa('.criterio-title'),ccd=qa('.criterio-desc');
+  ['Regulation','Reputation and history','Fund protection','Service quality','Competitive fees','Transparency'].forEach(function(v,i){if(cc[i])cc[i].textContent=v;});
+  ['Authorisation from recognised regulators: CONSOB, BaFin, CySEC, FCA, SEC, FINMA or equivalent. No unregulated brokers.','Years of operation, absence of serious sanctions, user reviews, group financial soundness.','Client fund segregation, membership in compensation schemes (FSCS, SIPC, FGD), MiCA compliance for crypto.','Reliable platform, responsive customer support, range of instruments suitable for Italian and European retail investors.','Fair trading commissions, contained spreads, no opaque or potentially misleading pricing practices.','Clear communication on costs, risks, and conditions. No brokers that hide costs or use misleading marketing.'].forEach(function(v,i){if(ccd[i])ccd[i].textContent=v;});
+  t('.safe-label','Our commitment');
+  t('.safe-box p','Affiliate transparency is not a legal obligation we fulfil reluctantly: it is part of the way FinEdge wants to operate. If something changes in the future — new partners, new methods — this page will be updated and the revision date will be visible at the top.');
+  qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
+  var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and affiliate cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
+  var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
+})();
+</script>
 <!-- ═══ COOKIE CONSENT BANNER ═══ -->
 <style>
 #ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;

@@ -357,6 +357,40 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · v1.1 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
 
+<script>
+(function(){
+  if(localStorage.getItem('fs_lang')!=='en')return;
+  document.documentElement.lang='en';
+  document.title='Terms and Conditions — FinEdge';
+  var q=function(s){return document.querySelector(s);};
+  var qa=function(s){return Array.from(document.querySelectorAll(s));};
+  var t=function(s,v){var e=q(s);if(e)e.textContent=v;};
+  var h=function(s,v){var e=q(s);if(e)e.innerHTML=v;};
+  h('.back','← Back to home');
+  t('.hero-tag','Legal document');
+  t('.hero h1','Terms and Conditions');
+  t('.hero-sub','Last updated: May 2026 · v1.1 · Applicable law: Italy (D.Lgs. 70/2003, Consumer Code)');
+  t('.summary-label','In brief');
+  t('.summary h2','What these terms govern.');
+  t('.summary p','These Terms and Conditions govern access to and use of FinEdge. By using the service you accept these conditions. FinEdge is an informational tool — it is not a financial advisory service. The information shown does not in any way constitute investment advice.');
+  t('.toc-label','Contents');
+  var ti=qa('.toc-item');
+  [['01','Definitions and scope'],['02','Service access and account'],['03','Acceptable use'],['04','Intellectual property'],['05','User data and content'],['06','Limitation of liability'],['07','Account suspension and closure'],['08','Changes to service and terms'],['09','Applicable law and jurisdiction'],['10','Commercial partners and affiliate links']].forEach(function(v,i){if(ti[i])ti[i].innerHTML='<span class="toc-num">'+v[0]+'</span>'+v[1];});
+  var cn=qa('.card-num');
+  ['01 — DEFINITIONS','02 — SERVICE ACCESS','03 — ACCEPTABLE USE','04 — INTELLECTUAL PROPERTY','05 — USER DATA AND CONTENT','06 — LIMITATION OF LIABILITY','07 — SUSPENSION AND CLOSURE','08 — CHANGES','09 — APPLICABLE LAW AND JURISDICTION','10 — COMMERCIAL PARTNERS AND AFFILIATE LINKS'].forEach(function(v,i){if(cn[i])cn[i].textContent=v;});
+  var h2=qa('.card h2');
+  ['Scope of application','Account and usage requirements','What you can and cannot do','Who owns what','Data you enter','What we cannot guarantee','When and how an account can be closed','How we update the Terms and Service','Which law applies','Affiliations and commercial transparency'].forEach(function(v,i){if(h2[i])h2[i].textContent=v;});
+  var pl=qa('.plain-label');
+  Array(4).fill('In plain terms').forEach(function(v,i){if(pl[i])pl[i].textContent=v;});
+  var pp=qa('.plain p');
+  ['One account per person, confidential credentials, legal age. If you share your password and someone causes damage, the responsibility is yours.','The code, design, and algorithms of FinEdge are mine. Stock prices belong to Yahoo Finance. You can use everything for personal purposes; you cannot copy or resell it.','You can leave whenever you want and we will return your data. We can close accounts that violate the rules. If we shut down the service, we will give you at least one month\'s notice.',''].forEach(function(v,i){if(pp[i]&&v)pp[i].textContent=v;});
+  qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
+  var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
+  var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
+})();
+</script>
 <!-- ═══ COOKIE CONSENT BANNER ═══ -->
 <style>
 #ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;

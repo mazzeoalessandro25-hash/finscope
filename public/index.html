@@ -1684,39 +1684,39 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div class="auth-overlay" id="auth-modal">
   <div class="auth-box">
     <div class="auth-logo"><img src="/logo-icon.png" alt="" style="height:36px;width:auto;vertical-align:middle;margin-right:8px"/>FinEdge</div>
-    <div class="auth-sub" id="auth-modal-sub">Accedi per salvare watchlist, portafoglio e preferenze</div>
+    <div class="auth-sub" id="auth-modal-sub" data-i18n="auth.sub.login">Accedi per salvare watchlist, portafoglio e preferenze</div>
 
     <!-- ── VISTA PRINCIPALE: Login / Registrati ── -->
     <div id="auth-main-view" class="auth-view">
       <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchTab('login',this)">Accedi</button>
-        <button class="auth-tab" onclick="switchTab('register',this)">Registrati</button>
+        <button class="auth-tab active" onclick="switchTab('login',this)" data-i18n="auth.login">Accedi</button>
+        <button class="auth-tab" onclick="switchTab('register',this)" data-i18n="auth.register">Registrati</button>
       </div>
       <form id="auth-form" onsubmit="event.preventDefault();submitAuth()" autocomplete="on" novalidate>
         <div class="auth-err" id="auth-err"></div>
         <div class="auth-ok" id="auth-ok"></div>
         <div class="auth-field" id="name-field" style="display:none">
-          <label for="auth-name">Nome</label>
-          <input type="text" id="auth-name" name="name" placeholder="Come ti chiami?" autocomplete="given-name"/>
+          <label for="auth-name" data-i18n="auth.name">Nome</label>
+          <input type="text" id="auth-name" name="name" data-i18n-ph="auth.namePh" placeholder="Come ti chiami?" autocomplete="given-name"/>
         </div>
         <div class="auth-field">
-          <label for="auth-email">Email</label>
+          <label for="auth-email" data-i18n="auth.email">Email</label>
           <input type="email" id="auth-email" name="email" placeholder="la-tua@email.com" autocomplete="email"/>
         </div>
         <div class="auth-field" id="pwd-field">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
-            <label for="auth-pwd" style="margin-bottom:0">Password</label>
-            <button type="button" id="forgot-link" onclick="showAuthView('forgot')" style="background:none;border:none;color:var(--b);font-size:11px;cursor:pointer;font-family:var(--fm);padding:0;font-weight:600;letter-spacing:.2px">
+            <label for="auth-pwd" style="margin-bottom:0" data-i18n="auth.password">Password</label>
+            <button type="button" id="forgot-link" onclick="showAuthView('forgot')" style="background:none;border:none;color:var(--b);font-size:11px;cursor:pointer;font-family:var(--fm);padding:0;font-weight:600;letter-spacing:.2px" data-i18n="auth.forgotPwd">
               Password dimenticata?
             </button>
           </div>
           <input type="password" id="auth-pwd" name="password" placeholder="Minimo 8 caratteri" autocomplete="current-password"/>
         </div>
-        <button type="submit" class="auth-submit" id="auth-submit">Accedi</button>
+        <button type="submit" class="auth-submit" id="auth-submit" data-i18n="auth.login">Accedi</button>
       </form>
-      <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.5">
-        Continuando accetti la nostra <a href="./privacy.html" target="_blank" style="color:var(--b)">Privacy Policy</a>.<br>
-        I tuoi dati sono trattati secondo il GDPR.
+      <p id="auth-gdpr-p" style="font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.5">
+        <span id="auth-gdpr-pre">Continuando accetti la nostra</span> <a href="./privacy.html" target="_blank" style="color:var(--b)">Privacy Policy</a>.<br>
+        <span id="auth-gdpr-post">I tuoi dati sono trattati secondo il GDPR.</span>
       </p>
     </div>
 
@@ -1726,12 +1726,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="auth-err" id="fp-err"></div>
         <div class="auth-ok" id="fp-ok"></div>
         <div class="auth-field">
-          <label for="fp-email">Email del tuo account</label>
+          <label for="fp-email" data-i18n="auth.emailAccount">Email del tuo account</label>
           <input type="email" id="fp-email" name="email" placeholder="la-tua@email.com" autocomplete="email"/>
         </div>
-        <button type="submit" class="auth-submit" id="fp-submit">Invia codice di reset</button>
+        <button type="submit" class="auth-submit" id="fp-submit" data-i18n="auth.sendCode">Invia codice di reset</button>
       </form>
-      <button type="button" class="auth-back-btn" onclick="showAuthView('main')">← Torna al login</button>
+      <button type="button" class="auth-back-btn" onclick="showAuthView('main')" data-i18n="auth.backLogin">← Torna al login</button>
     </div>
 
     <!-- ── VISTA: Reset password ── -->
@@ -1741,17 +1741,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="auth-ok" id="rp-ok"></div>
         <input type="hidden" id="rp-email-hidden" name="email-hidden"/>
         <div class="auth-field">
-          <label for="rp-code">Codice di reset (6 cifre)</label>
+          <label for="rp-code" data-i18n="auth.resetCode">Codice di reset (6 cifre)</label>
           <input class="fp-code-input" type="text" id="rp-code" name="code" placeholder="— — — — — —"
             maxlength="6" inputmode="numeric" autocomplete="one-time-code"/>
         </div>
         <div class="auth-field">
-          <label for="rp-pwd">Nuova password</label>
-          <input type="password" id="rp-pwd" name="new-password" placeholder="Minimo 8 caratteri" autocomplete="new-password"/>
+          <label for="rp-pwd" data-i18n="auth.newPwd">Nuova password</label>
+          <input type="password" id="rp-pwd" name="new-password" data-i18n-ph="auth.pwdPh.register" placeholder="Minimo 8 caratteri" autocomplete="new-password"/>
         </div>
-        <button type="submit" class="auth-submit" id="rp-submit">Aggiorna password</button>
+        <button type="submit" class="auth-submit" id="rp-submit" data-i18n="auth.updatePwd">Aggiorna password</button>
       </form>
-      <button type="button" class="auth-back-btn" onclick="showAuthView('forgot')">← Torna indietro</button>
+      <button type="button" class="auth-back-btn" onclick="showAuthView('forgot')" data-i18n="auth.back">← Torna indietro</button>
     </div>
 
   </div>
@@ -1785,8 +1785,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-top">
       <div class="sd-section">
         <div class="cc-row" style="margin-bottom:6px">
-          <button class="chart-type-btn active" id="sd-btn-candle" onclick="setSdType('candle',this)">Candele</button>
-          <button class="chart-type-btn" id="sd-btn-line" onclick="setSdType('line',this)">Linea</button>
+          <button class="chart-type-btn active" id="sd-btn-candle" onclick="setSdType('candle',this)" data-i18n="dash.candles">Candele</button>
+          <button class="chart-type-btn" id="sd-btn-line" onclick="setSdType('line',this)" data-i18n="dash.line">Linea</button>
           <div style="width:1px;height:14px;background:var(--bd);margin:0 4px"></div>
           <div class="tf-scroll">
             <button class="cc-btn" onclick="loadSdChart(null,'1d',this)">1G</button>
@@ -1963,7 +1963,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="sd-section">
           <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.top10">Top 10 Posizioni</span><span class="sd-info-btn">i<div class="sd-tip">Le prime 10 posizioni dell'ETF per peso. Mostrano la concentrazione del fondo e i principali sottostanti.</div></span></div>
           <div id="sd-etf-holdings" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
-            <div class="ld">Caricamento...</div>
+            <div class="ld" data-i18n="common.loading">Caricamento...</div>
           </div>
         </div>
         <div class="sd-section">
@@ -2065,8 +2065,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div>
         <div class="crd-chart-card">
           <div class="crd-tf-row" style="flex-wrap:wrap;gap:6px">
-            <button class="chart-type-btn active" id="crd-mode-line" onclick="setCrdMode('line',this)">Linea</button>
-            <button class="chart-type-btn" id="crd-mode-candle" onclick="setCrdMode('candle',this)">Candele</button>
+            <button class="chart-type-btn active" id="crd-mode-line" onclick="setCrdMode('line',this)" data-i18n="dash.line">Linea</button>
+            <button class="chart-type-btn" id="crd-mode-candle" onclick="setCrdMode('candle',this)" data-i18n="dash.candles">Candele</button>
             <div style="width:1px;height:16px;background:var(--bd);margin:0 2px;flex-shrink:0"></div>
             <button class="cc-btn" id="crd-btn-1" onclick="loadCryptoChart(1,this)">1G</button>
             <button class="cc-btn" id="crd-btn-7" onclick="loadCryptoChart(7,this)">7G</button>
@@ -2234,8 +2234,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-controls">
-      <button class="chart-type-btn active" id="mt-candle" onclick="setModalType('candle',this)">Candele</button>
-      <button class="chart-type-btn" id="mt-line" onclick="setModalType('line',this)">Linea</button>
+      <button class="chart-type-btn active" id="mt-candle" onclick="setModalType('candle',this)" data-i18n="dash.candles">Candele</button>
+      <button class="chart-type-btn" id="mt-line" onclick="setModalType('line',this)" data-i18n="dash.line">Linea</button>
       <div style="width:1px;height:16px;background:var(--bd);margin:0 4px"></div>
       <div class="tf-scroll">
         <button class="cc-btn" onclick="loadModalChart(null,'1d',this)">1G</button>
@@ -2316,7 +2316,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <!-- ═══ DASHBOARD ═══ -->
 <div class="page active" id="page-dashboard">
   <div class="pg-title">Dashboard</div>
-  <div class="pg-sub">Dati aggiornati in tempo reale · Clicca su qualsiasi indice, commodity o crypto per aprire il grafico</div>
+  <div class="pg-sub" data-i18n="dash.subtitle">Dati aggiornati in tempo reale · Clicca su qualsiasi indice, commodity o crypto per aprire il grafico</div>
 
   <!-- 2 GRAFICI INTERATTIVI -->
   <div class="dash-charts">
@@ -2325,8 +2325,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="ch" style="flex-wrap:wrap;gap:8px">
         <div><div class="ct" id="ch1-title">S&P 500</div><div class="cs" id="ch1-sub">Caricamento...</div></div>
         <div class="cc-row">
-          <button class="chart-type-btn active" onclick="setDashType(1,'candle',this)">Candele</button>
-          <button class="chart-type-btn" onclick="setDashType(1,'line',this)">Linea</button>
+          <button class="chart-type-btn active" onclick="setDashType(1,'candle',this)" data-i18n="dash.candles">Candele</button>
+          <button class="chart-type-btn" onclick="setDashType(1,'line',this)" data-i18n="dash.line">Linea</button>
           <div style="width:1px;height:14px;background:var(--bd);margin:0 2px"></div>
           <select class="sym-sel" id="ch1-sym" onchange="onDashSymChange(1)">
             <optgroup label="Indici USA">
@@ -2436,8 +2436,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="ch" style="flex-wrap:wrap;gap:8px">
         <div><div class="ct" id="ch2-title">Nasdaq 100</div><div class="cs" id="ch2-sub">Caricamento...</div></div>
         <div class="cc-row">
-          <button class="chart-type-btn active" onclick="setDashType(2,'candle',this)">Candele</button>
-          <button class="chart-type-btn" onclick="setDashType(2,'line',this)">Linea</button>
+          <button class="chart-type-btn active" onclick="setDashType(2,'candle',this)" data-i18n="dash.candles">Candele</button>
+          <button class="chart-type-btn" onclick="setDashType(2,'line',this)" data-i18n="dash.line">Linea</button>
           <div style="width:1px;height:14px;background:var(--bd);margin:0 2px"></div>
           <select class="sym-sel" id="ch2-sym" onchange="onDashSymChange(2)">
             <optgroup label="Indici USA">
@@ -2592,11 +2592,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
           <div style="font-size:10px;font-weight:600;color:var(--g);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">▲ Migliori</div>
-          <div id="movers-top"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="movers-top"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div>
           <div style="font-size:10px;font-weight:600;color:var(--r);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">▼ Peggiori</div>
-          <div id="movers-bot"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="movers-bot"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
       </div>
       <div id="movers-note" style="display:none;margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm);text-align:right"></div>
@@ -2605,7 +2605,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- INDICI UNIFICATI: USA + EUROPA + ASIA -->
     <div class="card" style="display:flex;flex-direction:column;overflow:hidden">
       <div class="ch" style="flex-shrink:0"><div><div class="ct">Indici globali</div><div class="cs">USA · Europa · Asia · clicca per grafico</div></div></div>
-      <div id="idx-list" style="overflow-y:auto;flex:1;min-height:0"><div class="ld">Caricamento...</div></div>
+      <div id="idx-list" style="overflow-y:auto;flex:1;min-height:0"><div class="ld" data-i18n="common.loading">Caricamento...</div></div>
     </div>
   </div>
 
@@ -2646,7 +2646,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <button class="mcap-btn" onclick="loadMcap('asia',this)">🌏 Asia</button>
       <button class="mcap-btn" onclick="loadMcap('crypto',this)">₿ Crypto</button>
     </div>
-    <div id="mcap-list"><div class="ld">Caricamento...</div></div>
+    <div id="mcap-list"><div class="ld" data-i18n="common.loading">Caricamento...</div></div>
   </div>
 
   <!-- MARKET HEATMAP -->
@@ -2663,7 +2663,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <button class="hm-filter-btn" onclick="hmSetFilter('IT',this)">🇮🇹 Italia</button>
       <div class="hm-summary"><span class="hm-sum-up" id="hm-up">▲ —</span><span class="hm-sum-dn" id="hm-dn">▼ —</span><span class="hm-sum-nc" id="hm-nc">— —</span></div>
     </div>
-    <div id="heatmap-container"><div class="ld">Caricamento...</div></div>
+    <div id="heatmap-container"><div class="ld" data-i18n="common.loading">Caricamento...</div></div>
   </div>
 
   <!-- INSIDER TRADING -->
@@ -2688,7 +2688,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <button onclick="loadInsiderFeed(true)" title="Aggiorna ora" data-i18n="ins.refresh.btn" style="padding:4px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;font-size:11px;font-family:var(--fm);color:var(--t2);cursor:pointer">↺ Aggiorna</button>
       </div>
     </div>
-    <div id="insider-dash-content" style="margin-top:4px"><div class="ld">Caricamento transazioni insider...</div></div>
+    <div id="insider-dash-content" style="margin-top:4px"><div class="ld" data-i18n="common.loading">Caricamento transazioni insider...</div></div>
   </div>
 
   <!-- ECONOMIC CALENDAR -->
@@ -2708,7 +2708,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <button class="cal-tab-btn"        id="caltab-macro"    onclick="setCalViewTab('macro',this)">🏦 Macro</button>
       <span class="cal-refresh-info" id="cal-refresh-ts"></span>
     </div>
-    <div id="eco-calendar-content"><div class="ld">Caricamento...</div></div>
+    <div id="eco-calendar-content"><div class="ld" data-i18n="common.loading">Caricamento...</div></div>
     <div class="cal-legend">
       <div class="cal-legend-item"><div class="cal-legend-dot cal-dot fed"></div>Fed</div>
       <div class="cal-legend-item"><div class="cal-legend-dot cal-dot bce"></div>BCE</div>
@@ -2723,7 +2723,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div class="page" id="page-screener">
   <div class="pg-title">Stock Screener</div>
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px">
-    <div class="pg-sub" style="margin-bottom:0">Indici mondiali con prezzi live · Fonte: Financial Modeling Prep · Clicca per l'analisi fondamentale</div>
+    <div class="pg-sub" style="margin-bottom:0" data-i18n="sc.subtitle">Indici mondiali con prezzi live · Fonte: Financial Modeling Prep · Clicca per l'analisi fondamentale</div>
     <div class="sc-quick-bar" style="margin-bottom:0">
       <button class="sc-quick-btn" onclick="openWlaPage()">★ Watchlist <span class="sc-quick-cnt" id="sc-wl-cnt" style="display:none">0</span></button>
     </div>
@@ -2732,7 +2732,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <!-- INDICI MONDIALI -->
   <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
     <select class="fsel" id="sc-idx-select" onchange="onScreenerIndexChange(this)" style="min-width:200px;font-weight:600">
-      <option value="all">🌐 Tutti i mercati</option>
+      <option value="all" data-i18n="sc.allMarkets">🌐 Tutti i mercati</option>
       <optgroup label="🇺🇸 USA">
         <option value="sp500">S&amp;P 500</option>
         <option value="nasdaq100">NASDAQ 100</option>
@@ -2796,7 +2796,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <th onclick="sortTbl('mktcap')" title="Market Cap — ordinabile">CAP ↕</th>
         <th onclick="sortTbl('score')" title="Overall Score — ordinabile" style="color:var(--b)">SCORE ↕</th>
       </tr></thead>
-      <tbody id="sc-body"><tr><td colspan="12" class="ld">Caricamento...</td></tr></tbody>
+      <tbody id="sc-body"><tr><td colspan="12" class="ld" data-i18n="common.loading">Caricamento...</td></tr></tbody>
     </table>
   </div>
 
@@ -2814,11 +2814,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="cry-gl-strip" style="margin-bottom:16px">
       <div class="cry-gl-panel">
         <div class="cry-gl-title" style="color:var(--g)">▲ Top Gainer 24h</div>
-        <div id="cry-gainers"><div class="ld">Caricamento...</div></div>
+        <div id="cry-gainers"><div class="ld" data-i18n="common.loading">Caricamento...</div></div>
       </div>
       <div class="cry-gl-panel">
         <div class="cry-gl-title" style="color:var(--r)">▼ Top Loser 24h</div>
-        <div id="cry-losers"><div class="ld">Caricamento...</div></div>
+        <div id="cry-losers"><div class="ld" data-i18n="common.loading">Caricamento...</div></div>
       </div>
     </div>
     <!-- Analisi narrativa -->
@@ -2842,7 +2842,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <th>VOLUME 24h</th>
           <th>SUPPLY %</th>
         </tr></thead>
-        <tbody id="cry-page-body"><tr><td colspan="10" class="ld">Caricamento...</td></tr></tbody>
+        <tbody id="cry-page-body"><tr><td colspan="10" class="ld" data-i18n="common.loading">Caricamento...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -2870,7 +2870,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <th>YIELD DIV.</th>
           <th>+ PORTAFOGLIO</th>
         </tr></thead>
-        <tbody id="bond-etf-body"><tr><td colspan="8" class="ld">Caricamento...</td></tr></tbody>
+        <tbody id="bond-etf-body"><tr><td colspan="8" class="ld" data-i18n="common.loading">Caricamento...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -2882,9 +2882,9 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
   <div id="port-login-msg" style="display:none;text-align:center;padding:48px 20px">
     <div style="font-size:40px;margin-bottom:16px">🔒</div>
-    <div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:8px">Accesso richiesto</div>
-    <div style="font-size:13px;color:var(--t2);margin-bottom:24px">Crea un account gratuito per salvare il tuo portafoglio</div>
-    <button class="auth-submit" style="width:auto;padding:12px 32px" onclick="openAuthModal()">Accedi o registrati</button>
+    <div style="font-size:16px;font-weight:600;color:var(--t);margin-bottom:8px" data-i18n="port.loginRequired">Accesso richiesto</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:24px" data-i18n="port.loginMsg">Crea un account gratuito per salvare il tuo portafoglio</div>
+    <button class="auth-submit" style="width:auto;padding:12px 32px" onclick="openAuthModal()" data-i18n="port.loginBtn">Accedi o registrati</button>
   </div>
 
   <div id="port-content" style="display:none">
@@ -2907,48 +2907,48 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <!-- COL 2: lista titoli (1fr) -->
       <div class="port-left">
         <div style="position:relative">
-          <button class="port-add-toggle" id="port-add-toggle" onclick="togglePortAddForm()">＋ Aggiungi titolo</button>
+          <button class="port-add-toggle" id="port-add-toggle" onclick="togglePortAddForm()" data-i18n="port.addTitle">＋ Aggiungi titolo</button>
           <div id="port-add-form-wrap" style="display:none;margin-top:7px">
             <div class="port-add-form">
               <div class="port-search-wrap" style="position:relative">
                 <input class="port-search-inp" id="port-search" type="text"
-                  placeholder="Cerca ticker o nome..." autocomplete="off"
+                  data-i18n-ph="port.searchPh" placeholder="Cerca ticker o nome..." autocomplete="off"
                   oninput="onPortSearchInput()" onkeydown="onPortSearchKey(event)"/>
                 <div id="port-dd" class="port-dd"></div>
               </div>
               <div class="port-add-row2">
                 <div>
-                  <div class="port-inp-lbl">Quantità</div>
-                  <input class="port-inp" id="port-qty" type="number" placeholder="es. 10" min="0.0001" step="any" style="width:100%;box-sizing:border-box"/>
+                  <div class="port-inp-lbl" data-i18n="port.quantity">Quantità</div>
+                  <input class="port-inp" id="port-qty" type="number" data-i18n-ph="port.qtyPh" placeholder="es. 10" min="0.0001" step="any" style="width:100%;box-sizing:border-box"/>
                 </div>
                 <div>
-                  <div class="port-inp-lbl">Prezzo acquisto</div>
-                  <input class="port-inp" id="port-price" type="number" placeholder="es. 150.00" min="0" step="any" style="width:100%;box-sizing:border-box"/>
+                  <div class="port-inp-lbl" data-i18n="port.buyPrice">Prezzo acquisto</div>
+                  <input class="port-inp" id="port-price" type="number" data-i18n-ph="port.pricePh" placeholder="es. 150.00" min="0" step="any" style="width:100%;box-sizing:border-box"/>
                 </div>
               </div>
               <div class="port-add-row3">
                 <div>
-                  <div class="port-inp-lbl">Data acquisto</div>
+                  <div class="port-inp-lbl" data-i18n="port.buyDate">Data acquisto</div>
                   <input class="port-inp" id="port-date" type="date" style="width:100%;box-sizing:border-box"/>
                 </div>
                 <div style="display:flex;align-items:flex-end">
-                  <button class="port-add-btn" onclick="addPortfolioItem()" style="white-space:nowrap;padding:8px 18px">＋ Aggiungi</button>
+                  <button class="port-add-btn" onclick="addPortfolioItem()" style="white-space:nowrap;padding:8px 18px" data-i18n="port.addBtn">＋ Aggiungi</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="port-cat-bar" id="port-cat-bar">
-          <button class="port-cat-tab active" onclick="setPortCat('all',this)">Tutti</button>
-          <button class="port-cat-tab" onclick="setPortCat('stock',this)">Azioni</button>
-          <button class="port-cat-tab" onclick="setPortCat('etf',this)">ETF</button>
-          <button class="port-cat-tab" onclick="setPortCat('crypto',this)">Crypto</button>
-          <button class="port-cat-tab" onclick="setPortCat('commodity',this)">Comm.</button>
+          <button class="port-cat-tab active" onclick="setPortCat('all',this)" data-i18n="port.catAll">Tutti</button>
+          <button class="port-cat-tab" onclick="setPortCat('stock',this)" data-i18n="port.catStock">Azioni</button>
+          <button class="port-cat-tab" onclick="setPortCat('etf',this)" data-i18n="port.catETF">ETF</button>
+          <button class="port-cat-tab" onclick="setPortCat('crypto',this)" data-i18n="port.catCrypto">Crypto</button>
+          <button class="port-cat-tab" onclick="setPortCat('commodity',this)" data-i18n="port.catComm">Comm.</button>
         </div>
-        <div id="port-list"><div class="ld" style="padding:20px;text-align:center">Nessun titolo aggiunto</div></div>
+        <div id="port-list"><div class="ld" style="padding:20px;text-align:center" data-i18n="port.empty">Nessun titolo aggiunto</div></div>
         <div style="display:flex;gap:6px;margin-top:2px">
-          <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioPDF()">⬇ Esporta PDF</button>
-          <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()">⬆ Importa CSV</button>
+          <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioPDF()" data-i18n="port.exportPDF">⬇ Esporta PDF</button>
+          <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()" data-i18n="port.importCSV">⬆ Importa CSV</button>
         </div>
       </div>
 
@@ -3013,19 +3013,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="port-tab-panel active" id="ptab-analisi">
         <div class="card" id="port-analysis-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.analysis">📊 Analisi del portafoglio</span><span class="info-icon">i<span class="info-tip">Composizione e profilo del portafoglio. Il punteggio indica quanto sei allineato al profilo scelto (0–100). Beta misura la sensibilità ai movimenti di mercato.</span></span></div><div class="cs" data-i18n="port.cs.analysis">Come è composto il tuo portafoglio e cosa fare per migliorarlo</div></div></div>
-          <div id="port-analysis-content"><div class="ld" style="padding:10px">Aggiungi titoli per vedere l'analisi</div></div>
+          <div id="port-analysis-content"><div class="ld" style="padding:10px" data-i18n="port.noItems.analysis">Aggiungi titoli per vedere l'analisi</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="risk-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.risk">📉 Rischio &amp; Volatilità</span><span class="info-icon">i<span class="info-tip">Sharpe Ratio: rendimento aggiustato per il rischio (>1 = buono). VaR 95%: perdita massima stimata nel 95% dei casi. Max Drawdown: calo massimo dal picco.</span></span></div><div class="cs" data-i18n="port.cs.risk">Sharpe ratio · VaR 95% · Max drawdown · Volatilità annualizzata</div></div></div>
-          <div id="risk-content"><div class="ld" style="padding:10px">Caricamento metriche di rischio...</div></div>
+          <div id="risk-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento metriche di rischio...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="stress-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.stress">⚡ Stress Test</span><span class="info-icon">i<span class="info-tip">Simulazione dell'impatto sul portafoglio in scenari di mercato estremi, basata sul beta ponderato di ogni titolo. Il beta misura la sensibilità ai movimenti del mercato.</span></span></div><div class="cs" data-i18n="port.cs.stress">Impatto stimato per scenari estremi · Beta ponderato portafoglio</div></div></div>
-          <div id="stress-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="stress-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="corr-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.corr">🔗 Correlazioni</span><span class="info-icon">i<span class="info-tip">Misura quanto i titoli si muovono insieme. +1 = perfettamente correlati, 0 = indipendenti, -1 = inversamente correlati. Basato sugli ultimi 3 mesi di prezzi giornalieri.</span></span></div><div class="cs" data-i18n="port.cs.corr">Matrice di correlazione 3 mesi · Verde = correlati · Rosso = inversamente correlati</div></div></div>
-          <div id="corr-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="corr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
       </div>
 
@@ -3057,7 +3057,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
         <div class="card" style="margin-top:10px" id="port-cagr-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.cagr">📊 Rendimenti per titolo</span><span class="info-icon">i<span class="info-tip">Rendimento totale e CAGR (tasso annuo composto) per ogni posizione. Il CAGR normalizza il rendimento sulla durata dell'investimento, così puoi confrontare titoli detenuti per periodi diversi.</span></span></div><div class="cs" data-i18n="port.cs.cagr">P&L % · CAGR annualizzato · Periodo di detenzione</div></div></div>
-          <div id="port-cagr-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="port-cagr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
       </div>
 
@@ -3065,11 +3065,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="port-tab-panel" id="ptab-obiettivi">
         <div class="card" id="port-targets-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.targets">🎯 Obiettivi di prezzo</span><span class="info-icon">i<span class="info-tip">Price target medio degli analisti per ogni titolo. Il break-even netto è il prezzo a cui recupereresti l'investimento dopo aver pagato le tasse sulle plusvalenze (26% in Italia).</span></span></div><div class="cs" data-i18n="port.cs.targets">Dove potrebbe arrivare ogni titolo · A che prezzo sei in pareggio dopo le tasse (26%)</div></div></div>
-          <div id="port-targets-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="port-targets-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="personal-targets-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.myTargets">🎯 I miei target personali</span><span class="info-icon">i<span class="info-tip">Imposta un prezzo obiettivo personale per ogni titolo, indipendente dai target degli analisti. Utile per pianificare uscite o aumenti di posizione.</span></span></div><div class="cs" data-i18n="port.cs.myTargets">Prezzo obiettivo personalizzato · Distanza % dal target · Barra avanzamento</div></div></div>
-          <div id="personal-targets-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="personal-targets-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
       </div>
 
@@ -3081,7 +3081,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
         <div class="card" style="margin-top:10px" id="fisco-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.tax">📋 Situazione fiscale</span><span class="info-icon">i<span class="info-tip">Plusvalenze (guadagni) soggette al 26% di imposta in Italia. Le minusvalenze possono compensare plusvalenze future per 4 anni. Tax-loss harvesting: vendere posizioni in perdita per ridurre le tasse.</span></span></div><div class="cs" data-i18n="port.cs.tax">Plusvalenze e minusvalenze · Imposta stimata (26%) · Come risparmiare sulle tasse</div></div></div>
-          <div id="fisco-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="fisco-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
       </div>
 
@@ -3089,11 +3089,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="port-tab-panel" id="ptab-gestione">
         <div class="card" id="rebalancing-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.rebalancing">⚖️ Ribilanciamento</span><span class="info-icon">i<span class="info-tip">Confronta l'allocazione attuale con i target che hai impostato. Se una posizione supera il ±5% dal target, viene segnalata. Gli ordini suggeriti indicano quanto acquistare o vendere per tornare in equilibrio.</span></span></div><div class="cs" data-i18n="port.cs.rebalancing">Quanto ti sei spostato dai tuoi obiettivi di allocazione · Cosa acquistare o vendere</div></div></div>
-          <div id="rebalancing-content"><div class="ld" style="padding:10px">Caricamento...</div></div>
+          <div id="rebalancing-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="price-alerts-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.alerts">🔔 Price Alert</span><span class="info-icon">i<span class="info-tip">Imposta avvisi quando un titolo supera o scende sotto un prezzo. Gli alert vengono verificati ad ogni aggiornamento del portafoglio.</span></span></div><div class="cs" data-i18n="port.cs.alerts">Notifiche visive al raggiungimento del prezzo · Gestione alert attivi</div></div></div>
-          <div id="price-alerts-content"><div class="ld" style="padding:10px">Nessun alert configurato</div></div>
+          <div id="price-alerts-content"><div class="ld" style="padding:10px" data-i18n="alert.empty">Nessun alert configurato</div></div>
         </div>
       </div>
 
@@ -3101,7 +3101,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="port-tab-panel" id="ptab-news">
         <div class="card" id="portnews-card">
           <div class="ch"><div><div class="ct" data-i18n="port.ct.news">📰 Notizie sui tuoi titoli</div><div class="cs" data-i18n="port.cs.news">Le ultime news per le aziende e gli ETF che hai in portafoglio</div></div></div>
-          <div id="portnews-content"><div class="ld" style="padding:10px">Caricamento news...</div></div>
+          <div id="portnews-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento news...</div></div>
         </div>
       </div>
 
@@ -3113,15 +3113,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div class="ct"><span data-i18n="port.ct.pac">📅 PAC — Piano di Accumulo</span><span class="info-icon">i<span class="info-tip">Il PAC (Piano di Accumulo del Capitale) consente di investire una somma fissa a cadenza mensile. L'acquisto viene simulato il primo giorno lavorativo disponibile del mese al prezzo di mercato di quel giorno.</span></span></div>
               <div class="cs" data-i18n="port.cs.pac">Investimento automatico mensile · Primo giorno lavorativo del mese · Prezzo di mercato</div>
             </div>
-            <button class="port-add-toggle" style="font-size:12px;padding:7px 14px" onclick="openPacForm()">＋ Nuovo PAC</button>
+            <button class="port-add-toggle" style="font-size:12px;padding:7px 14px" onclick="openPacForm()" data-i18n="pac.addBtn">＋ Nuovo PAC</button>
           </div>
 
           <!-- Form aggiunta PAC (inizialmente nascosto) -->
           <div id="pac-add-form" style="display:none;background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px">
-            <div style="font-size:12px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:12px">Nuovo Piano di Accumulo</div>
+            <div style="font-size:12px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:12px" data-i18n="pac.formTitle">Nuovo Piano di Accumulo</div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
               <div>
-                <div class="port-inp-lbl">Strumento (ETF, Azione…)</div>
+                <div class="port-inp-lbl" data-i18n="pac.instrument">Strumento (ETF, Azione…)</div>
                 <div style="position:relative">
                   <input class="port-inp" id="pac-search" type="text" placeholder="Cerca ETF (es. VWCE, iShares World, Amundi…)" autocomplete="off"
                     oninput="onPacSearchInput()" onkeydown="onPacSearchKey(event)" onfocus="onPacSearchFocus()" style="width:100%;box-sizing:border-box"/>
@@ -3129,7 +3129,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
                 </div>
               </div>
               <div>
-                <div class="port-inp-lbl">Importo mensile (€)</div>
+                <div class="port-inp-lbl" data-i18n="pac.amount">Importo mensile (€)</div>
                 <input class="port-inp" id="pac-amount" type="number" placeholder="es. 200" min="1" step="1" style="width:100%;box-sizing:border-box" oninput="onPacAmountInput()"/>
               </div>
             </div>
@@ -3137,34 +3137,34 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <div id="pac-preview-line" style="display:none;font-size:11px;color:var(--b);font-family:var(--fm);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:6px;padding:6px 10px;margin-bottom:10px"></div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
               <div>
-                <div class="port-inp-lbl">Data inizio</div>
+                <div class="port-inp-lbl" data-i18n="pac.startDate">Data inizio</div>
                 <input class="port-inp" id="pac-start" type="date" style="width:100%;box-sizing:border-box"/>
               </div>
               <div>
-                <div class="port-inp-lbl">Giorno del mese</div>
+                <div class="port-inp-lbl" data-i18n="pac.dayOfMonth">Giorno del mese</div>
                 <input class="port-inp" id="pac-day" type="number" placeholder="es. 4" min="1" max="28" step="1" style="width:100%;box-sizing:border-box" title="Giorno del mese in cui eseguire l'acquisto (1–28). Se cade di weekend viene spostato al lunedì successivo."/>
               </div>
               <div>
-                <div class="port-inp-lbl">Frequenza</div>
+                <div class="port-inp-lbl" data-i18n="pac.frequency">Frequenza</div>
                 <select class="port-inp" id="pac-freq" style="width:100%;box-sizing:border-box;background:var(--card);color:var(--t)">
-                  <option value="monthly">Mensile</option>
-                  <option value="quarterly">Trimestrale</option>
+                  <option value="monthly" data-i18n="pac.monthly">Mensile</option>
+                  <option value="quarterly" data-i18n="pac.quarterly">Trimestrale</option>
                 </select>
               </div>
             </div>
             <div style="display:flex;gap:8px;justify-content:flex-end">
-              <button onclick="closePacForm()" style="background:var(--s2);border:1px solid var(--bd);color:var(--t2);padding:7px 16px;border-radius:8px;font-size:12px;cursor:pointer">Annulla</button>
-              <button class="port-add-btn" onclick="addPacPlan()" style="padding:7px 20px">＋ Aggiungi PAC</button>
+              <button onclick="closePacForm()" style="background:var(--s2);border:1px solid var(--bd);color:var(--t2);padding:7px 16px;border-radius:8px;font-size:12px;cursor:pointer" data-i18n="pac.cancel">Annulla</button>
+              <button class="port-add-btn" onclick="addPacPlan()" style="padding:7px 20px" data-i18n="pac.addPlan">＋ Aggiungi PAC</button>
             </div>
           </div>
 
           <!-- Lista piani PAC -->
-          <div id="pac-list"><div class="ld" style="padding:16px;text-align:center">Nessun piano PAC attivo. Clicca "＋ Nuovo PAC" per iniziare.</div></div>
+          <div id="pac-list"><div class="ld" style="padding:16px;text-align:center" data-i18n="pac.empty">Nessun piano PAC attivo. Clicca "＋ Nuovo PAC" per iniziare.</div></div>
         </div>
 
         <!-- Log esecuzioni PAC -->
         <div class="card" style="margin-top:10px;display:none" id="pac-log-card">
-          <div class="ch"><div><div class="ct">📋 Storico esecuzioni PAC</div><div class="cs">Tutti gli acquisti automatici effettuati dai tuoi piani PAC</div></div></div>
+          <div class="ch"><div><div class="ct" data-i18n="pac.logTitle">📋 Storico esecuzioni PAC</div><div class="cs" data-i18n="pac.logSub">Tutti gli acquisti automatici effettuati dai tuoi piani PAC</div></div></div>
           <div id="pac-log-content"><div class="ld" style="padding:10px">Nessuna esecuzione registrata</div></div>
         </div>
       </div>
@@ -3223,7 +3223,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <!-- ═══ SIMULATORE ═══ -->
 <div class="page" id="page-lab">
   <div class="pg-title">Lab</div>
-  <div class="pg-sub">Simulatore · Backtest · Comparatore</div>
+  <div class="pg-sub" data-i18n="lab.subtitle">Simulatore · Backtest · Comparatore</div>
   <!-- Tab bar -->
   <div class="lab-tabs">
     <button class="lab-tab active" id="lab-tab-simulatore" onclick="switchLabTab('simulatore')">📈 Simulatore</button>
@@ -3237,28 +3237,28 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="card" style="padding:16px;display:flex;flex-direction:column;gap:12px">
       <div class="fg" style="margin-bottom:0"><label>TIPO DI INVESTIMENTO</label>
         <select id="sim-type" onchange="onSimTypeChange()">
-          <optgroup label="Azioni">
-            <option value="balanced">Portafoglio Bilanciato (60/40)</option>
-            <option value="growth">Portafoglio Growth (80/20)</option>
-            <option value="conservative">Portafoglio Conservativo (40/60)</option>
-            <option value="dividend">Portafoglio Dividendi</option>
+          <optgroup data-i18n-label="sim.group.stocks" label="Azioni">
+            <option value="balanced" data-i18n="sim.opt.balanced">Portafoglio Bilanciato (60/40)</option>
+            <option value="growth" data-i18n="sim.opt.growth">Portafoglio Growth (80/20)</option>
+            <option value="conservative" data-i18n="sim.opt.conservative">Portafoglio Conservativo (40/60)</option>
+            <option value="dividend" data-i18n="sim.opt.dividend">Portafoglio Dividendi</option>
           </optgroup>
-          <optgroup label="ETF">
-            <option value="etf">ETF Globale (MSCI World)</option>
+          <optgroup data-i18n-label="sim.group.etf" label="ETF">
+            <option value="etf" data-i18n="sim.opt.etf">ETF Globale (MSCI World)</option>
             <option value="etf_sp500">ETF S&amp;P 500</option>
-            <option value="etf_eu">ETF Europa</option>
-            <option value="etf_em">ETF Mercati Emergenti</option>
-            <option value="etf_bond">ETF Obbligazionario</option>
+            <option value="etf_eu" data-i18n="sim.opt.etf_eu">ETF Europa</option>
+            <option value="etf_em" data-i18n="sim.opt.etf_em">ETF Mercati Emergenti</option>
+            <option value="etf_bond" data-i18n="sim.opt.etf_bond">ETF Obbligazionario</option>
           </optgroup>
-          <optgroup label="Fondi">
-            <option value="fund_eq">Fondo Azionario Attivo</option>
-            <option value="fund_mix">Fondo Misto Bilanciato</option>
-            <option value="fund_bond">Fondo Obbligazionario</option>
+          <optgroup data-i18n-label="sim.group.funds" label="Fondi">
+            <option value="fund_eq" data-i18n="sim.opt.fund_eq">Fondo Azionario Attivo</option>
+            <option value="fund_mix" data-i18n="sim.opt.fund_mix">Fondo Misto Bilanciato</option>
+            <option value="fund_bond" data-i18n="sim.opt.fund_bond">Fondo Obbligazionario</option>
           </optgroup>
-          <optgroup label="Previdenza">
-            <option value="pension_pip">Piano Individuale Pensionistico (PIP)</option>
-            <option value="pension_fop">Fondo Pensione Aperto</option>
-            <option value="pension_fch">Fondo Pensione Chiuso (Categoria)</option>
+          <optgroup data-i18n-label="sim.group.pension" label="Previdenza">
+            <option value="pension_pip" data-i18n="sim.opt.pension_pip">Piano Individuale Pensionistico (PIP)</option>
+            <option value="pension_fop" data-i18n="sim.opt.pension_fop">Fondo Pensione Aperto</option>
+            <option value="pension_fch" data-i18n="sim.opt.pension_fch">Fondo Pensione Chiuso (Categoria)</option>
           </optgroup>
         </select>
       </div>
@@ -3364,7 +3364,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <input type="number" id="bt-capital" value="10000" min="100" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--t);font-family:var(--fm);font-size:13px"/>
         </div>
         <button onclick="executeBacktest()" style="width:100%;padding:12px;background:var(--b);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fm);letter-spacing:.3px">▶ Esegui Backtest</button>
-        <div id="bt-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--t3);font-family:var(--fm)">⏳ Caricamento dati storici…</div>
+        <div id="bt-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="lab.bt.loading">⏳ Caricamento dati storici…</div>
         <div id="bt-error" style="display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-radius:8px;padding:10px 12px;font-size:11px;color:#dc2626;font-family:var(--fm);margin-top:8px"></div>
       </div>
     </div>
@@ -3487,30 +3487,30 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div class="page" id="page-news">
   <div class="news-hdr">
     <div>
-      <div class="pg-title" style="margin-bottom:2px">News Mercati</div>
-      <div class="pg-sub">Ultime notizie finanziarie · RSS, Finnhub, Yahoo Finance</div>
+      <div class="pg-title" style="margin-bottom:2px" data-i18n="news.title">News Mercati</div>
+      <div class="pg-sub" data-i18n="news.subtitle">Ultime notizie finanziarie · RSS, Finnhub, Yahoo Finance</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
       <span class="news-refresh-ts" id="news-refresh-ts"></span>
-      <button class="news-refresh-btn" onclick="newsRefresh()">🔄 Aggiorna</button>
+      <button class="news-refresh-btn" onclick="newsRefresh()" data-i18n="news.refresh">🔄 Aggiorna</button>
     </div>
   </div>
   <div class="news-search-wrap">
-    <input class="news-search-inp" id="news-search-inp" type="text" placeholder="Cerca ticker o tema… es. AAPL, Fed, oro, BTP"
+    <input class="news-search-inp" id="news-search-inp" type="text" data-i18n-ph="news.searchPh" placeholder="Cerca ticker o tema… es. AAPL, Fed, oro, BTP"
       onkeydown="if(event.key==='Enter')loadNewsSearch(this.value)" autocomplete="off"/>
-    <button class="news-search-btn" onclick="loadNewsSearch(document.getElementById('news-search-inp').value)">Cerca</button>
+    <button class="news-search-btn" onclick="loadNewsSearch(document.getElementById('news-search-inp').value)" data-i18n="news.searchBtn">Cerca</button>
   </div>
   <div id="news-port-pills" class="news-port-pills"></div>
   <div class="nf">
-    <button class="nf-btn active" onclick="loadNews('mercati',this)">🌐 Mercati</button>
-    <button class="nf-btn" onclick="loadNews('italia',this)">🇮🇹 Italia</button>
-    <button class="nf-btn" onclick="loadNews('usa',this)">🇺🇸 USA</button>
-    <button class="nf-btn" onclick="loadNews('commodities',this)">🛢 Commodities</button>
-    <button class="nf-btn" onclick="loadNews('forex',this)">💱 Forex</button>
-    <button class="nf-btn" onclick="loadNews('crypto',this)">₿ Crypto</button>
-    <button class="nf-btn" onclick="loadNews('macro',this)">Macro</button>
+    <button class="nf-btn active" onclick="loadNews('mercati',this)" data-i18n="news.tab.markets">🌐 Mercati</button>
+    <button class="nf-btn" onclick="loadNews('italia',this)" data-i18n="news.tab.italy">🇮🇹 Italia</button>
+    <button class="nf-btn" onclick="loadNews('usa',this)" data-i18n="news.tab.usa">🇺🇸 USA</button>
+    <button class="nf-btn" onclick="loadNews('commodities',this)" data-i18n="news.tab.comm">🛢 Commodities</button>
+    <button class="nf-btn" onclick="loadNews('forex',this)" data-i18n="news.tab.forex">💱 Forex</button>
+    <button class="nf-btn" onclick="loadNews('crypto',this)" data-i18n="news.tab.crypto">₿ Crypto</button>
+    <button class="nf-btn" onclick="loadNews('macro',this)" data-i18n="news.tab.macro">Macro</button>
   </div>
-  <div id="news-grid"><div class="ld">Caricamento notizie...</div></div>
+  <div id="news-grid"><div class="ld" data-i18n="news.loading">Caricamento notizie...</div></div>
 </div>
 
 
@@ -3520,13 +3520,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <button onclick="showPage('screener',document.getElementById('nb-screener'))" style="background:none;border:1px solid var(--bd);color:var(--t2);padding:5px 12px;border-radius:7px;font-size:12px;font-family:var(--ff);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s" onmouseover="this.style.borderColor='rgba(26,86,196,.4)';this.style.color='var(--b)'" onmouseout="this.style.borderColor='var(--bd)';this.style.color='var(--t2)'">← Screener</button>
     <div class="pg-title" style="margin-bottom:0">Watchlist</div>
   </div>
-  <div class="pg-sub">I tuoi titoli monitorati · Imposta alert di prezzo direttamente da ogni card</div>
+  <div class="pg-sub" data-i18n="wl.subtitle">I tuoi titoli monitorati · Imposta alert di prezzo direttamente da ogni card</div>
   <div id="alert-triggered-banners"></div>
   <!-- Add ticker bar -->
   <div style="position:relative;margin-bottom:18px">
     <div style="display:flex;gap:8px;align-items:center">
       <div style="position:relative;flex:1;max-width:360px">
-        <input id="wla-add-inp" type="text" placeholder="Aggiungi ticker (es. AAPL, MSFT…)"
+        <input id="wla-add-inp" type="text" data-i18n-ph="wl.placeholder" placeholder="Aggiungi ticker (es. AAPL, MSFT…)"
           autocomplete="off"
           style="width:100%;font-family:var(--ff);font-size:13px;padding:9px 14px;border:1.5px solid var(--bd);border-radius:10px;background:var(--card);color:var(--t);outline:none;box-sizing:border-box;transition:border-color .15s"
           oninput="wlaAddSuggest(this.value)"
@@ -3535,17 +3535,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           onblur="setTimeout(()=>{document.getElementById('wla-sugg-list')&&(document.getElementById('wla-sugg-list').style.display='none')},200)"/>
         <div id="wla-sugg-list" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--card);border:1.5px solid var(--bd);border-radius:10px;max-height:220px;overflow-y:auto;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.15)"></div>
       </div>
-      <button onclick="addTickerFromWla()" style="background:var(--b);color:#fff;border:none;padding:9px 18px;border-radius:10px;font-size:13px;font-family:var(--ff);font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">+ Aggiungi</button>
+      <button onclick="addTickerFromWla()" style="background:var(--b);color:#fff;border:none;padding:9px 18px;border-radius:10px;font-size:13px;font-family:var(--ff);font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity .15s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'" data-i18n="wl.addBtn">+ Aggiungi</button>
     </div>
     <div id="wla-add-msg" style="font-size:11px;color:#DC2626;margin-top:5px;display:none"></div>
   </div>
-  <div id="wla-wl-list"><div class="ld">Caricamento watchlist...</div></div>
+  <div id="wla-wl-list"><div class="ld" data-i18n="common.loading">Caricamento watchlist...</div></div>
 </div>
 
 <!-- ═══ MACRO DASHBOARD ═══ -->
 <div class="page" id="page-macro">
   <div class="pg-title">Macro Dashboard</div>
-  <div class="pg-sub">Tassi · Banche Centrali · Ciclo Economico · Forex · Condizioni del Credito</div>
+  <div class="pg-sub" data-i18n="macro.sub">Tassi · Banche Centrali · Ciclo Economico · Forex · Condizioni del Credito</div>
 
   <!-- ══ ANALISI MACRO NARRATIVA ══ -->
   <div id="macro-analysis-card" style="margin-bottom:18px;display:flex;flex-direction:column;gap:12px">
@@ -3607,7 +3607,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div id="mac-bk-badge-rates" class="mac-bk-badge"></div>
             </div>
           </div>
-          <div class="mac-bk-txt" id="mac-txt-rates"><span class="ld" style="font-size:11px">Caricamento...</span></div>
+          <div class="mac-bk-txt" id="mac-txt-rates"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
         </div>
       </div>
       <div class="card mac-block-card">
@@ -3620,7 +3620,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div id="mac-bk-badge-dollar" class="mac-bk-badge"></div>
             </div>
           </div>
-          <div class="mac-bk-txt" id="mac-txt-dollar"><span class="ld" style="font-size:11px">Caricamento...</span></div>
+          <div class="mac-bk-txt" id="mac-txt-dollar"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
         </div>
       </div>
       <div class="card mac-block-card">
@@ -3633,7 +3633,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div id="mac-bk-badge-credit" class="mac-bk-badge"></div>
             </div>
           </div>
-          <div class="mac-bk-txt" id="mac-txt-credit"><span class="ld" style="font-size:11px">Caricamento...</span></div>
+          <div class="mac-bk-txt" id="mac-txt-credit"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
         </div>
       </div>
     </div>
@@ -3642,18 +3642,18 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="mac-2col">
       <div class="card">
         <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">Outlook per Asset Class</div>
-        <div class="mac-ac-list" id="mac-ac-list"><span class="ld" style="font-size:11px">Caricamento...</span></div>
+        <div class="mac-ac-list" id="mac-ac-list"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
       </div>
       <div class="card">
         <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">Posizionamento Settoriale</div>
-        <div class="mac-sec-grid" id="mac-sector-row"><span class="ld" style="font-size:11px">Caricamento...</span></div>
+        <div class="mac-sec-grid" id="mac-sector-row"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
       </div>
     </div>
 
     <!-- ── D: Appuntamenti ── -->
     <div class="card">
       <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">📅 Appuntamenti & Dati da Monitorare</div>
-      <div class="mac-watchlist" id="mac-watchlist"><span class="ld" style="font-size:11px">Caricamento...</span></div>
+      <div class="mac-watchlist" id="mac-watchlist"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
       <div class="mac-disclaimer">⚠ Indicazioni orientative basate sul ciclo macro e sui dati live. Non costituiscono consulenza di investimento — verifica sempre i fondamentali individuali prima di operare.</div>
     </div>
 
@@ -3691,7 +3691,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="ct">🏦 Banche Centrali</div>
         <div class="cs">Tassi · Prossime riunioni · Bias</div>
       </div></div>
-      <div id="macro-cb-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+      <div id="macro-cb-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
   </div>
@@ -3710,7 +3710,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
         <div id="macro-regime-badge"></div>
       </div>
-      <div id="macro-us-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+      <div id="macro-us-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
     <div class="card">
@@ -3718,7 +3718,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="ct">🇪🇺 Snapshot Eurozona</div>
         <div class="cs" id="macro-eu-upd">—</div>
       </div></div>
-      <div id="macro-eu-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+      <div id="macro-eu-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
     <div class="card">
@@ -3726,7 +3726,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="ct">💳 Condizioni del Credito</div>
         <div class="cs">High Yield · Invest. Grade · Treasury</div>
       </div></div>
-      <div id="macro-credit-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+      <div id="macro-credit-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
   </div>
@@ -3742,7 +3742,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="ct">💱 Forex Globale</div>
         <div class="cs">DXY · Valute principali · Live</div>
       </div></div>
-      <div id="macro-forex-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+      <div id="macro-forex-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
     <div class="card">
@@ -3750,7 +3750,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="ct">🔍 Segnali Leading</div>
         <div class="cs">Rame · Petrolio · Ratio Gold/Copper come indicatori macro</div>
       </div></div>
-      <div id="macro-leading-content"><div class="ld" style="padding:20px 0">Caricamento...</div></div>
+      <div id="macro-leading-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
   </div>
@@ -3763,17 +3763,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
   <div id="macro-edu-body">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-      <div class="card" id="macro-cycle-card"><div class="ld" style="padding:30px">Caricamento...</div></div>
-      <div class="card" id="macro-phase-card"><div class="ld" style="padding:30px">Caricamento...</div></div>
+      <div class="card" id="macro-cycle-card"><div class="ld" style="padding:30px" data-i18n="common.loading">Caricamento...</div></div>
+      <div class="card" id="macro-phase-card"><div class="ld" style="padding:30px" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
     <div class="card" style="margin-bottom:14px" id="macro-rotation-card">
-      <div class="ld" style="padding:30px">Caricamento...</div>
+      <div class="ld" style="padding:30px" data-i18n="common.loading">Caricamento...</div>
     </div>
 
     <div class="sdiv"><div class="sdiv-t" data-i18n="macro.sectors.title">Analisi Settoriale — 11 Settori GICS</div><div class="sdiv-l"></div></div>
     <div id="macro-sectors-grid" class="sec-sectors-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
-      <div class="ld" style="padding:20px;grid-column:1/-1">Caricamento...</div>
+      <div class="ld" style="padding:20px;grid-column:1/-1" data-i18n="common.loading">Caricamento...</div>
     </div>
   </div>
 
@@ -6031,7 +6031,7 @@ async function runFA(){
   <div class="fs-score-wrap">
     <div style="display:flex;justify-content:space-between;align-items:flex-start">
       <div>
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINEDGE SCORE ✦ Metrica proprietaria</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">FINEDGE SCORE ✦ ${_L({it:'Metrica proprietaria',en:'Proprietary metric'})}</div>
         <div style="display:flex;align-items:baseline;gap:7px">
           <span style="font-family:var(--fm);font-size:32px;font-weight:800;color:${scCol};line-height:1">${sc}</span>
           <span style="font-family:var(--fm);font-size:12px;color:var(--t3)">/100</span>
@@ -6677,6 +6677,10 @@ function applyTranslations(){
   document.querySelectorAll('[data-i18n-ti]').forEach(el=>{
     el.title=_t(el.getAttribute('data-i18n-ti'));
   });
+  // 3b. label attribute (for <optgroup>)
+  document.querySelectorAll('[data-i18n-label]').forEach(el=>{
+    el.label=_t(el.getAttribute('data-i18n-label'));
+  });
   // 4. Mappa selettori (legacy, per elementi con info-icon o struttura complessa)
   _TRANS_MAP.forEach(({s,k,t})=>{
     const el=document.querySelector(s);
@@ -6696,6 +6700,11 @@ function applyTranslations(){
 }
 
 function _applyDynamicTranslations(){
+  // Auth GDPR notice (preserves inner <a> link)
+  const gdprPre=document.getElementById('auth-gdpr-pre');
+  const gdprPost=document.getElementById('auth-gdpr-post');
+  if(gdprPre)gdprPre.textContent=currentLang==='en'?'By continuing you accept our':currentLang==='de'?'Mit der Nutzung akzeptierst du unsere':'Continuando accetti la nostra';
+  if(gdprPost)gdprPost.textContent=currentLang==='en'?'Your data is processed under GDPR.':currentLang==='de'?'Deine Daten werden gemäß DSGVO verarbeitet.':'I tuoi dati sono trattati secondo il GDPR.';
   // Port add toggle btn text (preserva solo testo)
   const portAddToggle=document.getElementById('port-add-toggle');
   if(portAddToggle&&portAddToggle.textContent.trim()!==_t('port.addTitle'))
@@ -6811,7 +6820,7 @@ function switchTab(tab,btn){
   authTab=tab;
   document.querySelectorAll('.auth-tab').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  document.getElementById('auth-submit').textContent=tab==='login'?'Accedi':'Crea account';
+  document.getElementById('auth-submit').textContent=tab==='login'?_t('auth.login'):_t('auth.register');
   document.getElementById('auth-err').classList.remove('show');
   document.getElementById('auth-ok').classList.remove('show');
   document.getElementById('auth-pwd').placeholder=tab==='login'?_t('auth.pwdPh.login'):_t('auth.pwdPh.register');
@@ -6839,7 +6848,7 @@ async function submitAuth(){
     });
     const d=await r.json();
     if(!r.ok||!d.ok){
-      errEl.textContent=d.error||'Errore sconosciuto';
+      errEl.textContent=d.error||_t('auth.err.conn');
       errEl.classList.add('show');
     } else {
       // Salva user_id come token persistente (non il sign_in_token monouso)
@@ -6877,7 +6886,7 @@ async function submitForgotPw(){
     });
     const d=await r.json();
     if(!r.ok||!d.ok){
-      errEl.textContent=d.error||'Errore. Riprova.';errEl.classList.add('show');
+      errEl.textContent=d.error||_t('auth.err.conn');errEl.classList.add('show');
     } else {
       const codeMsg=d.code?` Il tuo codice: <strong>${d.code}</strong>`:'';
       okEl.innerHTML=`Codice di reset generato.${codeMsg}<br><small>Valido 15 minuti</small>`;
@@ -6936,7 +6945,7 @@ function updateNavUser(){
       <button onclick="logout();closeMobileNav()" style="width:100%;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#F87171;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer">Esci</button>`;
   } else {
     area.innerHTML=`<button class="nav-login-btn" onclick="openAuthModal()">${_t('nav.login')}</button>`;
-    if(mob)mob.innerHTML=`<button onclick="openAuthModal();closeMobileNav()" style="width:100%;background:var(--b4);color:#fff;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer;border:none">Accedi</button>`;
+    if(mob)mob.innerHTML=`<button onclick="openAuthModal();closeMobileNav()" style="width:100%;background:var(--b4);color:#fff;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer;border:none">${_t('nav.login')}</button>`;
   }
 }
 
@@ -9958,19 +9967,19 @@ async function renderWatchlistPort(){
    ANALISI & BILANCIAMENTO PORTAFOGLIO
 ══════════════════════════════════════════ */
 const INVESTOR_PROFILES={
-  income:{nameKey:'prof.income',name:'Income',emoji:'💰',desc:'Massimo reddito passivo, dividendi elevati, rischio minimo',
+  income:{nameKey:'prof.income',name:'Income',emoji:'💰',desc:{it:'Massimo reddito passivo, dividendi elevati, rischio minimo',en:'Maximum passive income, high dividends, minimal risk'},
     types:{dividend:.80,value:.18,growth:.02},maxBeta:.65,color:'#0EA5E9'},
-  conservative:{nameKey:'prof.conservative',name:'Conservativo',emoji:'🛡️',desc:'Preservazione capitale, reddito stabile, alta qualità',
+  conservative:{nameKey:'prof.conservative',name:'Conservativo',emoji:'🛡️',desc:{it:'Preservazione capitale, reddito stabile, alta qualità',en:'Capital preservation, stable income, high quality'},
     types:{dividend:.60,value:.30,growth:.10},maxBeta:.85,color:'#3B82F6'},
-  moderate:{nameKey:'prof.moderate',name:'Moderato',emoji:'⚖️',desc:'Equilibrio tra crescita e stabilità, portafoglio core',
+  moderate:{nameKey:'prof.moderate',name:'Moderato',emoji:'⚖️',desc:{it:'Equilibrio tra crescita e stabilità, portafoglio core',en:'Balance between growth and stability, core portfolio'},
     types:{dividend:.35,value:.35,growth:.30},maxBeta:1.05,color:'#10B981'},
-  balanced_growth:{nameKey:'prof.balanced_growth',name:'Crescita Bilanciata',emoji:'📈',desc:'Prevalenza growth con quota difensiva',
+  balanced_growth:{nameKey:'prof.balanced_growth',name:'Crescita Bilanciata',emoji:'📈',desc:{it:'Prevalenza growth con quota difensiva',en:'Growth-oriented with a defensive allocation'},
     types:{dividend:.20,value:.25,growth:.55},maxBeta:1.15,color:'#6366F1'},
-  dynamic:{nameKey:'prof.dynamic',name:'Dinamico',emoji:'🚀',desc:'Crescita a lungo termine, buona tolleranza al rischio',
+  dynamic:{nameKey:'prof.dynamic',name:'Dinamico',emoji:'🚀',desc:{it:'Crescita a lungo termine, buona tolleranza al rischio',en:'Long-term growth, good risk tolerance'},
     types:{dividend:.10,value:.20,growth:.70},maxBeta:1.30,color:'#F59E0B'},
-  aggressive:{nameKey:'prof.aggressive',name:'Aggressivo',emoji:'⚡',desc:'Massima crescita, alto rischio, orizzonte lungo',
+  aggressive:{nameKey:'prof.aggressive',name:'Aggressivo',emoji:'⚡',desc:{it:'Massima crescita, alto rischio, orizzonte lungo',en:'Maximum growth, high risk, long horizon'},
     types:{dividend:.03,value:.12,growth:.85},maxBeta:1.60,color:'#EF4444'},
-  speculative:{nameKey:'prof.speculative',name:'Speculativo',emoji:'🎯',desc:'Titoli ad alto rischio/rendimento, concentrazione elevata',
+  speculative:{nameKey:'prof.speculative',name:'Speculativo',emoji:'🎯',desc:{it:'Titoli ad alto rischio/rendimento, concentrazione elevata',en:'High risk/return stocks, high concentration'},
     types:{dividend:.0,value:.05,growth:.95},maxBeta:2.0,color:'#EC4899'},
 };
 let selectedProfile='moderate';
@@ -10314,9 +10323,9 @@ function renderPortAnalysis(portItems, quotes){
       <!-- COL CENTRO: 3 donut impilati, stesso spazio verticale -->
       <div style="display:flex;flex-direction:column;gap:6px">
         ${[
-          ['Tipo',         typeEntries,           typePal, 'Classifica i titoli in Dividendo (azioni che pagano cedole regolari), Value (sottovalutate rispetto ai fondamentali) e Growth (alta crescita dei ricavi/utili).'],
-          ['Area geogr.',  mktEntries,            null,    'Distribuzione geografica del portafoglio. Diversificare su più mercati riduce il rischio-paese e valutario.'],
-          ['Settori',      secEntries.slice(0,8), null,    'Settori economici rappresentati (Tecnologia, Salute, Finanza…). Concentrare oltre il 40% in un solo settore aumenta il rischio specifico.']
+          [_t('port.label.type'),         typeEntries,           typePal, _L({it:'Classifica i titoli in Dividendo (azioni che pagano cedole regolari), Value (sottovalutate rispetto ai fondamentali) e Growth (alta crescita dei ricavi/utili).',en:'Classifies stocks as Dividend (regular coupon payers), Value (undervalued vs fundamentals) and Growth (high revenue/earnings growth).'})],
+          [_t('port.label.geoarea'),  mktEntries,            null,    _L({it:'Distribuzione geografica del portafoglio. Diversificare su più mercati riduce il rischio-paese e valutario.',en:'Geographic distribution of the portfolio. Diversifying across markets reduces country and currency risk.'})],
+          [_L({it:'Settori',en:'Sectors'}),      secEntries.slice(0,8), null,    _L({it:'Settori economici rappresentati (Tecnologia, Salute, Finanza…). Concentrare oltre il 40% in un solo settore aumenta il rischio specifico.',en:'Economic sectors represented (Technology, Health, Finance…). Concentrating over 40% in one sector increases specific risk.'})]
         ].map(([title,entries,pal,tipText])=>{
           const tot=entries.reduce((s,[,v])=>s+v,0);
           const leg=entries.slice(0,5).map(([k,v],i)=>{
@@ -11978,7 +11987,7 @@ function _macroOpenSecMobile(id){
    FEATURE 7: EXPORT PDF
 ══════════════════════════════════════════ */
 async function exportPortfolioPDF(){
-  if(!portfolio.length){alert('Nessun titolo nel portafoglio');return;}
+  if(!portfolio.length){alert(_L({it:'Nessun titolo nel portafoglio',en:'No positions in portfolio'}));return;}
   if(!window.jspdf){alert('Libreria PDF non ancora caricata, riprova tra un secondo.');return;}
   const { jsPDF } = window.jspdf;
   const quoteArr=await Promise.all(portfolio.map(item=>api(item.sym)));
@@ -12224,7 +12233,7 @@ async function exportPortfolioPDF(){
   doc.setFontSize(5.8);
   doc.setFont('helvetica','italic');
   doc.setTextColor(GRAY[0],GRAY[1],GRAY[2]);
-  const disc='Il presente documento è generato automaticamente da FinEdge a scopo esclusivamente informativo e non costituisce in alcun modo un consiglio finanziario, un\'offerta o una sollecitazione all\'investimento ai sensi della Direttiva MiFID II. I dati mostrati potrebbero non essere aggiornati in tempo reale.';
+  const disc=_t('pdf.disclaimer');
   doc.text(doc.splitTextToSize(disc,CW-36),ML,discY+3.5);
   doc.setFont('helvetica','bold');
   doc.setFontSize(7);
@@ -13508,7 +13517,7 @@ function renderFundamentals(d, cur){
     const txt=document.getElementById('sd-sector-txt');
     if(txt)txt.textContent=[d.sector,d.industry].filter(Boolean).join(' · ');
   }
-  document.getElementById('sd-description').textContent=d.description||'Nessuna descrizione disponibile.';
+  document.getElementById('sd-description').textContent=d.description||_L({it:'Nessuna descrizione disponibile.',en:'No description available.'});
   if(d.website)
     document.getElementById('sd-website').innerHTML=
       `<a href="${d.website}" target="_blank" rel="noopener" style="font-size:11px;color:var(--b);text-decoration:none;font-family:var(--fm)">🔗 ${d.website}</a>`;
@@ -13541,16 +13550,16 @@ function renderSdFinEdgeScore(){
   const sc=fss.total;
   const scCol=sc>=70?'var(--g)':sc>=45?'var(--o)':'var(--r)';
   const ratings=[
-    {min:85,label:'Eccellente',bg:'rgba(5,150,105,.15)',color:'#059669'},
-    {min:70,label:'Buono',bg:'rgba(16,185,129,.12)',color:'#10b981'},
-    {min:50,label:'Neutro',bg:'rgba(245,158,11,.12)',color:'#d97706'},
-    {min:35,label:'Debole',bg:'rgba(239,68,68,.12)',color:'#ef4444'},
-    {min:0, label:'Critico',bg:'rgba(185,28,28,.15)',color:'#b91c1c'},
+    {min:85,label:_L({it:'Eccellente',en:'Excellent'}),bg:'rgba(5,150,105,.15)',color:'#059669'},
+    {min:70,label:_L({it:'Buono',en:'Good'}),bg:'rgba(16,185,129,.12)',color:'#10b981'},
+    {min:50,label:_L({it:'Neutro',en:'Neutral'}),bg:'rgba(245,158,11,.12)',color:'#d97706'},
+    {min:35,label:_L({it:'Debole',en:'Weak'}),bg:'rgba(239,68,68,.12)',color:'#ef4444'},
+    {min:0, label:_L({it:'Critico',en:'Critical'}),bg:'rgba(185,28,28,.15)',color:'#b91c1c'},
   ];
   const rating=ratings.find(r=>sc>=r.min)||ratings[ratings.length-1];
-  const dimLabels2={valutazione:'Valutazione',redditivita:'Redditività',momentum:'Momentum',consensus:'Consensus',stabilita:'Stabilità'};
+  const dimLabels2={valutazione:_t('fa.dim.valutazione'),redditivita:_t('fa.dim.redditivita'),momentum:_t('fa.dim.momentum'),consensus:_t('fa.dim.consensus'),stabilita:_t('fa.dim.stabilita')};
   const dimMax2={valutazione:25,redditivita:25,momentum:20,consensus:20,stabilita:10};
-  const dimTips={valutazione:'P/E + P/B vs benchmark',redditivita:'ROE, EPS, margini operativi',momentum:'Posizione range 52 settimane',consensus:'Raccomandazione analisti',stabilita:'Beta — volatilità di mercato'};
+  const dimTips={valutazione:_L({it:'P/E + P/B vs benchmark',en:'P/E + P/B vs benchmark'}),redditivita:_L({it:'ROE, EPS, margini operativi',en:'ROE, EPS, operating margins'}),momentum:_L({it:'Posizione range 52 settimane',en:'Position in 52-week range'}),consensus:_L({it:'Raccomandazione analisti',en:'Analyst recommendation'}),stabilita:_L({it:'Beta — volatilità di mercato',en:'Beta — market volatility'})};
   const dims=Object.entries(fss.details).map(([k,v])=>{
     const max=dimMax2[k]||10;
     const pct=Math.round(v/max*100);
@@ -13568,7 +13577,7 @@ function renderSdFinEdgeScore(){
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:16px 18px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
         <div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:4px">FINEDGE SCORE ✦ Metrica proprietaria<span class="sd-info-btn" style="font-size:9px;width:13px;height:13px">i<div class="sd-tip">Score composito su 5 dimensioni (0–100):<br><br><b>Valutazione</b> /25: P/E, P/B vs benchmark<br><b>Redditività</b> /25: ROE, EPS, margini<br><b>Momentum</b> /20: posizione nel range 52 sett.<br><b>Consensus</b> /20: raccomandazione analisti<br><b>Stabilità</b> /10: beta — volatilità di mercato<br><br>≥70 Buono · ≥45 Neutro · &lt;45 Debole</div></span></div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:4px">FINEDGE SCORE ✦ ${_L({it:'Metrica proprietaria',en:'Proprietary metric'})}<span class="sd-info-btn" style="font-size:9px;width:13px;height:13px">i<div class="sd-tip">${_t('tip.sd.score')}</div></span></div>
           <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
             <span style="font-family:var(--fm);font-size:38px;font-weight:800;color:${scCol};line-height:1">${sc}</span>
             <span style="font-size:13px;color:var(--t3);font-family:var(--fm)">/100</span>
@@ -14903,21 +14912,21 @@ async function loadPortfolioNews(){
    SIMULATORE — TIPO INVESTIMENTO
 ══════════════════════════════════════════ */
 const SIM_PRESETS={
-  balanced:   {label:'Portafoglio Bilanciato',rate:8,  alloc:{azionario:.60,obbligazionario:.30,liquidità:.10},info:'Mix classico 60/40. Bilanciamento tra crescita e protezione del capitale.',pension:false},
-  growth:     {label:'Growth',               rate:10, alloc:{azionario:.80,obbligazionario:.15,liquidità:.05},info:'Orientamento alla crescita di lungo periodo. Maggiore volatilità, potenziale rendimento superiore.',pension:false},
-  conservative:{label:'Conservativo',        rate:5,  alloc:{azionario:.40,obbligazionario:.50,liquidità:.10},info:'Priorità alla protezione del capitale. Adatto a orizzonti brevi o bassa tolleranza al rischio.',pension:false},
-  dividend:   {label:'Dividendi',            rate:7,  alloc:{azionario:.70,dividendi:.25,liquidità:.05},info:'Focus su titoli con alto dividendo. Reddito passivo costante + crescita moderata.',pension:false},
-  etf:        {label:'ETF MSCI World',        rate:9,  alloc:{'ETF Globale':1.0},info:'Un singolo ETF che replica 1.500+ aziende in 23 mercati sviluppati. Diversificazione massima, costi minimi (TER ~0.20%).',pension:false},
-  etf_sp500:  {label:'ETF S&P 500',           rate:10, alloc:{'ETF S&P 500':1.0},info:'500 maggiori aziende USA. Storicamente ~10% annuo lordo negli ultimi 30 anni. TER tipico: 0.07–0.20%.',pension:false},
-  etf_eu:     {label:'ETF Europa',             rate:7,  alloc:{'ETF Europa':1.0},info:'Replica dei principali indici europei (EuroStoxx, MSCI Europe). Diversificazione valutaria ridotta (EUR).',pension:false},
-  etf_em:     {label:'ETF Mercati Emergenti',  rate:8,  alloc:{'ETF Emergenti':.7,'ETF Asia':.3},info:'Esposizione a Cina, India, Brasile, Korea. Alta crescita potenziale, alta volatilità.',pension:false},
-  etf_bond:   {label:'ETF Obbligazionario',    rate:4,  alloc:{'Bond Governativi':.6,'Bond Societari':.4},info:'Reddito fisso tramite ETF. Bassa volatilità, protezione in fasi di recessione. TER ~0.10%.',pension:false},
-  fund_eq:    {label:'Fondo Azionario Attivo', rate:8.5,alloc:{azionario:.90,liquidità:.10},info:'Gestione attiva da parte di professionisti. Costi più alti (TER 1.5–2.5%) ma potenziale alpha.',pension:false},
-  fund_mix:   {label:'Fondo Misto Bilanciato', rate:6.5,alloc:{azionario:.50,obbligazionario:.40,liquidità:.10},info:'Fondo bilanciato con gestione attiva. Adatto a investitori che preferiscono delega totale.',pension:false},
-  fund_bond:  {label:'Fondo Obbligazionario',  rate:3.5,alloc:{obbligazionario:.90,liquidità:.10},info:'Gestione attiva del reddito fisso. TER tipico 0.8–1.5%. Bassa volatilità.',pension:false},
-  pension_pip:{label:'PIP (Piano Individuale Pensionistico)',rate:7,alloc:{azionario:.60,obbligazionario:.35,liquidità:.05},info:'Veicolo previdenziale individuale. Deducibile fino a €5.164/anno. Tassazione agevolata in fase di erogazione (15% → 9%).',pension:true,taxNote:'Contributi deducibili IRPEF fino a €5.164,57/anno · Rendimenti tassati al 20% (vs 26% ETF) · Prestazione finale: aliquota 15% (decrescente fino a 9% dopo 35 anni di contribuzione)'},
-  pension_fop:{label:'Fondo Pensione Aperto',  rate:7,alloc:{azionario:.55,obbligazionario:.40,liquidità:.05},info:'Fondi pensione aperti — accessibili a tutti. Ottima flessibilità. Stessi vantaggi fiscali del PIP.',pension:true,taxNote:'Deducibilità IRPEF €5.164,57/anno · Tassazione rendimenti 20% · Erogazione tassata 15%→9% · Possibilità riscatto anticipato in caso di difficoltà'},
-  pension_fch:{label:'Fondo Pensione Chiuso',  rate:6.5,alloc:{azionario:.50,obbligazionario:.45,liquidità:.05},info:'Fondi di categoria (CCNL). Contributo datoriale aggiuntivo — massimizzare è sempre conveniente. Rendimenti tipici stabili ma conservativi.',pension:true,taxNote:'Contributo datoriale spesso incluso · Tassazione rendimenti 20% · Erogazione 9% se contributi datoriali prevalgono · Massimizza il contributo del datore di lavoro — è denaro "gratuito"'},
+  balanced:   {label:{it:'Portafoglio Bilanciato',en:'Balanced Portfolio'},rate:8,  alloc:{azionario:.60,obbligazionario:.30,liquidità:.10},info:{it:'Mix classico 60/40. Bilanciamento tra crescita e protezione del capitale.',en:'Classic 60/40 mix. Balance between growth and capital protection.'},pension:false},
+  growth:     {label:{it:'Growth',en:'Growth'},               rate:10, alloc:{azionario:.80,obbligazionario:.15,liquidità:.05},info:{it:'Orientamento alla crescita di lungo periodo. Maggiore volatilità, potenziale rendimento superiore.',en:'Long-term growth oriented. Higher volatility, higher potential returns.'},pension:false},
+  conservative:{label:{it:'Conservativo',en:'Conservative'},        rate:5,  alloc:{azionario:.40,obbligazionario:.50,liquidità:.10},info:{it:'Priorità alla protezione del capitale. Adatto a orizzonti brevi o bassa tolleranza al rischio.',en:'Capital preservation priority. Suitable for short horizons or low risk tolerance.'},pension:false},
+  dividend:   {label:{it:'Dividendi',en:'Dividend'},            rate:7,  alloc:{azionario:.70,dividendi:.25,liquidità:.05},info:{it:'Focus su titoli con alto dividendo. Reddito passivo costante + crescita moderata.',en:'Focus on high-dividend stocks. Steady passive income + moderate growth.'},pension:false},
+  etf:        {label:{it:'ETF MSCI World',en:'ETF MSCI World'},        rate:9,  alloc:{'ETF Globale':1.0},info:{it:'Un singolo ETF che replica 1.500+ aziende in 23 mercati sviluppati. Diversificazione massima, costi minimi (TER ~0.20%).',en:'A single ETF tracking 1,500+ companies in 23 developed markets. Maximum diversification, minimal costs (TER ~0.20%).'},pension:false},
+  etf_sp500:  {label:{it:'ETF S&P 500',en:'ETF S&P 500'},           rate:10, alloc:{'ETF S&P 500':1.0},info:{it:'500 maggiori aziende USA. Storicamente ~10% annuo lordo negli ultimi 30 anni. TER tipico: 0.07–0.20%.',en:'Top 500 US companies. Historically ~10% annual gross return over the last 30 years. Typical TER: 0.07–0.20%.'},pension:false},
+  etf_eu:     {label:{it:'ETF Europa',en:'ETF Europe'},             rate:7,  alloc:{'ETF Europa':1.0},info:{it:'Replica dei principali indici europei (EuroStoxx, MSCI Europe). Diversificazione valutaria ridotta (EUR).',en:'Tracks major European indices (EuroStoxx, MSCI Europe). Limited currency diversification (EUR).'},pension:false},
+  etf_em:     {label:{it:'ETF Mercati Emergenti',en:'ETF Emerging Markets'},  rate:8,  alloc:{'ETF Emergenti':.7,'ETF Asia':.3},info:{it:'Esposizione a Cina, India, Brasile, Korea. Alta crescita potenziale, alta volatilità.',en:'Exposure to China, India, Brazil, Korea. High growth potential, high volatility.'},pension:false},
+  etf_bond:   {label:{it:'ETF Obbligazionario',en:'Bond ETF'},    rate:4,  alloc:{'Bond Governativi':.6,'Bond Societari':.4},info:{it:'Reddito fisso tramite ETF. Bassa volatilità, protezione in fasi di recessione. TER ~0.10%.',en:'Fixed income via ETF. Low volatility, protection during recessions. TER ~0.10%.'},pension:false},
+  fund_eq:    {label:{it:'Fondo Azionario Attivo',en:'Active Equity Fund'}, rate:8.5,alloc:{azionario:.90,liquidità:.10},info:{it:'Gestione attiva da parte di professionisti. Costi più alti (TER 1.5–2.5%) ma potenziale alpha.',en:'Actively managed by professionals. Higher costs (TER 1.5–2.5%) but potential alpha.'},pension:false},
+  fund_mix:   {label:{it:'Fondo Misto Bilanciato',en:'Balanced Mixed Fund'}, rate:6.5,alloc:{azionario:.50,obbligazionario:.40,liquidità:.10},info:{it:'Fondo bilanciato con gestione attiva. Adatto a investitori che preferiscono delega totale.',en:'Balanced fund with active management. Suitable for investors who prefer full delegation.'},pension:false},
+  fund_bond:  {label:{it:'Fondo Obbligazionario',en:'Bond Fund'},  rate:3.5,alloc:{obbligazionario:.90,liquidità:.10},info:{it:'Gestione attiva del reddito fisso. TER tipico 0.8–1.5%. Bassa volatilità.',en:'Active fixed income management. Typical TER 0.8–1.5%. Low volatility.'},pension:false},
+  pension_pip:{label:{it:'PIP (Piano Individuale Pensionistico)',en:'PIP (Individual Pension Plan)'},rate:7,alloc:{azionario:.60,obbligazionario:.35,liquidità:.05},info:{it:'Veicolo previdenziale individuale. Deducibile fino a €5.164/anno. Tassazione agevolata in fase di erogazione (15% → 9%).',en:'Individual pension vehicle. Tax-deductible up to €5,164/year. Preferential tax treatment on distribution (15% → 9%).'},pension:true,taxNote:{it:'Contributi deducibili IRPEF fino a €5.164,57/anno · Rendimenti tassati al 20% (vs 26% ETF) · Prestazione finale: aliquota 15% (decrescente fino a 9% dopo 35 anni di contribuzione)',en:'IRPEF deductible contributions up to €5,164.57/year · Returns taxed at 20% (vs 26% for ETFs) · Final benefit: 15% rate (declining to 9% after 35 years of contributions)'}},
+  pension_fop:{label:{it:'Fondo Pensione Aperto',en:'Open Pension Fund'},  rate:7,alloc:{azionario:.55,obbligazionario:.40,liquidità:.05},info:{it:'Fondi pensione aperti — accessibili a tutti. Ottima flessibilità. Stessi vantaggi fiscali del PIP.',en:'Open pension funds — accessible to all. Excellent flexibility. Same tax benefits as PIP.'},pension:true,taxNote:{it:'Deducibilità IRPEF €5.164,57/anno · Tassazione rendimenti 20% · Erogazione tassata 15%→9% · Possibilità riscatto anticipato in caso di difficoltà',en:'IRPEF deductibility €5,164.57/year · Returns taxed at 20% · Distribution taxed 15%→9% · Early redemption possible in case of hardship'}},
+  pension_fch:{label:{it:'Fondo Pensione Chiuso',en:'Closed Pension Fund'},  rate:6.5,alloc:{azionario:.50,obbligazionario:.45,liquidità:.05},info:{it:'Fondi di categoria (CCNL). Contributo datoriale aggiuntivo — massimizzare è sempre conveniente. Rendimenti tipici stabili ma conservativi.',en:'Category funds (collective agreements). Additional employer contribution — always worth maximizing. Typically stable but conservative returns.'},pension:true,taxNote:{it:'Contributo datoriale spesso incluso · Tassazione rendimenti 20% · Erogazione 9% se contributi datoriali prevalgono · Massimizza il contributo del datore di lavoro — è denaro "gratuito"',en:'Employer contribution often included · Returns taxed at 20% · Distribution at 9% if employer contributions prevail · Maximize employer contribution — it\'s "free money"'}},
 };
 
 function onSimTypeChange(){
@@ -14929,7 +14938,7 @@ function onSimTypeChange(){
   document.getElementById('srv').textContent=preset.rate+'%';
   // Info box
   const infoBox=document.getElementById('sim-info-box');
-  if(infoBox){infoBox.style.display='block';infoBox.textContent=preset.info;}
+  if(infoBox){infoBox.style.display='block';infoBox.textContent=_L(preset.info);}
   // Tax row (pensione)
   const taxRow=document.getElementById('sim-tax-row');
   if(taxRow)taxRow.style.display=preset.pension?'block':'none';
@@ -14939,8 +14948,9 @@ function onSimTypeChange(){
   if(noteCard&&noteContent){
     if(preset.pension&&preset.taxNote){
       noteCard.style.display='block';
+      const taxNoteText=_L(preset.taxNote);
       noteContent.innerHTML=`<div style="font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.8;padding:4px 0">
-        ${preset.taxNote.split(' · ').map(n=>`<div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:5px"><span style="color:var(--g);flex-shrink:0">✓</span><span>${n}</span></div>`).join('')}
+        ${taxNoteText.split(' · ').map(n=>`<div style="display:flex;gap:6px;align-items:flex-start;margin-bottom:5px"><span style="color:var(--g);flex-shrink:0">✓</span><span>${n}</span></div>`).join('')}
       </div>`;
     } else {
       noteCard.style.display='none';
@@ -15315,21 +15325,21 @@ function cmpRenderMetrics(results){
   const fmtLgc=(v)=>{if(!v)return'—';if(v>=1e12)return(v/1e12).toFixed(2)+'T';if(v>=1e9)return(v/1e9).toFixed(2)+'B';if(v>=1e6)return(v/1e6).toFixed(1)+'M';return v.toLocaleString();}
 
   // Header
-  head.innerHTML=`<tr><th>Metrica</th>${cols.map(c=>`<th><span style="color:${colorFor(c)};font-size:13px">●</span> ${c.sym}</th>`).join('')}</tr>`;
+  head.innerHTML=`<tr><th>${_t('cmp.metric.header')}</th>${cols.map(c=>`<th><span style="color:${colorFor(c)};font-size:13px">●</span> ${c.sym}</th>`).join('')}</tr>`;
 
   const stats=cols.map(histStats);
   const rows=[
-    {label:'Rendimento periodo',vals:cols.map((c,i)=>{const v=parseFloat(stats[i].ret);const col=v>=0?'var(--g)':'var(--r)';return v!=null?`<span style="color:${col};font-weight:700">${v>=0?'+':''}${v}%</span>`:'—';})},
-    {label:'Volatilità annua',vals:cols.map((c,i)=>fmt2(stats[i].vol,'%'))},
+    {label:_t('cmp.metric.return'),vals:cols.map((c,i)=>{const v=parseFloat(stats[i].ret);const col=v>=0?'var(--g)':'var(--r)';return v!=null?`<span style="color:${col};font-weight:700">${v>=0?'+':''}${v}%</span>`:'—';})},
+    {label:_t('cmp.metric.vol'),vals:cols.map((c,i)=>fmt2(stats[i].vol,'%'))},
     {label:'Max Drawdown',vals:cols.map((c,i)=>stats[i].maxDD?`<span style="color:var(--r)">-${stats[i].maxDD}%</span>`:'—')},
-    {label:'Prezzo attuale',vals:cols.map(c=>{const p=c.quot?.price;return p?`$${p.toFixed(2)}`:'—';})},
+    {label:_t('cmp.metric.price'),vals:cols.map(c=>{const p=c.quot?.price;return p?`$${p.toFixed(2)}`:'—';})},
     {label:'Market Cap',vals:cols.map(c=>fmtLgc(c.summ?.marketCap))},
     {label:'P/E Trailing',vals:cols.map(c=>c.summ?.pe?c.summ.pe.toFixed(1):'—')},
     {label:'P/E Forward',vals:cols.map(c=>c.summ?.forwardPE?c.summ.forwardPE.toFixed(1):'—')},
-    {label:'Dividendo %',vals:cols.map(c=>c.summ?.dividend?fmtPct(c.summ.dividend):'—')},
+    {label:_t('sd.lbl.divPct'),vals:cols.map(c=>c.summ?.dividend?fmtPct(c.summ.dividend):'—')},
     {label:'Beta',vals:cols.map(c=>c.summ?.beta?c.summ.beta.toFixed(2):'—')},
     {label:'ROE',vals:cols.map(c=>c.summ?.roe?fmtPct(c.summ.roe):'—')},
-    {label:'Settore',vals:cols.map(c=>c.summ?.sector||'—')},
+    {label:_t('common.sector'),vals:cols.map(c=>c.summ?.sector||'—')},
   ];
 
   body.innerHTML=rows.map(row=>`<tr><td>${row.label}</td>${row.vals.map(v=>`<td>${v}</td>`).join('')}</tr>`).join('');
@@ -15734,10 +15744,12 @@ function deletePortGoal(){localStorage.removeItem('fs_port_goal');renderPortGoal
 ══════════════════════════════════════════ */
 function exportTaxCSV(){
   const quotes=_lastPortQuotes.length===portfolio.length?_lastPortQuotes:null;
-  if(!quotes||!portfolio.length){alert('Carica prima i dati del portafoglio');return;}
+  if(!quotes||!portfolio.length){alert(_L({it:'Carica prima i dati del portafoglio',en:'Please load portfolio data first'}));return;}
   const TAX=0.26;
   const fxRate=_lastFxRate||1.08;
-  const rows=[['Titolo','Quantità','Prezzo acquisto','Valuta','Prezzo attuale (orig.)','Prezzo attuale (€)','Costo totale (€)','Valore attuale (€)','P&L (€)','P&L %','Tipo','Imposta stimata 26% (€)']];
+  const rows=[currentLang==='en'
+    ?['Stock','Quantity','Buy Price','Currency','Current Price (orig.)','Current Price (€)','Total Cost (€)','Current Value (€)','P&L (€)','P&L %','Type','Estimated Tax 26% (€)']
+    :['Titolo','Quantità','Prezzo acquisto','Valuta','Prezzo attuale (orig.)','Prezzo attuale (€)','Costo totale (€)','Valore attuale (€)','P&L (€)','P&L %','Tipo','Imposta stimata 26% (€)']];
   portfolio.forEach((item,i)=>{
     const q=quotes[i];const p=q?.price??item.buyPrice;
     const isEUR=item.currency==='EUR';
@@ -15746,7 +15758,7 @@ function exportTaxCSV(){
     const pnl=val-inv;const pnlPct=inv>0?(pnl/inv*100):0;
     const pnlEUR=pnl*toEUR;const invEUR=inv*toEUR;const valEUR=val*toEUR;
     const isGain=pnlEUR>=0;const taxEUR=isGain?pnlEUR*TAX:0;
-    rows.push([item.sym,item.qty,item.buyPrice,item.currency||'USD',p.toFixed(4),(p*toEUR).toFixed(4),invEUR.toFixed(2),valEUR.toFixed(2),pnlEUR.toFixed(2),pnlPct.toFixed(2),isGain?'Plusvalenza':'Minusvalenza',taxEUR.toFixed(2)]);
+    rows.push([item.sym,item.qty,item.buyPrice,item.currency||'USD',p.toFixed(4),(p*toEUR).toFixed(4),invEUR.toFixed(2),valEUR.toFixed(2),pnlEUR.toFixed(2),pnlPct.toFixed(2),isGain?_L({it:'Plusvalenza',en:'Capital Gain'}):_L({it:'Minusvalenza',en:'Capital Loss'}),taxEUR.toFixed(2)]);
   });
   const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
@@ -16094,22 +16106,22 @@ function showTransition(onDone) {
    INVESTOR PROFILE QUIZ
 ══════════════════════════════════════════ */
 const PQ_QUESTIONS=[
-  {q:'Qual è il tuo orizzonte temporale per questi investimenti?',
-   opts:['Meno di 1 anno','Da 1 a 3 anni','Da 3 a 7 anni','Oltre 7 anni']},
-  {q:'Qual è il tuo obiettivo principale?',
-   opts:['Preservare il capitale','Reddito costante da dividendi','Crescita bilanciata','Massimizzare la crescita del capitale']},
-  {q:'Se il tuo portafoglio perdesse il 20% in un mese, cosa faresti?',
-   opts:['Venderei tutto immediatamente','Venderei una parte per ridurre il rischio','Manterrei la posizione senza cambiamenti','Comprerei di più approfittando dei prezzi più bassi']},
-  {q:'Che percentuale del tuo patrimonio totale vuoi investire in azioni?',
-   opts:['Meno del 10%','Tra il 10% e il 30%','Tra il 30% e il 60%','Oltre il 60%']},
-  {q:'Qual è la tua esperienza con investimenti finanziari?',
-   opts:['Nessuna esperienza','Meno di 3 anni','Tra 3 e 10 anni','Oltre 10 anni di esperienza']},
-  {q:'Quanto è stabile il tuo reddito attuale?',
-   opts:['Molto variabile o incerto','Abbastanza variabile','Stabile','Molto stabile e prevedibile']},
-  {q:'Potresti aver bisogno di liquidare parte degli investimenti nei prossimi 2 anni?',
-   opts:['Sì, probabilmente oltre il 50%','Sì, tra il 20% e il 50%','Solo una piccola parte (< 20%)','No, nessuna necessità prevista']},
-  {q:'Quale rendimento annuo ritieni accettabile, sapendo che più rendimento = più rischio?',
-   opts:['2–4% con rischio minimo','4–7% con rischio contenuto','7–12% con rischio moderato','Oltre il 12% anche con alta volatilità']},
+  {q:{it:'Qual è il tuo orizzonte temporale per questi investimenti?',en:'What is your investment time horizon?'},
+   opts:[{it:'Meno di 1 anno',en:'Less than 1 year'},{it:'Da 1 a 3 anni',en:'1 to 3 years'},{it:'Da 3 a 7 anni',en:'3 to 7 years'},{it:'Oltre 7 anni',en:'More than 7 years'}]},
+  {q:{it:'Qual è il tuo obiettivo principale?',en:'What is your primary investment goal?'},
+   opts:[{it:'Preservare il capitale',en:'Preserve capital'},{it:'Reddito costante da dividendi',en:'Steady dividend income'},{it:'Crescita bilanciata',en:'Balanced growth'},{it:'Massimizzare la crescita del capitale',en:'Maximize capital growth'}]},
+  {q:{it:'Se il tuo portafoglio perdesse il 20% in un mese, cosa faresti?',en:'If your portfolio lost 20% in a month, what would you do?'},
+   opts:[{it:'Venderei tutto immediatamente',en:'Sell everything immediately'},{it:'Venderei una parte per ridurre il rischio',en:'Sell part to reduce risk'},{it:'Manterrei la posizione senza cambiamenti',en:'Hold without changes'},{it:'Comprerei di più approfittando dei prezzi più bassi',en:'Buy more at lower prices'}]},
+  {q:{it:'Che percentuale del tuo patrimonio totale vuoi investire in azioni?',en:'What percentage of your total wealth do you want in stocks?'},
+   opts:[{it:'Meno del 10%',en:'Less than 10%'},{it:'Tra il 10% e il 30%',en:'Between 10% and 30%'},{it:'Tra il 30% e il 60%',en:'Between 30% and 60%'},{it:'Oltre il 60%',en:'More than 60%'}]},
+  {q:{it:'Qual è la tua esperienza con investimenti finanziari?',en:'How much financial investment experience do you have?'},
+   opts:[{it:'Nessuna esperienza',en:'No experience'},{it:'Meno di 3 anni',en:'Less than 3 years'},{it:'Tra 3 e 10 anni',en:'3 to 10 years'},{it:'Oltre 10 anni di esperienza',en:'More than 10 years'}]},
+  {q:{it:'Quanto è stabile il tuo reddito attuale?',en:'How stable is your current income?'},
+   opts:[{it:'Molto variabile o incerto',en:'Very variable or uncertain'},{it:'Abbastanza variabile',en:'Fairly variable'},{it:'Stabile',en:'Stable'},{it:'Molto stabile e prevedibile',en:'Very stable and predictable'}]},
+  {q:{it:'Potresti aver bisogno di liquidare parte degli investimenti nei prossimi 2 anni?',en:'Might you need to liquidate part of your investments in the next 2 years?'},
+   opts:[{it:'Sì, probabilmente oltre il 50%',en:'Yes, probably more than 50%'},{it:'Sì, tra il 20% e il 50%',en:'Yes, between 20% and 50%'},{it:'Solo una piccola parte (< 20%)',en:'Only a small part (< 20%)'},{it:'No, nessuna necessità prevista',en:'No, no anticipated need'}]},
+  {q:{it:'Quale rendimento annuo ritieni accettabile, sapendo che più rendimento = più rischio?',en:'What annual return do you find acceptable, knowing higher returns mean higher risk?'},
+   opts:[{it:'2–4% con rischio minimo',en:'2–4% with minimal risk'},{it:'4–7% con rischio contenuto',en:'4–7% with low risk'},{it:'7–12% con rischio moderato',en:'7–12% with moderate risk'},{it:'Oltre il 12% anche con alta volatilità',en:'Above 12% even with high volatility'}]},
 ];
 let _pqA=[],_pqIdx=0;
 
@@ -16127,9 +16139,9 @@ function _pqRender(){
   const n=PQ_QUESTIONS.length,q=PQ_QUESTIONS[_pqIdx];
   document.getElementById('pq-progbar').style.width=((_pqIdx/n)*100)+'%';
   document.getElementById('pq-counter').textContent=_L({it:'Domanda ',en:'Question '})+(_pqIdx+1)+_L({it:' di ',en:' of '})+n;
-  document.getElementById('pq-q').textContent=q.q;
+  document.getElementById('pq-q').textContent=_L(q.q);
   document.getElementById('pq-opts').innerHTML=q.opts.map((o,i)=>
-    '<button class="pq-opt'+(_pqA[_pqIdx]===i?' pq-sel':'')+'" onclick="_pqSel('+i+')">'+o+'</button>'
+    '<button class="pq-opt'+(_pqA[_pqIdx]===i?' pq-sel':'')+'" onclick="_pqSel('+i+')">'+_L(o)+'</button>'
   ).join('');
   const back=document.getElementById('pq-btn-back');
   const next=document.getElementById('pq-btn-next');
@@ -16137,7 +16149,7 @@ function _pqRender(){
   const has=_pqA[_pqIdx]!==null;
   next.disabled=!has;
   next.style.opacity=has?'1':'.35';
-  next.textContent=_pqIdx===n-1?'Vedi il mio profilo ✓':'Avanti →';
+  next.textContent=_pqIdx===n-1?_L({it:'Vedi il mio profilo ✓',en:'See my profile ✓'}):_L({it:'Avanti →',en:'Next →'});
 }
 function _pqSel(i){_pqA[_pqIdx]=i;_pqRender();}
 function pqBack(){if(_pqIdx>0){_pqIdx--;_pqRender();}}
@@ -16163,9 +16175,9 @@ function pqNext(){
     '<div style="text-align:center;padding:12px 0 8px">'+
       '<div style="font-size:48px;margin-bottom:12px">'+p.emoji+'</div>'+
       '<div style="font-size:22px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:8px">'+p.name+'</div>'+
-      '<div style="font-size:12px;color:var(--t2);font-family:var(--fm);line-height:1.7;margin-bottom:16px;max-width:340px;margin-left:auto;margin-right:auto">'+p.desc+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);font-family:var(--fm);line-height:1.7;margin-bottom:16px;max-width:340px;margin-left:auto;margin-right:auto">'+_L(p.desc)+'</div>'+
       '<div style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;background:'+p.color+'18;border:1.5px solid '+p.color+'50;border-radius:20px;margin-bottom:24px">'+
-        '<span style="font-size:12px;font-family:var(--fm);color:'+p.color+';font-weight:700">Punteggio: '+tot+' / '+maxScore+'</span>'+
+        '<span style="font-size:12px;font-family:var(--fm);color:'+p.color+';font-weight:700">'+_L({it:'Punteggio',en:'Score'})+': '+tot+' / '+maxScore+'</span>'+
       '</div>'+
       '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
         '<button onclick="closePQ();renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:12px 28px;background:'+p.color+';color:#fff;border:none;border-radius:10px;font-family:var(--fm);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px '+p.color+'40">Analizza il portafoglio →</button>'+
@@ -17084,17 +17096,17 @@ function _quickPortfolioModal(sym, name, price, cat, currency){
   if(typeof currentUser==='undefined'||!currentUser){openAuthModal?.();return;}
   const today=new Date().toISOString().split('T')[0];
   const html=`
-    <div class="qm-title">＋ Aggiungi al Portafoglio</div>
-    <div class="qm-sub">${name} · ${sym}${price?` · Prezzo attuale: ${currency==='EUR'?'€':'$'}${price.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:4})}`:''}  </div>
-    <div class="qm-row"><div class="qm-lbl">Quantità</div><input class="qm-inp" id="qm-qty" type="number" placeholder="es. 10" min="0.0001" step="any" autofocus></div>
-    <div class="qm-row"><div class="qm-lbl">Prezzo di acquisto (${currency==='EUR'?'€':'$'})</div><input class="qm-inp" id="qm-price" type="number" value="${price||''}" min="0" step="any"></div>
-    <div class="qm-row"><div class="qm-lbl">Data acquisto</div><input class="qm-inp" id="qm-date" type="date" value="${today}"></div>`;
+    <div class="qm-title">${_t('qm.addPortfolio')}</div>
+    <div class="qm-sub">${name} · ${sym}${price?` · ${_t('alert.notif.price')}: ${currency==='EUR'?'€':'$'}${price.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{minimumFractionDigits:2,maximumFractionDigits:4})}`:''}  </div>
+    <div class="qm-row"><div class="qm-lbl">${_t('qm.qty')}</div><input class="qm-inp" id="qm-qty" type="number" placeholder="${currentLang==='en'?'e.g. 10':'es. 10'}" min="0.0001" step="any" autofocus></div>
+    <div class="qm-row"><div class="qm-lbl">${_t('qm.buyPrice')} (${currency==='EUR'?'€':'$'})</div><input class="qm-inp" id="qm-price" type="number" value="${price||''}" min="0" step="any"></div>
+    <div class="qm-row"><div class="qm-lbl">${_t('qm.buyDate')}</div><input class="qm-inp" id="qm-date" type="date" value="${today}"></div>`;
   openQM(html, async ()=>{
     const qty=parseFloat(document.getElementById('qm-qty')?.value);
     const buyPrice=parseFloat(document.getElementById('qm-price')?.value);
     const buyDate=document.getElementById('qm-date')?.value||today;
-    if(!qty||qty<=0){_qmMsg('Inserisci una quantità valida',true);return;}
-    if(!buyPrice||buyPrice<=0){_qmMsg('Inserisci un prezzo valido',true);return;}
+    if(!qty||qty<=0){_qmMsg(_L({it:'Inserisci una quantità valida',en:'Enter a valid quantity'}),true);return;}
+    if(!buyPrice||buyPrice<=0){_qmMsg(_L({it:'Inserisci un prezzo valido',en:'Enter a valid price'}),true);return;}
     const isEU=(sym.endsWith('.MI')||sym.endsWith('.PA')||sym.endsWith('.DE')||sym.endsWith('.SW')||sym.endsWith('.AS')||sym.endsWith('.MC')||sym.endsWith('.BR')||sym.endsWith('.VI')||sym.endsWith('.L'))||(currency==='EUR');
     const cur=isEU?'EUR':'USD';
     const csym=isEU?'€':'$';
@@ -17103,7 +17115,7 @@ function _quickPortfolioModal(sym, name, price, cat, currency){
     if(typeof _logTransaction==='function')_logTransaction('buy',sym,qty,buyPrice,cur);
     await savePortfolio();
     if(typeof renderPortfolio==='function')renderPortfolio();
-    _qmMsg('✓ Aggiunto al portafoglio!',false);
+    _qmMsg(_L({it:'✓ Aggiunto al portafoglio!',en:'✓ Added to portfolio!'}),false);
     setTimeout(closeQM,1200);
   });
 }
@@ -17227,129 +17239,129 @@ function crdQuickAlert(){
 const TUTORIAL_KEY = 'finedge_tutorial_done';
 
 const TUTORIAL_STEPS = [
-  // ── 1. BENVENUTO ────────────────────────────────────────────────
+  // ── 1. WELCOME ──────────────────────────────────────────────────
   {
     target: null,
-    title: '👋 Benvenuto in FinEdge!',
-    desc: 'Ti guidiamo in 2 minuti attraverso tutte le funzionalità. Puoi saltare o tornare indietro in qualsiasi momento.',
+    title: () => _L({it:'👋 Benvenuto in FinEdge!',en:'👋 Welcome to FinEdge!'}),
+    desc: () => _L({it:'Ti guidiamo in 2 minuti attraverso tutte le funzionalità. Puoi saltare o tornare indietro in qualsiasi momento.',en:'We\'ll guide you through all the features in 2 minutes. You can skip or go back at any time.'}),
     pos: 'center'
   },
-  // ── 2. NAVIGAZIONE ──────────────────────────────────────────────
+  // ── 2. NAVIGATION ───────────────────────────────────────────────
   {
     target: () => window.innerWidth <= 640 ? document.querySelector('.hamburger') : document.querySelector('.nav-items'),
-    title: '🧭 Navigazione principale',
+    title: () => _L({it:'🧭 Navigazione principale',en:'🧭 Main navigation'}),
     desc: () => window.innerWidth <= 640
-      ? 'Tocca ☰ in alto a destra per aprire il menu: Dashboard, Screener, Portafoglio, Lab, News e Macro.'
-      : 'Sei sezioni sempre accessibili: Dashboard (mercati live), Screener, Portafoglio, Lab (strumenti avanzati), News e Macro.',
-    location: 'Barra di navigazione',
+      ? _L({it:'Tocca ☰ in alto a destra per aprire il menu: Dashboard, Screener, Portafoglio, Lab, News e Macro.',en:'Tap ☰ top right to open the menu: Dashboard, Screener, Portfolio, Lab, News and Macro.'})
+      : _L({it:'Sei sezioni sempre accessibili: Dashboard (mercati live), Screener, Portafoglio, Lab (strumenti avanzati), News e Macro.',en:'Six always-accessible sections: Dashboard (live markets), Screener, Portfolio, Lab (advanced tools), News and Macro.'}),
+    location: () => _L({it:'Barra di navigazione',en:'Navigation bar'}),
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 3. STATO BORSE ──────────────────────────────────────────────
+  // ── 3. MARKET STATUS ────────────────────────────────────────────
   {
     target: () => document.querySelector('.hours-bar'),
-    title: '🕐 Stato delle borse',
-    desc: 'Vedi in tempo reale se NYSE/NASDAQ, Londra e Milano sono aperte o chiuse — con l\'orario locale di ciascuna piazza.',
-    location: 'Dashboard › Stato borse',
+    title: () => _L({it:'🕐 Stato delle borse',en:'🕐 Market status'}),
+    desc: () => _L({it:'Vedi in tempo reale se NYSE/NASDAQ, Londra e Milano sono aperte o chiuse — con l\'orario locale di ciascuna piazza.',en:'See in real time if NYSE/NASDAQ, London and Milan are open or closed — with the local time for each exchange.'}),
+    location: () => _L({it:'Dashboard › Stato borse',en:'Dashboard › Market status'}),
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 4. GRAFICI INTERATTIVI ──────────────────────────────────────
+  // ── 4. CHARTS ───────────────────────────────────────────────────
   {
     target: () => document.querySelector('.dash-charts'),
-    title: '📈 Grafici interattivi',
-    desc: 'Due grafici configurabili: scegli qualsiasi indice, azione o crypto dal menu a tendina. Puoi scegliere candele o linea e cambiare il periodo.',
-    location: 'Dashboard › Grafici',
+    title: () => _L({it:'📈 Grafici interattivi',en:'📈 Interactive charts'}),
+    desc: () => _L({it:'Due grafici configurabili: scegli qualsiasi indice, azione o crypto dal menu a tendina. Puoi scegliere candele o linea e cambiare il periodo.',en:'Two configurable charts: choose any index, stock or crypto from the dropdown. Switch between candles and line, and change the period.'}),
+    location: () => _L({it:'Dashboard › Grafici',en:'Dashboard › Charts'}),
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 5. MIGLIORI E PEGGIORI ──────────────────────────────────────
+  // ── 5. MOVERS ───────────────────────────────────────────────────
   {
     target: () => document.getElementById('movers-top')?.closest('.card'),
-    title: '🏆 Migliori e Peggiori del giorno',
-    desc: 'Top 5 e Bottom 5 aggiornati in tempo reale tra i 150 principali titoli mondiali. Clicca su qualsiasi titolo per aprire il grafico completo.',
-    location: 'Dashboard › Migliori / Peggiori',
+    title: () => _L({it:'🏆 Migliori e Peggiori del giorno',en:'🏆 Top & Bottom of the day'}),
+    desc: () => _L({it:'Top 5 e Bottom 5 aggiornati in tempo reale tra i 150 principali titoli mondiali. Clicca su qualsiasi titolo per aprire il grafico completo.',en:'Top 5 and Bottom 5 updated in real time among the 150 leading global stocks. Click any stock to open the full chart.'}),
+    location: () => _L({it:'Dashboard › Migliori / Peggiori',en:'Dashboard › Top / Bottom'}),
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 6. CLICK PER ANALISI COMPLETA ──────────────────────────────
+  // ── 6. CLICK FOR ANALYSIS ───────────────────────────────────────
   {
     target: () => document.querySelector('#movers-top .mover-item') || document.getElementById('movers-top')?.closest('.card'),
-    title: '🖱️ Clicca per l\'analisi completa',
-    desc: 'Clicca su qualsiasi titolo in tutta l\'app per aprire un pannello con grafico interattivo, dati fondamentali e FinEdge Score.',
-    location: 'Dashboard › Migliori / Peggiori',
+    title: () => _L({it:'🖱️ Clicca per l\'analisi completa',en:'🖱️ Click for full analysis'}),
+    desc: () => _L({it:'Clicca su qualsiasi titolo in tutta l\'app per aprire un pannello con grafico interattivo, dati fondamentali e FinEdge Score.',en:'Click any stock anywhere in the app to open a panel with interactive chart, fundamental data and FinEdge Score.'}),
+    location: () => _L({it:'Dashboard › Migliori / Peggiori',en:'Dashboard › Top / Bottom'}),
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 7. INDICI GLOBALI ───────────────────────────────────────────
+  // ── 7. GLOBAL INDICES ───────────────────────────────────────────
   {
     target: () => document.getElementById('idx-list')?.closest('.card'),
-    title: '🌍 Indici globali',
-    desc: 'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei e molti altri indici in un\'unica lista. Clicca per aprire il grafico storico di ciascuno.',
-    location: 'Dashboard › Indici globali',
+    title: () => _L({it:'🌍 Indici globali',en:'🌍 Global indices'}),
+    desc: () => _L({it:'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei e molti altri indici in un\'unica lista. Clicca per aprire il grafico storico di ciascuno.',en:'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei and many more in one list. Click to open the historical chart for each.'}),
+    location: () => _L({it:'Dashboard › Indici globali',en:'Dashboard › Global indices'}),
     pos: 'bottom',
     page: 'dashboard'
   },
   // ── 8. SCREENER ─────────────────────────────────────────────────
   {
     target: () => document.getElementById('sc-idx-select'),
-    title: '🔍 Screener — Scegli il mercato',
-    desc: 'Seleziona l\'indice da analizzare: S&P 500, NASDAQ 100, DAX 40, FTSE MIB, CAC 40 e molti altri. La tabella si aggiorna istantaneamente.',
-    location: 'Screener › Selettore mercato',
+    title: () => _L({it:'🔍 Screener — Scegli il mercato',en:'🔍 Screener — Choose market'}),
+    desc: () => _L({it:'Seleziona l\'indice da analizzare: S&P 500, NASDAQ 100, DAX 40, FTSE MIB, CAC 40 e molti altri. La tabella si aggiorna istantaneamente.',en:'Select the index to analyze: S&P 500, NASDAQ 100, DAX 40, FTSE MIB, CAC 40 and many more. The table updates instantly.'}),
+    location: () => _L({it:'Screener › Selettore mercato',en:'Screener › Market selector'}),
     pos: 'bottom',
     page: 'screener'
   },
-  // ── 9. SCREENER — CLICK SUL TITOLO ──────────────────────────────
+  // ── 9. SCREENER — STOCK CLICK ───────────────────────────────────
   {
     target: () => document.getElementById('sc-body')?.closest('table') || document.getElementById('sc-body'),
-    title: '📄 Apri la scheda di un titolo',
-    desc: 'Clicca sul nome di qualsiasi titolo nella tabella per aprire la sua pagina completa: grafico, dati fondamentali, FinEdge Score, insider trading e molto altro.',
-    location: 'Screener › Tabella titoli',
+    title: () => _L({it:'📄 Apri la scheda di un titolo',en:'📄 Open a stock\'s detail'}),
+    desc: () => _L({it:'Clicca sul nome di qualsiasi titolo nella tabella per aprire la sua pagina completa: grafico, dati fondamentali, FinEdge Score, insider trading e molto altro.',en:'Click any stock name in the table to open its full page: chart, fundamental data, FinEdge Score, insider transactions and more.'}),
+    location: () => _L({it:'Screener › Tabella titoli',en:'Screener › Stock table'}),
     pos: 'top',
     page: 'screener'
   },
-  // ── 10. SCREENER WATCHLIST ──────────────────────────────────────
+  // ── 10. WATCHLIST ───────────────────────────────────────────────
   {
     target: () => document.querySelector('.sc-quick-bar'),
-    title: '★ Watchlist personale',
-    desc: 'Clicca sulla stella ★ accanto a qualsiasi titolo per salvarlo in Watchlist. Qui trovi sempre i tuoi titoli preferiti.',
-    location: 'Screener › Watchlist',
+    title: () => _L({it:'★ Watchlist personale',en:'★ Personal watchlist'}),
+    desc: () => _L({it:'Clicca sulla stella ★ accanto a qualsiasi titolo per salvarlo in Watchlist. Qui trovi sempre i tuoi titoli preferiti.',en:'Click the ★ star next to any stock to save it to your Watchlist. Your favorite stocks are always here.'}),
+    location: () => _L({it:'Screener › Watchlist',en:'Screener › Watchlist'}),
     pos: 'bottom',
     page: 'screener'
   },
-  // ── 11. PORTAFOGLIO INTRO ───────────────────────────────────────
+  // ── 11. PORTFOLIO ADD ───────────────────────────────────────────
   {
     target: () => document.getElementById('port-add-toggle'),
-    title: '💼 Portafoglio — Aggiungi titoli',
-    desc: 'Clicca qui per aggiungere un investimento: cerca il ticker, inserisci quantità, prezzo di acquisto e data. I dati vengono salvati nel cloud.',
-    location: 'Portafoglio › Aggiungi',
+    title: () => _L({it:'💼 Portafoglio — Aggiungi titoli',en:'💼 Portfolio — Add positions'}),
+    desc: () => _L({it:'Clicca qui per aggiungere un investimento: cerca il ticker, inserisci quantità, prezzo di acquisto e data. I dati vengono salvati nel cloud.',en:'Click here to add an investment: search the ticker, enter quantity, buy price and date. Data is saved in the cloud.'}),
+    location: () => _L({it:'Portafoglio › Aggiungi',en:'Portfolio › Add'}),
     pos: 'bottom',
     page: 'portafoglio'
   },
-  // ── 12. PORTAFOGLIO PANORAMICA ──────────────────────────────────
+  // ── 12. PORTFOLIO OVERVIEW ──────────────────────────────────────
   {
     target: () => document.getElementById('port-panel-overview'),
-    title: '🍩 Panoramica portafoglio',
-    desc: 'Il grafico a torta mostra la distribuzione dei tuoi investimenti. Sotto trovi il P&L totale, il valore di mercato e la variazione giornaliera.',
-    location: 'Portafoglio › Panoramica',
+    title: () => _L({it:'🍩 Panoramica portafoglio',en:'🍩 Portfolio overview'}),
+    desc: () => _L({it:'Il grafico a torta mostra la distribuzione dei tuoi investimenti. Sotto trovi il P&L totale, il valore di mercato e la variazione giornaliera.',en:'The pie chart shows your investment distribution. Below you find total P&L, market value and daily change.'}),
+    location: () => _L({it:'Portafoglio › Panoramica',en:'Portfolio › Overview'}),
     pos: 'right',
     page: 'portafoglio'
   },
-  // ── 13. PORTAFOGLIO LISTA ───────────────────────────────────────
+  // ── 13. PORTFOLIO FILTER ────────────────────────────────────────
   {
     target: () => document.getElementById('port-cat-bar'),
-    title: '📋 Filtra per categoria',
-    desc: 'Usa questi filtri per vedere solo Azioni, ETF, Crypto o Commodities. Clicca su qualsiasi titolo nella lista per aprirne l\'analisi completa.',
-    location: 'Portafoglio › Lista titoli',
+    title: () => _L({it:'📋 Filtra per categoria',en:'📋 Filter by category'}),
+    desc: () => _L({it:'Usa questi filtri per vedere solo Azioni, ETF, Crypto o Commodities. Clicca su qualsiasi titolo nella lista per aprirne l\'analisi completa.',en:'Use these filters to see only Stocks, ETFs, Crypto or Commodities. Click any position to open its full analysis.'}),
+    location: () => _L({it:'Portafoglio › Lista titoli',en:'Portfolio › Position list'}),
     pos: 'bottom',
     page: 'portafoglio'
   },
-  // ── 14. RIEPILOGO MERCATI ───────────────────────────────────────
+  // ── 14. MARKET SUMMARY ──────────────────────────────────────────
   {
     target: () => document.getElementById('port-daily-outer'),
-    title: '📊 Riepilogo Mercati',
-    desc: 'Ogni giorno FinEdge genera un briefing AI sui mercati legato ai titoli del tuo portafoglio: performance, notizie rilevanti e prossimi earnings.',
-    location: 'Portafoglio › Riepilogo mercati',
+    title: () => _L({it:'📊 Riepilogo Mercati',en:'📊 Market Summary'}),
+    desc: () => _L({it:'Ogni giorno FinEdge genera un briefing AI sui mercati legato ai titoli del tuo portafoglio: performance, notizie rilevanti e prossimi earnings.',en:'Every day FinEdge generates an AI market briefing tied to your portfolio stocks: performance, relevant news and upcoming earnings.'}),
+    location: () => _L({it:'Portafoglio › Riepilogo mercati',en:'Portfolio › Market summary'}),
     pos: 'left',
     page: 'portafoglio',
     setup: () => {
@@ -17366,8 +17378,8 @@ const TUTORIAL_STEPS = [
     target: () => window.innerWidth <= 640
       ? (document.querySelector('#page-lab .card') || document.getElementById('page-lab'))
       : document.getElementById('nb-lab'),
-    title: '🧪 Lab — Strumenti avanzati',
-    desc: 'Tre tool per analisi approfondite: Simulatore Monte Carlo (scenari futuri), Backtest (strategie storiche) e Comparatore (affianca 2 titoli).',
+    title: () => _L({it:'🧪 Lab — Strumenti avanzati',en:'🧪 Lab — Advanced tools'}),
+    desc: () => _L({it:'Tre tool per analisi approfondite: Simulatore Monte Carlo (scenari futuri), Backtest (strategie storiche) e Comparatore (affianca 2 titoli).',en:'Three tools for in-depth analysis: Monte Carlo Simulator (future scenarios), Backtest (historical strategies) and Comparator (compare 2 stocks).'}),
     location: 'Lab',
     pos: 'bottom',
     page: 'lab'
@@ -17377,17 +17389,17 @@ const TUTORIAL_STEPS = [
     target: () => window.innerWidth <= 640
       ? (document.querySelector('#page-macro .card') || document.getElementById('page-macro'))
       : document.getElementById('nb-macro'),
-    title: '🌐 Macro & Settori',
-    desc: 'Analisi macroeconomica globale con indicatori chiave (VIX, yield, DXY) e breakdown dei 11 settori GICS con segnali di regime di mercato.',
-    location: 'Macro & Settori',
+    title: () => _L({it:'🌐 Macro & Settori',en:'🌐 Macro & Sectors'}),
+    desc: () => _L({it:'Analisi macroeconomica globale con indicatori chiave (VIX, yield, DXY) e breakdown dei 11 settori GICS con segnali di regime di mercato.',en:'Global macroeconomic analysis with key indicators (VIX, yield, DXY) and breakdown of 11 GICS sectors with market regime signals.'}),
+    location: () => _L({it:'Macro & Settori',en:'Macro & Sectors'}),
     pos: 'bottom',
     page: 'macro'
   },
-  // ── 17. FINE ────────────────────────────────────────────────────
+  // ── 17. DONE ────────────────────────────────────────────────────
   {
     target: () => document.querySelector('.tut-help-btn'),
-    title: '🎉 Sei pronto a investire!',
-    desc: 'Tour completato. Clicca su "?" in qualsiasi momento per rivedere questa guida. Per supporto o suggerimenti, siamo qui. Buon investimento!',
+    title: () => _L({it:'🎉 Sei pronto a investire!',en:'🎉 You\'re ready to invest!'}),
+    desc: () => _L({it:'Tour completato. Clicca su "?" in qualsiasi momento per rivedere questa guida. Per supporto o suggerimenti, siamo qui. Buon investimento!',en:'Tour complete. Click "?" at any time to review this guide. For support or feedback, we\'re here. Happy investing!'}),
     pos: 'bottom'
   }
 ];
@@ -17446,7 +17458,7 @@ const TUTO = (() => {
     const back = document.getElementById('tut-back');
     const fwd = document.getElementById('tut-fwd');
     back.disabled = step === 0;
-    fwd.textContent = step === total - 1 ? 'Fine ✓' : 'Avanti →';
+    fwd.textContent = step === total - 1 ? _L({it:'Fine ✓',en:'Done ✓'}) : _L({it:'Avanti →',en:'Next →'});
 
     // Show elements
     document.getElementById('tut-overlay').style.display = 'block';
