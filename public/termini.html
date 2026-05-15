@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>Termini e Condizioni — FinEdge</title>
+<meta name="description" content="Termini e Condizioni di utilizzo di FinEdge. Leggi le regole del servizio, i tuoi diritti e le limitazioni di responsabilità."/>
+<meta name="robots" content="index, follow"/>
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="stylesheet" href="/fonts/fonts.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F0F4FA;--bd:#D8E2EF;
+  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;
+  --r:#DC2626;--r2:#FEE2E2;--r3:#FFF1F2;
+  --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
+  --card:#fff;--ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+nav{position:sticky;top:0;z-index:100;height:56px;background:rgba(13,26,43,.97);backdrop-filter:blur(12px);
+  display:flex;align-items:center;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:7px;height:7px;background:#34D399;border-radius:50%}
+.logo span{color:rgba(255,255,255,.5)}
+.back{color:rgba(255,255,255,.45);font-size:12px;font-family:var(--fm);text-decoration:none;
+  margin-left:auto;transition:color .15s;display:flex;align-items:center;gap:6px}
+.back:hover{color:#fff}
+
+.hero{background:linear-gradient(135deg,#0D1A2B 0%,#1A3460 70%,#1448A8 100%);
+  padding:56px 40px 52px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,86,196,.2),transparent 70%);pointer-events:none}
+.hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;letter-spacing:-1.2px;
+  line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);font-family:var(--fm)}
+
+.wrap{max-width:760px;margin:0 auto;padding:48px 32px 80px}
+
+.summary{background:#F0F9FF;border:1px solid #BAE6FD;border-left:4px solid #0284C7;
+  border-radius:14px;padding:24px 28px;margin-bottom:40px}
+.summary-label{font-family:var(--fm);font-size:10px;color:#0284C7;letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.summary h2{font-size:17px;font-weight:700;color:#0C4A6E;margin-bottom:8px}
+.summary p{font-size:13.5px;color:#0C4A6E;line-height:1.7;margin:0}
+
+.toc{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:22px 26px;margin-bottom:36px}
+.toc-label{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:12px}
+.toc-list{display:flex;flex-direction:column;gap:6px}
+.toc-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--b);
+  text-decoration:none;font-weight:500;transition:color .15s}
+.toc-item:hover{color:var(--b2)}
+.toc-num{font-family:var(--fm);font-size:10px;color:var(--t3);width:18px;flex-shrink:0}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;
+  padding:28px 32px;margin-bottom:20px;scroll-margin-top:72px}
+.card-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.card-icon{width:42px;height:42px;border-radius:11px;background:var(--b3);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.card-title-group{flex:1}
+.card-num{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1px;margin-bottom:3px}
+h2{font-size:16px;font-weight:700;color:var(--t);line-height:1.3}
+.legal-text{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:14px}
+.legal-text:last-child{margin-bottom:0}
+ul{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+ul:last-child{margin-bottom:0}
+li{font-size:13.5px;color:var(--t2);line-height:1.7;padding-left:20px;position:relative}
+li::before{content:'→';position:absolute;left:0;color:var(--b);font-size:12px;top:2px}
+li strong{color:var(--t);font-weight:600}
+li.no-item::before{content:'✗';color:var(--r)}
+
+.plain{background:var(--b3);border-radius:10px;padding:14px 18px;margin-top:16px;
+  display:flex;align-items:flex-start;gap:10px}
+.plain-label{font-family:var(--fm);font-size:9px;color:var(--b);letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:700;white-space:nowrap;margin-top:1px;flex-shrink:0}
+.plain p{font-size:12.5px;color:var(--b2);line-height:1.65;margin:0;font-weight:500}
+
+.warn-box{background:var(--r3);border:1px solid var(--r2);border-left:4px solid var(--r);
+  border-radius:10px;padding:14px 18px;margin-top:12px}
+.warn-box p{font-size:12.5px;color:#991B1B;line-height:1.65;margin:0}
+
+footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px}
+.foot-logo{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.foot-logo span{color:rgba(255,255,255,.4)}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap}
+.foot-link{color:rgba(255,255,255,.35);font-size:11px;font-family:var(--fm);
+  text-decoration:none;transition:color .15s}
+.foot-link:hover{color:rgba(255,255,255,.75)}
+.foot-note{font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)}
+
+@media(max-width:640px){
+  nav{padding:0 20px}
+  .hero{padding:40px 20px 36px}
+  .wrap{padding:32px 16px 56px}
+  .card{padding:22px 20px}
+  footer{padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));flex-direction:column;align-items:flex-start;gap:16px}
+  .foot-links{flex-direction:column;gap:10px}
+}
+@supports(padding:env(safe-area-inset-bottom)){
+  footer{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo"><div class="logo-dot"></div>Fin<span>Edge</span></a>
+  <a href="/" class="back">← Torna alla home</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Documento legale</div>
+    <h1>Termini e Condizioni</h1>
+    <div class="hero-sub">Ultimo aggiornamento: Maggio 2026 &nbsp;·&nbsp; v1.1 &nbsp;·&nbsp; Legge applicabile: Italia (D.Lgs. 70/2003, Cod. Consumo)</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="summary">
+    <div class="summary-label">In breve</div>
+    <h2>Cosa regolano questi termini.</h2>
+    <p>Questi Termini e Condizioni disciplinano l'accesso e l'utilizzo di FinEdge. Usando il servizio accetti queste condizioni. FinEdge è uno strumento informativo — non è un servizio di consulenza finanziaria. Le informazioni mostrate non costituiscono in alcun modo un consiglio di investimento.</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-label">Indice</div>
+    <div class="toc-list">
+      <a href="#definizioni" class="toc-item"><span class="toc-num">01</span>Definizioni e ambito di applicazione</a>
+      <a href="#accesso" class="toc-item"><span class="toc-num">02</span>Accesso al servizio e account</a>
+      <a href="#uso-accettabile" class="toc-item"><span class="toc-num">03</span>Uso accettabile</a>
+      <a href="#proprieta" class="toc-item"><span class="toc-num">04</span>Proprietà intellettuale</a>
+      <a href="#dati" class="toc-item"><span class="toc-num">05</span>Dati e contenuti dell'utente</a>
+      <a href="#responsabilita" class="toc-item"><span class="toc-num">06</span>Limitazione di responsabilità</a>
+      <a href="#sospensione" class="toc-item"><span class="toc-num">07</span>Sospensione e chiusura account</a>
+      <a href="#modifiche" class="toc-item"><span class="toc-num">08</span>Modifiche al servizio e ai termini</a>
+      <a href="#legge" class="toc-item"><span class="toc-num">09</span>Legge applicabile e foro competente</a>
+      <a href="#affiliazioni" class="toc-item"><span class="toc-num">10</span>Partner commerciali e link affiliati</a>
+    </div>
+  </div>
+
+  <!-- 01 DEFINIZIONI -->
+  <div class="card" id="definizioni">
+    <div class="card-head">
+      <div class="card-icon">📋</div>
+      <div class="card-title-group">
+        <div class="card-num">01 — DEFINIZIONI</div>
+        <h2>Ambito di applicazione</h2>
+      </div>
+    </div>
+    <p class="legal-text">I presenti Termini e Condizioni ("Termini") regolano il rapporto tra <strong>Alessandro Mazzeo</strong> ("FinEdge", "noi", "il Gestore"), con sede in Italia, e qualsiasi persona fisica ("Utente", "tu") che acceda o utilizzi la piattaforma FinEdge, accessibile all'indirizzo <strong>finedge.it</strong>.</p>
+    <ul>
+      <li><strong>"Servizio"</strong> — la piattaforma web FinEdge, incluse tutte le funzionalità (dashboard, screener, portafoglio, news, analisi macro).</li>
+      <li><strong>"Account"</strong> — il profilo personale creato dall'Utente tramite registrazione.</li>
+      <li><strong>"Contenuto"</strong> — tutti i dati, testi, grafici e informazioni presenti su FinEdge.</li>
+      <li><strong>"Dati di mercato"</strong> — prezzi, volumi e indicatori finanziari forniti da Yahoo Finance e CoinGecko.</li>
+    </ul>
+    <p class="legal-text">Accedendo al Servizio, l'Utente dichiara di aver letto, compreso e accettato integralmente i presenti Termini. Se non accetti questi Termini, non utilizzare il Servizio.</p>
+  </div>
+
+  <!-- 02 ACCESSO -->
+  <div class="card" id="accesso">
+    <div class="card-head">
+      <div class="card-icon">🔑</div>
+      <div class="card-title-group">
+        <div class="card-num">02 — ACCESSO AL SERVIZIO</div>
+        <h2>Account e requisiti di utilizzo</h2>
+      </div>
+    </div>
+    <p class="legal-text">Per accedere alle funzionalità complete di FinEdge è necessario creare un account fornendo un indirizzo email valido e una password. L'Utente deve:</p>
+    <ul>
+      <li>Avere almeno <strong>18 anni</strong> di età.</li>
+      <li>Fornire informazioni accurate e aggiornate durante la registrazione.</li>
+      <li>Mantenere la riservatezza delle proprie credenziali di accesso.</li>
+      <li>Notificare immediatamente FinEdge in caso di accesso non autorizzato al proprio account.</li>
+    </ul>
+    <p class="legal-text">L'Utente è l'unico responsabile di tutte le attività svolte tramite il proprio account. FinEdge non potrà essere ritenuta responsabile per perdite o danni derivanti dalla divulgazione delle credenziali a terzi.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Un account per persona, credenziali riservate, maggiore età. Se condividi la password e qualcuno fa danni, la responsabilità è tua.</p>
+    </div>
+  </div>
+
+  <!-- 03 USO ACCETTABILE -->
+  <div class="card" id="uso-accettabile">
+    <div class="card-head">
+      <div class="card-icon">✅</div>
+      <div class="card-title-group">
+        <div class="card-num">03 — USO ACCETTABILE</div>
+        <h2>Cosa puoi e non puoi fare</h2>
+      </div>
+    </div>
+    <p class="legal-text">Il Servizio è concesso in licenza per uso personale e non commerciale. È espressamente vietato:</p>
+    <ul>
+      <li class="no-item"><strong>Scraping e raccolta automatica</strong> — utilizzare bot, spider, crawler o qualsiasi strumento automatizzato per estrarre dati dal Servizio.</li>
+      <li class="no-item"><strong>Uso commerciale non autorizzato</strong> — rivendere, sublicenziare o sfruttare commercialmente i dati o le funzionalità del Servizio senza autorizzazione scritta.</li>
+      <li class="no-item"><strong>Reverse engineering</strong> — decompilare, disassemblare o tentare di estrarre il codice sorgente del Servizio.</li>
+      <li class="no-item"><strong>Account multipli</strong> — creare più account per lo stesso utente al fine di aggirare limitazioni del servizio.</li>
+      <li class="no-item"><strong>Violazione di sicurezza</strong> — tentare di accedere a parti non autorizzate del Servizio, dei server o delle reti collegate.</li>
+      <li class="no-item"><strong>Distribuzione non autorizzata</strong> — pubblicare, condividere o distribuire i contenuti di FinEdge su altri canali senza citare la fonte e senza autorizzazione.</li>
+    </ul>
+    <div class="warn-box">
+      <p>La violazione delle presenti norme comporta la sospensione immediata dell'account e, nei casi più gravi, azioni legali ai sensi del D.Lgs. 70/2003 e della normativa applicabile sulla proprietà intellettuale.</p>
+    </div>
+  </div>
+
+  <!-- 04 PROPRIETA INTELLETTUALE -->
+  <div class="card" id="proprieta">
+    <div class="card-head">
+      <div class="card-icon">©️</div>
+      <div class="card-title-group">
+        <div class="card-num">04 — PROPRIETÀ INTELLETTUALE</div>
+        <h2>Chi possiede cosa</h2>
+      </div>
+    </div>
+    <p class="legal-text">Tutto il contenuto originale di FinEdge — inclusi il codice sorgente, il design, gli algoritmi proprietari (FinEdge Score, Price Target), i testi, le icone e la struttura del Servizio — è di proprietà esclusiva di <strong>Alessandro Mazzeo</strong> ed è protetto dalla normativa sul diritto d'autore (L. 633/1941 e Reg. UE 2019/790).</p>
+    <p class="legal-text"><strong>Dati di mercato di terze parti:</strong> i prezzi, i volumi e i dati fondamentali provengono da Yahoo Finance e CoinGecko. Questi dati rimangono di proprietà dei rispettivi fornitori e sono soggetti ai loro termini di utilizzo. FinEdge non rivendica alcun diritto su tali dati.</p>
+    <p class="legal-text">L'utilizzo del Servizio non trasferisce all'Utente alcun diritto di proprietà intellettuale su qualsiasi contenuto di FinEdge.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Il codice, il design e gli algoritmi di FinEdge sono miei. I prezzi delle azioni appartengono a Yahoo Finance. Puoi usare tutto per scopi personali, non puoi copiarlo o rivenderlo.</p>
+    </div>
+  </div>
+
+  <!-- 05 DATI UTENTE -->
+  <div class="card" id="dati">
+    <div class="card-head">
+      <div class="card-icon">💾</div>
+      <div class="card-title-group">
+        <div class="card-num">05 — DATI E CONTENUTI DELL'UTENTE</div>
+        <h2>I dati che inserisci tu</h2>
+      </div>
+    </div>
+    <p class="legal-text">I dati che l'Utente inserisce volontariamente nel Servizio (portafoglio, watchlist, piani PAC, target di prezzo personali) rimangono di proprietà dell'Utente. Concedendo a FinEdge l'accesso a tali dati, l'Utente autorizza FinEdge a elaborarli esclusivamente per fornire le funzionalità del Servizio.</p>
+    <p class="legal-text">FinEdge non utilizza i dati del portafoglio dell'Utente per scopi commerciali, di analisi aggregata o di rivendita a terzi. Il trattamento dei dati personali è disciplinato dalla <a href="./privacy.html" style="color:var(--b);font-weight:600;text-decoration:none">Privacy Policy</a>.</p>
+    <p class="legal-text">L'Utente è responsabile dell'accuratezza dei dati inseriti. FinEdge non è responsabile di errori nelle analisi derivanti da dati di input errati.</p>
+  </div>
+
+  <!-- 06 RESPONSABILITA -->
+  <div class="card" id="responsabilita">
+    <div class="card-head">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title-group">
+        <div class="card-num">06 — LIMITAZIONE DI RESPONSABILITÀ</div>
+        <h2>Cosa non possiamo garantire</h2>
+      </div>
+    </div>
+    <p class="legal-text">Il Servizio è fornito <strong>"così com'è"</strong> e <strong>"nei limiti della disponibilità"</strong>, senza garanzie esplicite o implicite di alcun tipo.</p>
+    <ul>
+      <li><strong>Accuratezza dei dati</strong> — FinEdge non garantisce che i dati di mercato siano privi di errori, ritardi o interruzioni. I dati azionari possono avere un ritardo fino a 15 minuti.</li>
+      <li><strong>Continuità del servizio</strong> — FinEdge non garantisce disponibilità ininterrotta. Manutenzioni programmate o eventi imprevisti possono causare interruzioni temporanee.</li>
+      <li><strong>Risultati finanziari</strong> — FinEdge non garantisce alcun rendimento finanziario derivante dall'utilizzo del Servizio. Le analisi e i punteggi forniti sono esclusivamente informativi.</li>
+    </ul>
+    <p class="legal-text">Nella misura massima consentita dalla legge applicabile, FinEdge non sarà responsabile per danni diretti, indiretti, incidentali o consequenziali derivanti dall'uso o dall'impossibilità di utilizzo del Servizio, incluse eventuali perdite finanziarie derivanti da decisioni di investimento basate sulle informazioni presenti su FinEdge.</p>
+    <div class="warn-box">
+      <p>FinEdge non è un consulente finanziario. Nessun contenuto del Servizio costituisce consulenza finanziaria, di investimento, legale o fiscale. Consulta sempre un professionista abilitato prima di prendere decisioni di investimento. Per i dettagli completi consulta il <a href="./disclaimer.html" style="color:var(--r);font-weight:600;text-decoration:none">Disclaimer legale</a>.</p>
+    </div>
+  </div>
+
+  <!-- 07 SOSPENSIONE -->
+  <div class="card" id="sospensione">
+    <div class="card-head">
+      <div class="card-icon">🚪</div>
+      <div class="card-title-group">
+        <div class="card-num">07 — SOSPENSIONE E CHIUSURA</div>
+        <h2>Quando e come un account può essere chiuso</h2>
+      </div>
+    </div>
+    <p class="legal-text"><strong>Da parte dell'Utente:</strong> puoi chiudere il tuo account in qualsiasi momento accedendo alle impostazioni dell'app o contattandoci tramite la pagina <a href="./contatti.html" style="color:var(--b);font-weight:600;text-decoration:none">Contatti</a>. Alla chiusura, tutti i tuoi dati personali verranno eliminati entro 30 giorni.</p>
+    <p class="legal-text"><strong>Da parte di FinEdge:</strong> ci riserviamo il diritto di sospendere o terminare l'accesso al Servizio, con o senza preavviso, nei seguenti casi:</p>
+    <ul>
+      <li>Violazione dei presenti Termini e Condizioni.</li>
+      <li>Comportamenti fraudolenti o che arrecano danno al Servizio o ad altri utenti.</li>
+      <li>Richieste legali o regolamentari.</li>
+      <li>Cessazione del Servizio (con preavviso di almeno 30 giorni ove possibile).</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Puoi andartene quando vuoi e ti restituiamo i dati. Possiamo chiudere account che violano le regole. Se chiudiamo il servizio, ti avvisiamo con almeno un mese di anticipo.</p>
+    </div>
+  </div>
+
+  <!-- 08 MODIFICHE -->
+  <div class="card" id="modifiche">
+    <div class="card-head">
+      <div class="card-icon">🔄</div>
+      <div class="card-title-group">
+        <div class="card-num">08 — MODIFICHE</div>
+        <h2>Come aggiorniamo i Termini e il Servizio</h2>
+      </div>
+    </div>
+    <p class="legal-text">FinEdge si riserva il diritto di modificare i presenti Termini in qualsiasi momento. Le modifiche sostanziali verranno comunicate tramite avviso nell'applicazione con almeno <strong>14 giorni di preavviso</strong>. Continuando a utilizzare il Servizio dopo tale termine, l'Utente accetta i nuovi Termini.</p>
+    <p class="legal-text">FinEdge si riserva inoltre il diritto di modificare, sospendere o interrompere qualsiasi funzionalità del Servizio in qualsiasi momento, con o senza preavviso, senza responsabilità verso l'Utente.</p>
+  </div>
+
+  <!-- 09 LEGGE -->
+  <div class="card" id="legge">
+    <div class="card-head">
+      <div class="card-icon">🏛️</div>
+      <div class="card-title-group">
+        <div class="card-num">09 — LEGGE E FORO COMPETENTE</div>
+        <h2>Quale legge si applica</h2>
+      </div>
+    </div>
+    <p class="legal-text">I presenti Termini sono regolati dalla <strong>legge italiana</strong>. Per qualsiasi controversia relativa all'interpretazione, esecuzione o risoluzione dei presenti Termini, le parti concordano sulla competenza esclusiva del <strong>Tribunale di Milano</strong>, salvo diversa disposizione obbligatoria a favore del consumatore ai sensi del D.Lgs. 206/2005 (Codice del Consumo).</p>
+    <p class="legal-text">Per gli Utenti residenti nell'Unione Europea, si applicano le tutele obbligatorie previste dalla normativa consumer europea, inclusa la possibilità di accedere alla piattaforma ODR (Online Dispute Resolution) della Commissione Europea: <a href="https://ec.europa.eu/consumers/odr" target="_blank" rel="noopener" style="color:var(--b);font-weight:600;text-decoration:none">ec.europa.eu/consumers/odr</a>.</p>
+    <p class="legal-text">Data di entrata in vigore: <strong>Maggio 2026</strong>. Versione: <strong>1.1</strong>.</p>
+  </div>
+
+  <!-- 10 PARTNER COMMERCIALI E LINK AFFILIATI -->
+  <div class="card" id="affiliazioni">
+    <div class="card-head">
+      <div class="card-icon">🤝</div>
+      <div class="card-title-group">
+        <div class="card-num">10 — PARTNER COMMERCIALI E LINK AFFILIATI</div>
+        <h2>Affiliazioni e trasparenza commerciale</h2>
+      </div>
+    </div>
+    <p class="legal-text">FinEdge può contenere link affiliati verso broker, exchange, piattaforme di investimento e altri partner commerciali. Quando l'Utente clicca su un link affiliato e completa un'azione qualificante (es. apertura di un conto, deposito), FinEdge può ricevere una commissione dal partner come compenso per la segnalazione. Tale commissione è integralmente a carico del partner e non comporta <strong>alcun costo aggiuntivo per l'Utente</strong>.</p>
+    <p class="legal-text">Per informazioni complete su come funzionano le affiliazioni, quali sono i partner attuali, i criteri di selezione e come riconoscere i link affiliati, l'Utente è invitato a consultare la <a href="./affiliazioni.html" style="color:var(--b);font-weight:600;text-decoration:none">pagina Trasparenza Affiliazioni</a>.</p>
+    <ul>
+      <li>La presenza di un partner commerciale nell'elenco delle affiliazioni <strong>non costituisce raccomandazione di investimento personalizzata</strong> ai sensi della Direttiva MiFID II (2014/65/UE). Tutti i contenuti di FinEdge sono di natura informativa — consulta il <a href="./disclaimer.html" style="color:var(--b);font-weight:600;text-decoration:none">Disclaimer legale</a> per i dettagli completi.</li>
+      <li>Le affiliazioni <strong>non influenzano</strong> il FinEdge Score, il Price Target, i risultati dello screener né qualsiasi altra analisi presente sulla piattaforma. L'indipendenza editoriale è garantita e descritta nella pagina Trasparenza Affiliazioni.</li>
+      <li>Utilizzando il Servizio, l'Utente prende atto e accetta che FinEdge possa ricevere compensi economici derivanti da conversioni generate tramite link affiliati presenti sulla piattaforma.</li>
+      <li>L'Utente rimane libero di raggiungere qualsiasi broker o piattaforma direttamente, senza utilizzare i link affiliati di FinEdge.</li>
+    </ul>
+    <div class="warn-box">
+      <p>Alcuni partner offrono prodotti con leva finanziaria (CFD, forex) ad alto rischio. Tra il 70% e l'85% dei conti retail perde denaro con il trading di CFD. Verifica sempre la regolamentazione del broker e investi solo capitale che puoi permetterti di perdere.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-logo">Fin<span>Edge</span></div>
+  <div class="foot-links">
+    <a href="/" class="foot-link">Home</a>
+    <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
+    <a href="./contatti.html" class="foot-link">Contatti</a>
+    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="./termini.html" class="foot-link">Termini</a>
+    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+  </div>
+  <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · v1.1 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
+</footer>
+
+<!-- ═══ COOKIE CONSENT BANNER ═══ -->
+<style>
+#ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;
+  border-top:1px solid rgba(255,255,255,.12);padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  box-shadow:0 -4px 24px rgba(0,0,0,.25);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+#ck-banner.show{transform:translateY(0)}
+#ck-banner .ck-text{flex:1;min-width:220px}
+#ck-banner .ck-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc a{color:#60A5FA;text-decoration:none;font-weight:600}
+#ck-banner .ck-desc a:hover{text-decoration:underline}
+#ck-banner .ck-btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+#ck-reject{padding:9px 18px;border:1.5px solid rgba(255,255,255,.22);background:transparent;
+  color:rgba(255,255,255,.7);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-reject:hover{border-color:rgba(255,255,255,.55);color:#fff}
+#ck-accept{padding:9px 20px;background:#1A56C4;border:1.5px solid #1A56C4;color:#fff;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-accept:hover{background:#1448A8;border-color:#1448A8}
+@media(max-width:640px){
+  #ck-banner{padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  #ck-banner .ck-btns{width:100%}
+  #ck-reject,#ck-accept{flex:1;text-align:center}}
+</style>
+<div id="ck-banner" role="dialog" aria-label="Consenso cookie" aria-live="polite">
+  <div class="ck-text">
+    <div class="ck-title">Utilizziamo i cookie 🍪</div>
+    <div class="ck-desc">
+      Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
+      <a href="./cookie.html">Cookie Policy →</a>
+    </div>
+  </div>
+  <div class="ck-btns">
+    <button id="ck-reject">Solo necessari</button>
+    <button id="ck-accept">Accetta tutti</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='fs_cookie_consent';
+  var b=document.getElementById('ck-banner');
+  if(!b||localStorage.getItem(KEY))return;
+  setTimeout(function(){b.classList.add('show');},700);
+  function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
+  document.getElementById('ck-accept').onclick=function(){
+    localStorage.setItem(KEY,'all');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
+  };
+  document.getElementById('ck-reject').onclick=function(){
+    localStorage.setItem(KEY,'necessary');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'denied',analytics_storage:'denied'});}
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>Trasparenza Affiliazioni — FinEdge</title>
+<meta name="description" content="Politica di trasparenza sulle affiliazioni di FinEdge: come funzionano i link affiliati, i partner attuali, i criteri di selezione e i tuoi diritti come utente."/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:title" content="Trasparenza Affiliazioni — FinEdge"/>
+<meta property="og:description" content="Come funzionano le affiliazioni su FinEdge: link partner, commissioni, indipendenza editoriale e i tuoi diritti."/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://finedge.it/affiliazioni.html"/>
+<meta name="twitter:card" content="summary"/>
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="stylesheet" href="/fonts/fonts.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F0F4FA;--bd:#D8E2EF;
+  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;
+  --g:#059669;--g2:#D1FAE5;--g3:#ECFDF5;--g4:#065F46;--g5:#022C22;
+  --o:#D97706;--o2:#FEF3C7;--o3:#FFFBEB;--o4:#92400E;--o5:#78350F;
+  --r:#DC2626;--r2:#FEE2E2;--r3:#FFF1F2;
+  --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
+  --card:#fff;--ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;height:56px;background:rgba(13,26,43,.97);backdrop-filter:blur(12px);
+  display:flex;align-items:center;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:7px;height:7px;background:#34D399;border-radius:50%}
+.logo span{color:rgba(255,255,255,.5)}
+.back{color:rgba(255,255,255,.45);font-size:12px;font-family:var(--fm);text-decoration:none;
+  margin-left:auto;transition:color .15s;display:flex;align-items:center;gap:6px}
+.back:hover{color:#fff}
+
+/* HERO — verde per distinguerlo dagli altri doc legali */
+.hero{background:linear-gradient(135deg,#022C22 0%,#065F46 60%,#059669 100%);
+  padding:56px 40px 52px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(5,150,105,.25),transparent 70%);pointer-events:none}
+.hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;letter-spacing:-1.2px;
+  line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);font-family:var(--fm)}
+
+/* WRAP */
+.wrap{max-width:760px;margin:0 auto;padding:48px 32px 80px}
+
+/* SUMMARY BOX */
+.summary{background:var(--g3);border:1px solid var(--g2);border-left:4px solid var(--g);
+  border-radius:14px;padding:24px 28px;margin-bottom:40px}
+.summary-label{font-family:var(--fm);font-size:10px;color:var(--g);letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.summary h2{font-size:17px;font-weight:700;color:var(--g4);margin-bottom:8px}
+.summary p{font-size:13.5px;color:var(--g5);line-height:1.7;margin:0}
+
+/* TABLE OF CONTENTS */
+.toc{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:22px 26px;margin-bottom:36px}
+.toc-label{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:12px}
+.toc-list{display:flex;flex-direction:column;gap:6px}
+.toc-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--b);
+  text-decoration:none;font-weight:500;transition:color .15s}
+.toc-item:hover{color:var(--b2)}
+.toc-num{font-family:var(--fm);font-size:10px;color:var(--t3);width:18px;flex-shrink:0}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;
+  padding:28px 32px;margin-bottom:20px;scroll-margin-top:72px}
+.card.alert{background:var(--o3);border-color:var(--o2)}
+.card.danger{background:var(--r3);border-color:var(--r2)}
+.card-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.card-icon{width:42px;height:42px;border-radius:11px;background:var(--b3);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.card.alert .card-icon{background:#FDE68A}
+.card.danger .card-icon{background:#FEE2E2}
+.card-title-group{flex:1}
+.card-num{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1px;margin-bottom:3px}
+.card.alert .card-num{color:var(--o)}
+.card.danger .card-num{color:var(--r)}
+h2{font-size:16px;font-weight:700;color:var(--t);line-height:1.3}
+.card.alert h2{color:var(--o4)}
+.card.danger h2{color:#991B1B}
+.legal-text{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:14px}
+.card.alert .legal-text{color:var(--o5)}
+.card.danger .legal-text{color:#7F1D1D}
+.legal-text:last-child{margin-bottom:0}
+ul{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+ul:last-child{margin-bottom:0}
+li{font-size:13.5px;color:var(--t2);line-height:1.7;padding-left:20px;position:relative}
+li::before{content:'→';position:absolute;left:0;color:var(--b);font-size:12px;top:2px}
+.card.alert li{color:var(--o5)}
+.card.alert li::before{color:var(--o)}
+li strong{color:var(--t);font-weight:600}
+.card.alert li strong{color:var(--o4)}
+
+/* PLAIN LANGUAGE CALLOUT */
+.plain{background:var(--b3);border-radius:10px;padding:14px 18px;margin-top:16px;
+  display:flex;align-items:flex-start;gap:10px}
+.card.alert .plain{background:#FEF3C7}
+.card.danger .plain{background:#FEE2E2}
+.plain-label{font-family:var(--fm);font-size:9px;color:var(--b);letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:700;white-space:nowrap;margin-top:1px;flex-shrink:0}
+.card.alert .plain-label{color:var(--o)}
+.card.danger .plain-label{color:var(--r)}
+.plain p{font-size:12.5px;color:var(--b2);line-height:1.65;margin:0;font-weight:500}
+.card.alert .plain p{color:var(--o4)}
+.card.danger .plain p{color:#991B1B}
+
+/* PARTNER GRID */
+.partner-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.partner-card{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.partner-cat{font-family:var(--fm);font-size:9px;color:var(--g);letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:700;margin-bottom:4px}
+.partner-names{font-size:12.5px;color:var(--t2);line-height:1.55}
+
+/* CRITERI GRID */
+.criteri-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.criterio{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.criterio-icon{font-size:18px;margin-bottom:6px}
+.criterio-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:3px}
+.criterio-desc{font-size:12px;color:var(--t2);line-height:1.5}
+
+/* BADGE RICONOSCIMENTO */
+.badge-demo{display:inline-flex;align-items:center;gap:6px;background:var(--g3);
+  border:1px solid var(--g2);border-radius:6px;padding:4px 10px;font-size:12px;
+  font-weight:700;color:var(--g4);font-family:var(--fm);margin:4px 4px 4px 0}
+.badge-demo-o{display:inline-flex;align-items:center;gap:6px;background:var(--o3);
+  border:1px solid var(--o2);border-radius:6px;padding:4px 10px;font-size:12px;
+  font-weight:700;color:var(--o4);font-family:var(--fm);margin:4px 4px 4px 0}
+
+/* GREEN SAFE BOX */
+.safe-box{background:var(--g3);border:1px solid var(--g2);border-left:4px solid var(--g);
+  border-radius:14px;padding:22px 26px;margin-top:32px}
+.safe-label{font-family:var(--fm);font-size:10px;color:var(--g);letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.safe-box p{font-size:13.5px;color:var(--g4);line-height:1.7;margin:0}
+
+/* FOOTER */
+footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px}
+.foot-logo{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.foot-logo span{color:rgba(255,255,255,.4)}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap}
+.foot-link{color:rgba(255,255,255,.35);font-size:11px;font-family:var(--fm);
+  text-decoration:none;transition:color .15s}
+.foot-link:hover{color:rgba(255,255,255,.75)}
+.foot-note{font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  nav{padding:0 20px}
+  .hero{padding:40px 20px 36px}
+  .wrap{padding:32px 16px 56px}
+  .card{padding:22px 20px}
+  .partner-grid,.criteri-grid{grid-template-columns:1fr}
+  footer{padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));flex-direction:column;align-items:flex-start;gap:16px}
+  .foot-links{flex-direction:column;gap:10px}
+}
+@supports(padding:env(safe-area-inset-bottom)){
+  footer{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo"><div class="logo-dot"></div>Fin<span>Edge</span></a>
+  <a href="/" class="back">← Torna alla home</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Documento informativo</div>
+    <h1>Trasparenza sulle affiliazioni</h1>
+    <div class="hero-sub">Ultimo aggiornamento: Maggio 2026 &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; Conforme D.Lgs. 145/2007 · Cod. Consumo · FTC Endorsement Guidelines · Reg. UE 2019/2161</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- SUMMARY -->
+  <div class="summary">
+    <div class="summary-label">In breve — senza legalese</div>
+    <h2>Cosa trovi in questa pagina.</h2>
+    <p>FinEdge può contenere link verso broker, exchange e piattaforme partner. Se clicchi e apri un conto, FinEdge può ricevere una commissione dal partner — senza nessun costo aggiuntivo per te. I prezzi e le condizioni per l'utente restano identici. Le nostre analisi, lo Score e lo screener non sono mai influenzati da chi è partner: lo diciamo qui, chiaramente.</p>
+  </div>
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-label">Indice</div>
+    <div class="toc-list">
+      <a href="#cosa-sono" class="toc-item"><span class="toc-num">01</span>Cosa sono i link affiliati</a>
+      <a href="#nessun-costo" class="toc-item"><span class="toc-num">02</span>Nessun costo aggiuntivo per te</a>
+      <a href="#indipendenza" class="toc-item"><span class="toc-num">03</span>Indipendenza editoriale</a>
+      <a href="#riconoscere" class="toc-item"><span class="toc-num">04</span>Come riconoscere i link affiliati</a>
+      <a href="#partner" class="toc-item"><span class="toc-num">05</span>Partner attuali</a>
+      <a href="#criteri" class="toc-item"><span class="toc-num">06</span>Come scegliamo i partner</a>
+      <a href="#diritti" class="toc-item"><span class="toc-num">07</span>I tuoi diritti come utente</a>
+      <a href="#cfd" class="toc-item"><span class="toc-num">08</span>Disclaimer broker CFD e leva finanziaria</a>
+      <a href="#contatti" class="toc-item"><span class="toc-num">09</span>Contatti e segnalazioni</a>
+    </div>
+  </div>
+
+  <!-- 01 COSA SONO -->
+  <div class="card" id="cosa-sono">
+    <div class="card-head">
+      <div class="card-icon">🔗</div>
+      <div class="card-title-group">
+        <div class="card-num">01 — COSA SONO I LINK AFFILIATI</div>
+        <h2>Come funziona il meccanismo, senza magie</h2>
+      </div>
+    </div>
+    <p class="legal-text">Un link affiliato è un link ordinario con un parametro di tracciamento univoco. Quando clicchi su un link partner presente su FinEdge, il browser viene reindirizzato alla piattaforma partner (es. un broker) attraverso una rete di affiliazione (es. Awin, Impact). Se entro un periodo definito completi un'azione qualificante — tipicamente l'apertura di un conto o un deposito — il partner riconosce a FinEdge una commissione come compenso per la segnalazione.</p>
+    <ul>
+      <li>Il link ti porta <strong>direttamente</strong> al sito del broker o della piattaforma.</li>
+      <li>FinEdge <strong>non intercetta</strong> né vede le tue credenziali, i tuoi dati di pagamento o i dettagli del conto aperto.</li>
+      <li>La commissione è pagata dal <strong>partner a FinEdge</strong> — non da te.</li>
+      <li>Non sei obbligato in alcun modo a usare i link affiliati: puoi raggiungere qualsiasi broker direttamente dal suo sito ufficiale.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Funziona come un codice referral: FinEdge segnala, il broker paga FinEdge per la segnalazione. Tu apri il conto alle stesse condizioni che avresti visitando il sito direttamente. Nessuna magia, nessun costo nascosto.</p>
+    </div>
+  </div>
+
+  <!-- 02 NESSUN COSTO -->
+  <div class="card" id="nessun-costo">
+    <div class="card-head">
+      <div class="card-icon">💶</div>
+      <div class="card-title-group">
+        <div class="card-num">02 — NESSUN COSTO AGGIUNTIVO PER TE</div>
+        <h2>Il prezzo che paghi è identico. Sempre.</h2>
+      </div>
+    </div>
+    <p class="legal-text">Le commissioni di affiliazione sono integralmente a carico del partner commerciale, non dell'utente finale. Il fatto che tu arrivi su un broker tramite un link affiliato di FinEdge non modifica in alcun modo:</p>
+    <ul>
+      <li>Le <strong>commissioni di trading</strong> applicate dal broker.</li>
+      <li>Le <strong>condizioni di conto</strong> (spread, leva, deposito minimo).</li>
+      <li>I <strong>bonus o le promozioni</strong> eventualmente disponibili (anzi, alcuni link affiliati possono garantire condizioni esclusive migliori di quelle standard).</li>
+      <li>La <strong>qualità del servizio</strong> ricevuto dal broker.</li>
+    </ul>
+    <p class="legal-text">Alcune partnership prevedono bonus esclusivi per gli utenti che arrivano tramite FinEdge (es. deposito bonus, commissioni ridotte per i primi mesi). Quando disponibili, questi benefici saranno indicati esplicitamente accanto al link.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Cliccare su un link affiliato non ti costa nulla in più. Spesso ti conviene, perché alcuni partner riservano condizioni migliori agli utenti che arrivano tramite partner selezionati come FinEdge.</p>
+    </div>
+  </div>
+
+  <!-- 03 INDIPENDENZA -->
+  <div class="card" id="indipendenza">
+    <div class="card-head">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title-group">
+        <div class="card-num">03 — INDIPENDENZA EDITORIALE</div>
+        <h2>Le affiliazioni non influenzano le analisi. Mai.</h2>
+      </div>
+    </div>
+    <p class="legal-text">FinEdge separa rigidamente la funzione editoriale (analisi, scoring, screener) dalla funzione commerciale (affiliazioni). Nello specifico:</p>
+    <ul>
+      <li>Il <strong>FinEdge Score</strong> di un titolo azionario è calcolato da algoritmi quantitativi basati su dati pubblici (P/E, ROE, EPS, momentum, consensus analisti). Nessun broker partner può influenzarne il valore.</li>
+      <li>Il <strong>Price Target</strong> proprietario è una media ponderata di modelli matematici (Graham, P/E normalizzato, consensus). Non è soggetto a input editoriali discrezionali.</li>
+      <li>Lo <strong>screener</strong> filtra titoli per parametri oggettivi: un broker che opera su un certo mercato non ha alcun effetto sui risultati dello screener.</li>
+      <li>Possono esistere <strong>broker eccellenti che non sono partner di FinEdge</strong> — per scelta loro, per scelta nostra, o perché non hanno ancora un programma di affiliazione attivo. Non essere partner non comporta alcun trattamento negativo nelle analisi.</li>
+      <li>La <strong>decisione finale di investimento</strong> è sempre e solo dell'utente. FinEdge fornisce informazioni, non consulenza.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Se domani un broker ci offre una commissione astronomica ma ha recensioni pessime o regolamentazione debole, non diventa partner. E se un broker non partner ottiene uno score altissimo su FinEdge, lo score resta altissimo. I soldi non comprano l'algoritmo.</p>
+    </div>
+  </div>
+
+  <!-- 04 RICONOSCERE -->
+  <div class="card" id="riconoscere">
+    <div class="card-head">
+      <div class="card-icon">👁️</div>
+      <div class="card-title-group">
+        <div class="card-num">04 — COME RICONOSCERE I LINK AFFILIATI</div>
+        <h2>Li rendiamo visibili. Sempre.</h2>
+      </div>
+    </div>
+    <p class="legal-text">I link affiliati presenti su FinEdge sono identificabili attraverso uno o più dei seguenti elementi visivi:</p>
+    <ul>
+      <li><strong>Badge "Partner"</strong> — piccola etichetta verde accanto al testo o al pulsante del link.</li>
+      <li><strong>Tooltip al hover</strong> — passando il cursore sopra al link, appare il testo: <em>"Link affiliato — FinEdge può ricevere commissioni, senza costo per te."</em></li>
+      <li><strong>Micro-testo inline</strong> — sotto o accanto al pulsante, la dicitura: <em>"Link affiliato · possibile commissione"</em></li>
+      <li><strong>Attributi HTML</strong> — tutti i link affiliati hanno gli attributi <code style="font-family:var(--fm);font-size:12px;background:var(--bg);padding:1px 5px;border-radius:3px">rel="sponsored noopener nofollow"</code> conformi alle linee guida Google e FTC.</li>
+    </ul>
+    <p class="legal-text">Esempi di etichette che potresti vedere:</p>
+    <div style="margin:12px 0">
+      <span class="badge-demo">✦ Partner</span>
+      <span class="badge-demo-o">Link affiliato · commissione possibile</span>
+    </div>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Non nasconderemo mai che un link è affiliato. Se lo è, lo trovi scritto vicino al link — senza bisogno di leggere una policy lunga 20 pagine per scoprirlo.</p>
+    </div>
+  </div>
+
+  <!-- 05 PARTNER -->
+  <div class="card" id="partner">
+    <div class="card-head">
+      <div class="card-icon">🤝</div>
+      <div class="card-title-group">
+        <div class="card-num">05 — PARTNER ATTUALI</div>
+        <h2>Chi sono i partner di FinEdge</h2>
+      </div>
+    </div>
+    <!-- AGGIORNARE QUANDO I PROGRAMMI SONO ATTIVI -->
+    <p class="legal-text">I programmi di affiliazione sono in fase di attivazione. Di seguito i partner con cui stiamo avviando o valutiamo una collaborazione, suddivisi per categoria. L'elenco sarà aggiornato progressivamente all'attivazione di ciascun programma.</p>
+    <div class="partner-grid">
+      <div class="partner-card">
+        <div class="partner-cat">Broker italiani</div>
+        <div class="partner-names">Directa SIM</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-cat">Broker europei</div>
+        <div class="partner-names">Scalable Capital · Trade Republic · Freedom24</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-cat">Broker globali</div>
+        <div class="partner-names">eToro · XTB · Interactive Brokers · IG · Saxo Bank</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-cat">Exchange crypto</div>
+        <div class="partner-names">Bitpanda · Binance · Young Platform · Coinbase · Kraken</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-cat">Hardware wallet</div>
+        <div class="partner-names">Ledger</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-cat">Tool e analisi</div>
+        <div class="partner-names">TradingView · Seeking Alpha</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-cat">Network di affiliazione</div>
+        <div class="partner-names">Awin · Impact · CJ Affiliate</div>
+      </div>
+    </div>
+    <p class="legal-text" style="font-size:12px;color:var(--t3)">La presenza in questo elenco non implica endorsement incondizionato. Verifica sempre le condizioni, le commissioni e la regolamentazione di qualsiasi piattaforma prima di aprire un conto.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Questi sono i broker e le piattaforme con cui collaboriamo o stiamo valutando una collaborazione. Puoi usarne altri liberamente — nessuna pressione.</p>
+    </div>
+  </div>
+
+  <!-- 06 CRITERI -->
+  <div class="card" id="criteri">
+    <div class="card-head">
+      <div class="card-icon">🔍</div>
+      <div class="card-title-group">
+        <div class="card-num">06 — COME SCEGLIAMO I PARTNER</div>
+        <h2>I criteri di selezione — non il compenso</h2>
+      </div>
+    </div>
+    <p class="legal-text">La scelta dei partner è guidata da criteri qualitativi, non dall'ammontare della commissione offerta. I criteri principali che valutiamo:</p>
+    <div class="criteri-grid">
+      <div class="criterio">
+        <div class="criterio-icon">🏛️</div>
+        <div class="criterio-title">Regolamentazione</div>
+        <div class="criterio-desc">Autorizzazione da enti regolatori riconosciuti: CONSOB, BaFin, CySEC, FCA, SEC, FINMA o equivalenti. Nessun broker non regolamentato.</div>
+      </div>
+      <div class="criterio">
+        <div class="criterio-icon">📅</div>
+        <div class="criterio-title">Reputazione e storia</div>
+        <div class="criterio-desc">Anni di attività, assenza di sanzioni gravi, recensioni degli utenti, solidità finanziaria del gruppo.</div>
+      </div>
+      <div class="criterio">
+        <div class="criterio-icon">🛡️</div>
+        <div class="criterio-title">Protezione dei fondi</div>
+        <div class="criterio-desc">Segregazione dei conti clienti, adesione a schemi di indennizzo (FSCS, SIPC, FGD), conformità MiCA per crypto.</div>
+      </div>
+      <div class="criterio">
+        <div class="criterio-icon">⭐</div>
+        <div class="criterio-title">Qualità del servizio</div>
+        <div class="criterio-desc">Piattaforma affidabile, supporto clienti reattivo, gamma di strumenti adeguata al target retail italiano ed europeo.</div>
+      </div>
+      <div class="criterio">
+        <div class="criterio-icon">💱</div>
+        <div class="criterio-title">Tariffe competitive</div>
+        <div class="criterio-desc">Commissioni di trading eque, spread contenuti, nessuna pratica tariffaria opaca o potenzialmente ingannevole.</div>
+      </div>
+      <div class="criterio">
+        <div class="criterio-icon">📋</div>
+        <div class="criterio-title">Trasparenza</div>
+        <div class="criterio-desc">Comunicazione chiara su costi, rischi e condizioni. Nessun broker che nasconde costi o usa marketing ingannevole.</div>
+      </div>
+    </div>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Se un broker paga bene ma non è regolamentato o ha pessima reputazione, non lo accettiamo. La commissione viene dopo la qualità — non prima.</p>
+    </div>
+  </div>
+
+  <!-- 07 DIRITTI -->
+  <div class="card" id="diritti">
+    <div class="card-head">
+      <div class="card-icon">📜</div>
+      <div class="card-title-group">
+        <div class="card-num">07 — I TUOI DIRITTI COME UTENTE</div>
+        <h2>Libertà di scelta, sempre</h2>
+      </div>
+    </div>
+    <ul>
+      <li>Sei <strong>libero di scegliere qualsiasi broker o piattaforma</strong>, anche non partner di FinEdge. Non c'è nessuna pressione commerciale.</li>
+      <li>Puoi accedere a qualsiasi broker <strong>direttamente dal suo sito ufficiale</strong>, senza passare per i link di FinEdge, ottenendo le stesse condizioni standard.</li>
+      <li>FinEdge fornisce <strong>informazioni e strumenti di analisi</strong>, non consulenza finanziaria personalizzata ai sensi della Direttiva MiFID II (2014/65/UE). Per dettagli legali completi consulta il <a href="./disclaimer.html" style="color:var(--b);font-weight:600;text-decoration:none">Disclaimer legale</a>.</li>
+      <li>Il fondatore di FinEdge <strong>non è iscritto all'Albo dei Consulenti Finanziari (OCF)</strong> e non presta consulenza di investimento ai sensi della normativa vigente.</li>
+      <li>Hai il diritto di <strong>segnalare</strong> qualsiasi comportamento dei partner che ritieni scorretto, tramite i contatti in fondo a questa pagina.</li>
+      <li>Hai il diritto di <strong>rifiutare i cookie di affiliazione</strong> dal banner cookie senza perdere l'accesso alle funzionalità di FinEdge.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Usi FinEdge per analizzare, non per essere guidato dove conviene a noi. Scegli tu. Sempre.</p>
+    </div>
+  </div>
+
+  <!-- 08 CFD DISCLAIMER -->
+  <div class="card alert" id="cfd">
+    <div class="card-head">
+      <div class="card-icon">⚠️</div>
+      <div class="card-title-group">
+        <div class="card-num">08 — DISCLAIMER BROKER CFD E LEVA FINANZIARIA</div>
+        <h2>Prodotti ad alto rischio — leggi prima</h2>
+      </div>
+    </div>
+    <p class="legal-text">Alcuni partner di FinEdge offrono prodotti finanziari con leva finanziaria, tra cui <strong>Contratti per Differenza (CFD)</strong>, forex e altri strumenti derivati. Questi prodotti comportano un <strong>rischio di perdita elevato</strong>.</p>
+    <ul>
+      <li>Tra il <strong>70% e l'85% dei conti retail</strong> perde denaro quando opera in CFD con questi provider. La percentuale esatta varia per ciascun broker ed è indicata obbligatoriamente sul loro sito (requisito ESMA/CONSOB).</li>
+      <li>I CFD sono strumenti <strong>complessi</strong> e richiedono una comprensione approfondita del funzionamento della leva prima di operare.</li>
+      <li>Investi <strong>solo il capitale che puoi permetterti di perdere integralmente</strong>.</li>
+      <li>Verifica sempre la <strong>regolamentazione del broker</strong> nel tuo paese di residenza prima di aprire un conto.</li>
+      <li>FinEdge <strong>non consiglia l'uso di leva finanziaria</strong> né si assume responsabilità per perdite derivanti dall'uso di prodotti a leva.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>I CFD fanno perdere soldi alla maggioranza degli investitori retail. Non è un'opinione: è un dato che i broker sono obbligati per legge a comunicare. Se non hai esperienza con la leva, evita questi prodotti.</p>
+    </div>
+  </div>
+
+  <!-- 09 CONTATTI -->
+  <div class="card" id="contatti">
+    <div class="card-head">
+      <div class="card-icon">✉️</div>
+      <div class="card-title-group">
+        <div class="card-num">09 — CONTATTI E SEGNALAZIONI</div>
+        <h2>Come raggiungerci</h2>
+      </div>
+    </div>
+    <p class="legal-text">Per qualsiasi domanda relativa alla nostra politica di affiliazione, per segnalare comportamenti scorretti di partner, o per richieste di collaborazione commerciale:</p>
+    <ul>
+      <li><strong>Email generale e segnalazioni</strong>: <a href="mailto:info@finedge.it" style="color:var(--b);font-weight:600;text-decoration:none">info@finedge.it</a></li>
+      <li><strong>Modulo di contatto</strong>: <a href="./contatti.html" style="color:var(--b);font-weight:600;text-decoration:none">pagina Contatti</a> — seleziona "Partnership o collaborazione" nel menu</li>
+    </ul>
+    <p class="legal-text">Rispondiamo entro 2–3 giorni lavorativi. Le segnalazioni su comportamenti scorretti dei partner vengono prese in seria considerazione e possono portare alla revisione o alla rimozione del partner dall'elenco.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Hai dubbi su un link? Hai avuto un'esperienza negativa con un partner? Scrivici. Prendiamo queste segnalazioni sul serio — ci aiutano a mantenere alta la qualità dei partner.</p>
+    </div>
+  </div>
+
+  <!-- BOX FINALE -->
+  <div class="safe-box">
+    <div class="safe-label">Il nostro impegno</div>
+    <p>La trasparenza sulle affiliazioni non è un obbligo di legge che assolviamo a malincuore: è parte del modo in cui FinEdge vuole operare. Se in futuro qualcosa cambia — nuovi partner, nuove modalità — questa pagina sarà aggiornata e la data di revisione sarà visibile in cima.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-logo">Fin<span>Edge</span></div>
+  <div class="foot-links">
+    <a href="/" class="foot-link">Home</a>
+    <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
+    <a href="./contatti.html" class="foot-link">Contatti</a>
+    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="./termini.html" class="foot-link">Termini</a>
+    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+  </div>
+  <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · v1.0 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
+</footer>
+
+<!-- ═══ COOKIE CONSENT BANNER ═══ -->
+<style>
+#ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;
+  border-top:1px solid rgba(255,255,255,.12);padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  box-shadow:0 -4px 24px rgba(0,0,0,.25);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+#ck-banner.show{transform:translateY(0)}
+#ck-banner .ck-text{flex:1;min-width:220px}
+#ck-banner .ck-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc a{color:#60A5FA;text-decoration:none;font-weight:600}
+#ck-banner .ck-desc a:hover{text-decoration:underline}
+#ck-banner .ck-btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+#ck-reject{padding:9px 18px;border:1.5px solid rgba(255,255,255,.22);background:transparent;
+  color:rgba(255,255,255,.7);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-reject:hover{border-color:rgba(255,255,255,.55);color:#fff}
+#ck-accept{padding:9px 20px;background:#1A56C4;border:1.5px solid #1A56C4;color:#fff;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-accept:hover{background:#1448A8;border-color:#1448A8}
+@media(max-width:640px){
+  #ck-banner{padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  #ck-banner .ck-btns{width:100%}
+  #ck-reject,#ck-accept{flex:1;text-align:center}}
+</style>
+<div id="ck-banner" role="dialog" aria-label="Consenso cookie" aria-live="polite">
+  <div class="ck-text">
+    <div class="ck-title">Utilizziamo i cookie 🍪</div>
+    <div class="ck-desc">
+      Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di affiliazione.
+      <a href="./cookie.html">Cookie Policy →</a>
+    </div>
+  </div>
+  <div class="ck-btns">
+    <button id="ck-reject">Solo necessari</button>
+    <button id="ck-accept">Accetta tutti</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='fs_cookie_consent';
+  var b=document.getElementById('ck-banner');
+  if(!b||localStorage.getItem(KEY))return;
+  setTimeout(function(){b.classList.add('show');},700);
+  function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
+  document.getElementById('ck-accept').onclick=function(){
+    localStorage.setItem(KEY,'all');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
+  };
+  document.getElementById('ck-reject').onclick=function(){
+    localStorage.setItem(KEY,'necessary');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'denied',analytics_storage:'denied'});}
+  };
+})();
+</script>
+</body>
+</html>

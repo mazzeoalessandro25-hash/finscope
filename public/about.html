@@ -1055,7 +1055,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 <!-- ═══ NAV ═══ -->
 <nav>
-  <a href="./about.html" class="logo"><img src="/logo-icon.png" alt="" style="height:26px;width:auto;vertical-align:middle;margin-right:6px"/>FinEdge</a>
+  <a href="/" class="logo"><img src="/logo-icon.png" alt="" style="height:26px;width:auto;vertical-align:middle;margin-right:6px"/>FinEdge</a>
   <div class="nav-links">
     <a href="#features" class="nav-link" data-i18n="lp.nav.features">Funzionalità</a>
     <a href="#come-funziona" class="nav-link" data-i18n="lp.nav.how">Come funziona</a>
@@ -1350,7 +1350,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     </div>
     </div>
     <div class="vs-bottom-banner">
-      <div class="vs-bottom-left" data-i18n-html="lp.vs.banner">9 strumenti → <span>1 piattaforma</span>. Tutto gratis durante la beta.</div>
+      <div class="vs-bottom-left" data-i18n-html="lp.vs.banner">9 strumenti → <span>1 piattaforma</span>. Gratuito durante la beta — sostenuto da annunci e link affiliati.</div>
       <div class="vs-bottom-right" data-i18n-html="lp.vs.bannerRight">Costo alternativa: <strong>~€96+/mese</strong> · FinEdge: <strong>€0</strong></div>
     </div>
   </div>
@@ -1709,7 +1709,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div class="faq-list">
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q1">È davvero gratuito? Ci sono costi nascosti?</span> <span class="faq-arr">▾</span></button>
-      <div class="faq-a" data-i18n="lp.faq.a1">FinEdge è attualmente gratuito durante la fase beta. Non ci sono costi nascosti né carta di credito richiesta. In futuro potremmo introdurre piani a pagamento: alcune funzionalità potrebbero diventare parte di un piano premium, con prezzi e dettagli che comunicheremo in anticipo.</div>
+      <div class="faq-a" data-i18n="lp.faq.a1">FinEdge è attualmente gratuito durante la fase beta. Non ci sono costi nascosti né carta di credito richiesta. Il servizio è sostenuto da annunci (Google AdSense) e link affiliati verso broker e piattaforme partner — dichiarati e con il tuo consenso. In futuro potremmo introdurre piani a pagamento: alcune funzionalità potrebbero diventare parte di un piano premium, con prezzi e dettagli che comunicheremo in anticipo.</div>
     </div>
     <div class="faq-item">
       <button class="faq-q" onclick="toggleFaq(this)"><span data-i18n="lp.faq.q2">Come viene calcolato il FinEdge Score?</span> <span class="faq-arr">▾</span></button>
@@ -1876,8 +1876,13 @@ document.addEventListener('DOMContentLoaded',()=>{
         <div style="font-size:10px;color:rgba(255,255,255,.3);font-family:var(--fm);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px" data-i18n="lp.footer.info">Informazioni</div>
         <div style="display:flex;flex-direction:column;gap:6px">
           <a href="#faq" class="foot-link">FAQ</a>
-          <a href="./privacy.html" class="foot-link" target="_blank">Privacy Policy</a>
-          <a href="./disclaimer.html" class="foot-link" target="_blank">Disclaimer</a>
+          <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
+          <a href="./contatti.html" class="foot-link">Contatti</a>
+          <a href="./privacy.html" class="foot-link">Privacy Policy</a>
+          <a href="./cookie.html" class="foot-link">Cookie Policy</a>
+          <a href="./termini.html" class="foot-link">Termini</a>
+          <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
+          <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
         </div>
       </div>
     </div>
@@ -1885,10 +1890,16 @@ document.addEventListener('DOMContentLoaded',()=>{
   <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px;width:100%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
     <div class="foot-note" style="text-align:left" data-i18n="lp.footer.copyright">© 2026 FinEdge · Alessandro Mazzeo · Dati da Yahoo Finance · Ritardo max 15 min</div>
     <div style="display:flex;gap:10px;align-items:center">
+      <a href="mailto:info@finedge.it" style="font-size:10px;color:rgba(255,255,255,.35);font-family:var(--fm);text-decoration:none">info@finedge.it</a>
+      <span style="font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)">·</span>
       <span style="font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)">v2.5 · Beta</span>
       <span style="font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)">·</span>
       <span style="font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)">GDPR compliant</span>
     </div>
+  </div>
+  <!-- Disclosure affiliazioni -->
+  <div style="width:100%;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;font-size:10px;color:rgba(255,255,255,.2);font-family:var(--fm)">
+    FinEdge può ricevere commissioni dai link partner · nessun costo aggiuntivo per te · <a href="./affiliazioni.html" style="color:rgba(255,255,255,.3);text-decoration:none">Trasparenza affiliazioni →</a>
   </div>
 </footer>
 
@@ -2335,5 +2346,63 @@ function showTransition(onDone) {
 }
 </script>
 <script defer src="/_vercel/insights/script.js"></script>
+
+<!-- ═══ COOKIE CONSENT BANNER ═══ -->
+<style>
+#ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;
+  border-top:1px solid rgba(255,255,255,.12);padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  box-shadow:0 -4px 24px rgba(0,0,0,.25);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+#ck-banner.show{transform:translateY(0)}
+#ck-banner .ck-text{flex:1;min-width:220px}
+#ck-banner .ck-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc a{color:#60A5FA;text-decoration:none;font-weight:600}
+#ck-banner .ck-desc a:hover{text-decoration:underline}
+#ck-banner .ck-btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+#ck-reject{padding:9px 18px;border:1.5px solid rgba(255,255,255,.22);background:transparent;
+  color:rgba(255,255,255,.7);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-reject:hover{border-color:rgba(255,255,255,.55);color:#fff}
+#ck-accept{padding:9px 20px;background:#1A56C4;border:1.5px solid #1A56C4;color:#fff;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-accept:hover{background:#1448A8;border-color:#1448A8}
+@media(max-width:640px){
+  #ck-banner{padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  #ck-banner .ck-btns{width:100%}
+  #ck-reject,#ck-accept{flex:1;text-align:center}}
+</style>
+<div id="ck-banner" role="dialog" aria-label="Consenso cookie" aria-live="polite">
+  <div class="ck-text">
+    <div class="ck-title">Utilizziamo i cookie 🍪</div>
+    <div class="ck-desc">
+      Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
+      <a href="./cookie.html">Cookie Policy →</a>
+    </div>
+  </div>
+  <div class="ck-btns">
+    <button id="ck-reject">Solo necessari</button>
+    <button id="ck-accept">Accetta tutti</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='fs_cookie_consent';
+  var b=document.getElementById('ck-banner');
+  if(!b||localStorage.getItem(KEY))return;
+  setTimeout(function(){b.classList.add('show');},700);
+  function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
+  document.getElementById('ck-accept').onclick=function(){
+    localStorage.setItem(KEY,'all');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
+  };
+  document.getElementById('ck-reject').onclick=function(){
+    localStorage.setItem(KEY,'necessary');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'denied',analytics_storage:'denied'});}
+  };
+})();
+</script>
 </body>
 </html>

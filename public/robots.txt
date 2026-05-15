@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Blocca accesso diretto alle API serverless (già protette da Vercel)
+Disallow: /api/
+
+Sitemap: https://finedge.it/sitemap.xml

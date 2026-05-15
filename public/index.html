@@ -1715,7 +1715,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <button type="submit" class="auth-submit" id="auth-submit">Accedi</button>
       </form>
       <p style="font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.5">
-        Continuando accetti la nostra <a href="#" style="color:var(--b)">Privacy Policy</a>.<br>
+        Continuando accetti la nostra <a href="./privacy.html" target="_blank" style="color:var(--b)">Privacy Policy</a>.<br>
         I tuoi dati sono trattati secondo il GDPR.
       </p>
     </div>
@@ -3795,7 +3795,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
 <footer>
   <div class="flogo"><img src="/logo-icon.png" alt="" style="height:22px;width:auto;vertical-align:middle;margin-right:6px;opacity:.8"/>FinEdge</div>
-  <p class="fnote">Dati da Yahoo Finance · Ritardo max 15 min durante sessioni di borsa · Solo uso informativo · Non costituisce consulenza finanziaria</p>
+  <p class="fnote">Dati da Yahoo Finance · Ritardo max 15 min · Solo uso informativo · Non costituisce consulenza finanziaria</p>
+  <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+    <a href="./chi-siamo.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Chi siamo</a>
+    <a href="./contatti.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Contatti</a>
+    <a href="./privacy.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Privacy</a>
+    <a href="./cookie.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Cookie</a>
+    <a href="./termini.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Termini</a>
+    <a href="./disclaimer.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Disclaimer</a>
+  </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
@@ -17603,5 +17611,63 @@ const TUTO = (() => {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
 <script defer src="/_vercel/insights/script.js"></script>
+
+<!-- ═══ COOKIE CONSENT BANNER ═══ -->
+<style>
+#ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;
+  border-top:1px solid rgba(255,255,255,.12);padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  box-shadow:0 -4px 24px rgba(0,0,0,.25);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+#ck-banner.show{transform:translateY(0)}
+#ck-banner .ck-text{flex:1;min-width:220px}
+#ck-banner .ck-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc a{color:#60A5FA;text-decoration:none;font-weight:600}
+#ck-banner .ck-desc a:hover{text-decoration:underline}
+#ck-banner .ck-btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+#ck-reject{padding:9px 18px;border:1.5px solid rgba(255,255,255,.22);background:transparent;
+  color:rgba(255,255,255,.7);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-reject:hover{border-color:rgba(255,255,255,.55);color:#fff}
+#ck-accept{padding:9px 20px;background:#1A56C4;border:1.5px solid #1A56C4;color:#fff;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-accept:hover{background:#1448A8;border-color:#1448A8}
+@media(max-width:640px){
+  #ck-banner{padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  #ck-banner .ck-btns{width:100%}
+  #ck-reject,#ck-accept{flex:1;text-align:center}}
+</style>
+<div id="ck-banner" role="dialog" aria-label="Consenso cookie" aria-live="polite">
+  <div class="ck-text">
+    <div class="ck-title">Utilizziamo i cookie 🍪</div>
+    <div class="ck-desc">
+      Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
+      <a href="./cookie.html">Cookie Policy →</a>
+    </div>
+  </div>
+  <div class="ck-btns">
+    <button id="ck-reject">Solo necessari</button>
+    <button id="ck-accept">Accetta tutti</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='fs_cookie_consent';
+  var b=document.getElementById('ck-banner');
+  if(!b||localStorage.getItem(KEY))return;
+  setTimeout(function(){b.classList.add('show');},700);
+  function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
+  document.getElementById('ck-accept').onclick=function(){
+    localStorage.setItem(KEY,'all');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
+  };
+  document.getElementById('ck-reject').onclick=function(){
+    localStorage.setItem(KEY,'necessary');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'denied',analytics_storage:'denied'});}
+  };
+})();
+</script>
 </body>
 </html>

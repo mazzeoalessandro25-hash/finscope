@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>Cookie Policy — FinEdge</title>
+<meta name="description" content="Cookie Policy di FinEdge: quali cookie utilizziamo, come gestirli e come esercitare l'opt-out dagli annunci personalizzati."/>
+<meta name="robots" content="index, follow"/>
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="stylesheet" href="/fonts/fonts.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F0F4FA;--bd:#D8E2EF;
+  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;
+  --o:#D97706;--o2:#FEF3C7;--o3:#FFFBEB;
+  --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
+  --card:#fff;--ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+nav{position:sticky;top:0;z-index:100;height:56px;background:rgba(13,26,43,.97);backdrop-filter:blur(12px);
+  display:flex;align-items:center;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:7px;height:7px;background:#34D399;border-radius:50%}
+.logo span{color:rgba(255,255,255,.5)}
+.back{color:rgba(255,255,255,.45);font-size:12px;font-family:var(--fm);text-decoration:none;
+  margin-left:auto;transition:color .15s;display:flex;align-items:center;gap:6px}
+.back:hover{color:#fff}
+
+.hero{background:linear-gradient(135deg,#0D1A2B 0%,#1A3460 70%,#1448A8 100%);
+  padding:56px 40px 52px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,86,196,.2),transparent 70%);pointer-events:none}
+.hero-inner{max-width:760px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.45);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(28px,4vw,40px);font-weight:800;color:#fff;letter-spacing:-1.2px;
+  line-height:1.1;margin-bottom:10px}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.55);font-family:var(--fm)}
+
+.wrap{max-width:760px;margin:0 auto;padding:48px 32px 80px}
+
+.summary{background:var(--o3);border:1px solid var(--o2);border-left:4px solid var(--o);
+  border-radius:14px;padding:24px 28px;margin-bottom:40px}
+.summary-label{font-family:var(--fm);font-size:10px;color:var(--o);letter-spacing:2px;
+  text-transform:uppercase;font-weight:600;margin-bottom:10px}
+.summary h2{font-size:17px;font-weight:700;color:#92400E;margin-bottom:8px}
+.summary p{font-size:13.5px;color:#92400E;line-height:1.7;margin:0}
+
+.toc{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:22px 26px;margin-bottom:36px}
+.toc-label{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1.5px;
+  text-transform:uppercase;margin-bottom:12px}
+.toc-list{display:flex;flex-direction:column;gap:6px}
+.toc-item{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--b);
+  text-decoration:none;font-weight:500;transition:color .15s}
+.toc-item:hover{color:var(--b2)}
+.toc-num{font-family:var(--fm);font-size:10px;color:var(--t3);width:18px;flex-shrink:0}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;
+  padding:28px 32px;margin-bottom:20px;scroll-margin-top:72px}
+.card-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px}
+.card-icon{width:42px;height:42px;border-radius:11px;background:var(--b3);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.card-title-group{flex:1}
+.card-num{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:1px;margin-bottom:3px}
+h2{font-size:16px;font-weight:700;color:var(--t);line-height:1.3}
+.legal-text{font-size:13.5px;color:var(--t2);line-height:1.75;margin-bottom:14px}
+.legal-text:last-child{margin-bottom:0}
+ul{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+ul:last-child{margin-bottom:0}
+li{font-size:13.5px;color:var(--t2);line-height:1.7;padding-left:20px;position:relative}
+li::before{content:'→';position:absolute;left:0;color:var(--b);font-size:12px;top:2px}
+li strong{color:var(--t);font-weight:600}
+
+.plain{background:var(--b3);border-radius:10px;padding:14px 18px;margin-top:16px;
+  display:flex;align-items:flex-start;gap:10px}
+.plain-label{font-family:var(--fm);font-size:9px;color:var(--b);letter-spacing:1.5px;
+  text-transform:uppercase;font-weight:700;white-space:nowrap;margin-top:1px;flex-shrink:0}
+.plain p{font-size:12.5px;color:var(--b2);line-height:1.65;margin:0;font-weight:500}
+
+/* COOKIE TABLE */
+.cookie-table{width:100%;border-collapse:collapse;margin-bottom:16px;font-size:12.5px}
+.cookie-table th{background:var(--bg);color:var(--t3);font-family:var(--fm);font-size:10px;
+  letter-spacing:.8px;text-transform:uppercase;padding:8px 12px;text-align:left;
+  border-bottom:2px solid var(--bd)}
+.cookie-table td{padding:10px 12px;border-bottom:1px solid var(--bd);color:var(--t2);vertical-align:top;line-height:1.5}
+.cookie-table tr:last-child td{border-bottom:none}
+.cookie-table td:first-child{font-family:var(--fm);font-size:11px;color:var(--t);font-weight:600;white-space:nowrap}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;
+  font-family:var(--fm);letter-spacing:.3px;white-space:nowrap}
+.badge-req{background:#DCFCE7;color:#166534}
+.badge-ads{background:#FEE2E2;color:#991B1B}
+.badge-ana{background:#EDE9FE;color:#5B21B6}
+
+/* OPT-OUT BOX */
+.optout-box{background:#FFF7ED;border:1px solid #FED7AA;border-left:4px solid var(--o);
+  border-radius:12px;padding:20px 24px;margin-top:16px}
+.optout-box h3{font-size:14px;font-weight:700;color:#92400E;margin-bottom:8px}
+.optout-box p{font-size:13px;color:#92400E;line-height:1.65;margin-bottom:10px}
+.optout-box p:last-child{margin-bottom:0}
+.optout-link{color:var(--b);font-weight:600;text-decoration:none}
+.optout-link:hover{text-decoration:underline}
+
+/* BROWSER TABLE */
+.browser-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.browser-card{background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:14px 16px}
+.browser-name{font-size:13px;font-weight:700;color:var(--t);margin-bottom:4px}
+.browser-path{font-size:11px;color:var(--t3);font-family:var(--fm);line-height:1.5}
+
+footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px}
+.foot-logo{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.foot-logo span{color:rgba(255,255,255,.4)}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap}
+.foot-link{color:rgba(255,255,255,.35);font-size:11px;font-family:var(--fm);
+  text-decoration:none;transition:color .15s}
+.foot-link:hover{color:rgba(255,255,255,.75)}
+.foot-note{font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)}
+
+@media(max-width:640px){
+  nav{padding:0 20px}
+  .hero{padding:40px 20px 36px}
+  .wrap{padding:32px 16px 56px}
+  .card{padding:22px 20px}
+  .browser-grid{grid-template-columns:1fr}
+  .cookie-table{font-size:11.5px}
+  .cookie-table td:first-child{white-space:normal}
+  footer{padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));flex-direction:column;align-items:flex-start;gap:16px}
+  .foot-links{flex-direction:column;gap:10px}
+}
+@supports(padding:env(safe-area-inset-bottom)){
+  footer{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo"><div class="logo-dot"></div>Fin<span>Edge</span></a>
+  <a href="/" class="back">← Torna alla home</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Documento legale</div>
+    <h1>Cookie Policy</h1>
+    <div class="hero-sub">Ultimo aggiornamento: Maggio 2026 &nbsp;·&nbsp; v1.0 &nbsp;·&nbsp; Conforme GDPR (Reg. UE 2016/679) e Direttiva ePrivacy 2002/58/CE</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="summary">
+    <div class="summary-label">In breve</div>
+    <h2>Cosa trovi in questa pagina.</h2>
+    <p>FinEdge utilizza cookie tecnici necessari per il funzionamento dell'account, cookie di analisi aggregata anonima (Vercel Analytics) e — se hai acconsentito — cookie pubblicitari di Google AdSense per mostrare annunci pertinenti. Puoi gestire o rifiutare i cookie non essenziali in qualsiasi momento.</p>
+  </div>
+
+  <div class="toc">
+    <div class="toc-label">Indice</div>
+    <div class="toc-list">
+      <a href="#cosa-sono" class="toc-item"><span class="toc-num">01</span>Cosa sono i cookie</a>
+      <a href="#tecnici" class="toc-item"><span class="toc-num">02</span>Cookie tecnici e funzionali</a>
+      <a href="#analisi" class="toc-item"><span class="toc-num">03</span>Cookie di analisi</a>
+      <a href="#advertising" class="toc-item"><span class="toc-num">04</span>Cookie pubblicitari (Google AdSense)</a>
+      <a href="#optout" class="toc-item"><span class="toc-num">05</span>Come esercitare l'opt-out</a>
+      <a href="#browser" class="toc-item"><span class="toc-num">06</span>Gestione tramite browser</a>
+      <a href="#aggiornamenti" class="toc-item"><span class="toc-num">07</span>Aggiornamenti</a>
+    </div>
+  </div>
+
+  <!-- 01 COSA SONO -->
+  <div class="card" id="cosa-sono">
+    <div class="card-head">
+      <div class="card-icon">🍪</div>
+      <div class="card-title-group">
+        <div class="card-num">01 — COSA SONO I COOKIE</div>
+        <h2>Una breve spiegazione tecnica</h2>
+      </div>
+    </div>
+    <p class="legal-text">I cookie sono piccoli file di testo che un sito web salva nel tuo browser quando lo visiti. Vengono riletti dal sito ad ogni visita successiva per riconoscerti, mantenere le tue preferenze o monitorare determinate attività.</p>
+    <p class="legal-text">Si distinguono in:</p>
+    <ul>
+      <li><strong>Cookie di prima parte</strong> — impostati direttamente da FinEdge (finedge.it).</li>
+      <li><strong>Cookie di terze parti</strong> — impostati da domini esterni (es. Google) caricati nelle pagine di FinEdge.</li>
+      <li><strong>Cookie di sessione</strong> — cancellati automaticamente alla chiusura del browser.</li>
+      <li><strong>Cookie persistenti</strong> — rimangono nel browser per una durata definita.</li>
+    </ul>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>I cookie sono come un post-it che il sito lascia nel tuo browser. Alcuni sono indispensabili per farti restare loggato, altri ci aiutano a capire come va il sito, altri ancora servono a mostrare pubblicità.</p>
+    </div>
+  </div>
+
+  <!-- 02 TECNICI -->
+  <div class="card" id="tecnici">
+    <div class="card-head">
+      <div class="card-icon">🔧</div>
+      <div class="card-title-group">
+        <div class="card-num">02 — COOKIE TECNICI E FUNZIONALI</div>
+        <h2>Necessari per il funzionamento del servizio</h2>
+      </div>
+    </div>
+    <p class="legal-text">Questi cookie sono <strong>strettamente necessari</strong> per fornire il servizio. Non richiedono consenso ai sensi dell'art. 122 del Codice Privacy e della Direttiva ePrivacy. Non puoi disattivarli senza compromettere il funzionamento dell'account.</p>
+    <table class="cookie-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Fornitore</th>
+          <th>Scopo</th>
+          <th>Durata</th>
+          <th>Tipo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>__session</td>
+          <td>Clerk</td>
+          <td>Mantiene attiva la sessione di login</td>
+          <td>Sessione</td>
+          <td><span class="badge badge-req">Necessario</span></td>
+        </tr>
+        <tr>
+          <td>__client_uat</td>
+          <td>Clerk</td>
+          <td>Timestamp ultimo aggiornamento account</td>
+          <td>Persistente</td>
+          <td><span class="badge badge-req">Necessario</span></td>
+        </tr>
+        <tr>
+          <td>fs_token</td>
+          <td>FinEdge</td>
+          <td>Token di autenticazione (localStorage)</td>
+          <td>Persistente</td>
+          <td><span class="badge badge-req">Necessario</span></td>
+        </tr>
+        <tr>
+          <td>fs_user</td>
+          <td>FinEdge</td>
+          <td>Dati utente base per la UI (localStorage)</td>
+          <td>Persistente</td>
+          <td><span class="badge badge-req">Necessario</span></td>
+        </tr>
+        <tr>
+          <td>fs_theme</td>
+          <td>FinEdge</td>
+          <td>Preferenza tema chiaro/scuro (localStorage)</td>
+          <td>Persistente</td>
+          <td><span class="badge badge-req">Necessario</span></td>
+        </tr>
+        <tr>
+          <td>fs_lang</td>
+          <td>FinEdge</td>
+          <td>Preferenza lingua selezionata (localStorage)</td>
+          <td>Persistente</td>
+          <td><span class="badge badge-req">Necessario</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Senza questi cookie non puoi restare loggato, non ricordiamo la tua lingua e il tema si resetta ogni volta. Sono il minimo tecnico indispensabile.</p>
+    </div>
+  </div>
+
+  <!-- 03 ANALISI -->
+  <div class="card" id="analisi">
+    <div class="card-head">
+      <div class="card-icon">📊</div>
+      <div class="card-title-group">
+        <div class="card-num">03 — COOKIE DI ANALISI</div>
+        <h2>Capire come funziona il sito (in forma anonima)</h2>
+      </div>
+    </div>
+    <p class="legal-text">FinEdge utilizza <strong>Vercel Analytics</strong>, uno strumento di analisi aggregata che non usa cookie nel senso tradizionale. Raccoglie dati statistici anonimi (numero di visite, pagine viste, tempi di caricamento) senza creare profili individuali né utilizzare identificatori persistenti.</p>
+    <table class="cookie-table">
+      <thead>
+        <tr>
+          <th>Strumento</th>
+          <th>Fornitore</th>
+          <th>Scopo</th>
+          <th>Cookie?</th>
+          <th>Tipo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vercel Analytics</td>
+          <td>Vercel Inc.</td>
+          <td>Statistiche aggregate di utilizzo (anonime, no profilo)</td>
+          <td>No (cookieless)</td>
+          <td><span class="badge badge-ana">Analisi</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Sappiamo quante persone visitano FinEdge, ma non chi sono. Nessun cookie, nessun profilo, nessun dato personale. È come contare i clienti di un negozio senza prendere i loro nomi.</p>
+    </div>
+  </div>
+
+  <!-- 04 ADVERTISING -->
+  <div class="card" id="advertising">
+    <div class="card-head">
+      <div class="card-icon">📢</div>
+      <div class="card-title-group">
+        <div class="card-num">04 — COOKIE PUBBLICITARI</div>
+        <h2>Google AdSense — annunci pertinenti</h2>
+      </div>
+    </div>
+    <p class="legal-text">FinEdge utilizza <strong>Google AdSense</strong> per mostrare annunci pubblicitari. Google, in qualità di fornitore terzo, utilizza cookie per servire annunci basati sulle precedenti visite dell'utente a FinEdge e ad altri siti web. Questi cookie sono impostati dal dominio <code style="font-family:var(--fm);font-size:12px;background:var(--bg);padding:1px 5px;border-radius:3px">.google.com</code> e <code style="font-family:var(--fm);font-size:12px;background:var(--bg);padding:1px 5px;border-radius:3px">.doubleclick.net</code>.</p>
+    <p class="legal-text">I principali cookie impostati da Google AdSense:</p>
+    <table class="cookie-table">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Dominio</th>
+          <th>Scopo</th>
+          <th>Durata</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>__gads</td>
+          <td>.doubleclick.net</td>
+          <td>Registra le interazioni con gli annunci per evitare di mostrare lo stesso annuncio troppe volte</td>
+          <td>13 mesi</td>
+        </tr>
+        <tr>
+          <td>__gpi</td>
+          <td>.google.com</td>
+          <td>Identifica il browser per la personalizzazione degli annunci</td>
+          <td>13 mesi</td>
+        </tr>
+        <tr>
+          <td>__eoi</td>
+          <td>.google.com</td>
+          <td>Riduce la frequenza di visualizzazione degli annunci</td>
+          <td>13 mesi</td>
+        </tr>
+        <tr>
+          <td>DSID</td>
+          <td>.doubleclick.net</td>
+          <td>Identifica l'utente nei siti partner di Google Display Network</td>
+          <td>2 settimane</td>
+        </tr>
+        <tr>
+          <td>IDE</td>
+          <td>.doubleclick.net</td>
+          <td>Registra e riporta le azioni dell'utente dopo aver visto o cliccato un annuncio</td>
+          <td>13 mesi</td>
+        </tr>
+        <tr>
+          <td>test_cookie</td>
+          <td>.doubleclick.net</td>
+          <td>Verifica che il browser supporti i cookie</td>
+          <td>Sessione</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="legal-text">Per maggiori informazioni su come Google utilizza i dati raccolti tramite i propri partner, consulta la pagina: <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener" class="optout-link">policies.google.com/technologies/partner-sites</a>.</p>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Google usa questi cookie per mostrarti annunci più pertinenti ai tuoi interessi, ricordando i siti che hai visitato. Puoi disattivarli in qualsiasi momento — vedi la sezione successiva.</p>
+    </div>
+  </div>
+
+  <!-- 05 OPT-OUT -->
+  <div class="card" id="optout">
+    <div class="card-head">
+      <div class="card-icon">🚫</div>
+      <div class="card-title-group">
+        <div class="card-num">05 — OPT-OUT</div>
+        <h2>Come rifiutare o disattivare i cookie pubblicitari</h2>
+      </div>
+    </div>
+    <p class="legal-text">Hai il diritto di opporti ai cookie pubblicitari in qualsiasi momento, senza che questo comprometta la tua possibilità di usare FinEdge. Di seguito i principali strumenti disponibili:</p>
+
+    <div class="optout-box">
+      <h3>Google — Impostazioni annunci personalizzati</h3>
+      <p>Puoi disattivare la personalizzazione degli annunci da Google per tutti i siti che utilizzano AdSense dalla pagina ufficiale di Google:</p>
+      <p><a href="https://myaccount.google.com/data-and-privacy" target="_blank" rel="noopener" class="optout-link">→ myaccount.google.com/data-and-privacy</a></p>
+      <p>Oppure dalla pagina dedicata alle impostazioni annunci:</p>
+      <p><a href="https://adssettings.google.com" target="_blank" rel="noopener" class="optout-link">→ adssettings.google.com</a></p>
+    </div>
+
+    <div class="optout-box" style="margin-top:12px">
+      <h3>YourOnlineChoices / AboutAds</h3>
+      <p>Puoi gestire le preferenze per tutti i principali network pubblicitari (incluso Google) tramite i portali di autoregolamentazione del settore:</p>
+      <p><a href="https://www.youronlinechoices.com/it/" target="_blank" rel="noopener" class="optout-link">→ youronlinechoices.com (Europa)</a></p>
+      <p><a href="https://optout.aboutads.info/" target="_blank" rel="noopener" class="optout-link">→ optout.aboutads.info (Global)</a></p>
+    </div>
+
+    <div class="optout-box" style="margin-top:12px">
+      <h3>Google Analytics Opt-out</h3>
+      <p>Se non vuoi che i tuoi dati vengano utilizzati da Google Analytics su nessun sito, puoi installare il componente aggiuntivo ufficiale per il browser:</p>
+      <p><a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener" class="optout-link">→ tools.google.com/dlpage/gaoptout</a></p>
+    </div>
+
+    <div class="plain" style="margin-top:16px">
+      <span class="plain-label">In parole semplici</span>
+      <p>Clicca su uno dei link qui sopra per gestire le tue preferenze. Potrai comunque usare FinEdge normalmente — vedrai solo annunci non personalizzati.</p>
+    </div>
+  </div>
+
+  <!-- 06 BROWSER -->
+  <div class="card" id="browser">
+    <div class="card-head">
+      <div class="card-icon">🌐</div>
+      <div class="card-title-group">
+        <div class="card-num">06 — GESTIONE TRAMITE BROWSER</div>
+        <h2>Cancellare o bloccare i cookie dal tuo browser</h2>
+      </div>
+    </div>
+    <p class="legal-text">Ogni browser moderno ti consente di visualizzare, eliminare e bloccare i cookie. Tieni presente che bloccare tutti i cookie tecnici impedirà il funzionamento del login su FinEdge.</p>
+    <div class="browser-grid">
+      <div class="browser-card">
+        <div class="browser-name">Chrome</div>
+        <div class="browser-path">Impostazioni → Privacy e sicurezza → Cookie e altri dati dei siti</div>
+      </div>
+      <div class="browser-card">
+        <div class="browser-name">Firefox</div>
+        <div class="browser-path">Impostazioni → Privacy e sicurezza → Cookie e dati dei siti web</div>
+      </div>
+      <div class="browser-card">
+        <div class="browser-name">Safari</div>
+        <div class="browser-path">Preferenze → Privacy → Gestisci dati siti web</div>
+      </div>
+      <div class="browser-card">
+        <div class="browser-name">Edge</div>
+        <div class="browser-path">Impostazioni → Cookie e autorizzazioni del sito → Cookie e dati archiviati</div>
+      </div>
+    </div>
+    <div class="plain">
+      <span class="plain-label">In parole semplici</span>
+      <p>Se vuoi cancellare tutto, vai nelle impostazioni del tuo browser e cerca "Cookie". Puoi eliminare solo i cookie di finedge.it senza toccare gli altri siti.</p>
+    </div>
+  </div>
+
+  <!-- 07 AGGIORNAMENTI -->
+  <div class="card" id="aggiornamenti">
+    <div class="card-head">
+      <div class="card-icon">🔄</div>
+      <div class="card-title-group">
+        <div class="card-num">07 — AGGIORNAMENTI</div>
+        <h2>Come teniamo questa policy aggiornata</h2>
+      </div>
+    </div>
+    <p class="legal-text">Questa Cookie Policy può essere aggiornata in caso di modifiche ai servizi utilizzati o alla normativa applicabile. La data di "Ultimo aggiornamento" in cima alla pagina indica la versione corrente. Modifiche sostanziali verranno comunicate tramite avviso nell'applicazione.</p>
+    <p class="legal-text">Per qualsiasi domanda su questa policy, contattaci dalla pagina <a href="./contatti.html" style="color:var(--b);font-weight:600;text-decoration:none">Contatti</a>.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-logo">Fin<span>Edge</span></div>
+  <div class="foot-links">
+    <a href="/" class="foot-link">Home</a>
+    <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
+    <a href="./contatti.html" class="foot-link">Contatti</a>
+    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="./termini.html" class="foot-link">Termini</a>
+    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+  </div>
+  <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · v1.0 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
+</footer>
+
+<!-- ═══ COOKIE CONSENT BANNER ═══ -->
+<style>
+#ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;
+  border-top:1px solid rgba(255,255,255,.12);padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  box-shadow:0 -4px 24px rgba(0,0,0,.25);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+#ck-banner.show{transform:translateY(0)}
+#ck-banner .ck-text{flex:1;min-width:220px}
+#ck-banner .ck-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc a{color:#60A5FA;text-decoration:none;font-weight:600}
+#ck-banner .ck-desc a:hover{text-decoration:underline}
+#ck-banner .ck-btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+#ck-reject{padding:9px 18px;border:1.5px solid rgba(255,255,255,.22);background:transparent;
+  color:rgba(255,255,255,.7);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-reject:hover{border-color:rgba(255,255,255,.55);color:#fff}
+#ck-accept{padding:9px 20px;background:#1A56C4;border:1.5px solid #1A56C4;color:#fff;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-accept:hover{background:#1448A8;border-color:#1448A8}
+@media(max-width:640px){
+  #ck-banner{padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  #ck-banner .ck-btns{width:100%}
+  #ck-reject,#ck-accept{flex:1;text-align:center}}
+</style>
+<div id="ck-banner" role="dialog" aria-label="Consenso cookie" aria-live="polite">
+  <div class="ck-text">
+    <div class="ck-title">Utilizziamo i cookie 🍪</div>
+    <div class="ck-desc">
+      Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
+      <a href="./cookie.html">Cookie Policy →</a>
+    </div>
+  </div>
+  <div class="ck-btns">
+    <button id="ck-reject">Solo necessari</button>
+    <button id="ck-accept">Accetta tutti</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='fs_cookie_consent';
+  var b=document.getElementById('ck-banner');
+  if(!b||localStorage.getItem(KEY))return;
+  setTimeout(function(){b.classList.add('show');},700);
+  function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
+  document.getElementById('ck-accept').onclick=function(){
+    localStorage.setItem(KEY,'all');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
+  };
+  document.getElementById('ck-reject').onclick=function(){
+    localStorage.setItem(KEY,'necessary');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'denied',analytics_storage:'denied'});}
+  };
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover"/>
+<title>Chi siamo — FinEdge</title>
+<meta name="description" content="Chi siamo: la storia di FinEdge, il progetto e il suo fondatore Alessandro Mazzeo. Un dashboard professionale per analisi finanziaria creato per investitori italiani."/>
+<meta name="robots" content="index, follow"/>
+<meta property="og:title" content="Chi siamo — FinEdge"/>
+<meta property="og:description" content="La storia di FinEdge e del suo fondatore Alessandro Mazzeo."/>
+<meta property="og:type" content="website"/>
+<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="stylesheet" href="/fonts/fonts.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#F0F4FA;--bd:#D8E2EF;
+  --b:#1A56C4;--b2:#1448A8;--b3:#EBF1FB;--b4:#2563EB;
+  --g:#059669;--g2:#D1FAE5;
+  --t:#0F1C2E;--t2:#4A6080;--t3:#8499B0;
+  --card:#fff;--ff:'Plus Jakarta Sans',sans-serif;--fm:'IBM Plex Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:var(--ff);font-size:15px;line-height:1.7;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+
+nav{position:sticky;top:0;z-index:100;height:56px;background:rgba(13,26,43,.97);backdrop-filter:blur(12px);
+  display:flex;align-items:center;padding:0 40px;border-bottom:1px solid rgba(255,255,255,.08)}
+.logo{font-size:18px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.logo-dot{width:7px;height:7px;background:#34D399;border-radius:50%}
+.logo span{color:rgba(255,255,255,.5)}
+.back{color:rgba(255,255,255,.45);font-size:12px;font-family:var(--fm);text-decoration:none;
+  margin-left:auto;transition:color .15s;display:flex;align-items:center;gap:6px}
+.back:hover{color:#fff}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,#0D1A2B 0%,#1A3460 60%,#1448A8 100%);
+  padding:72px 40px 68px;position:relative;overflow:hidden;text-align:center}
+.hero::before{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(26,86,196,.15),transparent 65%);pointer-events:none}
+.hero-inner{max-width:660px;margin:0 auto;position:relative;z-index:1}
+.hero-tag{font-family:var(--fm);font-size:10px;color:rgba(255,255,255,.4);letter-spacing:2.5px;
+  text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:clamp(32px,5vw,52px);font-weight:800;color:#fff;letter-spacing:-1.5px;
+  line-height:1.05;margin-bottom:16px}
+.hero h1 span{background:linear-gradient(90deg,#60A5FA,#34D399);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.55);max-width:500px;margin:0 auto;line-height:1.65}
+
+/* WRAP */
+.wrap{max-width:800px;margin:0 auto;padding:56px 32px 80px}
+
+/* FOUNDER CARD */
+.founder-card{background:var(--card);border:1px solid var(--bd);border-radius:20px;
+  padding:36px 40px;margin-bottom:32px;display:flex;gap:36px;align-items:flex-start}
+.founder-avatar{width:88px;height:88px;border-radius:50%;background:linear-gradient(135deg,var(--b),var(--b4));
+  display:flex;align-items:center;justify-content:center;font-size:36px;flex-shrink:0;
+  box-shadow:0 4px 20px rgba(26,86,196,.25)}
+.founder-info{flex:1}
+.founder-name{font-size:22px;font-weight:800;color:var(--t);letter-spacing:-.5px;margin-bottom:3px}
+.founder-role{font-family:var(--fm);font-size:11px;color:var(--b);letter-spacing:.8px;
+  text-transform:uppercase;margin-bottom:14px}
+.founder-bio{font-size:14px;color:var(--t2);line-height:1.75}
+.founder-bio p{margin-bottom:12px}
+.founder-bio p:last-child{margin-bottom:0}
+.founder-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tag{background:var(--b3);color:var(--b);font-family:var(--fm);font-size:10px;font-weight:700;
+  padding:4px 12px;border-radius:100px;letter-spacing:.3px}
+
+/* MISSION */
+.section-label{font-family:var(--fm);font-size:10px;color:var(--t3);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--bd)}
+
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.mission-card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:24px 28px}
+.mission-icon{font-size:28px;margin-bottom:12px}
+.mission-title{font-size:15px;font-weight:700;color:var(--t);margin-bottom:8px;letter-spacing:-.3px}
+.mission-text{font-size:13px;color:var(--t2);line-height:1.65}
+
+/* WHAT IS FINEDGE */
+.what-card{background:linear-gradient(135deg,#0D1A2B,#1A3460);border-radius:20px;
+  padding:36px 40px;margin-bottom:32px;color:#fff}
+.what-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:8px}
+.what-sub{font-size:13px;color:rgba(255,255,255,.5);font-family:var(--fm);margin-bottom:24px}
+.feature-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.feature-item{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px}
+.feature-dot{width:6px;height:6px;border-radius:50%;background:#34D399;flex-shrink:0}
+.feature-text{font-size:13px;color:rgba(255,255,255,.8);font-weight:500}
+
+/* VALORI */
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px}
+.value-card{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+  padding:22px 20px;text-align:center}
+.value-icon{font-size:26px;margin-bottom:10px}
+.value-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:6px}
+.value-text{font-size:12px;color:var(--t2);line-height:1.55}
+
+/* STACK */
+.stack-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:32px}
+.stack-badge{background:var(--card);border:1px solid var(--bd);border-radius:8px;
+  padding:8px 16px;font-family:var(--fm);font-size:11px;color:var(--t2);font-weight:600;
+  display:flex;align-items:center;gap:6px}
+.stack-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--b);flex-shrink:0}
+
+/* CTA */
+.cta-box{background:linear-gradient(135deg,var(--b3),#E0EAFB);border:1px solid rgba(26,86,196,.2);
+  border-radius:18px;padding:36px;text-align:center}
+.cta-title{font-size:22px;font-weight:800;color:var(--t);letter-spacing:-.5px;margin-bottom:8px}
+.cta-sub{font-size:14px;color:var(--t2);margin-bottom:24px}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--b);color:#fff;
+  padding:13px 32px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;
+  transition:all .15s;box-shadow:0 4px 16px rgba(26,86,196,.3)}
+.cta-btn:hover{background:var(--b2);transform:translateY(-2px);box-shadow:0 8px 24px rgba(26,86,196,.4)}
+
+footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-between;
+  align-items:center;flex-wrap:wrap;gap:12px}
+.foot-logo{font-size:15px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.foot-logo span{color:rgba(255,255,255,.4)}
+.foot-links{display:flex;gap:16px;flex-wrap:wrap}
+.foot-link{color:rgba(255,255,255,.35);font-size:11px;font-family:var(--fm);
+  text-decoration:none;transition:color .15s}
+.foot-link:hover{color:rgba(255,255,255,.75)}
+.foot-note{font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)}
+
+@media(max-width:700px){
+  nav{padding:0 20px}
+  .hero{padding:52px 20px 48px}
+  .wrap{padding:36px 16px 60px}
+  .founder-card{flex-direction:column;gap:20px;padding:24px 20px}
+  .mission-grid,.feature-list,.values-grid{grid-template-columns:1fr}
+  .what-card{padding:24px 20px}
+  .cta-box{padding:24px 20px}
+  footer{padding:20px;padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));flex-direction:column;align-items:flex-start;gap:16px}
+  .foot-links{flex-direction:column;gap:10px}
+}
+@supports(padding:env(safe-area-inset-bottom)){
+  footer{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="logo"><div class="logo-dot"></div>Fin<span>Edge</span></a>
+  <a href="/" class="back">← Torna alla home</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">Chi siamo</div>
+    <h1>Analisi finanziaria<br/><span>alla portata di tutti</span></h1>
+    <p class="hero-sub">FinEdge nasce dall'idea che gli strumenti professionali per analizzare i mercati non debbano costare migliaia di euro l'anno.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- FONDATORE -->
+  <div class="section-label">Il fondatore</div>
+
+  <div class="founder-card">
+    <div class="founder-avatar">👤</div>
+    <div class="founder-info">
+      <div class="founder-name">Alessandro Mazzeo</div>
+      <div class="founder-role">Fondatore &amp; Sviluppatore · LUISS Guido Carli</div>
+      <div class="founder-bio">
+        <p>Sono Alessandro, studente di Economia e Management alla LUISS Guido Carli e investitore con qualche anno di esperienza sui mercati finanziari globali. Analizzo titoli azionari, ETF e asset macro da quando ho iniziato a investire, e nel tempo ho accumulato una visione chiara su cosa manca agli strumenti disponibili per chi investe in autonomia.</p>
+        <p>Il problema era semplice: per fare analisi seria dovevi usare mediamente sei o otto app diverse — molte a pagamento — senza che nessuna parlasse con le altre. Ho costruito FinEdge per risolvere questo problema: un'unica piattaforma che unisce dati live, FinEdge Score proprietario, gestione del portafoglio, screener globale, calendario macro e news, tutto senza costare nulla.</p>
+        <p>FinEdge nasce da un'esigenza reale e cresce con il feedback di chi lo usa ogni giorno. È un progetto personale, ma costruito con la stessa attenzione all'infrastruttura e alla qualità dei dati di un prodotto enterprise.</p>
+      </div>
+      <div class="founder-tags">
+        <span class="tag">LUISS — Economia &amp; Management</span>
+        <span class="tag">Investitore autonomo</span>
+        <span class="tag">Full-stack developer</span>
+        <span class="tag">Mercati globali</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION -->
+  <div class="section-label">La mission</div>
+
+  <div class="mission-grid">
+    <div class="mission-card">
+      <div class="mission-icon">🎯</div>
+      <div class="mission-title">Democratizzare l'analisi</div>
+      <div class="mission-text">Portare strumenti di qualità professionale nelle mani di chi investe in autonomia, eliminando la barriera dei costi elevati.</div>
+    </div>
+    <div class="mission-card">
+      <div class="mission-icon">🌍</div>
+      <div class="mission-title">Copertura globale</div>
+      <div class="mission-text">USA, Europa, Asia — S&amp;P 500, DAX, FTSE MIB, Nikkei, crypto. Oltre 50.000 strumenti su tutti i mercati mondiali.</div>
+    </div>
+    <div class="mission-card">
+      <div class="mission-icon">🔍</div>
+      <div class="mission-title">Chiarezza sui dati</div>
+      <div class="mission-text">Niente black box. Ogni punteggio, ogni segnale, ogni indicatore è spiegabile e comprensibile — non solo un numero.</div>
+    </div>
+    <div class="mission-card">
+      <div class="mission-icon">🚀</div>
+      <div class="mission-title">Costante evoluzione</div>
+      <div class="mission-text">FinEdge si aggiorna continuamente. Le funzionalità nascono da esigenze reali — spesso dai feedback diretti degli utenti.</div>
+    </div>
+  </div>
+
+  <!-- COSA FA FINEDGE -->
+  <div class="section-label">Cosa trovi su FinEdge</div>
+
+  <div class="what-card">
+    <div class="what-title">Un solo strumento. Tutto quello che ti serve.</div>
+    <div class="what-sub">Dashboard · Screener · Portafoglio · Lab · News · Macro</div>
+    <div class="feature-list">
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">FinEdge Score — punteggio proprietario 0–100</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Price Target con AI Analysis</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Screener su 5.000+ azioni globali</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Portafoglio live con P&amp;L in tempo reale</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Simulatore PAC e crescita portafoglio</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Risk Analytics: Sharpe, VaR, drawdown</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Dashboard Macro con regime di mercato</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">News aggregate con sentiment AI</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Calendario earnings e dividendi</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Disponibile in Italiano e Inglese</span></div>
+    </div>
+  </div>
+
+  <!-- VALORI -->
+  <div class="section-label">I nostri valori</div>
+
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="value-icon">🔒</div>
+      <div class="value-title">Privacy first</div>
+      <div class="value-text">Nessun tracciamento comportamentale interno. Nessun profilo venduto. Il sito è sostenuto da annunci e affiliazioni dichiarate — mai dai tuoi dati personali.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">⚡</div>
+      <div class="value-title">Velocità e semplicità</div>
+      <div class="value-text">Interfaccia pulita, caricamento rapido. Complessità finanziaria resa semplice.</div>
+    </div>
+    <div class="value-card">
+      <div class="value-icon">📖</div>
+      <div class="value-title">Trasparenza</div>
+      <div class="value-text">Ogni algoritmo è spiegato. Sappiamo da dove vengono i dati e diciamo sempre quando sono in ritardo.</div>
+    </div>
+  </div>
+
+  <!-- STACK -->
+  <div class="section-label">Stack tecnologico</div>
+
+  <div class="stack-row">
+    <div class="stack-badge">HTML · CSS · JavaScript</div>
+    <div class="stack-badge">Vercel (hosting)</div>
+    <div class="stack-badge">Yahoo Finance API</div>
+    <div class="stack-badge">CoinGecko API</div>
+    <div class="stack-badge">Chart.js</div>
+    <div class="stack-badge">Clerk (auth)</div>
+    <div class="stack-badge">Upstash Redis</div>
+    <div class="stack-badge">Claude AI</div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <div class="cta-title">Prova FinEdge gratuitamente</div>
+    <p class="cta-sub">Dashboard professionale per analisi azioni, indici, crypto e portafoglio. Nessuna carta di credito richiesta.</p>
+    <a href="./index.html" class="cta-btn">Apri il Dashboard →</a>
+  </div>
+
+</div>
+
+<footer>
+  <div class="foot-logo">Fin<span>Edge</span></div>
+  <div class="foot-links">
+    <a href="/" class="foot-link">Home</a>
+    <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
+    <a href="./contatti.html" class="foot-link">Contatti</a>
+    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="./termini.html" class="foot-link">Termini</a>
+    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+  </div>
+  <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
+  <!-- Disclosure affiliazioni — riga completa sotto il footer principale -->
+  <div style="width:100%;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;margin-top:4px;font-size:10px;color:rgba(255,255,255,.2);font-family:var(--fm)">
+    FinEdge può ricevere commissioni dai link partner · nessun costo aggiuntivo per te · <a href="./affiliazioni.html" style="color:rgba(255,255,255,.3);text-decoration:none">Trasparenza affiliazioni →</a>
+  </div>
+</footer>
+
+<!-- ═══ COOKIE CONSENT BANNER ═══ -->
+<style>
+#ck-banner{position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0D1A2B;
+  border-top:1px solid rgba(255,255,255,.12);padding:16px 28px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  box-shadow:0 -4px 24px rgba(0,0,0,.25);
+  transform:translateY(100%);transition:transform .4s cubic-bezier(.25,.8,.25,1)}
+#ck-banner.show{transform:translateY(0)}
+#ck-banner .ck-text{flex:1;min-width:220px}
+#ck-banner .ck-title{font-size:13px;font-weight:700;color:#fff;margin-bottom:3px;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc{font-size:12px;color:rgba(255,255,255,.5);line-height:1.5;font-family:'Plus Jakarta Sans',sans-serif}
+#ck-banner .ck-desc a{color:#60A5FA;text-decoration:none;font-weight:600}
+#ck-banner .ck-desc a:hover{text-decoration:underline}
+#ck-banner .ck-btns{display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap;align-items:center}
+#ck-reject{padding:9px 18px;border:1.5px solid rgba(255,255,255,.22);background:transparent;
+  color:rgba(255,255,255,.7);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-reject:hover{border-color:rgba(255,255,255,.55);color:#fff}
+#ck-accept{padding:9px 20px;background:#1A56C4;border:1.5px solid #1A56C4;color:#fff;
+  border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;transition:all .15s;white-space:nowrap}
+#ck-accept:hover{background:#1448A8;border-color:#1448A8}
+@media(max-width:640px){
+  #ck-banner{padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  #ck-banner .ck-btns{width:100%}
+  #ck-reject,#ck-accept{flex:1;text-align:center}}
+</style>
+<div id="ck-banner" role="dialog" aria-label="Consenso cookie" aria-live="polite">
+  <div class="ck-text">
+    <div class="ck-title">Utilizziamo i cookie 🍪</div>
+    <div class="ck-desc">
+      Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
+      <a href="./cookie.html">Cookie Policy →</a>
+    </div>
+  </div>
+  <div class="ck-btns">
+    <button id="ck-reject">Solo necessari</button>
+    <button id="ck-accept">Accetta tutti</button>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY='fs_cookie_consent';
+  var b=document.getElementById('ck-banner');
+  if(!b||localStorage.getItem(KEY))return;
+  setTimeout(function(){b.classList.add('show');},700);
+  function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
+  document.getElementById('ck-accept').onclick=function(){
+    localStorage.setItem(KEY,'all');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
+  };
+  document.getElementById('ck-reject').onclick=function(){
+    localStorage.setItem(KEY,'necessary');_hide();
+    if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'denied',analytics_storage:'denied'});}
+  };
+})();
+</script>
+</body>
+</html>

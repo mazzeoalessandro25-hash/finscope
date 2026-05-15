@@ -1,0 +1,10 @@
+# ads.txt — FinEdge.it
+# https://support.google.com/adsense/answer/7532444
+#
+# Formato: <ad-system-domain>, <publisher-id>, DIRECT|RESELLER, <tag-id-opzionale>
+#
+# Sostituire con il proprio Google AdSense Publisher ID quando attivato:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# Reti di affiliazione (non richiedono ads.txt, ma annotate per trasparenza):
+# Awin, Impact, Directa Plus, Freedom24, Bitpanda, Binance, TradingView
