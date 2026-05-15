@@ -1143,6 +1143,8 @@ const TRANSLATIONS={
     'auth.emailAccount':'Your account email',
     /* COMMON */
     'common.loading':'Loading...','common.add':'Add',
+    'common.fnote':'Data from Yahoo Finance · Max 15 min delay · For informational use only · Not financial advice',
+    'footer.chiSiamo':'About us','footer.contatti':'Contact','footer.termini':'Terms',
     'common.delete':'Delete','common.save':'Save',
     'common.search':'Search','common.cancel':'Cancel',
     'common.refresh':'↻ Refresh','common.update':'Update',
