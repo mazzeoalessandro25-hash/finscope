@@ -579,6 +579,8 @@ const TRANSLATIONS={
     'lp.auth.namePh':'Come ti chiami?','lp.auth.pwdPh':'Minimo 8 caratteri',
     'lp.footer.prod':'Prodotto','lp.footer.info':'Informazioni',
     'lp.footer.features':'Funzionalità','lp.footer.pricing':'Piani','lp.footer.dash':'Dashboard →',
+    'lp.footer.chiSiamo':'Chi siamo','lp.footer.contatti':'Contatti','lp.footer.termini':'Termini','lp.footer.affiliazioni':'Affiliazioni',
+    'lp.footer.affiliate':'FinEdge può ricevere commissioni dai link partner · nessun costo aggiuntivo per te · <a href="./affiliazioni.html" style="color:rgba(255,255,255,.3);text-decoration:none">Trasparenza affiliazioni →</a>',
     'lp.footer.copyright':'© 2026 FinEdge · Alessandro Mazzeo · Dati da Yahoo Finance · Ritardo max 15 min',
     'lp.mobilecta.text':'<strong>FinEdge è gratis.</strong><br>Registrati in 30 secondi.','lp.mobilecta.btn':'Inizia gratis →',
     'lp.stat.usersLabel':'investitori iscritti','lp.stat.free':'Registrazione gratuita · Zero costi',
