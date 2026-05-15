@@ -30,6 +30,8 @@ const TRANSLATIONS={
     'auth.emailAccount':'Email del tuo account',
     /* COMMON */
     'common.loading':'Caricamento...','common.add':'Aggiungi',
+    'common.fnote':'Dati da Yahoo Finance · Ritardo max 15 min · Solo uso informativo · Non costituisce consulenza finanziaria',
+    'footer.chiSiamo':'Chi siamo','footer.contatti':'Contatti','footer.termini':'Termini',
     'common.delete':'Elimina','common.save':'Salva',
     'common.search':'Cerca','common.cancel':'Annulla',
     'common.refresh':'↻ Aggiorna','common.update':'Aggiorna',
