@@ -1,1 +1,1 @@
-# FinEdge v25
+# FinEdge
