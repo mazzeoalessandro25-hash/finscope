@@ -5470,6 +5470,8 @@ function setScreenerIndex(idx, btn){
     // Reset filtro paese quando si entra in modalità ETF (il filtro non è applicabile)
     if(idx==='etf') elCountry.value='';
   }
+  // Reset filtro settore quando si entra in modalità ETF (i settori ETF sono diversi da quelli azionari)
+  if(idx==='etf'){const elSec=document.getElementById('fs');if(elSec)elSec.value='';}
   if(scLoadWrap) scLoadWrap.style.display=isAll?'block':'none';
   const thSpark=document.getElementById('sc-th-spark');
   if(thSpark) thSpark.style.display='none';
