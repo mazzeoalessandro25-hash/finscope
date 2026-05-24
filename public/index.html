@@ -5479,7 +5479,20 @@ function onFilterChange(){
   if(currentIndex==='all'){ dynamicStocks=[];screenerPage=0;loadMarketScreener(true); }
   else renderMarketStocks();
 }
-function onCountryChange(){ renderMarketStocks(); }
+function onCountryChange(){
+  const cntryF=document.getElementById('sc-country')?.value||'';
+  // Se viene selezionato un paese mentre l'indice attivo non è "tutti i mercati",
+  // passa automaticamente a "tutti" e ricarica — altrimenti filtra solo i titoli già presenti
+  if(cntryF&&currentIndex!=='all'){
+    const sel=document.getElementById('sc-idx-select');
+    if(sel) sel.value='all';
+    currentIndex='all';
+    dynamicStocks=[];screenerPage=0;
+    loadMarketScreener(true);
+  } else {
+    renderMarketStocks();
+  }
+}
 
 async function loadMarketScreener(reset=true){
   const loadId=++_screenerLoadId; // ogni chiamata ha un ID unico
