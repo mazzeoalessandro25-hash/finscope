@@ -251,7 +251,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
       <li>Mantenimento della sessione attiva tra una visita e l'altra</li>
       <li>Diagnostica tecnica in caso di errori o malfunzionamenti</li>
     </ul>
-    <p class="legal-text" style="margin-top:4px"><strong>Non utilizziamo i dati per:</strong> profilazione comportamentale interna, rivendita a terzi, o comunicazioni di marketing senza esplicito consenso. FinEdge può mostrare annunci tramite Google AdSense e contenere link affiliati verso partner commerciali (con possibile commissione per FinEdge, senza alcun costo aggiuntivo per te) — entrambi attivati solo con consenso e descritti nella <a href="./affiliazioni.html" style="color:var(--b);font-weight:600;text-decoration:none">pagina Trasparenza Affiliazioni</a>.</p>
+    <p class="legal-text" style="margin-top:4px"><strong>Non utilizziamo i dati per:</strong> profilazione comportamentale interna, rivendita a terzi, o comunicazioni di marketing senza esplicito consenso. FinEdge può mostrare annunci tramite Google AdSense e contenere link affiliati verso partner commerciali (con possibile commissione per FinEdge, senza alcun costo aggiuntivo per te) — entrambi attivati solo con consenso e descritti nella <a href="/legal/affiliazioni.html" style="color:var(--b);font-weight:600;text-decoration:none">pagina Trasparenza Affiliazioni</a>.</p>
     <div class="plain">
       <span class="plain-label">In parole semplici</span>
       <p>I tuoi dati servono solo a far funzionare FinEdge per te. Fine.</p>
@@ -377,7 +377,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <ul>
       <li><strong>Cookie tecnici di sessione</strong> — gestiti da Clerk, necessari per mantenere attivo il login. Senza di essi il servizio non funziona.</li>
       <li><strong>Cookie di profilazione comportamentale interna</strong> — <strong>nessuno</strong>. Non costruiamo profili sulle tue abitudini di navigazione su FinEdge.</li>
-      <li><strong>Cookie pubblicitari (Google AdSense)</strong> — attivati <strong>solo con il tuo consenso</strong> tramite il banner cookie. Se accetti, Google può impostare cookie per mostrare annunci pertinenti. Per i dettagli completi consulta la <a href="./cookie.html" style="color:var(--b);font-weight:600;text-decoration:none">Cookie Policy</a>.</li>
+      <li><strong>Cookie pubblicitari (Google AdSense)</strong> — attivati <strong>solo con il tuo consenso</strong> tramite il banner cookie. Se accetti, Google può impostare cookie per mostrare annunci pertinenti. Per i dettagli completi consulta la <a href="/legal/cookie.html" style="color:var(--b);font-weight:600;text-decoration:none">Cookie Policy</a>.</li>
     </ul>
 
     <!-- Cookie di affiliazione — nuova sotto-sezione -->
@@ -390,7 +390,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
       <li><strong>Exchange crypto</strong>: Bitpanda, Binance, Young Platform, Coinbase, Kraken — 30–90 giorni</li>
       <li><strong>Tool di analisi</strong>: TradingView, Seeking Alpha — 30 giorni</li>
     </ul>
-    <p class="legal-text">Per dettagli su come riconoscere i link affiliati e sui criteri di selezione dei partner, consulta la <a href="./affiliazioni.html" style="color:var(--b);font-weight:600;text-decoration:none">pagina Trasparenza Affiliazioni</a>.</p>
+    <p class="legal-text">Per dettagli su come riconoscere i link affiliati e sui criteri di selezione dei partner, consulta la <a href="/legal/affiliazioni.html" style="color:var(--b);font-weight:600;text-decoration:none">pagina Trasparenza Affiliazioni</a>.</p>
 
     <div class="plain">
       <span class="plain-label">In parole semplici</span>
@@ -424,11 +424,11 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <a href="/" class="foot-link">Home</a>
     <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
     <a href="./contatti.html" class="foot-link">Contatti</a>
-    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
-    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
-    <a href="./termini.html" class="foot-link">Termini</a>
-    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
-    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+    <a href="/legal/privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="/legal/cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="/legal/termini.html" class="foot-link">Termini</a>
+    <a href="/legal/disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="/legal/affiliazioni.html" class="foot-link">Affiliazioni</a>
   </div>
   <div class="foot-note">© 2026 Alessandro Mazzeo · Conforme GDPR · v1.2 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
@@ -472,7 +472,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   t('.contact-box p','Have a question about your privacy or want to exercise your rights?');
   qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
   var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
-  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="/legal/cookie.html">Cookie Policy →</a>';
   var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
   var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
 })();
@@ -509,7 +509,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <div class="ck-title">Utilizziamo i cookie 🍪</div>
     <div class="ck-desc">
       Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
-      <a href="./cookie.html">Cookie Policy →</a>
+      <a href="/legal/cookie.html">Cookie Policy →</a>
     </div>
   </div>
   <div class="ck-btns">

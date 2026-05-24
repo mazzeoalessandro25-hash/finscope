@@ -328,11 +328,11 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <a href="/" class="foot-link">Home</a>
     <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
     <a href="./contatti.html" class="foot-link">Contatti</a>
-    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
-    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
-    <a href="./termini.html" class="foot-link">Termini</a>
-    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
-    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+    <a href="/legal/privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="/legal/cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="/legal/termini.html" class="foot-link">Termini</a>
+    <a href="/legal/disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="/legal/affiliazioni.html" class="foot-link">Affiliazioni</a>
   </div>
   <div class="foot-note">© 2026 Alessandro Mazzeo · Tutti i diritti riservati · v1.1 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
@@ -373,7 +373,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
   t('.foot-note','© 2026 Alessandro Mazzeo · All rights reserved · v1.1 · info@finedge.it');
   var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
-  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="/legal/cookie.html">Cookie Policy →</a>';
   var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
   var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
 })();
@@ -410,7 +410,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <div class="ck-title">Utilizziamo i cookie 🍪</div>
     <div class="ck-desc">
       Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
-      <a href="./cookie.html">Cookie Policy →</a>
+      <a href="/legal/cookie.html">Cookie Policy →</a>
     </div>
   </div>
   <div class="ck-btns">

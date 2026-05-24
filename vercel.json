@@ -22,6 +22,11 @@
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/", "dest": "/public/about.html" },
+    { "src": "/privacy.html", "dest": "/legal/privacy.html", "status": 301 },
+    { "src": "/cookie.html", "dest": "/legal/cookie.html", "status": 301 },
+    { "src": "/termini.html", "dest": "/legal/termini.html", "status": 301 },
+    { "src": "/disclaimer.html", "dest": "/legal/disclaimer.html", "status": 301 },
+    { "src": "/affiliazioni.html", "dest": "/legal/affiliazioni.html", "status": 301 },
     { "src": "/(.*)", "dest": "/public/$1" }
   ]
 }

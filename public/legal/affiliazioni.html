@@ -11,7 +11,7 @@
 <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://finedge.it/affiliazioni.html"/>
 <meta name="twitter:card" content="summary"/>
-<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="icon" type="image/png" href="/assets/favicon.png"/>
 <link rel="stylesheet" href="/fonts/fonts.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -415,7 +415,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <ul>
       <li>Sei <strong>libero di scegliere qualsiasi broker o piattaforma</strong>, anche non partner di FinEdge. Non c'è nessuna pressione commerciale.</li>
       <li>Puoi accedere a qualsiasi broker <strong>direttamente dal suo sito ufficiale</strong>, senza passare per i link di FinEdge, ottenendo le stesse condizioni standard.</li>
-      <li>FinEdge fornisce <strong>informazioni e strumenti di analisi</strong>, non consulenza finanziaria personalizzata ai sensi della Direttiva MiFID II (2014/65/UE). Per dettagli legali completi consulta il <a href="./disclaimer.html" style="color:var(--b);font-weight:600;text-decoration:none">Disclaimer legale</a>.</li>
+      <li>FinEdge fornisce <strong>informazioni e strumenti di analisi</strong>, non consulenza finanziaria personalizzata ai sensi della Direttiva MiFID II (2014/65/UE). Per dettagli legali completi consulta il <a href="/legal/disclaimer.html" style="color:var(--b);font-weight:600;text-decoration:none">Disclaimer legale</a>.</li>
       <li>Il fondatore di FinEdge <strong>non è iscritto all'Albo dei Consulenti Finanziari (OCF)</strong> e non presta consulenza di investimento ai sensi della normativa vigente.</li>
       <li>Hai il diritto di <strong>segnalare</strong> qualsiasi comportamento dei partner che ritieni scorretto, tramite i contatti in fondo a questa pagina.</li>
       <li>Hai il diritto di <strong>rifiutare i cookie di affiliazione</strong> dal banner cookie senza perdere l'accesso alle funzionalità di FinEdge.</li>
@@ -484,11 +484,11 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <a href="/" class="foot-link">Home</a>
     <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
     <a href="./contatti.html" class="foot-link">Contatti</a>
-    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
-    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
-    <a href="./termini.html" class="foot-link">Termini</a>
-    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
-    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+    <a href="/legal/privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="/legal/cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="/legal/termini.html" class="foot-link">Termini</a>
+    <a href="/legal/disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="/legal/affiliazioni.html" class="foot-link">Affiliazioni</a>
   </div>
   <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · v1.0 · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
@@ -529,7 +529,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   t('.safe-box p','Affiliate transparency is not a legal obligation we fulfil reluctantly: it is part of the way FinEdge wants to operate. If something changes in the future — new partners, new methods — this page will be updated and the revision date will be visible at the top.');
   qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
   var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
-  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and affiliate cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and affiliate cookies. <a href="/legal/cookie.html">Cookie Policy →</a>';
   var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
   var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
 })();
@@ -566,7 +566,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <div class="ck-title">Utilizziamo i cookie 🍪</div>
     <div class="ck-desc">
       Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di affiliazione.
-      <a href="./cookie.html">Cookie Policy →</a>
+      <a href="/legal/cookie.html">Cookie Policy →</a>
     </div>
   </div>
   <div class="ck-btns">

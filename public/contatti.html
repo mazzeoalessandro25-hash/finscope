@@ -6,7 +6,7 @@
 <title>Contatti — FinEdge</title>
 <meta name="description" content="Contatta FinEdge per supporto, segnalazioni, domande sulla privacy o feedback sul servizio."/>
 <meta name="robots" content="index, follow"/>
-<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="icon" type="image/png" href="/assets/favicon.png"/>
 <link rel="stylesheet" href="/fonts/fonts.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -233,7 +233,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
       <div class="checkbox-row">
         <input type="checkbox" id="privacy-consent" name="privacy-consent" required/>
         <label for="privacy-consent">
-          Ho letto e accetto la <a href="./privacy.html" target="_blank">Privacy Policy</a>.
+          Ho letto e accetto la <a href="/legal/privacy.html" target="_blank">Privacy Policy</a>.
           I miei dati verranno utilizzati esclusivamente per rispondere alla mia richiesta.
         </label>
       </div>
@@ -257,7 +257,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     </div>
     <div class="faq-card">
       <div class="faq-q">Come esercito i miei diritti GDPR?</div>
-      <div class="faq-a">Seleziona "Richiesta privacy / GDPR" nel form. Per i dettagli sui tuoi diritti consulta la <a href="./privacy.html">Privacy Policy</a>.</div>
+      <div class="faq-a">Seleziona "Richiesta privacy / GDPR" nel form. Per i dettagli sui tuoi diritti consulta la <a href="/legal/privacy.html">Privacy Policy</a>.</div>
     </div>
     <div class="faq-card">
       <div class="faq-q">I dati di mercato sono in ritardo?</div>
@@ -265,7 +265,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     </div>
     <div class="faq-card">
       <div class="faq-q">FinEdge è un consulente finanziario?</div>
-      <div class="faq-a">No. FinEdge è uno strumento informativo. Nessun contenuto costituisce consulenza. Leggi il <a href="./disclaimer.html">Disclaimer completo</a>.</div>
+      <div class="faq-a">No. FinEdge è uno strumento informativo. Nessun contenuto costituisce consulenza. Leggi il <a href="/legal/disclaimer.html">Disclaimer completo</a>.</div>
     </div>
   </div>
 
@@ -277,11 +277,11 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <a href="/" class="foot-link">Home</a>
     <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
     <a href="./contatti.html" class="foot-link">Contatti</a>
-    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
-    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
-    <a href="./termini.html" class="foot-link">Termini</a>
-    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
-    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+    <a href="/legal/privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="/legal/cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="/legal/termini.html" class="foot-link">Termini</a>
+    <a href="/legal/disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="/legal/affiliazioni.html" class="foot-link">Affiliazioni</a>
   </div>
   <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
 </footer>
@@ -323,7 +323,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     for(var i=0;i<opts.length;i++){if(om[opts[i].text])opts[i].text=om[opts[i].text];}
   }
   var cb=q('label[for="privacy-consent"]');
-  if(cb)cb.innerHTML='I have read and accept the <a href="./privacy.html" target="_blank">Privacy Policy</a>. My data will be used solely to respond to my request.';
+  if(cb)cb.innerHTML='I have read and accept the <a href="/legal/privacy.html" target="_blank">Privacy Policy</a>. My data will be used solely to respond to my request.';
   var sb=document.getElementById('submit-btn');if(sb)sb.textContent='Send message →';
   var fsi=q('.form-success h3');if(fsi)fsi.textContent='Message sent!';
   var fsp=q('.form-success p');if(fsp)fsp.textContent='Thank you for writing to us. We will reply to the email address provided within 24–48 business hours.';
@@ -331,10 +331,10 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   if(fq)fq.textContent='Frequently asked questions';
   var fqq=qa('.faq-q'),fqa=qa('.faq-a');
   ['How do I delete my account?','How do I exercise my GDPR rights?','Is market data delayed?','Is FinEdge a financial advisor?'].forEach(function(v,i){if(fqq[i])fqq[i].textContent=v;});
-  ['Send us a request via this form selecting "Account issue". We will process it within 48h and delete all your data within 30 days.','Select "Privacy / GDPR request" in the form. For details on your rights, see the <a href="./privacy.html">Privacy Policy</a>.','Yes, stock data from Yahoo Finance may be delayed by up to 15 minutes during trading sessions. Crypto data from CoinGecko is near real-time.','No. FinEdge is an informational tool. No content constitutes advice. Read the <a href="./disclaimer.html">full Disclaimer</a>.'].forEach(function(v,i){if(fqa[i])fqa[i].innerHTML=v;});
+  ['Send us a request via this form selecting "Account issue". We will process it within 48h and delete all your data within 30 days.','Select "Privacy / GDPR request" in the form. For details on your rights, see the <a href="/legal/privacy.html">Privacy Policy</a>.','Yes, stock data from Yahoo Finance may be delayed by up to 15 minutes during trading sessions. Crypto data from CoinGecko is near real-time.','No. FinEdge is an informational tool. No content constitutes advice. Read the <a href="/legal/disclaimer.html">full Disclaimer</a>.'].forEach(function(v,i){if(fqa[i])fqa[i].innerHTML=v;});
   qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
   var ctl=q('.ck-title');if(ctl)ctl.textContent='We use cookies 🍪';
-  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var cdc=q('.ck-desc');if(cdc)cdc.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="/legal/cookie.html">Cookie Policy →</a>';
   var crj=document.getElementById('ck-reject');if(crj)crj.textContent='Necessary only';
   var cac=document.getElementById('ck-accept');if(cac)cac.textContent='Accept all';
 })();
@@ -404,7 +404,7 @@ if (form) {
     <div class="ck-title">Utilizziamo i cookie 🍪</div>
     <div class="ck-desc">
       Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
-      <a href="./cookie.html">Cookie Policy →</a>
+      <a href="/legal/cookie.html">Cookie Policy →</a>
     </div>
   </div>
   <div class="ck-btns">

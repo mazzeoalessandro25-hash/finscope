@@ -43,37 +43,37 @@
 
   <!-- Affiliazioni (trasparenza) -->
   <url>
-    <loc>https://finedge.it/affiliazioni.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <loc>https://finedge.it/legal/affiliazioni.html</loc>
+    <lastmod>2026-05-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
 
   <!-- Pagine legali -->
   <url>
-    <loc>https://finedge.it/privacy.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <loc>https://finedge.it/legal/privacy.html</loc>
+    <lastmod>2026-05-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <url>
-    <loc>https://finedge.it/cookie.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <loc>https://finedge.it/legal/cookie.html</loc>
+    <lastmod>2026-05-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <url>
-    <loc>https://finedge.it/termini.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <loc>https://finedge.it/legal/termini.html</loc>
+    <lastmod>2026-05-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <url>
-    <loc>https://finedge.it/disclaimer.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <loc>https://finedge.it/legal/disclaimer.html</loc>
+    <lastmod>2026-05-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>

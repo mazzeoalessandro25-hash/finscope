@@ -15,9 +15,9 @@
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="theme-color" content="#1448A8"/>
 <link rel="manifest" href="/manifest.json"/>
-<link rel="icon" type="image/png" href="/favicon.png"/>
-<link rel="shortcut icon" type="image/png" href="/favicon.png"/>
-<link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png?v=3"/>
+<link rel="icon" type="image/png" href="/assets/favicon.png"/>
+<link rel="shortcut icon" type="image/png" href="/assets/favicon.png"/>
+<link rel="apple-touch-icon" sizes="192x192" href="/assets/icon-192.png?v=3"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
 <meta name="apple-mobile-web-app-title" content="FinEdge"/>
@@ -1683,7 +1683,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <!-- AUTH MODAL -->
 <div class="auth-overlay" id="auth-modal">
   <div class="auth-box">
-    <div class="auth-logo"><img src="/logo-icon.png" alt="" style="height:36px;width:auto;vertical-align:middle;margin-right:8px"/>FinEdge</div>
+    <div class="auth-logo"><img src="/assets/logo-icon.png" alt="" style="height:36px;width:auto;vertical-align:middle;margin-right:8px"/>FinEdge</div>
     <div class="auth-sub" id="auth-modal-sub" data-i18n="auth.sub.login">Accedi per salvare watchlist, portafoglio e preferenze</div>
 
     <!-- ── VISTA PRINCIPALE: Login / Registrati ── -->
@@ -1715,7 +1715,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <button type="submit" class="auth-submit" id="auth-submit" data-i18n="auth.login">Accedi</button>
       </form>
       <p id="auth-gdpr-p" style="font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.5">
-        <span id="auth-gdpr-pre">Continuando accetti la nostra</span> <a href="./privacy.html" target="_blank" style="color:var(--b)">Privacy Policy</a>.<br>
+        <span id="auth-gdpr-pre">Continuando accetti la nostra</span> <a href="/legal/privacy.html" target="_blank" style="color:var(--b)">Privacy Policy</a>.<br>
         <span id="auth-gdpr-post">I tuoi dati sono trattati secondo il GDPR.</span>
       </p>
     </div>
@@ -2256,7 +2256,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div class="site-header">
 <!-- NAV BLU -->
 <nav>
-  <div class="logo" style="cursor:pointer" onclick="window.location.href='./about.html'"><img src="/logo-icon.png" alt="" style="height:26px;width:auto;vertical-align:middle;margin-right:6px"/>FinEdge</div>
+  <div class="logo" style="cursor:pointer" onclick="window.location.href='./about.html'"><img src="/assets/logo-icon.png" alt="" style="height:26px;width:auto;vertical-align:middle;margin-right:6px"/>FinEdge</div>
   <div class="nav-items">
     <button class="nav-btn active" id="nb-dashboard" onclick="showPage('dashboard',this)">Dashboard</button>
     <button class="nav-btn" id="nb-screener" onclick="showPage('screener',this)">Screener</button>
@@ -3794,15 +3794,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 </div>
 
 <footer>
-  <div class="flogo"><img src="/logo-icon.png" alt="" style="height:22px;width:auto;vertical-align:middle;margin-right:6px;opacity:.8"/>FinEdge</div>
+  <div class="flogo"><img src="/assets/logo-icon.png" alt="" style="height:22px;width:auto;vertical-align:middle;margin-right:6px;opacity:.8"/>FinEdge</div>
   <p class="fnote" data-i18n="common.fnote">Dati da Yahoo Finance · Ritardo max 15 min · Solo uso informativo · Non costituisce consulenza finanziaria</p>
   <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:center">
     <a href="./chi-siamo.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'" data-i18n="footer.chiSiamo">Chi siamo</a>
     <a href="./contatti.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'" data-i18n="footer.contatti">Contatti</a>
-    <a href="./privacy.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Privacy</a>
-    <a href="./cookie.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Cookie</a>
-    <a href="./termini.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'" data-i18n="footer.termini">Termini</a>
-    <a href="./disclaimer.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Disclaimer</a>
+    <a href="/legal/privacy.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Privacy</a>
+    <a href="/legal/cookie.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Cookie</a>
+    <a href="/legal/termini.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'" data-i18n="footer.termini">Termini</a>
+    <a href="/legal/disclaimer.html" style="font-size:11px;color:var(--t3);text-decoration:none;font-family:var(--fm);transition:color .15s" onmouseover="this.style.color='var(--b)'" onmouseout="this.style.color='var(--t3)'">Disclaimer</a>
   </div>
 </footer>
 
@@ -17656,7 +17656,7 @@ const TUTO = (() => {
     <div class="ck-title">Utilizziamo i cookie 🍪</div>
     <div class="ck-desc">
       Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
-      <a href="./cookie.html">Cookie Policy →</a>
+      <a href="/legal/cookie.html">Cookie Policy →</a>
     </div>
   </div>
   <div class="ck-btns">

@@ -9,7 +9,7 @@
 <meta property="og:title" content="Chi siamo — FinEdge"/>
 <meta property="og:description" content="La storia di FinEdge e del suo fondatore Alessandro Mazzeo."/>
 <meta property="og:type" content="website"/>
-<link rel="icon" type="image/png" href="/favicon.png"/>
+<link rel="icon" type="image/png" href="/assets/favicon.png"/>
 <link rel="stylesheet" href="/fonts/fonts.css"/>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -277,16 +277,16 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <a href="/" class="foot-link">Home</a>
     <a href="./chi-siamo.html" class="foot-link">Chi siamo</a>
     <a href="./contatti.html" class="foot-link">Contatti</a>
-    <a href="./privacy.html" class="foot-link">Privacy Policy</a>
-    <a href="./cookie.html" class="foot-link">Cookie Policy</a>
-    <a href="./termini.html" class="foot-link">Termini</a>
-    <a href="./disclaimer.html" class="foot-link">Disclaimer</a>
-    <a href="./affiliazioni.html" class="foot-link">Affiliazioni</a>
+    <a href="/legal/privacy.html" class="foot-link">Privacy Policy</a>
+    <a href="/legal/cookie.html" class="foot-link">Cookie Policy</a>
+    <a href="/legal/termini.html" class="foot-link">Termini</a>
+    <a href="/legal/disclaimer.html" class="foot-link">Disclaimer</a>
+    <a href="/legal/affiliazioni.html" class="foot-link">Affiliazioni</a>
   </div>
   <div class="foot-note">© 2026 FinEdge · Alessandro Mazzeo · <a href="mailto:info@finedge.it" style="color:rgba(255,255,255,.35);text-decoration:none;font-family:var(--fm);font-size:10px">info@finedge.it</a></div>
   <!-- Disclosure affiliazioni — riga completa sotto il footer principale -->
   <div style="width:100%;border-top:1px solid rgba(255,255,255,.06);padding-top:10px;margin-top:4px;font-size:10px;color:rgba(255,255,255,.2);font-family:var(--fm)">
-    FinEdge può ricevere commissioni dai link partner · nessun costo aggiuntivo per te · <a href="./affiliazioni.html" style="color:rgba(255,255,255,.3);text-decoration:none">Trasparenza affiliazioni →</a>
+    FinEdge può ricevere commissioni dai link partner · nessun costo aggiuntivo per te · <a href="/legal/affiliazioni.html" style="color:rgba(255,255,255,.3);text-decoration:none">Trasparenza affiliazioni →</a>
   </div>
 </footer>
 
@@ -322,7 +322,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <div class="ck-title">Utilizziamo i cookie 🍪</div>
     <div class="ck-desc">
       Cookie tecnici necessari sempre attivi. Con il tuo consenso, utilizziamo anche cookie pubblicitari (Google AdSense) e di analisi.
-      <a href="./cookie.html">Cookie Policy →</a>
+      <a href="/legal/cookie.html">Cookie Policy →</a>
     </div>
   </div>
   <div class="ck-btns">
@@ -380,9 +380,9 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   t('.cta-sub','Professional dashboard for stock, index, crypto, and portfolio analysis. No credit card required.');
   t('.cta-btn','Open Dashboard →');
   qa('.foot-link').forEach(function(a){var m={'Chi siamo':'About Us','Contatti':'Contact','Termini':'Terms','Affiliazioni':'Affiliations'};if(m[a.textContent])a.textContent=m[a.textContent];});
-  var fd=q('footer>div:last-child');if(fd)fd.innerHTML='FinEdge may receive commissions from partner links · no additional cost to you · <a href="./affiliazioni.html" style="color:rgba(255,255,255,.3);text-decoration:none">Affiliate transparency →</a>';
+  var fd=q('footer>div:last-child');if(fd)fd.innerHTML='FinEdge may receive commissions from partner links · no additional cost to you · <a href="/legal/affiliazioni.html" style="color:rgba(255,255,255,.3);text-decoration:none">Affiliate transparency →</a>';
   var ct=q('.ck-title');if(ct)ct.textContent='We use cookies 🍪';
-  var cd=q('.ck-desc');if(cd)cd.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="./cookie.html">Cookie Policy →</a>';
+  var cd=q('.ck-desc');if(cd)cd.innerHTML='Necessary technical cookies are always active. With your consent, we also use advertising (Google AdSense) and analytics cookies. <a href="/legal/cookie.html">Cookie Policy →</a>';
   var cr=document.getElementById('ck-reject');if(cr)cr.textContent='Necessary only';
   var ca=document.getElementById('ck-accept');if(ca)ca.textContent='Accept all';
 })();
