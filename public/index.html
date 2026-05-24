@@ -2771,6 +2771,34 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <option value="EU">🇪🇺 Europa</option><option value="UK">🇬🇧 UK</option>
       <option value="AS">🇯🇵 Giappone</option><option value="CA">🇨🇦 Canada</option>
     </select>
+    <select class="fsel" id="sc-chg-f" onchange="applyF()">
+      <option value="">Variazione</option>
+      <option value="pos">▲ Positiva</option>
+      <option value="neg">▼ Negativa</option>
+      <option value="gt2">▲ &gt;+2%</option>
+      <option value="lt-2">▼ &lt;-2%</option>
+    </select>
+    <select class="fsel" id="sc-pe-f" onchange="applyF()">
+      <option value="">P/E</option>
+      <option value="value">Value (&lt;15)</option>
+      <option value="normal">Normal (15–30)</option>
+      <option value="growth">Growth (&gt;30)</option>
+      <option value="nope">Senza P/E</option>
+    </select>
+    <select class="fsel" id="sc-cap-f" onchange="applyF()">
+      <option value="">Market Cap</option>
+      <option value="mega">Mega (&gt;200B)</option>
+      <option value="large">Large (&gt;10B)</option>
+      <option value="mid">Mid (&gt;2B)</option>
+      <option value="small">Small (≤2B)</option>
+    </select>
+    <select class="fsel" id="sc-score-f" onchange="applyF()">
+      <option value="0">Score min.</option>
+      <option value="50">≥ 50</option>
+      <option value="60">≥ 60</option>
+      <option value="70">≥ 70</option>
+      <option value="80">≥ 80</option>
+    </select>
     <div class="search-wrap" style="position:relative">
       <input class="finp" id="fq" type="text" placeholder="Cerca ticker o nome..." oninput="onFqInput()"/>
       <div id="search-dropdown" class="search-dd"></div>
@@ -5470,8 +5498,11 @@ function setScreenerIndex(idx, btn){
     // Reset filtro paese quando si entra in modalità ETF (il filtro non è applicabile)
     if(idx==='etf') elCountry.value='';
   }
-  // Reset filtro settore quando si entra in modalità ETF (i settori ETF sono diversi da quelli azionari)
-  if(idx==='etf'){const elSec=document.getElementById('fs');if(elSec)elSec.value='';}
+  // Reset filtri non applicabili in modalità ETF
+  if(idx==='etf'){
+    ['fs','sc-chg-f','sc-pe-f','sc-cap-f'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    const elScore=document.getElementById('sc-score-f');if(elScore)elScore.value='0';
+  }
   if(scLoadWrap) scLoadWrap.style.display=isAll?'block':'none';
   const thSpark=document.getElementById('sc-th-spark');
   if(thSpark) thSpark.style.display='none';
