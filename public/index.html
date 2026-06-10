@@ -6273,28 +6273,48 @@ async function _renderNews(category){
     if(!data?.news?.length){grid.innerHTML='<div class="ld">'+_t('empty.news.avail')+'</div>';return;}
     _newsAllItems=data.news;
     _newsSetTimestamp();
-    // Featured 2+1: primo card grande a sx, due piccoli a dx
-    const f0=_newsAllItems[0],f1=_newsAllItems[1],f2=_newsAllItems[2];
-    const featuredHtml=`
-      <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">\ud83d\udd25 In Evidenza</div>
-      <div class="news-featured-grid">
-        ${f0?_newsHeroCard(f0,0,'news-hero-main'):''}
-        ${f1?_newsHeroCard(f1,1,'news-hero-side'):''}
-        ${f2?_newsHeroCard(f2,2,'news-hero-side'):''}
-      </div>`;
-    // Prima batch di notizie secondarie
-    const restStart=3;
-    const firstBatch=_newsAllItems.slice(restStart,restStart+_NEWS_PAGE);
-    _newsShown=restStart+firstBatch.length;
-    const hasMore=_newsAllItems.length>_newsShown;
-    const restHtml=firstBatch.length?`
-      <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">\ud83d\udcf0 Ultime Notizie</div>
-      <div class="news-grid" id="news-rest-grid">
-        ${firstBatch.map((n,i)=>_newsItemCard(n,i)).join('')}
+
+    // Top 3 featured: priorità thumbnail, poi recency
+    const featured=_newsAllItems.slice().sort((a,b)=>{
+      const ta=a.thumbnail?1:0,tb=b.thumbnail?1:0;
+      if(tb!==ta)return tb-ta;
+      return(b.time||0)-(a.time||0);
+    }).slice(0,3);
+    const featuredSet=new Set(featured.map(n=>n.link));
+    const rest=_newsAllItems.filter(n=>!featuredSet.has(n.link));
+
+    // Colonna sinistra: 3 card in evidenza (hero con altezza fissa)
+    const featuredHtml=featured.map((n,i)=>`<div style="height:155px">${_newsHeroCard(n,i,'news-hero-side')}</div>`).join('');
+
+    // Colonna destra: lista piatta cronologica
+    const restHtml=rest.map(n=>{
+      const badge=getNewsBadge(n.title,n.time);
+      const time=newsTimeAgo(n.time);
+      return`<a href="${n.link||'#'}" target="_blank" rel="noopener"
+        style="display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid var(--bd);text-decoration:none;transition:background .12s"
+        onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+        <span style="flex-shrink:0;min-width:16px">${badge||'<span style="font-size:10px;color:var(--t3)">—</span>'}</span>
+        <span style="flex:1;font-size:12px;color:var(--t);line-height:1.4;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${n.title}</span>
+        <span style="flex-shrink:0;font-size:10px;color:var(--t3);font-family:var(--fm);white-space:nowrap;padding-left:4px">${n.publisher?n.publisher+' · ':''}${time}</span>
+      </a>`;
+    }).join('');
+
+    grid.innerHTML=`
+      <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:18px;align-items:start">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">🔥 In Evidenza</div>
+          ${featuredHtml}
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between">
+            <span>📰 Ultime Notizie</span><span style="opacity:.6">${rest.length} articoli</span>
+          </div>
+          <div style="max-height:540px;overflow-y:auto;padding-right:2px">
+            ${restHtml||'<div style="color:var(--t3);font-size:12px;padding:8px 0">Nessun altro articolo</div>'}
+          </div>
+        </div>
       </div>
-      ${hasMore?'<div class="news-more-wrap"><button class="news-more-btn" id="news-more-btn" onclick="_newsLoadMore()">\u21e9 Carica altre notizie</button></div>':''}
-    `:'';
-    grid.innerHTML=featuredHtml+restHtml;
+      <style>#news-grid>div>div:last-child>div:last-child::-webkit-scrollbar{width:4px}#news-grid>div>div:last-child>div:last-child::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}@media(max-width:640px){#news-grid>div{grid-template-columns:1fr!important}}</style>`;
   }catch{grid.innerHTML='<div class="ld">'+_t('load.news.err')+'</div>';}
 }
 
