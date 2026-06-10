@@ -4414,7 +4414,12 @@ function _logoOnError(img,ticker,smClass){
 }
 // Ticker per cui Parqet restituisce un logo sbagliato — bypass diretto a FMP
 const _LOGO_FORCE_FMP=new Set(['NVO','NOVO-B']);
+// Override sul ticker COMPLETO (incluso suffisso exchange) → ticker FMP da usare
+const _LOGO_TICKER_OVERRIDE={'NOV.DE':'NVO','NOVC.DE':'NVO'};
 function _logoSrc(ticker){
+  // Controlla override full ticker prima di pulire (evita conflitti cross-exchange)
+  if(_LOGO_TICKER_OVERRIDE[ticker])
+    return`https://financialmodelingprep.com/image-stock/${_LOGO_TICKER_OVERRIDE[ticker]}.png`;
   const clean=cleanTicker(ticker);
   if(_LOGO_FORCE_FMP.has(clean))
     return`https://financialmodelingprep.com/image-stock/${_logoFmpTicker(clean)}.png`;
