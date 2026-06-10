@@ -17530,7 +17530,8 @@ const TUTORIAL_STEPS = [
   },
   // ── 4. CHARTS ───────────────────────────────────────────────────
   {
-    target: () => document.querySelector('.dash-charts'),
+    // Target solo la barra controlli del primo grafico (più piccola del chart intero)
+    target: () => document.querySelector('.dash-charts .card:first-child .ch') || document.querySelector('.dash-charts .card:first-child'),
     title: () => _L({it:'📈 Grafici interattivi',en:'📈 Interactive charts'}),
     desc: () => _L({it:'Due grafici configurabili: scegli qualsiasi indice, azione o crypto dal menu a tendina. Puoi scegliere candele o linea e cambiare il periodo.',en:'Two configurable charts: choose any index, stock or crypto from the dropdown. Switch between candles and line, and change the period.'}),
     location: () => _L({it:'Dashboard › Grafici',en:'Dashboard › Charts'}),
@@ -17557,7 +17558,8 @@ const TUTORIAL_STEPS = [
   },
   // ── 7. GLOBAL INDICES ───────────────────────────────────────────
   {
-    target: () => document.getElementById('idx-list')?.closest('.card'),
+    // Target l'header della card per non avere uno spotlight alto tutta la pagina
+    target: () => document.getElementById('idx-list')?.closest('.card')?.querySelector('.ch,.ct') || document.getElementById('idx-list')?.closest('.card'),
     title: () => _L({it:'🌍 Indici globali',en:'🌍 Global indices'}),
     desc: () => _L({it:'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei e molti altri indici in un\'unica lista. Clicca per aprire il grafico storico di ciascuno.',en:'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei and many more in one list. Click to open the historical chart for each.'}),
     location: () => _L({it:'Dashboard › Indici globali',en:'Dashboard › Global indices'}),
@@ -17575,11 +17577,12 @@ const TUTORIAL_STEPS = [
   },
   // ── 9. SCREENER — STOCK CLICK ───────────────────────────────────
   {
-    target: () => document.getElementById('sc-body')?.closest('table') || document.getElementById('sc-body'),
+    // Target la prima riga della tabella (piccola) invece dell'intera table
+    target: () => document.getElementById('sc-body')?.querySelector('tr:first-child') || document.getElementById('sc-body'),
     title: () => _L({it:'📄 Apri la scheda di un titolo',en:'📄 Open a stock\'s detail'}),
     desc: () => _L({it:'Clicca sul nome di qualsiasi titolo nella tabella per aprire la sua pagina completa: grafico, dati fondamentali, FinEdge Score, insider trading e molto altro.',en:'Click any stock name in the table to open its full page: chart, fundamental data, FinEdge Score, insider transactions and more.'}),
     location: () => _L({it:'Screener › Tabella titoli',en:'Screener › Stock table'}),
-    pos: 'top',
+    pos: 'bottom',
     page: 'screener'
   },
   // ── 10. WATCHLIST ───────────────────────────────────────────────
@@ -17606,7 +17609,7 @@ const TUTORIAL_STEPS = [
     title: () => _L({it:'🍩 Panoramica portafoglio',en:'🍩 Portfolio overview'}),
     desc: () => _L({it:'Il grafico a torta mostra la distribuzione dei tuoi investimenti. Sotto trovi il P&L totale, il valore di mercato e la variazione giornaliera.',en:'The pie chart shows your investment distribution. Below you find total P&L, market value and daily change.'}),
     location: () => _L({it:'Portafoglio › Panoramica',en:'Portfolio › Overview'}),
-    pos: 'right',
+    pos: 'bottom',
     page: 'portafoglio'
   },
   // ── 13. PORTFOLIO FILTER ────────────────────────────────────────
@@ -17620,11 +17623,12 @@ const TUTORIAL_STEPS = [
   },
   // ── 14. MARKET SUMMARY ──────────────────────────────────────────
   {
-    target: () => document.getElementById('port-daily-outer'),
+    // Target l'header della card (piccolo) invece dell'intero pannello (580px)
+    target: () => document.querySelector('#port-daily-outer .port-analysis-card > div:first-child') || document.getElementById('port-daily-outer'),
     title: () => _L({it:'📊 Riepilogo Mercati',en:'📊 Market Summary'}),
     desc: () => _L({it:'Ogni giorno FinEdge genera un briefing AI sui mercati legato ai titoli del tuo portafoglio: performance, notizie rilevanti e prossimi earnings.',en:'Every day FinEdge generates an AI market briefing tied to your portfolio stocks: performance, relevant news and upcoming earnings.'}),
     location: () => _L({it:'Portafoglio › Riepilogo mercati',en:'Portfolio › Market summary'}),
-    pos: 'left',
+    pos: 'bottom',
     page: 'portafoglio',
     setup: () => {
       const el = document.getElementById('port-daily-outer');
@@ -17771,46 +17775,51 @@ const TUTO = (() => {
       return; // CSS handles box position
     }
 
-    // Desktop: scroll then position synchronously
+    // Desktop: scroll first, then position after scroll settles (same delay as mobile)
     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    setTimeout(() => {
+      const rect = el.getBoundingClientRect();
+      spotlight.style.display = 'block';
+      spotlight.style.top    = (rect.top  - PAD) + 'px';
+      spotlight.style.left   = (rect.left - PAD) + 'px';
+      spotlight.style.width  = (rect.width  + PAD * 2) + 'px';
+      spotlight.style.height = (rect.height + PAD * 2) + 'px';
 
-    const rect = el.getBoundingClientRect();
-    spotlight.style.display = 'block';
-    spotlight.style.top    = (rect.top  - PAD) + 'px';
-    spotlight.style.left   = (rect.left - PAD) + 'px';
-    spotlight.style.width  = (rect.width  + PAD * 2) + 'px';
-    spotlight.style.height = (rect.height + PAD * 2) + 'px';
+      // Desktop: calculate box position relative to target
+      // Prefer a position where the box does NOT overlap the spotlight area
+      const BW = box.getBoundingClientRect().width || 360;
+      const BH = box.getBoundingClientRect().height || 200;
+      const pos = TUTORIAL_STEPS[step].pos || 'bottom';
+      let top, left;
 
-    // Desktop: calculate box position relative to target
-    const BW = box.getBoundingClientRect().width || 360;
-    const BH = box.getBoundingClientRect().height || 200;
-    const pos = TUTORIAL_STEPS[step].pos || 'bottom';
-    let top, left;
+      if (pos === 'bottom') {
+        top  = rect.bottom + PAD + GAP;
+        left = rect.left + rect.width / 2 - BW / 2;
+        // Flip to top if off-screen bottom; if also off top, center below spotlight
+        if (top + BH + 12 > VH) { top = rect.top - BH - PAD - GAP; }
+        if (top < 12) { top = Math.min(VH - BH - 12, rect.bottom + PAD + GAP); }
+      } else if (pos === 'top') {
+        top  = rect.top - BH - PAD - GAP;
+        left = rect.left + rect.width / 2 - BW / 2;
+        if (top < 12) { top = rect.bottom + PAD + GAP; }
+      } else if (pos === 'right') {
+        top  = rect.top + rect.height / 2 - BH / 2;
+        left = rect.right + PAD + GAP;
+        if (left + BW + 12 > VW) { left = rect.left - BW - PAD - GAP; }
+        if (left < 12) { left = 12; }
+      } else if (pos === 'left') {
+        top  = rect.top + rect.height / 2 - BH / 2;
+        left = rect.left - BW - PAD - GAP;
+        if (left < 12) { left = rect.right + PAD + GAP; }
+      }
 
-    if (pos === 'bottom') {
-      top  = rect.bottom + PAD + GAP;
-      left = rect.left + rect.width / 2 - BW / 2;
-      if (top + BH + 12 > VH) { top = rect.top - BH - PAD - GAP; }
-    } else if (pos === 'top') {
-      top  = rect.top - BH - PAD - GAP;
-      left = rect.left + rect.width / 2 - BW / 2;
-      if (top < 12) { top = rect.bottom + PAD + GAP; }
-    } else if (pos === 'right') {
-      top  = rect.top + rect.height / 2 - BH / 2;
-      left = rect.right + PAD + GAP;
-      if (left + BW + 12 > VW) { left = rect.left - BW - PAD - GAP; }
-    } else if (pos === 'left') {
-      top  = rect.top + rect.height / 2 - BH / 2;
-      left = rect.left - BW - PAD - GAP;
-      if (left < 12) { left = rect.right + PAD + GAP; }
-    }
+      // Clamp to viewport
+      left = Math.max(12, Math.min(VW - BW - 12, left));
+      top  = Math.max(12, Math.min(VH - BH - 12, top));
 
-    // Clamp to viewport
-    left = Math.max(12, Math.min(VW - BW - 12, left));
-    top  = Math.max(12, Math.min(VH - BH - 12, top));
-
-    box.style.left = left + 'px';
-    box.style.top  = top  + 'px';
+      box.style.left = left + 'px';
+      box.style.top  = top  + 'px';
+    }, 350);
   }
 
   function _close() {
