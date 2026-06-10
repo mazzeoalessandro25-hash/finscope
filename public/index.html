@@ -17497,7 +17497,18 @@ const TUTORIAL_STEPS = [
     desc: () => _L({it:'Ti guidiamo in 2 minuti attraverso tutte le funzionalità. Puoi saltare o tornare indietro in qualsiasi momento.',en:'We\'ll guide you through all the features in 2 minutes. You can skip or go back at any time.'}),
     pos: 'center'
   },
-  // ── 2. NAVIGATION ───────────────────────────────────────────────
+  // ── 2. MODALITÀ SEMPLICE / AVANZATA ─────────────────────────────
+  {
+    target: null,
+    html: true,
+    title: () => _L({it:'☁⚡ Scegli la tua modalità',en:'☁⚡ Choose your mode'}),
+    desc: () => _L({
+      it:'FinEdge ha due modalità.<br><br><b>☁ Semplice</b> — Dashboard, Portafoglio e News. Interfaccia pulita, tutto l\'essenziale.<br><br><b>⚡ Avanzata</b> — sblocca anche Screener, Lab, Macro, Insider e i tab Rischio &amp; Fisco nel portafoglio.<br><br>Passa da una all\'altra con il bottone <b>"⚡ Avanzata"</b> nella barra in alto.',
+      en:'FinEdge has two modes.<br><br><b>☁ Simple</b> — Dashboard, Portfolio and News. Clean interface, all the essentials.<br><br><b>⚡ Advanced</b> — also unlocks Screener, Lab, Macro, Insider and the Risk &amp; Tax tabs in the portfolio.<br><br>Switch via the <b>"⚡ Advanced"</b> button in the top bar.'
+    }),
+    pos: 'center'
+  },
+  // ── 3. NAVIGATION ───────────────────────────────────────────────
   {
     target: () => window.innerWidth <= 640 ? document.querySelector('.hamburger') : document.querySelector('.nav-items'),
     title: () => _L({it:'🧭 Navigazione principale',en:'🧭 Main navigation'}),
@@ -17508,7 +17519,7 @@ const TUTORIAL_STEPS = [
     pos: 'bottom',
     page: 'dashboard'
   },
-  // ── 3. MARKET STATUS ────────────────────────────────────────────
+  // ── 4. MARKET STATUS ────────────────────────────────────────────
   {
     target: () => document.querySelector('.hours-bar'),
     title: () => _L({it:'🕐 Stato delle borse',en:'🕐 Market status'}),
@@ -17697,7 +17708,9 @@ const TUTO = (() => {
 
     document.getElementById('tut-lbl').textContent = _L({it:`Passo ${step + 1} di ${total}`,en:`Step ${step + 1} of ${total}`});
     document.getElementById('tut-ttl').textContent = typeof s.title === 'function' ? s.title() : s.title;
-    document.getElementById('tut-dsc').textContent = typeof s.desc === 'function' ? s.desc() : s.desc;
+    const _dscEl = document.getElementById('tut-dsc');
+    const _dscVal = typeof s.desc === 'function' ? s.desc() : s.desc;
+    if (s.html) { _dscEl.innerHTML = _dscVal; } else { _dscEl.textContent = _dscVal; }
     const locEl = document.getElementById('tut-loc');
     if (locEl) locEl.textContent = s.location || '';
 
