@@ -15004,60 +15004,136 @@ async function loadPortfolioNews(){
   }
   el.innerHTML='<div class="ld">'+_t('load.port.news')+'</div>';
 
-  // Fetch parallelo: una chiamata per ticker
+  // Mappa sym → variazione % giornaliera da _lastPortQuotes
+  const qMap={};
+  if(_lastPortQuotes.length===portfolio.length){
+    portfolio.forEach((item,i)=>{
+      const q=_lastPortQuotes[i];
+      if(q&&q.price&&q.prev)qMap[item.sym]=(q.price-q.prev)/q.prev*100;
+    });
+  }
+
+  // Palette colori per i ticker
+  const palette=['#1A56C4','#10B981','#F59E0B','#EF4444','#8B5CF6','#0EA5E9','#F43F5E','#06B6D4','#84CC16','#F97316'];
+  const symColors={};
+  portfolio.forEach((item,i)=>{symColors[item.sym]=palette[i%palette.length];});
+
+  // Fetch parallelo per ticker
   const results=await Promise.all(portfolio.map(async item=>{
     try{
       const r=await fetch(`/api/quote?type=news&symbol=${encodeURIComponent(item.sym)}`);
       const d=await r.json();
-      const name=item.name||((_lastPortQuotes.find&&_lastPortQuotes.find(q=>q?.symbol===item.sym||q?.sym===item.sym))?.longName)||item.sym;
-      return{sym:item.sym,name,news:(d.news||[]).slice(0,5)};
-    }catch{return{sym:item.sym,name:item.name||item.sym,news:[]};}
+      return{sym:item.sym,news:(d.news||[]).slice(0,6).map(a=>({...a,sym:item.sym,col:symColors[item.sym]}))};
+    }catch{return{sym:item.sym,news:[]};}
   }));
 
-  // Filtra ticker senza news, ordina per news più recente
-  const groups=results
-    .filter(g=>g.news.length>0)
-    .sort((a,b)=>{
-      const tA=a.news[0]?.time||0;
-      const tB=b.news[0]?.time||0;
-      return tB-tA;
-    });
+  // Feed unico, deduplica, ordina per tempo
+  const seen=new Set();
+  const feed=results.flatMap(g=>g.news)
+    .filter(a=>{
+      if(!a.title||!a.link)return false;
+      const k=a.title.slice(0,60).toLowerCase();
+      if(seen.has(k))return false;
+      seen.add(k);return true;
+    })
+    .sort((a,b)=>(b.time||0)-(a.time||0));
 
-  if(!groups.length){
+  if(!feed.length){
     el.innerHTML='<div class="ld" style="padding:10px">'+_t('empty.news.port')+'</div>';
     return;
   }
 
-  const totalArticles=groups.reduce((s,g)=>s+g.news.length,0);
+  // Sentiment da keyword
+  function sentiment(title){
+    const t=(title||'').toLowerCase();
+    const bull=['surge','soars','jumps','gains','beats','record','rally','rises','climbs','upgrade','profit','growth','exceeds','boosted','outperform','strong','high','positive'];
+    const bear=['crash','drops','falls','plunges','loses','misses','warns','cuts','downgrade','loss','decline','fears','slumps','disappoints','probe','lawsuit','fine','weak','risk','negative'];
+    if(bull.some(w=>t.includes(w)))return'bull';
+    if(bear.some(w=>t.includes(w)))return'bear';
+    return'neutral';
+  }
 
-  // Palette colori per i ticker badge
-  const palette=['#1A56C4','#10B981','#F59E0B','#EF4444','#8B5CF6','#0EA5E9','#F43F5E','#06B6D4','#84CC16','#F97316'];
+  // Helper: badge ticker con % giorno
+  function tickerBadge(sym,col){
+    const chg=qMap[sym];
+    const chgHtml=chg!=null
+      ?`<span style="font-size:9px;font-weight:600;color:${chg>=0?'var(--g)':'var(--r)'}">${chg>=0?'+':''}${chg.toFixed(1)}%</span>`
+      :'';
+    return`<span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;font-family:var(--fm);color:${col};background:${col}18;padding:2px 7px;border-radius:4px;white-space:nowrap">${sym}${chgHtml}</span>`;
+  }
+
+  // Helper: dot sentiment
+  function sentDot(title){
+    const s=sentiment(title);
+    if(s==='bull')return`<span style="font-size:10px;color:#059669;flex-shrink:0" title="Positivo">▲</span>`;
+    if(s==='bear')return`<span style="font-size:10px;color:#DC2626;flex-shrink:0" title="Negativo">▼</span>`;
+    return`<span style="font-size:10px;color:var(--t3);flex-shrink:0">—</span>`;
+  }
+
+  // Top 3 featured: priorità thumbnail + recency
+  const featured=feed.slice().sort((a,b)=>{
+    const ta=a.thumbnail?1:0,tb=b.thumbnail?1:0;
+    if(tb!==ta)return tb-ta;
+    return(b.time||0)-(a.time||0);
+  }).slice(0,3);
+  const featuredSet=new Set(featured.map(a=>a.link));
+  const rest=feed.filter(a=>!featuredSet.has(a.link));
+
+  // Render card featured
+  const featuredHTML=featured.map(a=>{
+    const ago=a.time?_timeAgo(a.time):'';
+    const s=sentiment(a.title);
+    const sColor=s==='bull'?'#059669':s==='bear'?'#DC2626':'var(--t3)';
+    const sLabel=s==='bull'?'▲ Positivo':s==='bear'?'▼ Negativo':'— Neutro';
+    const imgStyle=a.thumbnail
+      ?`background-image:url(${a.thumbnail});background-size:cover;background-position:center`
+      :`background:${a.col}12;display:flex;align-items:center;justify-content:center`;
+    const imgInner=a.thumbnail?'':`<span style="font-size:18px;font-weight:800;font-family:var(--fm);color:${a.col};opacity:.4">${a.sym}</span>`;
+    return`<a href="${a.link||'#'}" target="_blank" rel="noopener"
+      style="display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden;text-decoration:none;transition:border-color .18s,transform .18s"
+      onmouseover="this.style.borderColor='rgba(26,86,196,.35)';this.style.transform='translateY(-2px)'"
+      onmouseout="this.style.borderColor='var(--bd)';this.style.transform=''">
+      <div style="height:100px;flex-shrink:0;${imgStyle}">${imgInner}</div>
+      <div style="padding:11px;display:flex;flex-direction:column;gap:5px;flex:1">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+          ${tickerBadge(a.sym,a.col)}
+          <span style="font-size:9px;font-weight:600;color:${sColor}">${sLabel}</span>
+        </div>
+        <span style="font-size:12px;font-weight:600;color:var(--t);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${a.title}</span>
+        <span style="margin-top:auto;padding-top:4px;font-size:10px;color:var(--t3);font-family:var(--fm)">${a.publisher||''}${ago?' · '+ago:''}</span>
+      </div>
+    </a>`;
+  }).join('');
+
+  // Render lista destra
+  const restHTML=rest.map(a=>{
+    const ago=a.time?_timeAgo(a.time):'';
+    return`<a href="${a.link||'#'}" target="_blank" rel="noopener"
+      style="display:flex;align-items:center;gap:7px;padding:7px 6px;border-bottom:1px solid var(--bd);text-decoration:none;transition:background .12s"
+      onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+      ${sentDot(a.title)}
+      ${tickerBadge(a.sym,a.col)}
+      <span style="flex:1;font-size:12px;color:var(--t);line-height:1.4;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${a.title}</span>
+      <span style="flex-shrink:0;font-size:10px;color:var(--t3);font-family:var(--fm);white-space:nowrap;padding-left:4px">${ago}</span>
+    </a>`;
+  }).join('');
 
   el.innerHTML=`
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
-      <span>${groups.length} titol${groups.length===1?'o':'i'} con notizie · ${totalArticles} articoli</span>
-      <span style="font-size:9px;opacity:.6">Aggiornato ora</span>
-    </div>
-    ${groups.map((g,gi)=>{
-      const col=palette[gi%palette.length];
-      const rows=g.news.map(a=>{
-        const ago=a.time?_timeAgo(a.time):'';
-        return`<a href="${a.link||'#'}" target="_blank" rel="noopener"
-          style="display:flex;align-items:baseline;gap:0;padding:7px 0 7px 16px;border-bottom:1px solid var(--bd);text-decoration:none;transition:background .12s;cursor:pointer"
-          onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
-          <span style="flex:1;font-size:12px;color:var(--t);line-height:1.45;padding-right:10px">${a.title||''}</span>
-          <span style="flex-shrink:0;font-size:10px;color:var(--t3);font-family:var(--fm);white-space:nowrap">${a.publisher?a.publisher+' · ':''} ${ago}</span>
-        </a>`;
-      }).join('');
-      return`<div style="margin-bottom:4px">
-        <div style="display:flex;align-items:center;gap:8px;padding:9px 0 8px;border-bottom:2px solid ${col}22">
-          <span style="font-size:11px;font-weight:700;font-family:var(--fm);color:${col};background:${col}15;padding:2px 8px;border-radius:4px;letter-spacing:.3px">${g.sym}</span>
-          <span style="font-size:11px;color:var(--t2);font-weight:500">${g.name!==g.sym?g.name:''}</span>
-          <span style="margin-left:auto;font-size:10px;font-family:var(--fm);color:var(--t3)">${g.news.length} articol${g.news.length===1?'o':'i'}</span>
+    <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:18px;align-items:start">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--fm)">In evidenza</div>
+        ${featuredHTML||'<div class="ld" style="padding:8px">—</div>'}
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--fm);margin-bottom:6px;display:flex;justify-content:space-between">
+          <span>Tutte le notizie</span><span style="opacity:.6">${feed.length} articoli</span>
         </div>
-        ${rows}
-      </div>`;
-    }).join('')}`;
+        <div style="max-height:500px;overflow-y:auto">
+          ${restHTML||'<div style="color:var(--t3);font-size:12px;padding:8px 0">Nessun altro articolo</div>'}
+        </div>
+      </div>
+    </div>
+    <style>#portnews-content>div>div:last-child::-webkit-scrollbar{width:4px}#portnews-content>div>div:last-child::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}@media(max-width:640px){#portnews-content>div{grid-template-columns:1fr!important}}</style>`;
 }
 
 /* ══════════════════════════════════════════
