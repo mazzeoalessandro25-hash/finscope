@@ -3030,38 +3030,20 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <!-- ── TABS SEZIONI ── -->
     <div style="margin-top:20px">
+      <!-- Barra azioni rapide: alert e import sempre visibili da tutti i tab -->
+      <div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:10px">
+        <button class="sc-btn" style="font-size:11px;padding:5px 12px;background:var(--s2);color:var(--t2);border:1px solid var(--bd)" onclick="switchPortTab('fisco')" title="Vai agli alert di prezzo">🔔 Alert</button>
+        <button class="sc-btn" style="font-size:11px;padding:5px 12px;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()">⬆ Importa CSV</button>
+      </div>
       <div class="port-tabs">
-  <button class="port-tab active" id="ptab-btn-analisi" onclick="switchPortTab('analisi')" data-i18n="port.tab.analisi">📊 Analisi avanzata</button>
-  <button class="port-tab" id="ptab-btn-performance" onclick="switchPortTab('performance')">📈 Performance</button>
-  <button class="port-tab" id="ptab-btn-obiettivi" onclick="switchPortTab('obiettivi')" data-i18n="port.tab.obiettivi">🎯 Obiettivi</button>
-  <button class="port-tab" id="ptab-btn-reddito" onclick="switchPortTab('reddito')" data-i18n="port.tab.reddito">💰 Reddito & Fisco</button>
-  <button class="port-tab" id="ptab-btn-gestione" onclick="switchPortTab('gestione')" data-i18n="port.tab.gestione">⚖️ Ribilanciamento</button>
-  <button class="port-tab" id="ptab-btn-news" onclick="switchPortTab('news')">📰 News</button>
-  <button class="port-tab" id="ptab-btn-pac" onclick="switchPortTab('pac')" data-i18n="port.tab.pac">📅 PAC</button>
-</div>
-
-      <!-- ANALISI AVANZATA: composizione + risk analytics -->
-      <div class="port-tab-panel active" id="ptab-analisi">
-        <div class="card" id="port-analysis-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.analysis">📊 Analisi del portafoglio</span><span class="info-icon">i<span class="info-tip">Composizione e profilo del portafoglio. Il punteggio indica quanto sei allineato al profilo scelto (0–100). Beta misura la sensibilità ai movimenti di mercato.</span></span></div><div class="cs" data-i18n="port.cs.analysis">Come è composto il tuo portafoglio e cosa fare per migliorarlo</div></div></div>
-          <div id="port-analysis-content"><div class="ld" style="padding:10px" data-i18n="port.noItems.analysis">Aggiungi titoli per vedere l'analisi</div></div>
-        </div>
-        <div class="card" style="margin-top:10px" id="risk-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.risk">📉 Rischio &amp; Volatilità</span><span class="info-icon">i<span class="info-tip">Sharpe Ratio: rendimento aggiustato per il rischio (>1 = buono). VaR 95%: perdita massima stimata nel 95% dei casi. Max Drawdown: calo massimo dal picco.</span></span></div><div class="cs" data-i18n="port.cs.risk">Sharpe ratio · VaR 95% · Max drawdown · Volatilità annualizzata</div></div></div>
-          <div id="risk-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento metriche di rischio...</div></div>
-        </div>
-        <div class="card" style="margin-top:10px" id="stress-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.stress">⚡ Stress Test</span><span class="info-icon">i<span class="info-tip">Simulazione dell'impatto sul portafoglio in scenari di mercato estremi, basata sul beta ponderato di ogni titolo. Il beta misura la sensibilità ai movimenti del mercato.</span></span></div><div class="cs" data-i18n="port.cs.stress">Impatto stimato per scenari estremi · Beta ponderato portafoglio</div></div></div>
-          <div id="stress-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
-        <div class="card" style="margin-top:10px" id="corr-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.corr">🔗 Correlazioni</span><span class="info-icon">i<span class="info-tip">Misura quanto i titoli si muovono insieme. +1 = perfettamente correlati, 0 = indipendenti, -1 = inversamente correlati. Basato sugli ultimi 3 mesi di prezzi giornalieri.</span></span></div><div class="cs" data-i18n="port.cs.corr">Matrice di correlazione 3 mesi · Verde = correlati · Rosso = inversamente correlati</div></div></div>
-          <div id="corr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
+        <button class="port-tab active" id="ptab-btn-panoramica" onclick="switchPortTab('panoramica')">📊 Panoramica</button>
+        <button class="port-tab" id="ptab-btn-rischio" onclick="switchPortTab('rischio')">📉 Rischio</button>
+        <button class="port-tab" id="ptab-btn-pianificazione" onclick="switchPortTab('pianificazione')">🎯 Pianificazione</button>
+        <button class="port-tab" id="ptab-btn-fisco" onclick="switchPortTab('fisco')">💰 Fisco &amp; Dividendi</button>
       </div>
 
-      <!-- PERFORMANCE: chart + benchmark bars below -->
-      <div class="port-tab-panel" id="ptab-performance">
+      <!-- PANORAMICA: performance vs benchmark + news -->
+      <div class="port-tab-panel active" id="ptab-panoramica">
         <div class="card" id="port-perf-card">
           <div class="ch" style="flex-wrap:wrap;gap:8px">
             <div><div class="ct"><span data-i18n="port.ct.perf">📈 Performance Portafoglio</span><span class="info-icon">i<span class="info-tip">Andamento del portafoglio confrontato con i più grandi investitori e fondi al mondo. Ogni linea rappresenta il rendimento normalizzato dal primo giorno del periodo selezionato.</span></span></div><div class="cs" id="port-perf-sub" data-i18n="port.cs.perf">Rendimento ponderato vs grandi investitori</div></div>
@@ -3090,54 +3072,34 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.cagr">📊 Rendimenti per titolo</span><span class="info-icon">i<span class="info-tip">Rendimento totale e CAGR (tasso annuo composto) per ogni posizione. Il CAGR normalizza il rendimento sulla durata dell'investimento, così puoi confrontare titoli detenuti per periodi diversi.</span></span></div><div class="cs" data-i18n="port.cs.cagr">P&L % · CAGR annualizzato · Periodo di detenzione</div></div></div>
           <div id="port-cagr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
-      </div>
-
-      <!-- OBIETTIVI: price targets + break-even after tax -->
-      <div class="port-tab-panel" id="ptab-obiettivi">
-        <div class="card" id="port-targets-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.targets">🎯 Obiettivi di prezzo</span><span class="info-icon">i<span class="info-tip">Price target medio degli analisti per ogni titolo. Il break-even netto è il prezzo a cui recupereresti l'investimento dopo aver pagato le tasse sulle plusvalenze (26% in Italia).</span></span></div><div class="cs" data-i18n="port.cs.targets">Dove potrebbe arrivare ogni titolo · A che prezzo sei in pareggio dopo le tasse (26%)</div></div></div>
-          <div id="port-targets-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
-        <div class="card" style="margin-top:10px" id="personal-targets-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.myTargets">🎯 I miei target personali</span><span class="info-icon">i<span class="info-tip">Imposta un prezzo obiettivo personale per ogni titolo, indipendente dai target degli analisti. Utile per pianificare uscite o aumenti di posizione.</span></span></div><div class="cs" data-i18n="port.cs.myTargets">Prezzo obiettivo personalizzato · Distanza % dal target · Barra avanzamento</div></div></div>
-          <div id="personal-targets-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
-      </div>
-
-      <!-- REDDITO & FISCO: dividend tracker + tax dashboard stacked -->
-      <div class="port-tab-panel" id="ptab-reddito">
-        <div class="card" id="div-tracker-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.dividends">💰 Dividendi</span><span class="info-icon">i<span class="info-tip">Stima del reddito annuo da dividendi in base al dividend yield corrente. Il DRIP simulator mostra quanto crescerebbe il portafoglio reinvestendo automaticamente i dividendi.</span></span></div><div class="cs" data-i18n="port.cs.dividends">Quanto guadagni dai dividendi ogni anno · Simulazione reinvestimento automatico</div></div></div>
-          <div id="div-tracker-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
-        </div>
-        <div class="card" style="margin-top:10px" id="fisco-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.tax">📋 Situazione fiscale</span><span class="info-icon">i<span class="info-tip">Plusvalenze (guadagni) soggette al 26% di imposta in Italia. Le minusvalenze possono compensare plusvalenze future per 4 anni. Tax-loss harvesting: vendere posizioni in perdita per ridurre le tasse.</span></span></div><div class="cs" data-i18n="port.cs.tax">Plusvalenze e minusvalenze · Imposta stimata (26%) · Come risparmiare sulle tasse</div></div></div>
-          <div id="fisco-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
-      </div>
-
-      <!-- GESTIONE: rebalancing with alerts + portfolio news -->
-      <div class="port-tab-panel" id="ptab-gestione">
-        <div class="card" id="rebalancing-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.rebalancing">⚖️ Ribilanciamento</span><span class="info-icon">i<span class="info-tip">Confronta l'allocazione attuale con i target che hai impostato. Se una posizione supera il ±5% dal target, viene segnalata. Gli ordini suggeriti indicano quanto acquistare o vendere per tornare in equilibrio.</span></span></div><div class="cs" data-i18n="port.cs.rebalancing">Quanto ti sei spostato dai tuoi obiettivi di allocazione · Cosa acquistare o vendere</div></div></div>
-          <div id="rebalancing-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
-        <div class="card" style="margin-top:10px" id="price-alerts-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.alerts">🔔 Price Alert</span><span class="info-icon">i<span class="info-tip">Imposta avvisi quando un titolo supera o scende sotto un prezzo. Gli alert vengono verificati ad ogni aggiornamento del portafoglio.</span></span></div><div class="cs" data-i18n="port.cs.alerts">Notifiche visive al raggiungimento del prezzo · Gestione alert attivi</div></div></div>
-          <div id="price-alerts-content"><div class="ld" style="padding:10px" data-i18n="alert.empty">Nessun alert configurato</div></div>
-        </div>
-      </div>
-
-      <!-- NEWS: notizie sui titoli in portafoglio -->
-      <div class="port-tab-panel" id="ptab-news">
-        <div class="card" id="portnews-card">
+        <div class="card" style="margin-top:10px" id="portnews-card">
           <div class="ch"><div><div class="ct" data-i18n="port.ct.news">📰 Notizie sui tuoi titoli</div><div class="cs" data-i18n="port.cs.news">Le ultime news per le aziende e gli ETF che hai in portafoglio</div></div></div>
           <div id="portnews-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento news...</div></div>
         </div>
       </div>
 
-      <!-- PAC: Piano di Accumulo del Capitale -->
-      <div class="port-tab-panel" id="ptab-pac">
+      <!-- RISCHIO: composizione + metriche rischio + stress test + correlazioni -->
+      <div class="port-tab-panel" id="ptab-rischio">
+        <div class="card" id="port-analysis-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.analysis">📊 Analisi del portafoglio</span><span class="info-icon">i<span class="info-tip">Composizione e profilo del portafoglio. Il punteggio indica quanto sei allineato al profilo scelto (0–100). Beta misura la sensibilità ai movimenti di mercato.</span></span></div><div class="cs" data-i18n="port.cs.analysis">Come è composto il tuo portafoglio e cosa fare per migliorarlo</div></div></div>
+          <div id="port-analysis-content"><div class="ld" style="padding:10px" data-i18n="port.noItems.analysis">Aggiungi titoli per vedere l'analisi</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="risk-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.risk">📉 Rischio &amp; Volatilità</span><span class="info-icon">i<span class="info-tip">Sharpe Ratio: rendimento aggiustato per il rischio (>1 = buono). VaR 95%: perdita massima stimata nel 95% dei casi. Max Drawdown: calo massimo dal picco.</span></span></div><div class="cs" data-i18n="port.cs.risk">Sharpe ratio · VaR 95% · Max drawdown · Volatilità annualizzata</div></div></div>
+          <div id="risk-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento metriche di rischio...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="stress-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.stress">⚡ Stress Test</span><span class="info-icon">i<span class="info-tip">Simulazione dell'impatto sul portafoglio in scenari di mercato estremi, basata sul beta ponderato di ogni titolo. Il beta misura la sensibilità ai movimenti del mercato.</span></span></div><div class="cs" data-i18n="port.cs.stress">Impatto stimato per scenari estremi · Beta ponderato portafoglio</div></div></div>
+          <div id="stress-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="corr-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.corr">🔗 Correlazioni</span><span class="info-icon">i<span class="info-tip">Misura quanto i titoli si muovono insieme. +1 = perfettamente correlati, 0 = indipendenti, -1 = inversamente correlati. Basato sugli ultimi 3 mesi di prezzi giornalieri.</span></span></div><div class="cs" data-i18n="port.cs.corr">Matrice di correlazione 3 mesi · Verde = correlati · Rosso = inversamente correlati</div></div></div>
+          <div id="corr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
+        </div>
+      </div>
+
+      <!-- PIANIFICAZIONE: PAC + obiettivi + ribilanciamento -->
+      <div class="port-tab-panel" id="ptab-pianificazione">
         <div class="card" id="pac-card">
           <div class="ch">
             <div>
@@ -3198,7 +3160,46 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="ch"><div><div class="ct" data-i18n="pac.logTitle">📋 Storico esecuzioni PAC</div><div class="cs" data-i18n="pac.logSub">Tutti gli acquisti automatici effettuati dai tuoi piani PAC</div></div></div>
           <div id="pac-log-content"><div class="ld" style="padding:10px">Nessuna esecuzione registrata</div></div>
         </div>
+
+        <div class="card" style="margin-top:10px" id="port-targets-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.targets">🎯 Obiettivi di prezzo</span><span class="info-icon">i<span class="info-tip">Price target medio degli analisti per ogni titolo. Il break-even netto è il prezzo a cui recupereresti l'investimento dopo aver pagato le tasse sulle plusvalenze (26% in Italia).</span></span></div><div class="cs" data-i18n="port.cs.targets">Dove potrebbe arrivare ogni titolo · A che prezzo sei in pareggio dopo le tasse (26%)</div></div></div>
+          <div id="port-targets-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="personal-targets-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.myTargets">🎯 I miei target personali</span><span class="info-icon">i<span class="info-tip">Imposta un prezzo obiettivo personale per ogni titolo, indipendente dai target degli analisti. Utile per pianificare uscite o aumenti di posizione.</span></span></div><div class="cs" data-i18n="port.cs.myTargets">Prezzo obiettivo personalizzato · Distanza % dal target · Barra avanzamento</div></div></div>
+          <div id="personal-targets-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="rebalancing-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.rebalancing">⚖️ Ribilanciamento</span><span class="info-icon">i<span class="info-tip">Confronta l'allocazione attuale con i target che hai impostato. Se una posizione supera il ±5% dal target, viene segnalata. Gli ordini suggeriti indicano quanto acquistare o vendere per tornare in equilibrio.</span></span></div><div class="cs" data-i18n="port.cs.rebalancing">Quanto ti sei spostato dai tuoi obiettivi di allocazione · Cosa acquistare o vendere</div></div></div>
+          <div id="rebalancing-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
+        </div>
       </div>
+
+      <!-- FISCO & DIVIDENDI: dividendi + tax + price alerts -->
+      <div class="port-tab-panel" id="ptab-fisco">
+        <div class="card" id="div-tracker-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.dividends">💰 Dividendi</span><span class="info-icon">i<span class="info-tip">Stima del reddito annuo da dividendi in base al dividend yield corrente. Il DRIP simulator mostra quanto crescerebbe il portafoglio reinvestendo automaticamente i dividendi.</span></span></div><div class="cs" data-i18n="port.cs.dividends">Quanto guadagni dai dividendi ogni anno · Simulazione reinvestimento automatico</div></div></div>
+          <div id="div-tracker-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="fisco-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.tax">📋 Situazione fiscale</span><span class="info-icon">i<span class="info-tip">Plusvalenze (guadagni) soggette al 26% di imposta in Italia. Le minusvalenze possono compensare plusvalenze future per 4 anni. Tax-loss harvesting: vendere posizioni in perdita per ridurre le tasse.</span></span></div><div class="cs" data-i18n="port.cs.tax">Plusvalenze e minusvalenze · Imposta stimata (26%) · Come risparmiare sulle tasse</div></div></div>
+          <div id="fisco-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="price-alerts-card">
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.alerts">🔔 Price Alert</span><span class="info-icon">i<span class="info-tip">Imposta avvisi quando un titolo supera o scende sotto un prezzo. Gli alert vengono verificati ad ogni aggiornamento del portafoglio.</span></span></div><div class="cs" data-i18n="port.cs.alerts">Notifiche visive al raggiungimento del prezzo · Gestione alert attivi</div></div></div>
+          <div id="price-alerts-content"><div class="ld" style="padding:10px" data-i18n="alert.empty">Nessun alert configurato</div></div>
+        </div>
+      </div>
+
+      <!-- Tab vuoti per compatibilità con vecchi riferimenti JS (non mostrati) -->
+      <div class="port-tab-panel" id="ptab-analisi" style="display:none"></div>
+      <div class="port-tab-panel" id="ptab-performance" style="display:none"></div>
+      <div class="port-tab-panel" id="ptab-obiettivi" style="display:none"></div>
+      <div class="port-tab-panel" id="ptab-reddito" style="display:none"></div>
+      <div class="port-tab-panel" id="ptab-gestione" style="display:none"></div>
+      <div class="port-tab-panel" id="ptab-news" style="display:none"></div>
+      <div class="port-tab-panel" id="ptab-pac" style="display:none"></div>
+
 
     </div>
 
@@ -4360,7 +4361,12 @@ let dynamicStocks=[], screenerPage=0, screenerHasMore=false, searchDebounce=null
 let _screenerLoadId=0; // guard anti-race-condition
 let _portHeroUSD=0, _portHeroEUR=0, _portCurrView='EUR', _lastFxRate=1.08;
 let portSortKey='default';
-let _portActiveTab='analisi';
+// Tab attivo portafoglio — persistito in sessionStorage
+let _portActiveTab=(()=>{
+  try{const t=sessionStorage.getItem('portActiveTab');
+    if(['panoramica','rischio','pianificazione','fisco'].includes(t))return t;}catch(_){}
+  return 'panoramica';
+})();
 let simCI=null, pieCI=null, radarCI=null;
 const dashCharts={
   1:{inst:null,sym:'^GSPC',range:'1y',type:'candle',indicators:new Set(),indSeries:{},rsiInst:null,macdInst:null,stochInst:null,lastPts:null,volSeries:null},
@@ -7950,6 +7956,8 @@ function showPortfolioState(){
   if(currentUser){
     logMsg.style.display='none';content.style.display='block';
     if(sub)sub.textContent=`${currentUser.name||currentUser.email} · ${portfolio.length}${_t('port.sub.suffix')}`;
+    // Ripristina tab attivo dalla sessione
+    switchPortTab(_portActiveTab);
     renderPortfolio();
   } else {
     logMsg.style.display='block';content.style.display='none';
@@ -7999,20 +8007,26 @@ function togglePortCurrency(){
   if(lblEl)lblEl.textContent=isEUR?_L({it:'Valore totale (EUR)',en:'Total value (EUR)'}):_L({it:'Valore totale (USD)',en:'Total value (USD)'});
 }
 function switchPortTab(name){
+  // Mappa compatibilità: vecchi nomi tab → nuovi
+  const _tabMap={analisi:'rischio',performance:'panoramica',obiettivi:'pianificazione',
+    reddito:'fisco',gestione:'pianificazione',news:'panoramica',pac:'pianificazione'};
+  if(_tabMap[name])name=_tabMap[name];
   _portActiveTab=name;
+  try{sessionStorage.setItem('portActiveTab',name);}catch(_){}
   document.querySelectorAll('.port-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.port-tab-panel').forEach(p=>p.classList.remove('active'));
+  // Nascondi solo i tab panel dei nuovi tab (non i legacy hidden)
+  ['ptab-panoramica','ptab-rischio','ptab-pianificazione','ptab-fisco'].forEach(id=>{
+    const p=document.getElementById(id);if(p)p.classList.remove('active');
+  });
   const btn=document.getElementById('ptab-btn-'+name);
   const panel=document.getElementById('ptab-'+name);
   if(btn)btn.classList.add('active');
   if(panel)panel.classList.add('active');
-  if(name==='performance'){loadPortPerf();loadBenchmark();renderPortPerfSummary();}
-  if(name==='analisi'){try{renderPortAnalysis(portfolio,_lastPortQuotes);}catch(e){}loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
-  if(name==='obiettivi'){loadPortTargets();renderPersonalTargets();renderPortGoal();}
-  if(name==='reddito'){loadDividendTracker();renderTaxDashboard();}
-  if(name==='gestione'){renderRebalancing();renderTransactionHistory();renderPriceAlerts();}
-  if(name==='news'){loadPortfolioNews();}
-  if(name==='pac'){renderPacPlans();renderPacLog();autoExecuteDuePacs();}
+  // Carica contenuti lazy al primo accesso
+  if(name==='panoramica'){loadPortPerf();loadBenchmark();renderPortPerfSummary();loadPortfolioNews();}
+  if(name==='rischio'){try{renderPortAnalysis(portfolio,_lastPortQuotes);}catch(e){}loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
+  if(name==='pianificazione'){loadPortTargets();renderPersonalTargets();renderPortGoal();renderRebalancing();renderTransactionHistory();renderPacPlans();renderPacLog();autoExecuteDuePacs();}
+  if(name==='fisco'){loadDividendTracker();renderTaxDashboard();renderPriceAlerts();}
 }
 
 function setPortSort(key){
@@ -8467,11 +8481,11 @@ async function renderPortfolio(){
   portQuotes=quotes;
   checkPriceAlerts(quotes);
   try{renderPortAnalysis(portfolio,quotes);}catch(e){const el=document.getElementById('port-analysis-content');if(el)el.innerHTML='<div class="ld" style="padding:10px;color:var(--r)">'+_t('err.analysis')+e.message+'</div>';}
-  if(_portActiveTab==='analisi'){loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
+  if(_portActiveTab==='rischio'){loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
   loadBenchmark();
   loadDividendTracker();
   loadPortTargets();
-  if(_portActiveTab==='performance')loadPortPerf();
+  if(_portActiveTab==='panoramica')loadPortPerf();
   // Check portfolio alerts
   checkPortAlertBadges(quotes);
   // New 3-col renderers
