@@ -172,10 +172,10 @@ function deduplicate(articles) {
 const CATEGORIES = {
   mercati: {
     rss: [
-      // Con thumbnail — fonti primarie
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://apnews.com/apf-business'], name: 'AP Business', specific: false },
       { urls: ['https://feeds.marketwatch.com/marketwatch/topstories/'], name: 'MarketWatch', specific: false },
-      { urls: ['https://www.thestreet.com/.rss/full/'], name: 'TheStreet', specific: false },
-      // Senza thumbnail ma abbondanti
+      { urls: ['https://www.barrons.com/xml/rss/3_7442.xml'], name: "Barron's", specific: false },
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
       { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
     ],
@@ -209,9 +209,10 @@ const CATEGORIES = {
   },
   usa: {
     rss: [
-      // Con thumbnail
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://apnews.com/apf-business'], name: 'AP Business', specific: false },
       { urls: ['https://feeds.marketwatch.com/marketwatch/topstories/'], name: 'MarketWatch', specific: false },
-      { urls: ['https://www.thestreet.com/.rss/full/'], name: 'TheStreet', specific: false },
+      { urls: ['https://www.barrons.com/xml/rss/3_7442.xml'], name: "Barron's", specific: false },
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
       { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
     ],
@@ -228,8 +229,8 @@ const CATEGORIES = {
   },
   commodities: {
     rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
       { urls: ['https://www.cnbc.com/id/100727362/device/rss/rss.html'], name: 'CNBC Commodities', specific: true },
-      { urls: ['https://www.thestreet.com/.rss/full/'], name: 'TheStreet', specific: false },
       { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
     ],
     finnhub: 'general',
@@ -244,6 +245,7 @@ const CATEGORIES = {
   },
   forex: {
     rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
       { urls: ['https://www.ft.com/markets?format=rss'], name: 'Financial Times', specific: false },
       { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
@@ -276,6 +278,8 @@ const CATEGORIES = {
   },
   macro: {
     rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://apnews.com/apf-business'], name: 'AP Business', specific: false },
       { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
       { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
       { urls: ['https://www.ft.com/world?format=rss'], name: 'Financial Times', specific: false },
