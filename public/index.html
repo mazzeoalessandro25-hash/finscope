@@ -4413,7 +4413,7 @@ function _logoOnError(img,ticker,smClass){
   if(img.nextElementSibling)img.nextElementSibling.style.display='inline-flex';
 }
 // Ticker per cui Parqet restituisce un logo sbagliato — bypass diretto a FMP
-const _LOGO_FORCE_FMP=new Set(['NVO']);
+const _LOGO_FORCE_FMP=new Set(['NVO','NOVO-B']);
 function _logoSrc(ticker){
   const clean=cleanTicker(ticker);
   if(_LOGO_FORCE_FMP.has(clean))
