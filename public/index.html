@@ -17900,7 +17900,23 @@ const TUTO = (() => {
 @media(max-width:640px){
   #ck-banner{padding:16px 20px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
   #ck-banner .ck-btns{width:100%}
-  #ck-reject,#ck-accept{flex:1;text-align:center}}
+  #ck-reject,#ck-accept{flex:1;text-align:center}
+  /* ── BENCHMARK BUTTONS: scroll orizzontale invece di wrap a 3+ righe ── */
+  #perf-bench-btns{
+    flex-wrap:nowrap!important;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    padding-bottom:6px;
+    /* scrollbar invisibile ma funzionante */
+    scrollbar-width:none;
+    -ms-overflow-style:none;
+  }
+  #perf-bench-btns::-webkit-scrollbar{display:none}
+  #perf-bench-btns .port-sort-btn{flex-shrink:0}
+  /* ── PERF range buttons: più compatti ── */
+  #perf-range-btns{flex-wrap:nowrap}
+  #perf-range-btns .port-sort-btn{padding:4px 7px;font-size:9px}
+}
 </style>
 <div id="ck-banner" role="dialog" aria-label="Consenso cookie" aria-live="polite">
   <div class="ck-text">

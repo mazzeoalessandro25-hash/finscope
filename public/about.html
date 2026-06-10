@@ -496,6 +496,8 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
 @media(max-width:900px){
   nav{padding:0 16px;height:56px}
   nav .nav-links{display:none}
+  /* Nasconde il selettore lingua dal nav su mobile — è nel drawer */
+  #lang-select-lp{display:none}
   .nav-burger{display:flex;width:44px;height:44px;min-width:44px}
   .nav-drawer{top:56px}
   /* Su mobile: mostra sempre "Accedi", nascondi "Apri Dashboard" (è nel drawer) */
@@ -1001,6 +1003,24 @@ footer{background:#0D1A2B;padding:28px 40px;display:flex;justify-content:space-b
   .feat-spot-row{gap:20px;margin-bottom:48px}
   .datasrc-grid{grid-template-columns:repeat(2,1fr)}
   .preview-frame{max-width:100%}
+}
+/* Su schermi < 508px l'iframe (508px scaled) supera il viewport — ridimensiona.
+   scale = containerWidth/1100, containerWidth = 100vw - 28px (14px padding ×2)
+   height container = containerWidth × (270/508) */
+@media(max-width:507px){
+  /* ~460px container → scale 460/1100 = 0.418 */
+  .preview-frame{aspect-ratio:unset;height:calc((100vw - 28px) * 0.531)}
+  .preview-frame iframe{transform:scale(0.418);transform-origin:top left}
+}
+@media(max-width:430px){
+  /* ~390px container → scale 390/1100 = 0.355 */
+  .preview-frame{height:calc((100vw - 28px) * 0.531)}
+  .preview-frame iframe{transform:scale(0.355)}
+}
+@media(max-width:360px){
+  /* ~325px container → scale 325/1100 = 0.296 */
+  .preview-frame{height:calc((100vw - 28px) * 0.531)}
+  .preview-frame iframe{transform:scale(0.296)}
 }
 /* ─── FINAL RESPONSIVE OVERRIDES (must come last — base styles are defined late) ─── */
 @media(max-width:1100px){
