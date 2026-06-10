@@ -2897,37 +2897,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
   <div id="port-content" style="display:none">
 
-    <!-- ── HERO CARD "Come sto andando" ── -->
-    <div id="port-hero-wrap" class="port-hero" style="display:none">
-      <!-- KPI 1: Valore totale (card blu, cliccabile per cambiare valuta) -->
-      <div class="port-hero-kpi" style="cursor:pointer" onclick="togglePortCurrency()" title="Clicca per cambiare valuta">
-        <div class="port-hero-lbl" id="ph-val-lbl">Valore totale (EUR)</div>
-        <div class="port-hero-val" id="ph-val-usd">—</div>
-        <div class="port-hero-sub" id="ph-val-eur" style="opacity:.75">—</div>
-      </div>
-      <!-- KPI 2: Variazione oggi -->
-      <div class="port-hero-kpi" id="ph-kpi-day">
-        <div class="port-hero-lbl">Oggi</div>
-        <div class="port-hero-val" id="ph-day-val">—</div>
-        <div class="port-hero-sub" id="ph-day-pct">—</div>
-      </div>
-      <!-- KPI 3: P&L totale -->
-      <div class="port-hero-kpi" id="ph-kpi-pnl">
-        <div class="port-hero-lbl">P&L totale</div>
-        <div class="port-hero-val" id="ph-pnl">—</div>
-        <div class="port-hero-sub" id="ph-pnl-pct">—</div>
-      </div>
-      <!-- KPI 4: Rendimento % -->
-      <div class="port-hero-kpi" id="ph-kpi-rend">
-        <div class="port-hero-lbl">Rendimento</div>
-        <div class="port-hero-val" id="ph-rend">—</div>
-        <div class="port-hero-sub" id="ph-count">—</div>
-      </div>
-    </div>
-    <!-- Riga contesto: performance odierna vs S&P 500 -->
-    <div id="ph-bench-context" style="display:none;font-size:11px;font-family:var(--fm);background:rgba(26,86,196,.07);border:1px solid rgba(26,86,196,.2);border-radius:8px;padding:8px 14px;margin-bottom:16px;color:var(--t2);line-height:1.6">
-      <span id="ph-bench-text"></span>
-    </div>
 
     <!-- ── 3-COLUMN LAYOUT: donut | lista | giornata ── -->
     <div class="port-2col">
@@ -8064,16 +8033,7 @@ async function addPortfolioItem(){
   renderPortfolio();
 }
 
-function togglePortCurrency(){
-  _portCurrView=_portCurrView==='EUR'?'USD':'EUR';
-  const isEUR=_portCurrView==='EUR';
-  const mainEl=document.getElementById('ph-val-usd');
-  const subEl=document.getElementById('ph-val-eur');
-  const lblEl=document.getElementById('ph-val-lbl');
-  if(mainEl)mainEl.textContent=isEUR?'€'+fmt(_portHeroEUR,0):'$'+fmt(_portHeroUSD,0);
-  if(subEl)subEl.textContent=isEUR?'≈ $'+fmt(_portHeroUSD,0):'≈ €'+fmt(_portHeroEUR,0);
-  if(lblEl)lblEl.textContent=isEUR?_L({it:'Valore totale (EUR)',en:'Total value (EUR)'}):_L({it:'Valore totale (USD)',en:'Total value (USD)'});
-}
+
 function switchPortTab(name){
   // Mappa compatibilità: vecchi nomi tab → nuovi
   const _tabMap={analisi:'rischio',performance:'panoramica',obiettivi:'pianificazione',
@@ -8152,17 +8112,14 @@ async function renderPortfolio(){
   if(!portfolio.length){
     el.innerHTML=`<div class="ld">${_t('port.empty')}</div>`;
     document.getElementById('port-summary').innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:4px 0">'+_t('port.empty')+'</div>';
-    // Nascondi hero card quando portafoglio è vuoto
-    const hw=document.getElementById('port-hero-wrap');if(hw)hw.style.display='none';
-    const bc=document.getElementById('ph-bench-context');if(bc)bc.style.display='none';
+
     return;
   }
 
-  // Fetch prezzi + cambio EUR/USD + S&P 500 in parallelo
-  const [quotes, fxData, spxData] = await Promise.all([
+  // Fetch prezzi + cambio EUR/USD in parallelo
+  const [quotes, fxData] = await Promise.all([
     Promise.all(portfolio.map(item=>api(item.sym))),
     api('EURUSD=X'),
-    api('^GSPC'),
   ]);
   const eurUsd = fxData?.price || 1.08; _lastFxRate=eurUsd;
 
@@ -8293,46 +8250,7 @@ async function renderPortfolio(){
     });
   })();
 
-  // ── Popola Hero Bar ──
-  const _heroValUSD=(totalUSD_val||totalUSD_inv)+(totalEUR_val||totalEUR_inv)*eurUsd;
-  const _heroValEUR=(totalUSD_val||totalUSD_inv)/eurUsd+(totalEUR_val||totalEUR_inv);
-  const _heroInvUSD=totalUSD_inv+totalEUR_inv*eurUsd;
-  const _heroPnl=_heroValUSD-_heroInvUSD;
-  const _heroRend=_heroInvUSD>0?(_heroPnl/_heroInvUSD*100):0;
-  const _heroUp=_heroPnl>=0;
-  const _stockMap=Object.fromEntries(STOCKS.concat(customStocks).map(s=>[s.s,s]));
-  const allSects=[...new Set(portfolio.map(item=>{
-    // 1. Lista STOCKS predefinita (match esatto ticker)
-    if(_stockMap[item.sym])return _stockMap[item.sym].sec;
-    // 2. scData/scSummary (popolato quando si apre il dettaglio)
-    const sd=scData[item.sym]||scSummary[item.sym];
-    if(sd?.sector)return sd.sector;
-    return null;
-  }).filter(Boolean))];
-  const setV=id=>v=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  const setC=id=>(v,cls)=>{const e=document.getElementById(id);if(e){e.textContent=v;if(cls)e.style.color=cls;}};
-  _portHeroUSD=_heroValUSD; _portHeroEUR=_heroValEUR;
   const _isEUR=_portCurrView==='EUR';
-  // Mostra hero card
-  const _hw=document.getElementById('port-hero-wrap');if(_hw)_hw.style.display='grid';
-  setV('ph-val-usd')(_isEUR?'€'+fmt(_heroValEUR,0):'$'+fmt(_heroValUSD,0));
-  setV('ph-val-eur')(_isEUR?'≈ $'+fmt(_heroValUSD,0):'≈ €'+fmt(_heroValEUR,0));
-  const _lblEl=document.getElementById('ph-val-lbl');
-  if(_lblEl)_lblEl.textContent=_isEUR?_L({it:'Valore totale (EUR)',en:'Total value (EUR)'}):_L({it:'Valore totale (USD)',en:'Total value (USD)'});
-  setV('ph-count')(portfolio.length+(portfolio.length===1?' posizione':' posizioni'));
-  setV('ph-sectors')(allSects.length+' '+(allSects.length===1?_t('port.sector.one'):_t('port.sector.many')));
-  // P&L in EUR (default vista EUR)
-  const _heroPnlEUR=_heroPnl/eurUsd;
-  setC('ph-pnl')((_heroUp?'+':'')+'€'+fmt(Math.abs(_heroPnlEUR),0),_heroUp?'var(--g)':'var(--r)');
-  setC('ph-pnl-pct')((_heroUp?'+':'')+fmt(_heroPnl/_heroInvUSD*100,2)+'%',_heroUp?'var(--g)':'var(--r)');
-  setC('ph-rend')((_heroUp?'+':'')+fmt(_heroRend,2)+'%',_heroUp?'var(--g)':'var(--r)');
-  setV('ph-rate')(fmt(eurUsd,4));
-  const _fxChg=fxData?chgPct(fxData.price,fxData.prev):null;
-  setC('ph-rate-chg')(_fxChg!=null?chgStr(_fxChg):'',_fxChg==null||_fxChg>=0?'var(--g)':'var(--r)');
-  // Colora le hero card P&L e Rendimento
-  ['ph-pnl','ph-pnl-pct','ph-rend'].forEach(id=>{
-    const e=document.getElementById(id);if(e){const kpi=e.closest('.port-hero-kpi');if(kpi)kpi.style.borderColor=_heroUp?'rgba(5,150,105,.3)':'rgba(220,38,38,.3)';}
-  });
 
   // Totale unificato con cambio EUR/USD
   const totalInvUSD = totalUSD_inv + totalEUR_inv * eurUsd;
@@ -8363,25 +8281,6 @@ async function renderPortfolio(){
   const dailyPnlPct=dailyValBefore>0?(dailyPnlUSD/dailyValBefore*100):0;
   const dailyUp=dailyPnlUSD>=0;
   setS('psb-oggi-inline',(dailyUp?'+':'')+'€'+fmt(dailyPnlUSD/eurUsd,0)+' ('+(dailyUp?'+':'')+fmt(dailyPnlPct,1)+'%)', dailyUp?'var(--g)':'var(--r)');
-  // Popola KPI "Oggi" nella hero card
-  const dailyPnlEUR=dailyPnlUSD/eurUsd;
-  setS('ph-day-val',(dailyUp?'+':'')+'€'+fmt(Math.abs(dailyPnlEUR),0),dailyUp?'var(--g)':'var(--r)');
-  setS('ph-day-pct',(dailyUp?'+':'')+fmt(dailyPnlPct,2)+'%',dailyUp?'var(--g)':'var(--r)');
-  // Colora KPI "Oggi"
-  const _kdEl=document.getElementById('ph-kpi-day');if(_kdEl)_kdEl.style.borderColor=dailyUp?'rgba(5,150,105,.3)':'rgba(220,38,38,.3)';
-  // Riga contesto vs S&P 500
-  if(spxData&&spxData.price&&spxData.prev){
-    const spxChg=(spxData.price-spxData.prev)/spxData.prev*100;
-    const spxUp=spxChg>=0;
-    const diff=dailyPnlPct-spxChg;
-    const diffAbs=Math.abs(diff).toFixed(1);
-    const ctxEl=document.getElementById('ph-bench-context');
-    const txtEl=document.getElementById('ph-bench-text');
-    if(ctxEl&&txtEl){
-      txtEl.innerHTML=`Oggi il mercato (S&P 500) è a <strong style="color:${spxUp?'var(--g)':'var(--r)'}">${spxUp?'+':''}${fmt(spxChg,2)}%</strong>&ensp;·&ensp;Tu sei a <strong style="color:${dailyUp?'var(--g)':'var(--r)'}">${dailyUp?'+':''}${fmt(dailyPnlPct,2)}%</strong>&ensp;·&ensp;${diff>=0?`<span style="color:var(--g)">Stai battendo il mercato di +${diffAbs}% 🟢</span>`:`<span style="color:var(--r)">Il mercato ti supera di ${diffAbs}% 🔴</span>`}`;
-      ctxEl.style.display='block';
-    }
-  }
   // Mostra la card full-width giornata
   const dailyOuter=document.getElementById('port-daily-outer');
   if(dailyOuter&&dailyItems.length>0){dailyOuter.style.display='block';setTimeout(_syncPortColHeights,0);}
@@ -8389,7 +8288,7 @@ async function renderPortfolio(){
   const dailySection='';
 
   const _totalValDisplay=_isEUR?'€'+fmt(totalValEUR,0):'$'+fmt(totalValUSD,0);
-  const _totalPnlDisplay=(_heroUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
+  const _totalPnlDisplay=(totalUp?'+':'')+(_isEUR?'€'+fmt(Math.abs(totalValEUR-totalInvEUR),0):'$'+fmt(Math.abs(totalValUSD-totalInvUSD),0));
   // Mappa valore corrente per symbol in USD (deduplicata, con fallback a buyPrice)
   const holdingCurMap={};
   portfolio.forEach((item,i)=>{
