@@ -3035,9 +3035,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <button class="port-sort-btn active" data-bench="SPY"   onclick="togglePerfBench('SPY',this)"   title="S&P 500 — mercato azionario USA">📊 S&P 500</button>
             <button class="port-sort-btn active" data-bench="BRK-B" onclick="togglePerfBench('BRK-B',this)" title="Berkshire Hathaway — Warren Buffett">🧓 Buffett</button>
             <button class="port-sort-btn"        data-bench="QQQ"   onclick="togglePerfBench('QQQ',this)"   title="Nasdaq 100 — Big Tech &amp; Growth">💻 Nasdaq 100</button>
+            <button class="port-sort-btn"        data-bench="^DJI"  onclick="togglePerfBench('^DJI',this)"  title="Dow Jones — 30 blue chip USA">🏛 Dow Jones</button>
+            <button class="port-sort-btn"        data-bench="RPAR"  onclick="togglePerfBench('RPAR',this)"  title="RPAR Risk Parity ETF — strategia All-Weather di Ray Dalio">🌊 Ray Dalio</button>
+            <button class="port-sort-btn"        data-bench="PSH.L" onclick="togglePerfBench('PSH.L',this)" title="Pershing Square Holdings — Bill Ackman">🎯 Bill Ackman</button>
             <button class="port-sort-btn"        data-bench="ARKK"  onclick="togglePerfBench('ARKK',this)"  title="ARK Innovation ETF — Cathie Wood">🚀 Cathie Wood</button>
             <button class="port-sort-btn"        data-bench="ACWI"  onclick="togglePerfBench('ACWI',this)"  title="MSCI All-Country World — diversificazione globale">🌍 MSCI World</button>
-            <button class="port-sort-btn"        data-bench="GLD"   onclick="togglePerfBench('GLD',this)"   title="Oro — asset rifugio (Ray Dalio All-Weather)">🏅 Oro</button>
+            <button class="port-sort-btn"        data-bench="GLD"   onclick="togglePerfBench('GLD',this)"   title="Oro — asset rifugio">🏅 Oro</button>
           </div>
           <canvas id="portPerfChart" height="90"></canvas>
         </div>
@@ -10875,6 +10878,9 @@ const BENCH_DEFS={
   'ARKK': {label:'Cathie Wood', sub:'ARK Innovation ETF',                 color:'#EF4444',dash:[4,2]},
   'ACWI': {label:'MSCI World',  sub:_L({it:'1600+ aziende globali',en:'1600+ global companies'}),              color:'#10B981',dash:[5,3]},
   'GLD':  {label:_L({it:'Oro',en:'Gold'}),         sub:_L({it:'Asset rifugio — All-Weather',en:'Safe-haven asset — All-Weather'}),        color:'#D97706',dash:[3,3]},
+  'RPAR': {label:'Ray Dalio',   sub:'RPAR Risk Parity ETF — All-Weather Portfolio',                             color:'#06B6D4',dash:[4,3]},
+  'PSH.L':{label:'Bill Ackman', sub:'Pershing Square Holdings',                                                  color:'#EC4899',dash:[4,2]},
+  '^DJI': {label:'Dow Jones',   sub:_L({it:'30 blue chip USA',en:'30 US blue chips'}),                          color:'#A3E635',dash:[5,3]},
 };
 let _activeBenches=new Set(['SPY','BRK-B']);
 function togglePerfBench(sym,btn){
