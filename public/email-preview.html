@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinEdge — Anteprima Newsletter</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #0f1117;
+      color: #f3f4f6;
+      min-height: 100vh;
+    }
+
+    /* Barra dev avviso */
+    .dev-banner {
+      background: #f59e0b;
+      color: #1c1917;
+      text-align: center;
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Toolbar controlli */
+    .toolbar {
+      background: #16181f;
+      border-bottom: 1px solid #1e2130;
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .toolbar h1 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f3f4f6;
+      margin-right: auto;
+    }
+    .toolbar button {
+      background: #1a56c4;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 7px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .toolbar button:hover { opacity: .85; }
+    .toolbar button:disabled { opacity: .4; cursor: default; }
+    .toolbar .btn-secondary {
+      background: #1e2130;
+      border: 1px solid #2d3148;
+      color: #9ca3af;
+    }
+    .toolbar .status {
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .toolbar .status.ok { color: #10b981; }
+    .toolbar .status.err { color: #ef4444; }
+
+    /* Layout split: JSON + preview */
+    .split {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      height: calc(100vh - 90px);
+      overflow: hidden;
+    }
+    @media (max-width: 900px) {
+      .split { grid-template-columns: 1fr; height: auto; }
+      .json-panel { max-height: 300px; }
+    }
+
+    /* Pannello JSON */
+    .json-panel {
+      background: #0d0f14;
+      border-right: 1px solid #1e2130;
+      overflow-y: auto;
+      padding: 16px;
+    }
+    .json-panel h2 {
+      font-size: 10px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .json-panel pre {
+      font-family: 'IBM Plex Mono', 'Courier New', monospace;
+      font-size: 11px;
+      color: #93c5fd;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.6;
+    }
+
+    /* Pannello preview email */
+    .preview-panel {
+      overflow-y: auto;
+      background: #1a1c27;
+      padding: 32px 24px;
+    }
+    .preview-panel h2 {
+      font-size: 10px;
+      font-weight: 600;
+      color: #6b7280;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .preview-frame-wrap {
+      max-width: 640px;
+      margin: 0 auto;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 32px rgba(0,0,0,.5);
+    }
+
+    /* Stato di caricamento */
+    .loading-state {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 200px;
+      color: #6b7280;
+      font-size: 13px;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .spinner {
+      width: 20px; height: 20px;
+      border: 2px solid #2d3148;
+      border-top-color: #1a56c4;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Sezioni JSON colorate */
+    .kv { display: block; }
+    .kv-key { color: #a78bfa; }
+    .kv-str { color: #86efac; }
+    .kv-num { color: #fbbf24; }
+    .kv-bool-t { color: #34d399; }
+    .kv-bool-f { color: #f87171; }
+    .kv-null { color: #6b7280; }
+  </style>
+</head>
+<body>
+
+  <!-- Avviso dev -->
+  <div class="dev-banner">
+    ANTEPRIMA SVILUPPO — Questa pagina non e' accessibile in produzione. Non condividere URL con utenti.
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <h1>FinEdge &mdash; Anteprima Newsletter</h1>
+    <span class="status" id="status-label">Pronto</span>
+    <button class="btn-secondary" id="btn-raw" onclick="window.open('/api/newsletter?preview=1','_blank')">
+      API JSON &nearr;
+    </button>
+    <button id="btn-reload" onclick="loadPreview()">
+      Ricarica dati
+    </button>
+  </div>
+
+  <!-- Layout split -->
+  <div class="split">
+
+    <!-- Pannello JSON -->
+    <div class="json-panel">
+      <h2>Dati API &mdash; /api/newsletter?preview=1</h2>
+      <pre id="json-out"><span style="color:#6b7280;">Caricamento in corso...</span></pre>
+    </div>
+
+    <!-- Pannello preview -->
+    <div class="preview-panel">
+      <h2>Anteprima email renderizzata</h2>
+      <div class="preview-frame-wrap">
+        <div id="preview-out">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <span>Caricamento dati di mercato...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── Colorazione JSON sintattica minimale ─────────────────
+    function syntaxHL(obj) {
+      const json = JSON.stringify(obj, null, 2);
+      return json
+        .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(\.\d+)?([eE][+-]?\d+)?)/g, match => {
+          if (/^"/.test(match)) {
+            if (/:$/.test(match)) return `<span class="kv-key">${match}</span>`;
+            return `<span class="kv-str">${match}</span>`;
+          }
+          if (/true/.test(match)) return `<span class="kv-bool-t">${match}</span>`;
+          if (/false/.test(match)) return `<span class="kv-bool-f">${match}</span>`;
+          if (/null/.test(match)) return `<span class="kv-null">${match}</span>`;
+          return `<span class="kv-num">${match}</span>`;
+        });
+    }
+
+    // ── Formattazione euro ───────────────────────────────────
+    function fmtEUR(n) {
+      if (n == null) return '—';
+      return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+    }
+
+    // ── Render email HTML dal JSON ───────────────────────────
+    function renderEmail(d) {
+      const G = '#10b981', R = '#ef4444', GREY = '#9ca3af';
+      const c = v => v ? G : R;
+      const fmtIdx = (idx) => idx?.price != null ? idx.price.toLocaleString('it-IT', {maximumFractionDigits: 2}) : '—';
+
+      // News items HTML
+      const newsHTML = (d.news || []).map(n => `
+        <div style="background:#1e2130;border-radius:8px;padding:14px 16px;margin-bottom:8px;border-left:3px solid #2d3148;">
+          <p style="margin:0 0 4px;font-size:13px;font-weight:600;line-height:1.4;">
+            <a href="${n.link||'#'}" target="_blank" style="color:#f3f4f6;text-decoration:none;">${n.title||'—'}</a>
+          </p>
+          <p style="margin:0;font-size:11px;color:#6b7280;">${n.publisher||''}</p>
+        </div>
+      `).join('');
+
+      // Movers HTML
+      let moversHTML = '';
+      if (d.portfolio?.topMovers?.length) {
+        moversHTML = d.portfolio.topMovers.map(m => `
+          <td class="mover-cell" style="vertical-align:top;padding-right:8px;width:33%;">
+            <div style="background:#252840;border-radius:6px;padding:10px 12px;">
+              <p style="margin:0 0 2px;font-size:11px;font-weight:700;color:#f3f4f6;">${m.sym}</p>
+              <p style="margin:0 0 2px;font-size:10px;color:#9ca3af;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${m.name}</p>
+              <p style="margin:0;font-size:13px;font-weight:700;color:${m.up ? G : R};">${m.dayChgPct}</p>
+            </div>
+          </td>
+        `).join('');
+      }
+
+      // Portfolio section
+      let portSection = '';
+      if (d.portfolio) {
+        const p = d.portfolio;
+        const portUp = p.dayPnlUp;
+        portSection = `
+          <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px;">
+            <tr>
+              <td style="padding-bottom:6px;">
+                <p style="margin:0;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">Il tuo portafoglio</p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div style="background:#1e2130;border-radius:10px;padding:16px 20px;border-left:3px solid ${portUp?G:R};">
+                  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                      <td>
+                        <p style="margin:0 0 2px;font-size:12px;color:#9ca3af;">Valore totale</p>
+                        <p style="margin:0;font-size:24px;font-weight:700;color:#f3f4f6;">${fmtEUR(p.totalEUR)}</p>
+                      </td>
+                      <td align="right" style="vertical-align:middle;">
+                        <p style="margin:0 0 2px;font-size:12px;color:#9ca3af;text-align:right;">Oggi</p>
+                        <p style="margin:0;font-size:20px;font-weight:700;color:${portUp?G:R};text-align:right;">${p.dayPnlPct}</p>
+                        <p style="margin:2px 0 0;font-size:13px;color:${portUp?G:R};text-align:right;">${(portUp?'+':'')+'€'+Math.abs(p.dayPnlEUR||0).toLocaleString('it-IT')}</p>
+                      </td>
+                    </tr>
+                  </table>
+                  ${moversHTML ? `
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:14px;border-top:1px solid #2d3148;padding-top:14px;">
+                      <tr><td colspan="3" style="padding-bottom:8px;"><p style="margin:0;font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Top movers di oggi</p></td></tr>
+                      <tr>${moversHTML}</tr>
+                    </table>
+                  ` : ''}
+                </div>
+              </td>
+            </tr>
+          </table>
+        `;
+      }
+
+      const m = d.market || {};
+      return `
+        <div style="background:#16181f;border-radius:12px;overflow:hidden;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+          <!-- Header -->
+          <div style="background:linear-gradient(135deg,#1a56c4 0%,#1e3a8a 100%);padding:28px 32px 24px;">
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+              <tr>
+                <td>
+                  <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">Fin<span style="color:#93c5fd;">Edge</span></p>
+                  <p style="margin:4px 0 0;font-size:12px;color:rgba(255,255,255,0.7);font-weight:400;letter-spacing:0.5px;text-transform:uppercase;">Recap Giornaliero &mdash; ${d.date||'—'}</p>
+                </td>
+                <td align="right" style="vertical-align:middle;">
+                  <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.5);">Dashboard &rarr; <a href="https://finedge.it" style="color:rgba(255,255,255,0.8);">finedge.it</a></p>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <!-- Body -->
+          <div style="padding:24px 32px;">
+            <!-- Mercati -->
+            <p style="margin:0 0 6px;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">Mercati di oggi</p>
+            <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom:20px;">
+              <tr>
+                <td width="25%" style="padding:10px 8px 10px 0;vertical-align:top;">
+                  <div style="background:#1e2130;border-radius:8px;padding:12px;border-top:2px solid ${c(m.spx?.up)};">
+                    <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">S&amp;P 500</p>
+                    <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">${fmtIdx(m.spx)}</p>
+                    <p style="margin:2px 0 0;font-size:12px;font-weight:600;color:${c(m.spx?.up)};">${m.spx?.chgPct||'—'}</p>
+                  </div>
+                </td>
+                <td width="25%" style="padding:10px 8px;vertical-align:top;">
+                  <div style="background:#1e2130;border-radius:8px;padding:12px;border-top:2px solid ${c(m.ndx?.up)};">
+                    <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">Nasdaq</p>
+                    <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">${fmtIdx(m.ndx)}</p>
+                    <p style="margin:2px 0 0;font-size:12px;font-weight:600;color:${c(m.ndx?.up)};">${m.ndx?.chgPct||'—'}</p>
+                  </div>
+                </td>
+                <td width="25%" style="padding:10px 8px;vertical-align:top;">
+                  <div style="background:#1e2130;border-radius:8px;padding:12px;border-top:2px solid ${c(m.stoxx?.up)};">
+                    <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">Euro Stoxx 50</p>
+                    <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">${fmtIdx(m.stoxx)}</p>
+                    <p style="margin:2px 0 0;font-size:12px;font-weight:600;color:${c(m.stoxx?.up)};">${m.stoxx?.chgPct||'—'}</p>
+                  </div>
+                </td>
+                <td width="25%" style="padding:10px 0 10px 8px;vertical-align:top;">
+                  <div style="background:#1e2130;border-radius:8px;padding:12px;">
+                    <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">EUR/USD</p>
+                    <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">${m.eurusd?.price||'—'}</p>
+                    <p style="margin:2px 0 0;font-size:11px;color:#9ca3af;">VIX: <strong style="color:#f3f4f6;">${m.vix?.price?.toFixed?.(1)||'—'}</strong></p>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            ${portSection}
+            <!-- News -->
+            <p style="margin:0 0 6px;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">Notizie principali</p>
+            <div style="margin-bottom:24px;">${newsHTML||'<p style="color:#6b7280;font-size:13px;">Nessuna notizia disponibile.</p>'}</div>
+            <!-- CTA -->
+            <div style="text-align:center;margin-bottom:24px;">
+              <a href="https://finedge.it"
+                 style="display:inline-block;background:linear-gradient(135deg,#1a56c4,#1e3a8a);color:#ffffff;
+                        font-size:14px;font-weight:600;padding:12px 32px;border-radius:8px;text-decoration:none;letter-spacing:0.3px;">
+                Apri la Dashboard &rarr;
+              </a>
+            </div>
+          </div>
+          <!-- Footer -->
+          <div style="background:#0f1117;padding:20px 32px;border-top:1px solid #1e2130;">
+            <p style="margin:0 0 8px;font-size:11px;color:#4b5563;line-height:1.6;">
+              <strong style="color:#6b7280;">FinEdge</strong> &mdash; Dashboard finanziaria gratuita per investitori retail.
+            </p>
+            <p style="margin:0 0 8px;font-size:10px;color:#374151;line-height:1.6;">
+              <strong>Disclaimer:</strong> Le informazioni contenute in questa email hanno scopo puramente informativo e non costituiscono
+              consulenza finanziaria, raccomandazione d'investimento o sollecitazione all'acquisto/vendita di strumenti finanziari.
+              I dati di mercato potrebbero non essere aggiornati in tempo reale.
+            </p>
+            <p style="margin:0;font-size:10px;color:#374151;">
+              <a href="https://finedge.it/legal/privacy.html" style="color:#4b5563;">Privacy</a>
+              &nbsp;&middot;&nbsp;
+              <a href="https://finedge.it/legal/disclaimer.html" style="color:#4b5563;">Disclaimer</a>
+              &nbsp;&middot;&nbsp;
+              <a href="#" style="color:#4b5563;">Cancellati dalla newsletter</a>
+            </p>
+          </div>
+        </div>
+      `;
+    }
+
+    // ── Carica e renderizza ──────────────────────────────────
+    async function loadPreview() {
+      const btn = document.getElementById('btn-reload');
+      const status = document.getElementById('status-label');
+      const jsonOut = document.getElementById('json-out');
+      const previewOut = document.getElementById('preview-out');
+
+      btn.disabled = true;
+      status.textContent = 'Caricamento...';
+      status.className = 'status';
+      previewOut.innerHTML = `<div class="loading-state"><div class="spinner"></div><span>Fetching dati di mercato...</span></div>`;
+
+      try {
+        const r = await fetch('/api/newsletter?preview=1');
+        const data = await r.json();
+
+        if (!r.ok) throw new Error(data.error || 'Errore API');
+
+        // JSON panel
+        jsonOut.innerHTML = syntaxHL(data);
+
+        // Preview panel
+        previewOut.innerHTML = renderEmail(data);
+
+        status.textContent = 'OK — ' + new Date().toLocaleTimeString('it-IT');
+        status.className = 'status ok';
+      } catch (e) {
+        jsonOut.innerHTML = `<span style="color:#f87171;">Errore: ${e.message}</span>`;
+        previewOut.innerHTML = `<div class="loading-state"><span style="color:#ef4444;">Errore: ${e.message}</span></div>`;
+        status.textContent = 'Errore';
+        status.className = 'status err';
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    // Carica al load
+    loadPreview();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="format-detection" content="telephone=no,date=no,address=no,email=no,url=no">
+  <title>FinEdge — Recap Giornaliero</title>
+  <!--[if mso]>
+  <noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript>
+  <![endif]-->
+  <style>
+    /* Reset base — Gmail rimuove i tag style ma lascia gli inline */
+    body, table, td, p, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+    body { margin: 0; padding: 0; background-color: #0f1117; }
+    a { color: #1a56c4; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    @media only screen and (max-width: 600px) {
+      .email-wrapper { width: 100% !important; }
+      .email-body { padding: 16px !important; }
+      .market-cell { display: block !important; width: 100% !important; padding-bottom: 8px !important; }
+      .news-item { padding: 12px !important; }
+      .mover-cell { display: block !important; width: 100% !important; margin-bottom: 8px !important; }
+    }
+  </style>
+</head>
+<body style="margin:0;padding:0;background-color:#0f1117;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
+
+  <!-- Preheader (nascosto, mostrato da client email come preview) -->
+  <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;">
+    Il tuo recap finanziario giornaliero — mercati, portafoglio, notizie.
+    &zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
+  </div>
+
+  <!-- Wrapper esterno -->
+  <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color:#0f1117;">
+    <tr>
+      <td align="center" style="padding:24px 16px;">
+
+        <!-- Container principale 600px -->
+        <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="600" class="email-wrapper"
+               style="max-width:600px;width:100%;background-color:#16181f;border-radius:12px;overflow:hidden;">
+
+          <!-- ── HEADER ─────────────────────────────────────── -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#1a56c4 0%,#1e3a8a 100%);padding:28px 32px 24px;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td>
+                    <!-- Logo / brand -->
+                    <p style="margin:0;font-size:22px;font-weight:700;color:#ffffff;letter-spacing:-0.5px;">
+                      Fin<span style="color:#93c5fd;">Edge</span>
+                    </p>
+                    <p style="margin:4px 0 0;font-size:12px;color:rgba(255,255,255,0.7);font-weight:400;letter-spacing:0.5px;text-transform:uppercase;">
+                      Recap Giornaliero &mdash; {{DATE}}
+                    </p>
+                  </td>
+                  <td align="right" style="vertical-align:middle;">
+                    <p style="margin:0;font-size:11px;color:rgba(255,255,255,0.5);">
+                      Dashboard &rarr; <a href="https://finedge.it" style="color:rgba(255,255,255,0.8);">finedge.it</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- ── CORPO ──────────────────────────────────────── -->
+          <tr>
+            <td class="email-body" style="padding:24px 32px;">
+
+              <!-- ── SEZIONE MERCATI ──────────────────────── -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="padding-bottom:6px;">
+                    <p style="margin:0;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">
+                      Mercati di oggi
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-bottom:20px;">
+                    <!-- Griglia indici 2×2 + VIX -->
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                      <tr>
+                        <!-- S&P 500 -->
+                        <td class="market-cell" width="25%" style="padding:10px 8px 10px 0;vertical-align:top;">
+                          <div style="background:#1e2130;border-radius:8px;padding:12px;border-top:2px solid {{SPX_COLOR}};">
+                            <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">S&amp;P 500</p>
+                            <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">{{SPX_PRICE}}</p>
+                            <p style="margin:2px 0 0;font-size:12px;font-weight:600;color:{{SPX_COLOR}};">{{SPX_CHG}}</p>
+                          </div>
+                        </td>
+                        <!-- Nasdaq -->
+                        <td class="market-cell" width="25%" style="padding:10px 8px;vertical-align:top;">
+                          <div style="background:#1e2130;border-radius:8px;padding:12px;border-top:2px solid {{NDX_COLOR}};">
+                            <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">Nasdaq</p>
+                            <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">{{NDX_PRICE}}</p>
+                            <p style="margin:2px 0 0;font-size:12px;font-weight:600;color:{{NDX_COLOR}};">{{NDX_CHG}}</p>
+                          </div>
+                        </td>
+                        <!-- STOXX 50 -->
+                        <td class="market-cell" width="25%" style="padding:10px 8px;vertical-align:top;">
+                          <div style="background:#1e2130;border-radius:8px;padding:12px;border-top:2px solid {{STOXX_COLOR}};">
+                            <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">Euro Stoxx 50</p>
+                            <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">{{STOXX_PRICE}}</p>
+                            <p style="margin:2px 0 0;font-size:12px;font-weight:600;color:{{STOXX_COLOR}};">{{STOXX_CHG}}</p>
+                          </div>
+                        </td>
+                        <!-- EUR/USD + VIX -->
+                        <td class="market-cell" width="25%" style="padding:10px 0 10px 8px;vertical-align:top;">
+                          <div style="background:#1e2130;border-radius:8px;padding:12px;">
+                            <p style="margin:0 0 4px;font-size:10px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">EUR/USD</p>
+                            <p style="margin:0;font-size:16px;font-weight:700;color:#f3f4f6;">{{EURUSD}}</p>
+                            <p style="margin:2px 0 0;font-size:11px;color:#9ca3af;">VIX: <strong style="color:#f3f4f6;">{{VIX}}</strong></p>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- ── SEZIONE PORTAFOGLIO (condizionale) ───── -->
+              {{#IF_PORTFOLIO}}
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="padding-bottom:6px;">
+                    <p style="margin:0;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">
+                      Il tuo portafoglio
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-bottom:20px;">
+                    <div style="background:#1e2130;border-radius:10px;padding:16px 20px;border-left:3px solid {{PORT_COLOR}};">
+                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tr>
+                          <td>
+                            <p style="margin:0 0 2px;font-size:12px;color:#9ca3af;">Valore totale</p>
+                            <p style="margin:0;font-size:24px;font-weight:700;color:#f3f4f6;">{{PORT_TOTAL}}</p>
+                          </td>
+                          <td align="right" style="vertical-align:middle;">
+                            <p style="margin:0 0 2px;font-size:12px;color:#9ca3af;text-align:right;">Oggi</p>
+                            <p style="margin:0;font-size:20px;font-weight:700;color:{{PORT_COLOR}};text-align:right;">{{PORT_DAY_PCT}}</p>
+                            <p style="margin:2px 0 0;font-size:13px;color:{{PORT_COLOR}};text-align:right;">{{PORT_DAY_EUR}}</p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <!-- Top movers -->
+                      {{#IF_MOVERS}}
+                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top:14px;border-top:1px solid #2d3148;padding-top:14px;">
+                        <tr>
+                          <td colspan="3" style="padding-bottom:8px;">
+                            <p style="margin:0;font-size:10px;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Top movers di oggi</p>
+                          </td>
+                        </tr>
+                        <tr>
+                          {{MOVERS_CELLS}}
+                        </tr>
+                      </table>
+                      {{/IF_MOVERS}}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+              {{/IF_PORTFOLIO}}
+
+              <!-- ── SEZIONE NEWS ─────────────────────────── -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td style="padding-bottom:6px;">
+                    <p style="margin:0;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:1px;">
+                      Notizie principali
+                    </p>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding-bottom:24px;">
+                    {{NEWS_ITEMS}}
+                  </td>
+                </tr>
+              </table>
+
+              <!-- ── CTA ────────────────────────────────── -->
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center" style="padding-bottom:24px;">
+                    <a href="https://finedge.it"
+                       style="display:inline-block;background:linear-gradient(135deg,#1a56c4,#1e3a8a);color:#ffffff;
+                              font-size:14px;font-weight:600;padding:12px 32px;border-radius:8px;
+                              text-decoration:none;letter-spacing:0.3px;">
+                      Apri la Dashboard &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- ── FOOTER ─────────────────────────────────────── -->
+          <tr>
+            <td style="background:#0f1117;padding:20px 32px;border-top:1px solid #1e2130;">
+              <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td>
+                    <p style="margin:0 0 8px;font-size:11px;color:#4b5563;line-height:1.6;">
+                      <strong style="color:#6b7280;">FinEdge</strong> &mdash; Dashboard finanziaria gratuita per investitori retail.<br>
+                      Hai ricevuto questa email perché hai un account attivo su finedge.it.
+                    </p>
+                    <p style="margin:0 0 8px;font-size:10px;color:#374151;line-height:1.6;">
+                      <strong>Disclaimer:</strong> Le informazioni contenute in questa email hanno scopo puramente informativo e non costituiscono
+                      consulenza finanziaria, raccomandazione d'investimento o sollecitazione all'acquisto/vendita di strumenti finanziari.
+                      I dati di mercato potrebbero non essere aggiornati in tempo reale. FinEdge non si assume responsabilità
+                      per decisioni prese sulla base di questi contenuti. Investi sempre in modo consapevole.
+                    </p>
+                    <p style="margin:0;font-size:10px;color:#374151;">
+                      <a href="https://finedge.it/legal/privacy.html" style="color:#4b5563;">Privacy</a>
+                      &nbsp;&middot;&nbsp;
+                      <a href="https://finedge.it/legal/disclaimer.html" style="color:#4b5563;">Disclaimer</a>
+                      &nbsp;&middot;&nbsp;
+                      <a href="{{UNSUBSCRIBE_URL}}" style="color:#4b5563;">Cancellati dalla newsletter</a>
+                    </p>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+        </table>
+        <!-- Fine container 600px -->
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>
