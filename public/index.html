@@ -1799,7 +1799,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <button class="cc-btn" onclick="loadSdChart(null,'10y',this)">10A</button>
             <button class="cc-btn" onclick="loadSdChart(null,'max',this)">MAX</button>
           </div>
-          <span class="sd-info-btn" style="margin-left:auto">i<div class="sd-tip">Grafico prezzi interattivo con dati storici Yahoo Finance.<br><br><b>Candele</b>: mostra apertura, chiusura, massimo e minimo giornaliero.<br><b>Linea</b>: solo prezzo di chiusura.<br><b>Volumi</b>: istogramma in verde/rosso sovrapposto al grafico.<br>Usa il pannello Indicatori per aggiungere medie mobili, RSI e bande di Bollinger.</div></span>
+          <span class="sd-info-btn" style="margin-left:auto">i<div class="sd-tip" data-i18n-html="tip.sd.chart">Grafico prezzi interattivo con dati storici Yahoo Finance.<br><br><b>Candele</b>: mostra apertura, chiusura, massimo e minimo giornaliero.<br><b>Linea</b>: solo prezzo di chiusura.<br><b>Volumi</b>: istogramma in verde/rosso sovrapposto al grafico.<br>Usa il pannello Indicatori per aggiungere medie mobili, RSI e bande di Bollinger.</div></span>
         </div>
         <div class="cc-row" style="margin-bottom:10px;gap:4px;position:relative">
           <div class="ind-toggle-btn" style="position:relative">
@@ -1838,7 +1838,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="sd-section">
         <div class="sd-section-title" style="display:flex;align-items:center">
           <span data-i18n="sd.key.title">Dati chiave</span>
-          <span class="sd-info-btn">i<div class="sd-tip">Prezzi e volumi aggiornati ogni 30 secondi durante l'orario di mercato.<br><br><b>Beta</b>: volatilità vs mercato. &gt;1 più volatile, &lt;1 meno volatile.<br><b>Short Ratio</b>: giorni necessari a coprire le posizioni short. Valori alti indicano alta pressione ribassista.</div></span>
+          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.keydata">Prezzi e volumi aggiornati ogni 30 secondi durante l'orario di mercato.<br><br><b>Beta</b>: volatilità vs mercato. &gt;1 più volatile, &lt;1 meno volatile.<br><b>Short Ratio</b>: giorni necessari a coprire le posizioni short. Valori alti indicano alta pressione ribassista.</div></span>
         </div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.change">Variazione</div><div class="sd-m-val" id="sdm-chg">—</div></div>
@@ -1860,7 +1860,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-section" id="sd-analyst-section" style="margin-bottom:16px">
       <div class="sd-section-title" style="display:flex;align-items:center">
         <span data-i18n="sd.analyst.title">Raccomandazione analisti</span>
-        <span class="sd-info-btn">i<div class="sd-tip">Consenso degli analisti finanziari che coprono il titolo.<br><br><b>Score</b>: da 1 (Forte Acquisto) a 5 (Forte Vendita).<br><b>Target price</b>: prezzo obiettivo medio stimato a 12 mesi.<br><b>Upside</b>: potenziale di rialzo/ribasso rispetto al prezzo attuale.</div></span>
+        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.analyst">Consenso degli analisti finanziari che coprono il titolo.<br><br><b>Score</b>: da 1 (Forte Acquisto) a 5 (Forte Vendita).<br><b>Target price</b>: prezzo obiettivo medio stimato a 12 mesi.<br><b>Upside</b>: potenziale di rialzo/ribasso rispetto al prezzo attuale.</div></span>
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">
         <div id="sdm-rec" style="font-size:15px;font-weight:700;font-family:var(--fm)">—</div>
@@ -1884,7 +1884,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-funds" id="sd-funds-section">
       <div class="sd-section">
         <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span style="display:flex;align-items:center">Valutazione<span class="sd-info-btn">i<div class="sd-tip"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
+          <span style="display:flex;align-items:center">Valutazione<span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.valuation"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
           <span id="sd-val-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
@@ -1898,7 +1898,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <div class="sd-section">
         <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span style="display:flex;align-items:center">Redditività<span class="sd-info-btn">i<div class="sd-tip"><b>ROE</b>: rendimento sul capitale proprio. &gt;15% ottimo.<br><b>ROA</b>: rendimento sugli asset. &gt;5% buono.<br><b>Margine Lordo</b>: ricavi - costo del venduto / ricavi. &gt;40% eccellente.<br><b>Margine Netto</b>: utile netto / ricavi. Verde se positivo.<br><b>EBITDA</b>: utile prima di interessi, tasse e ammortamenti.</div></span></span>
+          <span style="display:flex;align-items:center">Redditività<span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.profitability"><b>ROE</b>: rendimento sul capitale proprio. &gt;15% ottimo.<br><b>ROA</b>: rendimento sugli asset. &gt;5% buono.<br><b>Margine Lordo</b>: ricavi - costo del venduto / ricavi. &gt;40% eccellente.<br><b>Margine Netto</b>: utile netto / ricavi. Verde se positivo.<br><b>EBITDA</b>: utile prima di interessi, tasse e ammortamenti.</div></span></span>
           <span id="sd-fund-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
@@ -1911,7 +1911,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
       <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.growth.title">Crescita</span><span class="sd-info-btn">i<div class="sd-tip"><b>Cresc. Ricavi/Utili</b>: variazione YoY (anno su anno). ▲ verde = crescita, ▼ rosso = calo.<br><b>Free Cash Flow</b>: liquidità generata dopo le spese in conto capitale. Più alto è meglio.<br><b>Azioni Circolanti</b>: numero totale di azioni emesse.</div></span></div>
+        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.growth.title">Crescita</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.growth"><b>Cresc. Ricavi/Utili</b>: variazione YoY (anno su anno). ▲ verde = crescita, ▼ rosso = calo.<br><b>Free Cash Flow</b>: liquidità generata dopo le spese in conto capitale. Più alto è meglio.<br><b>Azioni Circolanti</b>: numero totale di azioni emesse.</div></span></div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.revGrowth">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.earnGrowth">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
@@ -1922,7 +1922,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
       <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.bs.title">Bilancio</span><span class="sd-info-btn">i<div class="sd-tip"><b>Debt/Equity</b>: debito totale / capitale proprio. &lt;1 solido, &gt;2 attenzione.<br><b>Current Ratio</b>: attivo corrente / passivo corrente. &gt;1.5 buono.<br><b>Quick Ratio</b>: come Current Ratio ma senza le scorte. &gt;1 buono.<br><b>Float</b>: azioni disponibili per la negoziazione pubblica.</div></span></div>
+        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.bs.title">Bilancio</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.balance"><b>Debt/Equity</b>: debito totale / capitale proprio. &lt;1 solido, &gt;2 attenzione.<br><b>Current Ratio</b>: attivo corrente / passivo corrente. &gt;1.5 buono.<br><b>Quick Ratio</b>: come Current Ratio ma senza le scorte. &gt;1 buono.<br><b>Float</b>: azioni disponibili per la negoziazione pubblica.</div></span></div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalCash">Cassa Totale</div><div class="sd-m-val" id="sdm-cash">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalDebt">Debito Totale</div><div class="sd-m-val" id="sdm-debt">—</div></div>
@@ -1940,7 +1940,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="sd-section" style="margin-bottom:16px">
         <div class="sd-section-title" style="display:flex;align-items:center">
           <span data-i18n="sd.etf.overview">Panoramica ETF</span>
-          <span class="sd-info-btn">i<div class="sd-tip"><b>TER</b>: costo annuo totale del fondo (Total Expense Ratio). Più basso è meglio.<br><b>AUM</b>: patrimonio gestito totale (Assets Under Management).<br><b>Rend. YTD</b>: rendimento dall'inizio dell'anno.<br><b>P/E Pond.</b>: rapporto prezzo/utili medio ponderato delle posizioni.<br><b>Beta 3A</b>: volatilità vs mercato su 3 anni.</div></span>
+          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etfdata"><b>TER</b>: costo annuo totale del fondo (Total Expense Ratio). Più basso è meglio.<br><b>AUM</b>: patrimonio gestito totale (Assets Under Management).<br><b>Rend. YTD</b>: rendimento dall'inizio dell'anno.<br><b>P/E Pond.</b>: rapporto prezzo/utili medio ponderato delle posizioni.<br><b>Beta 3A</b>: volatilità vs mercato su 3 anni.</div></span>
         </div>
         <div class="sd-mg" style="grid-template-columns:repeat(4,1fr)">
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfTER">TER (Costo Ann.)</div><div class="sd-m-val" id="etfm-ter">—</div></div>
@@ -1961,13 +1961,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <!-- Holdings + Settori affiancati -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
         <div class="sd-section">
-          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.top10">Top 10 Posizioni</span><span class="sd-info-btn">i<div class="sd-tip">Le prime 10 posizioni dell'ETF per peso. Mostrano la concentrazione del fondo e i principali sottostanti.</div></span></div>
+          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.top10">Top 10 Posizioni</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etftop10">Le prime 10 posizioni dell'ETF per peso. Mostrano la concentrazione del fondo e i principali sottostanti.</div></span></div>
           <div id="sd-etf-holdings" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
             <div class="ld" data-i18n="common.loading">Caricamento...</div>
           </div>
         </div>
         <div class="sd-section">
-          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.sectors">Allocazione Settoriale</span><span class="sd-info-btn">i<div class="sd-tip">Distribuzione del patrimonio ETF per settore industriale. Mostra dove è concentrata l'esposizione del fondo.</div></span></div>
+          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.sectors">Allocazione Settoriale</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etfsectors">Distribuzione del patrimonio ETF per settore industriale. Mostra dove è concentrata l'esposizione del fondo.</div></span></div>
           <div id="sd-etf-sectors" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
             <div class="ld">—</div>
           </div>
@@ -1979,7 +1979,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-desc-card" style="margin-bottom:16px" id="sd-wyckoff-section">
       <div class="sd-section-title" style="display:flex;align-items:center">
         <span data-i18n="sd.wyckoff.title">Wyckoff — Analisi OBV vs Prezzo</span>
-        <span class="sd-info-btn">i<div class="sd-tip">Confronto tra andamento del prezzo e OBV (On-Balance Volume). Una divergenza rialzista si verifica quando il prezzo scende ma l'OBV sale — possibile fase di Accumulazione. Una divergenza ribassista indica possibile Distribuzione.</div></span>
+        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.obv">Confronto tra andamento del prezzo e OBV (On-Balance Volume). Una divergenza rialzista si verifica quando il prezzo scende ma l'OBV sale — possibile fase di Accumulazione. Una divergenza ribassista indica possibile Distribuzione.</div></span>
       </div>
       <div id="sd-wyckoff-content" style="margin-top:8px">
         <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
@@ -1991,7 +1991,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
         <span style="display:flex;align-items:center">
           <span data-i18n="sd.insider.title">🔍 Transazioni Insider</span>
-          <span class="sd-info-btn">i<div class="sd-tip">Acquisti e vendite di azioni da parte di dirigenti, amministratori e dipendenti della società. Gli acquisti insider sono spesso un segnale positivo sul futuro dell'azienda. Le vendite possono avere motivazioni personali e non indicare necessariamente un segnale negativo.</div></span>
+          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.insider">Acquisti e vendite di azioni da parte di dirigenti, amministratori e dipendenti della società. Gli acquisti insider sono spesso un segnale positivo sul futuro dell'azienda. Le vendite possono avere motivazioni personali e non indicare necessariamente un segnale negativo.</div></span>
         </span>
         <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
           <button class="cal-tab-btn active" id="sd-ins-all"  onclick="sdInsFilter('all',this)" data-i18n="ins.filter.all">Tutti</button>
@@ -2013,12 +2013,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- Notizie + Descrizione -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="sd-bottom-row">
       <div class="sd-desc-card" style="margin-bottom:0">
-        <div class="sd-section-title" style="display:flex;align-items:center" id="sd-company-title"><span data-i18n="sd.company.title">Sull'azienda</span><span class="sd-info-btn">i<div class="sd-tip">Descrizione del business e attività principale dell'azienda. Include settore, industria e sito web ufficiale.</div></span></div>
+        <div class="sd-section-title" style="display:flex;align-items:center" id="sd-company-title"><span data-i18n="sd.company.title">Sull'azienda</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.company">Descrizione del business e attività principale dell'azienda. Include settore, industria e sito web ufficiale.</div></span></div>
         <div class="sd-desc-txt" id="sd-description" data-i18n="common.loading">Caricamento...</div>
         <div style="margin-top:10px" id="sd-website"></div>
       </div>
       <div class="sd-desc-card" style="margin-bottom:0">
-        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.news.title">Ultime notizie</span><span class="sd-info-btn">i<div class="sd-tip">Notizie recenti relative all'azienda, aggregate da Finnhub e Yahoo Finance. Filtrate per rilevanza per evitare notizie generiche di mercato.</div></span></div>
+        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.news.title">Ultime notizie</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.news">Notizie recenti relative all'azienda, aggregate da Finnhub e Yahoo Finance. Filtrate per rilevanza per evitare notizie generiche di mercato.</div></span></div>
         <div id="sd-news-list" style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
           <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
         </div>
@@ -3019,7 +3019,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="port-tab-panel active" id="ptab-panoramica">
         <div class="card" id="port-perf-card">
           <div class="ch" style="flex-wrap:wrap;gap:8px">
-            <div><div class="ct"><span data-i18n="port.ct.perf">📈 Performance Portafoglio</span><span class="info-icon">i<span class="info-tip">Andamento del portafoglio confrontato con i più grandi investitori e fondi al mondo. Ogni linea rappresenta il rendimento normalizzato dal primo giorno del periodo selezionato.</span></span></div><div class="cs" id="port-perf-sub" data-i18n="port.cs.perf">Rendimento ponderato vs grandi investitori</div></div>
+            <div><div class="ct"><span data-i18n="port.ct.perf">📈 Performance Portafoglio</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.perf">Andamento del portafoglio confrontato con i più grandi investitori e fondi al mondo. Ogni linea rappresenta il rendimento normalizzato dal primo giorno del periodo selezionato.</span></span></div><div class="cs" id="port-perf-sub" data-i18n="port.cs.perf">Rendimento ponderato vs grandi investitori</div></div>
             <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
               <div style="display:flex;gap:3px" id="perf-range-btns">
                 <button class="port-sort-btn" id="prf-ytd" onclick="loadPortPerf('ytd',this)">YTD</button>
@@ -3045,7 +3045,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <canvas id="portPerfChart" height="90"></canvas>
         </div>
         <div class="card" style="margin-top:10px" id="port-cagr-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.cagr">📊 Rendimenti per titolo</span><span class="info-icon">i<span class="info-tip">Rendimento totale e CAGR (tasso annuo composto) per ogni posizione. Il CAGR normalizza il rendimento sulla durata dell'investimento, così puoi confrontare titoli detenuti per periodi diversi.</span></span></div><div class="cs" data-i18n="port.cs.cagr">P&L % · CAGR annualizzato · Periodo di detenzione</div></div></div>
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.cagr">📊 Rendimenti per titolo</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.returns">Rendimento totale e CAGR (tasso annuo composto) per ogni posizione. Il CAGR normalizza il rendimento sulla durata dell'investimento, così puoi confrontare titoli detenuti per periodi diversi.</span></span></div><div class="cs" data-i18n="port.cs.cagr">P&L % · CAGR annualizzato · Periodo di detenzione</div></div></div>
           <div id="port-cagr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="portnews-card">
@@ -3057,19 +3057,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <!-- RISCHIO: composizione + metriche rischio + stress test + correlazioni -->
       <div class="port-tab-panel" id="ptab-rischio">
         <div class="card" id="port-analysis-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.analysis">📊 Analisi del portafoglio</span><span class="info-icon">i<span class="info-tip">Composizione e profilo del portafoglio. Il punteggio indica quanto sei allineato al profilo scelto (0–100). Beta misura la sensibilità ai movimenti di mercato.</span></span></div><div class="cs" data-i18n="port.cs.analysis">Come è composto il tuo portafoglio e cosa fare per migliorarlo</div></div></div>
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.analysis">📊 Analisi del portafoglio</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.analysis">Composizione e profilo del portafoglio. Il punteggio indica quanto sei allineato al profilo scelto (0–100). Beta misura la sensibilità ai movimenti di mercato.</span></span></div><div class="cs" data-i18n="port.cs.analysis">Come è composto il tuo portafoglio e cosa fare per migliorarlo</div></div></div>
           <div id="port-analysis-content"><div class="ld" style="padding:10px" data-i18n="port.noItems.analysis">Aggiungi titoli per vedere l'analisi</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="risk-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.risk">📉 Rischio &amp; Volatilità</span><span class="info-icon">i<span class="info-tip">Sharpe Ratio: rendimento aggiustato per il rischio (>1 = buono). VaR 95%: perdita massima stimata nel 95% dei casi. Max Drawdown: calo massimo dal picco.</span></span></div><div class="cs" data-i18n="port.cs.risk">Sharpe ratio · VaR 95% · Max drawdown · Volatilità annualizzata</div></div></div>
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.risk">📉 Rischio &amp; Volatilità</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.risk">Sharpe Ratio: rendimento aggiustato per il rischio (>1 = buono). VaR 95%: perdita massima stimata nel 95% dei casi. Max Drawdown: calo massimo dal picco.</span></span></div><div class="cs" data-i18n="port.cs.risk">Sharpe ratio · VaR 95% · Max drawdown · Volatilità annualizzata</div></div></div>
           <div id="risk-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento metriche di rischio...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="stress-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.stress">⚡ Stress Test</span><span class="info-icon">i<span class="info-tip">Simulazione dell'impatto sul portafoglio in scenari di mercato estremi, basata sul beta ponderato di ogni titolo. Il beta misura la sensibilità ai movimenti del mercato.</span></span></div><div class="cs" data-i18n="port.cs.stress">Impatto stimato per scenari estremi · Beta ponderato portafoglio</div></div></div>
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.stress">⚡ Stress Test</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.stress">Simulazione dell'impatto sul portafoglio in scenari di mercato estremi, basata sul beta ponderato di ogni titolo. Il beta misura la sensibilità ai movimenti del mercato.</span></span></div><div class="cs" data-i18n="port.cs.stress">Impatto stimato per scenari estremi · Beta ponderato portafoglio</div></div></div>
           <div id="stress-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="corr-card">
-          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.corr">🔗 Correlazioni</span><span class="info-icon">i<span class="info-tip">Misura quanto i titoli si muovono insieme. +1 = perfettamente correlati, 0 = indipendenti, -1 = inversamente correlati. Basato sugli ultimi 3 mesi di prezzi giornalieri.</span></span></div><div class="cs" data-i18n="port.cs.corr">Matrice di correlazione 3 mesi · Verde = correlati · Rosso = inversamente correlati</div></div></div>
+          <div class="ch"><div><div class="ct"><span data-i18n="port.ct.corr">🔗 Correlazioni</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.corr">Misura quanto i titoli si muovono insieme. +1 = perfettamente correlati, 0 = indipendenti, -1 = inversamente correlati. Basato sugli ultimi 3 mesi di prezzi giornalieri.</span></span></div><div class="cs" data-i18n="port.cs.corr">Matrice di correlazione 3 mesi · Verde = correlati · Rosso = inversamente correlati</div></div></div>
           <div id="corr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
       </div>
@@ -3079,7 +3079,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="card" id="pac-card">
           <div class="ch">
             <div>
-              <div class="ct"><span data-i18n="port.ct.pac">📅 PAC — Piano di Accumulo</span><span class="info-icon">i<span class="info-tip">Il PAC (Piano di Accumulo del Capitale) consente di investire una somma fissa a cadenza mensile. L'acquisto viene simulato il primo giorno lavorativo disponibile del mese al prezzo di mercato di quel giorno.</span></span></div>
+              <div class="ct"><span data-i18n="port.ct.pac">📅 PAC — Piano di Accumulo</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.pac">Il PAC (Piano di Accumulo del Capitale) consente di investire una somma fissa a cadenza mensile. L'acquisto viene simulato il primo giorno lavorativo disponibile del mese al prezzo di mercato di quel giorno.</span></span></div>
               <div class="cs" data-i18n="port.cs.pac">Investimento automatico mensile · Primo giorno lavorativo del mese · Prezzo di mercato</div>
             </div>
             <button class="port-add-toggle" style="font-size:12px;padding:7px 14px" onclick="openPacForm()" data-i18n="pac.addBtn">＋ Nuovo PAC</button>
@@ -4901,9 +4901,9 @@ document.addEventListener('DOMContentLoaded',()=>{
     'tip.sd.company','tip.sd.news','tip.sd.score'
   ];
   const _INFO_TIP_KEYS=[
-    'tip.info.analysis','tip.info.risk','tip.info.stress','tip.info.corr',
-    'tip.info.perf','tip.info.returns','tip.info.targets','tip.info.myTargets',
-    'tip.info.div','tip.info.tax','tip.info.rebalance','tip.info.alerts','tip.info.pac'
+    'tip.info.perf','tip.info.returns','tip.info.analysis','tip.info.risk',
+    'tip.info.stress','tip.info.corr','tip.info.pac','tip.info.targets',
+    'tip.info.myTargets','tip.info.rebalance','tip.info.div','tip.info.tax','tip.info.alerts'
   ];
   document.querySelectorAll('.sd-tip').forEach((el,i)=>{
     if(_SD_TIP_KEYS[i])el.setAttribute('data-i18n-html',_SD_TIP_KEYS[i]);
