@@ -16092,9 +16092,15 @@ function exportTaxCSV(){
   if(!quotes||!portfolio.length){alert(_L({it:'Carica prima i dati del portafoglio',en:'Please load portfolio data first'}));return;}
   const TAX=0.26;
   const fxRate=_lastFxRate||1.08;
-  const rows=[currentLang==='en'
-    ?['Stock','Quantity','Buy Price','Currency','Current Price (orig.)','Current Price (€)','Total Cost (€)','Current Value (€)','P&L (€)','P&L %','Type','Estimated Tax 26% (€)']
-    :['Titolo','Quantità','Prezzo acquisto','Valuta','Prezzo attuale (orig.)','Prezzo attuale (€)','Costo totale (€)','Valore attuale (€)','P&L (€)','P&L %','Tipo','Imposta stimata 26% (€)']];
+  // Separatore ; per IT (Excel EU), , per EN — decimale , per IT, . per EN
+  const isIT=currentLang!=='en';
+  const sep=isIT?';':',';
+  const dec=isIT?',':'.';
+  const fmtN=(n,d=2)=>n.toFixed(d).replace('.',dec);
+
+  const rows=[isIT
+    ?['Titolo','Quantità','Prezzo acquisto','Valuta','Prezzo attuale (orig.)','Prezzo attuale (€)','Costo totale (€)','Valore attuale (€)','P&L (€)','P&L %','Tipo','Imposta stimata 26% (€)']
+    :['Stock','Quantity','Buy Price','Currency','Current Price (orig.)','Current Price (€)','Total Cost (€)','Current Value (€)','P&L (€)','P&L %','Type','Estimated Tax 26% (€)']];
   portfolio.forEach((item,i)=>{
     const q=quotes[i];const p=q?.price??item.buyPrice;
     const isEUR=item.currency==='EUR';
@@ -16103,12 +16109,13 @@ function exportTaxCSV(){
     const pnl=val-inv;const pnlPct=inv>0?(pnl/inv*100):0;
     const pnlEUR=pnl*toEUR;const invEUR=inv*toEUR;const valEUR=val*toEUR;
     const isGain=pnlEUR>=0;const taxEUR=isGain?pnlEUR*TAX:0;
-    rows.push([item.sym,item.qty,item.buyPrice,item.currency||'USD',p.toFixed(4),(p*toEUR).toFixed(4),invEUR.toFixed(2),valEUR.toFixed(2),pnlEUR.toFixed(2),pnlPct.toFixed(2),isGain?_L({it:'Plusvalenza',en:'Capital Gain'}):_L({it:'Minusvalenza',en:'Capital Loss'}),taxEUR.toFixed(2)]);
+    rows.push([item.sym,fmtN(item.qty,4),fmtN(item.buyPrice,4),item.currency||'USD',fmtN(p,4),fmtN(p*toEUR,4),fmtN(invEUR,2),fmtN(valEUR,2),fmtN(pnlEUR,2),fmtN(pnlPct,2),isGain?_L({it:'Plusvalenza',en:'Capital Gain'}):_L({it:'Minusvalenza',en:'Capital Loss'}),fmtN(taxEUR,2)]);
   });
-  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(sep)).join('\n');
   const blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download=`riepilogo_fiscale_${new Date().toISOString().slice(0,10)}.csv`;
+  const fname=isIT?`riepilogo_fiscale_${new Date().toISOString().slice(0,10)}.csv`:`tax_summary_${new Date().toISOString().slice(0,10)}.csv`;
+  const a=document.createElement('a');a.href=url;a.download=fname;
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
 }
 
