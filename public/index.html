@@ -9067,13 +9067,13 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
 }
 
 function renderPortDailyText(el, payload){
-  let text='', macroNews=[], indicesMap={}, newsMap={};
+  let text='', indicesMap={}, newsMap={};
   try{
     const p=JSON.parse(payload);
-    text=p.text||''; macroNews=p.macroNews||[]; indicesMap=p.indicesMap||{}; newsMap=p.newsMap||{};
+    text=p.text||''; indicesMap=p.indicesMap||{}; newsMap=p.newsMap||{};
   } catch(e){ text=payload; }
 
-  // Ricostruisci assets dalle variabili globali per i visual cards
+  // ── Assets dai globals ──
   const _fxR=_lastFxRate||1.08;
   const _assets=(typeof portfolio!=='undefined'&&Array.isArray(portfolio)&&typeof portQuotes!=='undefined')
     ?portfolio.map((item,i)=>{
@@ -9084,107 +9084,109 @@ function renderPortDailyText(el, payload){
         return{sym:item.sym,name:item.name||q.name||item.sym,chgPct,chgUSD};
       }).filter(Boolean)
     :[];
+  const _byPct=[..._assets].sort((a,b)=>a.chgPct-b.chgPct);
+  const _best=_byPct[_byPct.length-1], _worst=_byPct[0];
   const _topMovers=[..._assets].sort((a,b)=>Math.abs(b.chgPct)-Math.abs(a.chgPct)).slice(0,3);
+  const nUp=_assets.filter(a=>a.chgPct>=0).length;
+  const nDn=_assets.filter(a=>a.chgPct<0).length;
 
-  // ── Barra indici con EUR/USD ──
-  const IDX=[
-    {sym:'^GSPC',label:'S&P 500',dec:0},
-    {sym:'^IXIC',label:'Nasdaq',dec:0},
-    {sym:'^DJI', label:'Dow',dec:0},
-    {sym:'GC=F', label:_L({it:'Oro',en:'Gold'}),dec:1},
-    {sym:'CL=F', label:_L({it:'Petrolio',en:'Oil'}),dec:1},
-  ];
-  const _mkChip=(label,changeTxt,subTxt,bg,border,clr)=>
-    `<div style="display:flex;flex-direction:column;align-items:center;background:${bg};border:1px solid ${border};border-radius:8px;padding:7px 10px;min-width:60px;flex:1">
+  // ── Dati indici ──
+  const sp=indicesMap['^GSPC'],nq=indicesMap['^IXIC'],dj=indicesMap['^DJI'],gc=indicesMap['GC=F'],cl=indicesMap['CL=F'];
+  const _chg=d=>d?.price&&d?.prev?(d.price-d.prev)/d.prev*100:null;
+  const spC=_chg(sp),nqC=_chg(nq),djC=_chg(dj),gcC=_chg(gc),clC=_chg(cl);
+  const equityVals=[spC,nqC,djC].filter(v=>v!=null);
+  const avgIdx=equityVals.length?equityVals.reduce((a,b)=>a+b,0)/equityVals.length:0;
+
+  // ── Zona 1: chip indici ──
+  const _chip=(label,pct,price,neutral)=>{
+    const up=neutral?null:pct>=0;
+    const bg=neutral?'rgba(59,130,246,.07)':up?'rgba(5,150,105,.07)':'rgba(220,38,38,.07)';
+    const bd=neutral?'rgba(59,130,246,.15)':up?'rgba(5,150,105,.18)':'rgba(220,38,38,.18)';
+    const tc=neutral?'var(--b)':up?'#059669':'#DC2626';
+    return `<div style="display:flex;flex-direction:column;align-items:center;background:${bg};border:1px solid ${bd};border-radius:8px;padding:7px 10px;min-width:56px;flex:1">
       <div style="font-size:9px;color:var(--t3);font-family:var(--fm);font-weight:600;white-space:nowrap;margin-bottom:2px">${label}</div>
-      <div style="font-family:var(--fm);font-size:12px;font-weight:800;color:${clr}">${changeTxt}</div>
-      <div style="font-size:9px;color:var(--t2);font-family:var(--fm);margin-top:1px;white-space:nowrap">${subTxt}</div>
+      <div style="font-family:var(--fm);font-size:12px;font-weight:800;color:${tc}">${neutral?price:(pct>=0?'+':'')+pct.toFixed(2)+'%'}</div>
+      <div style="font-size:9px;color:var(--t2);font-family:var(--fm);margin-top:1px;white-space:nowrap">${neutral?'—':price}</div>
     </div>`;
-  const idxChips=IDX.map(({sym,label,dec})=>{
-    const d=indicesMap[sym];
-    if(!d?.price||!d?.prev) return '';
-    const chg=(d.price-d.prev)/d.prev*100;
-    const up=chg>=0;
-    const priceStr=d.price.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{maximumFractionDigits:dec});
-    return _mkChip(label,(up?'+':'')+chg.toFixed(2)+'%',priceStr,
-      up?'rgba(5,150,105,.07)':'rgba(220,38,38,.07)',
-      up?'rgba(5,150,105,.18)':'rgba(220,38,38,.18)',
-      up?'#059669':'#DC2626');
-  }).filter(Boolean);
-  if(_lastFxRate) idxChips.push(_mkChip('EUR/USD',_fxR.toFixed(4),'—',
-    'rgba(59,130,246,.07)','rgba(59,130,246,.15)','var(--b)'));
-  const idxStrip=idxChips.length
-    ?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px">${idxChips.join('')}</div>`:'';
-
-  // ── Helpers testo ──
-  const _esc=t=>t
-    .replace(/<strong>(.+?)<\/strong>/g,'<strong style="color:var(--t);font-weight:700">$1</strong>')
-    .replace(/<em>"(.+?)"<\/em>/g,'<em style="font-style:italic;color:var(--t3)">"$1"</em>');
-  const _renderContent=content=>{
-    const lines=content.split('\n').filter(l=>l.trim());
-    let html='',bullets=[];
-    const flush=()=>{if(bullets.length){html+=`<div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 2px">${bullets.join('')}</div>`;bullets=[];}};
-    for(const line of lines){
-      const tr=line.trim();
-      if(tr.startsWith('•')){
-        bullets.push(`<div style="display:flex;gap:7px;align-items:flex-start;font-size:12px;line-height:1.55">
-          <span style="color:var(--b);font-size:8px;flex-shrink:0;margin-top:4px;font-weight:700">●</span>
-          <span style="color:var(--t2)">${_esc(tr.slice(1).trim())}</span></div>`);
-      } else { flush(); html+=`<div style="font-size:12px;color:var(--t2);line-height:1.65;margin-top:4px">${_esc(tr)}</div>`; }
-    }
-    flush(); return html;
   };
+  const IDX=[
+    {label:'S&P 500',pct:spC,d:sp,dec:0},{label:'Nasdaq',pct:nqC,d:nq,dec:0},{label:'Dow',pct:djC,d:dj,dec:0},
+    {label:_L({it:'Oro',en:'Gold'}),pct:gcC,d:gc,dec:1},{label:_L({it:'Petrolio',en:'Oil'}),pct:clC,d:cl,dec:1},
+  ];
+  const idxChips=IDX.filter(x=>x.d?.price&&x.d?.prev&&x.pct!=null).map(x=>
+    _chip(x.label,x.pct,x.d.price.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{maximumFractionDigits:x.dec}))
+  );
+  if(_lastFxRate) idxChips.push(_chip('EUR/USD',0,_fxR.toFixed(4),true));
+  const idxStrip=idxChips.length?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">${idxChips.join('')}</div>`:'';
 
-  // ── Parse e render sezioni testo ──
-  const ICONS={'Contesto di mercato':'🌐','Market Context':'🌐','Il tuo portafoglio':'📋','Your Portfolio':'📋','Earnings':'📅','Sintesi':'💡','Summary':'💡'};
-  const _isSintesi=t=>t==='Sintesi'||t==='Summary';
-  const _isEvidenza=t=>t.includes('evidenza')||t.includes('Focus');
-  const sections=text.split('\n\n').map(block=>{
-    const m=block.match(/^\*\*(.+?)\*\*\n([\s\S]*)/);
-    return m?{title:m[1],content:m[2].trim()}:{title:null,content:block.trim()};
-  }).filter(s=>s.content);
+  // ── Zona 2: riga sentiment (1 frase compatta) ──
+  let sentHtml='';
+  if(equityVals.length){
+    const parts=[];
+    if(avgIdx>1) parts.push(_L({it:'📈 Mercati in forte rialzo',en:'📈 Markets strongly higher'}));
+    else if(avgIdx>0.1) parts.push(_L({it:'📈 Mercati positivi',en:'📈 Markets positive'}));
+    else if(avgIdx>-0.1) parts.push(_L({it:'➡ Mercati piatti',en:'➡ Markets flat'}));
+    else if(avgIdx>-1) parts.push(_L({it:'📉 Mercati in ribasso',en:'📉 Markets declining'}));
+    else parts.push(_L({it:'📉 Mercati in forte ribasso',en:'📉 Markets sharply lower'}));
+    if(spC!=null&&nqC!=null){const d=nqC-spC;if(d>0.5)parts.push(_L({it:'Tech in testa',en:'Tech leading'}));else if(d<-0.5)parts.push(_L({it:'Ciclici avanti',en:'Cyclicals ahead'}));}
+    if(gcC!=null&&gcC>0.5)parts.push(_L({it:'Oro in rialzo',en:'Gold rising'}));
+    else if(gcC!=null&&gcC<-0.5)parts.push(_L({it:'Oro in calo',en:'Gold falling'}));
+    if(clC!=null&&Math.abs(clC)>1)parts.push((clC>0?_L({it:'Petrolio su',en:'Oil up'}):_L({it:'Petrolio giù',en:'Oil down'}))+' '+(clC>=0?'+':'')+clC.toFixed(1)+'%');
+    sentHtml=`<div style="font-size:11px;color:var(--t2);padding:6px 10px;background:var(--s2);border-radius:7px;border-left:2px solid var(--b);margin-bottom:12px">${parts.join(' · ')}</div>`;
+  }
 
-  const mainHtml=sections.filter(s=>!s.title||!_isEvidenza(s.title)).map(s=>{
-    if(!s.title) return `<div style="font-size:12px;color:var(--t2);line-height:1.6;margin-top:8px">${s.content}</div>`;
-    const icon=Object.entries(ICONS).find(([k])=>s.title.includes(k))?.[1]||'';
-    if(_isSintesi(s.title)){
-      return `<div style="margin-top:14px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.14);border-radius:10px;padding:10px 14px">
-        <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--b);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">💡 ${s.title}</div>
-        <div style="font-size:12px;color:var(--t2);line-height:1.6">${_esc(s.content)}</div>
-      </div>`;
-    }
-    return `<div style="margin-top:14px">
-      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t);letter-spacing:.5px;text-transform:uppercase;border-left:2px solid var(--b);padding-left:7px;margin-bottom:7px">${icon?icon+' ':''}${s.title}</div>
-      <div>${_renderContent(s.content)}</div>
-    </div>`;
-  }).join('');
+  // ── Zona 3: barra quick stats portafoglio ──
+  let statsHtml='';
+  if(_assets.length){
+    const _f1=v=>(v>=0?'+':'')+v.toFixed(1)+'%';
+    const items=[
+      `<span style="font-weight:700;font-family:var(--fm);color:${nUp>0?'#059669':'var(--t3)'}">↑ ${nUp}</span>`,
+      `<span style="font-weight:700;font-family:var(--fm);color:${nDn>0?'#DC2626':'var(--t3)'}">↓ ${nDn}</span>`,
+    ];
+    if(_best&&_assets.length>1) items.push(`${_L({it:'Top',en:'Top'})}: <strong style="font-family:var(--fm)">${_best.sym}</strong> <span style="color:#059669;font-family:var(--fm)">${_f1(_best.chgPct)}</span>`);
+    if(_worst&&_worst.sym!==_best?.sym) items.push(`${_L({it:'Peggiore',en:'Worst'})}: <strong style="font-family:var(--fm)">${_worst.sym}</strong> <span style="color:#DC2626;font-family:var(--fm)">${_f1(_worst.chgPct)}</span>`);
+    statsHtml=`<div style="display:flex;flex-wrap:wrap;gap:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;margin-bottom:14px;font-size:11px;color:var(--t2);align-items:center">${items.join('<span style="color:var(--bd)"> · </span>')}</div>`;
+  }
 
-  // ── Titoli in evidenza: visual cards con link news cliccabili ──
-  const _moversWithNews=_topMovers.filter(a=>Math.abs(a.chgPct)>0.05);
-  let evidenzaHtml='';
-  if(_moversWithNews.length){
-    const cards=_moversWithNews.map(a=>{
+  // ── Zona 4: top movers cards ──
+  const _movers=_topMovers.filter(a=>Math.abs(a.chgPct)>0.05);
+  let moversHtml='';
+  if(_movers.length){
+    const cards=_movers.map(a=>{
       const up=a.chgPct>=0;
       const news=(newsMap[a.sym]||[])[0];
-      return `<div style="background:var(--s2);border:1px solid ${up?'rgba(5,150,105,.18)':'rgba(220,38,38,.18)'};border-left:3px solid ${up?'#059669':'#DC2626'};border-radius:8px;padding:8px 10px;min-width:0">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:${a.name&&a.name!==a.sym?'3':'5'}px">
-          <div style="font-family:var(--fm);font-size:11px;font-weight:800;color:var(--t)">${a.sym}</div>
-          <div style="font-family:var(--fm);font-size:12px;font-weight:800;color:${up?'#059669':'#DC2626'};flex-shrink:0">${up?'+':''}${a.chgPct.toFixed(2)}%</div>
+      return `<div style="background:var(--s2);border:1px solid ${up?'rgba(5,150,105,.18)':'rgba(220,38,38,.18)'};border-left:3px solid ${up?'#059669':'#DC2626'};border-radius:8px;padding:9px 11px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${a.name&&a.name!==a.sym?'3':'6'}px">
+          <span style="font-family:var(--fm);font-size:12px;font-weight:800;color:var(--t)">${a.sym}</span>
+          <span style="font-family:var(--fm);font-size:12px;font-weight:800;color:${up?'#059669':'#DC2626'}">${up?'+':''}${a.chgPct.toFixed(2)}%</span>
         </div>
         ${a.name&&a.name!==a.sym?`<div style="font-size:9px;color:var(--t3);margin-bottom:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${a.name}</div>`:''}
-        ${news?`<a href="${news.link||'#'}" target="_blank" rel="noopener" style="text-decoration:none;display:block">
-          <div style="font-size:10px;color:var(--t2);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${news.title}</div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:3px">${news.publisher||''}${news.time?' · '+_timeAgo(news.time):''}</div>
-        </a>`:''}
+        ${news
+          ?`<a href="${news.link||'#'}" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+              <div style="font-size:10px;color:var(--t2);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${news.title}</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:3px">${news.publisher||''}${news.time?' · '+_timeAgo(news.time):''}</div>
+            </a>`
+          :`<div style="font-size:10px;color:var(--t3);font-style:italic">${_L({it:'Nessuna news recente',en:'No recent news'})}</div>`}
       </div>`;
     }).join('');
-    evidenzaHtml=`<div style="margin-top:14px">
+    moversHtml=`<div style="margin-bottom:14px">
       <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t);letter-spacing:.5px;text-transform:uppercase;border-left:2px solid var(--b);padding-left:7px;margin-bottom:8px">📊 ${_L({it:'Titoli in evidenza',en:'Stocks in Focus'})}</div>
-      <div style="display:flex;flex-direction:column;gap:7px">${cards}</div>
+      <div style="display:flex;flex-direction:column;gap:6px">${cards}</div>
     </div>`;
   }
 
-  el.innerHTML=`${idxStrip}<div>${mainHtml}</div>${evidenzaHtml}`;
+  // ── Zona 5: sintesi (estratta dal testo, 1-2 frasi) ──
+  let sintesiHtml='';
+  const _sm=text.match(/\*\*(?:Sintesi|Summary)\*\*\n([\s\S]*?)(?:\n\n|$)/);
+  if(_sm){
+    const _esc=t=>t.replace(/<strong>(.+?)<\/strong>/g,'<strong style="color:var(--t);font-weight:700">$1</strong>');
+    sintesiHtml=`<div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.14);border-radius:10px;padding:10px 14px">
+      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--b);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">💡 ${_L({it:'Sintesi',en:'Summary'})}</div>
+      <div style="font-size:12px;color:var(--t2);line-height:1.6">${_esc(_sm[1].trim())}</div>
+    </div>`;
+  }
+
+  el.innerHTML=`${idxStrip}${sentHtml}${statsHtml}${moversHtml}${sintesiHtml}`;
 }
 
 function _timeAgo(ts){
