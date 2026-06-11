@@ -1259,6 +1259,24 @@ html.dark .auth-box{background:#1e293b}
 .lw-tt-perf.up{background:var(--g2);color:#047857}
 .lw-tt-perf.down{background:var(--r2);color:#B91C1C}
 html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
+/* ── MEASURE TOOL ── */
+.lw-measure-tip{position:absolute;z-index:101;pointer-events:none;background:rgba(120,85,0,.97);border:none;border-radius:8px;padding:8px 12px;box-shadow:0 4px 22px rgba(0,0,0,.32);font-family:var(--fm);line-height:1.5;display:none;min-width:120px;white-space:nowrap}
+.lw-measure-tip.vis{display:block}
+.lw-mt-label{font-size:9px;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
+.lw-mt-pct{font-size:16px;font-weight:800;line-height:1.2}
+.lw-mt-sub{font-size:10px;color:rgba(255,255,255,.72);margin-top:3px}
+/* Sub-chart header */
+.sc-hdr{display:flex;align-items:center;gap:4px;padding:2px 10px;background:var(--s2);border-top:1px solid var(--bd);font-family:var(--fm);height:20px;flex-shrink:0}
+.sc-hdr-name{font-size:9px;font-weight:700;color:var(--t2);letter-spacing:.4px;text-transform:uppercase}
+.sc-hdr-sep{font-size:9px;color:var(--bd)}
+.sc-hdr-val{font-size:9px;font-weight:700;color:var(--b)}
+.sc-hdr-close{margin-left:auto;width:16px;height:16px;border:none;background:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;border-radius:3px;display:flex;align-items:center;justify-content:center;padding:0;flex-shrink:0;transition:color .12s}
+.sc-hdr-close:hover{color:var(--t)}
+/* Chart legend overlay */
+.chart-legend{position:absolute;top:6px;left:6px;z-index:98;display:flex;flex-wrap:wrap;gap:3px;pointer-events:none}
+.cl-chip{font-family:var(--fm);font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--card);border:1px solid var(--bd);white-space:nowrap;display:inline-flex;align-items:center;gap:3px;opacity:.9}
+.cl-dot{width:12px;height:2px;border-radius:1px;flex-shrink:0}
+.cl-val{color:var(--t2);font-weight:600}
 /* ═══ CRYPTO ═══ */
 .crypto-logo{width:24px;height:24px;border-radius:50%;object-fit:cover;vertical-align:middle}
 .crypto-rank{font-family:var(--fm);font-size:10px;color:var(--t3);font-weight:700}
@@ -1827,6 +1845,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <button class="cc-btn" id="sd-ind-bb" onclick="toggleSdInd('bb',this)" style="color:#6366f1" data-i18n-ti="ind.bb" title="Bande di Bollinger (20,2)">Bollinger</button>
             </div>
           </div>
+          <button class="cc-btn" id="sd-measure-btn" onclick="toggleMeasure('sd-chart',this)" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 9.5L9.5 1.5M1.5 6.5V9.5H4.5M6.5 1.5H9.5V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Misura
+          </button>
         </div>
         <div id="sd-chart" style="width:100%;height:300px"></div>
         <div id="sd-rsi-chart" style="display:none;width:100%;height:90px;margin-top:3px;border-top:1px solid var(--bd)"></div>
@@ -2432,6 +2454,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <button class="cc-btn" id="ch1-ind-bb" onclick="toggleDashInd(1,'bb',this)" style="color:#6366f1">Bollinger</button>
           </div>
         </div>
+        <button class="cc-btn" id="ch1-measure-btn" onclick="toggleMeasure('dashChart1',this)" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 9.5L9.5 1.5M1.5 6.5V9.5H4.5M6.5 1.5H9.5V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Misura
+        </button>
       </div>
       <div id="dashChart1" style="width:100%;height:300px"></div>
       <div id="dashRsi1" style="display:none;width:100%;height:90px;margin-top:3px;border-top:1px solid var(--bd)"></div>
@@ -2543,6 +2569,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <button class="cc-btn" id="ch2-ind-bb" onclick="toggleDashInd(2,'bb',this)" style="color:#6366f1">Bollinger</button>
           </div>
         </div>
+        <button class="cc-btn" id="ch2-measure-btn" onclick="toggleMeasure('dashChart2',this)" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 9.5L9.5 1.5M1.5 6.5V9.5H4.5M6.5 1.5H9.5V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Misura
+        </button>
       </div>
       <div id="dashChart2" style="width:100%;height:300px"></div>
       <div id="dashRsi2" style="display:none;width:100%;height:90px;margin-top:3px;border-top:1px solid var(--bd)"></div>
@@ -4988,10 +5018,29 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
   if(!chart||!container||!mainSeries)return;
   if(getComputedStyle(container).position==='static')container.style.position='relative';
   const old=container.querySelector('.lw-tooltip');if(old)old.remove();
+  const oldMt=container.querySelector('.lw-measure-tip');if(oldMt)oldMt.remove();
+  if(!container.querySelector('.chart-legend')){const leg=document.createElement('div');leg.className='chart-legend';container.appendChild(leg);}
   const tip=document.createElement('div');tip.className='lw-tooltip';container.appendChild(tip);
+  const mt=document.createElement('div');mt.className='lw-measure-tip';container.appendChild(mt);
   const firstClose=pts&&pts.length?+pts[0].close:null;
+  const tKey=t=>typeof t==='object'?`${t.year}-${t.month}-${t.day}`:String(t);
+  const fmtDate=(t,full)=>{try{let d;if(typeof t==='object')d=new Date(t.year,t.month-1,t.day);else d=new Date(t*1000);return d.toLocaleDateString('it-IT',full?{day:'2-digit',month:'short',year:'numeric'}:{day:'2-digit',month:'short'});}catch(e){return '';}};
+  chart.subscribeClick(param=>{
+    if(!container._measureMode)return;
+    if(!param.time||!param.seriesData||!param.seriesData.size){container._measureAnchor=null;mt.classList.remove('vis');return;}
+    const data=param.seriesData.get(mainSeries);if(!data)return;
+    const price=type==='candle'?data.close:(data.value??data.close);if(price==null)return;
+    if(!container._measureAnchor){
+      container._measureAnchor={price,time:param.time,dateStr:fmtDate(param.time,false)};
+    } else {
+      container._measureAnchor=null;mt.classList.remove('vis');
+    }
+  });
   chart.subscribeCrosshairMove(param=>{
-    if(!param.time||!param.point||!param.seriesData||!param.seriesData.size){tip.classList.remove('vis');return;}
+    const inMeasure=!!container._measureMode;
+    if(!param.time||!param.point||!param.seriesData||!param.seriesData.size){
+      tip.classList.remove('vis');if(!container._measureAnchor)mt.classList.remove('vis');return;
+    }
     const data=param.seriesData.get(mainSeries);
     if(!data){tip.classList.remove('vis');return;}
     let price,open,high,low,close;
@@ -4999,28 +5048,104 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
     else{price=data.value??data.close;close=price;}
     if(price==null){tip.classList.remove('vis');return;}
     const dec=price<10?4:price<100?2:price<10000?2:0;
-    let dateStr='';
-    try{
-      if(typeof param.time==='object'){const{year,month,day}=param.time;dateStr=new Date(year,month-1,day).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'});}
-      else{dateStr=new Date(param.time*1000).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'});}
-    }catch(e){}
-    const perf=firstClose&&close?(close-firstClose)/firstClose*100:null;
-    let html=`<div class="lw-tt-date">${dateStr}</div>`;
-    if(type==='candle'&&open!=null){
-      html+=`<div class="lw-tt-price">C&nbsp;${fmt(close,dec)}</div><div class="lw-tt-ohlc">A&nbsp;<b>${fmt(open,dec)}</b>&nbsp;·&nbsp;H&nbsp;<b style="color:var(--g)">${fmt(high,dec)}</b>&nbsp;·&nbsp;L&nbsp;<b style="color:var(--r)">${fmt(low,dec)}</b></div>`;
-    }else{html+=`<div class="lw-tt-price">${fmt(price,dec)}</div>`;}
-    if(perf!=null)html+=`<span class="lw-tt-perf ${perf>=0?'up':'down'}">${perf>=0?'+':''}${fmt(perf,2)}%</span>`;
-    tip.innerHTML=html;tip.classList.add('vis');
+    const dateStr=fmtDate(param.time,true);
     const cW=container.clientWidth,cH=container.clientHeight;
-    const tw=tip.offsetWidth||140,th=tip.offsetHeight||80;
-    let left=param.point.x+14;
-    if(left+tw>cW-4)left=param.point.x-tw-14;
-    let top=param.point.y-th/2;
-    top=Math.max(4,Math.min(top,cH-th-4));
-    tip.style.left=left+'px';tip.style.top=top+'px';
+    if(inMeasure){
+      tip.classList.remove('vis');
+      if(container._measureAnchor){
+        const a=container._measureAnchor;
+        const pct=(close-a.price)/a.price*100;
+        const absChg=close-a.price;
+        let days=0;try{let d1,d2;if(typeof a.time==='object')d1=new Date(a.time.year,a.time.month-1,a.time.day);else d1=new Date(a.time*1000);if(typeof param.time==='object')d2=new Date(param.time.year,param.time.month-1,param.time.day);else d2=new Date(param.time*1000);days=Math.abs(Math.round((d2-d1)/86400000));}catch(e){}
+        const col=pct>=0?'#4ade80':'#f87171';const sign=pct>=0?'+':'';
+        mt.innerHTML=`<div class="lw-mt-label">${_L({it:'Misura rendimento',en:'Return measure'})}</div><div class="lw-mt-pct" style="color:${col}">${sign}${fmt(pct,2)}%</div><div class="lw-mt-sub">${a.dateStr} &rarr; ${dateStr}</div><div class="lw-mt-sub">${sign}${fmt(absChg,dec)} &middot; ${days} ${_L({it:'giorni',en:'days'})}</div>`;
+      } else {
+        mt.innerHTML=`<div class="lw-mt-label">${_L({it:'Misura %',en:'Measure %'})}</div><div style="font-size:10px;color:rgba(255,255,255,.75)">${_L({it:'Clicca per impostare il punto di partenza',en:'Click to set start point'})}</div>`;
+      }
+      mt.classList.add('vis');
+      const tw=mt.offsetWidth||180,th=mt.offsetHeight||60;
+      let left=param.point.x+14;if(left+tw>cW-4)left=param.point.x-tw-14;
+      let top=param.point.y-th/2;top=Math.max(4,Math.min(top,cH-th-4));
+      mt.style.left=left+'px';mt.style.top=top+'px';
+    } else {
+      mt.classList.remove('vis');
+      const perf=firstClose&&close?(close-firstClose)/firstClose*100:null;
+      let html=`<div class="lw-tt-date">${dateStr}</div>`;
+      if(type==='candle'&&open!=null){
+        html+=`<div class="lw-tt-price">C&nbsp;${fmt(close,dec)}</div><div class="lw-tt-ohlc">A&nbsp;<b>${fmt(open,dec)}</b>&nbsp;&middot;&nbsp;H&nbsp;<b style="color:var(--g)">${fmt(high,dec)}</b>&nbsp;&middot;&nbsp;L&nbsp;<b style="color:var(--r)">${fmt(low,dec)}</b></div>`;
+      }else{html+=`<div class="lw-tt-price">${fmt(price,dec)}</div>`;}
+      if(perf!=null)html+=`<span class="lw-tt-perf ${perf>=0?'up':'down'}">${perf>=0?'+':''}${fmt(perf,2)}%</span>`;
+      tip.innerHTML=html;tip.classList.add('vis');
+      const tw=tip.offsetWidth||140,th=tip.offsetHeight||80;
+      let left=param.point.x+14;if(left+tw>cW-4)left=param.point.x-tw-14;
+      let top=param.point.y-th/2;top=Math.max(4,Math.min(top,cH-th-4));
+      tip.style.left=left+'px';tip.style.top=top+'px';
+    }
+    if(container._indData&&param.time){
+      const tk=tKey(param.time);
+      const pfx=container.id==='sd-chart'?'sd':container.id==='dashChart1'?'ch1':container.id==='dashChart2'?'ch2':null;
+      if(pfx){
+        const rsiArr=container._indData.rsi;
+        if(rsiArr){const r=rsiArr.find(x=>tKey(x.time)===tk)||rsiArr[rsiArr.length-1];const el=document.getElementById(`${pfx}-rsi-hdr-val`);if(el&&r)el.textContent=fmt(r.value,1);}
+        const macdArr=container._indData.macd;
+        if(macdArr){const r=macdArr.find(x=>tKey(x.time)===tk)||macdArr[macdArr.length-1];const el=document.getElementById(`${pfx}-macd-hdr-val`);if(el&&r)el.textContent=`M:${fmt(r.macd,2)} S:${fmt(r.signal,2)}`;}
+        const stochArr=container._indData.stoch;
+        if(stochArr){const r=stochArr.find(x=>tKey(x.time)===tk)||stochArr[stochArr.length-1];const el=document.getElementById(`${pfx}-stoch-hdr-val`);if(el&&r)el.textContent=`K:${fmt(r.k,0)} D:${fmt(r.d,0)}`;}
+      }
+    }
+    const legend=container.querySelector('.chart-legend');
+    if(legend&&container._legendData&&param.time){
+      const tk=tKey(param.time);
+      legend.querySelectorAll('.cl-chip[data-ind]').forEach(chip=>{
+        const key=chip.dataset.ind;const arr=container._legendData[key];if(!arr||!arr.length)return;
+        const row=arr.find(r=>tKey(r.time)===tk)||arr[arr.length-1];
+        const valEl=chip.querySelector('.cl-val');if(!valEl||!row)return;
+        if(row.value!=null)valEl.textContent=fmt(row.value,2);
+        else if(row.upper!=null)valEl.textContent=`${fmt(row.upper,2)} / ${fmt(row.lower,2)}`;
+      });
+    }
   });
 }
 
+// ── MEASURE TOOL ──
+function toggleMeasure(containerId,btn){
+  const container=document.getElementById(containerId);if(!container)return;
+  const active=!container._measureMode;
+  container._measureMode=active;
+  btn.classList.toggle('active',active);
+  container.style.cursor=active?'crosshair':'';
+  if(!active){
+    container._measureAnchor=null;
+    const mt=container.querySelector('.lw-measure-tip');if(mt)mt.classList.remove('vis');
+  }
+}
+// ── SUB-CHART HEADER ──
+function _addSubHdr(chartDiv,name,valId,closeFn){
+  _removeSubHdr(chartDiv);
+  const hdr=document.createElement('div');hdr.className='sc-hdr';
+  hdr.innerHTML=`<span class="sc-hdr-name">${name}</span><span class="sc-hdr-sep">·</span><span class="sc-hdr-val" id="${valId}">—</span><button class="sc-hdr-close" onclick="${closeFn}">×</button>`;
+  chartDiv.parentNode.insertBefore(hdr,chartDiv);
+}
+function _removeSubHdr(chartDiv){
+  if(!chartDiv)return;
+  const prev=chartDiv.previousElementSibling;
+  if(prev&&prev.classList.contains('sc-hdr'))prev.remove();
+}
+// ── CHART LEGEND ──
+function _updateLegend(container,key,color,label,data){
+  const legend=container.querySelector('.chart-legend');if(!legend)return;
+  const old=legend.querySelector(`.cl-chip[data-ind="${key}"]`);if(old)old.remove();
+  if(!container._legendData)container._legendData={};
+  container._legendData[key]=data;
+  const chip=document.createElement('div');chip.className='cl-chip';chip.dataset.ind=key;
+  chip.innerHTML=`<span class="cl-dot" style="background:${color}"></span>${label} <span class="cl-val">—</span>`;
+  legend.appendChild(chip);
+}
+function _removeLegend(container,key){
+  const legend=container.querySelector('.chart-legend');
+  if(legend){const old=legend.querySelector(`.cl-chip[data-ind="${key}"]`);if(old)old.remove();}
+  if(container&&container._legendData)delete container._legendData[key];
+}
 /* ── DASH CHARTS ── */
 function onDashSymChange(n){
   const sel=document.getElementById(`ch${n}-sym`);
@@ -5052,6 +5177,9 @@ async function loadDashChart(n,sym,range,btn){
   if(s.rsiInst){s.rsiInst.remove();s.rsiInst=null;const rd=document.getElementById(`dashRsi${n}`);if(rd)rd.style.display='none';}
   if(s.inst){s.inst.remove();s.inst=null;s.volSeries=null;}
   s.indSeries={};
+  // Reset measure mode quando il grafico viene ricostruito
+  const mb=document.getElementById(`ch${n}-measure-btn`);if(mb)mb.classList.remove('active');
+  container._measureMode=false;container._measureAnchor=null;container._indData={};container._legendData={};
   s.inst=buildLWChart(container,s.type,pts,{timeVisible:s.range==='1d'||s.range==='5d'});
   // Volume histogram
   const volData=pts.filter(p=>p.volume!=null&&p.volume>0).map(p=>{
@@ -5099,27 +5227,32 @@ function _updateDashIndBadge(n){
 function toggleDashInd(n,key,btn){
   const s=dashCharts[n];
   btn.classList.toggle('active');
+  const mc=document.getElementById(`dashChart${n}`);
   if(s.indicators.has(key)){
     s.indicators.delete(key);
     if(key==='rsi'){
       const rd=document.getElementById(`dashRsi${n}`);
-      if(rd)rd.style.display='none';
+      _removeSubHdr(rd);if(rd)rd.style.display='none';
       if(s.rsiInst){s.rsiInst.remove();s.rsiInst=null;}
+      if(mc&&mc._indData)delete mc._indData.rsi;
       delete s.indSeries[key];
     } else if(key==='macd'){
       const md=document.getElementById(`dashMacd${n}`);
-      if(md)md.style.display='none';
+      _removeSubHdr(md);if(md)md.style.display='none';
       if(s.macdInst){s.macdInst.remove();s.macdInst=null;}
+      if(mc&&mc._indData)delete mc._indData.macd;
       delete s.indSeries[key];
     } else if(key==='stoch'){
       const sd=document.getElementById(`dashStoch${n}`);
-      if(sd)sd.style.display='none';
+      _removeSubHdr(sd);if(sd)sd.style.display='none';
       if(s.stochInst){s.stochInst.remove();s.stochInst=null;}
+      if(mc&&mc._indData)delete mc._indData.stoch;
       delete s.indSeries[key];
     } else if(s.indSeries[key]){
       const arr=Array.isArray(s.indSeries[key])?s.indSeries[key]:[s.indSeries[key]];
       arr.forEach(ser=>{try{if(s.inst)s.inst.removeSeries(ser);}catch(_){}});
       delete s.indSeries[key];
+      _removeLegend(mc,key);
     }
   } else {
     s.indicators.add(key);
@@ -5133,23 +5266,27 @@ function renderDashTechOverlays(n,onlyKey){
   const pts=s.lastPts;
   const closes=pts.map(p=>+p.close);
   const keys=onlyKey?[onlyKey]:[...s.indicators];
+  const mc=document.getElementById(`dashChart${n}`);if(mc&&!mc._indData)mc._indData={};
   keys.forEach(key=>{
     if(s.indSeries[key])return;
     if(key==='sma20'){
       const d=calcSMA(closes,20);if(!d.length)return;
       const ser=s.inst.addLineSeries({color:'#f59e0b',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
-      ser.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
-      s.indSeries[key]=ser;
+      const smaData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      ser.setData(smaData);s.indSeries[key]=ser;
+      _updateLegend(mc,'sma20','#f59e0b','SMA20',smaData);
     } else if(key==='sma50'){
       const d=calcSMA(closes,50);if(!d.length)return;
       const ser=s.inst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
-      ser.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
-      s.indSeries[key]=ser;
+      const smaData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      ser.setData(smaData);s.indSeries[key]=ser;
+      _updateLegend(mc,'sma50','#8b5cf6','SMA50',smaData);
     } else if(key==='ema20'){
       const d=calcEMA(closes,20);if(!d.length)return;
       const ser=s.inst.addLineSeries({color:'#06b6d4',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
-      ser.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
-      s.indSeries[key]=ser;
+      const emaData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      ser.setData(emaData);s.indSeries[key]=ser;
+      _updateLegend(mc,'ema20','#06b6d4','EMA20',emaData);
     } else if(key==='bb'){
       const d=calcBB(closes,20);if(!d.length)return;
       const [upS,midS,loS]=[
@@ -5157,13 +5294,16 @@ function renderDashTechOverlays(n,onlyKey){
         s.inst.addLineSeries({color:'rgba(99,102,241,.85)',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
         s.inst.addLineSeries({color:'rgba(99,102,241,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
       ];
-      upS.setData(d.map(r=>({time:pts[r.idx].time,value:r.upper})));
-      midS.setData(d.map(r=>({time:pts[r.idx].time,value:r.middle})));
-      loS.setData(d.map(r=>({time:pts[r.idx].time,value:r.lower})));
+      const bbData=d.map(r=>({time:pts[r.idx].time,upper:r.upper,middle:r.middle,lower:r.lower}));
+      upS.setData(bbData.map(r=>({time:r.time,value:r.upper})));
+      midS.setData(bbData.map(r=>({time:r.time,value:r.middle})));
+      loS.setData(bbData.map(r=>({time:r.time,value:r.lower})));
       s.indSeries[key]=[upS,midS,loS];
+      _updateLegend(mc,'bb','#6366f1','BB(20)',bbData);
     } else if(key==='rsi'){
       const d=calcRSI(closes,14);if(!d.length)return;
       const rd=document.getElementById(`dashRsi${n}`);if(!rd)return;
+      _addSubHdr(rd,`RSI 14`,`ch${n}-rsi-hdr-val`,`toggleDashInd(${n},'rsi',document.getElementById('ch${n}-ind-rsi'))`);
       rd.style.display='block';
       if(s.rsiInst){s.rsiInst.remove();}
       s.rsiInst=buildSubChart(rd,90);
@@ -5178,11 +5318,13 @@ function renderDashTechOverlays(n,onlyKey){
         os.setData([{time:t0,value:30},{time:tN,value:30}]);
       }
       s.rsiInst.timeScale().fitContent();
+      mc._indData.rsi=lwData;
       s.indSeries[key]='rsi_active';
     } else if(key==='macd'){
       const md_res=calcMACD(closes);
       if(!md_res.macd.length)return;
       const md=document.getElementById(`dashMacd${n}`);if(!md)return;
+      _addSubHdr(md,`MACD 12-26-9`,`ch${n}-macd-hdr-val`,`toggleDashInd(${n},'macd',document.getElementById('ch${n}-ind-macd'))`);
       md.style.display='block';
       if(s.macdInst){s.macdInst.remove();}
       s.macdInst=buildSubChart(md,100);
@@ -5193,11 +5335,13 @@ function renderDashTechOverlays(n,onlyKey){
       sigS.setData(md_res.signal.map(r=>({time:pts[r.idx].time,value:r.value})));
       histS.setData(md_res.hist.map(r=>({time:pts[r.idx].time,value:r.value,color:r.value>=0?'rgba(5,150,105,.6)':'rgba(220,38,38,.6)'})));
       s.macdInst.timeScale().fitContent();
+      mc._indData.macd=md_res.signal.map(r=>{const mr=md_res.macd.find(m=>m.idx===r.idx);return{time:pts[r.idx].time,macd:mr?mr.value:null,signal:r.value};});
       s.indSeries[key]='macd_active';
     } else if(key==='stoch'){
       const st_res=calcStoch(pts);
       if(!st_res.length)return;
       const sd=document.getElementById(`dashStoch${n}`);if(!sd)return;
+      _addSubHdr(sd,`Stoch 14,3`,`ch${n}-stoch-hdr-val`,`toggleDashInd(${n},'stoch',document.getElementById('ch${n}-ind-stoch'))`);
       sd.style.display='block';
       if(s.stochInst){s.stochInst.remove();}
       s.stochInst=buildSubChart(sd,85);
@@ -5213,11 +5357,11 @@ function renderDashTechOverlays(n,onlyKey){
         osS.setData([{time:t0,value:20},{time:tN,value:20}]);
       }
       s.stochInst.timeScale().fitContent();
+      mc._indData.stoch=st_res.map(r=>({time:pts[r.idx].time,k:r.k,d:r.d}));
       s.indSeries[key]='stoch_active';
     }
   });
 }
-
 /* ── MODAL CHART ── */
 async function openModal(sym,label){
   modalSym=sym;modalRange='1mo';
@@ -13586,6 +13730,10 @@ async function loadSdChart(sym,range,btn){
   const pts=Array.isArray(data)?data:data.points;
   if(!pts?.length)return;
   const container=document.getElementById('sd-chart');
+  // Reset measure mode quando il grafico viene ricostruito
+  const mbtn=document.getElementById('sd-measure-btn');
+  if(mbtn)mbtn.classList.remove('active');
+  container._measureMode=false;container._measureAnchor=null;container._indData={};container._legendData={};
   if(sdChartInst){sdChartInst.remove();sdChartInst=null;sdVolSeries=null;}
   sdChartInst=buildLWChart(container,sdType,pts,{timeVisible:sdRange==='1d'||sdRange==='5d'});
   // Volume histogram — scala separata nella fascia bassa del grafico
@@ -13988,27 +14136,32 @@ function _updateIndBadge(){
 
 function toggleSdInd(key,btn){
   btn.classList.toggle('active');
+  const mc=document.getElementById('sd-chart');
   if(sdIndicators.has(key)){
     sdIndicators.delete(key);
     if(key==='rsi'){
       const rd=document.getElementById('sd-rsi-chart');
-      if(rd)rd.style.display='none';
+      _removeSubHdr(rd);if(rd)rd.style.display='none';
       if(sdRsiInst){sdRsiInst.remove();sdRsiInst=null;}
+      if(mc&&mc._indData)delete mc._indData.rsi;
       delete sdIndSeries[key];
     } else if(key==='macd'){
       const md=document.getElementById('sd-macd-chart');
-      if(md)md.style.display='none';
+      _removeSubHdr(md);if(md)md.style.display='none';
       if(sdMacdInst){sdMacdInst.remove();sdMacdInst=null;}
+      if(mc&&mc._indData)delete mc._indData.macd;
       delete sdIndSeries[key];
     } else if(key==='stoch'){
       const sd2=document.getElementById('sd-stoch-chart');
-      if(sd2)sd2.style.display='none';
+      _removeSubHdr(sd2);if(sd2)sd2.style.display='none';
       if(sdStochInst){sdStochInst.remove();sdStochInst=null;}
+      if(mc&&mc._indData)delete mc._indData.stoch;
       delete sdIndSeries[key];
     } else if(sdIndSeries[key]){
       const arr=Array.isArray(sdIndSeries[key])?sdIndSeries[key]:[sdIndSeries[key]];
       arr.forEach(s=>{try{if(sdChartInst)sdChartInst.removeSeries(s);}catch(_){}});
       delete sdIndSeries[key];
+      _removeLegend(mc,key);
     }
   } else {
     sdIndicators.add(key);
@@ -14023,43 +14176,45 @@ function renderSdTechOverlays(onlyKey){
   const pts=sdLastPts;
   const closes=pts.map(p=>+p.close);
   const keys=onlyKey?[onlyKey]:[...sdIndicators];
+  const mc=document.getElementById('sd-chart');if(mc&&!mc._indData)mc._indData={};
   keys.forEach(key=>{
     if(sdIndSeries[key])return;
     if(key==='sma20'){
-      const d=calcSMA(closes,20);
-      if(!d.length)return;
+      const d=calcSMA(closes,20);if(!d.length)return;
       const s=sdChartInst.addLineSeries({color:'#f59e0b',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
-      s.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
-      sdIndSeries[key]=s;
+      const smaData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      s.setData(smaData);sdIndSeries[key]=s;
+      _updateLegend(mc,'sma20','#f59e0b','SMA20',smaData);
     } else if(key==='sma50'){
-      const d=calcSMA(closes,50);
-      if(!d.length)return;
+      const d=calcSMA(closes,50);if(!d.length)return;
       const s=sdChartInst.addLineSeries({color:'#8b5cf6',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
-      s.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
-      sdIndSeries[key]=s;
+      const smaData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      s.setData(smaData);sdIndSeries[key]=s;
+      _updateLegend(mc,'sma50','#8b5cf6','SMA50',smaData);
     } else if(key==='ema20'){
-      const d=calcEMA(closes,20);
-      if(!d.length)return;
+      const d=calcEMA(closes,20);if(!d.length)return;
       const s=sdChartInst.addLineSeries({color:'#06b6d4',lineWidth:1,lineStyle:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
-      s.setData(d.map(r=>({time:pts[r.idx].time,value:r.value})));
-      sdIndSeries[key]=s;
+      const emaData=d.map(r=>({time:pts[r.idx].time,value:r.value}));
+      s.setData(emaData);sdIndSeries[key]=s;
+      _updateLegend(mc,'ema20','#06b6d4','EMA20',emaData);
     } else if(key==='bb'){
-      const d=calcBB(closes,20);
-      if(!d.length)return;
+      const d=calcBB(closes,20);if(!d.length)return;
       const [upS,midS,loS]=[
         sdChartInst.addLineSeries({color:'rgba(99,102,241,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
         sdChartInst.addLineSeries({color:'rgba(99,102,241,.85)',lineWidth:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
         sdChartInst.addLineSeries({color:'rgba(99,102,241,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false}),
       ];
-      upS.setData(d.map(r=>({time:pts[r.idx].time,value:r.upper})));
-      midS.setData(d.map(r=>({time:pts[r.idx].time,value:r.middle})));
-      loS.setData(d.map(r=>({time:pts[r.idx].time,value:r.lower})));
+      const bbData=d.map(r=>({time:pts[r.idx].time,upper:r.upper,middle:r.middle,lower:r.lower}));
+      upS.setData(bbData.map(r=>({time:r.time,value:r.upper})));
+      midS.setData(bbData.map(r=>({time:r.time,value:r.middle})));
+      loS.setData(bbData.map(r=>({time:r.time,value:r.lower})));
       sdIndSeries[key]=[upS,midS,loS];
+      _updateLegend(mc,'bb','#6366f1','BB(20)',bbData);
     } else if(key==='rsi'){
       const d=calcRSI(closes,14);
       if(!d.length)return;
-      const rd=document.getElementById('sd-rsi-chart');
-      if(!rd)return;
+      const rd=document.getElementById('sd-rsi-chart');if(!rd)return;
+      _addSubHdr(rd,'RSI 14','sd-rsi-hdr-val',"toggleSdInd('rsi',document.getElementById('sd-ind-rsi'))");
       rd.style.display='block';
       if(sdRsiInst){sdRsiInst.remove();}
       sdRsiInst=buildSubChart(rd,90);
@@ -14074,11 +14229,13 @@ function renderSdTechOverlays(onlyKey){
         osS.setData([{time:t0,value:30},{time:tN,value:30}]);
       }
       sdRsiInst.timeScale().fitContent();
+      mc._indData.rsi=lwData;
       sdIndSeries[key]='rsi_active';
     } else if(key==='macd'){
       const md_res=calcMACD(closes);
       if(!md_res.macd.length)return;
       const md=document.getElementById('sd-macd-chart');if(!md)return;
+      _addSubHdr(md,'MACD 12-26-9','sd-macd-hdr-val',"toggleSdInd('macd',document.getElementById('sd-ind-macd'))");
       md.style.display='block';
       if(sdMacdInst){sdMacdInst.remove();}
       sdMacdInst=buildSubChart(md,100);
@@ -14089,11 +14246,13 @@ function renderSdTechOverlays(onlyKey){
       sigS.setData(md_res.signal.map(r=>({time:pts[r.idx].time,value:r.value})));
       histS.setData(md_res.hist.map(r=>({time:pts[r.idx].time,value:r.value,color:r.value>=0?'rgba(5,150,105,.6)':'rgba(220,38,38,.6)'})));
       sdMacdInst.timeScale().fitContent();
+      mc._indData.macd=md_res.signal.map(r=>{const mr=md_res.macd.find(m=>m.idx===r.idx);return{time:pts[r.idx].time,macd:mr?mr.value:null,signal:r.value};});
       sdIndSeries[key]='macd_active';
     } else if(key==='stoch'){
       const st_res=calcStoch(pts);
       if(!st_res.length)return;
       const sd2=document.getElementById('sd-stoch-chart');if(!sd2)return;
+      _addSubHdr(sd2,'Stoch 14,3','sd-stoch-hdr-val',"toggleSdInd('stoch',document.getElementById('sd-ind-stoch'))");
       sd2.style.display='block';
       if(sdStochInst){sdStochInst.remove();}
       sdStochInst=buildSubChart(sd2,85);
@@ -14110,11 +14269,11 @@ function renderSdTechOverlays(onlyKey){
       }
       sdStochInst.timeScale().fitContent();
       new ResizeObserver(()=>{if(sdStochInst)sdStochInst.applyOptions({width:sd2.clientWidth});}).observe(sd2);
+      mc._indData.stoch=st_res.map(r=>({time:pts[r.idx].time,k:r.k,d:r.d}));
       sdIndSeries[key]='stoch_active';
     }
   });
 }
-
 function renderSdTechSignals(){
   const el=document.getElementById('sd-tech-signals');
   if(!el||!sdLastPts||!sdLastPts.length||!sdIndicators.size){if(el)el.style.display='none';return;}
