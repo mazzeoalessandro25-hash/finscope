@@ -3187,7 +3187,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div style="background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:24px;width:min(560px,95vw);max-height:85vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
       <div><div style="font-size:16px;font-weight:700;color:var(--t)" data-i18n="port.import.title">Importa Portafoglio</div>
-      <div style="font-size:11px;color:var(--t3);margin-top:2px" data-i18n="port.import.subtitle">Supporta CSV, Excel (.xlsx/.xls) e PDF — Fineco, DEGIRO, Directa, Generico</div></div>
+      <div style="font-size:11px;color:var(--t3);margin-top:2px" data-i18n="port.import.subtitle">Supporta CSV, Excel (.xlsx/.xls) e PDF — Fineco, DEGIRO, Revolut, Trading 212, Directa, Generico</div></div>
       <button onclick="closePortImport()" style="background:none;border:none;color:var(--t3);font-size:20px;cursor:pointer;line-height:1">✕</button>
     </div>
     <div style="margin-bottom:14px">
@@ -3197,6 +3197,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <option value="generic" data-i18n="port.import.generic">Generico (ticker, quantità, prezzo, data)</option>
         <option value="fineco">Fineco Bank</option>
         <option value="degiro">DEGIRO</option>
+        <option value="revolut">Revolut</option>
+        <option value="t212">Trading 212</option>
         <option value="directa">Directa SIM</option>
       </select>
     </div>
@@ -12448,7 +12450,7 @@ function routePortFile(file){
   const ext=file.name.split('.').pop().toLowerCase();
   if(ext==='xlsx'||ext==='xls')readPortExcelFile(file);
   else if(ext==='pdf')readPortPDFFile(file);
-  else{const r=new FileReader();r.onload=e=>parsePortCSV(e.target.result);r.readAsText(file,'UTF-8');}
+  else{const r=new FileReader();r.onload=e=>{let text=e.target.result;if(text.charCodeAt(0)===0xFEFF)text=text.slice(1);parsePortCSV(text);};r.readAsText(file,'UTF-8');}
 }
 
 /* ── Excel parser (SheetJS CDN on-demand) ── */
@@ -12521,12 +12523,14 @@ function _xlsParseFromHeader(raw,hi){
   if(headers.filter(h=>h.length>0).length<2)return [];
 
   const SYM_KW =['ticker','symbol','titolo','strumento','descrizione','prodotto','nome','azione','isin','cod.','codice'];
-  const QTY_KW =['quant','qty','pezzi','numero','n.tit','n °','n.','pz','contratti','lotti'];
+  const QTY_KW =['quant','qty','pezzi','numero','n.tit','n °','n.','pz','contratti','lotti','shares','no. of'];
   const PRICE_KW=['prezzo','price','costo medio','corso','carico','p.medio','nav','valore unitario','prezzo medio'];
-  const DATE_KW =['data acq','data oper','data eseg','data comp','date','data'];
+  const DATE_KW =['data acq','data oper','data eseg','data comp','trade date','date','data','time'];
+  const TYPE_KW =['type','action','azione','tipo'];
 
   const findCol=kws=>headers.findIndex(h=>kws.some(k=>h.includes(k)));
   let si=findCol(SYM_KW), qi=findCol(QTY_KW), pi=findCol(PRICE_KW), di=findCol(DATE_KW);
+  const ti=findCol(TYPE_KW);
 
   // Se non troviamo sym ma troviamo qty+price, tenta col 0 come sym
   if(si<0&&qi>=0&&pi>=0)si=0;
@@ -12536,6 +12540,9 @@ function _xlsParseFromHeader(raw,hi){
   for(let r=hi+1;r<raw.length;r++){
     const row=raw[r];
     if(!row||row.every(c=>c===''||c===null))continue;
+    // Salta operazioni di vendita
+    const typeVal=ti>=0?String(row[ti]||'').toUpperCase().trim():'';
+    if(typeVal==='SELL'||typeVal==='VENDITA')continue;
     const origName=String(row[si]||'').replace(/"/g,'').trim();
     let sym=origName.toUpperCase().split(/\s+/)[0].replace(/[^A-Z0-9.]/g,'');
     if(!sym||sym.length<2||sym.length>12)continue;
@@ -12756,53 +12763,130 @@ function _importSymSelect(idx,sym){
   const box=document.getElementById('port-import-suggest-box');
   if(box)box.style.display='none';
 }
+/* ── Parser CSV RFC 4180 (gestisce campi quotati e virgole interne) ── */
+function _parseCSVRow(line,sep){
+  const result=[];
+  let field='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const c=line[i];
+    if(inQ){if(c==='"'){if(line[i+1]==='"'){field+='"';i++;}else inQ=false;}else field+=c;}
+    else{if(c==='"')inQ=true;else if(c===sep){result.push(field.trim());field='';}else field+=c;}
+  }
+  result.push(field.trim());
+  return result;
+}
+
 function parsePortCSV(text){
   const fmt=document.getElementById('port-import-fmt')?.value||'auto';
   const lines=text.split(/\r?\n/).filter(l=>l.trim());
   let parsed=[];
   try{
-    if(fmt==='fineco'||fmt==='auto'&&/Titolo|Strumento|ISIN/i.test(lines[0])){
-      const hdr=lines[0].split(';').map(h=>h.trim().toLowerCase());
+    const l0=lines[0]||'';
+    const l0low=l0.toLowerCase();
+
+    // ── FINECO (separatore ;, intestazioni IT)
+    if(fmt==='fineco'||(fmt==='auto'&&/Titolo|Strumento|ISIN/i.test(l0)&&l0.includes(';'))){
+      const hdr=_parseCSVRow(l0,';').map(h=>h.toLowerCase());
       const iSym=hdr.findIndex(h=>h.includes('ticker')||h.includes('titolo'));
       const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('pezzi'));
       const iPrice=hdr.findIndex(h=>h.includes('prezzo')||h.includes('price'));
       const iDate=hdr.findIndex(h=>h.includes('data')||h.includes('date'));
       for(let i=1;i<lines.length;i++){
-        const cols=lines[i].split(';');
-        const sym=(iSym>=0?cols[iSym]:'').replace(/"/g,'').trim().toUpperCase();
+        const cols=_parseCSVRow(lines[i],';');
+        const sym=(iSym>=0?cols[iSym]:'').toUpperCase().trim();
         const qty=parseFloat((iQty>=0?cols[iQty]:'').replace(',','.'));
         const price=parseFloat((iPrice>=0?cols[iPrice]:'').replace(',','.'));
-        const date=(iDate>=0?cols[iDate]:'').replace(/"/g,'').trim();
-        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||''});
+        const date=(iDate>=0?cols[iDate]:'').trim();
+        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||'',origName:sym});
       }
-    } else if(fmt==='degiro'||fmt==='auto'&&/Prodotto|Borsa|ISIN/i.test(lines[0])){
-      const hdr=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+
+    // ── DEGIRO (separatore ,, Prodotto/Borsa/ISIN)
+    } else if(fmt==='degiro'||(fmt==='auto'&&/Prodotto|Borsa|ISIN/i.test(l0)&&l0.includes(','))){
+      const hdr=_parseCSVRow(l0,',').map(h=>h.toLowerCase());
       const iSym=hdr.findIndex(h=>h.includes('prodotto')||h.includes('product'));
       const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('numero'));
       const iPrice=hdr.findIndex(h=>h.includes('prezzo')||h.includes('price'));
       const iDate=hdr.findIndex(h=>h.includes('data')||h.includes('date'));
       for(let i=1;i<lines.length;i++){
-        const cols=lines[i].split(',');
-        const sym=(iSym>=0?cols[iSym]:'').replace(/"/g,'').trim().toUpperCase();
+        if(!lines[i].trim())continue;
+        const cols=_parseCSVRow(lines[i],',');
+        const origName=(iSym>=0?cols[iSym]:'').trim();
+        const sym=origName.toUpperCase().split(/\s+/)[0].replace(/[^A-Z0-9.]/g,'');
         const qty=Math.abs(parseFloat((iQty>=0?cols[iQty]:'').replace(',','.')));
         const price=parseFloat((iPrice>=0?cols[iPrice]:'').replace(',','.'));
-        const date=(iDate>=0?cols[iDate]:'').replace(/"/g,'').trim();
-        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||''});
+        const date=(iDate>=0?cols[iDate]:'').trim();
+        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date:date||'',origName});
       }
+
+    // ── REVOLUT / TRADING 212 (,, colonne Ticker/Symbol + Type/Action)
+    } else if(fmt==='revolut'||fmt==='t212'||(fmt==='auto'&&(l0low.includes('ticker')||l0low.includes('symbol'))&&(l0low.includes(',type,')||l0low.includes(',action,')))){
+      const hdr=_parseCSVRow(l0,',').map(h=>h.toLowerCase().trim());
+      const iSym=hdr.findIndex(h=>h==='ticker'||h==='symbol');
+      const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('shares')||h==='qty');
+      const iPrice=hdr.findIndex(h=>h.includes('price')&&!h.includes('total'));
+      const iDate=hdr.findIndex(h=>h.includes('date')||h==='time');
+      const iType=hdr.findIndex(h=>h==='type'||h==='action');
+      if(iSym>=0&&iQty>=0&&iPrice>=0){
+        for(let i=1;i<lines.length;i++){
+          if(!lines[i].trim())continue;
+          const cols=_parseCSVRow(lines[i],',');
+          const typeVal=iType>=0?(cols[iType]||'').toUpperCase().trim():'';
+          if(typeVal&&typeVal!=='BUY'&&typeVal!=='ACQUISTO')continue;
+          const sym=(cols[iSym]||'').toUpperCase().replace(/[^A-Z0-9.]/g,'');
+          const qty=parseFloat((cols[iQty]||'').replace(/[^0-9.]/g,''));
+          const price=parseFloat((cols[iPrice]||'').replace(/[^0-9.]/g,''));
+          const rawDate=(cols[iDate]||'').trim().split(/[T ]/)[0];
+          const date=_xlsDate(rawDate)||rawDate;
+          if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date,origName:sym});
+        }
+      }
+
+    // ── GENERICO: cerca header in modo dinamico, poi posizioni fisse
     } else {
-      for(let i=0;i<lines.length;i++){
-        if(i===0&&/sym|tick|titolo/i.test(lines[i]))continue;
-        const sep=lines[i].includes(';')?';':',';
-        const cols=lines[i].split(sep).map(c=>c.replace(/"/g,'').trim());
-        const sym=cols[0]?.toUpperCase();
-        const qty=parseFloat(cols[1]?.replace(',','.'));
-        const price=parseFloat(cols[2]?.replace(',','.'));
-        const date=cols[3]||'';
-        if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date});
+      const SYM_KW=['ticker','symbol','titolo','strumento','isin','nome','azione'];
+      const QTY_KW=['quant','qty','pezzi','shares','n.tit'];
+      const PRICE_KW=['prezzo','price','costo','carico','nav'];
+      let hdrIdx=-1,hdr=[],sep=',';
+      for(let i=0;i<=Math.min(4,lines.length-1);i++){
+        const s=lines[i].includes(';')?';':',';
+        const row=_parseCSVRow(lines[i],s).map(h=>h.toLowerCase().trim());
+        if(SYM_KW.some(k=>row.some(h=>h.includes(k)))&&PRICE_KW.some(k=>row.some(h=>h.includes(k)))){
+          hdrIdx=i;hdr=row;sep=s;break;
+        }
+      }
+      if(hdrIdx>=0){
+        const iSym=hdr.findIndex(h=>SYM_KW.some(k=>h.includes(k)));
+        const iQty=hdr.findIndex(h=>QTY_KW.some(k=>h.includes(k)));
+        const iPrice=hdr.findIndex(h=>PRICE_KW.some(k=>h.includes(k)));
+        const iDate=hdr.findIndex(h=>h.includes('date')||h.includes('data'));
+        const iType=hdr.findIndex(h=>h==='type'||h==='action'||h==='azione');
+        for(let i=hdrIdx+1;i<lines.length;i++){
+          if(!lines[i].trim())continue;
+          const cols=_parseCSVRow(lines[i],sep);
+          const typeVal=iType>=0?(cols[iType]||'').toUpperCase().trim():'';
+          if(typeVal&&typeVal!=='BUY'&&typeVal!=='ACQUISTO')continue;
+          const origName=(iSym>=0?cols[iSym]:'').trim();
+          const sym=origName.toUpperCase().split(/\s+/)[0].replace(/[^A-Z0-9.]/g,'');
+          const qty=iQty>=0?parseFloat(cols[iQty].replace(',','.').replace(/[^0-9.]/g,'')):NaN;
+          const price=iPrice>=0?parseFloat(cols[iPrice].replace(',','.').replace(/[^0-9.]/g,'')):NaN;
+          const rawDate=(iDate>=0?cols[iDate]:'').trim().split(/[T ]/)[0];
+          if(sym&&sym.length>=2&&qty>0&&price>0)parsed.push({sym,qty,price,date:rawDate,origName});
+        }
+      } else {
+        // Fallback: posizioni fisse (ticker, qty, price, data)
+        for(let i=0;i<lines.length;i++){
+          if(i===0&&/sym|tick|titolo/i.test(lines[i]))continue;
+          const s=lines[i].includes(';')?';':',';
+          const cols=_parseCSVRow(lines[i],s);
+          const sym=cols[0]?.toUpperCase();
+          const qty=parseFloat(cols[1]?.replace(',','.'));
+          const price=parseFloat(cols[2]?.replace(',','.'));
+          const date=cols[3]||'';
+          if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date});
+        }
       }
     }
   }catch(e){parsed=[];}
-
   _portShowImportPreview(parsed);
 }
 async function confirmPortImport(){

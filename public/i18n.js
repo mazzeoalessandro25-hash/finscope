@@ -155,7 +155,7 @@ const TRANSLATIONS={
     'port.daily.earnings':'📅 Prossimi Earnings in Portafoglio',
     /* IMPORT MODAL */
     'port.import.title':'Importa Portafoglio',
-    'port.import.subtitle':'Supporta CSV, Excel (.xlsx/.xls) e PDF — Fineco, DEGIRO, Directa, Generico',
+    'port.import.subtitle':'Supporta CSV, Excel (.xlsx/.xls) e PDF — Fineco, DEGIRO, Revolut, Trading 212, Directa, Generico',
     'port.import.format':'FORMATO','port.import.auto':'Auto-detect',
     'port.import.generic':'Generico (ticker, quantità, prezzo, data)',
     'port.import.drop':'Trascina il file qui o clicca per selezionare',
@@ -1311,7 +1311,7 @@ const TRANSLATIONS={
     'port.daily.earnings':'📅 Upcoming Earnings in Portfolio',
     /* IMPORT MODAL */
     'port.import.title':'Import Portfolio',
-    'port.import.subtitle':'Supports CSV, Excel (.xlsx/.xls) and PDF — Fineco, DEGIRO, Directa, Generic',
+    'port.import.subtitle':'Supports CSV, Excel (.xlsx/.xls) and PDF — Fineco, DEGIRO, Revolut, Trading 212, Directa, Generic',
     'port.import.format':'FORMAT','port.import.auto':'Auto-detect',
     'port.import.generic':'Generic (ticker, quantity, price, date)',
     'port.import.drop':'Drag file here or click to select',
