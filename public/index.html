@@ -3017,7 +3017,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
       <!-- PANORAMICA: performance vs benchmark + news -->
       <div class="port-tab-panel active" id="ptab-panoramica">
-        <div class="card" id="port-perf-card">
+        <div class="card" id="portnews-card">
+          <div class="ch"><div><div class="ct" data-i18n="port.ct.news">📰 Notizie sui tuoi titoli</div><div class="cs" data-i18n="port.cs.news">Le ultime news per le aziende e gli ETF che hai in portafoglio</div></div></div>
+          <div id="portnews-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento news...</div></div>
+        </div>
+        <div class="card" style="margin-top:10px" id="port-perf-card">
           <div class="ch" style="flex-wrap:wrap;gap:8px">
             <div><div class="ct"><span data-i18n="port.ct.perf">📈 Performance Portafoglio</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.perf">Andamento del portafoglio confrontato con i più grandi investitori e fondi al mondo. Ogni linea rappresenta il rendimento normalizzato dal primo giorno del periodo selezionato.</span></span></div><div class="cs" id="port-perf-sub" data-i18n="port.cs.perf">Rendimento ponderato vs grandi investitori</div></div>
             <div style="display:flex;gap:4px;flex-wrap:wrap;align-items:center">
@@ -3047,10 +3051,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="card" style="margin-top:10px" id="port-cagr-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.cagr">📊 Rendimenti per titolo</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.returns">Rendimento totale e CAGR (tasso annuo composto) per ogni posizione. Il CAGR normalizza il rendimento sulla durata dell'investimento, così puoi confrontare titoli detenuti per periodi diversi.</span></span></div><div class="cs" data-i18n="port.cs.cagr">P&L % · CAGR annualizzato · Periodo di detenzione</div></div></div>
           <div id="port-cagr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
-        <div class="card" style="margin-top:10px" id="portnews-card">
-          <div class="ch"><div><div class="ct" data-i18n="port.ct.news">📰 Notizie sui tuoi titoli</div><div class="cs" data-i18n="port.cs.news">Le ultime news per le aziende e gli ETF che hai in portafoglio</div></div></div>
-          <div id="portnews-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento news...</div></div>
         </div>
       </div>
 
