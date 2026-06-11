@@ -2965,8 +2965,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="port-analysis-card" style="padding:18px 20px;box-sizing:border-box;overflow-y:auto">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
             <div>
-              <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:.2px">📊 Riepilogo mercati</div>
-              <div id="port-daily-date-lbl" style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px"></div>
+              <div style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm);letter-spacing:.1px">📊 Riepilogo mercati</div>
+              <div id="port-daily-date-lbl" style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px"></div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
               <div id="port-daily-refresh-badge" style="display:none;font-size:9px;color:var(--b);font-family:var(--fm);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:4px;padding:2px 7px;white-space:nowrap" data-i18n="port.daily.badge">↻ Auto-refresh ogni 15 min</div>
@@ -9073,92 +9073,125 @@ function renderPortDailyText(el, payload){
     text=p.text||''; macroNews=p.macroNews||[]; indicesMap=p.indicesMap||{}; newsMap=p.newsMap||{};
   } catch(e){ text=payload; }
 
-  // ── Barra indici ──
+  // Ricostruisci assets dalle variabili globali per i visual cards
+  const _fxR=_lastFxRate||1.08;
+  const _assets=(typeof portfolio!=='undefined'&&Array.isArray(portfolio)&&typeof portQuotes!=='undefined')
+    ?portfolio.map((item,i)=>{
+        const q=portQuotes[i];
+        if(!q?.price||!q?.prev)return null;
+        const chgPct=(q.price-q.prev)/q.prev*100;
+        const chgUSD=item.qty*(q.price-q.prev)*(item.currency==='EUR'?_fxR:1);
+        return{sym:item.sym,name:item.name||q.name||item.sym,chgPct,chgUSD};
+      }).filter(Boolean)
+    :[];
+  const _topMovers=[..._assets].sort((a,b)=>Math.abs(b.chgPct)-Math.abs(a.chgPct)).slice(0,3);
+
+  // ── Barra indici con EUR/USD ──
   const IDX=[
-    {sym:'^GSPC', label:'S&P 500'},
-    {sym:'^IXIC', label:'Nasdaq'},
-    {sym:'^DJI',  label:'Dow'},
-    {sym:'GC=F',  label:_L({it:'Oro',en:'Gold'})},
-    {sym:'CL=F',  label:_L({it:'Petrolio',en:'Oil'})},
+    {sym:'^GSPC',label:'S&P 500',dec:0},
+    {sym:'^IXIC',label:'Nasdaq',dec:0},
+    {sym:'^DJI', label:'Dow',dec:0},
+    {sym:'GC=F', label:_L({it:'Oro',en:'Gold'}),dec:1},
+    {sym:'CL=F', label:_L({it:'Petrolio',en:'Oil'}),dec:1},
   ];
-  const idxBadges=IDX.map(({sym,label})=>{
+  const _mkChip=(label,changeTxt,subTxt,bg,border,clr)=>
+    `<div style="display:flex;flex-direction:column;align-items:center;background:${bg};border:1px solid ${border};border-radius:8px;padding:7px 10px;min-width:60px;flex:1">
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);font-weight:600;white-space:nowrap;margin-bottom:2px">${label}</div>
+      <div style="font-family:var(--fm);font-size:12px;font-weight:800;color:${clr}">${changeTxt}</div>
+      <div style="font-size:9px;color:var(--t2);font-family:var(--fm);margin-top:1px;white-space:nowrap">${subTxt}</div>
+    </div>`;
+  const idxChips=IDX.map(({sym,label,dec})=>{
     const d=indicesMap[sym];
     if(!d?.price||!d?.prev) return '';
     const chg=(d.price-d.prev)/d.prev*100;
     const up=chg>=0;
-    const sign=up?'+':'';
-    return `<div style="display:flex;flex-direction:column;align-items:center;background:${up?'rgba(5,150,105,.08)':'rgba(220,38,38,.08)'};border:1px solid ${up?'rgba(5,150,105,.2)':'rgba(220,38,38,.2)'};border-radius:8px;padding:6px 10px;min-width:60px">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);font-weight:600;margin-bottom:3px">${label}</div>
-      <div style="font-family:var(--fm);font-size:13px;font-weight:800;color:${up?'#059669':'#DC2626'}">${sign}${chg.toFixed(2)}%</div>
-      <div style="font-size:10px;color:var(--t2);font-family:var(--fm);margin-top:1px">${d.price?.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{maximumFractionDigits:sym==='GC=F'||sym==='CL=F'?1:0})||''}</div>
-    </div>`;
-  }).filter(Boolean).join('');
+    const priceStr=d.price.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{maximumFractionDigits:dec});
+    return _mkChip(label,(up?'+':'')+chg.toFixed(2)+'%',priceStr,
+      up?'rgba(5,150,105,.07)':'rgba(220,38,38,.07)',
+      up?'rgba(5,150,105,.18)':'rgba(220,38,38,.18)',
+      up?'#059669':'#DC2626');
+  }).filter(Boolean);
+  if(_lastFxRate) idxChips.push(_mkChip('EUR/USD',_fxR.toFixed(4),'—',
+    'rgba(59,130,246,.07)','rgba(59,130,246,.15)','var(--b)'));
+  const idxStrip=idxChips.length
+    ?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px">${idxChips.join('')}</div>`:'';
 
-  // ── Testo analisi ──
-  const _escHtml=t=>t.replace(/<strong>(.+?)<\/strong>/g,'<strong style="color:var(--t);font-weight:700">$1</strong>').replace(/<em>"(.+?)"<\/em>/g,'<em style="font-style:italic;color:var(--t3)">"$1"</em>');
-  const _renderDailyContent=content=>{
+  // ── Helpers testo ──
+  const _esc=t=>t
+    .replace(/<strong>(.+?)<\/strong>/g,'<strong style="color:var(--t);font-weight:700">$1</strong>')
+    .replace(/<em>"(.+?)"<\/em>/g,'<em style="font-style:italic;color:var(--t3)">"$1"</em>');
+  const _renderContent=content=>{
     const lines=content.split('\n').filter(l=>l.trim());
-    let cHtml='',bullets=[];
-    const flush=()=>{
-      if(bullets.length){cHtml+=`<div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 2px">${bullets.join('')}</div>`;bullets=[];}
-    };
+    let html='',bullets=[];
+    const flush=()=>{if(bullets.length){html+=`<div style="display:flex;flex-direction:column;gap:5px;margin:8px 0 2px">${bullets.join('')}</div>`;bullets=[];}};
     for(const line of lines){
       const tr=line.trim();
       if(tr.startsWith('•')){
-        const bText=tr.slice(1).trim();
         bullets.push(`<div style="display:flex;gap:7px;align-items:flex-start;font-size:12px;line-height:1.55">
           <span style="color:var(--b);font-size:8px;flex-shrink:0;margin-top:4px;font-weight:700">●</span>
-          <span style="color:var(--t2)">${_escHtml(bText)}</span>
-        </div>`);
-      } else {
-        flush();
-        cHtml+=`<div style="font-size:12px;color:var(--t2);line-height:1.65;margin-top:4px">${_escHtml(tr)}</div>`;
-      }
+          <span style="color:var(--t2)">${_esc(tr.slice(1).trim())}</span></div>`);
+      } else { flush(); html+=`<div style="font-size:12px;color:var(--t2);line-height:1.65;margin-top:4px">${_esc(tr)}</div>`; }
     }
-    flush();
-    return cHtml;
+    flush(); return html;
   };
-  const analysisHtml=text
-    .split('\n\n').map(block=>{
-      const boldMatch=block.match(/^\*\*(.+?)\*\*\n([\s\S]*)/);
-      if(boldMatch){
-        return `<div style="margin-top:12px">
-          <div style="font-size:10px;font-family:var(--fm);font-weight:700;color:var(--t);letter-spacing:.3px;text-transform:uppercase;border-left:2px solid var(--b);padding-left:7px;margin-bottom:6px">${boldMatch[1]}</div>
-          <div>${_renderDailyContent(boldMatch[2])}</div>
-        </div>`;
-      }
-      return `<div style="font-size:12px;color:var(--t2);line-height:1.6;margin-top:8px">${block}</div>`;
-    }).join('');
 
-  // ── Notizie per asset (sotto l'analisi, compatte) ──
-  const assetNewsCols=Object.entries(newsMap).filter(([sym,news])=>news.length>0).map(([sym,news])=>{
-    const n=news[0]; if(!n) return '';
-    const ago=n.time?_timeAgo(n.time):'';
-    return `<a href="${n.link||'#'}" target="_blank" rel="noopener" style="display:flex;flex-direction:column;gap:4px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;text-decoration:none;min-width:0">
-      <div style="display:flex;align-items:center;gap:5px;justify-content:space-between">
-        <div style="font-size:9px;color:var(--b);font-family:var(--fm);font-weight:700;text-transform:uppercase;letter-spacing:.3px">${sym}</div>
-        ${ago?`<div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${ago}</div>`:''}
-      </div>
-      <div style="font-size:10px;color:var(--t);line-height:1.4;font-weight:500;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical">${n.title}</div>
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${n.publisher||''}</div>
-    </a>`;
+  // ── Parse e render sezioni testo ──
+  const ICONS={'Contesto di mercato':'🌐','Market Context':'🌐','Il tuo portafoglio':'📋','Your Portfolio':'📋','Earnings':'📅','Sintesi':'💡','Summary':'💡'};
+  const _isSintesi=t=>t==='Sintesi'||t==='Summary';
+  const _isEvidenza=t=>t.includes('evidenza')||t.includes('Focus');
+  const sections=text.split('\n\n').map(block=>{
+    const m=block.match(/^\*\*(.+?)\*\*\n([\s\S]*)/);
+    return m?{title:m[1],content:m[2].trim()}:{title:null,content:block.trim()};
+  }).filter(s=>s.content);
+
+  const mainHtml=sections.filter(s=>!s.title||!_isEvidenza(s.title)).map(s=>{
+    if(!s.title) return `<div style="font-size:12px;color:var(--t2);line-height:1.6;margin-top:8px">${s.content}</div>`;
+    const icon=Object.entries(ICONS).find(([k])=>s.title.includes(k))?.[1]||'';
+    if(_isSintesi(s.title)){
+      return `<div style="margin-top:14px;background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.14);border-radius:10px;padding:10px 14px">
+        <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--b);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">💡 ${s.title}</div>
+        <div style="font-size:12px;color:var(--t2);line-height:1.6">${_esc(s.content)}</div>
+      </div>`;
+    }
+    return `<div style="margin-top:14px">
+      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t);letter-spacing:.5px;text-transform:uppercase;border-left:2px solid var(--b);padding-left:7px;margin-bottom:7px">${icon?icon+' ':''}${s.title}</div>
+      <div>${_renderContent(s.content)}</div>
+    </div>`;
   }).join('');
 
-  el.innerHTML=`
-    ${idxBadges?`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">${idxBadges}</div>`:''}
-    <div>${analysisHtml}</div>
-    ${assetNewsCols?`
-      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bd)">
-        <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Notizie titoli in evidenza</div>
-        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px">${assetNewsCols}</div>
-      </div>`:''}`;
+  // ── Titoli in evidenza: visual cards con link news cliccabili ──
+  const _moversWithNews=_topMovers.filter(a=>Math.abs(a.chgPct)>0.05);
+  let evidenzaHtml='';
+  if(_moversWithNews.length){
+    const cards=_moversWithNews.map(a=>{
+      const up=a.chgPct>=0;
+      const news=(newsMap[a.sym]||[])[0];
+      return `<div style="background:var(--s2);border:1px solid ${up?'rgba(5,150,105,.18)':'rgba(220,38,38,.18)'};border-left:3px solid ${up?'#059669':'#DC2626'};border-radius:8px;padding:8px 10px;min-width:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:${a.name&&a.name!==a.sym?'3':'5'}px">
+          <div style="font-family:var(--fm);font-size:11px;font-weight:800;color:var(--t)">${a.sym}</div>
+          <div style="font-family:var(--fm);font-size:12px;font-weight:800;color:${up?'#059669':'#DC2626'};flex-shrink:0">${up?'+':''}${a.chgPct.toFixed(2)}%</div>
+        </div>
+        ${a.name&&a.name!==a.sym?`<div style="font-size:9px;color:var(--t3);margin-bottom:5px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis">${a.name}</div>`:''}
+        ${news?`<a href="${news.link||'#'}" target="_blank" rel="noopener" style="text-decoration:none;display:block">
+          <div style="font-size:10px;color:var(--t2);line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">${news.title}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:3px">${news.publisher||''}${news.time?' · '+_timeAgo(news.time):''}</div>
+        </a>`:''}
+      </div>`;
+    }).join('');
+    evidenzaHtml=`<div style="margin-top:14px">
+      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t);letter-spacing:.5px;text-transform:uppercase;border-left:2px solid var(--b);padding-left:7px;margin-bottom:8px">📊 ${_L({it:'Titoli in evidenza',en:'Stocks in Focus'})}</div>
+      <div style="display:flex;flex-direction:column;gap:7px">${cards}</div>
+    </div>`;
+  }
+
+  el.innerHTML=`${idxStrip}<div>${mainHtml}</div>${evidenzaHtml}`;
 }
 
 function _timeAgo(ts){
   const diff=Math.floor((Date.now()-ts*1000)/60000);
-  if(diff<60) return diff+'m fa';
-  if(diff<1440) return Math.floor(diff/60)+'h fa';
-  return Math.floor(diff/1440)+'g fa';
+  if(diff<60) return diff+_L({it:'m fa',en:'m ago'});
+  if(diff<1440) return Math.floor(diff/60)+_L({it:'h fa',en:'h ago'});
+  return Math.floor(diff/1440)+_L({it:'g fa',en:'d ago'});
 }
 
 let _portDailyRefreshTimer = null;
