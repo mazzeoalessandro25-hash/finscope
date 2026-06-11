@@ -1810,21 +1810,21 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <span class="ind-badge" id="sd-ind-badge">0</span>
           </div>
           <div class="ind-panel" id="sd-ind-panel">
-            <div class="ind-panel-cat">Medie Mobili</div>
+            <div class="ind-panel-cat" data-i18n="dash.movAvg">Medie Mobili</div>
             <div class="ind-panel-row">
-              <button class="cc-btn" id="sd-ind-sma20" onclick="toggleSdInd('sma20',this)" style="color:#f59e0b" title="SMA 20 periodi">SMA20</button>
-              <button class="cc-btn" id="sd-ind-sma50" onclick="toggleSdInd('sma50',this)" style="color:#8b5cf6" title="SMA 50 periodi">SMA50</button>
-              <button class="cc-btn" id="sd-ind-ema20" onclick="toggleSdInd('ema20',this)" style="color:#06b6d4" title="EMA 20 periodi">EMA20</button>
+              <button class="cc-btn" id="sd-ind-sma20" onclick="toggleSdInd('sma20',this)" style="color:#f59e0b" data-i18n-ti="ind.sma20" title="SMA 20 periodi">SMA20</button>
+              <button class="cc-btn" id="sd-ind-sma50" onclick="toggleSdInd('sma50',this)" style="color:#8b5cf6" data-i18n-ti="ind.sma50" title="SMA 50 periodi">SMA50</button>
+              <button class="cc-btn" id="sd-ind-ema20" onclick="toggleSdInd('ema20',this)" style="color:#06b6d4" data-i18n-ti="ind.ema20" title="EMA 20 periodi">EMA20</button>
             </div>
-            <div class="ind-panel-cat">Oscillatori</div>
+            <div class="ind-panel-cat" data-i18n="dash.osc">Oscillatori</div>
             <div class="ind-panel-row">
-              <button class="cc-btn" id="sd-ind-rsi" onclick="toggleSdInd('rsi',this)" style="color:#8b5cf6" title="RSI 14 periodi">RSI 14</button>
+              <button class="cc-btn" id="sd-ind-rsi" onclick="toggleSdInd('rsi',this)" style="color:#8b5cf6" data-i18n-ti="ind.rsi14" title="RSI 14 periodi">RSI 14</button>
               <button class="cc-btn" id="sd-ind-macd" onclick="toggleSdInd('macd',this)" style="color:#f43f5e" title="MACD 12-26-9">MACD</button>
-              <button class="cc-btn" id="sd-ind-stoch" onclick="toggleSdInd('stoch',this)" style="color:#0ea5e9" title="Stocastico 14,3">Stoch</button>
+              <button class="cc-btn" id="sd-ind-stoch" onclick="toggleSdInd('stoch',this)" style="color:#0ea5e9" data-i18n-ti="ind.stoch" title="Stocastico 14,3">Stoch</button>
             </div>
-            <div class="ind-panel-cat">Volatilità &amp; Bande</div>
+            <div class="ind-panel-cat" data-i18n="dash.volBand">Volatilità &amp; Bande</div>
             <div class="ind-panel-row">
-              <button class="cc-btn" id="sd-ind-bb" onclick="toggleSdInd('bb',this)" style="color:#6366f1" title="Bande di Bollinger (20,2)">Bollinger</button>
+              <button class="cc-btn" id="sd-ind-bb" onclick="toggleSdInd('bb',this)" style="color:#6366f1" data-i18n-ti="ind.bb" title="Bande di Bollinger (20,2)">Bollinger</button>
             </div>
           </div>
         </div>
@@ -1982,7 +1982,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <span class="sd-info-btn">i<div class="sd-tip">Confronto tra andamento del prezzo e OBV (On-Balance Volume). Una divergenza rialzista si verifica quando il prezzo scende ma l'OBV sale — possibile fase di Accumulazione. Una divergenza ribassista indica possibile Distribuzione.</div></span>
       </div>
       <div id="sd-wyckoff-content" style="margin-top:8px">
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento analisi Wyckoff...</div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
       </div>
     </div>
 
@@ -2006,7 +2006,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
       <div id="sd-insider-content" style="margin-top:10px">
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento transazioni insider...</div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
       </div>
     </div>
 
@@ -2014,13 +2014,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="sd-bottom-row">
       <div class="sd-desc-card" style="margin-bottom:0">
         <div class="sd-section-title" style="display:flex;align-items:center" id="sd-company-title"><span data-i18n="sd.company.title">Sull'azienda</span><span class="sd-info-btn">i<div class="sd-tip">Descrizione del business e attività principale dell'azienda. Include settore, industria e sito web ufficiale.</div></span></div>
-        <div class="sd-desc-txt" id="sd-description">Caricamento...</div>
+        <div class="sd-desc-txt" id="sd-description" data-i18n="common.loading">Caricamento...</div>
         <div style="margin-top:10px" id="sd-website"></div>
       </div>
       <div class="sd-desc-card" style="margin-bottom:0">
         <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.news.title">Ultime notizie</span><span class="sd-info-btn">i<div class="sd-tip">Notizie recenti relative all'azienda, aggregate da Finnhub e Yahoo Finance. Filtrate per rilevanza per evitare notizie generiche di mercato.</div></span></div>
         <div id="sd-news-list" style="display:flex;flex-direction:column;gap:10px;margin-top:4px">
-          <div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento...</div>
+          <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
         </div>
       </div>
     </div>
@@ -2152,15 +2152,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
         <!-- CONVERTITORE -->
         <div class="crd-inner-card">
-          <div class="crd-inner-title">Convertitore</div>
+          <div class="crd-inner-title" data-i18n="cry.panel.converter">Convertitore</div>
           <div style="display:grid;grid-template-columns:1fr 28px 1fr;align-items:center;gap:8px;margin-bottom:10px">
             <div>
-              <div style="font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px" id="crd-conv-sym-lbl">Quantità</div>
+              <div style="font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px" id="crd-conv-sym-lbl" data-i18n="common.quantity">Quantità</div>
               <input class="crd-conv-inp" id="crd-conv-qty" type="number" placeholder="1" min="0" step="any" oninput="crdConvFromQty()">
             </div>
             <div style="font-family:var(--fm);font-size:16px;color:var(--t3);text-align:center">⇄</div>
             <div>
-              <div style="font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">Valore (USD)</div>
+              <div style="font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">Value (USD)</div>
               <input class="crd-conv-inp" id="crd-conv-usd" type="number" placeholder="0.00" min="0" step="any" oninput="crdConvFromUsd()">
             </div>
           </div>
@@ -2180,36 +2180,36 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="crd-pb-val" id="crd-p24">—</div>
         </div>
         <div class="crd-pb-row">
-          <div class="crd-pb-lbl">7 giorni</div>
+          <div class="crd-pb-lbl" data-i18n="cry.panel.days7">7 giorni</div>
           <div class="crd-pb-track"><div class="crd-pb-bar" id="crd-bar-7" style="width:0%"></div></div>
           <div class="crd-pb-val" id="crd-p7">—</div>
         </div>
         <div class="crd-pb-row">
-          <div class="crd-pb-lbl">30 giorni</div>
+          <div class="crd-pb-lbl" data-i18n="cry.panel.days30">30 giorni</div>
           <div class="crd-pb-track"><div class="crd-pb-bar" id="crd-bar-30" style="width:0%"></div></div>
           <div class="crd-pb-val" id="crd-p30">—</div>
         </div>
         <div class="crd-pb-row">
-          <div class="crd-pb-lbl">1 anno</div>
+          <div class="crd-pb-lbl" data-i18n="cry.panel.year1">1 anno</div>
           <div class="crd-pb-track"><div class="crd-pb-bar" id="crd-bar-1y" style="width:0%"></div></div>
           <div class="crd-pb-val" id="crd-p1y">—</div>
         </div>
       </div>
       <div class="crd-inner-card">
-        <div class="crd-inner-title">Segnali Chiave</div>
-        <div id="crd-quick-signals"><div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento...</div></div>
+        <div class="crd-inner-title" data-i18n="cry.panel.signals">Segnali Chiave</div>
+        <div id="crd-quick-signals"><div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
       </div>
     </div>
 
     <!-- ANALISI NARRATIVA (full-width) -->
     <div class="crd-inner-card" style="margin-bottom:14px">
-      <div class="crd-inner-title">Analisi di Mercato</div>
+      <div class="crd-inner-title" data-i18n="cry.panel.analysis">Analisi di Mercato</div>
       <div id="crd-narrative"></div>
     </div>
 
     <!-- DESCRIZIONE COIN (nascosta finché non caricata) -->
     <div class="crd-inner-card" id="crd-info-card" style="margin-bottom:14px;display:none">
-      <div class="crd-inner-title">Informazioni</div>
+      <div class="crd-inner-title" data-i18n="cry.panel.info">Informazioni</div>
       <div id="crd-description" style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:14px"></div>
       <div id="crd-categories" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
       <div id="crd-links" style="display:flex;gap:16px;flex-wrap:wrap"></div>
@@ -2217,9 +2217,9 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <!-- NOTIZIE RECENTI -->
     <div class="crd-inner-card" style="margin-bottom:24px">
-      <div class="crd-inner-title">Ultime Notizie</div>
+      <div class="crd-inner-title" data-i18n="cry.panel.news">Ultime Notizie</div>
       <div id="crd-news-list" style="display:flex;flex-direction:column;gap:0">
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento notizie...</div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
       </div>
     </div>
 
@@ -2270,7 +2270,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <option value="it">🇮🇹 IT</option>
       <option value="en">🇬🇧 EN</option>
     </select>
-    <button class="dm-toggle" id="dm-btn" onclick="toggleDark()" title="Cambia tema chiaro/scuro" aria-label="Toggle tema">
+    <button class="dm-toggle" id="dm-btn" onclick="toggleDark()" data-i18n-ti="dm.title" title="Cambia tema chiaro/scuro" aria-label="Toggle tema">
       <span class="dm-moon">🌙</span>
       <span class="dm-track">☀</span>
       <span class="dm-sun">☀</span>
@@ -2280,11 +2280,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="nav-user" id="nav-user-area">
       <button class="nav-login-btn" onclick="window.location.href='./about.html'">Accedi</button>
     </div>
-    <button id="usermode-toggle" onclick="toggleUserMode()" title="Passa alla modalità avanzata"
+    <button id="usermode-toggle" onclick="toggleUserMode()" data-i18n-ti="usermode.title" title="Passa alla modalità avanzata"
       style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
       font-family:var(--ff);font-size:10px;font-weight:600;padding:4px 10px;border-radius:6px;
-      cursor:pointer;transition:.15s;white-space:nowrap;display:none">⚡ Avanzata</button>
-    <button class="tut-help-btn" onclick="TUTO.restart()" title="Guida introduttiva">?</button>
+      cursor:pointer;transition:.15s;white-space:nowrap;display:none" data-i18n="usermode.label">⚡ Avanzata</button>
+    <button class="tut-help-btn" onclick="TUTO.restart()" data-i18n-ti="tuto.help.title" title="Guida introduttiva">?</button>
     <button class="hamburger" id="hamburger-btn" onclick="toggleMobileNav()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -2331,7 +2331,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- Grafico 1 -->
     <div class="card">
       <div class="ch" style="flex-wrap:wrap;gap:8px">
-        <div><div class="ct" id="ch1-title">S&P 500</div><div class="cs" id="ch1-sub">Caricamento...</div></div>
+        <div><div class="ct" id="ch1-title">S&P 500</div><div class="cs" id="ch1-sub" data-i18n="common.loading">Caricamento...</div></div>
         <div class="cc-row">
           <button class="chart-type-btn active" onclick="setDashType(1,'candle',this)" data-i18n="dash.candles">Candele</button>
           <button class="chart-type-btn" onclick="setDashType(1,'line',this)" data-i18n="dash.line">Linea</button>
@@ -2442,7 +2442,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- Grafico 2 -->
     <div class="card">
       <div class="ch" style="flex-wrap:wrap;gap:8px">
-        <div><div class="ct" id="ch2-title">Nasdaq 100</div><div class="cs" id="ch2-sub">Caricamento...</div></div>
+        <div><div class="ct" id="ch2-title">Nasdaq 100</div><div class="cs" id="ch2-sub" data-i18n="common.loading">Caricamento...</div></div>
         <div class="cc-row">
           <button class="chart-type-btn active" onclick="setDashType(2,'candle',this)" data-i18n="dash.candles">Candele</button>
           <button class="chart-type-btn" onclick="setDashType(2,'line',this)" data-i18n="dash.line">Linea</button>
@@ -2565,7 +2565,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div id="vix-badge" style="font-family:var(--fm);font-size:11px;padding:3px 10px;border-radius:100px;font-weight:600;cursor:pointer" onclick="openModal('^VIX',_t('dash.vix'))"></div>
       </div>
       <div class="vix-num" id="vix-v" style="cursor:pointer" onclick="openModal('^VIX',_t('dash.vix'))">—</div>
-      <div class="vix-desc" id="vix-d">Caricamento...</div>
+      <div class="vix-desc" id="vix-d" data-i18n="common.loading">Caricamento...</div>
       <div style="padding:0 4px;margin-bottom:14px">
         <div class="vix-bar"><div class="vix-needle" id="vix-n" style="left:0%"></div></div>
         <div class="vix-zones"><span>&lt;15 <span data-i18n="vix.zone.calm">Calmo</span></span><span>15–25 <span data-i18n="vix.zone.normal">Normale</span></span><span>25–35 <span data-i18n="vix.zone.tension">Tensione</span></span><span>&gt;35 <span data-i18n="vix.zone.fear">Paura</span></span></div>
@@ -2780,10 +2780,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <option value="AS">🇯🇵 Giappone</option><option value="CA">🇨🇦 Canada</option>
     </select>
     <div class="search-wrap" style="position:relative">
-      <input class="finp" id="fq" type="text" placeholder="Cerca ticker o nome..." oninput="onFqInput()"/>
+      <input class="finp" id="fq" type="text" data-i18n-ph="sc.placeholder" placeholder="Cerca ticker o nome..." oninput="onFqInput()"/>
       <div id="search-dropdown" class="search-dd"></div>
     </div>
-    <button class="sc-btn" onclick="loadScreener()">↻ Aggiorna</button>
+    <button class="sc-btn" onclick="loadScreener()" data-i18n="sc.refresh">↻ Aggiorna</button>
     <span class="sc-cnt" id="sc-cnt">—</span>
   </div>
 
@@ -2800,9 +2800,9 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <th>MKT</th><th>SETTORE</th>
         <th id="sc-th-spark" style="display:none">5 GG</th>
         <th onclick="sortTbl('price')">PREZZO ↕</th><th onclick="sortTbl('chg')">VAR 1G ↕</th>
-        <th onclick="sortTbl('pe')" title="Price/Earnings — ordinabile">P/E ↕</th>
-        <th onclick="sortTbl('mktcap')" title="Market Cap — ordinabile">CAP ↕</th>
-        <th onclick="sortTbl('score')" title="Overall Score — ordinabile" style="color:var(--b)">SCORE ↕</th>
+        <th onclick="sortTbl('pe')" data-i18n-ti="sc.th.pe" title="Price/Earnings — ordinabile">P/E ↕</th>
+        <th onclick="sortTbl('mktcap')" data-i18n-ti="sc.th.mktcap" title="Market Cap — ordinabile">CAP ↕</th>
+        <th onclick="sortTbl('score')" data-i18n-ti="sc.th.score" title="Overall Score — ordinabile" style="color:var(--b)">SCORE ↕</th>
       </tr></thead>
       <tbody id="sc-body"><tr><td colspan="12" class="ld" data-i18n="common.loading">Caricamento...</td></tr></tbody>
     </table>
@@ -2831,8 +2831,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     </div>
     <!-- Analisi narrativa -->
     <div class="cry-narrative" style="margin-bottom:16px">
-      <div class="cry-narrative-title">📊 Analisi Mercato Crypto</div>
-      <div id="cry-narrative-content"><div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Caricamento analisi...</div></div>
+      <div class="cry-narrative-title" data-i18n="cry.panel.analysis">Analisi di Mercato</div>
+      <div id="cry-narrative-content"><div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
     </div>
     <!-- Top 50 tabella -->
     <div style="font-size:11px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Top 50 per Market Cap</div>
@@ -2859,9 +2859,9 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div id="sc-bonds-section" style="display:none">
     <!-- Curva dei Tassi USA -->
     <div style="margin-bottom:20px">
-      <div style="font-size:11px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">📈 Curva dei Rendimenti USA — Live</div>
+      <div style="font-size:11px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px" data-i18n="sc.yieldCurve">📈 Curva dei Rendimenti USA — Live</div>
       <div class="bond-rate-grid" id="bond-rate-grid">
-        <div class="bond-rate-card ld">Caricamento...</div>
+        <div class="bond-rate-card ld" data-i18n="common.loading">Caricamento...</div>
       </div>
     </div>
     <!-- Tabella ETF Obbligazionari -->
@@ -2969,13 +2969,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div id="port-daily-date-lbl" style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:2px"></div>
             </div>
             <div style="display:flex;align-items:center;gap:8px">
-              <div id="port-daily-refresh-badge" style="display:none;font-size:9px;color:var(--b);font-family:var(--fm);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:4px;padding:2px 7px;white-space:nowrap">↻ Auto-refresh ogni 15 min</div>
+              <div id="port-daily-refresh-badge" style="display:none;font-size:9px;color:var(--b);font-family:var(--fm);background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:4px;padding:2px 7px;white-space:nowrap" data-i18n="port.daily.badge">↻ Auto-refresh ogni 15 min</div>
               <div id="psb-oggi-inline" style="font-family:var(--fm);font-size:12px;font-weight:700"></div>
-              <button id="port-refresh-btn" onclick="refreshPortfolio()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)">↻ Aggiorna</button>
+              <button id="port-refresh-btn" onclick="refreshPortfolio()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)" data-i18n="port.daily.refresh">↻ Aggiorna</button>
             </div>
           </div>
           <div id="port-daily-text" style="font-size:12px;color:var(--t2);line-height:1.6">
-            <div class="ld" style="padding:8px 0">Raccolta notizie in corso…</div>
+            <div class="ld" style="padding:8px 0" data-i18n="port.news.loading">Raccolta notizie in corso…</div>
           </div>
           <div id="port-earnings-section" style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px;display:none">
             <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:8px;letter-spacing:.2px" data-i18n="port.daily.earnings">📅 Prossimi Earnings in Portafoglio</div>
@@ -3032,15 +3032,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           </div>
           <!-- Toggle benchmark famosi -->
           <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--bd)" id="perf-bench-btns">
-            <button class="port-sort-btn active" data-bench="SPY"   onclick="togglePerfBench('SPY',this)"   title="S&P 500 — mercato azionario USA">📊 S&P 500</button>
+            <button class="port-sort-btn active" data-bench="SPY"   onclick="togglePerfBench('SPY',this)"   data-i18n-ti="bench.spy" title="S&P 500 — mercato azionario USA">📊 S&P 500</button>
             <button class="port-sort-btn active" data-bench="BRK-B" onclick="togglePerfBench('BRK-B',this)" title="Berkshire Hathaway — Warren Buffett">🧓 Buffett</button>
             <button class="port-sort-btn"        data-bench="QQQ"   onclick="togglePerfBench('QQQ',this)"   title="Nasdaq 100 — Big Tech &amp; Growth">💻 Nasdaq 100</button>
-            <button class="port-sort-btn"        data-bench="^DJI"  onclick="togglePerfBench('^DJI',this)"  title="Dow Jones — 30 blue chip USA">🏛 Dow Jones</button>
-            <button class="port-sort-btn"        data-bench="RPAR"  onclick="togglePerfBench('RPAR',this)"  title="RPAR Risk Parity ETF — strategia All-Weather di Ray Dalio">🌊 Ray Dalio</button>
+            <button class="port-sort-btn"        data-bench="^DJI"  onclick="togglePerfBench('^DJI',this)"  data-i18n-ti="bench.dji" title="Dow Jones — 30 blue chip USA">🏛 Dow Jones</button>
+            <button class="port-sort-btn"        data-bench="RPAR"  onclick="togglePerfBench('RPAR',this)"  data-i18n-ti="bench.rpar" title="RPAR Risk Parity ETF — strategia All-Weather di Ray Dalio">🌊 Ray Dalio</button>
             <button class="port-sort-btn"        data-bench="PSH.L" onclick="togglePerfBench('PSH.L',this)" title="Pershing Square Holdings — Bill Ackman">🎯 Bill Ackman</button>
             <button class="port-sort-btn"        data-bench="ARKK"  onclick="togglePerfBench('ARKK',this)"  title="ARK Innovation ETF — Cathie Wood">🚀 Cathie Wood</button>
-            <button class="port-sort-btn"        data-bench="ACWI"  onclick="togglePerfBench('ACWI',this)"  title="MSCI All-Country World — diversificazione globale">🌍 MSCI World</button>
-            <button class="port-sort-btn"        data-bench="GLD"   onclick="togglePerfBench('GLD',this)"   title="Oro — asset rifugio">🏅 Oro</button>
+            <button class="port-sort-btn"        data-bench="ACWI"  onclick="togglePerfBench('ACWI',this)"  data-i18n-ti="bench.acwi" title="MSCI All-Country World — diversificazione globale">🌍 MSCI World</button>
+            <button class="port-sort-btn"        data-bench="GLD"   onclick="togglePerfBench('GLD',this)"   data-i18n-ti="bench.gld" title="Oro — asset rifugio">🏅 Oro</button>
           </div>
           <canvas id="portPerfChart" height="90"></canvas>
         </div>
@@ -3092,7 +3092,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div>
                 <div class="port-inp-lbl" data-i18n="pac.instrument">Strumento (ETF, Azione…)</div>
                 <div style="position:relative">
-                  <input class="port-inp" id="pac-search" type="text" placeholder="Cerca ETF (es. VWCE, iShares World, Amundi…)" autocomplete="off"
+                  <input class="port-inp" id="pac-search" type="text" data-i18n-ph="pac.searchPh" placeholder="Cerca ETF (es. VWCE, iShares World, Amundi…)" autocomplete="off"
                     oninput="onPacSearchInput()" onkeydown="onPacSearchKey(event)" onfocus="onPacSearchFocus()" style="width:100%;box-sizing:border-box"/>
                   <div id="pac-dd" class="port-dd"></div>
                 </div>
@@ -3111,7 +3111,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               </div>
               <div>
                 <div class="port-inp-lbl" data-i18n="pac.dayOfMonth">Giorno del mese</div>
-                <input class="port-inp" id="pac-day" type="number" placeholder="es. 4" min="1" max="28" step="1" style="width:100%;box-sizing:border-box" title="Giorno del mese in cui eseguire l'acquisto (1–28). Se cade di weekend viene spostato al lunedì successivo."/>
+                <input class="port-inp" id="pac-day" type="number" placeholder="es. 4" min="1" max="28" step="1" style="width:100%;box-sizing:border-box" data-i18n-ti="pac.day.title" title="Giorno del mese in cui eseguire l'acquisto (1–28). Se cade di weekend viene spostato al lunedì successivo."/>
               </div>
               <div>
                 <div class="port-inp-lbl" data-i18n="pac.frequency">Frequenza</div>
@@ -3134,7 +3134,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <!-- Log esecuzioni PAC -->
         <div class="card" style="margin-top:10px;display:none" id="pac-log-card">
           <div class="ch"><div><div class="ct" data-i18n="pac.logTitle">📋 Storico esecuzioni PAC</div><div class="cs" data-i18n="pac.logSub">Tutti gli acquisti automatici effettuati dai tuoi piani PAC</div></div></div>
-          <div id="pac-log-content"><div class="ld" style="padding:10px">Nessuna esecuzione registrata</div></div>
+          <div id="pac-log-content"><div class="ld" style="padding:10px" data-i18n="pac.noExec">Nessuna esecuzione registrata</div></div>
         </div>
 
         <div class="card" style="margin-top:10px" id="port-targets-card">
@@ -3155,7 +3155,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="port-tab-panel" id="ptab-fisco">
         <div class="card" id="div-tracker-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.dividends">💰 Dividendi</span><span class="info-icon">i<span class="info-tip">Stima del reddito annuo da dividendi in base al dividend yield corrente. Il DRIP simulator mostra quanto crescerebbe il portafoglio reinvestendo automaticamente i dividendi.</span></span></div><div class="cs" data-i18n="port.cs.dividends">Quanto guadagni dai dividendi ogni anno · Simulazione reinvestimento automatico</div></div></div>
-          <div id="div-tracker-content"><div class="ld" style="padding:8px">Caricamento...</div></div>
+          <div id="div-tracker-content"><div class="ld" style="padding:8px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div class="card" style="margin-top:10px" id="fisco-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.tax">📋 Situazione fiscale</span><span class="info-icon">i<span class="info-tip">Plusvalenze (guadagni) soggette al 26% di imposta in Italia. Le minusvalenze possono compensare plusvalenze future per 4 anni. Tax-loss harvesting: vendere posizioni in perdita per ridurre le tasse.</span></span></div><div class="cs" data-i18n="port.cs.tax">Plusvalenze e minusvalenze · Imposta stimata (26%) · Come risparmiare sulle tasse</div></div></div>
@@ -3277,7 +3277,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <div class="fg" style="margin-bottom:0">
         <label style="display:flex;justify-content:space-between">ANNI<span id="syv" style="color:var(--b);font-weight:700">10 anni</span></label>
-        <input type="range" id="sy" min="1" max="40" value="10" oninput="document.getElementById('syv').textContent=this.value+' anni';calcSim()"/>
+        <input type="range" id="sy" min="1" max="40" value="10" oninput="document.getElementById('syv').textContent=this.value+(currentLang==='en'?' yr':' anni');calcSim()"/>
       </div>
       <div class="fg" style="margin-bottom:0">
         <label style="display:flex;justify-content:space-between">RENDIMENTO %/ANNO<span id="srv" style="color:var(--b);font-weight:700">8%</span></label>
@@ -3384,22 +3384,22 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="cs" id="bt-res-sub">—</div>
         </div></div>
         <div class="bt-kpi-grid">
-          <div class="bt-kpi"><div class="bt-kpi-lbl">Rendimento Totale</div><div class="bt-kpi-val" id="bt-kpi-ret">—</div></div>
-          <div class="bt-kpi"><div class="bt-kpi-lbl">Valore Finale</div><div class="bt-kpi-val" id="bt-kpi-val">—</div></div>
-          <div class="bt-kpi"><div class="bt-kpi-lbl">N° Operazioni</div><div class="bt-kpi-val" id="bt-kpi-trades">—</div></div>
-          <div class="bt-kpi"><div class="bt-kpi-lbl">Max Drawdown</div><div class="bt-kpi-val" id="bt-kpi-dd">—</div></div>
+          <div class="bt-kpi"><div class="bt-kpi-lbl" data-i18n="lab.bt.totalReturn">Rendimento Totale</div><div class="bt-kpi-val" id="bt-kpi-ret">—</div></div>
+          <div class="bt-kpi"><div class="bt-kpi-lbl" data-i18n="lab.bt.finalVal">Valore Finale</div><div class="bt-kpi-val" id="bt-kpi-val">—</div></div>
+          <div class="bt-kpi"><div class="bt-kpi-lbl" data-i18n="lab.bt.trades">N° Operazioni</div><div class="bt-kpi-val" id="bt-kpi-trades">—</div></div>
+          <div class="bt-kpi"><div class="bt-kpi-lbl" data-i18n="lab.bt.maxDD">Max Drawdown</div><div class="bt-kpi-val" id="bt-kpi-dd">—</div></div>
         </div>
         <div id="bt-chart" style="width:100%;height:260px"></div>
         <div id="bt-vs-bh" style="display:none;margin-top:10px;padding:8px 12px;background:var(--s2);border-radius:8px;font-size:11px;font-family:var(--fm);color:var(--t2)"></div>
       </div>
       <div class="card" id="bt-trades-card" style="display:none">
         <div class="ch"><div>
-          <div class="ct">Log Operazioni</div>
+          <div class="ct" data-i18n="lab.bt.log">Log Operazioni</div>
           <div class="cs" id="bt-trades-count">—</div>
         </div></div>
         <div style="overflow-x:auto;max-height:300px;overflow-y:auto">
           <table class="bt-trades-tbl">
-            <thead><tr><th>#</th><th>Tipo</th><th>Data</th><th>Prezzo</th><th>Valore portafoglio</th><th>P&amp;L operaz.</th></tr></thead>
+            <thead><tr><th>#</th><th data-i18n="common.type">Tipo</th><th data-i18n="common.date">Data</th><th data-i18n="common.price">Prezzo</th><th data-i18n="bt.th.portval">Valore portafoglio</th><th data-i18n="bt.th.pnlop">P&amp;L operaz.</th></tr></thead>
             <tbody id="bt-trades-body"></tbody>
           </table>
         </div>
@@ -3418,10 +3418,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="cmp-slot">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
             <div style="width:10px;height:10px;border-radius:50%;background:#1A56C4;flex-shrink:0"></div>
-            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Titolo 1</span>
+            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700" data-i18n="lab.comp.ticker1">Titolo 1</span>
           </div>
           <div style="position:relative">
-            <input type="text" id="cmp-inp-0" placeholder="Cerca simbolo…" oninput="cmpSearch(0,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+            <input type="text" id="cmp-inp-0" data-i18n-ph="lab.comp.ph" placeholder="Cerca simbolo…" oninput="cmpSearch(0,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
             <div id="cmp-dd-0" class="port-dd" style="display:none;max-height:160px;overflow-y:auto;z-index:99"></div>
           </div>
           <div id="cmp-badge-0" style="display:none;margin-top:7px;font-size:11px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
@@ -3430,10 +3430,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="cmp-slot">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
             <div style="width:10px;height:10px;border-radius:50%;background:#059669;flex-shrink:0"></div>
-            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Titolo 2</span>
+            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700" data-i18n="lab.comp.ticker2">Titolo 2</span>
           </div>
           <div style="position:relative">
-            <input type="text" id="cmp-inp-1" placeholder="Cerca simbolo…" oninput="cmpSearch(1,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+            <input type="text" id="cmp-inp-1" data-i18n-ph="lab.comp.ph" placeholder="Cerca simbolo…" oninput="cmpSearch(1,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
             <div id="cmp-dd-1" class="port-dd" style="display:none;max-height:160px;overflow-y:auto;z-index:99"></div>
           </div>
           <div id="cmp-badge-1" style="display:none;margin-top:7px;font-size:11px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
@@ -3442,10 +3442,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="cmp-slot" style="margin-bottom:0">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
             <div style="width:10px;height:10px;border-radius:50%;background:#f59e0b;flex-shrink:0"></div>
-            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Titolo 3 <span style="font-weight:400">(opzionale)</span></span>
+            <span style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;font-weight:700" data-i18n="lab.comp.ticker3">Titolo 3 (opzionale)</span>
           </div>
           <div style="position:relative">
-            <input type="text" id="cmp-inp-2" placeholder="Cerca simbolo…" oninput="cmpSearch(2,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+            <input type="text" id="cmp-inp-2" data-i18n-ph="lab.comp.ph" placeholder="Cerca simbolo…" oninput="cmpSearch(2,this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
             <div id="cmp-dd-2" class="port-dd" style="display:none;max-height:160px;overflow-y:auto;z-index:99"></div>
           </div>
           <div id="cmp-badge-2" style="display:none;margin-top:7px;font-size:11px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
@@ -3463,7 +3463,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
       <button onclick="executeCompare()" style="width:100%;padding:12px;background:var(--b);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fm);letter-spacing:.3px">⚖ Confronta</button>
-      <div id="cmp-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--t3);font-family:var(--fm)">⏳ Caricamento dati…</div>
+      <div id="cmp-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
       <div id="cmp-error" style="display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-radius:8px;padding:10px 12px;font-size:11px;color:#dc2626;font-family:var(--fm);margin-top:8px"></div>
     </div>
     <!-- RIGHT: Risultati -->
@@ -3478,7 +3478,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <!-- Tabella metriche -->
       <div class="card" id="cmp-metrics-card">
-        <div class="ch"><div><div class="ct">Metriche a confronto</div><div class="cs">Dati fondamentali e di mercato</div></div></div>
+        <div class="ch"><div><div class="ct" data-i18n="lab.comp.metricsTitle">Metriche a confronto</div><div class="cs" data-i18n="lab.comp.metricsSub">Dati fondamentali e di mercato</div></div></div>
         <div style="overflow-x:auto">
           <table class="cmp-tbl" id="cmp-metrics-table">
             <thead id="cmp-tbl-head"></thead>
@@ -3598,8 +3598,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <!-- Sintesi narrativa -->
       <div class="mac-scenario-box">
-        <div class="mac-scenario-label">Il Contesto Attuale</div>
-        <div id="mac-scenario"><span class="ld">Analisi in caricamento...</span></div>
+        <div class="mac-scenario-label" data-i18n="macro.context">Il Contesto Attuale</div>
+        <div id="mac-scenario"><span class="ld" data-i18n="macro.contextLoading">Analisi in caricamento...</span></div>
       </div>
     </div>
 
@@ -4482,7 +4482,7 @@ async function renderScreenerWatchlist(){
       <span class="sc-wl-name">${name}</span>
       <span class="sc-wl-price">${d?cur+fmt(d.price,d.price>=1000?0:2):'—'}</span>
       <span style="font-family:var(--fm);font-size:11px;font-weight:600;padding:2px 6px;border-radius:3px" class="${up?'up':'down'}">${chgStr(c)}</span>
-      <button class="sc-wl-del" onclick="event.stopPropagation();removeFromWlScreener('${sym}')" title="Rimuovi dalla watchlist">✕</button>
+      <button class="sc-wl-del" onclick="event.stopPropagation();removeFromWlScreener('${sym}')" title="${_L({it:'Rimuovi dalla watchlist',en:'Remove from watchlist'})}">✕</button>
     </div>`;
   }).join('');
 }
@@ -4597,16 +4597,16 @@ async function renderWlaWatchlist(){
         ${alertsHtml?`<div style="margin-bottom:8px;padding:6px 8px;background:var(--s2);border-radius:7px;border:1px solid var(--bd)">${alertsHtml}</div>`:''}
         <div style="display:flex;gap:5px;align-items:center;margin-bottom:10px">
           <select id="al-cond-${sid}" style="font-family:var(--fm);font-size:11px;padding:4px 6px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--t);cursor:pointer;flex-shrink:0">
-            <option value="above">↑ Sopra</option>
-            <option value="below">↓ Sotto</option>
+            <option value="above">${_L({it:'↑ Sopra',en:'↑ Above'})}</option>
+            <option value="below">${_L({it:'↓ Sotto',en:'↓ Below'})}</option>
           </select>
-          <input id="al-inp-${sid}" type="number" placeholder="${d?fmt(d.price,2):'prezzo'}" min="0" step="any"
+          <input id="al-inp-${sid}" type="number" placeholder="${d?fmt(d.price,2):_L({it:'prezzo',en:'price'})}" min="0" step="any"
             style="font-family:var(--fm);font-size:11px;padding:4px 7px;border:1px solid var(--bd);border-radius:6px;background:var(--card);color:var(--t);width:0;flex:1;min-width:0"/>
           <button onclick="addAlertForCard('${sym}')" style="background:var(--b);color:#fff;border:none;padding:4px 10px;border-radius:6px;font-size:11px;font-family:var(--ff);font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">+ Alert</button>
         </div>
         <div class="wl-card-btns">
-          <button class="wl-card-btn" onclick="openFA('${sym}')">Analizza</button>
-          <button class="wl-card-btn del" onclick="removeFromWlaWatchlist('${sym}')">Rimuovi</button>
+          <button class="wl-card-btn" onclick="openFA('${sym}')">${_L({it:'Analizza',en:'Analyse'})}</button>
+          <button class="wl-card-btn del" onclick="removeFromWlaWatchlist('${sym}')">${_L({it:'Rimuovi',en:'Remove'})}</button>
         </div>
       </div>`;
     }).join('')+'</div>';
@@ -5542,7 +5542,7 @@ async function loadMarketScreener(reset=true){
   try{
     const r=await fetch(url);
     const data=await r.json();
-    if(!r.ok) throw new Error(data.error||'Errore '+r.status);
+    if(!r.ok) throw new Error(data.error||_L({it:'Errore ',en:'Error '})+r.status);
     stocks=data.stocks||[];
   }catch(e){
     body.innerHTML=`<tr><td colspan="12"><div class="sc-market-err">⚠ ${e.message}</div></td></tr>`;
@@ -5693,7 +5693,7 @@ function renderMarketStocks(){
     const bv=sortKey==='price'?b.price||0:sortKey==='chg'?b.chg||0:sortKey==='pe'?b.pe||0:sortKey==='mktcap'?b.marketCap||0:sortKey==='score'?(typeof _scB==='number'?_scB:0):0;
     return(av>bv?1:-1)*sortDir;
   });
-  document.getElementById('sc-cnt').textContent=list.length+' titoli';
+  document.getElementById('sc-cnt').textContent=list.length+' '+_L({it:'titoli',en:'stocks'});
   const body=document.getElementById('sc-body');
   if(!list.length){body.innerHTML='<tr><td colspan="15" style="text-align:center;padding:24px;color:var(--t3);font-size:12px">'+_t('empty.result')+'</td></tr>';return;}
   const flags={US:'🇺🇸',IT:'🇮🇹',EU:'🇪🇺',AS:'🇯🇵',CA:'🇨🇦',UK:'🇬🇧',CH:'🇨🇭'};
@@ -5762,7 +5762,7 @@ function onFqInput(){
 async function fetchSearchSuggestions(q){
   const dd=document.getElementById('search-dropdown');
   if(!dd) return;
-  dd.innerHTML='<div class="sd-hint">Ricerca in corso…</div>';
+  dd.innerHTML=`<div class="sd-hint">${_L({it:'Ricerca in corso…',en:'Searching…'})}</div>`;
   dd.classList.add('open');
   try{
     const r=await fetch('/api/screener?q='+encodeURIComponent(q));
@@ -6021,7 +6021,7 @@ function calcSim(){
   const rate=parseFloat(document.getElementById('sr').value)/100;
   const strat=document.getElementById('ss').value;
   const labels=[],vals=[],inv=[];let v=cap,i2=cap;
-  for(let y=0;y<=yrs;y++){labels.push(y===0?'Oggi':'A'+y);vals.push(Math.round(v));inv.push(Math.round(i2));v=v*(1+rate)+mo*12;i2+=mo*12;}
+  for(let y=0;y<=yrs;y++){labels.push(y===0?_L({it:'Oggi',en:'Today'}):_L({it:'A',en:'Y'})+y);vals.push(Math.round(v));inv.push(Math.round(i2));v=v*(1+rate)+mo*12;i2+=mo*12;}
   const fin=vals[vals.length-1],ti=inv[inv.length-1],gain=fin-ti;
   document.getElementById('rf').textContent='€'+fin.toLocaleString(currentLang==='en'?'en-GB':'it-IT');
   document.getElementById('ri').textContent='€'+ti.toLocaleString(currentLang==='en'?'en-GB':'it-IT');
@@ -6118,7 +6118,7 @@ async function runFA(){
   ${fss.total!=null?`<div style="display:flex;align-items:center;gap:16px;margin-top:10px;padding:14px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;flex-wrap:wrap">
     <div class="radar-wrap"><canvas id="radarChart"></canvas></div>
     <div style="flex:1;min-width:160px">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">PROFILO FINEDGE ✦ Radar 5 dimensioni</div>
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px">${_L({it:'PROFILO FINEDGE ✦ Radar 5 dimensioni',en:'FINEDGE PROFILE ✦ 5-dimension Radar'})}</div>
       ${Object.entries(fss.details).map(([k,v])=>`<div class="bench-row"><div class="bench-label">${dimLabels[k]||k}</div><div class="bench-bar-wrap"><div class="bench-bar" style="width:${Math.round(v/(dimMax[k]||10)*100)}%;background:${getScoreColor(v/(dimMax[k]||10)*100)}"></div></div><div class="bench-val">${v}/${dimMax[k]}</div></div>`).join('')}
     </div>
   </div>`:''}`;
@@ -6316,10 +6316,10 @@ async function _renderNews(category){
         </div>
         <div>
           <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px;display:flex;justify-content:space-between">
-            <span>📰 Ultime Notizie</span><span style="opacity:.6">${rest.length} articoli</span>
+            <span>📰 ${_L({it:'Ultime Notizie',en:'Latest News'})}</span><span style="opacity:.6">${rest.length} ${_L({it:'articoli',en:'articles'})}</span>
           </div>
           <div style="max-height:540px;overflow-y:auto;padding-right:2px">
-            ${restHtml||'<div style="color:var(--t3);font-size:12px;padding:8px 0">Nessun altro articolo</div>'}
+            ${restHtml||`<div style="color:var(--t3);font-size:12px;padding:8px 0">${_L({it:'Nessun altro articolo',en:'No more articles'})}</div>`}
           </div>
         </div>
       </div>
@@ -6418,12 +6418,12 @@ function calcPriceTarget(sd, qd){
 }
 
 function getRating(score){
-  if(score>=85)return{label:'Eccellente',color:'#047857',bg:'#D1FAE5'};
-  if(score>=70)return{label:'Molto buono',color:'var(--g)',bg:'var(--g2)'};
-  if(score>=55)return{label:'Buono',color:'#0891B2',bg:'#E0F7FA'};
-  if(score>=40)return{label:'Nella media',color:'var(--o)',bg:'var(--o2)'};
-  if(score>=25)return{label:'Sotto media',color:'#D97706',bg:'#FEF3C7'};
-  return{label:'Debole',color:'var(--r)',bg:'var(--r2)'};
+  if(score>=85)return{label:_L({it:'Eccellente',en:'Excellent'}),color:'#047857',bg:'#D1FAE5'};
+  if(score>=70)return{label:_L({it:'Molto buono',en:'Very good'}),color:'var(--g)',bg:'var(--g2)'};
+  if(score>=55)return{label:_L({it:'Buono',en:'Good'}),color:'#0891B2',bg:'#E0F7FA'};
+  if(score>=40)return{label:_L({it:'Nella media',en:'Average'}),color:'var(--o)',bg:'var(--o2)'};
+  if(score>=25)return{label:_L({it:'Sotto media',en:'Below average'}),color:'#D97706',bg:'#FEF3C7'};
+  return{label:_L({it:'Debole',en:'Weak'}),color:'var(--r)',bg:'var(--r2)'};
 }
 function getScoreColor(pct){
   if(pct>=70)return'var(--g)'; if(pct>=45)return'var(--o)'; return'var(--r)';
@@ -7092,8 +7092,8 @@ async function submitForgotPw(){
     if(!r.ok||!d.ok){
       errEl.textContent=d.error||_t('auth.err.conn');errEl.classList.add('show');
     } else {
-      const codeMsg=d.code?` Il tuo codice: <strong>${d.code}</strong>`:'';
-      okEl.innerHTML=`Codice di reset generato.${codeMsg}<br><small>Valido 15 minuti</small>`;
+      const codeMsg=d.code?` ${_L({it:'Il tuo codice:',en:'Your code:'})} <strong>${d.code}</strong>`:'';
+      okEl.innerHTML=`${_L({it:'Codice di reset generato.',en:'Reset code generated.'})}${codeMsg}<br><small>${_L({it:'Valido 15 minuti',en:'Valid for 15 minutes'})}</small>`;
       okEl.classList.add('show');
       document.getElementById('rp-email-hidden').value=email;
       setTimeout(()=>showAuthView('reset'),1800);
@@ -7122,7 +7122,7 @@ async function submitResetPw(){
     });
     const d=await r.json();
     if(!r.ok||!d.ok){
-      errEl.textContent=d.error||'Codice non valido o scaduto.';errEl.classList.add('show');
+      errEl.textContent=d.error||_L({it:'Codice non valido o scaduto.',en:'Invalid or expired code.'});errEl.classList.add('show');
     } else {
       okEl.textContent=_t('auth.pwd.updated');
       okEl.classList.add('show');
@@ -7143,7 +7143,7 @@ function updateNavUser(){
       <button class="nav-logout-btn" onclick="logout()">${_t('nav.logout')}</button>`;
     if(mob)mob.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <div style="font-size:12px;color:rgba(255,255,255,.5);font-family:var(--fm)">${display}</div>
-        <button class="dm-toggle" onclick="toggleDark()" title="Tema chiaro/scuro" aria-label="Toggle tema" style="display:flex!important"><span class="dm-moon">🌙</span><span class="dm-track">☀</span><span class="dm-sun">☀</span></button>
+        <button class="dm-toggle" onclick="toggleDark()" data-i18n-ti="dm.title" title="Tema chiaro/scuro" aria-label="Toggle tema" style="display:flex!important"><span class="dm-moon">🌙</span><span class="dm-track">☀</span><span class="dm-sun">☀</span></button>
       </div>
       <button onclick="TUTO.restart();closeMobileNav()" style="width:100%;background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.3);color:#93C5FD;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer;margin-bottom:8px">? Guida introduttiva</button>
       <button onclick="logout();closeMobileNav()" style="width:100%;background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);color:#F87171;padding:10px;border-radius:8px;font-size:14px;font-family:var(--ff);font-weight:600;cursor:pointer">Esci</button>`;
@@ -7748,8 +7748,8 @@ function renderPacPlans(){
           <span style="font-size:11px;font-family:var(--fm);color:${statusColor}">${statusText}</span>
           <div style="display:flex;gap:6px;align-items:center">
             ${isDue?`<button id="pac-exec-btn-${p.id}" onclick="executePacNow('${p.id}')" style="background:var(--b);color:#fff;border:none;border-radius:7px;font-size:12px;font-weight:600;padding:6px 14px;cursor:pointer;font-family:var(--fm)">${_t('pac.execute')}</button>`:''}
-            <button onclick="togglePacPlan('${p.id}')" title="${p.active?'Ferma i nuovi acquisti (mantieni le posizioni nel portafoglio)':'Riprendi gli acquisti mensili'}" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;color:${p.active?'var(--o)':'var(--g)'};font-family:var(--ff)">${p.active?'⏸ Ferma':'▶ Riprendi'}</button>
-            <button onclick="deletePacPlan('${p.id}')" title="Elimina il PAC e rimuovi le posizioni dal portafoglio" style="background:none;border:1px solid var(--r);border-radius:6px;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;color:var(--r);font-family:var(--ff)">✕ Elimina</button>
+            <button onclick="togglePacPlan('${p.id}')" title="${p.active?_L({it:'Ferma i nuovi acquisti (mantieni le posizioni nel portafoglio)',en:'Stop new purchases (keep positions in portfolio)'}):_L({it:'Riprendi gli acquisti mensili',en:'Resume monthly purchases'})}" style="background:none;border:1px solid var(--bd);border-radius:6px;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;color:${p.active?'var(--o)':'var(--g)'};font-family:var(--ff)">${p.active?_L({it:'⏸ Ferma',en:'⏸ Pause'}):_L({it:'▶ Riprendi',en:'▶ Resume'})}</button>
+            <button onclick="deletePacPlan('${p.id}')" title="${_L({it:'Elimina il PAC e rimuovi le posizioni dal portafoglio',en:'Delete the PAC plan and remove positions from portfolio'})}" style="background:none;border:1px solid var(--r);border-radius:6px;font-size:11px;font-weight:600;padding:5px 10px;cursor:pointer;color:var(--r);font-family:var(--ff)">${_L({it:'✕ Elimina',en:'✕ Delete'})}</button>
           </div>
         </div>
       </div>
@@ -7788,7 +7788,7 @@ function renderPacLog(){
       '<td style="padding:7px 4px;text-align:center">'+
         '<button onclick="openPacEntryEdit(\''+pid+'\',\''+l.date+'\')" '+
           'style="background:none;border:1px solid var(--bd);border-radius:5px;cursor:pointer;'+
-          'font-size:11px;padding:2px 6px;color:var(--t3);line-height:1" title="Modifica prezzo di acquisto">✏</button>'+
+          'font-size:11px;padding:2px 6px;color:var(--t3);line-height:1" title="'+_L({it:'Modifica prezzo di acquisto',en:'Edit purchase price'})+'">✏</button>'+
       '</td>'+
       '</tr>'
     ).join('');
@@ -7798,16 +7798,16 @@ function renderPacLog(){
         '<div><span style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">'+p.sym+'</span>'+nameSpan+'</div>'+
         '<div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">'+
           '<div style="text-align:right">'+
-            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Investito totale</div>'+
+            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">'+_L({it:'Investito totale',en:'Total invested'})+'</div>'+
             '<div style="font-size:14px;font-weight:700;color:var(--t)">'+c+totalInvested.toLocaleString(currentLang==='en'?'en-GB':'it-IT')+'</div>'+
-            '<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">'+nAcq+' acquist'+(nAcq!==1?'i':'o')+'</div>'+
+            '<div style="font-size:10px;color:var(--t3);font-family:var(--fm)">'+nAcq+' '+(currentLang==='en'?'purchase'+(nAcq!==1?'s':''):'acquist'+(nAcq!==1?'i':'o'))+'</div>'+
           '</div>'+
           '<div style="text-align:right">'+
-            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Quote tot.</div>'+
+            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">'+_L({it:'Quote tot.',en:'Total shares'})+'</div>'+
             '<div style="font-size:14px;font-weight:700;color:var(--t)">'+totalQty.toFixed(4)+'</div>'+
           '</div>'+
           '<div style="text-align:right" id="pac-val-'+p.id+'">'+
-            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Valore attuale</div>'+
+            '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">'+_L({it:'Valore attuale',en:'Current value'})+'</div>'+
             '<div style="font-size:14px;font-weight:700;color:var(--t3)">—</div>'+
           '</div>'+
         '</div>'+
@@ -7815,11 +7815,11 @@ function renderPacLog(){
       '<div style="overflow-x:auto;-webkit-overflow-scrolling:touch">'+
       '<table style="width:100%;border-collapse:collapse;font-size:11px;min-width:320px">'+
         '<thead><tr style="color:var(--t3);font-family:var(--fm);font-size:9px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd)">'+
-          '<th style="padding:6px 4px 6px 0;text-align:left">Data</th>'+
-          '<th style="padding:6px 4px;text-align:right">Importo</th>'+
-          '<th style="padding:6px 4px;text-align:right">Prezzo</th>'+
-          '<th style="padding:6px 4px;text-align:right">Quote</th>'+
-          '<th style="padding:6px 4px;text-align:right">Cumulato</th>'+
+          '<th style="padding:6px 4px 6px 0;text-align:left">'+_L({it:'Data',en:'Date'})+'</th>'+
+          '<th style="padding:6px 4px;text-align:right">'+_L({it:'Importo',en:'Amount'})+'</th>'+
+          '<th style="padding:6px 4px;text-align:right">'+_L({it:'Prezzo',en:'Price'})+'</th>'+
+          '<th style="padding:6px 4px;text-align:right">'+_L({it:'Quote',en:'Shares'})+'</th>'+
+          '<th style="padding:6px 4px;text-align:right">'+_L({it:'Cumulato',en:'Cumul.'})+'</th>'+
           '<th style="padding:6px 4px;width:32px"></th>'+
         '</tr></thead>'+
         '<tbody>'+rows+'</tbody>'+
@@ -7843,8 +7843,8 @@ function renderPacLog(){
       const col=ret>=0?'var(--g)':'var(--r)';
       const sign=ret>=0?'+':'';
       valEl.innerHTML=
-        '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">Valore attuale</div>'+
-        '<div style="font-size:14px;font-weight:700;color:var(--t)">'+c+val.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div>'+
+        '<div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px">'+_L({it:'Valore attuale',en:'Current value'})+'</div>'+
+        '<div style="font-size:14px;font-weight:700;color:var(--t)">'+c+val.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{minimumFractionDigits:2,maximumFractionDigits:2})+'</div>'+
         '<div style="font-size:10px;font-weight:600;color:'+col+';font-family:var(--fm)">'+sign+c+Math.abs(ret).toFixed(2)+' ('+sign+retPct.toFixed(1)+'%)</div>';
     }catch{}
   });
@@ -7955,7 +7955,7 @@ async function autoExecuteDuePacs(){
     renderPacPlans();
     renderPacLog();
     checkPacDue();
-    _showPacToast('\u2713 '+count+' acquisto'+(count>1?'i':'')+' PAC eseguito'+(count>1?'i':'')+' automaticamente');
+    _showPacToast('\u2713 '+_L({it:count+' acquisto'+(count>1?'i':'')+' PAC eseguito'+(count>1?'i':'')+' automaticamente',en:count+' PAC purchase'+(count>1?'s':'')+' executed automatically'}));
   }
 }
 
@@ -8441,7 +8441,7 @@ async function renderPortfolio(){
       </div>`:''}
     </div>
     ${dailySection}`
-    :`<div style="padding:30px;text-align:center;color:var(--t3)"><div style="font-size:32px;margin-bottom:10px">📊</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Nessun titolo</div><div style="font-size:11px">${_t('port.addFirst')}</div></div>`;
+    :`<div style="padding:30px;text-align:center;color:var(--t3)"><div style="font-size:32px;margin-bottom:10px">📊</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">${_t('port.empty')}</div><div style="font-size:11px">${_t('port.addFirst')}</div></div>`;
 
   document.getElementById('port-summary').innerHTML=summaryHtml;
   // Carica analisi giornaliera AI (async, non bloccante)
@@ -9180,7 +9180,7 @@ function schedulePortDailyRefresh() {
     if (badge)   badge.style.display='none';
   } else {
     // Pre-market / Europe hours
-    if (dateLbl) dateLbl.textContent = dateStr + ' · Aggiornata alla chiusura USA (20:00 UTC)';
+    if (dateLbl) dateLbl.textContent = dateStr + ' · ' + _L({it:'Aggiornata alla chiusura USA (20:00 UTC)',en:'Updated at US market close (20:00 UTC)'});
     if (badge)   badge.style.display='none';
   }
 }
@@ -9213,7 +9213,7 @@ function togglePortAddForm(){
   if(!wrap)return;
   const open=wrap.style.display==='none'||wrap.style.display==='';
   wrap.style.display=open?'block':'none';
-  if(btn)btn.textContent=open?'✕ Chiudi':'＋ Aggiungi titolo';
+  if(btn)btn.textContent=open?_L({it:'✕ Chiudi',en:'✕ Close'}):_L({it:'＋ Aggiungi titolo',en:'＋ Add ticker'});
   if(open)setTimeout(()=>document.getElementById('port-search')?.focus(),50);
 }
 
@@ -9249,9 +9249,9 @@ function updatePortAnalysisHeader(item,q,idx){
   const pnlPct_=inv>0?(pnl_/inv*100):0;
   const posEl=document.getElementById('port-analysis-pos');
   if(posEl)posEl.innerHTML=`
-    <div class="port-pos-item"><div class="port-pos-lbl">Qtà</div><div class="port-pos-val">${item.qty}</div></div>
-    <div class="port-pos-item"><div class="port-pos-lbl">Prezzo acq.</div><div class="port-pos-val">${cur.sym}${fmt(item.buyPrice,2)}</div></div>
-    <div class="port-pos-item"><div class="port-pos-lbl">Valore</div><div class="port-pos-val">${cur.sym}${fmt(val,0)}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">${_L({it:'Qtà',en:'Qty'})}</div><div class="port-pos-val">${item.qty}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">${_L({it:'Prezzo acq.',en:'Buy price'})}</div><div class="port-pos-val">${cur.sym}${fmt(item.buyPrice,2)}</div></div>
+    <div class="port-pos-item"><div class="port-pos-lbl">${_L({it:'Valore',en:'Value'})}</div><div class="port-pos-val">${cur.sym}${fmt(val,0)}</div></div>
     <div class="port-pos-item"><div class="port-pos-lbl">P&L</div><div class="port-pos-val" style="color:${pnl_>=0?'var(--g)':'var(--r)'}">${pnl_>=0?'+':''}${cur.sym}${fmt(Math.abs(pnl_),0)} (${pnlPct_>=0?'+':''}${fmt(pnlPct_,1)}%)</div></div>
   `;
 }
@@ -9508,7 +9508,7 @@ function renderWatchlistPort(){
   el.innerHTML=watchlist.map(sym=>`
     <div class="port-wl-item" onclick="openModal('${sym}','${sym}')">
       <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${sym}</span>
-      <button class="port-del" onclick="event.stopPropagation();removeFromWatchlist('${sym}')" title="Rimuovi">✕</button>
+      <button class="port-del" onclick="event.stopPropagation();removeFromWatchlist('${sym}')" title="${_L({it:'Rimuovi',en:'Remove'})}">✕</button>
     </div>`).join('');
 }
 
@@ -9823,9 +9823,9 @@ async function loadBenchmark(){
     </div>`;
   };
   el.innerHTML=`
-    ${makeRow('📊 Il tuo portafoglio',portRet)}
+    ${makeRow('📊 '+_L({it:'Il tuo portafoglio',en:'Your portfolio'}),portRet)}
     ${bmReturns.map(b=>makeRow(`${b.flag} ${b.n}`,b.ret)).join('')}
-    <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">Portafoglio calcolato dal prezzo di acquisto · Benchmark: variazione ultimo mese</div>`;
+    <div style="margin-top:8px;font-size:10px;color:var(--t3);font-family:var(--fm)">${_L({it:'Portafoglio calcolato dal prezzo di acquisto · Benchmark: variazione ultimo mese',en:'Portfolio calculated from purchase price · Benchmark: last-month change'})}</div>`;
 }
 
 /* ══════════════════════════════════════════
@@ -10066,11 +10066,11 @@ function showDivTip(e, idx){
     ${detailRows}
     <div style="margin-top:5px;padding-top:5px;border-top:1px solid var(--bd)">
       <div style="display:flex;justify-content:space-between;gap:14px;margin-bottom:2px">
-        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">Totale lordo</span>
+        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Totale lordo',en:'Gross total'})}</span>
         <span style="font-size:11px;color:#10B981;font-weight:700;font-family:var(--fm)">€${grossTotal.toFixed(2)}</span>
       </div>
       <div style="display:flex;justify-content:space-between;gap:14px">
-        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">Totale netto</span>
+        <span style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Totale netto',en:'Net total'})}</span>
         <span style="font-size:11px;color:#059669;font-weight:700;font-family:var(--fm)">€${netTotal.toFixed(2)}</span>
       </div>
     </div>`;
@@ -10455,7 +10455,7 @@ function renderPortAnalysis(portItems, quotes){
       <div style="flex:1;min-width:190px;display:flex;align-items:center;gap:10px;padding:9px 12px;background:${prof.color}15;border:1.5px solid ${prof.color}50;border-radius:10px">
         <span style="font-size:22px;line-height:1;flex-shrink:0">${prof.emoji}</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center">Profilo investitore ${tip('Il profilo determina come valutare il portafoglio. Ogni profilo ha target diversi per tipo di titoli, beta massimo e rendimento atteso. Usa il quiz per trovare il tuo.')}</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;display:flex;align-items:center">${_L({it:'Profilo investitore',en:'Investor profile'})} ${tip(_L({it:'Il profilo determina come valutare il portafoglio. Ogni profilo ha target diversi per tipo di titoli, beta massimo e rendimento atteso. Usa il quiz per trovare il tuo.',en:'The profile determines how to evaluate the portfolio. Each profile has different targets for stock type, maximum beta and expected return. Use the quiz to find yours.'}))}</div>
           <div style="font-size:13px;font-weight:700;color:var(--t);font-family:var(--fm)">${_t(prof.nameKey)}</div>
         </div>
         <select onchange="setSelectedProfile(this.value);renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:7px;color:var(--t);font-family:var(--fm);font-size:11px;cursor:pointer;flex-shrink:0">
@@ -10463,7 +10463,7 @@ function renderPortAnalysis(portItems, quotes){
         </select>
       </div>
       <button onclick="openPQ()" style="display:flex;align-items:center;gap:6px;padding:9px 13px;background:linear-gradient(135deg,#1A56C4,#7C3AED);color:#fff;border:none;border-radius:10px;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">
-        🧭 <span>Scopri il tuo profilo</span>
+        🧭 <span>${_L({it:'Scopri il tuo profilo',en:'Find your profile'})}</span>
       </button>
     </div>
 
@@ -10483,18 +10483,18 @@ function renderPortAnalysis(portItems, quotes){
             <text x="41" y="46" text-anchor="middle" font-size="19" font-weight="700" fill="${scoreColor}" font-family="IBM Plex Mono">${score}</text>
           </svg>
           <div style="flex:1;min-width:0">
-            <div style="font-size:12px;font-weight:700;color:${scoreColor};font-family:var(--fm);display:flex;align-items:center;gap:4px">${score}/100 pt ${tip('Punteggio di allineamento tra il portafoglio e il profilo selezionato. Considera la distribuzione per tipo (Dividendo/Value/Growth), il beta medio e il numero di titoli. 100 = allineamento perfetto.')}</div>
-            <div style="font-size:10px;color:var(--t2);font-family:var(--fm);margin-top:2px">${score>=75?'Ottimo allineamento':score>=50?'Allineamento discreto':'Da migliorare'}</div>
+            <div style="font-size:12px;font-weight:700;color:${scoreColor};font-family:var(--fm);display:flex;align-items:center;gap:4px">${score}/100 pt ${tip(_L({it:'Punteggio di allineamento tra il portafoglio e il profilo selezionato. Considera la distribuzione per tipo (Dividendo/Value/Growth), il beta medio e il numero di titoli. 100 = allineamento perfetto.',en:'Alignment score between portfolio and selected profile. Considers type distribution (Dividend/Value/Growth), average beta and number of holdings. 100 = perfect alignment.'}))}</div>
+            <div style="font-size:10px;color:var(--t2);font-family:var(--fm);margin-top:2px">${score>=75?_L({it:'Ottimo allineamento',en:'Excellent alignment'}):score>=50?_L({it:'Allineamento discreto',en:'Fair alignment'}):_L({it:'Da migliorare',en:'Needs improvement'})}</div>
             ${bestMatch!==selectedProfile
               ?`<div style="font-size:9px;color:var(--b);font-family:var(--fm);margin-top:3px">↗ ${INVESTOR_PROFILES[bestMatch].emoji} ${_t(INVESTOR_PROFILES[bestMatch].nameKey)} (${scores[bestMatch]}pt)</div>`
-              :'<div style="font-size:9px;color:#10B981;font-family:var(--fm);margin-top:3px">✓ Profilo ottimale</div>'}
+              :`<div style="font-size:9px;color:#10B981;font-family:var(--fm);margin-top:3px">✓ ${_L({it:'Profilo ottimale',en:'Optimal profile'})}</div>`}
           </div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;flex:1;align-content:stretch">
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">TITOLI${tip('Numero di posizioni aperte. Una buona diversificazione richiede almeno 8-10 titoli su settori diversi.')}</div><div class="rv2 b" style="font-size:16px">${nStocks}</div></div>
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">SETTORI${tip('Numero di settori economici rappresentati (Tech, Salute, Energia…). Più settori = minore rischio di concentrazione.')}</div><div class="rv2 b" style="font-size:16px">${nSectors}</div></div>
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">BETA MEDIO${tip('Volatilità media del portafoglio rispetto al mercato (S&P 500 = 1.0). Beta < 1 = più stabile del mercato. Beta > 1 = più volatile. Ponderato per capitale investito.')}</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:16px">${fmt(weightedBeta,2)}</div></div>
-          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">YIELD PORTAFOGLIO${tip('Dividendi annui stimati come % del valore corrente di mercato del portafoglio. Calcolato su tutti i titoli: dividendi annui totali ÷ valore attuale totale. Tutti i titoli contano nel denominatore; solo chi paga dividendi contribuisce al numeratore. Importo convertito in €.')}</div><div class="rv2 g" style="font-size:16px">${portYield>0?fmt(portYield*100,2)+'%':'—'}</div>${annualDivAmt>0?`<div class="rl" style="font-size:10px;margin-top:2px;color:var(--g)">~€${annualDivAmt>=1000?(annualDivAmt/1000).toFixed(1)+'K':Math.round(annualDivAmt)}/anno</div><div class="rl" style="font-size:9px;margin-top:1px;color:var(--t3)">${divBreakdown.map(d=>`${d.sym} ${fmt(d.y*100,2)}%`).join(' · ')}</div>`:''}</div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">${_L({it:'TITOLI',en:'HOLDINGS'})}${tip(_L({it:'Numero di posizioni aperte. Una buona diversificazione richiede almeno 8-10 titoli su settori diversi.',en:'Number of open positions. Effective diversification requires at least 8-10 holdings across different sectors.'}))}</div><div class="rv2 b" style="font-size:16px">${nStocks}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">${_L({it:'SETTORI',en:'SECTORS'})}${tip(_L({it:'Numero di settori economici rappresentati (Tech, Salute, Energia…). Più settori = minore rischio di concentrazione.',en:'Number of economic sectors represented (Tech, Health, Energy…). More sectors = lower concentration risk.'}))}</div><div class="rv2 b" style="font-size:16px">${nSectors}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">${_L({it:'BETA MEDIO',en:'AVG BETA'})}${tip(_L({it:'Volatilità media del portafoglio rispetto al mercato (S&P 500 = 1.0). Beta < 1 = più stabile del mercato. Beta > 1 = più volatile. Ponderato per capitale investito.',en:'Average portfolio volatility vs the market (S&P 500 = 1.0). Beta < 1 = more stable. Beta > 1 = more volatile. Weighted by invested capital.'}))}</div><div class="rv2 ${weightedBeta>1.2?'down':weightedBeta<0.8?'b':'a'}" style="font-size:16px">${fmt(weightedBeta,2)}</div></div>
+          <div class="rb" style="display:flex;flex-direction:column;justify-content:center"><div class="rl" style="display:flex;align-items:center">${_L({it:'YIELD PORTAFOGLIO',en:'PORTFOLIO YIELD'})}${tip(_L({it:'Dividendi annui stimati come % del valore corrente di mercato del portafoglio. Calcolato su tutti i titoli: dividendi annui totali ÷ valore attuale totale. Tutti i titoli contano nel denominatore; solo chi paga dividendi contribuisce al numeratore. Importo convertito in €.',en:'Estimated annual dividends as % of current portfolio market value. Calculated across all holdings: total annual dividends ÷ total current value. All holdings count in the denominator; only dividend payers contribute to the numerator. Amount converted to €.'}))}</div><div class="rv2 g" style="font-size:16px">${portYield>0?fmt(portYield*100,2)+'%':'—'}</div>${annualDivAmt>0?`<div class="rl" style="font-size:10px;margin-top:2px;color:var(--g)">~€${annualDivAmt>=1000?(annualDivAmt/1000).toFixed(1)+'K':Math.round(annualDivAmt)}/${_L({it:'anno',en:'yr'})}</div><div class="rl" style="font-size:9px;margin-top:1px;color:var(--t3)">${divBreakdown.map(d=>`${d.sym} ${fmt(d.y*100,2)}%`).join(' · ')}</div>`:''}</div>
         </div>
       </div>
 
@@ -10527,7 +10527,7 @@ function renderPortAnalysis(portItems, quotes){
 
       <!-- COL DX: Radar — stessa altezza delle altre due -->
       <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:10px;display:flex;flex-direction:column">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:3px">Profilo portafoglio${tip('Grafico a 6 dimensioni: Rendimento (P&L vs prezzo di carico), Diversificazione (settori e titoli), Qualità (FinEdge Score medio ponderato), Momentum (variazione % giornaliera ponderata — 0%=50, +5%=100), Stabilità (beta basso = più stabile), Reddito (yield dividendi — 0%=0, 3%=50, 6%=100). 0–100 per ogni asse.')}</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;justify-content:center;gap:3px">${_L({it:'Profilo portafoglio',en:'Portfolio profile'})}${tip(_L({it:'Grafico a 6 dimensioni: Rendimento (P&L vs prezzo di carico), Diversificazione (settori e titoli), Qualità (FinEdge Score medio ponderato), Momentum (variazione % giornaliera ponderata — 0%=50, +5%=100), Stabilità (beta basso = più stabile), Reddito (yield dividendi — 0%=0, 3%=50, 6%=100). 0–100 per ogni asse.',en:'6-dimension chart: Return (P&L vs cost basis), Diversification (sectors and holdings), Quality (weighted avg FinEdge Score), Momentum (weighted daily % change — 0%=50, +5%=100), Stability (low beta = more stable), Income (dividend yield — 0%=0, 3%=50, 6%=100). 0–100 per axis.'}))}</div>
         <div style="flex:1;display:flex;align-items:center;justify-content:center">
           <canvas id="port-radar-canvas" width="200" height="180"></canvas>
         </div>
@@ -10541,7 +10541,7 @@ function renderPortAnalysis(portItems, quotes){
          RACCOMANDAZIONI
     ══════════════════════════════════════ -->
     <div style="margin-bottom:12px">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center">Raccomandazioni${tip('Suggerimenti automatici basati sul confronto tra la composizione reale del portafoglio e i target del profilo selezionato (tipo titoli, beta, concentrazione, diversificazione).')}</div>
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center">${_L({it:'Raccomandazioni',en:'Recommendations'})}${tip(_L({it:'Suggerimenti automatici basati sul confronto tra la composizione reale del portafoglio e i target del profilo selezionato (tipo titoli, beta, concentrazione, diversificazione).',en:'Automatic suggestions based on comparing the actual portfolio composition with the targets of the selected profile (stock type, beta, concentration, diversification).'}))}</div>
       ${getRecs(selectedProfile).map(r=>`<div class="port-rec ${r.cls}">${r.txt}</div>`).join('')}
     </div>
 
@@ -10549,7 +10549,7 @@ function renderPortAnalysis(portItems, quotes){
          SEGNALI PER TITOLO
     ══════════════════════════════════════ -->
     <div style="margin-bottom:14px">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center">Segnali per titolo${tip('Valutazione di ogni titolo rispetto al profilo selezionato. Considera 4 fattori: FinEdge Score (qualità fondamentale), Upside verso target analisti, P&L (rendimento dal prezzo di carico) e Beta (rischio). COMPRA = tutti positivi, ATTENZIONE = 2+ negativi.')}</div>
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:7px;display:flex;align-items:center">${_L({it:'Segnali per titolo',en:'Per-holding signals'})}${tip(_L({it:'Valutazione di ogni titolo rispetto al profilo selezionato. Considera 4 fattori: FinEdge Score (qualità fondamentale), Upside verso target analisti, P&L (rendimento dal prezzo di carico) e Beta (rischio). COMPRA = tutti positivi, ATTENZIONE = 2+ negativi.',en:'Evaluation of each holding against the selected profile. Considers 4 factors: FinEdge Score (fundamental quality), Upside to analyst target, P&L (return from cost basis) and Beta (risk). BUY = all positive, CAUTION = 2+ negative.'}))}</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:6px">
         ${(()=>{
           const prof2=INVESTOR_PROFILES[selectedProfile];
@@ -10588,7 +10588,7 @@ function renderPortAnalysis(portItems, quotes){
           }).join('');
         })()}
       </div>
-      <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">⚠ Segnali quantitativi · Non costituisce consulenza finanziaria (MiFID II)</div>
+      <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">⚠ ${_L({it:'Segnali quantitativi · Non costituisce consulenza finanziaria (MiFID II)',en:'Quantitative signals · Not financial advice (MiFID II)'})}</div>
     </div>
 
     <!-- ══════════════════════════════════════
@@ -10602,17 +10602,17 @@ function renderPortAnalysis(portItems, quotes){
       <div style="display:none;margin-top:10px">
         <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px">
           <div style="flex:1;min-width:110px">
-            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">RIMUOVI TICKER</div>
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">${_L({it:'RIMUOVI TICKER',en:'REMOVE TICKER'})}</div>
             <select id="whatif-old" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px">
               ${portItems.map(item=>`<option value="${item.sym}">${item.sym}</option>`).join('')}
             </select>
           </div>
           <div style="font-size:14px;color:var(--t3);padding-bottom:8px">→</div>
           <div style="flex:1;min-width:110px">
-            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">AGGIUNGI TICKER</div>
+            <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">${_L({it:'AGGIUNGI TICKER',en:'ADD TICKER'})}</div>
             <input id="whatif-new" placeholder="es. GOOGL" style="width:100%;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:6px;color:var(--t);font-family:var(--fm);font-size:12px;box-sizing:border-box"/>
           </div>
-          <button onclick="runWhatIf()" style="padding:8px 18px;background:var(--b);color:#fff;border:none;border-radius:6px;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0">Analizza</button>
+          <button onclick="runWhatIf()" style="padding:8px 18px;background:var(--b);color:#fff;border:none;border-radius:6px;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;flex-shrink:0">${_L({it:'Analizza',en:'Analyse'})}</button>
         </div>
         <div id="whatif-result"></div>
       </div>
@@ -10692,10 +10692,10 @@ async function runWhatIf(){
     const newInfo=allS2.find(s=>s.s===newSym)||{};
     el.innerHTML=`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:12px">Risultato simulazione: rimpiazzo <span style="color:var(--r)">${oldSym}</span> con <span style="color:var(--g)">${newSym}</span></div>
+      <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:12px">${_L({it:'Risultato simulazione: rimpiazzo',en:'Simulation result: replacing'})} <span style="color:var(--r)">${oldSym}</span> ${_L({it:'con',en:'with'})} <span style="color:var(--g)">${newSym}</span></div>
       <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
         <div class="rb">
-          <div class="rl">BETA PORTAFOGLIO</div>
+          <div class="rl">${_L({it:'BETA PORTAFOGLIO',en:'PORTFOLIO BETA'})}</div>
           <div style="display:flex;align-items:baseline;gap:5px;margin-top:4px">
             <span style="font-size:13px;font-family:var(--fm);font-weight:700;color:var(--t)">${fmt(curBeta,2)}</span>
             <span style="font-size:10px;color:var(--t3)">→</span>
@@ -10704,7 +10704,7 @@ async function runWhatIf(){
           <div style="font-size:9px;font-family:var(--fm);color:${betaDiff<0?'var(--g)':'var(--r)'};margin-top:2px">${betaDiff>=0?'+':''}${fmt(betaDiff,2)} beta</div>
         </div>
         <div class="rb">
-          <div class="rl">YIELD PORTAFOGLIO</div>
+          <div class="rl">${_L({it:'YIELD PORTAFOGLIO',en:'PORTFOLIO YIELD'})}</div>
           <div style="display:flex;align-items:baseline;gap:5px;margin-top:4px">
             <span style="font-size:13px;font-family:var(--fm);font-weight:700;color:var(--t)">${fmt(curYield*100,2)}%</span>
             <span style="font-size:10px;color:var(--t3)">→</span>
@@ -10715,19 +10715,19 @@ async function runWhatIf(){
         <div class="rb">
           <div class="rl">${newSym} — P/E · BETA</div>
           <div style="font-size:15px;font-family:var(--fm);font-weight:700;color:var(--t);margin-top:4px">${newPE?fmt(newPE,1):'—'} · ${fmt(newBetaVal,2)}</div>
-          <div style="font-size:9px;font-family:var(--fm);color:var(--t3);margin-top:2px">P/E · beta titolo</div>
+          <div style="font-size:9px;font-family:var(--fm);color:var(--t3);margin-top:2px">P/E · beta</div>
         </div>
       </div>
       ${newUpside!==null?`<div style="padding:8px 12px;background:${newUpside>=10?'rgba(16,185,129,0.1)':newUpside>=-5?'rgba(245,158,11,0.1)':'rgba(239,68,68,0.1)'};border-radius:6px;margin-bottom:8px">
-        <span style="font-size:11px;font-family:var(--fm);color:var(--t2)">Target analisti su ${newSym}: </span>
+        <span style="font-size:11px;font-family:var(--fm);color:var(--t2)">${_L({it:'Target analisti su',en:'Analyst target for'})} ${newSym}: </span>
         <span style="font-size:12px;font-family:var(--fm);font-weight:700;color:${newUpside>=10?'var(--g)':newUpside>=-5?'var(--o)':'var(--r)'}">${newUpside>=0?'+':''}${fmt(newUpside,1)}%</span>
-        <span style="font-size:10px;color:var(--t3)"> (target $${fmt(newTarget,2)} · prezzo attuale $${fmt(newQ.price,2)})</span>
+        <span style="font-size:10px;color:var(--t3)"> (${_L({it:'target',en:'target'})} $${fmt(newTarget,2)} · ${_L({it:'prezzo attuale',en:'current price'})} $${fmt(newQ.price,2)})</span>
       </div>`:''}
       <div style="padding:8px 12px;background:var(--b3);border-radius:6px;display:flex;gap:16px;flex-wrap:wrap">
-        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Tipo: <strong style="color:var(--t)">${newInfo.t||'growth'}</strong></span>
-        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Settore: <strong style="color:var(--t)">${newInfo.sec||newSum?.sector||'—'}</strong></span>
-        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Mercato: <strong style="color:var(--t)">${newInfo.mkt||'US'}</strong></span>
-        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">Prezzo: <strong style="color:var(--t)">$${fmt(newQ.price,2)}</strong></span>
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">${_L({it:'Tipo',en:'Type'})}: <strong style="color:var(--t)">${newInfo.t||'growth'}</strong></span>
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">${_L({it:'Settore',en:'Sector'})}: <strong style="color:var(--t)">${newInfo.sec||newSum?.sector||'—'}</strong></span>
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">${_L({it:'Mercato',en:'Market'})}: <strong style="color:var(--t)">${newInfo.mkt||'US'}</strong></span>
+        <span style="font-size:10px;font-family:var(--fm);color:var(--t3)">${_L({it:'Prezzo',en:'Price'})}: <strong style="color:var(--t)">$${fmt(newQ.price,2)}</strong></span>
       </div>
     </div>`;
   }catch(e){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">${_t('err.analysis')}${e.message}</div>`;}
@@ -10823,25 +10823,25 @@ async function loadPortTargets(){
     <!-- Summary totale in EUR -->
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
       <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px 14px">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Valore attuale</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">${_L({it:'Valore attuale',en:'Current value'})}</div>
         <div style="font-size:20px;font-weight:700;color:var(--t);font-family:var(--fm)">€${fmt(totalCurValEUR,0)}</div>
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px">Investito €${fmt(totalInvEUR2,0)}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:3px">${_L({it:'Investito',en:'Invested'})} €${fmt(totalInvEUR2,0)}</div>
         <div style="font-size:11px;font-family:var(--fm);margin-top:4px;color:${totalPnlEUR2>=0?'var(--g)':'var(--r)'}">P&L ${totalPnlEUR2>=0?'+':''}€${fmt(totalPnlEUR2,0)} (${totalPnlEUR2>=0?'+':''}${fmt(totalPnlPct2||0,1)}%)</div>
       </div>
       <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px 14px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:4px">
         <div style="font-size:24px;color:var(--t3)">→</div>
-        <div style="font-size:11px;font-family:var(--fm);color:var(--t3);font-weight:600">${coverage}% copertura</div>
-        <div style="font-size:10px;font-family:var(--fm);color:var(--t3)">Proiezione 12 mesi</div>
+        <div style="font-size:11px;font-family:var(--fm);color:var(--t3);font-weight:600">${coverage}% ${_L({it:'copertura',en:'coverage'})}</div>
+        <div style="font-size:10px;font-family:var(--fm);color:var(--t3)">${_L({it:'Proiezione 12 mesi',en:'12-month projection'})}</div>
         ${totalUpsideEUR!=null?`<div style="font-size:12px;font-family:var(--fm);font-weight:700;color:${totalUpsideEUR>=0?'var(--g)':'var(--r)'}">Upside ${totalUpsideEUR>=0?'+':''}${fmt(totalUpsideEUR,1)}%</div>`:''}
       </div>
       <div style="background:${totalUpsideEUR==null?'var(--s2)':totalUpsideEUR>=0?'rgba(5,150,105,.07)':'rgba(220,38,38,.07)'};border:1px solid ${totalUpsideEUR==null?'var(--bd)':totalUpsideEUR>=0?'rgba(5,150,105,.25)':'rgba(220,38,38,.25)'};border-radius:8px;padding:12px 14px;text-align:right">
-        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Target analisti (€)</div>
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">${_L({it:'Target analisti (€)',en:'Analyst target (€)'})}</div>
         <div style="font-size:20px;font-weight:700;font-family:var(--fm);color:${totalUpsideEUR==null?'var(--t)':totalUpsideEUR>=0?'var(--g)':'var(--r)'}">${totalTargetValEUR!=null?'€'+fmt(totalTargetValEUR,0):'—'}</div>
-        <div style="font-size:11px;font-family:var(--fm);margin-top:3px;color:${totalUpsideEUR==null?'var(--t3)':totalUpsideEUR>=0?'var(--g)':'var(--r)'}">${totalGainEUR!=null?(totalGainEUR>=0?'+':'')+'€'+fmt(totalGainEUR,0)+' potenziale':'Dati insufficienti'}</div>
+        <div style="font-size:11px;font-family:var(--fm);margin-top:3px;color:${totalUpsideEUR==null?'var(--t3)':totalUpsideEUR>=0?'var(--g)':'var(--r)'}">${totalGainEUR!=null?(totalGainEUR>=0?'+':'')+'€'+fmt(totalGainEUR,0)+' '+_L({it:'potenziale',en:'potential'}):_L({it:'Dati insufficienti',en:'Insufficient data'})}</div>
       </div>
     </div>
 
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Dettaglio per titolo</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">${_L({it:'Dettaglio per titolo',en:'Per-holding detail'})}</div>
     ${rows.map(r=>{
       const up=r.upside==null||r.upside>=0;
       const barMax=40;
@@ -10871,7 +10871,7 @@ async function loadPortTargets(){
           <div style="height:4px;background:var(--bd);border-radius:10px;overflow:hidden;max-width:200px">
             <div style="height:4px;width:${barW}%;background:${barColor};border-radius:10px;transition:width .6s"></div>
           </div>
-          ${r.targetLow&&r.targetHigh?`<div style="font-size:8px;color:var(--t3);font-family:var(--fm);margin-top:2px">Range analisti: ${r.cur}${fmt(r.targetLow,0)} – ${r.cur}${fmt(r.targetHigh,0)}</div>`:''}
+          ${r.targetLow&&r.targetHigh?`<div style="font-size:8px;color:var(--t3);font-family:var(--fm);margin-top:2px">${_L({it:'Range analisti',en:'Analyst range'})}: ${r.cur}${fmt(r.targetLow,0)} – ${r.cur}${fmt(r.targetHigh,0)}</div>`:''}
         </div>
         <!-- Col 3: Upside % -->
         <div style="text-align:right;min-width:50px">
@@ -10881,17 +10881,17 @@ async function loadPortTargets(){
         <!-- Col 4: Guadagno potenziale in EUR -->
         <div style="text-align:right;min-width:70px">
           <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:${gainEUR2==null?'var(--t3)':gainEUR2>=0?'var(--g)':'var(--r)'}">${gainEUR2!=null?(gainEUR2>=0?'+':'')+'€'+fmt(gainEUR2,0):'—'}</div>
-          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${gainFromCostPct!=null?(gainFromCostPct>=0?'+':'')+fmt(gainFromCostPct,1)+'% dal costo':gainEUR2!=null?'dal prezzo att.':''}</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${gainFromCostPct!=null?(gainFromCostPct>=0?'+':'')+fmt(gainFromCostPct,1)+'% '+_L({it:'dal costo',en:'from cost'}):gainEUR2!=null?_L({it:'dal prezzo att.',en:'from cur. price'}):''}</div>
         </div>
         <!-- Col 5: Break-even netto -->
         <div style="text-align:right;min-width:70px">
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">Break-even netto</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">${_L({it:'Break-even netto',en:'Net break-even'})}</div>
           <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${r.breakEvenPct>=0?'var(--g)':'var(--r)'}">${r.cur}${fmt(r.breakEvenNet/r.item.qty,r.breakEvenNet/r.item.qty<10?3:2)}</div>
-          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.breakEvenPct>=0?'+':''}${fmt(r.breakEvenPct,1)}% netto</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.breakEvenPct>=0?'+':''}${fmt(r.breakEvenPct,1)}% ${_L({it:'netto',en:'net'})}</div>
         </div>
       </div>`;
     }).join('')}
-    <div style="margin-top:14px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ Proiezione a ~12 mesi basata sui prezzi target medi degli analisti · Valori in EUR convertiti al cambio corrente EUR/USD ${fmt(fxR,4)} · Non garantisce rendimenti futuri</div>
+    <div style="margin-top:14px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.5">⚠ ${_L({it:`Proiezione a ~12 mesi basata sui prezzi target medi degli analisti · Valori in EUR convertiti al cambio corrente EUR/USD ${fmt(fxR,4)} · Non garantisce rendimenti futuri`,en:`~12-month projection based on average analyst price targets · EUR values converted at current rate EUR/USD ${fmt(fxR,4)} · Does not guarantee future returns`})}</div>
   `;
 }
 
@@ -11226,10 +11226,10 @@ function _macroRenderCredit(d){
   let signal='',sigCol='var(--t2)';
   if(hygChg!==null&&lqdChg!==null){
     const diff=hygChg-lqdChg;
-    if(hygChg>0&&diff>0.1){signal='✅ Risk-on: High Yield sovraperforma IG';sigCol='var(--g)';}
-    else if(hygChg<0&&diff<-0.1){signal='⚠ Stress creditizio: HY sottoperforma IG';sigCol='var(--r)';}
-    else if(hygChg>=0){signal='⬜ Condizioni neutrali · mercato stabile';sigCol='var(--t2)';}
-    else{signal='🟡 Avversione al rischio generalizzata';sigCol='var(--o)';}
+    if(hygChg>0&&diff>0.1){signal=_L({it:'✅ Risk-on: High Yield sovraperforma IG',en:'✅ Risk-on: High Yield outperforms IG'});sigCol='var(--g)';}
+    else if(hygChg<0&&diff<-0.1){signal=_L({it:'⚠ Stress creditizio: HY sottoperforma IG',en:'⚠ Credit stress: HY underperforms IG'});sigCol='var(--r)';}
+    else if(hygChg>=0){signal=_L({it:'⬜ Condizioni neutrali · mercato stabile',en:'⬜ Neutral conditions · stable market'});sigCol='var(--t2)';}
+    else{signal=_L({it:'🟡 Avversione al rischio generalizzata',en:'🟡 Broad risk aversion'});sigCol='var(--o)';}
   }
   el.innerHTML=items.map(it=>{
     const c=it.q?chgPct(it.q.price,it.q.prev):null;const up=c==null||c>=0;
@@ -11449,7 +11449,7 @@ function _macroRenderAnalysis(d){
   if(goldP!=null){
     const goldChgPct=d.gold?chgPct(d.gold.price,d.gold.prev):null;
     const sc=goldP>3000?'sig-safe':goldP>2500?'sig-neu':'sig-neu';
-    const st=goldP>3000?'Domanda risk-off forte':goldP>2500?'Livello storico alto':'Livello elevato';
+    const st=goldP>3000?_L({it:'Domanda risk-off forte',en:'Strong risk-off demand'}):goldP>2500?_L({it:'Livello storico alto',en:'Historically high level'}):_L({it:'Livello elevato',en:'Elevated level'});
     const sc2=goldP>3000?'var(--g)':goldP>2500?'var(--t3)':'var(--t3)';
     const sub=st+(goldChgPct!=null?' · '+chgStr(goldChgPct):'');
     setStat('mss-gold','mss-gold-sub','mss-gold-item','$'+fmt(goldP,0),sub,sc2,sc);
@@ -11467,7 +11467,7 @@ function _macroRenderAnalysis(d){
   const sub1=spread!=null?(spread<-0.5?_t('macro.curve.inverted'):spread<0.2?_t('macro.curve.flat'):_t('macro.curve.normal')):'—';
   const sub2=dxyP!=null?(dxyP>103?_t('macro.dxy.sub.strong'):dxyP<98?_t('macro.dxy.sub.weak'):_t('macro.dxy.sub.neutral')):'—';
   const sub3=fedBias===1?`${_t('macro.fed.hawkish')} (${fedRate}%)`:fedBias===-1?`${_t('macro.fed.cutting')} (${fedRate}%)`:`${_t('macro.fed.pause')} (${fedRate}%)`;
-  const sub4=vixP!=null?(vixP>30?`VIX ${fmt(vixP,1)} — panico`:vixP>20?`VIX ${fmt(vixP,1)} — stress`:vixP>15?`VIX ${fmt(vixP,1)} — allerta`:`VIX ${fmt(vixP,1)} — calmo`):'';
+  const sub4=vixP!=null?(vixP>30?`VIX ${fmt(vixP,1)} — ${_L({it:'panico',en:'panic'})}`:vixP>20?`VIX ${fmt(vixP,1)} — ${_L({it:'stress',en:'stress'})}`:vixP>15?`VIX ${fmt(vixP,1)} — ${_L({it:'allerta',en:'alert'})}`:`VIX ${fmt(vixP,1)} — ${_L({it:'calmo',en:'calm'})}`):'';
   const rsub=document.getElementById('mac-regime-sub');
   if(rsub)rsub.textContent=`${sub1}  ·  ${sub2}  ·  ${sub3}${sub4?' · '+sub4:''}`;
 
@@ -11485,33 +11485,33 @@ function _macroRenderAnalysis(d){
 
   // ── D: Scenario narrativo ──
   const regimeTxt={
-    expansion:`L'economia USA \xE8 in espansione`,
-    slowdown:`L'economia USA mostra segnali di rallentamento`,
-    contraction:`L'economia \xE8 in contrazione — fase recessiva`,
-    stagflation:`Il contesto \xE8 stagflazionario: crescita bassa con inflazione persistente`
-  }[regime]||`Il contesto macro \xE8 in evoluzione`;
+    expansion:_L({it:`L'economia USA \xE8 in espansione`,en:`The US economy is in expansion`}),
+    slowdown:_L({it:`L'economia USA mostra segnali di rallentamento`,en:`The US economy is showing signs of a slowdown`}),
+    contraction:_L({it:`L'economia \xE8 in contrazione — fase recessiva`,en:`The economy is in contraction — recessionary phase`}),
+    stagflation:_L({it:`Il contesto \xE8 stagflazionario: crescita bassa con inflazione persistente`,en:`The context is stagflationary: low growth with persistent inflation`})
+  }[regime]||_L({it:`Il contesto macro \xE8 in evoluzione`,en:`The macro context is evolving`});
 
   const fedTxt=fedBias===1
-    ?`La Federal Reserve mantiene un orientamento restrittivo con i Fed Funds al <strong>${fedRate}%</strong>: l'obiettivo \xE8 riportare l'inflazione core al target del 2%, ancora non raggiunto.`
+    ?_L({it:`La Federal Reserve mantiene un orientamento restrittivo con i Fed Funds al <strong>${fedRate}%</strong>: l'obiettivo \xE8 riportare l'inflazione core al target del 2%, ancora non raggiunto.`,en:`The Federal Reserve maintains a restrictive stance with Fed Funds at <strong>${fedRate}%</strong>: the goal is to bring core inflation back to the 2% target, not yet reached.`})
     :fedBias===-1
-    ?`La Federal Reserve ha avviato un ciclo di taglio (tassi attuali: <strong>${fedRate}%</strong>): l'attenzione si \xE8 spostata dalla lotta all'inflazione alla tutela di crescita e occupazione.`
-    :`La Federal Reserve \xE8 in pausa con i tassi al <strong>${fedRate}%</strong>, valutando ogni dato in arrivo prima di decidere la prossima mossa.`;
+    ?_L({it:`La Federal Reserve ha avviato un ciclo di taglio (tassi attuali: <strong>${fedRate}%</strong>): l'attenzione si \xE8 spostata dalla lotta all'inflazione alla tutela di crescita e occupazione.`,en:`The Federal Reserve has initiated a cutting cycle (current rates: <strong>${fedRate}%</strong>): focus has shifted from fighting inflation to protecting growth and employment.`})
+    :_L({it:`La Federal Reserve \xE8 in pausa con i tassi al <strong>${fedRate}%</strong>, valutando ogni dato in arrivo prima di decidere la prossima mossa.`,en:`The Federal Reserve is on pause with rates at <strong>${fedRate}%</strong>, assessing every incoming data point before deciding the next move.`});
 
   let curveTxt='';
   if(spread!=null){
-    if(spread<-0.5)curveTxt=`La curva dei rendimenti \xE8 marcatamente invertita (spread ${fmt(spread,2)}%): storicamente \xE8 il segnale pi\xF9 affidabile di recessione imminente entro 12\u201318 mesi.`;
-    else if(spread<0)curveTxt=`La curva \xE8 leggermente invertita (spread ${fmt(spread,2)}%): il mercato obbligazionario sconta un rallentamento e possibili tagli futuri.`;
-    else if(spread<0.5)curveTxt=`La curva \xE8 piatta (spread +${fmt(spread,2)}%): incertezza sulla direzione di crescita e tassi, tipica delle fasi di transizione del ciclo.`;
-    else curveTxt=`La curva \xE8 positivamente inclinata (+${fmt(spread,2)}%): condizioni storicamente normali, favorevoli all'intermediazione bancaria e alla crescita.`;
+    if(spread<-0.5)curveTxt=_L({it:`La curva dei rendimenti \xE8 marcatamente invertita (spread ${fmt(spread,2)}%): storicamente \xE8 il segnale pi\xF9 affidabile di recessione imminente entro 12\u201318 mesi.`,en:`The yield curve is sharply inverted (spread ${fmt(spread,2)}%): historically the most reliable signal of imminent recession within 12–18 months.`});
+    else if(spread<0)curveTxt=_L({it:`La curva \xE8 leggermente invertita (spread ${fmt(spread,2)}%): il mercato obbligazionario sconta un rallentamento e possibili tagli futuri.`,en:`The curve is slightly inverted (spread ${fmt(spread,2)}%): the bond market is pricing in a slowdown and possible future cuts.`});
+    else if(spread<0.5)curveTxt=_L({it:`La curva \xE8 piatta (spread +${fmt(spread,2)}%): incertezza sulla direzione di crescita e tassi, tipica delle fasi di transizione del ciclo.`,en:`The curve is flat (spread +${fmt(spread,2)}%): uncertainty over the direction of growth and rates, typical of cycle transition phases.`});
+    else curveTxt=_L({it:`La curva \xE8 positivamente inclinata (+${fmt(spread,2)}%): condizioni storicamente normali, favorevoli all'intermediazione bancaria e alla crescita.`,en:`The curve is positively sloped (+${fmt(spread,2)}%): historically normal conditions, favorable for banking intermediation and growth.`});
   }
 
   const consegMap={
     expansion: fedBias===1
-      ?`La combinazione espansione + tassi alti penalizza i settori con alta duration (tech growth, utilities, real estate) e favorisce i finanziari. Il mercato guarda all'inflazione core come catalizzatore per un eventuale pivot Fed.`
-      :`Il mix espansione + politica accomodante \xE8 storicamente il migliore per le asset rischiose: multipli in espansione, utili in crescita, accesso al credito facilitato. I ciclici e il tech ne beneficiano di pi\xF9.`,
-    slowdown:`In fase di rallentamento gli utili vengono rivisti al ribasso e i mercati ruotano verso i difensivi (healthcare, utilities, staples). Il segnale cruciale da monitorare: se il rallentamento porta a un soft-landing o evolve in recessione vera.`,
-    contraction:`In recessione gli utili scendono tipicamente del 15\u201330%. I bond governativi di qualit\xE0 e l'oro diventano i principali asset difensivi. La Fed taglia aggressivamente: momento ideale per estendere la duration obbligazionaria.`,
-    stagflation:`La stagflazione \xE8 il peggior scenario per i portafogli bilanciati. Solo le commodity reali (oro, energia, agricoltura), i TIPS e le aziende con forte pricing power riescono a preservare il capitale in termini reali.`
+      ?_L({it:`La combinazione espansione + tassi alti penalizza i settori con alta duration (tech growth, utilities, real estate) e favorisce i finanziari. Il mercato guarda all'inflazione core come catalizzatore per un eventuale pivot Fed.`,en:`The combination of expansion + high rates penalizes high-duration sectors (tech growth, utilities, real estate) and favors financials. The market looks to core inflation as the catalyst for a potential Fed pivot.`})
+      :_L({it:`Il mix espansione + politica accomodante \xE8 storicamente il migliore per le asset rischiose: multipli in espansione, utili in crescita, accesso al credito facilitato. I ciclici e il tech ne beneficiano di pi\xF9.`,en:`The expansion + accommodative policy mix is historically the best for risk assets: expanding multiples, growing earnings, easier credit access. Cyclicals and tech benefit the most.`}),
+    slowdown:_L({it:`In fase di rallentamento gli utili vengono rivisti al ribasso e i mercati ruotano verso i difensivi (healthcare, utilities, staples). Il segnale cruciale da monitorare: se il rallentamento porta a un soft-landing o evolve in recessione vera.`,en:`In a slowdown, forward earnings are revised downward and markets rotate toward defensives (healthcare, utilities, staples). The key signal to watch: whether the slowdown leads to a soft landing or evolves into a full recession.`}),
+    contraction:_L({it:`In recessione gli utili scendono tipicamente del 15\u201330%. I bond governativi di qualit\xE0 e l'oro diventano i principali asset difensivi. La Fed taglia aggressivamente: momento ideale per estendere la duration obbligazionaria.`,en:`In a recession, earnings typically fall 15–30%. Quality government bonds and gold become the main defensive assets. The Fed cuts aggressively: an ideal moment to extend bond duration.`}),
+    stagflation:_L({it:`La stagflazione \xE8 il peggior scenario per i portafogli bilanciati. Solo le commodity reali (oro, energia, agricoltura), i TIPS e le aziende con forte pricing power riescono a preservare il capitale in termini reali.`,en:`Stagflation is the worst scenario for balanced portfolios. Only real commodities (gold, energy, agriculture), TIPS and companies with strong pricing power manage to preserve capital in real terms.`})
   };
   const consegTxt=consegMap[regime]||'';
 
@@ -11529,46 +11529,46 @@ function _macroRenderAnalysis(d){
 
   // Tassi
   const rSc=fedBias===1?'neg':fedBias===-1?'pos':'neu';
-  const rBadge=fedBias===1?'HAWKISH':fedBias===-1?'DOVISH \u2014 IN TAGLIO':'IN PAUSA';
+  const rBadge=fedBias===1?'HAWKISH':fedBias===-1?_L({it:'DOVISH \u2014 IN TAGLIO',en:'DOVISH \u2014 CUTTING'}):_L({it:'IN PAUSA',en:'ON PAUSE'});
   const rTxt=fedBias===1
-    ?`<strong>Fed Funds: ${fedRate}%</strong>${t10!=null?` · 10Y: ${fmt(t10,2)}%`:''}<br><br>La Fed mantiene una stance restrittiva. I tassi reali positivi comprimono i multipli P/E delle growth stock e aumentano il costo del debito per le aziende leveraged. Ogni dato di inflazione sopra le attese allontana il pivot e pesa sui mercati. <em>Beneficiari: banche, money market e T-bill.</em>`
+    ?`<strong>Fed Funds: ${fedRate}%</strong>${t10!=null?` · 10Y: ${fmt(t10,2)}%`:''}<br><br>${_L({it:`La Fed mantiene una stance restrittiva. I tassi reali positivi comprimono i multipli P/E delle growth stock e aumentano il costo del debito per le aziende leveraged. Ogni dato di inflazione sopra le attese allontana il pivot e pesa sui mercati. <em>Beneficiari: banche, money market e T-bill.</em>`,en:`The Fed maintains a restrictive stance. Positive real rates compress growth stock P/E multiples and raise the cost of debt for leveraged companies. Every above-expectation inflation print pushes the pivot further away and weighs on markets. <em>Beneficiaries: banks, money market and T-bills.</em>`})}`
     :fedBias===-1
-    ?`<strong>Fed Funds: ${fedRate}%</strong>${t10!=null?` · 10Y: ${fmt(t10,2)}%`:''}<br><br>La Fed \xE8 in ciclo di taglio. Ogni -25bp riduce il costo del capitale, espande i multipli azionari e alleggerisce le aziende ad alto debito. I 6\u201312 mesi successivi al primo taglio sono storicamente positivi per growth, REITs ed emergenti. <em>Perdenti: banche retail (NIM in compressione).</em>`
-    :`<strong>Fed Funds: ${fedRate}%</strong>${t10!=null?` · 10Y: ${fmt(t10,2)}%`:''}<br><br>La Fed attende nuovi dati. Il mercato obbligazionario diventa il "sondaggio" sulle aspettative: monitora i future sui Fed Funds (CME FedWatch) e il breakeven di inflazione 5Y. La volatilit\xE0 aumenta quando le aspettative si riprezzano bruscamente.`;
+    ?`<strong>Fed Funds: ${fedRate}%</strong>${t10!=null?` · 10Y: ${fmt(t10,2)}%`:''}<br><br>${_L({it:`La Fed \xE8 in ciclo di taglio. Ogni -25bp riduce il costo del capitale, espande i multipli azionari e alleggerisce le aziende ad alto debito. I 6\u201312 mesi successivi al primo taglio sono storicamente positivi per growth, REITs ed emergenti. <em>Perdenti: banche retail (NIM in compressione).</em>`,en:`The Fed is in a cutting cycle. Each -25bp lowers the cost of capital, expands equity multiples and relieves highly indebted companies. The 6–12 months following the first cut are historically positive for growth, REITs and emerging markets. <em>Losers: retail banks (NIM compression).</em>`})}`
+    :`<strong>Fed Funds: ${fedRate}%</strong>${t10!=null?` · 10Y: ${fmt(t10,2)}%`:''}<br><br>${_L({it:`La Fed attende nuovi dati. Il mercato obbligazionario diventa il "sondaggio" sulle aspettative: monitora i future sui Fed Funds (CME FedWatch) e il breakeven di inflazione 5Y. La volatilit\xE0 aumenta quando le aspettative si riprezzano bruscamente.`,en:`The Fed is waiting for new data. The bond market becomes the "poll" on expectations: watch Fed Funds futures (CME FedWatch) and the 5Y inflation breakeven. Volatility rises when expectations are repriced sharply.`})}`;
   setBlock('mac-bk-sig-rates','mac-bk-badge-rates','mac-txt-rates',rSc,rBadge,rTxt);
 
   // Dollaro
   const dSc=dxyP!=null?(dxyP>103?'neg':dxyP<98?'pos':'neu'):'neu';
-  const dBadge=dxyP!=null?(dxyP>103?'DOLLARO FORTE':dxyP<98?'DOLLARO DEBOLE':'DOLLARO NEUTRALE'):'N/D';
+  const dBadge=dxyP!=null?(dxyP>103?_L({it:'DOLLARO FORTE',en:'STRONG DOLLAR'}):dxyP<98?_L({it:'DOLLARO DEBOLE',en:'WEAK DOLLAR'}):_L({it:'DOLLARO NEUTRALE',en:'NEUTRAL DOLLAR'})):'N/D';
   const dTxt=dxyP!=null
     ?(dxyP>103
-      ?`<strong>DXY: ${fmt(dxyP,2)} \u2014 Forte</strong>${dxyChg!=null?` (${chgStr(dxyChg)} oggi)`:''}<br><br>Il dollaro forte \xE8 una pressione negativa per le commodity in USD (petrolio, oro, rame), per gli emergenti con debito in dollari e per le multinazionali USA con ricavi esteri.${oilP?` Brent: $${fmt(oilP,1)}.`:''}${copperP?` Rame: $${fmt(copperP,2)}/lb.`:''}`
+      ?`<strong>DXY: ${fmt(dxyP,2)} \u2014 ${_L({it:'Forte',en:'Strong'})}</strong>${dxyChg!=null?` (${chgStr(dxyChg)} ${_L({it:'oggi',en:'today'})})`:''}<br><br>${_L({it:`Il dollaro forte \xE8 una pressione negativa per le commodity in USD (petrolio, oro, rame), per gli emergenti con debito in dollari e per le multinazionali USA con ricavi esteri.`,en:`A strong dollar is a negative pressure on USD-denominated commodities (oil, gold, copper), on emerging markets with dollar debt and on US multinationals with foreign revenues.`})}${oilP?` Brent: $${fmt(oilP,1)}.`:''}${copperP?` ${_L({it:'Rame',en:'Copper'})}: $${fmt(copperP,2)}/lb.`:''}`
       :dxyP<98
-      ?`<strong>DXY: ${fmt(dxyP,2)} \u2014 Debole</strong>${dxyChg!=null?` (${chgStr(dxyChg)} oggi)`:''}<br><br>Dollaro debole: vento favorevole per le commodity, gli emergenti e le multinazionali USA con ricavi esteri. Attenzione alle pressioni inflazionistiche importate.${copperP?` Rame: $${fmt(copperP,2)}/lb.`:''}${gcRatio!=null?` Gold/Copper: ${fmt(gcRatio,0)}.`:''}`
-      :`<strong>DXY: ${fmt(dxyP,2)} \u2014 Neutrale</strong><br><br>Il dollaro non esercita pressione direzionale dominante. Le commodity si muovono sui propri fondamentali.${copperP?` Rame a $${fmt(copperP,2)}/lb${copperP>4.5?' (domanda robusta)':copperP<3.8?' (segnale debole)':''}.`:''}${gcRatio!=null?` Gold/Copper: ${fmt(gcRatio,0)} (${gcRatio>600?'risk-off':gcRatio<400?'risk-on':'neutrale'}).`:''}`)
-    :'Dati non disponibili.';
+      ?`<strong>DXY: ${fmt(dxyP,2)} \u2014 ${_L({it:'Debole',en:'Weak'})}</strong>${dxyChg!=null?` (${chgStr(dxyChg)} ${_L({it:'oggi',en:'today'})})`:''}<br><br>${_L({it:`Dollaro debole: vento favorevole per le commodity, gli emergenti e le multinazionali USA con ricavi esteri. Attenzione alle pressioni inflazionistiche importate.`,en:`Weak dollar: a tailwind for commodities, emerging markets and US multinationals with foreign revenues. Watch out for imported inflationary pressures.`})}${copperP?` ${_L({it:'Rame',en:'Copper'})}: $${fmt(copperP,2)}/lb.`:''}${gcRatio!=null?` Gold/Copper: ${fmt(gcRatio,0)}.`:''}`
+      :`<strong>DXY: ${fmt(dxyP,2)} \u2014 ${_L({it:'Neutrale',en:'Neutral'})}</strong><br><br>${_L({it:`Il dollaro non esercita pressione direzionale dominante. Le commodity si muovono sui propri fondamentali.`,en:`The dollar is not exerting dominant directional pressure. Commodities are moving on their own fundamentals.`})}${copperP?` ${_L({it:'Rame',en:'Copper'})} a $${fmt(copperP,2)}/lb${copperP>4.5?_L({it:' (domanda robusta)',en:' (robust demand)'}):copperP<3.8?_L({it:' (segnale debole)',en:' (weak signal)'}):''}.`:''}${gcRatio!=null?` Gold/Copper: ${fmt(gcRatio,0)} (${gcRatio>600?'risk-off':gcRatio<400?'risk-on':_L({it:'neutrale',en:'neutral'})}).`:''}`)
+    :_L({it:'Dati non disponibili.',en:'Data not available.'});
   setBlock('mac-bk-sig-dollar','mac-bk-badge-dollar','mac-txt-dollar',dSc,dBadge,dTxt);
 
   // Credito
-  let cSc='neu',cBadge='NEUTRALE',cTxt='';
+  let cSc='neu',cBadge=_L({it:'NEUTRALE',en:'NEUTRAL'}),cTxt='';
   if(hygChg!=null&&lqdChg!=null){
     const diff=hygChg-lqdChg;
     if(hygChg>0&&diff>0.1){
       cSc='pos';cBadge='RISK-ON';
-      cTxt=`<strong>HYG +${fmt(hygChg,2)}% \u00B7 LQD ${lqdChg>=0?'+':''}${fmt(lqdChg,2)}%</strong><br><br>Gli spread HY si restringono e HY sovraperforma IG: gli investitori comprano rischio. Segnale positivo per azioni cicliche e obbligazioni sub-IG. Il mercato del credito non sconta stress.${tltChg!=null?` TLT: ${chgStr(tltChg)}.`:''}`;
+      cTxt=`<strong>HYG +${fmt(hygChg,2)}% \u00B7 LQD ${lqdChg>=0?'+':''}${fmt(lqdChg,2)}%</strong><br><br>${_L({it:`Gli spread HY si restringono e HY sovraperforma IG: gli investitori comprano rischio. Segnale positivo per azioni cicliche e obbligazioni sub-IG. Il mercato del credito non sconta stress.`,en:`HY spreads are tightening and HY is outperforming IG: investors are buying risk. Positive signal for cyclical equities and sub-IG bonds. The credit market is not pricing in stress.`})}${tltChg!=null?` TLT: ${chgStr(tltChg)}.`:''}`;
     } else if(hygChg<0&&diff<-0.1){
-      cSc='neg';cBadge='STRESS CREDITIZIO';
-      cTxt=`<strong>HYG ${fmt(hygChg,2)}% \u00B7 LQD ${lqdChg>=0?'+':''}${fmt(lqdChg,2)}%</strong><br><br>HY scende pi\xF9 di IG: gli spread si allargano, gli investitori fuggono dal rischio di credito. Segnale negativo per le aziende ad alto leverage. Preferire IG e governativi.${tltChg!=null&&tltChg>0.2?' TLT in salita: flight-to-safety.':''}`;
+      cSc='neg';cBadge=_L({it:'STRESS CREDITIZIO',en:'CREDIT STRESS'});
+      cTxt=`<strong>HYG ${fmt(hygChg,2)}% \u00B7 LQD ${lqdChg>=0?'+':''}${fmt(lqdChg,2)}%</strong><br><br>${_L({it:`HY scende pi\xF9 di IG: gli spread si allargano, gli investitori fuggono dal rischio di credito. Segnale negativo per le aziende ad alto leverage. Preferire IG e governativi.`,en:`HY is falling more than IG: spreads are widening, investors are fleeing credit risk. Negative signal for high-leverage companies. Prefer IG and government bonds.`})}${tltChg!=null&&tltChg>0.2?_L({it:' TLT in salita: flight-to-safety.',en:' TLT rising: flight-to-safety.'}):''}`;
     } else if(tltChg!=null&&tltChg>0.3){
       cSc='cau';cBadge='FLIGHT TO SAFETY';
-      cTxt=`<strong>TLT +${fmt(tltChg,2)}%</strong><br><br>I Treasury a lungo termine salgono: il mercato cerca rifugio nei governativi. Pattern che anticipa spesso un rallentamento economico o un taglio Fed imminente. Ridurre il beta del portafoglio azionario.`;
+      cTxt=`<strong>TLT +${fmt(tltChg,2)}%</strong><br><br>${_L({it:`I Treasury a lungo termine salgono: il mercato cerca rifugio nei governativi. Pattern che anticipa spesso un rallentamento economico o un taglio Fed imminente. Ridurre il beta del portafoglio azionario.`,en:`Long-term Treasuries are rising: the market is seeking refuge in government bonds. A pattern that often anticipates an economic slowdown or an imminent Fed cut. Reduce equity portfolio beta.`})}`;
     } else {
-      cSc='neu';cBadge='NEUTRALE';
-      cTxt=`<strong>HYG ${hygChg>=0?'+':''}${fmt(hygChg,2)}% \u00B7 LQD ${lqdChg>=0?'+':''}${fmt(lqdChg,2)}%</strong><br><br>Il mercato del credito \xE8 bilanciato: nessun segnale di stress estremo n\xE9 di euforia. Buona finestra per revisionare la qualit\xE0 creditizia del portafoglio senza urgenza.`;
+      cSc='neu';cBadge=_L({it:'NEUTRALE',en:'NEUTRAL'});
+      cTxt=`<strong>HYG ${hygChg>=0?'+':''}${fmt(hygChg,2)}% \u00B7 LQD ${lqdChg>=0?'+':''}${fmt(lqdChg,2)}%</strong><br><br>${_L({it:`Il mercato del credito \xE8 bilanciato: nessun segnale di stress estremo n\xE9 di euforia. Buona finestra per revisionare la qualit\xE0 creditizia del portafoglio senza urgenza.`,en:`The credit market is balanced: no signals of extreme stress or euphoria. A good window to review portfolio credit quality without urgency.`})}`;
     }
   } else {
-    cSc='neu';cBadge='DATI N/D';
-    cTxt='Dati credito non disponibili temporaneamente. Riprova tra qualche minuto.';
+    cSc='neu';cBadge=_L({it:'DATI N/D',en:'DATA N/A'});
+    cTxt=_L({it:'Dati credito non disponibili temporaneamente. Riprova tra qualche minuto.',en:'Credit data temporarily unavailable. Please try again in a few minutes.'});
   }
   setBlock('mac-bk-sig-credit','mac-bk-badge-credit','mac-txt-credit',cSc,cBadge,cTxt);
 
@@ -12169,7 +12169,7 @@ function _macroOpenSecMobile(id){
 ══════════════════════════════════════════ */
 async function exportPortfolioPDF(){
   if(!portfolio.length){alert(_L({it:'Nessun titolo nel portafoglio',en:'No positions in portfolio'}));return;}
-  if(!window.jspdf){alert('Libreria PDF non ancora caricata, riprova tra un secondo.');return;}
+  if(!window.jspdf){alert(_L({it:'Libreria PDF non ancora caricata, riprova tra un secondo.',en:'PDF library not loaded yet, please try again in a moment.'}));return;}
   const { jsPDF } = window.jspdf;
   const quoteArr=await Promise.all(portfolio.map(item=>api(item.sym)));
   const quotesMap={};
@@ -12451,7 +12451,7 @@ function routePortFile(file){
 
 /* ── Excel parser (SheetJS CDN on-demand) ── */
 async function readPortExcelFile(file){
-  _portShowImportStatus('Caricamento libreria Excel...');
+  _portShowImportStatus(_L({it:'Caricamento libreria Excel...',en:'Loading Excel library...'}));
   if(!window.XLSX){
     await new Promise((res,rej)=>{
       const s=document.createElement('script');
@@ -12459,7 +12459,7 @@ async function readPortExcelFile(file){
       s.onload=res;s.onerror=rej;document.head.appendChild(s);
     });
   }
-  _portShowImportStatus('Analisi file...');
+  _portShowImportStatus(_L({it:'Analisi file...',en:'Analysing file...'}));
   const buf=await file.arrayBuffer();
   const wb=XLSX.read(buf,{type:'array',cellDates:true,cellText:false});
 
@@ -12568,7 +12568,7 @@ function _portShowImportDebug(rows,msg){
 
 /* ── PDF parser (pdf.js CDN on-demand) ── */
 async function readPortPDFFile(file){
-  _portShowImportStatus('Estrazione testo PDF...');
+  _portShowImportStatus(_L({it:'Estrazione testo PDF...',en:'Extracting PDF text...'}));
   if(!window.pdfjsLib){
     await new Promise((res,rej)=>{
       const s=document.createElement('script');
@@ -12832,18 +12832,18 @@ function showToast(msg,color='#1A56C4'){
    FEATURE 8: ECONOMIC CALENDAR
 ══════════════════════════════════════════ */
 const ECO_EVENTS=[
-  {date:'2026-03-19',label:'Fed Meeting',type:'fed',detail:'Decisione tassi FOMC'},
-  {date:'2026-03-28',label:'PCE USA',type:'macro',detail:'Inflazione preferita dalla Fed'},
-  {date:'2026-04-10',label:'CPI USA',type:'macro',detail:'Inflazione al consumo'},
-  {date:'2026-04-16',label:'BCE Meeting',type:'bce',detail:'Decisione tassi BCE'},
-  {date:'2026-04-30',label:'PIL USA Q1',type:'macro',detail:'GDP preliminare Q1 2026'},
-  {date:'2026-05-07',label:'Fed Meeting',type:'fed',detail:'Decisione tassi FOMC'},
-  {date:'2026-05-13',label:'CPI USA',type:'macro',detail:'Inflazione al consumo'},
-  {date:'2026-05-30',label:'PIL UE Q1',type:'bce',detail:'GDP preliminare Eurozona'},
-  {date:'2026-06-05',label:'NFP USA',type:'macro',detail:'Buste paga non agricole'},
-  {date:'2026-06-11',label:'CPI USA',type:'macro',detail:'Inflazione al consumo'},
-  {date:'2026-06-12',label:'Fed Meeting',type:'fed',detail:'Decisione tassi FOMC'},
-  {date:'2026-06-18',label:'BCE Meeting',type:'bce',detail:'Decisione tassi BCE'},
+  {date:'2026-03-19',label:'Fed Meeting',type:'fed',detail:{it:'Decisione tassi FOMC',en:'FOMC rate decision'}},
+  {date:'2026-03-28',label:'PCE USA',type:'macro',detail:{it:'Inflazione preferita dalla Fed',en:'Fed\'s preferred inflation gauge'}},
+  {date:'2026-04-10',label:'CPI USA',type:'macro',detail:{it:'Inflazione al consumo',en:'Consumer price inflation'}},
+  {date:'2026-04-16',label:'BCE Meeting',type:'bce',detail:{it:'Decisione tassi BCE',en:'ECB rate decision'}},
+  {date:'2026-04-30',label:'GDP USA Q1',type:'macro',detail:{it:'GDP preliminare Q1 2026',en:'Preliminary GDP Q1 2026'}},
+  {date:'2026-05-07',label:'Fed Meeting',type:'fed',detail:{it:'Decisione tassi FOMC',en:'FOMC rate decision'}},
+  {date:'2026-05-13',label:'CPI USA',type:'macro',detail:{it:'Inflazione al consumo',en:'Consumer price inflation'}},
+  {date:'2026-05-30',label:'GDP EU Q1',type:'bce',detail:{it:'GDP preliminare Eurozona',en:'Preliminary Eurozone GDP'}},
+  {date:'2026-06-05',label:'NFP USA',type:'macro',detail:{it:'Buste paga non agricole',en:'Non-Farm Payrolls'}},
+  {date:'2026-06-11',label:'CPI USA',type:'macro',detail:{it:'Inflazione al consumo',en:'Consumer price inflation'}},
+  {date:'2026-06-12',label:'Fed Meeting',type:'fed',detail:{it:'Decisione tassi FOMC',en:'FOMC rate decision'}},
+  {date:'2026-06-18',label:'BCE Meeting',type:'bce',detail:{it:'Decisione tassi BCE',en:'ECB rate decision'}},
 ];
 
 let calYear=new Date().getFullYear(), calMonth=new Date().getMonth();
@@ -12940,21 +12940,21 @@ function openCalDayModal(dateStr){
     const impCol=e.impact==='High'?'#DC2626':e.impact==='Medium'?'#D97706':'#6B7280';
     const dotCol=e.type==='fed'?'#1A56C4':e.type==='bce'?'#7C3AED':'#059669';
     let sub='';
-    if(e.actual!=null)sub+=`Attuale: <strong>${e.actual}${e.unit||''}</strong>`;
-    if(e.estimate!=null)sub+=(sub?' · ':'')+`Stima: ${e.estimate}${e.unit||''}`;
-    if(e.prev!=null)sub+=(sub?' · ':'')+`Prec: ${e.prev}${e.unit||''}`;
+    if(e.actual!=null)sub+=`${_t('cal.actual')}<strong>${e.actual}${e.unit||''}</strong>`;
+    if(e.estimate!=null)sub+=(sub?' · ':'')+`${_t('cal.estimate')}${e.estimate}${e.unit||''}`;
+    if(e.prev!=null)sub+=(sub?' · ':'')+`${_t('cal.previous')}${e.prev}${e.unit||''}`;
     return`<div class="cal-dm-row"><div class="cal-dm-dot" style="background:${dotCol}"></div><div class="cal-dm-info"><div class="cal-dm-name">${e.label}</div>${sub?`<div class="cal-dm-sub">${sub}</div>`:''}</div><span class="cal-dm-badge" style="background:${impCol}22;color:${impCol}">${e.impact}</span></div>`;
   };
 
   let html='';
-  if(bmoRows.length){html+=`<div class="cal-dm-section">☀ Pre-mercato (BMO)</div>`;bmoRows.forEach(e=>{html+=makeEarRow(e);});}
-  if(amcRows.length){html+=`<div class="cal-dm-section">🌙 Post-mercato (AMC)</div>`;amcRows.forEach(e=>{html+=makeEarRow(e);});}
-  if(unkRows.length){html+=`<div class="cal-dm-section">Utili</div>`;unkRows.forEach(e=>{html+=makeEarRow(e);});}
+  if(bmoRows.length){html+=`<div class="cal-dm-section">${_L({it:'☀ Pre-mercato (BMO)',en:'☀ Pre-market (BMO)'})}</div>`;bmoRows.forEach(e=>{html+=makeEarRow(e);});}
+  if(amcRows.length){html+=`<div class="cal-dm-section">${_L({it:'🌙 Post-mercato (AMC)',en:'🌙 After-hours (AMC)'})}</div>`;amcRows.forEach(e=>{html+=makeEarRow(e);});}
+  if(unkRows.length){html+=`<div class="cal-dm-section">${_L({it:'Utili',en:'Earnings'})}</div>`;unkRows.forEach(e=>{html+=makeEarRow(e);});}
   if(fedRows.length){html+=`<div class="cal-dm-section">🏛 Federal Reserve</div>`;fedRows.forEach(e=>{html+=makeMacRow(e);});}
-  if(bceRows.length){html+=`<div class="cal-dm-section">🇪🇺 Banca Centrale Europea</div>`;bceRows.forEach(e=>{html+=makeMacRow(e);});}
-  if(othRows.length){html+=`<div class="cal-dm-section">📊 Dati Macro</div>`;othRows.forEach(e=>{html+=makeMacRow(e);});}
+  if(bceRows.length){html+=`<div class="cal-dm-section">${_L({it:'🇪🇺 Banca Centrale Europea',en:'🇪🇺 European Central Bank'})}</div>`;bceRows.forEach(e=>{html+=makeMacRow(e);});}
+  if(othRows.length){html+=`<div class="cal-dm-section">${_L({it:'📊 Dati Macro',en:'📊 Macro Data'})}</div>`;othRows.forEach(e=>{html+=makeMacRow(e);});}
 
-  document.getElementById('cal-dm-body').innerHTML=html||'<div style="color:var(--t3);font-size:13px">Nessun evento</div>';
+  document.getElementById('cal-dm-body').innerHTML=html||`<div style="color:var(--t3);font-size:13px">${_L({it:'Nessun evento',en:'No events'})}</div>`;
   document.getElementById('cal-dm-overlay').classList.add('open');
   document.body.style.overflow='hidden';
 }
@@ -13557,10 +13557,11 @@ async function loadSdChart(sym,range,btn){
 
 function timeAgo(ts){
   const s=Math.floor((Date.now()/1000)-ts);
-  if(s<60)return 'ora';
-  if(s<3600)return Math.floor(s/60)+'m fa';
-  if(s<86400)return Math.floor(s/3600)+'h fa';
-  return Math.floor(s/86400)+'g fa';
+  const ago=_L({it:'fa',en:'ago'});
+  if(s<60)return _L({it:'ora',en:'just now'});
+  if(s<3600)return Math.floor(s/60)+'m '+ago;
+  if(s<86400)return Math.floor(s/3600)+'h '+ago;
+  return Math.floor(s/86400)+_L({it:'g ',en:'d '})+ago;
 }
 function sdSet(id,val){const el=document.getElementById(id);if(el)el.textContent=val??'—';}
 function sdSetChg(id,c){
@@ -13601,7 +13602,7 @@ function sdCacheSet(sym, type, data){
 // Applica i dati di valutazione all'UI
 function renderValuation(d, cur){
   // Dati chiave
-  sdSet('sdm-divk', d.dividend&&d.dividend>0 ? fmt(d.dividend*100,2)+'%' : 'Nessuno');
+  sdSet('sdm-divk', d.dividend&&d.dividend>0 ? fmt(d.dividend*100,2)+'%' : _L({it:'Nessuno',en:'None'}));
   const divkEl=document.getElementById('sdm-divk');
   if(divkEl) divkEl.className='sd-m-val '+(d.dividend&&d.dividend>0?'up':'');
   sdSet('sdm-cap',fmtLg(d.marketCap));
@@ -14023,11 +14024,11 @@ function renderSdTechSignals(){
     const prev20=s20?.length>1?s20[s20.length-2].value:null;
     const prev50=s50?.length>1?s50[s50.length-2].value:null;
     if(last20&&last50&&prev20&&prev50){
-      if(prev20<prev50&&last20>last50)signals.push({label:'Golden Cross',text:'SMA20 ha superato SMA50 — segnale rialzista forte',type:'bull'});
-      else if(prev20>prev50&&last20<last50)signals.push({label:'Death Cross',text:'SMA20 ha incrociato sotto SMA50 — segnale ribassista',type:'bear'});
-      else signals.push({label:'Trend',text:last20>last50?'SMA20 > SMA50 — Uptrend confermato':'SMA20 < SMA50 — Downtrend in corso',type:last20>last50?'bull':'bear'});
+      if(prev20<prev50&&last20>last50)signals.push({label:'Golden Cross',text:_L({it:'SMA20 ha superato SMA50 — segnale rialzista forte',en:'SMA20 crossed above SMA50 — strong bullish signal'}),type:'bull'});
+      else if(prev20>prev50&&last20<last50)signals.push({label:'Death Cross',text:_L({it:'SMA20 ha incrociato sotto SMA50 — segnale ribassista',en:'SMA20 crossed below SMA50 — bearish signal'}),type:'bear'});
+      else signals.push({label:'Trend',text:last20>last50?_L({it:'SMA20 > SMA50 — Uptrend confermato',en:'SMA20 > SMA50 — Uptrend confirmed'}):_L({it:'SMA20 < SMA50 — Downtrend in corso',en:'SMA20 < SMA50 — Downtrend in progress'}),type:last20>last50?'bull':'bear'});
     } else if(last20){
-      signals.push({label:'SMA20',text:lastPrice>last20?'Prezzo sopra la media mobile — momentum positivo':'Prezzo sotto la media mobile',type:lastPrice>last20?'bull':'bear'});
+      signals.push({label:'SMA20',text:lastPrice>last20?_L({it:'Prezzo sopra la media mobile — momentum positivo',en:'Price above moving average — positive momentum'}):_L({it:'Prezzo sotto la media mobile',en:'Price below moving average'}),type:lastPrice>last20?'bull':'bear'});
     }
   }
   if(sdIndicators.has('rsi')){
@@ -14036,7 +14037,7 @@ function renderSdTechSignals(){
       const rsi=rsiData[rsiData.length-1].value;
       signals.push({
         label:`RSI ${rsi.toFixed(0)}`,
-        text:rsi>=70?'Ipercomprato — possibile correzione':rsi<=30?'Ipervenduto — possibile rimbalzo':rsi>50?'Momentum positivo':'Momentum negativo',
+        text:rsi>=70?_L({it:'Ipercomprato — possibile correzione',en:'Overbought — possible correction'}):rsi<=30?_L({it:'Ipervenduto — possibile rimbalzo',en:'Oversold — possible bounce'}):rsi>50?_L({it:'Momentum positivo',en:'Positive momentum'}):_L({it:'Momentum negativo',en:'Negative momentum'}),
         type:rsi>=70?'bear':rsi<=30?'bull':rsi>50?'bull':'bear'
       });
     }
@@ -14339,9 +14340,9 @@ async function loadRiskMetrics(){
   };
   const corrTxt=v=>(v===null||Math.abs(v)<0.5)?'var(--t)':'#fff';
   const shCol=sharpe>=1.5?'var(--g)':sharpe>=0.5?'var(--o)':'var(--r)';
-  const shLbl=sharpe>=1.5?'Eccellente':sharpe>=1?'Buono':sharpe>=0.5?'Sufficiente':'Da migliorare';
+  const shLbl=sharpe>=1.5?_L({it:'Eccellente',en:'Excellent'}):sharpe>=1?_L({it:'Buono',en:'Good'}):sharpe>=0.5?_L({it:'Sufficiente',en:'Adequate'}):_L({it:'Da migliorare',en:'Needs improvement'});
   const vCol=annVol*100>30?'var(--r)':annVol*100>15?'var(--o)':'var(--g)';
-  const vLbl=annVol*100>30?'Alta':annVol*100>15?'Media':'Bassa';
+  const vLbl=annVol*100>30?_L({it:'Alta',en:'High'}):annVol*100>15?_L({it:'Media',en:'Medium'}):_L({it:'Bassa',en:'Low'});
 
   // ── Monte Carlo Simulation — GBM con distribuzione t(5) (code grasse) ──
   // Distribuzione normale assume kurtosi=3; i ritorni reali hanno kurtosi >3 (eventi estremi
@@ -14532,7 +14533,7 @@ async function loadRiskMetrics(){
           <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);width:64px;flex-shrink:0">${x.sym}</div>
           <div style="flex:1">
             <div style="display:flex;gap:6px;font-size:10px;font-family:var(--fm);margin-bottom:4px">
-              <span style="color:${x.stockRet>=0?'var(--g)':'var(--r)'}">${x.stockRet>=0?'+':''}${fmt(x.stockRet*100,1)}% tuo</span>
+              <span style="color:${x.stockRet>=0?'var(--g)':'var(--r)'}">${x.stockRet>=0?'+':''}${fmt(x.stockRet*100,1)}% ${_L({it:'tuo',en:'yours'})}</span>
               <span style="color:var(--t3)">vs</span>
               <span style="color:var(--t2)">${x.spyRet>=0?'+':''}${fmt(x.spyRet*100,1)}% SPY</span>
             </div>
@@ -14552,7 +14553,7 @@ async function loadRiskMetrics(){
     <div style="margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid var(--bd)">
       ${portfolio.map((item,pi)=>{
         const r=stockRets[pi];
-        if(!r.length)return`<div style="font-family:var(--fm);font-size:11px;color:var(--t3);padding:4px 0">${item.sym}: dati storici insufficienti</div>`;
+        if(!r.length)return`<div style="font-family:var(--fm);font-size:11px;color:var(--t3);padding:4px 0">${item.sym}: ${_L({it:'dati storici insufficienti',en:'insufficient historical data'})}</div>`;
         const sv=_std(r)*Math.sqrt(252)*100;
         const sr=(r.reduce((acc,x)=>acc*(1+x),1)-1)*100;
         const vc=sv>40?'var(--r)':sv>20?'var(--o)':'var(--g)';
@@ -14621,12 +14622,12 @@ async function loadRiskMetrics(){
       </div>
       <div style="overflow-x:auto">
         <table class="corr-table">
-          <thead><tr><th style="text-align:left;padding:4px 10px;min-width:60px;color:var(--r);font-size:9px;letter-spacing:.4px">CRISI</th>${portfolio.map(it=>`<th style="color:var(--r)">${it.sym}</th>`).join('')}</tr></thead>
+          <thead><tr><th style="text-align:left;padding:4px 10px;min-width:60px;color:var(--r);font-size:9px;letter-spacing:.4px">${_L({it:'CRISI',en:'CRISIS'})}</th>${portfolio.map(it=>`<th style="color:var(--r)">${it.sym}</th>`).join('')}</tr></thead>
           <tbody>${portfolio.map((itA,a)=>`<tr><th style="text-align:left;padding:4px 10px;color:var(--r);font-size:11px;font-family:var(--fm);white-space:nowrap">${itA.sym}</th>${portfolio.map((_,b)=>{const v=crisisCorrM[a][b];return`<td style="background:${corrBg(v)};color:${corrTxt(v)};padding:5px 8px;border-radius:4px">${v!==null?fmt(v,2):'—'}</td>`;}).join('')}</tr>`).join('')}</tbody>
           <thead><tr><th style="text-align:left;padding:4px 10px;min-width:60px;color:var(--r);font-size:9px;letter-spacing:.4px">${_t('risk.crisisLabel')}</th>${portfolio.map(it=>`<th style="color:var(--r)">${it.sym}</th>`).join('')}</tr></thead>
         </table>
       </div>
-    </div>`:'<div style="font-size:12px;color:var(--t3);padding:8px 0;font-family:var(--fm)">Aggiungi almeno 2 titoli per vedere la matrice di correlazione.</div>'}
+    </div>`:`<div style="font-size:12px;color:var(--t3);padding:8px 0;font-family:var(--fm)">${_L({it:'Aggiungi almeno 2 titoli per vedere la matrice di correlazione.',en:'Add at least 2 holdings to see the correlation matrix.'})}</div>`}
 
     <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">${_t('risk.footer')}</div>
   `;
@@ -14738,26 +14739,26 @@ function renderRebalancing(){
     <!-- KPI -->
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       <div class="rb">
-        <div class="rl">VALORE PORTAFOGLIO</div>
+        <div class="rl">${_L({it:'VALORE PORTAFOGLIO',en:'PORTFOLIO VALUE'})}</div>
         <div class="rv2 b" style="font-size:18px">$${fmt(totalVal,0)}</div>
       </div>
       <div class="rb">
-        <div class="rl">TOTALE TARGET</div>
+        <div class="rl">${_L({it:'TOTALE TARGET',en:'TOTAL TARGET'})}</div>
         <div class="rv2 ${Math.abs(totalTarget-100)<1?'g':totalTarget>100?'down':'a'}" style="font-size:18px">${fmt(totalTarget,0)}%</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${Math.abs(totalTarget-100)<1?'✓ Corretto':totalTarget>100?'⚠ Supera 100%':'⚠ Inferiore a 100%'}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${Math.abs(totalTarget-100)<1?_L({it:'✓ Corretto',en:'✓ Correct'}):totalTarget>100?_L({it:'⚠ Supera 100%',en:'⚠ Exceeds 100%'}):_L({it:'⚠ Inferiore a 100%',en:'⚠ Below 100%'})}</div>
       </div>
       <div class="rb">
-        <div class="rl">DA RIBILANCIARE</div>
+        <div class="rl">${_L({it:'DA RIBILANCIARE',en:'TO REBALANCE'})}</div>
         <div class="rv2 a" style="font-size:18px">$${fmt(totalImbalance/2,0)}</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">volume di operazioni</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${_L({it:'volume di operazioni',en:'trade volume'})}</div>
       </div>
     </div>
 
-    ${Math.abs(totalTarget-100)>=1?`<div style="padding:8px 12px;background:var(--o2);border-radius:6px;border-left:3px solid var(--o);font-size:11px;color:#92400E;font-family:var(--fm);margin-bottom:12px">⚠ Somma target = ${fmt(totalTarget,0)}% — i target devono sommare a 100%. Modifica i valori nella colonna Target %.</div>`:''}
+    ${Math.abs(totalTarget-100)>=1?`<div style="padding:8px 12px;background:var(--o2);border-radius:6px;border-left:3px solid var(--o);font-size:11px;color:#92400E;font-family:var(--fm);margin-bottom:12px">⚠ ${_L({it:`Somma target = ${fmt(totalTarget,0)}% — i target devono sommare a 100%. Modifica i valori nella colonna Target %.`,en:`Target sum = ${fmt(totalTarget,0)}% — targets must add up to 100%. Edit values in the Target % column.`})}</div>`:''}
 
     <!-- Header colonne -->
     <div style="display:grid;grid-template-columns:72px 1fr 72px 100px 1fr;gap:10px;padding:0 0 6px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--bd);margin-bottom:2px">
-      <div>Titolo</div><div>Allocazione attuale</div><div style="text-align:center">Target %</div><div style="text-align:right">Delta</div><div style="text-align:right">Ordine suggerito</div>
+      <div>${_L({it:'Titolo',en:'Ticker'})}</div><div>${_L({it:'Allocazione attuale',en:'Current allocation'})}</div><div style="text-align:center">Target %</div><div style="text-align:right">Delta</div><div style="text-align:right">${_L({it:'Ordine suggerito',en:'Suggested order'})}</div>
     </div>
 
     <!-- Righe -->
@@ -14770,9 +14771,9 @@ function renderRebalancing(){
       const bW=Math.min(curPct/barMax*100,100);
       const tW=Math.min(tPct/barMax*100,100);
       const oClass=isOk?'ok':isBuy?'buy':'sell';
-      const oText=isOk?'✓ In equilibrio':isBuy
-        ?`＋ Acquista ${fmt(Math.abs(o.shares),o.curPrice<10?3:1)} az · ${o.cur}${fmt(Math.abs(o.delta),0)}`
-        :`－ Vendi ${fmt(Math.abs(o.shares),o.curPrice<10?3:1)} az · ${o.cur}${fmt(Math.abs(o.delta),0)}`;
+      const oText=isOk?_L({it:'✓ In equilibrio',en:'✓ Balanced'}):isBuy
+        ?`＋ ${_L({it:'Acquista',en:'Buy'})} ${fmt(Math.abs(o.shares),o.curPrice<10?3:1)} ${_L({it:'az',en:'sh'})} · ${o.cur}${fmt(Math.abs(o.delta),0)}`
+        :`－ ${_L({it:'Vendi',en:'Sell'})} ${fmt(Math.abs(o.shares),o.curPrice<10?3:1)} ${_L({it:'az',en:'sh'})} · ${o.cur}${fmt(Math.abs(o.delta),0)}`;
       return`<div class="reb-row">
         <div class="reb-sym">${o.sym}<div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${o.cur}${fmt(o.curPrice,o.curPrice<10?3:2)}</div></div>
         <div>
@@ -14800,9 +14801,9 @@ function renderRebalancing(){
 
     <!-- Nuovo capitale -->
     <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)">
-      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Distribuisci nuovo capitale secondo i target</div>
+      <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${_L({it:'Distribuisci nuovo capitale secondo i target',en:'Distribute new capital according to targets'})}</div>
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-        <input id="reb-new-money" class="port-inp" type="number" placeholder="Importo da investire ($)" min="0" step="100" style="width:200px" oninput="_renderRebNewMoney()"/>
+        <input id="reb-new-money" class="port-inp" type="number" placeholder="${_L({it:'Importo da investire ($)',en:'Amount to invest ($)'})}" min="0" step="100" style="width:200px" oninput="_renderRebNewMoney()"/>
       </div>
       <div id="reb-new-money-result"></div>
     </div>
@@ -14811,7 +14812,7 @@ function renderRebalancing(){
     <div style="margin-bottom:12px;padding:10px 14px;background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;display:flex;align-items:flex-start;gap:8px">
       <div style="font-size:14px;flex-shrink:0">⚠</div>
       <div>
-        <div style="font-size:11px;font-weight:700;color:#92400E;font-family:var(--fm);margin-bottom:3px">Alert ribilanciamento — ${_rebAlerts.length} posizione${_rebAlerts.length>1?'i':''} fuori target</div>
+        <div style="font-size:11px;font-weight:700;color:#92400E;font-family:var(--fm);margin-bottom:3px">${_L({it:`Alert ribilanciamento — ${_rebAlerts.length} posizione${_rebAlerts.length>1?'i':''} fuori target`,en:`Rebalancing alert — ${_rebAlerts.length} position${_rebAlerts.length>1?'s':''} off target`})}</div>
         <div style="font-size:10px;color:#92400E;font-family:var(--fm)">${_rebAlerts.map(it=>{const curPct=totalVal>0?(it.val/totalVal*100):0;const tPct=_rebTargets[it.sym]||0;const diff=curPct-tPct;return`${it.sym}: ${fmt(curPct,1)}% vs target ${fmt(tPct,0)}% (${diff>=0?'+':''}${fmt(diff,1)}%)`;}).join(' · ')}</div>
       </div>
     </div>`:''}
@@ -14821,12 +14822,12 @@ function renderRebalancing(){
       <button class="sc-btn" style="font-size:11px;padding:6px 14px" onclick="
         const eq=Math.round(100/portfolio.length);
         portfolio.forEach((item,i)=>{_rebTargets[item.sym]=i<portfolio.length-1?eq:100-eq*(portfolio.length-1);});
-        _saveRebTargets();renderRebalancing();">↺ Uguale per tutti</button>
+        _saveRebTargets();renderRebalancing();">↺ ${_L({it:'Uguale per tutti',en:'Equal for all'})}</button>
       <button class="sc-btn" style="font-size:11px;padding:6px 14px;background:var(--s2);color:var(--t2);border-color:var(--bd)" onclick="
         portfolio.forEach(item=>{delete _rebTargets[item.sym];});
-        _saveRebTargets();renderRebalancing();">✕ Reset target</button>
+        _saveRebTargets();renderRebalancing();">✕ ${_L({it:'Reset target',en:'Reset targets'})}</button>
     </div>
-    <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">I target vengono salvati nel browser · Non considera i costi di transazione · Solo scopo informativo</div>
+    <div style="margin-top:10px;font-size:10px;color:var(--t3);font-family:var(--fm)">${_L({it:'I target vengono salvati nel browser · Non considera i costi di transazione · Solo scopo informativo',en:'Targets are saved in the browser · Does not account for transaction costs · For informational purposes only'})}</div>
   `;
 }
 
@@ -14847,7 +14848,7 @@ function _renderRebNewMoney(){
     rows+=`<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);font-family:var(--fm);font-size:11px">
       <span style="font-weight:700;color:var(--t);width:70px">${item.sym}</span>
       <span style="color:var(--t3)">${fmt(tPct*100,1)}% = ${cur}${fmt(amount,0)}</span>
-      <span style="color:var(--g);font-weight:600">＋ ${fmt(shares,shares<10?3:1)} az @ ${cur}${fmt(p,p<10?3:2)}</span>
+      <span style="color:var(--g);font-weight:600">＋ ${fmt(shares,shares<10?3:1)} ${_L({it:'az',en:'sh'})} @ ${cur}${fmt(p,p<10?3:2)}</span>
     </div>`;
   });
   el.innerHTML=rows?`<div style="background:var(--s2);border-radius:8px;border:1px solid var(--bd);padding:6px 12px">${rows}</div>`:'';
@@ -15094,8 +15095,8 @@ async function loadPortfolioNews(){
   // Helper: dot sentiment
   function sentDot(title){
     const s=sentiment(title);
-    if(s==='bull')return`<span style="font-size:10px;color:#059669;flex-shrink:0" title="Positivo">▲</span>`;
-    if(s==='bear')return`<span style="font-size:10px;color:#DC2626;flex-shrink:0" title="Negativo">▼</span>`;
+    if(s==='bull')return`<span style="font-size:10px;color:#059669;flex-shrink:0" title="${_L({it:'Positivo',en:'Positive'})}">▲</span>`;
+    if(s==='bear')return`<span style="font-size:10px;color:#DC2626;flex-shrink:0" title="${_L({it:'Negativo',en:'Negative'})}">▼</span>`;
     return`<span style="font-size:10px;color:var(--t3);flex-shrink:0">—</span>`;
   }
 
@@ -15113,7 +15114,7 @@ async function loadPortfolioNews(){
     const ago=a.time?_timeAgo(a.time):'';
     const s=sentiment(a.title);
     const sColor=s==='bull'?'#059669':s==='bear'?'#DC2626':'var(--t3)';
-    const sLabel=s==='bull'?'▲ Positivo':s==='bear'?'▼ Negativo':'— Neutro';
+    const sLabel=s==='bull'?'▲ '+_L({it:'Positivo',en:'Positive'}):s==='bear'?'▼ '+_L({it:'Negativo',en:'Negative'}):'— '+_L({it:'Neutro',en:'Neutral'});
     const imgStyle=a.thumbnail
       ?`background-image:url(${a.thumbnail});background-size:cover;background-position:center`
       :`background:${a.col}12;display:flex;align-items:center;justify-content:center`;
@@ -15155,10 +15156,10 @@ async function loadPortfolioNews(){
       </div>
       <div>
         <div style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--fm);margin-bottom:6px;display:flex;justify-content:space-between">
-          <span>Tutte le notizie</span><span style="opacity:.6">${feed.length} articoli</span>
+          <span>${_L({it:'Tutte le notizie',en:'All news'})}</span><span style="opacity:.6">${feed.length} ${_L({it:'articoli',en:'articles'})}</span>
         </div>
         <div style="max-height:500px;overflow-y:auto">
-          ${restHTML||'<div style="color:var(--t3);font-size:12px;padding:8px 0">Nessun altro articolo</div>'}
+          ${restHTML||`<div style="color:var(--t3);font-size:12px;padding:8px 0">${_L({it:'Nessun altro articolo',en:'No more articles'})}</div>`}
         </div>
       </div>
     </div>
@@ -15222,15 +15223,15 @@ function onSimTypeChange(){
 let btSym=null, btPeriod='5y', btChartInst=null, btSearchTimer=null;
 
 const BT_STRAT_INFO={
-  buyhold:'Acquista il titolo al primo giorno del periodo e mantieni fino alla fine. Strategia benchmark di riferimento per confrontare le altre.',
-  sma_cross:'Compra quando la media mobile veloce SMA(20) supera quella lenta SMA(50) (Golden Cross). Vende quando la attraversa al ribasso (Death Cross). Segue i trend di mercato.',
-  rsi_rev:'Compra quando l\'RSI(14) scende sotto 30 (zona ipervenduto). Vende quando supera 70 (zona ipercomprato). Sfrutta le oscillazioni di breve termine.',
+  buyhold:()=>_L({it:'Acquista il titolo al primo giorno del periodo e mantieni fino alla fine. Strategia benchmark di riferimento per confrontare le altre.',en:'Buy the asset on the first day of the period and hold until the end. Reference benchmark strategy to compare against others.'}),
+  sma_cross:()=>_L({it:'Compra quando la media mobile veloce SMA(20) supera quella lenta SMA(50) (Golden Cross). Vende quando la attraversa al ribasso (Death Cross). Segue i trend di mercato.',en:'Buy when the fast SMA(20) crosses above the slow SMA(50) (Golden Cross). Sell when it crosses back down (Death Cross). Follows market trends.'}),
+  rsi_rev:()=>_L({it:"Compra quando l'RSI(14) scende sotto 30 (zona ipervenduto). Vende quando supera 70 (zona ipercomprato). Sfrutta le oscillazioni di breve termine.",en:'Buy when RSI(14) drops below 30 (oversold). Sell when it exceeds 70 (overbought). Exploits short-term oscillations.'}),
 };
 
 function btUpdateStratInfo(){
   const sel=document.getElementById('bt-strategy');
   const info=document.getElementById('bt-strat-info');
-  if(sel&&info)info.textContent=BT_STRAT_INFO[sel.value]||'';
+  if(sel&&info){const fn=BT_STRAT_INFO[sel.value];info.textContent=fn?fn():'';};
 }
 
 function btSetPeriod(p,btn){
@@ -15323,7 +15324,7 @@ function btRunEngine(pts,strategy,capital){
 
 async function executeBacktest(){
   const sym=btSym||(document.getElementById('bt-sym-inp')?.value?.trim()?.toUpperCase());
-  if(!sym){alert('Inserisci un titolo o ETF');return;}
+  if(!sym){alert(_L({it:'Inserisci un titolo o ETF',en:'Enter a ticker or ETF'}));return;}
   btSym=sym;
   const strategy=document.getElementById('bt-strategy')?.value||'buyhold';
   const capital=parseFloat(document.getElementById('bt-capital')?.value)||10000;
@@ -15338,10 +15339,10 @@ async function executeBacktest(){
   try{
     const range=btPeriod;
     const r=await fetch(`/api/quote?symbol=${encodeURIComponent(sym)}&type=history&range=${range}`);
-    if(!r.ok)throw new Error('Dati non disponibili per '+sym);
+    if(!r.ok)throw new Error(_L({it:'Dati non disponibili per ',en:'Data not available for '})+sym);
     const data=await r.json();
     const pts=(data.points||data||[]).filter(p=>p.close!=null&&p.close>0);
-    if(pts.length<30)throw new Error('Dati storici insufficienti (min. 30 giorni)');
+    if(pts.length<30)throw new Error(_L({it:'Dati storici insufficienti (min. 30 giorni)',en:'Insufficient historical data (min. 30 days)'}));
 
     const result=btRunEngine(pts,strategy,capital);
     btRenderResults(sym,strategy,capital,pts,result);
@@ -15376,7 +15377,7 @@ function btRenderResults(sym,strategy,capital,pts,result){
     const bhResult=btRunEngine(pts,'buyhold',capital);
     const diff=returnPct-bhResult.returnPct;
     bhDiv.style.display='block';
-    bhDiv.innerHTML=`<span style="font-weight:700">vs Buy &amp; Hold:</span> B&amp;H = ${bhResult.returnPct>=0?'+':''}${bhResult.returnPct.toFixed(2)}% · Strategia ${diff>=0?'<span style="color:var(--g)">+':'<span style="color:var(--r)">'}${diff>=0?'+':''}${diff.toFixed(2)}% rispetto al B&amp;H</span>`;
+    bhDiv.innerHTML=`<span style="font-weight:700">vs Buy &amp; Hold:</span> B&amp;H = ${bhResult.returnPct>=0?'+':''}${bhResult.returnPct.toFixed(2)}% · ${_L({it:'Strategia',en:'Strategy'})} ${diff>=0?'<span style="color:var(--g)">+':'<span style="color:var(--r)">'}${diff>=0?'+':''}${diff.toFixed(2)}% ${_L({it:'rispetto al B&amp;H',en:'vs B&amp;H'})}</span>`;
   } else if(bhDiv) bhDiv.style.display='none';
 
   // Chart
@@ -15392,7 +15393,7 @@ function btRenderResults(sym,strategy,capital,pts,result){
       timeScale:{borderColor:theme.border,timeVisible:false},
       handleScroll:true,handleScale:true,
     });
-    const portSeries=btChartInst.addAreaSeries({lineColor:'#1A56C4',topColor:'rgba(26,86,196,.18)',bottomColor:'rgba(26,86,196,0)',lineWidth:2,title:'Portafoglio'});
+    const portSeries=btChartInst.addAreaSeries({lineColor:'#1A56C4',topColor:'rgba(26,86,196,.18)',bottomColor:'rgba(26,86,196,0)',lineWidth:2,title:_L({it:'Portafoglio',en:'Portfolio'})});
     const chartData=pts.map((p,i)=>({time:p.time,value:portValues[i]||capital})).filter(d=>d.value>0);
     portSeries.setData(chartData);
     if(strategy!=='buyhold'){
@@ -15475,7 +15476,7 @@ function cmpSetPeriod(p,btn){
 
 async function executeCompare(){
   const active=cmpSyms.filter(Boolean);
-  if(active.length<2){alert('Inserisci almeno 2 simboli da confrontare');return;}
+  if(active.length<2){alert(_L({it:'Inserisci almeno 2 simboli da confrontare',en:'Enter at least 2 symbols to compare'}));return;}
   const loadEl=document.getElementById('cmp-loading');
   const errEl=document.getElementById('cmp-error');
   const resCol=document.getElementById('cmp-results-col');
@@ -15496,7 +15497,7 @@ async function executeCompare(){
     if(loadEl)loadEl.style.display='none';
 
     const valid=results.filter(r=>r&&r.hist);
-    if(valid.length<2)throw new Error('Dati storici non disponibili per almeno 2 titoli');
+    if(valid.length<2)throw new Error(_L({it:'Dati storici non disponibili per almeno 2 titoli',en:'Historical data not available for at least 2 symbols'}));
 
     cmpRenderChart(valid);
     cmpRenderMetrics(valid);
@@ -15816,16 +15817,17 @@ function renderPortPerfSummary(){
   const best=rows[0],worst=rows[rows.length-1];
   el.innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
-      <div class="rb"><div class="rl">MIGLIOR RENDIMENTO</div><div class="rv2 g">${best?.sym||'—'} <span style="font-size:11px">${best?(best.pnlPct>=0?'+':'')+fmt(best.pnlPct,1)+'%':''}</span></div></div>
-      <div class="rb"><div class="rl">PEGGIOR RENDIMENTO</div><div class="rv2 down">${worst?.sym||'—'} <span style="font-size:11px">${worst?(worst.pnlPct>=0?'+':'')+fmt(worst.pnlPct,1)+'%':''}</span></div></div>
+      <div class="rb"><div class="rl">${_L({it:'MIGLIOR RENDIMENTO',en:'BEST RETURN'})}</div><div class="rv2 g">${best?.sym||'—'} <span style="font-size:11px">${best?(best.pnlPct>=0?'+':'')+fmt(best.pnlPct,1)+'%':''}</span></div></div>
+      <div class="rb"><div class="rl">${_L({it:'PEGGIOR RENDIMENTO',en:'WORST RETURN'})}</div><div class="rv2 down">${worst?.sym||'—'} <span style="font-size:11px">${worst?(worst.pnlPct>=0?'+':'')+fmt(worst.pnlPct,1)+'%':''}</span></div></div>
     </div>
     <div style="display:grid;grid-template-columns:65px 1fr 75px 75px 75px;gap:8px;padding:0 0 6px;font-size:9px;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;border-bottom:2px solid var(--bd);margin-bottom:2px">
-      <div>Titolo</div><div>Barra</div><div style="text-align:right">P&L %</div><div style="text-align:right">CAGR</div><div style="text-align:right">Detenuto</div>
+      <div>${_L({it:'Titolo',en:'Ticker'})}</div><div>${_L({it:'Barra',en:'Bar'})}</div><div style="text-align:right">P&L %</div><div style="text-align:right">CAGR</div><div style="text-align:right">${_L({it:'Detenuto',en:'Held'})}</div>
     </div>
     ${rows.map(r=>{
       const isPos=r.pnlPct>=0;
       const barW=Math.min(Math.abs(r.pnlPct)/50*100,100);
-      const holdStr=r.holdDays!=null?(r.holdDays<30?r.holdDays+'g':r.holdDays<365?Math.floor(r.holdDays/30)+'m':Math.floor(r.holdDays/365)+'a '+Math.floor((r.holdDays%365)/30)+'m'):'—';
+      const _d=_L({it:'g',en:'d'}),_mo=_L({it:'m',en:'mo'}),_yr=_L({it:'a',en:'yr'});
+      const holdStr=r.holdDays!=null?(r.holdDays<30?r.holdDays+_d:r.holdDays<365?Math.floor(r.holdDays/30)+_mo:Math.floor(r.holdDays/365)+_yr+' '+Math.floor((r.holdDays%365)/30)+_mo):'—';
       return`<div style="display:grid;grid-template-columns:65px 1fr 75px 75px 75px;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid var(--bd)">
         <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${r.sym.replace(/\.[A-Z0-9]+$/,'')}</div>
         <div style="background:var(--s2);border-radius:3px;height:7px;overflow:hidden"><div style="height:7px;width:${barW}%;background:${isPos?'var(--g)':'var(--r)'};border-radius:3px"></div></div>
@@ -15850,7 +15852,7 @@ function renderPersonalTargets(){
   const targets=_loadPersonalTargets();
   const uniqueSyms=[...new Set(portfolio.map(p=>p.sym))];
   el.innerHTML=`
-    <div style="margin-bottom:12px;font-size:11px;color:var(--t2)">Imposta un prezzo obiettivo personale per ogni titolo. Indipendente dai target degli analisti.</div>
+    <div style="margin-bottom:12px;font-size:11px;color:var(--t2)">${_L({it:'Imposta un prezzo obiettivo personale per ogni titolo. Indipendente dai target degli analisti.',en:'Set a personal target price for each holding. Independent from analyst targets.'})}</div>
     ${uniqueSyms.map(sym=>{
       const item=portfolio.find(p=>p.sym===sym);
       const i=portfolio.indexOf(item);
@@ -15866,18 +15868,18 @@ function renderPersonalTargets(){
         <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
           <div>
             <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${sym}</div>
-            <div style="font-size:11px;color:var(--t3)">Attuale: ${cur}${fmt(curPrice,curPrice<10?3:2)}</div>
+            <div style="font-size:11px;color:var(--t3)">${_L({it:'Attuale',en:'Current'})}: ${cur}${fmt(curPrice,curPrice<10?3:2)}</div>
           </div>
           <div style="display:flex;align-items:center;gap:8px">
             <div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:3px">Target personale</div>
-              <input type="number" id="ptgt-${sym.replace(/\./g,'_')}" value="${myTarget||''}" placeholder="Prezzo obiettivo"
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:3px">${_L({it:'Target personale',en:'Personal target'})}</div>
+              <input type="number" id="ptgt-${sym.replace(/\./g,'_')}" value="${myTarget||''}" placeholder="${_L({it:'Prezzo obiettivo',en:'Target price'})}"
                 style="background:var(--s2);border:1px solid var(--bd);color:var(--t);padding:5px 8px;border-radius:6px;font-size:11px;font-family:var(--fm);outline:none;width:130px"
                 onchange="savePersonalTarget('${sym}',this.value)"/>
             </div>
             ${myTarget?`<div style="text-align:right">
               <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:${upside>=0?'var(--g)':'var(--r)'}">${upside>=0?'+':''}${fmt(upside,1)}%</div>
-              <div style="font-size:9px;color:var(--t3)">${upside>=0?'distanza':'già sopra'}</div>
+              <div style="font-size:9px;color:var(--t3)">${upside>=0?_L({it:'distanza',en:'upside'}):_L({it:'già sopra',en:'above target'})}</div>
             </div>`:''}
           </div>
         </div>
@@ -15886,12 +15888,12 @@ function renderPersonalTargets(){
             <div style="height:6px;width:${barW}%;background:${barColor};border-radius:5px;transition:.4s"></div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:3px;font-size:9px;color:var(--t3);font-family:var(--fm)">
-            <span>${cur}${fmt(curPrice,curPrice<10?3:2)}</span><span>Target: ${cur}${fmt(myTarget,myTarget<10?3:2)}</span>
+            <span>${cur}${fmt(curPrice,curPrice<10?3:2)}</span><span>${_L({it:'Target',en:'Target'})}: ${cur}${fmt(myTarget,myTarget<10?3:2)}</span>
           </div>
         </div>`:''}
       </div>`;
     }).join('')}
-    <div style="margin-top:10px;font-size:10px;color:var(--t3)">I target vengono salvati localmente nel browser. Modificali direttamente nel campo e premi Invio o Tab.</div>`;
+    <div style="margin-top:10px;font-size:10px;color:var(--t3)">${_L({it:'I target vengono salvati localmente nel browser. Modificali direttamente nel campo e premi Invio o Tab.',en:'Targets are saved locally in your browser. Edit directly in the field and press Enter or Tab.'})}</div>`;
 }
 
 function savePersonalTarget(sym,val){
@@ -15939,50 +15941,50 @@ function renderPortGoal(){
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:6px">
           <div>
             <div style="font-size:22px;font-weight:800;color:var(--t);font-family:var(--fm)">€${fmt(totalValEUR,0)}</div>
-            <div style="font-size:11px;color:var(--t3)">di €${fmt(targetValue,0)} obiettivo</div>
+            <div style="font-size:11px;color:var(--t3)">${_L({it:'di',en:'of'})} €${fmt(targetValue,0)} ${_L({it:'obiettivo',en:'goal'})}</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:24px;font-weight:800;color:${barColor};font-family:var(--fm)">${fmt(progress,1)}%</div>
-            <div style="font-size:10px;color:var(--t3)">${daysLeft>0?daysLeft+' giorni rimanenti':'Scaduto'}</div>
+            <div style="font-size:10px;color:var(--t3)">${daysLeft>0?daysLeft+' '+_L({it:'giorni rimanenti',en:'days remaining'}):_L({it:'Scaduto',en:'Expired'})}</div>
           </div>
         </div>
         <div style="background:var(--s2);border-radius:8px;height:12px;overflow:hidden;border:1px solid var(--bd)">
           <div style="height:12px;width:${progress}%;background:${barColor};border-radius:8px;transition:.5s"></div>
         </div>
         <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:10px;color:var(--t3);font-family:var(--fm)">
-          <span>Manca: €${fmt(remaining,0)}</span>
-          <span>${new Date(targetDate).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'})}</span>
+          <span>${_L({it:'Manca',en:'Remaining'})}: €${fmt(remaining,0)}</span>
+          <span>${new Date(targetDate).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{day:'2-digit',month:'short',year:'numeric'})}</span>
         </div>
       </div>
       <div style="padding:10px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);margin-bottom:14px">
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">Proiezione con rendimento ${annualReturn||8}% annuo</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-bottom:4px">${_L({it:`Proiezione con rendimento ${annualReturn||8}% annuo`,en:`Projection with ${annualReturn||8}% annual return`})}</div>
         <div style="font-size:14px;font-weight:700;font-family:var(--fm);color:${willReach?'var(--g)':'var(--r)'}">
-          ${willReach?'✓ Raggiungerai l\'obiettivo':'⚠ Proiezione insufficiente con questo tasso'}
+          ${willReach?_L({it:"✓ Raggiungerai l'obiettivo",en:'✓ You will reach the goal'}):_L({it:'⚠ Proiezione insufficiente con questo tasso',en:'⚠ Projection insufficient at this rate'})}
         </div>
-        <div style="font-size:11px;color:var(--t2);margin-top:2px">Valore proiettato: <strong>€${fmt(projectedVal,0)}</strong> entro ${new Date(targetDate).toLocaleDateString('it-IT',{month:'short',year:'numeric'})}</div>
+        <div style="font-size:11px;color:var(--t2);margin-top:2px">${_L({it:'Valore proiettato',en:'Projected value'})}: <strong>€${fmt(projectedVal,0)}</strong> ${_L({it:'entro',en:'by'})} ${new Date(targetDate).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{month:'short',year:'numeric'})}</div>
       </div>`;
   }
   el.innerHTML=`
     ${projHtml}
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--t);margin-bottom:10px">${goal?'Modifica obiettivo':'Configura il tuo obiettivo'}</div>
+      <div style="font-size:11px;font-weight:700;color:var(--t);margin-bottom:10px">${goal?_L({it:'Modifica obiettivo',en:'Edit goal'}):_L({it:'Configura il tuo obiettivo',en:'Configure your goal'})}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">
         <div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Valore target (€)</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${_L({it:'Valore target (€)',en:'Target value (€)'})}</div>
           <input type="number" id="goal-value" value="${goal?.targetValue||''}" placeholder="es. 100000" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 9px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
         </div>
         <div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Data obiettivo</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${_L({it:'Data obiettivo',en:'Target date'})}</div>
           <input type="date" id="goal-date" value="${goal?.targetDate||''}" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 9px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
         </div>
         <div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Rendimento atteso %/a</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${_L({it:'Rendimento atteso %/a',en:'Expected return %/yr'})}</div>
           <input type="number" id="goal-rate" value="${goal?.annualReturn||8}" placeholder="es. 8" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 9px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
         </div>
       </div>
       <div style="display:flex;gap:8px">
-        <button onclick="savePortGoal()" style="background:var(--b);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-family:var(--fm);font-weight:600;cursor:pointer">${goal?'Aggiorna':'Salva obiettivo'}</button>
-        ${goal?`<button onclick="deletePortGoal()" style="background:var(--r2);color:var(--r);border:1px solid var(--r);border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--fm);cursor:pointer">Elimina</button>`:''}
+        <button onclick="savePortGoal()" style="background:var(--b);color:#fff;border:none;border-radius:8px;padding:8px 18px;font-size:12px;font-family:var(--fm);font-weight:600;cursor:pointer">${goal?_L({it:'Aggiorna',en:'Update'}):_L({it:'Salva obiettivo',en:'Save goal'})}</button>
+        ${goal?`<button onclick="deletePortGoal()" style="background:var(--r2);color:var(--r);border:1px solid var(--r);border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--fm);cursor:pointer">${_L({it:'Elimina',en:'Delete'})}</button>`:''}
       </div>
     </div>`;
 }
@@ -16131,36 +16133,36 @@ function renderPriceAlerts(){
         const cur=item?.currency==='EUR'?'€':'$';
         return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;margin-bottom:6px">
           <div><span style="font-family:var(--fm);font-weight:700;color:var(--t)">${a.sym}</span>
-          <span style="font-size:10px;font-family:var(--fm);color:${a.direction==='above'?'var(--g)':'var(--r)'};margin-left:6px">${a.direction==='above'?'↑ sopra':'↓ sotto'} ${cur}${fmt(a.targetPrice,a.targetPrice<10?3:2)}</span>
-          ${curPrice?`<span style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-left:8px">ora: ${cur}${fmt(curPrice,curPrice<10?3:2)}</span>`:''}
+          <span style="font-size:10px;font-family:var(--fm);color:${a.direction==='above'?'var(--g)':'var(--r)'};margin-left:6px">${a.direction==='above'?_L({it:'↑ sopra',en:'↑ above'}):_L({it:'↓ sotto',en:'↓ below'})} ${cur}${fmt(a.targetPrice,a.targetPrice<10?3:2)}</span>
+          ${curPrice?`<span style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-left:8px">${_L({it:'ora',en:'now'})}: ${cur}${fmt(curPrice,curPrice<10?3:2)}</span>`:''}
           </div>
           <button onclick="deleteAlert(${i})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">✕</button>
         </div>`;
       }).join('')}
     </div>`:''}
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px">
-      <div style="font-size:11px;font-weight:700;color:var(--t);margin-bottom:10px">Nuovo alert</div>
+      <div style="font-size:11px;font-weight:700;color:var(--t);margin-bottom:10px">${_L({it:'Nuovo alert',en:'New alert'})}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;align-items:end">
         <div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Titolo</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${_L({it:'Titolo',en:'Ticker'})}</div>
           <select id="alert-sym" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none">
             ${uniqueSyms.map(s=>`<option value="${s}">${s}</option>`).join('')}
           </select>
         </div>
         <div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Condizione</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${_L({it:'Condizione',en:'Condition'})}</div>
           <select id="alert-dir" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none">
-            <option value="above">Sale sopra</option><option value="below">Scende sotto</option>
+            <option value="above">${_L({it:'Sale sopra',en:'Rises above'})}</option><option value="below">${_L({it:'Scende sotto',en:'Falls below'})}</option>
           </select>
         </div>
         <div>
-          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Prezzo</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${_L({it:'Prezzo',en:'Price'})}</div>
           <input type="number" id="alert-price" placeholder="es. 150.00" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
         </div>
-        <button onclick="addPriceAlert()" style="background:var(--b);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--fm);font-weight:600;cursor:pointer;white-space:nowrap">+ Aggiungi</button>
+        <button onclick="addPriceAlert()" style="background:var(--b);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--fm);font-weight:600;cursor:pointer;white-space:nowrap">${_L({it:'+ Aggiungi',en:'+ Add'})}</button>
       </div>
     </div>
-    ${!_priceAlerts.length?'<div style="margin-top:10px;font-size:11px;color:var(--t3);text-align:center">Nessun alert configurato · Gli alert vengono verificati ad ogni aggiornamento del portafoglio</div>':''}`;
+    ${!_priceAlerts.length?`<div style="margin-top:10px;font-size:11px;color:var(--t3);text-align:center">${_L({it:'Nessun alert configurato · Gli alert vengono verificati ad ogni aggiornamento del portafoglio',en:'No alerts configured · Alerts are checked on every portfolio refresh'})}</div>`:''}`;
 }
 function addPriceAlert(){
   const sym=document.getElementById('alert-sym')?.value;
@@ -16742,7 +16744,7 @@ function _renderCryptoGlobal(d){
   }
   if(el('cry-g-btc')){
     el('cry-g-btc').textContent=btcDom?btcDom.toFixed(1)+'%':'—';
-    el('cry-g-btc-sub').textContent=btcDom>55?'Risk-off — flussi su BTC':btcDom<45?'Possibile altseason':'Mercato bilanciato';
+    el('cry-g-btc-sub').textContent=btcDom>55?_L({it:'Risk-off — flussi su BTC',en:'Risk-off — flows into BTC'}):btcDom<45?_L({it:'Possibile altseason',en:'Possible altseason'}):_L({it:'Mercato bilanciato',en:'Balanced market'});
   }
   if(el('cry-g-eth'))el('cry-g-eth').textContent=ethDom?ethDom.toFixed(1)+'%':'—';
   if(el('cry-g-vol')){
@@ -16790,27 +16792,27 @@ function _renderCryptoNarrative(d){
   const fngV=fng?parseInt(fng.value):null;
   const signals=[];
   if(btcDom!=null){
-    if(btcDom>55)signals.push({i:'🔵',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Fase risk-off crypto. Il capitale si concentra su Bitcoin. Le altcoin tendono a sottoperformare.`});
-    else if(btcDom>50)signals.push({i:'⚪',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Mercato bilanciato con leggera preferenza per Bitcoin. Altseason non ancora confermata.`});
-    else if(btcDom>45)signals.push({i:'🟡',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Rotazione verso le altcoin in corso. Possibile inizio di altseason.`});
-    else signals.push({i:'🟢',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — Altseason in corso. Il capitale si distribuisce su ETH, DeFi e small cap.`});
+    if(btcDom>55)signals.push({i:'🔵',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — ${_L({it:'Fase risk-off crypto. Il capitale si concentra su Bitcoin. Le altcoin tendono a sottoperformare.',en:'Crypto risk-off phase. Capital concentrating on Bitcoin. Altcoins tend to underperform.'})}`});
+    else if(btcDom>50)signals.push({i:'⚪',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — ${_L({it:'Mercato bilanciato con leggera preferenza per Bitcoin. Altseason non ancora confermata.',en:'Balanced market with slight preference for Bitcoin. Altseason not yet confirmed.'})}`});
+    else if(btcDom>45)signals.push({i:'🟡',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — ${_L({it:'Rotazione verso le altcoin in corso. Possibile inizio di altseason.',en:'Rotation toward altcoins underway. Possible start of altseason.'})}`});
+    else signals.push({i:'🟢',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — ${_L({it:'Altseason in corso. Il capitale si distribuisce su ETH, DeFi e small cap.',en:'Altseason underway. Capital flowing into ETH, DeFi and small caps.'})}`});
   }
   if(fngV!=null){
-    if(fngV<25)signals.push({i:'🔴',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Paura estrema. Storicamente zona di accumulo per gli investitori di lungo periodo.`});
-    else if(fngV<45)signals.push({i:'🟠',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Sentiment negativo. Mercato cauto, possibile opportunità per chi guarda al medio termine.`});
-    else if(fngV<55)signals.push({i:'⚪',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Sentiment neutro. Mercato in equilibrio senza eccessi.`});
-    else if(fngV<75)signals.push({i:'🟢',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Sentiment positivo. Momentum favorevole, ma attenzione a possibili correzioni.`});
-    else signals.push({i:'⚠️',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — Euforia di mercato. Possibile surriscaldamento, aumentare cautela.`});
+    if(fngV<25)signals.push({i:'🔴',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Paura estrema. Storicamente zona di accumulo per gli investitori di lungo periodo.',en:'Extreme fear. Historically an accumulation zone for long-term investors.'})}`});
+    else if(fngV<45)signals.push({i:'🟠',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Sentiment negativo. Mercato cauto, possibile opportunità per chi guarda al medio termine.',en:'Negative sentiment. Cautious market, possible opportunity for medium-term investors.'})}`});
+    else if(fngV<55)signals.push({i:'⚪',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Sentiment neutro. Mercato in equilibrio senza eccessi.',en:'Neutral sentiment. Market in balance with no excesses.'})}`});
+    else if(fngV<75)signals.push({i:'🟢',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Sentiment positivo. Momentum favorevole, ma attenzione a possibili correzioni.',en:'Positive sentiment. Favorable momentum, but watch for possible corrections.'})}`});
+    else signals.push({i:'⚠️',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Euforia di mercato. Possibile surriscaldamento, aumentare cautela.',en:'Market euphoria. Possible overheating — increase caution.'})}`});
   }
   if(mcapChg!=null&&Math.abs(mcapChg)>3){
     const icon=mcapChg>0?'📈':'📉';
-    signals.push({i:icon,t:`<strong>Market Cap ${_fmtCryptoChg(mcapChg)} nelle ultime 24h</strong> — Movimento significativo della capitalizzazione totale del mercato crypto.`});
+    signals.push({i:icon,t:`<strong>Market Cap ${_fmtCryptoChg(mcapChg)} ${_L({it:'nelle ultime 24h',en:'in the last 24h'})}</strong> — ${_L({it:'Movimento significativo della capitalizzazione totale del mercato crypto.',en:'Significant move in total crypto market capitalization.'})}`});
   }
   if(ethDom!=null){
-    if(ethDom>20)signals.push({i:'💎',t:`<strong>ETH Dominance ${ethDom.toFixed(1)}%</strong> — DeFi e Layer 2 in buona salute. Attività on-chain sostenuta.`});
-    else if(ethDom<12)signals.push({i:'⚡',t:`<strong>ETH Dominance ${ethDom.toFixed(1)}%</strong> — ETH perde quota. Possibile rotazione verso BTC o Layer 1 alternativi.`});
+    if(ethDom>20)signals.push({i:'💎',t:`<strong>ETH Dominance ${ethDom.toFixed(1)}%</strong> — ${_L({it:'DeFi e Layer 2 in buona salute. Attività on-chain sostenuta.',en:'DeFi and Layer 2 in good health. Sustained on-chain activity.'})}`});
+    else if(ethDom<12)signals.push({i:'⚡',t:`<strong>ETH Dominance ${ethDom.toFixed(1)}%</strong> — ${_L({it:'ETH perde quota. Possibile rotazione verso BTC o Layer 1 alternativi.',en:'ETH losing ground. Possible rotation toward BTC or alternative Layer 1s.'})}`});
   }
-  el.innerHTML=signals.map(s=>`<div class="cry-signal-row"><span class="cry-signal-icon">${s.i}</span><span class="cry-signal-text">${s.t}</span></div>`).join('')||'<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">Nessun segnale disponibile.</div>';
+  el.innerHTML=signals.map(s=>`<div class="cry-signal-row"><span class="cry-signal-icon">${s.i}</span><span class="cry-signal-text">${s.t}</span></div>`).join('')||`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('cry.sig.none')}</div>`;
 }
 
 function _renderCryptoTable(tbodyId,coins){
@@ -16905,7 +16907,7 @@ function _populateCryptoHeader(c){
   // Header meta: rank + categoria
   const mcap=c.market_cap;
   const capLabel=mcap>10e9?'Large Cap':mcap>1e9?'Mid Cap':mcap>100e6?'Small Cap':'Micro Cap';
-  if(el('crd-hdr-rank'))el('crd-hdr-rank').textContent='#'+c.market_cap_rank+' per MCap';
+  if(el('crd-hdr-rank'))el('crd-hdr-rank').textContent='#'+c.market_cap_rank+' '+_L({it:'per MCap',en:'by MCap'});
   if(el('crd-hdr-cat'))el('crd-hdr-cat').textContent='· '+capLabel;
   if(el('crd-hdr-mcap-small'))el('crd-hdr-mcap-small').textContent='· '+_fmtCryptoCap(mcap);
   // Price position bar (ATL → ATH)
@@ -16944,14 +16946,14 @@ function _populateCryptoHeader(c){
   if(el('crd-fdv'))el('crd-fdv').textContent=c.fully_diluted_valuation?_fmtCryptoCap(c.fully_diluted_valuation):'—';
   if(el('crd-fdv-sub')&&c.fully_diluted_valuation&&mcap){
     const r=c.fully_diluted_valuation/mcap;
-    el('crd-fdv-sub').textContent=r>2?`⚠ ${r.toFixed(1)}× MCap — rischio diluzione`:'Fully Diluted';
+    el('crd-fdv-sub').textContent=r>2?`⚠ ${r.toFixed(1)}× MCap — ${_L({it:'rischio diluzione',en:'dilution risk'})}`:'Fully Diluted';
     if(r>2)el('crd-fdv-sub').style.color='var(--o)';
   }
   const supplyPct=c.max_supply?(c.circulating_supply/c.max_supply*100):null;
   if(el('crd-supply'))el('crd-supply').textContent=c.circulating_supply?new Intl.NumberFormat('it-IT',{notation:'compact',maximumFractionDigits:2}).format(c.circulating_supply):'—';
   if(el('crd-supply-sub')){
     if(!c.max_supply)el('crd-supply-sub').textContent=_L({it:'Supply illimitata ♾',en:'Unlimited supply ♾'});
-    else el('crd-supply-sub').textContent=supplyPct.toFixed(1)+'% del max emessa';
+    else el('crd-supply-sub').textContent=supplyPct.toFixed(1)+'% '+_L({it:'del max emessa',en:'of max issued'});
   }
   // Performance con barre
   const p24=chg,p7=c.price_change_percentage_7d_in_currency,p30=c.price_change_percentage_30d_in_currency,p1y=c.price_change_percentage_1y_in_currency;
@@ -17389,7 +17391,7 @@ function _quickAlertModal(sym, price){
     const target=parseFloat(document.getElementById('qm-alert-price')?.value);
     const condition=document.getElementById('qm-cond')?.value||'above';
     const label=document.getElementById('qm-alert-label')?.value.trim()||'';
-    if(!target||target<=0){_qmMsg('Inserisci un prezzo valido',true);return;}
+    if(!target||target<=0){_qmMsg(_L({it:'Inserisci un prezzo valido',en:'Enter a valid price'}),true);return;}
     alerts.push({sym,target,condition,label,addedAt:Date.now()});
     await saveAlerts();
     if(typeof renderAlerts==='function')renderAlerts();
