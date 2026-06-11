@@ -130,14 +130,20 @@ export default async function handler(req, res) {
       const toDate  = new Date().toISOString().slice(0, 10);
       const fromDate = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
 
-      // Fetch parallelo: Yahoo (newsCount=15 + quotesCount=1 per ricavare il nome) + Finnhub company news
-      const [yahooR, fhR] = await Promise.all([
+      const from30 = new Date(Date.now() - 30 * 864e5).toISOString().slice(0, 10);
+
+      // Fetch parallelo: Yahoo + Finnhub company news + Finnhub upgrade/downgrade
+      const [yahooR, fhNewsR, fhUpR] = await Promise.all([
         fetch(
           `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(sym)}&newsCount=15&quotesCount=1`,
           { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
         ),
         finnhubKey ? fetch(
           `https://finnhub.io/api/v1/company-news?symbol=${encodeURIComponent(baseSym)}&from=${fromDate}&to=${toDate}&token=${finnhubKey}`,
+          { signal: AbortSignal.timeout(5000) }
+        ) : Promise.resolve(null),
+        finnhubKey ? fetch(
+          `https://finnhub.io/api/v1/stock/upgrade-downgrade?symbol=${encodeURIComponent(baseSym)}&from=${from30}&token=${finnhubKey}`,
           { signal: AbortSignal.timeout(5000) }
         ) : Promise.resolve(null),
       ]);
@@ -163,24 +169,44 @@ export default async function handler(req, res) {
           time: n.providerPublishTime, thumbnail: n.thumbnail?.resolutions?.[0]?.url || null,
         }));
 
-      // Finnhub: news specifiche per ticker, già pertinenti per definizione
+      // Finnhub company news — già specifiche per ticker
       let fhNews = [];
-      if (fhR) {
-        const fhData = await fhR.json().catch(() => []);
+      if (fhNewsR) {
+        const fhData = await fhNewsR.json().catch(() => []);
         fhNews = (Array.isArray(fhData) ? fhData : []).slice(0, 5).map(n => ({
           title: n.headline, publisher: n.source, link: n.url,
           time: n.datetime, thumbnail: n.image || null,
         }));
       }
 
-      // Merge Finnhub (priorità) + Yahoo filtrato, dedup, ordina per data
+      // Finnhub upgrade/downgrade → item sintetici con isRating:true
+      let ratingNews = [];
+      if (fhUpR) {
+        const fhUpData = await fhUpR.json().catch(() => []);
+        const ACTION = { up:'⬆ Upgrade', down:'⬇ Downgrade', init:'🆕 Avvia copertura', reit:'➡ Conferma', main:'➡ Mantiene' };
+        ratingNews = (Array.isArray(fhUpData) ? fhUpData : []).slice(0, 6).map(item => {
+          const act = ACTION[item.action] || '📊 Rating';
+          const from = item.fromGrade ? ` — da ${item.fromGrade}` : '';
+          const to   = item.toGrade   ? ` → ${item.toGrade}`    : '';
+          return {
+            title: `${act} · ${item.company}${from}${to} [${baseSym}]`,
+            publisher: 'Analyst Ratings · Finnhub',
+            link: `https://finance.yahoo.com/quote/${baseSym}/analysis`,
+            time: item.gradeTime,
+            thumbnail: null,
+            isRating: true,
+          };
+        });
+      }
+
+      // Merge: rating primo (massima rilevanza), poi Finnhub news, poi Yahoo filtrato
       const seen = new Set();
-      const news = [...fhNews, ...yahooNews].filter(n => {
+      const news = [...ratingNews, ...fhNews, ...yahooNews].filter(n => {
         if (!n.title || !n.link) return false;
         const k = n.title.slice(0, 60).toLowerCase();
         if (seen.has(k)) return false;
         seen.add(k); return true;
-      }).sort((a, b) => (b.time || 0) - (a.time || 0)).slice(0, 8);
+      }).sort((a, b) => (b.time || 0) - (a.time || 0)).slice(0, 10);
 
       return res.json({ news });
     } catch (e) {
