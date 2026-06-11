@@ -15168,10 +15168,11 @@ async function loadPortfolioNews(){
   const symColors={};
   portfolio.forEach((item,i)=>{symColors[item.sym]=palette[i%palette.length];});
 
-  // Fetch parallelo per ticker
-  const results=await Promise.all(portfolio.map(async item=>{
+  // Fetch parallelo per ticker — passa il nome azienda per filtraggio rilevanza lato API
+  const results=await Promise.all(portfolio.map(async (item,i)=>{
     try{
-      const r=await fetch(`/api/quote?type=news&symbol=${encodeURIComponent(item.sym)}`);
+      const name=encodeURIComponent(_lastPortQuotes[i]?.name||'');
+      const r=await fetch(`/api/quote?type=news&symbol=${encodeURIComponent(item.sym)}&name=${name}`);
       const d=await r.json();
       return{sym:item.sym,news:(d.news||[]).slice(0,6).map(a=>({...a,sym:item.sym,col:symColors[item.sym]}))};
     }catch{return{sym:item.sym,news:[]};}

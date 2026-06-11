@@ -122,19 +122,66 @@ export default async function handler(req, res) {
   // NEWS endpoint — no symbol needed
   if (type === 'news') {
     try {
-      const query = symbol || 'stock+market+borsa';
-      const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}&newsCount=8&quotesCount=0`;
-      const r = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }
+      const sym = (symbol || '').trim();
+      if (!sym) return res.json({ news: [] });
+      // Rimuove suffisso borsa per Finnhub (ENI.MI → ENI, SAN.PA → SAN)
+      const baseSym = sym.replace(/\.[A-Z0-9]{1,4}$/i, '').toUpperCase();
+      const finnhubKey = process.env.FINNHUB_KEY || '';
+      const toDate  = new Date().toISOString().slice(0, 10);
+      const fromDate = new Date(Date.now() - 14 * 864e5).toISOString().slice(0, 10);
+
+      // Fetch parallelo: Yahoo (newsCount=15 + quotesCount=1 per ricavare il nome) + Finnhub company news
+      const [yahooR, fhR] = await Promise.all([
+        fetch(
+          `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(sym)}&newsCount=15&quotesCount=1`,
+          { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' }, signal: AbortSignal.timeout(6000) }
+        ),
+        finnhubKey ? fetch(
+          `https://finnhub.io/api/v1/company-news?symbol=${encodeURIComponent(baseSym)}&from=${fromDate}&to=${toDate}&token=${finnhubKey}`,
+          { signal: AbortSignal.timeout(5000) }
+        ) : Promise.resolve(null),
+      ]);
+
+      const yahooData = await yahooR.json().catch(() => ({}));
+
+      // Nome azienda: dal param opzionale ?name= (passato dal frontend) oppure dal risultato Yahoo
+      const rawName = (req.query.name || yahooData?.quotes?.[0]?.shortname || yahooData?.quotes?.[0]?.longname || '').toLowerCase();
+
+      // Costruisce termini di rilevanza: ticker base + parole significative del nome azienda
+      const STOP = new Set(['inc','corp','ltd','plc','group','holdings','the','and','for','spa','ag','sa','nv','se','asa','ab','co','de','di','il','la','le']);
+      const relTerms = [baseSym.toLowerCase()];
+      rawName.split(/[\s,\-\/\.]+/).forEach(w => {
+        if (w.length >= 4 && !STOP.has(w)) relTerms.push(w);
       });
-      const data = await r.json();
-      const news = (data?.news || []).map(n => ({
-        title: n.title,
-        publisher: n.publisher,
-        link: n.link,
-        time: n.providerPublishTime,
-        thumbnail: n.thumbnail?.resolutions?.[0]?.url || null,
-      }));
+
+      // Filtra Yahoo: il titolo deve contenere almeno un termine di rilevanza
+      const yahooNews = (yahooData?.news || [])
+        .filter(n => relTerms.some(t => (n.title || '').toLowerCase().includes(t)))
+        .slice(0, 6)
+        .map(n => ({
+          title: n.title, publisher: n.publisher, link: n.link,
+          time: n.providerPublishTime, thumbnail: n.thumbnail?.resolutions?.[0]?.url || null,
+        }));
+
+      // Finnhub: news specifiche per ticker, già pertinenti per definizione
+      let fhNews = [];
+      if (fhR) {
+        const fhData = await fhR.json().catch(() => []);
+        fhNews = (Array.isArray(fhData) ? fhData : []).slice(0, 5).map(n => ({
+          title: n.headline, publisher: n.source, link: n.url,
+          time: n.datetime, thumbnail: n.image || null,
+        }));
+      }
+
+      // Merge Finnhub (priorità) + Yahoo filtrato, dedup, ordina per data
+      const seen = new Set();
+      const news = [...fhNews, ...yahooNews].filter(n => {
+        if (!n.title || !n.link) return false;
+        const k = n.title.slice(0, 60).toLowerCase();
+        if (seen.has(k)) return false;
+        seen.add(k); return true;
+      }).sort((a, b) => (b.time || 0) - (a.time || 0)).slice(0, 8);
+
       return res.json({ news });
     } catch (e) {
       return res.status(500).json({ error: e.message });
