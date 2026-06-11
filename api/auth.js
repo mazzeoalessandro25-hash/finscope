@@ -96,7 +96,8 @@ export default async function handler(req, res) {
   // ── FORGOT PASSWORD ──
   if (action === 'forgot' && req.method === 'POST') {
     try {
-      const { email } = req.body;
+      const { email, lang } = req.body;
+      const isEN = lang === 'en';
       if (!email) return res.status(400).json({ error: 'Email richiesta' });
 
       const result = await clerk.users.getUserList({ emailAddress: [email], limit: 1 });
@@ -123,10 +124,26 @@ export default async function handler(req, res) {
       if (RESEND_KEY) {
         const resend = new Resend(RESEND_KEY);
         await resend.emails.send({
-          from: 'FinEdge <noreply@finscope.vercel.app>',
+          from: 'FinEdge <noreply@finedge.it>',
           to: email,
-          subject: 'Il tuo codice di reset password — FinEdge',
-          html: `
+          subject: isEN
+            ? `Your password reset code — FinEdge`
+            : `Il tuo codice di reset password — FinEdge`,
+          html: isEN ? `
+            <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#F0F4FA;border-radius:12px">
+              <div style="font-size:22px;font-weight:800;color:#1448A8;margin-bottom:8px">FinEdge</div>
+              <h2 style="font-size:18px;font-weight:700;color:#0F1C2E;margin-bottom:16px">Password reset</h2>
+              <p style="color:#4A6080;font-size:14px;margin-bottom:24px">
+                You requested a password reset. Use the code below — valid for 15 minutes.
+              </p>
+              <div style="background:#fff;border:1px solid #D8E2EF;border-radius:10px;padding:24px;text-align:center;margin-bottom:24px">
+                <div style="font-family:monospace;font-size:36px;font-weight:700;letter-spacing:8px;color:#1448A8">${code}</div>
+              </div>
+              <p style="color:#8499B0;font-size:12px">
+                If you did not request a password reset, ignore this email. Your account is safe.
+              </p>
+            </div>
+          ` : `
             <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:32px;background:#F0F4FA;border-radius:12px">
               <div style="font-size:22px;font-weight:800;color:#1448A8;margin-bottom:8px">FinEdge</div>
               <h2 style="font-size:18px;font-weight:700;color:#0F1C2E;margin-bottom:16px">Reset della password</h2>

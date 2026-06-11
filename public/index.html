@@ -7086,7 +7086,7 @@ async function submitForgotPw(){
   try{
     const r=await fetch('/api/auth?action=forgot',{
       method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email})
+      body:JSON.stringify({email,lang:currentLang})
     });
     const d=await r.json();
     if(!r.ok||!d.ok){
