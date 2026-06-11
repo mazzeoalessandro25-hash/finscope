@@ -4,7 +4,7 @@
   <!-- Homepage (about.html → /) -->
   <url>
     <loc>https://finedge.it/</loc>
-    <lastmod>2026-05-15</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -12,7 +12,7 @@
   <!-- App principale -->
   <url>
     <loc>https://finedge.it/index.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
@@ -20,7 +20,7 @@
   <!-- Demo -->
   <url>
     <loc>https://finedge.it/demo.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -28,7 +28,7 @@
   <!-- Chi siamo -->
   <url>
     <loc>https://finedge.it/chi-siamo.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -36,7 +36,7 @@
   <!-- Contatti -->
   <url>
     <loc>https://finedge.it/contatti.html</loc>
-    <lastmod>2026-05-15</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -44,7 +44,7 @@
   <!-- Affiliazioni (trasparenza) -->
   <url>
     <loc>https://finedge.it/legal/affiliazioni.html</loc>
-    <lastmod>2026-05-24</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -52,28 +52,28 @@
   <!-- Pagine legali -->
   <url>
     <loc>https://finedge.it/legal/privacy.html</loc>
-    <lastmod>2026-05-24</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <url>
     <loc>https://finedge.it/legal/cookie.html</loc>
-    <lastmod>2026-05-24</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 
   <url>
     <loc>https://finedge.it/legal/termini.html</loc>
-    <lastmod>2026-05-24</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
 
   <url>
     <loc>https://finedge.it/legal/disclaimer.html</loc>
-    <lastmod>2026-05-24</lastmod>
+    <lastmod>2026-06-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
