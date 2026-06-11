@@ -148,7 +148,12 @@ export default async function handler(req, res) {
         ) : Promise.resolve(null),
       ]);
 
-      const yahooData = await yahooR.json().catch(() => ({}));
+      // Await tutti e tre in parallelo — serve avere news prima di processare i rating
+      const [yahooData, fhRawData, fhUpData] = await Promise.all([
+        yahooR.json().catch(() => ({})),
+        fhNewsR ? fhNewsR.json().catch(() => []) : Promise.resolve([]),
+        fhUpR   ? fhUpR.json().catch(()   => []) : Promise.resolve([]),
+      ]);
 
       // Nome azienda: dal param opzionale ?name= (passato dal frontend) oppure dal risultato Yahoo
       const rawName = (req.query.name || yahooData?.quotes?.[0]?.shortname || yahooData?.quotes?.[0]?.longname || '').toLowerCase();
@@ -160,8 +165,9 @@ export default async function handler(req, res) {
         if (w.length >= 4 && !STOP.has(w)) relTerms.push(w);
       });
 
-      // Filtra Yahoo: il titolo deve contenere almeno un termine di rilevanza
-      const yahooNews = (yahooData?.news || [])
+      // Yahoo filtrato per rilevanza
+      const rawYahooNews = yahooData?.news || [];
+      const yahooNews = rawYahooNews
         .filter(n => relTerms.some(t => (n.title || '').toLowerCase().includes(t)))
         .slice(0, 6)
         .map(n => ({
@@ -170,34 +176,71 @@ export default async function handler(req, res) {
         }));
 
       // Finnhub company news — già specifiche per ticker
-      let fhNews = [];
-      if (fhNewsR) {
-        const fhData = await fhNewsR.json().catch(() => []);
-        fhNews = (Array.isArray(fhData) ? fhData : []).slice(0, 5).map(n => ({
-          title: n.headline, publisher: n.source, link: n.url,
-          time: n.datetime, thumbnail: n.image || null,
-        }));
+      const fhNews = (Array.isArray(fhRawData) ? fhRawData : []).slice(0, 5).map(n => ({
+        title: n.headline, publisher: n.source, link: n.url,
+        time: n.datetime, thumbnail: n.image || null,
+      }));
+
+      // Helper: estrae target price da headline — es. "raises PT to $250 from $220"
+      function extractPT(title) {
+        const s = title || '';
+        // "to $250 from $220" / "a €16 da €14"
+        const m1 = /\bto\b\s*[€$£]?\s*(\d{1,5}(?:[.,]\d{1,2})?)\s+\bfrom\b\s*[€$£]?\s*(\d{1,5}(?:[.,]\d{1,2})?)/i.exec(s);
+        if (m1) return { newPt: m1[1], oldPt: m1[2] };
+        // "from $220 to $250"
+        const m2 = /\bfrom\b\s*[€$£]?\s*(\d{1,5}(?:[.,]\d{1,2})?)\s+\bto\b\s*[€$£]?\s*(\d{1,5}(?:[.,]\d{1,2})?)/i.exec(s);
+        if (m2) return { newPt: m2[2], oldPt: m2[1] };
+        // "price target to $250" / "PT $250" / "target €50"
+        const m3 = /(?:price target|target price|\bpt\b|\btp\b|obiettivo)\s+(?:to|of|at|a|di)?\s*[€$£]?\s*(\d{1,5}(?:[.,]\d{1,2})?)/i.exec(s);
+        if (m3) return { newPt: m3[1], oldPt: null };
+        return null;
       }
 
-      // Finnhub upgrade/downgrade → item sintetici con isRating:true
-      let ratingNews = [];
-      if (fhUpR) {
-        const fhUpData = await fhUpR.json().catch(() => []);
-        const ACTION = { up:'⬆ Upgrade', down:'⬇ Downgrade', init:'🆕 Avvia copertura', reit:'➡ Conferma', main:'➡ Mantiene' };
-        ratingNews = (Array.isArray(fhUpData) ? fhUpData : []).slice(0, 6).map(item => {
-          const act = ACTION[item.action] || '📊 Rating';
-          const from = item.fromGrade ? ` — da ${item.fromGrade}` : '';
-          const to   = item.toGrade   ? ` → ${item.toGrade}`    : '';
-          return {
-            title: `${act} · ${item.company}${from}${to} [${baseSym}]`,
-            publisher: 'Analyst Ratings · Finnhub',
-            link: `https://finance.yahoo.com/quote/${baseSym}/analysis`,
-            time: item.gradeTime,
-            thumbnail: null,
-            isRating: true,
-          };
-        });
-      }
+      // Pool di tutte le headline per trovare il target price per ogni rating
+      const allHeadlines = [
+        ...fhNews.map(n => ({ title: n.title, link: n.link, time: n.time })),
+        ...rawYahooNews.map(n => ({ title: n.title, link: n.link, time: n.providerPublishTime })),
+      ];
+
+      // Finnhub upgrade/downgrade → item sintetici con target price
+      const ACTION = { up:'⬆ Upgrade', down:'⬇ Downgrade', init:'🆕 Avvia copertura', reit:'➡ Conferma', main:'➡ Mantiene' };
+      const isEU = /\.(MI|PA|DE|AS|MC|SW|BR|VI|LS|OL|ST|HE|CO)$/i.test(sym);
+      const currency = isEU ? '€' : '$';
+
+      const ratingNews = (Array.isArray(fhUpData) ? fhUpData : []).slice(0, 6).map(item => {
+        const act = ACTION[item.action] || '📊';
+        const fromGrade = item.fromGrade ? ` — da ${item.fromGrade}` : '';
+        const toGrade   = item.toGrade   ? ` → ${item.toGrade}`     : '';
+
+        // Cerca headline della stessa banca entro 3 giorni per estrarre il target
+        const coWord = (item.company || '').split(/\s+/)[0].toLowerCase();
+        const itemMs = (item.gradeTime || 0) * 1000;
+        const match = coWord.length > 2 ? allHeadlines.find(n =>
+          Math.abs((n.time * 1000) - itemMs) < 3 * 864e5 &&
+          (n.title || '').toLowerCase().includes(coWord)
+        ) : null;
+
+        let ptStr = '';
+        let link = `https://finance.yahoo.com/quote/${baseSym}/analysis`;
+        if (match) {
+          const pt = extractPT(match.title);
+          if (pt) {
+            ptStr = pt.oldPt
+              ? ` · 🎯 ${currency}${pt.oldPt} → ${currency}${pt.newPt}`
+              : ` · 🎯 ${currency}${pt.newPt}`;
+          }
+          if (match.link) link = match.link;
+        }
+
+        return {
+          title: `${act} · ${item.company}${fromGrade}${toGrade}${ptStr} [${baseSym}]`,
+          publisher: 'Analyst Ratings · Finnhub',
+          link,
+          time: item.gradeTime,
+          thumbnail: null,
+          isRating: true,
+        };
+      });
 
       // Merge: rating primo (massima rilevanza), poi Finnhub news, poi Yahoo filtrato
       const seen = new Set();
