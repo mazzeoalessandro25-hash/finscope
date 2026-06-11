@@ -5582,7 +5582,7 @@ async function loadMarketScreener(reset=true){
       renderMarketStocks();
     }
   }
-  if(loadBtn){loadBtn.disabled=!screenerHasMore;loadBtn.textContent=screenerHasMore?'Mostra altri 50':'Fine risultati';}
+  if(loadBtn){loadBtn.disabled=!screenerHasMore;loadBtn.textContent=screenerHasMore?_L({it:'Mostra altri 50',en:'Show 50 more'}):_L({it:'Fine risultati',en:'No more results'});}
   if(typeof renderScreenerWatchlist==='function') renderScreenerWatchlist();
   if(typeof renderAlerts==='function') renderAlerts();
   if(typeof renderScreenerAlertList==='function') renderScreenerAlertList();
@@ -7230,8 +7230,8 @@ async function saveWatchlist(){
 async function savePortfolio(){
   localStorage.setItem('fs_portfolio',JSON.stringify(portfolio));
   const statusEl=document.getElementById('port-sync-status');
-  if(statusEl)statusEl.textContent='↑ salvataggio...';
-  if(!currentToken){if(statusEl)statusEl.textContent='💾 locale';return;}
+  if(statusEl)statusEl.textContent=_L({it:'↑ salvataggio...',en:'↑ saving...'});
+  if(!currentToken){if(statusEl)statusEl.textContent=_L({it:'💾 locale',en:'💾 local'});return;}
   try{
     await fetch('/api/user?type=portfolio',{
       method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+currentToken},
@@ -7864,12 +7864,12 @@ function openPacEntryEdit(planId, entryDate){
       '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
         '<span style="font-size:11px;color:var(--t3);font-family:var(--fm)">'+entryDate+'</span>'+
         '<span style="font-size:11px;color:var(--t2)">'+c+entry.amount+' →</span>'+
-        '<label style="font-size:11px;color:var(--t2)">Prezzo reale:</label>'+
+        '<label style="font-size:11px;color:var(--t2)">'+_L({it:'Prezzo reale:',en:'Actual price:'})+'</label>'+
         '<input id="pac-edit-price-inp" type="number" step="0.0001" min="0.0001" value="'+entry.price.toFixed(4)+'" '+
           'style="width:100px;padding:4px 8px;border:1px solid var(--bd);border-radius:6px;'+
           'font-family:var(--fm);font-size:12px;background:var(--s2);color:var(--t)"/>'+
         '<span id="pac-edit-qty-prev" style="font-size:10px;color:var(--t3);font-family:var(--fm)">'+
-          '= '+(entry.qty||0).toFixed(4)+' quote'+
+          '= '+(entry.qty||0).toFixed(4)+_L({it:' quote',en:' units'})+
         '</span>'+
       '</div>'+
     '</td>'+
@@ -9167,16 +9167,16 @@ function schedulePortDailyRefresh() {
   const utcH = now.getUTCHours();
   const dateLbl = document.getElementById('port-daily-date-lbl');
   const badge   = document.getElementById('port-daily-refresh-badge');
-  const dateStr = now.toLocaleDateString('it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  const dateStr = now.toLocaleDateString(currentLang==='en'?'en-GB':'it-IT', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
   // US market: ~13:30–20:00 UTC | After-hours: 20:00–00:00 UTC
   if (utcH >= 20) {
     // After-hours: earnings reports period — refresh every 15 min
-    if (dateLbl) dateLbl.textContent = dateStr + ' · After-hours USA attivo';
-    if (badge)   { badge.style.display='inline'; badge.textContent='↻ Auto-refresh ogni 15 min (after-hours)'; }
+    if (dateLbl) dateLbl.textContent = dateStr + _L({it:' · After-hours USA attivo',en:' · US After-hours active'});
+    if (badge)   { badge.style.display='inline'; badge.textContent=_L({it:'↻ Auto-refresh ogni 15 min (after-hours)',en:'↻ Auto-refresh every 15 min (after-hours)'}); }
     _portDailyRefreshTimer = setInterval(() => refreshPortDailyAnalysis(), 15 * 60 * 1000);
   } else if (utcH >= 13) {
     // Market open
-    if (dateLbl) dateLbl.textContent = dateStr + ' · Mercato USA aperto';
+    if (dateLbl) dateLbl.textContent = dateStr + _L({it:' · Mercato USA aperto',en:' · US Market open'});
     if (badge)   badge.style.display='none';
   } else {
     // Pre-market / Europe hours
@@ -9538,11 +9538,11 @@ function renderBuyZone(sd,qd){
   const range=hi-lo;if(range<=0)return'';
   const pos=Math.max(0,Math.min(100,((cur-lo)/range)*100));
   let statusText,statusColor;
-  if(pos<=30){statusText='🟢 Buy Zone — Prezzo vicino ai minimi annuali';statusColor='var(--g)';}
-  else if(pos<=65){statusText='🟡 Fair Zone — Prezzo in area di equilibrio';statusColor='var(--o)';}
-  else{statusText='🔴 Top Zone — Prezzo vicino ai massimi annuali';statusColor='var(--r)';}
+  if(pos<=30){statusText=_L({it:'🟢 Buy Zone — Prezzo vicino ai minimi annuali',en:'🟢 Buy Zone — Price near 52-week lows'});statusColor='var(--g)';}
+  else if(pos<=65){statusText=_L({it:'🟡 Fair Zone — Prezzo in area di equilibrio',en:'🟡 Fair Zone — Price in equilibrium range'});statusColor='var(--o)';}
+  else{statusText=_L({it:'🔴 Top Zone — Prezzo vicino ai massimi annuali',en:'🔴 Top Zone — Price near 52-week highs'});statusColor='var(--r)';}
   return`<div class="bz-wrap">
-    <div class="bz-title">Buy Zone Indicator ✦ Posizione nel range 52 settimane</div>
+    <div class="bz-title">${_L({it:'Buy Zone Indicator ✦ Posizione nel range 52 settimane',en:'Buy Zone Indicator ✦ Position in 52-week range'})}</div>
     <div class="bz-track"><div class="bz-marker" style="left:${pos.toFixed(1)}%"></div></div>
     <div class="bz-labels"><span>Min 52W $${fmt(lo,2)}</span><span>Max 52W $${fmt(hi,2)}</span></div>
     <div class="bz-status" style="color:${statusColor}">${statusText} · ${pos.toFixed(0)}° percentile</div>
@@ -9874,7 +9874,7 @@ function renderAlerts(){
     if(cnt)cnt.textContent=_t('empty.alerts3');
     return;
   }
-  if(cnt)cnt.textContent=alerts.length+' alert attivi';
+  if(cnt)cnt.textContent=alerts.length+_L({it:' alert attivi',en:' active alerts'});
   el.innerHTML=alerts.map((a,i)=>`
     <div class="alert-item">
       ${logoHtmlSm(a.sym,a.sym)}
@@ -12562,7 +12562,7 @@ function _portShowImportDebug(rows,msg){
       </tr>`).join('')}
       </tbody>
     </table></div>
-    <div style="padding:8px 10px;font-size:11px;color:var(--t3)">💡 Usa il selettore <b>Formato</b> in alto per specificare il tipo, oppure assicurati che le colonne abbiano intestazioni come: <b>Ticker, Quantità, Prezzo, Data</b></div>`;
+    <div style="padding:8px 10px;font-size:11px;color:var(--t3)">${_L({it:'💡 Usa il selettore <b>Formato</b> in alto per specificare il tipo, oppure assicurati che le colonne abbiano intestazioni come: <b>Ticker, Quantità, Prezzo, Data</b>',en:'💡 Use the <b>Format</b> selector above to specify the type, or make sure columns have headers like: <b>Ticker, Quantity, Price, Date</b>'})}</div>`;
   }
   if(prev)prev.style.display='block';
   if(cnt)cnt.textContent=_t('import.tickers.debug');
@@ -12821,7 +12821,7 @@ async function confirmPortImport(){
   await savePortfolio();
   closePortImport();
   renderPortfolio();
-  showToast(`${added} titoli importati nel portafoglio`,'#059669');
+  showToast(_L({it:`${added} titoli importati nel portafoglio`,en:`${added} stocks imported to portfolio`}),'#059669');
 }
 function showToast(msg,color='#1A56C4'){
   let t=document.getElementById('_toast');
@@ -14918,12 +14918,12 @@ function renderTaxDashboard(){
       <div class="rb">
         <div class="rl">GUADAGNO NETTO</div>
         <div class="rv2 ${netGainEUR>=0?'g':'down'}" style="font-size:18px">${netGainEUR>=0?'+':''}€${fmt(netGainEUR,0)}</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">plusvalenze − minusvalenze</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${_L({it:'plusvalenze − minusvalenze',en:'capital gains − losses'})}</div>
       </div>
       <div class="rb">
-        <div class="rl">IMPOSTA STIMATA 26%</div>
+        <div class="rl">${_L({it:'IMPOSTA STIMATA 26%',en:'ESTIMATED TAX 26%'})}</div>
         <div class="rv2 down" style="font-size:18px">${estTaxEUR>0?'€'+fmt(estTaxEUR,0):'—'}</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${estTaxEUR>0?'se realizzi tutte le plusvalenze':'Nessuna imposta dovuta'}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${estTaxEUR>0?_L({it:'se realizzi tutte le plusvalenze',en:'if you realise all gains'}):_L({it:'Nessuna imposta dovuta',en:'No tax due'})}</div>
       </div>
     </div>
 
@@ -14931,36 +14931,36 @@ function renderTaxDashboard(){
     <!-- Barra imposta -->
     <div style="padding:12px 14px;background:var(--s2);border-radius:8px;border:1px solid var(--bd);margin-bottom:14px">
       <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:11px;margin-bottom:6px">
-        <span style="color:var(--t2)">Guadagno netto (€)</span>
+        <span style="color:var(--t2)">${_L({it:'Guadagno netto (€)',en:'Net gain (€)'})}</span>
         <span style="font-weight:700;color:var(--t)">€${fmt(netGainEUR,0)}</span>
       </div>
       <div style="height:12px;background:var(--g);border-radius:10px;overflow:hidden;position:relative">
         <div style="height:12px;width:26%;background:#DC2626;border-radius:0 10px 10px 0;position:absolute;right:0"></div>
       </div>
       <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:10px;margin-top:5px">
-        <span style="color:var(--g)">■ Netto dopo tasse: €${fmt(netAfterTaxEUR,0)} (74%)</span>
-        <span style="color:var(--r)">■ Imposta: €${fmt(estTaxEUR,0)} (26%)</span>
+        <span style="color:var(--g)">■ ${_L({it:'Netto dopo tasse',en:'After-tax net'})}: €${fmt(netAfterTaxEUR,0)} (74%)</span>
+        <span style="color:var(--r)">■ ${_L({it:'Imposta',en:'Tax'})}: €${fmt(estTaxEUR,0)} (26%)</span>
       </div>
     </div>`:''}
 
     ${hasLoss&&hasGain?`
     <!-- Tax-Loss Harvesting -->
     <div style="padding:12px 14px;background:var(--o2);border:1px solid #FCD34D;border-radius:8px;border-left:3px solid var(--o);margin-bottom:14px">
-      <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:6px">💡 Opportunità Tax-Loss Harvesting</div>
+      <div style="font-size:12px;font-weight:700;color:#92400E;margin-bottom:6px">💡 ${_L({it:'Opportunità Tax-Loss Harvesting',en:'Tax-Loss Harvesting Opportunity'})}</div>
       <div style="font-size:11px;color:#92400E;line-height:1.6;font-family:var(--fm)">
-        Hai <strong>${rows.filter(r=>r.pnlEUR<0).length} posizioni in perdita</strong> (totale -€${fmt(totalLossEUR,0)}) che puoi realizzare per compensare le plusvalenze.
-        Risparmio fiscale stimato: <strong>€${fmt(Math.min(totalLossEUR,totalGainEUR)*TAX,0)}</strong>.
-        Le minusvalenze sono utilizzabili per i successivi <strong>4 anni fiscali</strong> (Regime Dichiarativo/Amministrato).
+        ${_L({it:`Hai <strong>${rows.filter(r=>r.pnlEUR<0).length} posizioni in perdita</strong> (totale -€${fmt(totalLossEUR,0)}) che puoi realizzare per compensare le plusvalenze.`,en:`You have <strong>${rows.filter(r=>r.pnlEUR<0).length} losing positions</strong> (total -€${fmt(totalLossEUR,0)}) you can realise to offset capital gains.`})}
+        ${_L({it:`Risparmio fiscale stimato: <strong>€${fmt(Math.min(totalLossEUR,totalGainEUR)*TAX,0)}</strong>.`,en:`Estimated tax saving: <strong>€${fmt(Math.min(totalLossEUR,totalGainEUR)*TAX,0)}</strong>.`})}
+        ${_L({it:'Le minusvalenze sono utilizzabili per i successivi <strong>4 anni fiscali</strong> (Regime Dichiarativo/Amministrato).',en:'Losses can be used to offset gains for the following <strong>4 tax years</strong> (Administered/Declaratory regime).'})}
       </div>
     </div>`:''}
 
     <!-- Dettaglio per titolo -->
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo (P&amp;L convertito in €)</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${_L({it:'Dettaglio per titolo (P&L convertito in €)',en:'Per-holding detail (P&L converted to €)'})}</div>
     ${sortedRows.map(r=>`
     <div class="tax-row">
       <div>
         <div style="font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)">${r.sym}</div>
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">${r.qty} az · ${r.cur}${fmt(r.p,r.p<10?3:2)}${!r.isEUR?` (€${fmt(r.p/fxRate,r.p/fxRate<10?3:2)})`:''}  · costo €${fmt(r.invEUR,0)}</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm)">${r.qty} ${_L({it:'az',en:'sh'})} · ${r.cur}${fmt(r.p,r.p<10?3:2)}${!r.isEUR?` (€${fmt(r.p/fxRate,r.p/fxRate<10?3:2)})`:''}  · ${_L({it:'costo',en:'cost'})} €${fmt(r.invEUR,0)}</div>
       </div>
       <div><span class="tax-badge ${r.isGain?'gain':'loss'}">${r.isGain?'PLUS':'MINUS'}</span></div>
       <div style="text-align:right">
@@ -14968,13 +14968,13 @@ function renderTaxDashboard(){
         <div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${r.pnlPct>=0?'+':''}${fmt(r.pnlPct,1)}%${!r.isEUR?` · ${r.cur}${fmt(r.pnl,0)}`:''}  </div>
       </div>
       <div style="text-align:right">
-        ${r.isGain?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;color:var(--r)">-€${fmt(r.taxEUR,0)} imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">se realizzi oggi</div>`:`<div style="font-family:var(--fm);font-size:11px;color:var(--g)">Nessuna imposta</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">compensazione 4 anni</div>`}
+        ${r.isGain?`<div style="font-family:var(--fm);font-size:11px;font-weight:600;color:var(--r)">-€${fmt(r.taxEUR,0)} ${_L({it:'imposta',en:'tax'})}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${_L({it:'se realizzi oggi',en:'if realised today'})}</div>`:`<div style="font-family:var(--fm);font-size:11px;color:var(--g)">${_L({it:'Nessuna imposta',en:'No tax'})}</div><div style="font-size:9px;color:var(--t3);font-family:var(--fm)">${_L({it:'compensazione 4 anni',en:'4-year offset'})}</div>`}
       </div>
     </div>`).join('')}
 
     <!-- Export CSV -->
     <div style="display:flex;justify-content:flex-end;margin-top:16px;margin-bottom:12px">
-      <button onclick="exportTaxCSV()" style="background:var(--b3);color:var(--b);border:1px solid var(--b);border-radius:8px;padding:7px 14px;font-size:11px;font-family:var(--fm);font-weight:600;cursor:pointer">⬇ Scarica riepilogo fiscale CSV</button>
+      <button onclick="exportTaxCSV()" style="background:var(--b3);color:var(--b);border:1px solid var(--b);border-radius:8px;padding:7px 14px;font-size:11px;font-family:var(--fm);font-weight:600;cursor:pointer">⬇ ${_L({it:'Scarica riepilogo fiscale CSV',en:'Download tax summary CSV'})}</button>
     </div>
 
     <!-- Note legali -->
@@ -14983,7 +14983,7 @@ function renderTaxDashboard(){
       · Aliquota capital gains su titoli esteri: <strong>26%</strong> (D.Lgs. 461/97 · art. 5 D.Lgs. 461/97)<br>
       · Minusvalenze compensano plusvalenze per i successivi <strong>4 anni fiscali</strong> (Regime Dichiarativo o Amministrato)<br>
       · Dividendi soggetti a ritenuta alla fonte <strong>26%</strong> (applicata direttamente dall'intermediario in regime amministrato)<br>
-      · Valori calcolati sui prezzi di mercato attuali — la situazione fiscale reale dipende dalle date di acquisto/vendita effettive<br>
+      · ${_L({it:'Valori calcolati sui prezzi di mercato attuali — la situazione fiscale reale dipende dalle date di acquisto/vendita effettive',en:'Values calculated on current market prices — actual tax liability depends on purchase/sale dates'})}<br>
       · ⚠ Queste sono stime indicative. Consulta un commercialista o consulente fiscale per la tua situazione specifica.
     </div>
   `;
@@ -16076,7 +16076,7 @@ function renderTransactionHistory(){
     ${_transactions.length>50?`<div style="padding:8px 0;font-size:10px;color:var(--t3);font-family:var(--fm);text-align:center">Ultime 50 di ${_transactions.length} transazioni</div>`:''}`;
 }
 function clearTransactionHistory(){
-  if(!confirm('Cancellare tutto lo storico transazioni?'))return;
+  if(!confirm(_L({it:'Cancellare tutto lo storico transazioni?',en:'Delete all transaction history?'})))return;
   _transactions=[];_saveTransactions();renderTransactionHistory();
 }
 
@@ -16435,8 +16435,8 @@ function pqNext(){
         '<span style="font-size:12px;font-family:var(--fm);color:'+p.color+';font-weight:700">'+_L({it:'Punteggio',en:'Score'})+': '+tot+' / '+maxScore+'</span>'+
       '</div>'+
       '<div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">'+
-        '<button onclick="closePQ();renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:12px 28px;background:'+p.color+';color:#fff;border:none;border-radius:10px;font-family:var(--fm);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px '+p.color+'40">Analizza il portafoglio →</button>'+
-        '<button onclick="openPQ()" style="padding:12px 18px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;font-family:var(--fm);font-size:12px;color:var(--t2);cursor:pointer">↺ Rifai il test</button>'+
+        '<button onclick="closePQ();renderPortAnalysis(portfolio,_lastPortQuotes)" style="padding:12px 28px;background:'+p.color+';color:#fff;border:none;border-radius:10px;font-family:var(--fm);font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px '+p.color+'40">'+_L({it:'Analizza il portafoglio →',en:'Analyse portfolio →'})+'</button>'+
+        '<button onclick="openPQ()" style="padding:12px 18px;background:var(--s2);border:1px solid var(--bd);border-radius:10px;font-family:var(--fm);font-size:12px;color:var(--t2);cursor:pointer">'+_L({it:'↺ Rifai il test',en:'↺ Redo the test'})+'</button>'+
       '</div>'+
     '</div>';
 }
@@ -17379,16 +17379,16 @@ function _quickPortfolioModal(sym, name, price, cat, currency){
 function _quickAlertModal(sym, price){
   if(typeof currentUser==='undefined'||!currentUser){openAuthModal?.();return;}
   const html=`
-    <div class="qm-title">🔔 Imposta Alert Prezzo</div>
+    <div class="qm-title">🔔 ${_L({it:'Imposta Alert Prezzo',en:'Set Price Alert'})}</div>
     <div class="qm-sub">${sym}</div>
-    <div class="qm-row"><div class="qm-lbl">Condizione</div>
+    <div class="qm-row"><div class="qm-lbl">${_L({it:'Condizione',en:'Condition'})}</div>
       <select class="qm-sel" id="qm-cond">
-        <option value="above">↑ Sopra (prezzo sale a)</option>
-        <option value="below">↓ Sotto (prezzo scende a)</option>
+        <option value="above">${_L({it:'↑ Sopra (prezzo sale a)',en:'↑ Above (price rises to)'})}</option>
+        <option value="below">${_L({it:'↓ Sotto (prezzo scende a)',en:'↓ Below (price falls to)'})}</option>
       </select>
     </div>
-    <div class="qm-row"><div class="qm-lbl">Prezzo target</div><input class="qm-inp" id="qm-alert-price" type="number" value="${price||''}" min="0" step="any" autofocus></div>
-    <div class="qm-row"><div class="qm-lbl">Nota (opzionale)</div><input class="qm-inp" id="qm-alert-label" type="text" placeholder="es. Target profitto"></div>`;
+    <div class="qm-row"><div class="qm-lbl">${_L({it:'Prezzo target',en:'Target price'})}</div><input class="qm-inp" id="qm-alert-price" type="number" value="${price||''}" min="0" step="any" autofocus></div>
+    <div class="qm-row"><div class="qm-lbl">${_L({it:'Nota (opzionale)',en:'Note (optional)'})}</div><input class="qm-inp" id="qm-alert-label" type="text" placeholder="${_L({it:'es. Target profitto',en:'e.g. Profit target'})}"></div>`;
   openQM(html, async ()=>{
     const target=parseFloat(document.getElementById('qm-alert-price')?.value);
     const condition=document.getElementById('qm-cond')?.value||'above';
