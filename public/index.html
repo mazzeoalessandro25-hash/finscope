@@ -8814,255 +8814,156 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
   const tot = assets.length;
   const absPct = Math.abs(totalChgPct).toFixed(2);
   const _fxR = _lastFxRate||1.08;
-  const totalChgEUR = totalChgUSD / _fxR;
-  const absEUR = Math.abs(totalChgEUR).toFixed(0);
-  const date = new Date().toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'});
+  const absEUR = Math.abs(totalChgUSD/_fxR).toFixed(0);
+  const s = v=>`${v>=0?'+':''}${v.toFixed(2)}%`;
+  const s1 = v=>`${v>=0?'+':''}${v.toFixed(1)}%`;
 
-  // ── Dati indici ──
-  const sp=indicesMap['^GSPC'], nq=indicesMap['^IXIC'], dj=indicesMap['^DJI'];
-  const gc=indicesMap['GC=F'], cl=indicesMap['CL=F'];
+  // Dati indici
+  const sp=indicesMap['^GSPC'],nq=indicesMap['^IXIC'],dj=indicesMap['^DJI'],gc=indicesMap['GC=F'],cl=indicesMap['CL=F'];
   const idxChg=d=>d?.price&&d?.prev?(d.price-d.prev)/d.prev*100:null;
-  const spC=idxChg(sp), nqC=idxChg(nq), djC=idxChg(dj), gcC=idxChg(gc), clC=idxChg(cl);
+  const spC=idxChg(sp),nqC=idxChg(nq),djC=idxChg(dj),gcC=idxChg(gc),clC=idxChg(cl);
   const equityVals=[spC,nqC,djC].filter(v=>v!=null);
   const avgIdx=equityVals.length?equityVals.reduce((a,b)=>a+b,0)/equityVals.length:0;
-  const s=v=>`${v>=0?'+':''}${v.toFixed(2)}%`;
 
-  // ── SEZIONE 1: Contesto di mercato ──
+  // ── SEZIONE 1: Cosa succede oggi ──
   let macro='';
-
-  // Riga dati chiave indici (testo inline, no bullet)
-  if(equityVals.length||gcC!=null||clC!=null){
-    const _kdi=[];
-    if(spC!=null&&sp?.price)  _kdi.push(`S&P 500 <strong>${fmt(sp.price,0)} pt</strong> (${s(spC)})`);
-    if(nqC!=null&&nq?.price)  _kdi.push(`Nasdaq <strong>${fmt(nq.price,0)} pt</strong> (${s(nqC)})`);
-    if(djC!=null&&dj?.price)  _kdi.push(`Dow <strong>${fmt(dj.price,0)} pt</strong> (${s(djC)})`);
-    if(gcC!=null&&gc?.price)  _kdi.push(`Oro <strong>$${fmt(gc.price,1)}</strong> (${s(gcC)})`);
-    if(clC!=null&&cl?.price)  _kdi.push(`Petrolio <strong>$${fmt(cl.price,1)}</strong> (${s(clC)})`);
-    if(_lastFxRate) _kdi.push(`EUR/USD <strong>${fmt(_lastFxRate,4)}</strong>`);
-    if(_kdi.length) macro+=_kdi.join(' · ')+'\n';
-  }
-
-  // Sentimento generale con lettura più ampia
+  // Frase 1: indici principali
+  const _idxParts=[];
+  if(spC!=null) _idxParts.push(`S&P 500 <strong>${s(spC)}</strong>`);
+  if(nqC!=null) _idxParts.push(`Nasdaq <strong>${s(nqC)}</strong>`);
+  if(djC!=null) _idxParts.push(`Dow <strong>${s(djC)}</strong>`);
+  if(_idxParts.length) macro+=_idxParts.join(', ')+'. ';
+  // Frase 2: tono di mercato
   if(equityVals.length){
-    if(avgIdx>1.5)       macro+=_L({it:'La seduta odierna è stata chiaramente dominata dagli acquirenti: i principali indici azionari hanno messo a segno guadagni consistenti, con un sentiment di mercato decisamente orientato al rischio. Giornate di questo tipo riflettono solitamente una combinazione di dati macro favorevoli, aspettative positive sugli utili aziendali o una riduzione delle tensioni geopolitiche. ',en:'Today\'s session was clearly dominated by buyers: major equity indices posted consistent gains, with market sentiment decidedly risk-on. Days like this typically reflect a combination of favorable macro data, positive earnings expectations, or a reduction in geopolitical tensions. '});
-    else if(avgIdx>0.5)  macro+=_L({it:'I mercati azionari hanno archiviato una seduta positiva, con acquisti prevalenti su più fronti. Il tono complessivo è stato costruttivo, anche se la progressione è rimasta contenuta rispetto ai movimenti più marcati visti in altre sedute. In queste fasi di rialzo moderato il mercato tende a consolidare i livelli raggiunti senza prendere posizioni direzionali troppo nette. ',en:'Equity markets closed a positive session, with buying prevailing across multiple fronts. The overall tone was constructive, though gains remained contained compared to more pronounced moves seen in other sessions. In these phases of moderate upside, the market tends to consolidate levels reached without taking strong directional positions. '});
-    else if(avgIdx>0.1)  macro+=_L({it:'Una giornata moderatamente positiva, senza grandi accelerazioni ma con il mercato che ha mantenuto un bias rialzista. In assenza di catalizzatori forti, gli investitori hanno preferito muoversi con cautela, consolidando le posizioni esistenti piuttosto che aprirne di nuove. ',en:'A moderately positive day, without major acceleration but with the market maintaining a bullish bias. In the absence of strong catalysts, investors preferred to move cautiously, consolidating existing positions rather than opening new ones. '});
-    else if(avgIdx>-0.1) macro+=_L({it:'I mercati hanno navigato in acque incerte nella seduta odierna, chiudendo sostanzialmente invariati. L\'assenza di una direzione definita suggerisce un momento di equilibrio tra compratori e venditori, tipico delle fasi di attesa prima di dati macroeconomici rilevanti o di decisioni delle banche centrali. ',en:'Markets navigated uncertain waters in today\'s session, closing largely unchanged. The absence of a defined direction suggests a moment of balance between buyers and sellers, typical of waiting phases before key macro data or central bank decisions. '});
-    else if(avgIdx>-0.5) macro+=_L({it:'Seduta in rosso per i mercati azionari, con pressioni di vendita che hanno prevalso durante la giornata. La correzione, pur limitata, riflette un aumento dell\'incertezza degli investitori. In queste fasi è normale osservare una rotazione verso asset più difensivi o una riduzione temporanea dell\'esposizione al rischio. ',en:'A negative session for equity markets, with selling pressure prevailing throughout the day. The correction, though limited, reflects a rise in investor uncertainty. In these phases it is normal to observe a rotation toward more defensive assets or a temporary reduction in risk exposure. '});
-    else if(avgIdx>-1.5) macro+=_L({it:'I mercati hanno accusato un calo significativo nella seduta odierna, con gli investitori che hanno preferito alleggerire le posizioni. Movimenti di questa entità segnalano solitamente una reazione a notizie specifiche o a un deterioramento del sentiment generale: vale la pena monitorare il flusso di notizie nelle prossime ore per capire se si tratta di una correzione tecnica o di un cambio di tendenza. ',en:'Markets suffered a significant decline in today\'s session, with investors preferring to reduce positions. Moves of this magnitude typically signal a reaction to specific news or deterioration of general sentiment: it is worth monitoring the news flow in the coming hours to determine whether this is a technical correction or a trend change. '});
-    else                  macro+=_L({it:'Giornata da dimenticare per i mercati globali: le vendite sono state generalizzate e intense, con tutti i principali indici che hanno chiuso con perdite rilevanti. In queste sessioni di forte risk-off gli investitori tendono a liquidare le posizioni più rischiose e a rifugiarsi in asset sicuri come oro, dollaro e obbligazioni governative. È importante non farsi prendere dall\'emotività e leggere il movimento nel contesto del trend di più lungo periodo. ',en:'A day to forget for global markets: selling was widespread and intense, with all major indices closing with significant losses. In these strong risk-off sessions investors tend to liquidate riskier positions and seek refuge in safe-haven assets such as gold, the dollar, and government bonds. It is important not to let emotion take over and to read the move in the context of the longer-term trend. '});
+    if(avgIdx>1)        macro+=_L({it:'Giornata chiaramente positiva: i compratori hanno dominato su tutti i fronti.',en:'Clearly positive day: buyers dominated across the board.'});
+    else if(avgIdx>0.1) macro+=_L({it:'Tono costruttivo, mercato in rialzo moderato.',en:'Constructive tone, moderate market gains.'});
+    else if(avgIdx>-0.1)macro+=_L({it:'Seduta piatta, nessuna direzione prevalente.',en:'Flat session, no prevailing direction.'});
+    else if(avgIdx>-1)  macro+=_L({it:'Giornata negativa, pressioni di vendita prevalenti.',en:'Negative day, selling pressure prevailing.'});
+    else                macro+=_L({it:'Forte correzione: vendite generalizzate su tutti i principali indici.',en:'Sharp correction: broad selling across all major indices.'});
+    macro+=' ';
   }
-
-  // Divergenza Nasdaq vs S&P: tech vs mercato ampio
-  if(spC!=null && nqC!=null){
-    const diff=nqC-spC;
-    if(diff>0.8)       macro+=_L({it:`Si nota una chiara leadership del comparto tecnologico: il Nasdaq (${s(nqC)}) ha sovraperformato l'S&P 500 (${s(spC)}) di circa ${Math.abs(diff).toFixed(1)} punti percentuali, segnalando un appetite per i titoli growth e tech in particolare. `,en:`There is clear leadership from the tech sector: Nasdaq (${s(nqC)}) outperformed S&P 500 (${s(spC)}) by about ${Math.abs(diff).toFixed(1)} percentage points, signaling appetite for growth and tech stocks in particular. `});
-    else if(diff>0.3)  macro+=_L({it:`Il settore tecnologico ha mostrato una certa forza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) leggermente meglio dell'S&P 500 (${s(spC)}). `,en:`The tech sector showed relative strength versus the broad market, with Nasdaq (${s(nqC)}) slightly ahead of S&P 500 (${s(spC)}). `});
-    else if(diff<-0.8) macro+=_L({it:`Interessante la divergenza tra indici: il Nasdaq (${s(nqC)}) ha sottoperformato in modo marcato rispetto all'S&P 500 (${s(spC)}), suggerendo pressioni specifiche sui titoli tecnologici o una rotazione verso settori più ciclici e value. `,en:`Notable divergence between indices: Nasdaq (${s(nqC)}) significantly underperformed S&P 500 (${s(spC)}), suggesting specific pressure on tech stocks or rotation toward more cyclical and value sectors. `});
-    else if(diff<-0.3) macro+=_L({it:`Il tech ha mostrato una leggera debolezza relativa rispetto al mercato ampio, con il Nasdaq (${s(nqC)}) in ritardo sull'S&P 500 (${s(spC)}). `,en:`Tech showed slight relative weakness versus the broad market, with Nasdaq (${s(nqC)}) trailing S&P 500 (${s(spC)}). `});
-    else if(equityVals.length>=2) macro+=_L({it:`S&P 500 (${s(spC)}) e Nasdaq (${s(nqC)}) si sono mossi in modo coerente, senza divergenze significative tra i vari comparti di mercato. `,en:`S&P 500 (${s(spC)}) and Nasdaq (${s(nqC)}) moved coherently, without significant divergences between market segments. `});
+  // Frase 3: osservazioni chiave (tech/ciclici, commodities)
+  const _obs=[];
+  if(spC!=null&&nqC!=null){
+    const d=nqC-spC;
+    if(d>0.6)  _obs.push(_L({it:'Tech in testa',en:'Tech leading'}));
+    else if(d<-0.6) _obs.push(_L({it:'Settori ciclici avanti sul tech',en:'Cyclicals ahead of tech'}));
   }
-
-  // Dow Jones: cicliche vs tech
-  if(djC!=null && nqC!=null && spC!=null){
-    const diffDJ=djC-nqC;
-    if(diffDJ>0.8) macro+=_L({it:`Il Dow Jones (${s(djC)}) ha guidato i rialzi rispetto al Nasdaq, segnale di una preferenza degli investitori per i settori industriali e finanziari rispetto al tech. `,en:`The Dow Jones (${s(djC)}) led gains relative to the Nasdaq, signaling investor preference for industrial and financial sectors over tech. `});
-    else if(diffDJ<-0.8) macro+=_L({it:`Le blue chip industriali del Dow Jones (${s(djC)}) hanno faticato più del tech, una dinamica che spesso accompagna fasi di mercato a forte componente speculativa o di crescita. `,en:`The Dow Jones (${s(djC)}) industrial blue chips struggled more than tech, a dynamic that often accompanies market phases with a strong speculative or growth component. `});
+  if(gcC!=null&&Math.abs(gcC)>0.4){
+    _obs.push(`${_L({it:'Oro',en:'Gold'})} <strong>${s(gcC)}</strong>`+(gcC>0&&avgIdx<0?' (bene rifugio)':gcC<0&&avgIdx>0?' (risk-on)':''));
   }
-
-  // Oro e Petrolio: lettura macro approfondita
-  if(gcC!=null || clC!=null){
-    let commodityLine='';
-    if(gcC!=null){
-      if(gcC>1 && avgIdx<0)       commodityLine=_L({it:`L'oro ha registrato un apprezzamento rilevante (${s(gcC)}), confermando la sua natura di bene rifugio in una giornata difficile per gli azionari: quando gli investitori hanno paura, l'oro sale. `,en:`Gold posted significant appreciation (${s(gcC)}), confirming its safe-haven nature on a difficult day for equities: when investors are fearful, gold rises. `});
-      else if(gcC>0.5 && avgIdx<0) commodityLine=_L({it:`Il rialzo dell'oro (${s(gcC)}) in una giornata negativa per le azioni riflette una classica rotazione difensiva. Gli investitori cercano protezione in asset percepiti come sicuri. `,en:`Gold's rise (${s(gcC)}) on a negative day for equities reflects a classic defensive rotation. Investors are seeking protection in assets perceived as safe. `});
-      else if(gcC>0.5 && avgIdx>0) commodityLine=_L({it:`Degno di nota il rialzo dell'oro (${s(gcC)}) anche in una giornata positiva per le azioni: questo movimento inusuale potrebbe segnalare preoccupazioni sottostanti legate all'inflazione o a rischi geopolitici non ancora pienamente prezzati dal mercato. `,en:`Noteworthy is gold's rise (${s(gcC)}) even on a positive day for equities: this unusual move may signal underlying concerns about inflation or geopolitical risks not yet fully priced by the market. `});
-      else if(gcC<-0.5 && avgIdx>0.5) commodityLine=_L({it:`L'oro ha ceduto terreno (${s(gcC)}) mentre le azioni salivano: una dinamica classica di risk-on, con il capitale che scorre dagli asset rifugio verso quelli più rischiosi. `,en:`Gold gave ground (${s(gcC)}) while equities rose: a classic risk-on dynamic, with capital flowing from safe-haven assets toward riskier ones. `});
-      else if(Math.abs(gcC)>0.3) commodityLine=_L({it:`L'oro si è mosso di ${s(gcC)}, un dato da tenere d'occhio come indicatore del sentiment macro complessivo. `,en:`Gold moved by ${s(gcC)}, a figure worth watching as an indicator of overall macro sentiment. `});
-    }
-    if(clC!=null){
-      if(clC>1.5)       commodityLine+=_L({it:`Il petrolio ha avuto un'accelerazione decisa (${s(clC)}): un rialzo energetico di questa portata può alimentare timori inflazionistici e comprimere i margini delle aziende più energivore. `,en:`Oil surged sharply (${s(clC)}): an energy rally of this magnitude can fuel inflationary fears and compress margins for energy-intensive companies. `});
-      else if(clC>0.5)  commodityLine+=_L({it:`Il petrolio è salito moderatamente (${s(clC)}), segnalando aspettative di domanda sostenuta o tensioni sull'offerta. `,en:`Oil rose moderately (${s(clC)}), signaling expectations of sustained demand or supply tensions. `});
-      else if(clC<-1.5) commodityLine+=_L({it:`Il petrolio ha perso quota in modo significativo (${s(clC)}): una buona notizia per il fronte inflazionistico, che potrebbe ridurre la pressione sui costi energetici e allentare la stretta sulle politiche monetarie. `,en:`Oil fell significantly (${s(clC)}): good news on the inflation front, which could reduce pressure on energy costs and ease monetary policy tightening. `});
-      else if(clC<-0.5) commodityLine+=_L({it:`Il petrolio ha ceduto (${s(clC)}), contribuendo a un quadro macro leggermente più favorevole sul versante dell'inflazione. `,en:`Oil gave ground (${s(clC)}), contributing to a slightly more favorable macro picture on the inflation front. `});
-    }
-    macro+=commodityLine;
-  }
+  if(clC!=null&&Math.abs(clC)>0.8) _obs.push(`${_L({it:'Petrolio',en:'Oil'})} <strong>${s(clC)}</strong>`);
+  if(_lastFxRate) _obs.push(`EUR/USD <strong>${_fxR.toFixed(4)}</strong>`);
+  if(_obs.length) macro+=_obs.join(' · ')+'.';
 
   // ── SEZIONE 2: Il tuo portafoglio ──
   let portText='';
-
-  // KPI bullets sintetici
-  {
-    const _fxR2=_fxR;
-    const _valEUR2=totalValUSD>0?totalValUSD/_fxR2:null;
-    const _invUSD2=(typeof portfolio!=='undefined'&&portfolio.length)?portfolio.reduce((s,it)=>s+(it.qty*(it.buyPrice||0)*(it.currency==='EUR'?_fxR2:1)),0):0;
-    const _invEUR2=_invUSD2/_fxR2;
-    const _pnlEUR2=_valEUR2!=null?_valEUR2-_invEUR2:null;
-    const _pnlPct2=_invEUR2>0&&_pnlEUR2!=null?_pnlEUR2/_invEUR2*100:null;
-    const _todayEUR2=totalChgUSD/_fxR2;
-    // Riga KPI inline (no bullet)
-    const _kpiParts=[];
-    if(_valEUR2!=null) _kpiParts.push(_L({it:`Valore <strong>€${fmt(_valEUR2,0)}</strong>${_invEUR2>0?' · Investito €'+fmt(_invEUR2,0):''}`,en:`Value <strong>€${fmt(_valEUR2,0)}</strong>${_invEUR2>0?' · Invested €'+fmt(_invEUR2,0):''}`}));
-    if(_pnlEUR2!=null) _kpiParts.push(_L({it:`P&L totale <strong>${_pnlEUR2>=0?'+':'−'}€${fmt(Math.abs(_pnlEUR2),0)}</strong> (${_pnlEUR2>=0?'+':'−'}${fmt(_pnlPct2||0,1)}%)`,en:`Total P&L <strong>${_pnlEUR2>=0?'+':'−'}€${fmt(Math.abs(_pnlEUR2),0)}</strong> (${_pnlEUR2>=0?'+':'−'}${fmt(_pnlPct2||0,1)}%)`}));
-    _kpiParts.push(_L({it:`Oggi <strong>${up?'+':'−'}€${fmt(Math.abs(_todayEUR2),0)}</strong> · ${nUp}/${tot} in verde`,en:`Today <strong>${up?'+':'−'}€${fmt(Math.abs(_todayEUR2),0)}</strong> · ${nUp}/${tot} in the green`}));
-    if(best) _kpiParts.push(`Top: <strong>${best.sym}</strong> ${best.chgPct>=0?'+':''}${best.chgPct.toFixed(1)}%`);
-    if(worst&&worst.sym!==best?.sym&&Math.abs(worst.chgPct)>0.3) _kpiParts.push(`Worst: <strong>${worst.sym}</strong> ${worst.chgPct.toFixed(1)}%`);
-    portText+=_kpiParts.join(' · ')+'\n';
+  // Frase 1: risultato del giorno
+  portText+=_L({
+    it:`Il portafoglio ${up?'guadagna':'perde'} <strong>${up?'+':'−'}€${absEUR}</strong> oggi (${up?'+':'−'}${absPct}%): <strong>${nUp} titol${nUp===1?'o':'i'} in verde</strong> e ${nDown} in rosso su ${tot}. `,
+    en:`Portfolio ${up?'gains':'loses'} <strong>${up?'+':'−'}€${absEUR}</strong> today (${up?'+':'−'}${absPct}%): <strong>${nUp} holding${nUp===1?'':'s'} in the green</strong> and ${nDown} in the red out of ${tot}. `
+  });
+  // Frase 2: miglior e peggior titolo
+  if(best&&tot>1){
+    portText+=_L({
+      it:`Miglior titolo: <strong>${best.sym}</strong> <strong style="color:#059669">${s1(best.chgPct)}</strong>`,
+      en:`Top performer: <strong>${best.sym}</strong> <strong style="color:#059669">${s1(best.chgPct)}</strong>`
+    });
+    if(worst&&worst.sym!==best.sym&&Math.abs(worst.chgPct)>0.2)
+      portText+=_L({it:` · peggiore: <strong>${worst.sym}</strong> <strong style="color:#DC2626">${s1(worst.chgPct)}</strong>`,en:` · worst: <strong>${worst.sym}</strong> <strong style="color:#DC2626">${s1(worst.chgPct)}</strong>`});
+    portText+='. ';
   }
-
-  // Apertura: variazione con interpretazione calibrata
-  if(Math.abs(totalChgPct)<0.3)
-    portText+=_L({it:`Il portafoglio ha chiuso la giornata pressoché invariato (${up?'+':'−'}${absPct}%, ${up?'+':'−'}€${absEUR}). In assenza di movimenti rilevanti, il valore complessivo rimane stabile: queste sedute di transizione sono normali e spesso precedono fasi più direzionali. `,en:`The portfolio closed the day virtually unchanged (${up?'+':'−'}${absPct}%, ${up?'+':'−'}€${absEUR}). In the absence of significant moves, overall value remains stable: these transitional sessions are normal and often precede more directional phases. `});
-  else if(up)
-    portText+=totalChgPct>2
-      ? _L({it:`Una seduta eccellente per il portafoglio, che ha guadagnato il ${absPct}% corrispondente a +€${absEUR}. Movimenti di questa entità su base giornaliera non sono frequenti e riflettono una combinazione favorevole di titoli in posizione. `,en:`An excellent session for the portfolio, which gained ${absPct}% equivalent to +€${absEUR}. Moves of this magnitude on a daily basis are uncommon and reflect a favorable combination of holdings. `})
-      : totalChgPct>1
-        ? _L({it:`Il portafoglio ha messo a segno una buona performance giornaliera: +${absPct}% pari a +€${absEUR}. Un risultato che rafforza il valore complessivo e conferma la bontà delle posizioni aperte. `,en:`The portfolio posted a good daily performance: +${absPct}% equal to +€${absEUR}. A result that strengthens overall value and confirms the quality of open positions. `})
-        : _L({it:`Il portafoglio chiude in territorio positivo con un progresso del ${absPct}% (+€${absEUR}). Un guadagno moderato ma coerente con il tono della seduta. `,en:`The portfolio closes in positive territory with a gain of ${absPct}% (+€${absEUR}). A moderate gain consistent with the session's tone. `});
-  else
-    portText+=totalChgPct<-2
-      ? _L({it:`Giornata difficile per il portafoglio, che subisce una flessione del ${absPct}% (−€${absEUR}). Perdite di questa entità in una singola seduta meritano attenzione, anche se è importante contestualizzarle nel trend di medio periodo prima di trarre conclusioni affrettate. `,en:`A difficult day for the portfolio, which suffered a decline of ${absPct}% (−€${absEUR}). Losses of this magnitude in a single session deserve attention, though it is important to contextualize them within the medium-term trend before drawing hasty conclusions. `})
-      : totalChgPct<-1
-        ? _L({it:`Il portafoglio registra un calo del ${absPct}% (−€${absEUR}) nella seduta odierna. Una correzione moderata che, se non accompagnata da un deterioramento dei fondamentali, rientra nella normale volatilità di mercato. `,en:`The portfolio recorded a decline of ${absPct}% (−€${absEUR}) in today's session. A moderate correction that, if not accompanied by deterioration in fundamentals, falls within normal market volatility. `})
-        : _L({it:`Leggera correzione per il portafoglio: −${absPct}% (−€${absEUR}). Un movimento contenuto che non altera in modo sostanziale il quadro complessivo. `,en:`Slight correction for the portfolio: −${absPct}% (−€${absEUR}). A contained move that does not substantially alter the overall picture. `});
-
-  // Ampiezza della performance: quanti titoli hanno partecipato
-  if(nUp===tot)
-    portText+=_L({it:`La performance è stata trasversale: tutti i ${tot} titoli in portafoglio hanno chiuso in verde, un segnale di forza ampia e non concentrata su un singolo nome. `,en:`Performance was broad-based: all ${tot} holdings closed in the green, a signal of broad strength not concentrated on a single name. `});
-  else if(nDown===tot)
-    portText+=_L({it:`Giornata uniforme in negativo: nessuna posizione è riuscita a portarsi in territorio positivo. Un'ampiezza così negativa suggerisce che la pressione di vendita ha coinvolto l'intero portafoglio, indipendentemente dalle caratteristiche dei singoli titoli. `,en:`A uniformly negative day: no position managed to move into positive territory. Such negative breadth suggests selling pressure affected the entire portfolio, regardless of individual holding characteristics. `});
-  else if(nUp>nDown)
-    portText+=_L({it:`${nUp} posizioni su ${tot} hanno terminato in rialzo, a testimonianza di una performance ampiamente condivisa anche se non universale. `,en:`${nUp} out of ${tot} positions ended higher, testament to a broadly shared performance even if not universal. `});
-  else
-    portText+=_L({it:`Solo ${nUp} posizion${nUp===1?'e':'i'} su ${tot} ha chiuso in positivo: la debolezza è stata diffusa, con ${nDown} titoli in calo a pesare sul risultato complessivo. `,en:`Only ${nUp} position${nUp===1?'':'s'} out of ${tot} closed positive: weakness was widespread, with ${nDown} holdings in decline weighing on the overall result. `});
-
-  // Concentrazione: quanto ha pesato il titolo migliore/peggiore
-  if(best && tot>1){
-    const bestShare=totalChgUSD!==0?Math.abs(best.chgUSD/totalChgUSD*100):0;
-    if(bestShare>60 && up)
-      portText+=_L({it:`Vale la pena notare che la maggior parte del guadagno odierno è riconducibile a ${best.sym}, che da solo ha generato circa il ${Math.round(bestShare)}% della variazione positiva: una concentrazione elevata che evidenzia la dipendenza del risultato da un singolo nome. `,en:`It is worth noting that most of today's gain is attributable to ${best.sym}, which alone generated about ${Math.round(bestShare)}% of the positive change: a high concentration that highlights dependence on a single name. `});
-    else if(bestShare>60 && !up && worst)
-      portText+=_L({it:`Il risultato negativo è fortemente influenzato da ${worst.sym}, che ha pesato per circa il ${Math.round(Math.abs(worst.chgUSD/totalChgUSD*100))}% sulla perdita complessiva. `,en:`The negative result is heavily influenced by ${worst.sym}, which accounted for about ${Math.round(Math.abs(worst.chgUSD/totalChgUSD*100))}% of the overall loss. `});
-  }
-
-  // Confronto col mercato con lettura più dettagliata
+  // Frase 3: confronto col mercato
   if(equityVals.length){
     const diff=totalChgPct-avgIdx;
-    if(diff>1)         portText+=_L({it:`Rispetto al mercato generale, il portafoglio ha sovraperformato di circa ${diff.toFixed(1)} punti percentuali: una differenza rilevante che premia la scelta dei titoli effettuata. `,en:`Relative to the broader market, the portfolio outperformed by about ${diff.toFixed(1)} percentage points: a significant gap that rewards the stock selection made. `});
-    else if(diff>0.3)  portText+=_L({it:`Il portafoglio ha fatto leggermente meglio del mercato generale (differenziale di ${diff.toFixed(1)}%), segnale di una composizione efficace per la giornata. `,en:`The portfolio did slightly better than the broader market (differential of ${diff.toFixed(1)}%), signaling an effective composition for the day. `});
-    else if(diff>-0.3) portText+=_L({it:`La performance del portafoglio è risultata allineata all'andamento generale degli indici, senza divergenze significative. `,en:`Portfolio performance was aligned with the general trend of indices, without significant divergences. `});
-    else if(diff>-1)   portText+=_L({it:`Il portafoglio ha leggermente sottoperformato il mercato di ${Math.abs(diff).toFixed(1)} punti percentuali: una divergenza contenuta, ma da monitorare se dovesse persistere nelle prossime sedute. `,en:`The portfolio slightly underperformed the market by ${Math.abs(diff).toFixed(1)} percentage points: a contained divergence, but worth monitoring if it persists in coming sessions. `});
-    else               portText+=_L({it:`Il portafoglio ha sottoperformato il mercato in modo marcato (−${Math.abs(diff).toFixed(1)}% rispetto agli indici): vale la pena analizzare quali posizioni hanno generato questa divergenza negativa. `,en:`The portfolio markedly underperformed the market (−${Math.abs(diff).toFixed(1)}% vs indices): it is worth analyzing which positions generated this negative divergence. `});
+    if(diff>1)         portText+=_L({it:`Sovraperformance di <strong>+${diff.toFixed(1)}pp</strong> rispetto agli indici.`,en:`Outperformed indices by <strong>+${diff.toFixed(1)}pp</strong>.`});
+    else if(diff>0.3)  portText+=_L({it:`Leggermente meglio del mercato generale (+${diff.toFixed(1)}pp).`,en:`Slightly ahead of the broader market (+${diff.toFixed(1)}pp).`});
+    else if(diff>-0.3) portText+=_L({it:'In linea con l\'andamento generale degli indici.',en:'In line with the general market trend.'});
+    else if(diff>-1)   portText+=_L({it:`Lieve sottoperformance rispetto al mercato (${diff.toFixed(1)}pp).`,en:`Slight underperformance vs market (${diff.toFixed(1)}pp).`});
+    else               portText+=_L({it:`Sottoperformance marcata (${diff.toFixed(1)}pp): vale la pena verificare le posizioni più deboli.`,en:`Marked underperformance (${diff.toFixed(1)}pp): worth reviewing the weakest positions.`});
   }
 
-  // ── SEZIONE 3: Titoli in evidenza (più testo per asset) ──
+  // ── SEZIONE 3: Titoli in evidenza ──
   let evidenzaText='';
   const discussed=new Set();
-  const commentAsset=(a,role)=>{
+  const _cmtAsset=(a)=>{
     if(!a||discussed.has(a.sym)) return '';
     discussed.add(a.sym);
     const assetUp=a.chgPct>=0;
-    const chgStr=`${assetUp?'+':''}${a.chgPct.toFixed(2)}%`;
-    const eurAbs=Math.abs(a.chgUSD/_fxR).toFixed(0);
-    const eurSign=a.chgUSD>=0?'+':'−';
-    const news=newsMap[a.sym]||[];
-    let comment='';
-    if(role==='best'){
-      comment=a.chgPct>3?_L({it:'Contributo determinante al portafoglio',en:'Decisive contribution to the portfolio'}):a.chgPct>1?_L({it:'Buon contributo positivo',en:'Good positive contribution'}):_L({it:'Leggero rialzo nella seduta',en:'Slight rise in the session'});
-    } else if(role==='worst'){
-      comment=a.chgPct<-3?_L({it:'Flessione rilevante, ha pesato sul risultato',en:'Significant decline, weighed on the result'}):a.chgPct<-1?_L({it:'Calo moderato che ha frenato la performance',en:'Moderate decline that held back performance'}):_L({it:'Piccola perdita giornaliera',en:'Small daily loss'});
-    } else {
-      comment=assetUp?_L({it:'Positivo nella seduta',en:'Positive in the session'}):_L({it:'In flessione nella seduta',en:'In decline in the session'});
-    }
+    const news=(newsMap[a.sym]||[])[0];
     let line=`• <strong>${a.sym}</strong>`;
     if(a.name&&a.name!==a.sym) line+=` (${a.name})`;
-    line+=`: <strong>${chgStr}</strong> (${eurSign}€${eurAbs}) — ${comment}`;
-    if(news[0]) line+=`. <em>"${news[0].title}"</em>`;
+    line+=`: <strong style="color:${assetUp?'#059669':'#DC2626'}">${assetUp?'+':''}${a.chgPct.toFixed(2)}%</strong>`;
+    if(news) line+=` — <em>"${news.title}"</em>`;
     return line+'\n';
   };
-
-  evidenzaText+=commentAsset(best,'best');
-  if(worst&&worst.sym!==best?.sym&&Math.abs(worst.chgPct)>0.2) evidenzaText+=commentAsset(worst,'worst');
+  evidenzaText+=_cmtAsset(best);
+  if(worst&&worst.sym!==best?.sym&&Math.abs(worst.chgPct)>0.2) evidenzaText+=_cmtAsset(worst);
   const third=sorted.find(a=>!discussed.has(a.sym)&&Math.abs(a.chgPct)>0.4);
-  if(third) evidenzaText+=commentAsset(third,'other');
+  if(third) evidenzaText+=_cmtAsset(third);
 
-  // ── SEZIONE 4: Sintesi finale ──
+  // ── SEZIONE 4: Sintesi ──
   let sintesi='';
   if(Math.abs(totalChgPct)<0.3){
-    sintesi=_L({it:'Una seduta interlocutoria che non sposta gli equilibri del portafoglio. In giornate come questa è normale attendere un catalizzatore che dia direttiva ai mercati.',en:'An inconclusive session that does not shift portfolio balances. On days like this, it is normal to wait for a catalyst to give direction to markets.'});
+    sintesi=_L({it:'Seduta di transizione senza movimenti rilevanti. Normale attendere un catalizzatore per una direzione più definita.',en:'Transitional session with no significant moves. Normal to wait for a catalyst for a clearer direction.'});
   } else if(up){
-    if(totalChgPct>1.5) sintesi=_L({it:`Una delle migliori sedute recenti per il portafoglio. ${avgIdx>0?'Il rialzo di mercato ha sostenuto i titoli in posizione.':'La sovraperformance rispetto al mercato generale è un segnale incoraggiante sulla qualità del portafoglio.'}`,en:`One of the best recent sessions for the portfolio. ${avgIdx>0?'The market rally supported the holdings.':'Outperformance versus the broader market is an encouraging signal about portfolio quality.'}`});
-    else sintesi=_L({it:`Il portafoglio chiude positivo in una giornata ${avgIdx>0?'favorevole per i mercati':'in cui non tutti i titoli hanno trovato la spinta del mercato'}. I fondamentali restano il fattore chiave da monitorare nel medio periodo.`,en:`The portfolio closes positive on a day ${avgIdx>0?'favorable for markets':'when not all holdings found market support'}. Fundamentals remain the key factor to monitor over the medium term.`});
+    sintesi=totalChgPct>1.5
+      ? _L({it:`Ottima giornata per il portafoglio. ${avgIdx>0?'Il rialzo del mercato ha sostenuto le posizioni.':'Sovraperformance rispetto al mercato: segnale positivo sulla qualità del portafoglio.'}`,en:`Strong day for the portfolio. ${avgIdx>0?'The market rally supported the holdings.':'Outperformance vs market is a positive signal on portfolio quality.'}`})
+      : _L({it:`Giornata positiva. ${avgIdx>0?'In linea con il tono del mercato.':'Il portafoglio ha tenuto meglio degli indici generali.'}`,en:`Positive day. ${avgIdx>0?'In line with the market tone.':'Portfolio held up better than broad indices.'}`});
   } else {
-    if(totalChgPct<-1.5) sintesi=_L({it:`Una seduta difficile da digerire. ${avgIdx<0?'Il sell-off è stato generalizzato sui mercati: si tratta di una correzione che va letta nel contesto di più lungo periodo.':'La sottoperformance rispetto al mercato richiede una riflessione sulla composizione del portafoglio.'}`,en:`A difficult session to stomach. ${avgIdx<0?'The sell-off was broad across markets: this is a correction to be read in the longer-term context.':'Underperformance versus the market calls for reflection on portfolio composition.'}`});
-    else sintesi=_L({it:`Leggera correzione per il portafoglio. ${avgIdx<0?'Il ribasso è in linea con il tono generale dei mercati e non genera preoccupazioni particolari.':'Vale la pena monitorare i titoli che hanno mostrato maggiore debolezza relativa.'}`,en:`Slight correction for the portfolio. ${avgIdx<0?'The decline is in line with the general market tone and does not raise particular concerns.':'It is worth monitoring the holdings that showed the most relative weakness.'}`});
+    sintesi=totalChgPct<-1.5
+      ? _L({it:`Giornata difficile. ${avgIdx<0?'Il sell-off è stato generalizzato: la correzione va letta nel trend di medio periodo.':'Il portafoglio ha sottoperformato il mercato: vale la pena analizzare i titoli più deboli.'}`,en:`Difficult day. ${avgIdx<0?'The sell-off was broad: this correction should be read in the medium-term trend.':'Portfolio underperformed the market: worth analyzing the weakest holdings.'}`})
+      : _L({it:`Leggera correzione. ${avgIdx<0?'Il ribasso è in linea col tono generale dei mercati.':'Monitorare i titoli con maggiore debolezza relativa.'}`,en:`Minor correction. ${avgIdx<0?'The decline aligns with the general market tone.':'Monitor holdings showing relative weakness.'}`});
   }
 
-  // ── SEZIONE 5: Earnings in arrivo e risultati recenti ──────────────────────
-  let earningsText = '';
+  // ── SEZIONE 5: Earnings ──
+  let earningsText='';
   if(earningsCtx){
-    const { upcoming=[], recent=[] } = earningsCtx;
-    const _eNow = new Date();
-
-    // Prossimi earnings (entro 7 giorni)
+    const{upcoming=[],recent=[]}=earningsCtx;
+    const _eNow=new Date();
     upcoming.forEach(e=>{
-      const dt = new Date(e.date+'T12:00:00');
-      const diffDays = Math.round((dt - _eNow) / 86400000);
+      const dt=new Date(e.date+'T12:00:00');
+      const diffDays=Math.round((dt-_eNow)/86400000);
       const _eLoc=currentLang==='en'?'en-GB':'it-IT';
-      const whenStr = diffDays===0 ? _L({it:'oggi',en:'today'})
-                    : diffDays===1 ? _L({it:'domani',en:'tomorrow'})
-                    : _L({it:`tra ${diffDays} giorni (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`,en:`in ${diffDays} days (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`});
-      const timingStr = e.time==='bmo'
-        ? `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(217,119,6,.15);color:#D97706;font-weight:600">☀ ${_L({it:'pre-apertura',en:'pre-market'})}</span>`
-        : `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(26,86,196,.12);color:#1A56C4;font-weight:600">🌙 ${_L({it:'post-chiusura',en:'post-close'})}</span>`;
-      const nameStr = e.name&&e.name!==e.symbol ? ` (${e.name})` : '';
-      earningsText += `• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'riporterà i risultati trimestrali',en:'will report quarterly results'})} <strong>${whenStr}</strong> ${timingStr}\n`;
+      const whenStr=diffDays===0?_L({it:'oggi',en:'today'}):diffDays===1?_L({it:'domani',en:'tomorrow'}):_L({it:`tra ${diffDays} giorni (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`,en:`in ${diffDays} days (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`});
+      const timingStr=e.time==='bmo'
+        ?`<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(217,119,6,.15);color:#D97706;font-weight:600">☀ ${_L({it:'pre-apertura',en:'pre-market'})}</span>`
+        :`<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(26,86,196,.12);color:#1A56C4;font-weight:600">🌙 ${_L({it:'post-chiusura',en:'post-close'})}</span>`;
+      const nameStr=e.name&&e.name!==e.symbol?` (${e.name})`:'';
+      earningsText+=`• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'riporterà',en:'reports'})} <strong>${whenStr}</strong> ${timingStr}\n`;
     });
-
-    // Risultati recenti (ultimi 7 giorni)
     recent.forEach(e=>{
-      const dt = new Date(e.date+'T12:00:00');
-      const diffDays = Math.round((_eNow - dt) / 86400000);
-      const whenStr = diffDays===0 ? _L({it:'oggi',en:'today'}) : diffDays===1 ? _L({it:'ieri',en:'yesterday'}) : _L({it:`${diffDays} giorni fa`,en:`${diffDays} days ago`});
-      const nameStr = e.name&&e.name!==e.symbol ? ` (${e.name})` : '';
-      let resultsStr = '';
-
-      if(e.epsActual!==null && e.epsActual!==undefined){
-        const beat = e.epsEstimate!=null ? e.epsActual - e.epsEstimate : null;
-        const beatPct = beat!=null && e.epsEstimate!==0 ? beat/Math.abs(e.epsEstimate)*100 : null;
-        const beatBadge = beatPct!=null
-          ? (beatPct>=0
-              ? ` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(5,150,105,.12);color:#059669;font-weight:600">▲ beat +${beatPct.toFixed(1)}%</span>`
-              : ` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(220,38,38,.1);color:#DC2626;font-weight:600">▼ miss ${beatPct.toFixed(1)}%</span>`)
-          : '';
-        resultsStr += `EPS <strong>$${e.epsActual.toFixed(2)}</strong>`;
-        if(e.epsEstimate!=null) resultsStr += ` vs ${_L({it:'stima',en:'est.'})} $${e.epsEstimate.toFixed(2)}`;
-        resultsStr += beatBadge;
+      const dt=new Date(e.date+'T12:00:00');
+      const diffDays=Math.round((_eNow-dt)/86400000);
+      const whenStr=diffDays===0?_L({it:'oggi',en:'today'}):diffDays===1?_L({it:'ieri',en:'yesterday'}):_L({it:`${diffDays} giorni fa`,en:`${diffDays} days ago`});
+      const nameStr=e.name&&e.name!==e.symbol?` (${e.name})`:'';
+      let resultsStr='';
+      if(e.epsActual!==null&&e.epsActual!==undefined){
+        const beat=e.epsEstimate!=null?e.epsActual-e.epsEstimate:null;
+        const beatPct=beat!=null&&e.epsEstimate!==0?beat/Math.abs(e.epsEstimate)*100:null;
+        const beatBadge=beatPct!=null?(beatPct>=0?` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(5,150,105,.12);color:#059669;font-weight:600">▲ beat +${beatPct.toFixed(1)}%</span>`:` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(220,38,38,.1);color:#DC2626;font-weight:600">▼ miss ${beatPct.toFixed(1)}%</span>`):'';
+        resultsStr+=`EPS <strong>$${e.epsActual.toFixed(2)}</strong>`;
+        if(e.epsEstimate!=null) resultsStr+=` vs ${_L({it:'stima',en:'est.'})} $${e.epsEstimate.toFixed(2)}`;
+        resultsStr+=beatBadge;
       }
-
-      if(e.revenueActual!=null && e.revenueActual!==undefined){
-        const rev = e.revenueActual;
-        const revFmt = rev>=1e12?`$${(rev/1e12).toFixed(2)}T`:rev>=1e9?`$${(rev/1e9).toFixed(1)}B`:`$${(rev/1e6).toFixed(0)}M`;
-        if(resultsStr) resultsStr += ' · ';
-        resultsStr += `Revenue <strong>${revFmt}</strong>`;
+      if(e.revenueActual!=null){
+        const rev=e.revenueActual;
+        const revFmt=rev>=1e12?`$${(rev/1e12).toFixed(2)}T`:rev>=1e9?`$${(rev/1e9).toFixed(1)}B`:`$${(rev/1e6).toFixed(0)}M`;
+        if(resultsStr) resultsStr+=' · ';
+        resultsStr+=`Revenue <strong>${revFmt}</strong>`;
       }
-
-      const quarterStr = e.quarter ? ` — ${e.quarter}${e.fiscalYear?' '+e.fiscalYear:''}` : '';
-      if(resultsStr){
-        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr}: ${resultsStr}\n`;
-      } else {
-        earningsText += `• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr} — ${_L({it:'dati non ancora disponibili',en:'data not yet available'})}\n`;
-      }
+      const quarterStr=e.quarter?` — ${e.quarter}${e.fiscalYear?' '+e.fiscalYear:''}`:'';
+      if(resultsStr) earningsText+=`• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr}: ${resultsStr}\n`;
+      else earningsText+=`• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr} — ${_L({it:'dati in attesa',en:'data pending'})}\n`;
     });
   }
 
   return [
-    macro.trim() ? `**${_L({it:'Contesto di mercato',en:'Market Context'})}**\n${macro.trim()}` : '',
-    earningsText.trim() ? `**📊 ${_L({it:'Earnings',en:'Earnings'})}**\n${earningsText.trim()}` : '',
+    macro.trim()        ?`**${_L({it:'Cosa succede oggi',en:"Today's Market"})}**\n${macro.trim()}`:'',
+    earningsText.trim() ?`**📅 ${_L({it:'Earnings',en:'Earnings'})}**\n${earningsText.trim()}`:'',
     `**${_L({it:'Il tuo portafoglio',en:'Your Portfolio'})}**\n${portText.trim()}`,
-    evidenzaText.trim() ? `**${_L({it:'Titoli in evidenza',en:'Stocks in Focus'})}**\n${evidenzaText.trim()}` : '',
-    `**${_L({it:'Sintesi',en:'Summary'})}**\n${sintesi}`
+    evidenzaText.trim() ?`**${_L({it:'Titoli in evidenza',en:'Stocks in Focus'})}**\n${evidenzaText.trim()}`:'',
+    `**${_L({it:'Sintesi',en:'Summary'})}**\n${sintesi}`,
   ].filter(Boolean).join('\n\n');
 }
 
@@ -9073,7 +8974,7 @@ function renderPortDailyText(el, payload){
     text=p.text||''; indicesMap=p.indicesMap||{}; newsMap=p.newsMap||{};
   } catch(e){ text=payload; }
 
-  // ── Assets dai globals ──
+  // Assets dai globals per le visual cards
   const _fxR=_lastFxRate||1.08;
   const _assets=(typeof portfolio!=='undefined'&&Array.isArray(portfolio)&&typeof portQuotes!=='undefined')
     ?portfolio.map((item,i)=>{
@@ -9084,20 +8985,9 @@ function renderPortDailyText(el, payload){
         return{sym:item.sym,name:item.name||q.name||item.sym,chgPct,chgUSD};
       }).filter(Boolean)
     :[];
-  const _byPct=[..._assets].sort((a,b)=>a.chgPct-b.chgPct);
-  const _best=_byPct[_byPct.length-1], _worst=_byPct[0];
   const _topMovers=[..._assets].sort((a,b)=>Math.abs(b.chgPct)-Math.abs(a.chgPct)).slice(0,3);
-  const nUp=_assets.filter(a=>a.chgPct>=0).length;
-  const nDn=_assets.filter(a=>a.chgPct<0).length;
 
-  // ── Dati indici ──
-  const sp=indicesMap['^GSPC'],nq=indicesMap['^IXIC'],dj=indicesMap['^DJI'],gc=indicesMap['GC=F'],cl=indicesMap['CL=F'];
-  const _chg=d=>d?.price&&d?.prev?(d.price-d.prev)/d.prev*100:null;
-  const spC=_chg(sp),nqC=_chg(nq),djC=_chg(dj),gcC=_chg(gc),clC=_chg(cl);
-  const equityVals=[spC,nqC,djC].filter(v=>v!=null);
-  const avgIdx=equityVals.length?equityVals.reduce((a,b)=>a+b,0)/equityVals.length:0;
-
-  // ── Zona 1: chip indici ──
+  // ── Chip indici ──
   const _chip=(label,pct,price,neutral)=>{
     const up=neutral?null:pct>=0;
     const bg=neutral?'rgba(59,130,246,.07)':up?'rgba(5,150,105,.07)':'rgba(220,38,38,.07)';
@@ -9109,46 +8999,63 @@ function renderPortDailyText(el, payload){
       <div style="font-size:9px;color:var(--t2);font-family:var(--fm);margin-top:1px;white-space:nowrap">${neutral?'—':price}</div>
     </div>`;
   };
+  const sp=indicesMap['^GSPC'],nq=indicesMap['^IXIC'],dj=indicesMap['^DJI'],gc=indicesMap['GC=F'],cl=indicesMap['CL=F'];
+  const _pct=d=>d?.price&&d?.prev?(d.price-d.prev)/d.prev*100:null;
   const IDX=[
-    {label:'S&P 500',pct:spC,d:sp,dec:0},{label:'Nasdaq',pct:nqC,d:nq,dec:0},{label:'Dow',pct:djC,d:dj,dec:0},
-    {label:_L({it:'Oro',en:'Gold'}),pct:gcC,d:gc,dec:1},{label:_L({it:'Petrolio',en:'Oil'}),pct:clC,d:cl,dec:1},
+    {label:'S&P 500',d:sp,dec:0},{label:'Nasdaq',d:nq,dec:0},{label:'Dow',d:dj,dec:0},
+    {label:_L({it:'Oro',en:'Gold'}),d:gc,dec:1},{label:_L({it:'Petrolio',en:'Oil'}),d:cl,dec:1},
   ];
-  const idxChips=IDX.filter(x=>x.d?.price&&x.d?.prev&&x.pct!=null).map(x=>
-    _chip(x.label,x.pct,x.d.price.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{maximumFractionDigits:x.dec}))
+  const idxChips=IDX.filter(x=>x.d?.price&&x.d?.prev).map(x=>
+    _chip(x.label,_pct(x.d),x.d.price.toLocaleString(currentLang==='en'?'en-GB':'it-IT',{maximumFractionDigits:x.dec}))
   );
   if(_lastFxRate) idxChips.push(_chip('EUR/USD',0,_fxR.toFixed(4),true));
-  const idxStrip=idxChips.length?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px">${idxChips.join('')}</div>`:'';
+  const idxStrip=idxChips.length?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:14px">${idxChips.join('')}</div>`:'';
 
-  // ── Zona 2: riga sentiment (1 frase compatta) ──
-  let sentHtml='';
-  if(equityVals.length){
-    const parts=[];
-    if(avgIdx>1) parts.push(_L({it:'📈 Mercati in forte rialzo',en:'📈 Markets strongly higher'}));
-    else if(avgIdx>0.1) parts.push(_L({it:'📈 Mercati positivi',en:'📈 Markets positive'}));
-    else if(avgIdx>-0.1) parts.push(_L({it:'➡ Mercati piatti',en:'➡ Markets flat'}));
-    else if(avgIdx>-1) parts.push(_L({it:'📉 Mercati in ribasso',en:'📉 Markets declining'}));
-    else parts.push(_L({it:'📉 Mercati in forte ribasso',en:'📉 Markets sharply lower'}));
-    if(spC!=null&&nqC!=null){const d=nqC-spC;if(d>0.5)parts.push(_L({it:'Tech in testa',en:'Tech leading'}));else if(d<-0.5)parts.push(_L({it:'Ciclici avanti',en:'Cyclicals ahead'}));}
-    if(gcC!=null&&gcC>0.5)parts.push(_L({it:'Oro in rialzo',en:'Gold rising'}));
-    else if(gcC!=null&&gcC<-0.5)parts.push(_L({it:'Oro in calo',en:'Gold falling'}));
-    if(clC!=null&&Math.abs(clC)>1)parts.push((clC>0?_L({it:'Petrolio su',en:'Oil up'}):_L({it:'Petrolio giù',en:'Oil down'}))+' '+(clC>=0?'+':'')+clC.toFixed(1)+'%');
-    sentHtml=`<div style="font-size:11px;color:var(--t2);padding:6px 10px;background:var(--s2);border-radius:7px;border-left:2px solid var(--b);margin-bottom:12px">${parts.join(' · ')}</div>`;
-  }
+  // ── Rendering sezioni testo ──
+  const _esc=t=>t
+    .replace(/<strong style="color:#059669">(.+?)<\/strong>/g,'<strong style="color:#059669;font-weight:700">$1</strong>')
+    .replace(/<strong style="color:#DC2626">(.+?)<\/strong>/g,'<strong style="color:#DC2626;font-weight:700">$1</strong>')
+    .replace(/<strong>(.+?)<\/strong>/g,'<strong style="color:var(--t);font-weight:700">$1</strong>')
+    .replace(/<em>"(.+?)"<\/em>/g,'<em style="font-style:italic;color:var(--t3)">"$1"</em>');
 
-  // ── Zona 3: barra quick stats portafoglio ──
-  let statsHtml='';
-  if(_assets.length){
-    const _f1=v=>(v>=0?'+':'')+v.toFixed(1)+'%';
-    const items=[
-      `<span style="font-weight:700;font-family:var(--fm);color:${nUp>0?'#059669':'var(--t3)'}">↑ ${nUp}</span>`,
-      `<span style="font-weight:700;font-family:var(--fm);color:${nDn>0?'#DC2626':'var(--t3)'}">↓ ${nDn}</span>`,
-    ];
-    if(_best&&_assets.length>1) items.push(`${_L({it:'Top',en:'Top'})}: <strong style="font-family:var(--fm)">${_best.sym}</strong> <span style="color:#059669;font-family:var(--fm)">${_f1(_best.chgPct)}</span>`);
-    if(_worst&&_worst.sym!==_best?.sym) items.push(`${_L({it:'Peggiore',en:'Worst'})}: <strong style="font-family:var(--fm)">${_worst.sym}</strong> <span style="color:#DC2626;font-family:var(--fm)">${_f1(_worst.chgPct)}</span>`);
-    statsHtml=`<div style="display:flex;flex-wrap:wrap;gap:10px;padding:8px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;margin-bottom:14px;font-size:11px;color:var(--t2);align-items:center">${items.join('<span style="color:var(--bd)"> · </span>')}</div>`;
-  }
+  const _renderBullets=content=>{
+    const lines=content.split('\n').filter(l=>l.trim());
+    let html='',bullets=[];
+    const flush=()=>{if(bullets.length){html+=`<div style="display:flex;flex-direction:column;gap:5px;margin:6px 0 2px">${bullets.join('')}</div>`;bullets=[];}};
+    for(const line of lines){
+      const tr=line.trim();
+      if(tr.startsWith('•')){
+        bullets.push(`<div style="display:flex;gap:7px;align-items:flex-start;font-size:12px;line-height:1.55">
+          <span style="color:var(--b);font-size:8px;flex-shrink:0;margin-top:4px;font-weight:700">●</span>
+          <span style="color:var(--t2)">${_esc(tr.slice(1).trim())}</span></div>`);
+      } else { flush(); html+=`<div style="font-size:12px;color:var(--t2);line-height:1.65;margin-top:4px">${_esc(tr)}</div>`; }
+    }
+    flush(); return html;
+  };
 
-  // ── Zona 4: top movers cards ──
+  // Sezioni del testo: titoli, evidenza, sintesi hanno trattamento diverso
+  const _isEvidenza=t=>t.includes('evidenza')||t.includes('Focus');
+  const _isSintesi=t=>t==='Sintesi'||t==='Summary';
+  const sections=text.split('\n\n').map(block=>{
+    const m=block.match(/^\*\*(.+?)\*\*\n([\s\S]*)/);
+    return m?{title:m[1],content:m[2].trim()}:{title:null,content:block.trim()};
+  }).filter(s=>s.content);
+
+  const ICONS={'Cosa succede oggi':'🌐',"Today's Market":'🌐','Il tuo portafoglio':'📋','Your Portfolio':'📋','Earnings':'📅'};
+
+  // Sezioni di testo normali (escludo Evidenza e Sintesi — trattate separatamente)
+  const textSectionsHtml=sections
+    .filter(s=>!s.title||(!_isEvidenza(s.title)&&!_isSintesi(s.title)))
+    .map(s=>{
+      if(!s.title) return `<div style="font-size:12px;color:var(--t2);line-height:1.65">${_esc(s.content)}</div>`;
+      const icon=Object.entries(ICONS).find(([k])=>s.title.includes(k))?.[1]||'';
+      return `<div style="margin-bottom:14px">
+        <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--t);letter-spacing:.5px;text-transform:uppercase;border-left:2px solid var(--b);padding-left:7px;margin-bottom:7px">${icon?icon+' ':''}${s.title}</div>
+        <div>${_renderBullets(s.content)}</div>
+      </div>`;
+    }).join('');
+
+  // Titoli in evidenza: visual cards (con link news cliccabili)
   const _movers=_topMovers.filter(a=>Math.abs(a.chgPct)>0.05);
   let moversHtml='';
   if(_movers.length){
@@ -9175,18 +9082,14 @@ function renderPortDailyText(el, payload){
     </div>`;
   }
 
-  // ── Zona 5: sintesi (estratta dal testo, 1-2 frasi) ──
-  let sintesiHtml='';
-  const _sm=text.match(/\*\*(?:Sintesi|Summary)\*\*\n([\s\S]*?)(?:\n\n|$)/);
-  if(_sm){
-    const _esc=t=>t.replace(/<strong>(.+?)<\/strong>/g,'<strong style="color:var(--t);font-weight:700">$1</strong>');
-    sintesiHtml=`<div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.14);border-radius:10px;padding:10px 14px">
-      <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--b);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">💡 ${_L({it:'Sintesi',en:'Summary'})}</div>
-      <div style="font-size:12px;color:var(--t2);line-height:1.6">${_esc(_sm[1].trim())}</div>
-    </div>`;
-  }
+  // Sintesi: box evidenziato
+  const _sintesiSec=sections.find(s=>s.title&&_isSintesi(s.title));
+  const sintesiHtml=_sintesiSec?`<div style="background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.14);border-radius:10px;padding:10px 14px">
+    <div style="font-size:9px;font-family:var(--fm);font-weight:700;color:var(--b);letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px">💡 ${_sintesiSec.title}</div>
+    <div style="font-size:12px;color:var(--t2);line-height:1.6">${_esc(_sintesiSec.content)}</div>
+  </div>`:'';
 
-  el.innerHTML=`${idxStrip}${sentHtml}${statsHtml}${moversHtml}${sintesiHtml}`;
+  el.innerHTML=`${idxStrip}${textSectionsHtml}${moversHtml}${sintesiHtml}`;
 }
 
 function _timeAgo(ts){
