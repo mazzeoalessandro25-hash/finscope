@@ -8827,60 +8827,77 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
 
   // ── SEZIONE 1: Cosa succede oggi ──
   let macro='';
-  // Frase 1: indici principali
-  const _idxParts=[];
-  if(spC!=null) _idxParts.push(`S&P 500 <strong>${s(spC)}</strong>`);
-  if(nqC!=null) _idxParts.push(`Nasdaq <strong>${s(nqC)}</strong>`);
-  if(djC!=null) _idxParts.push(`Dow <strong>${s(djC)}</strong>`);
-  if(_idxParts.length) macro+=_idxParts.join(', ')+'. ';
-  // Frase 2: tono di mercato
+  const _ip=[];
+  if(spC!=null) _ip.push(`S&P 500 <strong>${s(spC)}</strong>`);
+  if(nqC!=null) _ip.push(`Nasdaq <strong>${s(nqC)}</strong>`);
+  if(djC!=null) _ip.push(`Dow <strong>${s(djC)}</strong>`);
+  // Frase 1: apertura narrativa con contesto
   if(equityVals.length){
-    if(avgIdx>1)        macro+=_L({it:'Giornata chiaramente positiva: i compratori hanno dominato su tutti i fronti.',en:'Clearly positive day: buyers dominated across the board.'});
-    else if(avgIdx>0.1) macro+=_L({it:'Tono costruttivo, mercato in rialzo moderato.',en:'Constructive tone, moderate market gains.'});
-    else if(avgIdx>-0.1)macro+=_L({it:'Seduta piatta, nessuna direzione prevalente.',en:'Flat session, no prevailing direction.'});
-    else if(avgIdx>-1)  macro+=_L({it:'Giornata negativa, pressioni di vendita prevalenti.',en:'Negative day, selling pressure prevailing.'});
-    else                macro+=_L({it:'Forte correzione: vendite generalizzate su tutti i principali indici.',en:'Sharp correction: broad selling across all major indices.'});
-    macro+=' ';
+    if(avgIdx>1.5) macro+=_L({it:`Giornata chiaramente positiva sui mercati americani (${_ip.join(', ')}): gli acquirenti hanno preso il controllo fin dall'apertura, con il sentiment degli investitori decisamente orientato al rischio. Movimenti di questa entità si osservano tipicamente in risposta a dati macro migliori delle attese o a una riduzione delle tensioni geopolitiche. `,en:`Clearly positive day on US markets (${_ip.join(', ')}): buyers took control from the open, with investor sentiment decidedly risk-on. Moves of this magnitude typically occur in response to better-than-expected macro data or reduced geopolitical tensions. `});
+    else if(avgIdx>0.5) macro+=_L({it:`Seduta positiva per i mercati americani (${_ip.join(', ')}). Il tono è costruttivo, con gli acquirenti prevalenti su più settori anche se senza accelerazioni particolari. In queste fasi di rialzo moderato, il mercato tende a consolidare i livelli raggiunti piuttosto che allungare in modo deciso. `,en:`Positive session for US markets (${_ip.join(', ')}). The tone is constructive, with buyers prevailing across multiple sectors though without sharp acceleration. In these phases of moderate upside, the market tends to consolidate levels rather than extend decisively. `});
+    else if(avgIdx>0.1) macro+=_L({it:`Una giornata moderatamente positiva sui mercati americani (${_ip.join(', ')}). In assenza di catalizzatori forti, gli investitori si muovono con prudenza, preferendo consolidare le posizioni esistenti piuttosto che prendere nuove direzionalità. `,en:`A moderately positive day on US markets (${_ip.join(', ')}). In the absence of strong catalysts, investors are moving cautiously, preferring to consolidate existing positions rather than take new directional bets. `});
+    else if(avgIdx>-0.1) macro+=_L({it:`Mercati americani sostanzialmente piatti nella seduta odierna (${_ip.join(', ')}). L'assenza di una direzione definita riflette un momento di equilibrio tra compratori e venditori, tipico delle fasi di attesa prima di eventi macro rilevanti o decisioni delle banche centrali. `,en:`US markets largely flat in today's session (${_ip.join(', ')}). The lack of a clear direction reflects a balance between buyers and sellers, typical of waiting phases ahead of key macro events or central bank decisions. `});
+    else if(avgIdx>-0.5) macro+=_L({it:`Giornata in rosso per i mercati americani (${_ip.join(', ')}). Le pressioni di vendita hanno prevalso: gli investitori preferiscono ridurre l'esposizione al rischio, e in queste fasi è normale osservare una rotazione verso settori più difensivi come utilities, healthcare e consumer staples. `,en:`Red day for US markets (${_ip.join(', ')}). Selling pressure prevailed: investors prefer to reduce risk exposure, and in these phases it is normal to see rotation toward more defensive sectors such as utilities, healthcare and consumer staples. `});
+    else if(avgIdx>-1.5) macro+=_L({it:`Seduta decisamente negativa sui mercati americani (${_ip.join(', ')}). Il ribasso riflette un aumento dell'incertezza degli investitori: vale la pena monitorare le notizie nelle prossime ore per capire se si tratta di una correzione tecnica o di un cambio di sentiment più duraturo. `,en:`Decidedly negative session on US markets (${_ip.join(', ')}). The decline reflects rising investor uncertainty: it is worth monitoring the news flow in the coming hours to understand whether this is a technical correction or a more lasting sentiment shift. `});
+    else macro+=_L({it:`Forte correzione per i mercati americani (${_ip.join(', ')}). Le vendite sono state generalizzate e intense, tipiche delle giornate di forte risk-off in cui gli investitori liquidano le posizioni più rischiose per rifugiarsi in asset sicuri come oro, yen e obbligazioni governative. `,en:`Sharp correction for US markets (${_ip.join(', ')}). Selling was widespread and intense, typical of strong risk-off days when investors liquidate riskier positions for safe-haven assets such as gold, yen and government bonds. `});
   }
-  // Frase 3: osservazioni chiave (tech/ciclici, commodities)
-  const _obs=[];
+  // Frase 2: tech vs ciclici (se divergenza rilevante)
   if(spC!=null&&nqC!=null){
     const d=nqC-spC;
-    if(d>0.6)  _obs.push(_L({it:'Tech in testa',en:'Tech leading'}));
-    else if(d<-0.6) _obs.push(_L({it:'Settori ciclici avanti sul tech',en:'Cyclicals ahead of tech'}));
+    if(d>0.8) macro+=_L({it:`Si nota una chiara leadership del tech: il Nasdaq (${s(nqC)}) ha sovraperformato l'S&P 500 (${s(spC)}) di circa ${Math.abs(d).toFixed(1)}pp, segnalando un forte appetite per i titoli growth e tecnologici. `,en:`Clear tech leadership: Nasdaq (${s(nqC)}) outperformed S&P 500 (${s(spC)}) by about ${Math.abs(d).toFixed(1)}pp, signaling strong appetite for growth and technology stocks. `});
+    else if(d>0.4) macro+=_L({it:`Il tech ha mostrato forza relativa rispetto al mercato ampio (Nasdaq ${s(nqC)} vs S&P 500 ${s(spC)}). `,en:`Tech showed relative strength vs the broad market (Nasdaq ${s(nqC)} vs S&P 500 ${s(spC)}). `});
+    else if(d<-0.8) macro+=_L({it:`Il Nasdaq (${s(nqC)}) ha sottoperformato l'S&P 500 (${s(spC)}) in modo marcato: pressioni specifiche sul settore tech o rotazione verso settori ciclici e value. `,en:`Nasdaq (${s(nqC)}) markedly underperformed S&P 500 (${s(spC)}): specific pressure on tech or rotation toward cyclical and value sectors. `});
+    else if(d<-0.4) macro+=_L({it:`Leggera debolezza relativa del tech (Nasdaq ${s(nqC)} vs S&P 500 ${s(spC)}). `,en:`Slight relative weakness in tech (Nasdaq ${s(nqC)} vs S&P 500 ${s(spC)}). `});
   }
-  if(gcC!=null&&Math.abs(gcC)>0.4){
-    _obs.push(`${_L({it:'Oro',en:'Gold'})} <strong>${s(gcC)}</strong>`+(gcC>0&&avgIdx<0?' (bene rifugio)':gcC<0&&avgIdx>0?' (risk-on)':''));
+  // Frase 3: commodities e FX con interpretazione
+  if(gcC!=null&&Math.abs(gcC)>0.3){
+    if(gcC>0.8&&avgIdx<0) macro+=_L({it:`L'oro sale (<strong>${s(gcC)}</strong>) confermando la sua funzione di bene rifugio: in giornate difficili per gli azionari, il capitale si sposta verso asset percepiti come sicuri. `,en:`Gold rises (<strong>${s(gcC)}</strong>) confirming its safe-haven role: on difficult days for equities, capital moves toward assets perceived as safe. `});
+    else if(gcC>0.5&&avgIdx>0) macro+=_L({it:`Degno di nota il rialzo dell'oro (<strong>${s(gcC)}</strong>) in una giornata positiva per le azioni: potrebbe segnalare preoccupazioni sottostanti sull'inflazione o rischi geopolitici non ancora pienamente scontati dal mercato. `,en:`Noteworthy is gold's rise (<strong>${s(gcC)}</strong>) on a positive equity day: it may signal underlying concerns about inflation or geopolitical risks not yet fully priced in by the market. `});
+    else if(gcC<-0.5&&avgIdx>0.5) macro+=_L({it:`L'oro cede (<strong>${s(gcC)}</strong>) mentre le azioni salgono: dinamica classica di risk-on, con il capitale che fluisce dagli asset rifugio verso quelli più rischiosi. `,en:`Gold retreats (<strong>${s(gcC)}</strong>) as equities rise: classic risk-on dynamic, with capital flowing from safe-haven assets toward riskier ones. `});
+    else macro+=_L({it:`L'oro si muove di <strong>${s(gcC)}</strong>: un dato da tenere d'occhio come termometro del sentiment macro complessivo. `,en:`Gold moves by <strong>${s(gcC)}</strong>: a figure worth watching as a gauge of overall macro sentiment. `});
   }
-  if(clC!=null&&Math.abs(clC)>0.8) _obs.push(`${_L({it:'Petrolio',en:'Oil'})} <strong>${s(clC)}</strong>`);
-  if(_lastFxRate) _obs.push(`EUR/USD <strong>${_fxR.toFixed(4)}</strong>`);
-  if(_obs.length) macro+=_obs.join(' · ')+'.';
+  if(clC!=null&&Math.abs(clC)>0.8){
+    if(clC>1.5) macro+=_L({it:`Forte rialzo del petrolio (<strong>${s(clC)}</strong>): un movimento di questa entità può alimentare timori inflazionistici e comprimere i margini delle aziende più energivore. `,en:`Sharp oil rally (<strong>${s(clC)}</strong>): a move of this magnitude can fuel inflationary fears and compress margins for energy-intensive companies. `});
+    else if(clC>0.8) macro+=_L({it:`Il petrolio avanza (<strong>${s(clC)}</strong>), segnalando attese di domanda robusta o tensioni sull'offerta globale. `,en:`Oil advances (<strong>${s(clC)}</strong>), signaling expectations of robust demand or global supply tensions. `});
+    else if(clC<-1.5) macro+=_L({it:`Il petrolio perde terreno in modo deciso (<strong>${s(clC)}</strong>): buona notizia per il fronte inflazionistico, che potrebbe allentare la pressione sulle politiche monetarie. `,en:`Oil falls sharply (<strong>${s(clC)}</strong>): good news for the inflation front, which could ease pressure on monetary policy. `});
+    else macro+=_L({it:`Il petrolio arretra (<strong>${s(clC)}</strong>), contribuendo a un quadro macro leggermente più favorevole sul versante dei prezzi. `,en:`Oil retreats (<strong>${s(clC)}</strong>), contributing to a slightly more favorable macro picture on the price front. `});
+  }
 
   // ── SEZIONE 2: Il tuo portafoglio ──
   let portText='';
-  // Frase 1: risultato del giorno
-  portText+=_L({
-    it:`Il portafoglio ${up?'guadagna':'perde'} <strong>${up?'+':'−'}€${absEUR}</strong> oggi (${up?'+':'−'}${absPct}%): <strong>${nUp} titol${nUp===1?'o':'i'} in verde</strong> e ${nDown} in rosso su ${tot}. `,
-    en:`Portfolio ${up?'gains':'loses'} <strong>${up?'+':'−'}€${absEUR}</strong> today (${up?'+':'−'}${absPct}%): <strong>${nUp} holding${nUp===1?'':'s'} in the green</strong> and ${nDown} in the red out of ${tot}. `
-  });
-  // Frase 2: miglior e peggior titolo
-  if(best&&tot>1){
-    portText+=_L({
-      it:`Miglior titolo: <strong>${best.sym}</strong> <strong style="color:#059669">${s1(best.chgPct)}</strong>`,
-      en:`Top performer: <strong>${best.sym}</strong> <strong style="color:#059669">${s1(best.chgPct)}</strong>`
-    });
+  // Frase 1: risultato complessivo con interpretazione
+  if(Math.abs(totalChgPct)<0.3)
+    portText+=_L({it:`Il portafoglio chiude la giornata pressoché invariato (${up?'+':'−'}€${absEUR}, ${up?'+':'−'}${absPct}%): una seduta di transizione normale, in assenza di movimenti rilevanti sui titoli in posizione. `,en:`The portfolio closes the day virtually unchanged (${up?'+':'−'}€${absEUR}, ${up?'+':'−'}${absPct}%): a normal transitional session, with no significant moves on the held positions. `});
+  else if(up)
+    portText+=totalChgPct>2
+      ?_L({it:`Ottima giornata per il portafoglio, che guadagna <strong>+€${absEUR} (+${absPct}%)</strong>. Movimenti giornalieri di questa entità non sono frequenti e riflettono una combinazione particolarmente favorevole dei titoli in posizione. `,en:`Excellent day for the portfolio, gaining <strong>+€${absEUR} (+${absPct}%)</strong>. Daily moves of this magnitude are uncommon and reflect a particularly favorable combination of the held positions. `})
+      :totalChgPct>1
+        ?_L({it:`Buona performance giornaliera: il portafoglio avanza di <strong>+€${absEUR} (+${absPct}%)</strong>, rafforzando il valore complessivo delle posizioni. `,en:`Good daily performance: portfolio advances by <strong>+€${absEUR} (+${absPct}%)</strong>, strengthening the overall value of positions. `})
+        :_L({it:`Il portafoglio chiude in positivo con un progresso di <strong>+€${absEUR} (+${absPct}%)</strong>. Un guadagno moderato, in linea con il tono generale della seduta. `,en:`Portfolio closes positive with a gain of <strong>+€${absEUR} (+${absPct}%)</strong>. A moderate gain, consistent with the general tone of the session. `});
+  else
+    portText+=totalChgPct<-2
+      ?_L({it:`Giornata difficile per il portafoglio, che cede <strong>−€${absEUR} (−${absPct}%)</strong>. Perdite di questa entità in una singola seduta meritano attenzione, anche se è importante contestualizzarle nel trend di medio periodo prima di trarre conclusioni affrettate. `,en:`Difficult day for the portfolio, which gives up <strong>−€${absEUR} (−${absPct}%)</strong>. Losses of this magnitude in a single session deserve attention, though it is important to contextualize them within the medium-term trend before drawing hasty conclusions. `})
+      :totalChgPct<-1
+        ?_L({it:`Il portafoglio registra un calo di <strong>−€${absEUR} (−${absPct}%)</strong>. Una correzione moderata che, in assenza di deterioramento dei fondamentali, rientra nella normale volatilità di mercato. `,en:`Portfolio records a decline of <strong>−€${absEUR} (−${absPct}%)</strong>. A moderate correction that, in the absence of fundamental deterioration, falls within normal market volatility. `})
+        :_L({it:`Leggera correzione per il portafoglio: <strong>−€${absEUR} (−${absPct}%)</strong>. Un movimento contenuto che non altera in modo sostanziale il quadro complessivo. `,en:`Slight portfolio correction: <strong>−€${absEUR} (−${absPct}%)</strong>. A contained move that does not substantially alter the overall picture. `});
+  // Frase 2: breadth + movers principali
+  if(nUp===tot) portText+=_L({it:`Tutti i ${tot} titoli hanno chiuso in verde: una forza ampia e diffusa, non dipendente da un singolo nome. `,en:`All ${tot} holdings closed in the green: broad, diffuse strength not dependent on a single name. `});
+  else if(nDown===tot) portText+=_L({it:`Nessuna posizione è riuscita a chiudere in positivo: la debolezza è stata generalizzata su tutti i ${tot} titoli in portafoglio. `,en:`No position managed to close positive: weakness was generalized across all ${tot} holdings. `});
+  else if(best&&tot>1){
+    portText+=_L({it:`${nUp} titol${nUp===1?'o':'i'} su ${tot} in verde. `,en:`${nUp} out of ${tot} holding${nUp===1?'':'s'} in the green. `});
+    portText+=_L({it:`Miglior performer: <strong>${best.sym}</strong> <strong style="color:#059669">${s1(best.chgPct)}</strong>`,en:`Top performer: <strong>${best.sym}</strong> <strong style="color:#059669">${s1(best.chgPct)}</strong>`});
     if(worst&&worst.sym!==best.sym&&Math.abs(worst.chgPct)>0.2)
       portText+=_L({it:` · peggiore: <strong>${worst.sym}</strong> <strong style="color:#DC2626">${s1(worst.chgPct)}</strong>`,en:` · worst: <strong>${worst.sym}</strong> <strong style="color:#DC2626">${s1(worst.chgPct)}</strong>`});
     portText+='. ';
   }
-  // Frase 3: confronto col mercato
+  // Frase 3: confronto col mercato con interpretazione
   if(equityVals.length){
     const diff=totalChgPct-avgIdx;
-    if(diff>1)         portText+=_L({it:`Sovraperformance di <strong>+${diff.toFixed(1)}pp</strong> rispetto agli indici.`,en:`Outperformed indices by <strong>+${diff.toFixed(1)}pp</strong>.`});
-    else if(diff>0.3)  portText+=_L({it:`Leggermente meglio del mercato generale (+${diff.toFixed(1)}pp).`,en:`Slightly ahead of the broader market (+${diff.toFixed(1)}pp).`});
-    else if(diff>-0.3) portText+=_L({it:'In linea con l\'andamento generale degli indici.',en:'In line with the general market trend.'});
-    else if(diff>-1)   portText+=_L({it:`Lieve sottoperformance rispetto al mercato (${diff.toFixed(1)}pp).`,en:`Slight underperformance vs market (${diff.toFixed(1)}pp).`});
-    else               portText+=_L({it:`Sottoperformance marcata (${diff.toFixed(1)}pp): vale la pena verificare le posizioni più deboli.`,en:`Marked underperformance (${diff.toFixed(1)}pp): worth reviewing the weakest positions.`});
+    if(diff>1)        portText+=_L({it:`Il portafoglio ha sovraperformato gli indici di <strong>+${diff.toFixed(1)}pp</strong>: un risultato che premia la scelta dei titoli in posizione. `,en:`Portfolio outperformed indices by <strong>+${diff.toFixed(1)}pp</strong>: a result that rewards the stock selection. `});
+    else if(diff>0.3) portText+=_L({it:`Leggera sovraperformance rispetto al mercato (+${diff.toFixed(1)}pp): la composizione del portafoglio si è dimostrata efficace per questa seduta. `,en:`Slight outperformance vs market (+${diff.toFixed(1)}pp): the portfolio composition proved effective for this session. `});
+    else if(diff>-0.3)portText+=_L({it:'La performance è risultata in linea con l\'andamento generale degli indici. ',en:'Performance was broadly in line with the general market trend. '});
+    else if(diff>-1)  portText+=_L({it:`Lieve sottoperformance rispetto agli indici (${diff.toFixed(1)}pp): una divergenza contenuta, ma da monitorare se dovesse persistere nelle prossime sedute. `,en:`Slight underperformance vs indices (${diff.toFixed(1)}pp): a contained divergence, but worth monitoring if it persists in coming sessions. `});
+    else              portText+=_L({it:`Sottoperformance marcata rispetto al mercato (${diff.toFixed(1)}pp): vale la pena analizzare le posizioni che hanno contribuito maggiormente alla divergenza negativa. `,en:`Marked underperformance vs market (${diff.toFixed(1)}pp): worth analyzing the positions that contributed most to the negative divergence. `});
   }
 
   // ── SEZIONE 3: Titoli in evidenza ──
