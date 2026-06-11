@@ -2415,19 +2415,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <span class="ind-badge" id="ch1-ind-badge" style="display:none">0</span>
         </div>
         <div class="ind-panel" id="ch1-ind-panel" style="display:none">
-          <div class="ind-panel-cat">Medie Mobili</div>
+          <div class="ind-panel-cat" data-i18n="dash.movAvg">Medie Mobili</div>
           <div class="ind-panel-row">
             <button class="cc-btn" id="ch1-ind-sma20" onclick="toggleDashInd(1,'sma20',this)" style="color:#f59e0b">SMA20</button>
             <button class="cc-btn" id="ch1-ind-sma50" onclick="toggleDashInd(1,'sma50',this)" style="color:#8b5cf6">SMA50</button>
             <button class="cc-btn" id="ch1-ind-ema20" onclick="toggleDashInd(1,'ema20',this)" style="color:#06b6d4">EMA20</button>
           </div>
-          <div class="ind-panel-cat">Oscillatori</div>
+          <div class="ind-panel-cat" data-i18n="dash.osc">Oscillatori</div>
           <div class="ind-panel-row">
             <button class="cc-btn" id="ch1-ind-rsi" onclick="toggleDashInd(1,'rsi',this)" style="color:#8b5cf6">RSI 14</button>
             <button class="cc-btn" id="ch1-ind-macd" onclick="toggleDashInd(1,'macd',this)" style="color:#f43f5e">MACD</button>
             <button class="cc-btn" id="ch1-ind-stoch" onclick="toggleDashInd(1,'stoch',this)" style="color:#0ea5e9">Stoch</button>
           </div>
-          <div class="ind-panel-cat">Volatilità &amp; Bande</div>
+          <div class="ind-panel-cat" data-i18n="dash.volBand">Volatilità &amp; Bande</div>
           <div class="ind-panel-row">
             <button class="cc-btn" id="ch1-ind-bb" onclick="toggleDashInd(1,'bb',this)" style="color:#6366f1">Bollinger</button>
           </div>
@@ -2526,19 +2526,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <span class="ind-badge" id="ch2-ind-badge" style="display:none">0</span>
         </div>
         <div class="ind-panel" id="ch2-ind-panel" style="display:none">
-          <div class="ind-panel-cat">Medie Mobili</div>
+          <div class="ind-panel-cat" data-i18n="dash.movAvg">Medie Mobili</div>
           <div class="ind-panel-row">
             <button class="cc-btn" id="ch2-ind-sma20" onclick="toggleDashInd(2,'sma20',this)" style="color:#f59e0b">SMA20</button>
             <button class="cc-btn" id="ch2-ind-sma50" onclick="toggleDashInd(2,'sma50',this)" style="color:#8b5cf6">SMA50</button>
             <button class="cc-btn" id="ch2-ind-ema20" onclick="toggleDashInd(2,'ema20',this)" style="color:#06b6d4">EMA20</button>
           </div>
-          <div class="ind-panel-cat">Oscillatori</div>
+          <div class="ind-panel-cat" data-i18n="dash.osc">Oscillatori</div>
           <div class="ind-panel-row">
             <button class="cc-btn" id="ch2-ind-rsi" onclick="toggleDashInd(2,'rsi',this)" style="color:#8b5cf6">RSI 14</button>
             <button class="cc-btn" id="ch2-ind-macd" onclick="toggleDashInd(2,'macd',this)" style="color:#f43f5e">MACD</button>
             <button class="cc-btn" id="ch2-ind-stoch" onclick="toggleDashInd(2,'stoch',this)" style="color:#0ea5e9">Stoch</button>
           </div>
-          <div class="ind-panel-cat">Volatilità &amp; Bande</div>
+          <div class="ind-panel-cat" data-i18n="dash.volBand">Volatilità &amp; Bande</div>
           <div class="ind-panel-row">
             <button class="cc-btn" id="ch2-ind-bb" onclick="toggleDashInd(2,'bb',this)" style="color:#6366f1">Bollinger</button>
           </div>
@@ -3581,17 +3581,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="mac-stat-sub" id="mss-spread-sub">—</div>
         </div>
         <div class="mac-stat-item" id="mss-dxy-item">
-          <div class="mac-stat-lbl">DXY — Dollaro</div>
+          <div class="mac-stat-lbl" data-i18n="mac.lbl.dxy">DXY — Dollaro</div>
           <div class="mac-stat-val" id="mss-dxy">—</div>
           <div class="mac-stat-sub" id="mss-dxy-sub">—</div>
         </div>
         <div class="mac-stat-item" id="mss-vix-item">
-          <div class="mac-stat-lbl">VIX — Volatilità</div>
+          <div class="mac-stat-lbl" data-i18n="mac.lbl.vix">VIX — Volatilità</div>
           <div class="mac-stat-val" id="mss-vix">—</div>
           <div class="mac-stat-sub" id="mss-vix-sub">—</div>
         </div>
         <div class="mac-stat-item" id="mss-gold-item">
-          <div class="mac-stat-lbl">Oro (XAU/USD)</div>
+          <div class="mac-stat-lbl" data-i18n="mac.lbl.gold">Oro (XAU/USD)</div>
           <div class="mac-stat-val" id="mss-gold">—</div>
           <div class="mac-stat-sub" id="mss-gold-sub">—</div>
         </div>
@@ -6958,9 +6958,9 @@ function applyUserMode(mode){
   if(simple&&(_portActiveTab==='rischio'||_portActiveTab==='fisco'))switchPortTab('panoramica');
   // Aggiorna bottoni toggle
   const _upd=(id,txt,ttl)=>{const e=document.getElementById(id);if(e){e.textContent=txt;e.title=ttl;e.style.display=currentUser?'':'none';}};
-  _upd('usermode-toggle',simple?'⚡ Avanzata':'☁ Semplice',simple?'Passa alla modalità avanzata (più funzioni)':'Passa alla modalità semplice (essenziale)');
+  _upd('usermode-toggle',simple?_L({it:'⚡ Avanzata',en:'⚡ Advanced'}):_L({it:'☁ Semplice',en:'☁ Simple'}),simple?_L({it:'Passa alla modalità avanzata (più funzioni)',en:'Switch to advanced mode (more features)'}):_L({it:'Passa alla modalità semplice (essenziale)',en:'Switch to simple mode (essentials)'}));
   const mob=document.getElementById('mob-usermode-toggle');
-  if(mob){mob.textContent=simple?'⚡ Passa a Avanzata':'☁ Passa a Semplice';mob.style.display=currentUser?'':'none';}
+  if(mob){mob.textContent=simple?_L({it:'⚡ Passa a Avanzata',en:'⚡ Switch to Advanced'}):_L({it:'☁ Passa a Semplice',en:'☁ Switch to Simple'});mob.style.display=currentUser?'':'none';}
 }
 
 async function saveUserMode(mode){
@@ -11217,9 +11217,9 @@ function _macroRenderYieldCurve(d){
 function _macroRenderCredit(d){
   const el=document.getElementById('macro-credit-content');if(!el)return;
   const items=[
-    {sym:'HYG',label:'iShares High Yield Bond',desc:'Obbligazioni junk — risk appetite',q:d.hyg},
-    {sym:'LQD',label:'iShares Invest. Grade Bond',desc:'Obbligazioni IG — qualità creditizia',q:d.lqd},
-    {sym:'TLT',label:'iShares 20Y Treasury',desc:'Treasury a lungo termine — duration',q:d.tlt},
+    {sym:'HYG',label:'iShares High Yield Bond',desc:{it:'Obbligazioni junk — risk appetite',en:'Junk bonds — risk appetite'},q:d.hyg},
+    {sym:'LQD',label:'iShares Invest. Grade Bond',desc:{it:'Obbligazioni IG — qualità creditizia',en:'Investment grade bonds — credit quality'},q:d.lqd},
+    {sym:'TLT',label:'iShares 20Y Treasury',desc:{it:'Treasury a lungo termine — duration',en:'Long-term Treasury — duration'},q:d.tlt},
   ];
   const hygChg=d.hyg?chgPct(d.hyg.price,d.hyg.prev):null;
   const lqdChg=d.lqd?chgPct(d.lqd.price,d.lqd.prev):null;
@@ -11236,7 +11236,7 @@ function _macroRenderCredit(d){
     return`<div style="display:flex;align-items:center;justify-content:space-between;padding:9px 10px;border-radius:8px;margin-bottom:3px;background:var(--s2)">
       <div style="min-width:0">
         <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${it.sym}</div>
-        <div style="font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.desc}</div>
+        <div style="font-size:10px;color:var(--t3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${_L(it.desc)}</div>
       </div>
       <div style="text-align:right;flex-shrink:0;margin-left:10px">
         <div style="font-family:var(--fm);font-size:13px;font-weight:600;color:var(--t)">${it.q?'$'+fmt(it.q.price,2):'—'}</div>
@@ -12282,21 +12282,21 @@ async function exportPortfolioPDF(){
   const valEURstr='€ '+fmtN(totalEURval,2)+(totalUSDval>0?'  +  $ '+fmtN(totalUSDval,2):'');
   const invEURstr='€ '+fmtN(totalEURinv,2)+(totalUSDinv>0?'  +  $ '+fmtN(totalUSDinv,2):'');
   const pnlEURstr=(pnlEUR_pdf>=0?'+':'')+'€ '+fmtN(Math.abs(pnlEUR_pdf),2);
-  drawKpi(0,'VALORE TOTALE PORTAFOGLIO',valEURstr, nPos+' posizioni', DARK);
-  drawKpi(1,'P&L TOTALE',pnlEURstr,(up?'+':'')+fmtN(pnlPctTot,2)+'%  ·  equiv. € '+fmtN(pnlEUR_pdf,2), up?GREEN:RED);
-  drawKpi(2,'VARIAZIONE GIORNALIERA',(dailyUp?'+':'')+fmtN(totalDailyUSD/fx,2)+' €','≈ '+(dailyUp?'+':'')+fmtN(totalDailyUSD,2)+' $', dailyUp?GREEN:RED);
-  drawKpi(3,'TITOLI',nPos+' totali',nGain+' in guadagno · '+nLoss+' in perdita', DARK);
-  drawKpi(4,'CAPITALE INVESTITO',invEURstr,'', GRAY);
-  drawKpi(5,'MIGLIOR POSIZIONE',bestSym,bestPct>-Infinity?(bestPct>=0?'+':'')+bestPct.toFixed(2)+'%':'—',GREEN);
-  drawKpi(6,'PEGGIOR POSIZIONE',worstSym,worstPct<Infinity?(worstPct>=0?'+':'')+worstPct.toFixed(2)+'%':'—',RED);
-  drawKpi(7,'EUR/USD',fmtN(fx,4),'tasso corrente',GRAY);
+  drawKpi(0,_L({it:'VALORE TOTALE PORTAFOGLIO',en:'TOTAL PORTFOLIO VALUE'}),valEURstr, nPos+_L({it:' posizioni',en:' positions'}), DARK);
+  drawKpi(1,_L({it:'P&L TOTALE',en:'TOTAL P&L'}),pnlEURstr,(up?'+':'')+fmtN(pnlPctTot,2)+'%  ·  equiv. € '+fmtN(pnlEUR_pdf,2), up?GREEN:RED);
+  drawKpi(2,_L({it:'VARIAZIONE GIORNALIERA',en:'DAILY CHANGE'}),(dailyUp?'+':'')+fmtN(totalDailyUSD/fx,2)+' €','≈ '+(dailyUp?'+':'')+fmtN(totalDailyUSD,2)+' $', dailyUp?GREEN:RED);
+  drawKpi(3,_L({it:'TITOLI',en:'HOLDINGS'}),nPos+_L({it:' totali',en:' total'}),nGain+_L({it:' in guadagno · ',en:' gaining · '})+nLoss+_L({it:' in perdita',en:' losing'}), DARK);
+  drawKpi(4,_L({it:'CAPITALE INVESTITO',en:'INVESTED CAPITAL'}),invEURstr,'', GRAY);
+  drawKpi(5,_L({it:'MIGLIOR POSIZIONE',en:'BEST POSITION'}),bestSym,bestPct>-Infinity?(bestPct>=0?'+':'')+bestPct.toFixed(2)+'%':'—',GREEN);
+  drawKpi(6,_L({it:'PEGGIOR POSIZIONE',en:'WORST POSITION'}),worstSym,worstPct<Infinity?(worstPct>=0?'+':'')+worstPct.toFixed(2)+'%':'—',RED);
+  drawKpi(7,'EUR/USD',fmtN(fx,4),_L({it:'tasso corrente',en:'current rate'}),GRAY);
 
   // ── TITOLO TABELLA ──
   const tblTitleY=kpiY+2*(kpiH+kpiGap)+5;
   doc.setFontSize(8);
   doc.setFont('helvetica','bold');
   doc.setTextColor(DARK[0],DARK[1],DARK[2]);
-  doc.text('Posizioni in portafoglio',ML,tblTitleY);
+  doc.text(_L({it:'Posizioni in portafoglio',en:'Portfolio positions'}),ML,tblTitleY);
   doc.setDrawColor(LGRAY[0],LGRAY[1],LGRAY[2]);
   doc.setLineWidth(0.3);
   doc.line(ML,tblTitleY+1.5,W-MR,tblTitleY+1.5);
@@ -12312,9 +12312,9 @@ async function exportPortfolioPDF(){
     const pnlItem=val!=null?val-inv:null;
     const pnlPctItem=pnlItem!=null&&inv>0?((pnlItem/inv)*100):null;
     const dayChg=q&&q.price&&q.prev?((q.price-q.prev)/q.prev*100):null;
-    const catMap={stock:'Azione',etf:'ETF',crypto:'Crypto',commodity:'Comm.'};
+    const catMap={stock:_L({it:'Azione',en:'Stock'}),etf:'ETF',crypto:'Crypto',commodity:_L({it:'Comm.',en:'Comm.'})};
     const cat=catMap[item.cat||detectPortCat(item.sym)]||'—';
-    const dateAcq=item.buyDate?new Date(item.buyDate).toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}):'—';
+    const dateAcq=item.buyDate?new Date(item.buyDate).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}):'—';
     return[
       item.sym,
       (item.name||(q&&q.name)||item.sym).substring(0,28),
@@ -12342,7 +12342,9 @@ async function exportPortfolioPDF(){
 
   doc.autoTable({
     startY:tblTitleY+3,
-    head:[['TICKER','NOME','TIPO','QTÀ','P.ACQ','P.ATT','VALORE','P&L','REND.%','VAR. OGGI','DATA ACQ']],
+    head:[currentLang==='en'
+      ?['TICKER','NAME','TYPE','QTY','BUY P.','CURR. P.','VALUE','P&L','RET.%','TODAY','BUY DATE']
+      :['TICKER','NOME','TIPO','QTÀ','P.ACQ','P.ATT','VALORE','P&L','REND.%','VAR. OGGI','DATA ACQ']],
     body:[...rows,totRow],
     margin:{left:ML,right:MR},
     tableWidth:'auto',

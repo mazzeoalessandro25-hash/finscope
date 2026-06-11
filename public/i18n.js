@@ -20,6 +20,8 @@ const TRANSLATIONS={
     'bench.gld':'Oro — asset rifugio',
     'ind.sma20':'SMA 20 periodi','ind.sma50':'SMA 50 periodi','ind.ema20':'EMA 20 periodi','ind.rsi14':'RSI 14 periodi',
     'ind.stoch':'Stocastico 14,3','ind.bb':'Bande di Bollinger (20,2)',
+    /* MACRO LABELS */
+    'mac.lbl.dxy':'DXY — Dollaro','mac.lbl.vix':'VIX — Volatilità','mac.lbl.gold':'Oro (XAU/USD)',
     /* AUTH */
     'auth.login':'Accedi','auth.register':'Registrati',
     'auth.name':'Nome','auth.email':'Email','auth.password':'Password',
@@ -1174,6 +1176,8 @@ const TRANSLATIONS={
     'bench.gld':'Gold — safe-haven asset',
     'ind.sma20':'SMA 20 periods','ind.sma50':'SMA 50 periods','ind.ema20':'EMA 20 periods','ind.rsi14':'RSI 14 periods',
     'ind.stoch':'Stochastic 14,3','ind.bb':'Bollinger Bands (20,2)',
+    /* MACRO LABELS */
+    'mac.lbl.dxy':'DXY — Dollar','mac.lbl.vix':'VIX — Volatility','mac.lbl.gold':'Gold (XAU/USD)',
     /* AUTH */
     'auth.login':'Log in','auth.register':'Sign up',
     'auth.name':'Name','auth.email':'Email','auth.password':'Password',
