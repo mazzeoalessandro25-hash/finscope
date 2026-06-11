@@ -13766,10 +13766,59 @@ function renderFundamentals(d, cur){
   const newsList=document.getElementById('sd-news-list');
   if(newsList){
     if(d.news&&d.news.length){
-      newsList.innerHTML=d.news.map(n=>{
-        const ago=n.time?timeAgo(n.time):'';
-        return `<div class="sd-news-item"><a href="${n.link}" target="_blank" rel="noopener" class="sd-news-title">${n.title}</a><div class="sd-news-meta">${n.publisher}${ago?' · '+ago:''}</div></div>`;
+      // Sentiment detection
+      const _sdSent=t=>{
+        const tl=(t||'').toLowerCase();
+        const bull=['surge','soars','jumps','gains','beats','record','rally','rises','climbs','upgrade','profit','growth','exceeds','boosted','outperform','strong','positive'];
+        const bear=['crash','drops','falls','plunges','loses','misses','warns','cuts','downgrade','loss','decline','fears','slumps','disappoints','weak','negative','probe','lawsuit','fine'];
+        if(bull.some(w=>tl.includes(w)))return'bull';
+        if(bear.some(w=>tl.includes(w)))return'bear';
+        return'neutral';
+      };
+      const _sdDot=t=>{
+        const s=_sdSent(t);
+        if(s==='bull')return`<span style="font-size:10px;color:#059669;flex-shrink:0">▲</span>`;
+        if(s==='bear')return`<span style="font-size:10px;color:#DC2626;flex-shrink:0">▼</span>`;
+        return`<span style="font-size:10px;color:var(--t3);flex-shrink:0">—</span>`;
+      };
+      const featured=d.news.slice(0,2);
+      const rest=d.news.slice(2);
+      const featuredHTML=featured.map(n=>{
+        const ago=n.time?_timeAgo(n.time):'';
+        const s=_sdSent(n.title);
+        const sColor=s==='bull'?'#059669':s==='bear'?'#DC2626':'var(--t3)';
+        const sLabel=s==='bull'?'▲ '+_L({it:'Positivo',en:'Positive'}):s==='bear'?'▼ '+_L({it:'Negativo',en:'Negative'}):'— '+_L({it:'Neutro',en:'Neutral'});
+        const imgStyle=n.thumbnail
+          ?`background-image:url(${n.thumbnail});background-size:cover;background-position:center`
+          :`background:rgba(26,86,196,.07);display:flex;align-items:center;justify-content:center`;
+        const imgInner=n.thumbnail?'':`<span style="font-size:16px;font-weight:800;font-family:var(--fm);color:var(--b);opacity:.3">${sdSym}</span>`;
+        return`<a href="${n.link||'#'}" target="_blank" rel="noopener"
+          style="display:flex;flex-direction:column;background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden;text-decoration:none;transition:border-color .18s,transform .18s"
+          onmouseover="this.style.borderColor='rgba(26,86,196,.35)';this.style.transform='translateY(-2px)'"
+          onmouseout="this.style.borderColor='var(--bd)';this.style.transform=''">
+          <div style="height:90px;flex-shrink:0;${imgStyle}">${imgInner}</div>
+          <div style="padding:10px;display:flex;flex-direction:column;gap:4px;flex:1">
+            <span style="font-size:9px;font-weight:600;color:${sColor}">${sLabel}</span>
+            <span style="font-size:12px;font-weight:600;color:var(--t);line-height:1.4;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden">${n.title}</span>
+            <span style="margin-top:auto;padding-top:3px;font-size:10px;color:var(--t3);font-family:var(--fm)">${n.publisher||''}${ago?' · '+ago:''}</span>
+          </div>
+        </a>`;
       }).join('');
+      const restHTML=rest.map(n=>{
+        const ago=n.time?_timeAgo(n.time):'';
+        return`<a href="${n.link||'#'}" target="_blank" rel="noopener"
+          style="display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px solid var(--bd);text-decoration:none;transition:background .12s"
+          onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+          ${_sdDot(n.title)}
+          <span style="flex:1;font-size:12px;color:var(--t);line-height:1.4;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden">${n.title}</span>
+          <span style="flex-shrink:0;font-size:10px;color:var(--t3);font-family:var(--fm);white-space:nowrap;padding-left:4px">${ago}</span>
+        </a>`;
+      }).join('');
+      newsList.innerHTML=`
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:${rest.length?'14':'0'}px">${featuredHTML}</div>
+        ${rest.length?`
+          <div style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--fm);margin-bottom:6px">${_L({it:'Tutte le notizie',en:'All news'})} <span style="opacity:.6">${d.news.length}</span></div>
+          <div>${restHTML}</div>`:''}`;
     } else {
       newsList.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">'+_t('empty.news.recent')+'</div>';
     }
