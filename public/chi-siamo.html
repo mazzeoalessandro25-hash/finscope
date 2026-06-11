@@ -126,6 +126,11 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
 .foot-link:hover{color:rgba(255,255,255,.75)}
 .foot-note{font-size:10px;color:rgba(255,255,255,.25);font-family:var(--fm)}
 
+/* ─── LANG SELECT ─── */
+.lang-select{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.8);
+  border-radius:7px;padding:5px 8px;font-size:12px;font-family:var(--fm);cursor:pointer;outline:none}
+.lang-select:hover{border-color:rgba(255,255,255,.4)}
+
 @media(max-width:700px){
   nav{padding:0 20px}
   .hero{padding:52px 20px 48px}
@@ -146,7 +151,13 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
 
 <nav>
   <a href="/" class="logo"><div class="logo-dot"></div>Fin<span>Edge</span></a>
-  <a href="/" class="back">← Torna alla home</a>
+  <div style="display:flex;align-items:center;gap:12px;margin-left:auto">
+    <select class="lang-select" id="lang-sel-cs" onchange="setLangPage(this.value)">
+      <option value="it">🇮🇹 IT</option>
+      <option value="en">🇬🇧 EN</option>
+    </select>
+    <a href="/" class="back" style="margin-left:0">← <span id="back-lbl">Torna alla home</span></a>
+  </div>
 </nav>
 
 <div class="hero">
@@ -346,6 +357,15 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'denied',analytics_storage:'denied'});}
   };
 })();
+</script>
+<script>
+// ─── lang switcher ───
+function setLangPage(lang){localStorage.setItem('fs_lang',lang);location.reload();}
+document.addEventListener('DOMContentLoaded',function(){
+  var lang=localStorage.getItem('fs_lang')||'it';
+  var sel=document.getElementById('lang-sel-cs');if(sel)sel.value=lang;
+  if(lang==='en'){var bl=document.getElementById('back-lbl');if(bl)bl.textContent='Back to home';}
+});
 </script>
 <script>
 (function(){
