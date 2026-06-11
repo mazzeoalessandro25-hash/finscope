@@ -5019,7 +5019,10 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
   if(getComputedStyle(container).position==='static')container.style.position='relative';
   const old=container.querySelector('.lw-tooltip');if(old)old.remove();
   const oldMt=container.querySelector('.lw-measure-tip');if(oldMt)oldMt.remove();
-  if(!container.querySelector('.chart-legend')){const leg=document.createElement('div');leg.className='chart-legend';container.appendChild(leg);}
+  // Pulisce o crea la legend overlay
+  let _leg=container.querySelector('.chart-legend');
+  if(!_leg){_leg=document.createElement('div');_leg.className='chart-legend';container.appendChild(_leg);}
+  else{_leg.innerHTML='';}
   const tip=document.createElement('div');tip.className='lw-tooltip';container.appendChild(tip);
   const mt=document.createElement('div');mt.className='lw-measure-tip';container.appendChild(mt);
   const firstClose=pts&&pts.length?+pts[0].close:null;
