@@ -175,14 +175,14 @@ nav{height:54px;background:var(--b2);
 /* SPARKLINE */
 .spark{display:block;flex-shrink:0;overflow:visible}
 
-/* COMMODITY CARD — layout compatto 3 zone */
+/* COMMODITY CARD — flex con icona */
 .com-item{background:var(--card);border:1px solid var(--bd);border-radius:11px;padding:12px 14px;
   box-shadow:0 1px 3px rgba(0,0,0,.04);cursor:pointer;transition:all .15s;
-  display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;gap:0;align-items:center}
+  display:flex;align-items:center;gap:12px}
 .com-item:hover{border-color:rgba(26,86,196,.4);box-shadow:0 3px 12px rgba(26,86,196,.1);transform:translateY(-1px)}
-.com-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:4px;text-transform:uppercase;grid-column:1;grid-row:1}
-.com-p{font-family:var(--fm);font-size:17px;font-weight:600;color:var(--t);grid-column:1;grid-row:2;line-height:1}
-.com-c{font-family:var(--fm);font-size:11px;font-weight:500;grid-column:1;grid-row:3;margin-top:3px}
+.com-lbl{font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;margin-bottom:4px;text-transform:uppercase}
+.com-p{font-family:var(--fm);font-size:17px;font-weight:600;color:var(--t);line-height:1}
+.com-c{font-family:var(--fm);font-size:11px;font-weight:500;margin-top:3px}
 .com-spark{grid-column:2;grid-row:1/4;align-self:center;padding-left:8px}
 
 /* CRYPTO CARD — layout compatto */
@@ -208,10 +208,35 @@ nav{height:54px;background:var(--b2);
 .mv-chg.up{background:var(--g2);color:#047857}
 .mv-chg.down{background:var(--r2);color:#B91C1C}
 
-/* SECTION DIVIDER */
-.sdiv{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
-.sdiv-t{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}
-.sdiv-l{flex:1;height:1px;background:var(--bd)}
+/* SECTION DIVIDER — gradient line */
+.sdiv{display:flex;align-items:center;gap:12px;margin:24px 0 14px}
+.sdiv-t{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:1.2px;white-space:nowrap}
+.sdiv-l{flex:1;height:1px;background:linear-gradient(90deg,var(--bd) 0%,transparent 100%)}
+.sdiv-l:first-child{background:linear-gradient(270deg,var(--bd) 0%,transparent 100%)}
+
+/* MARKET PULSE BAR */
+.pulse-bar{display:flex;align-items:center;gap:6px;padding:7px 28px;background:var(--s2);border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;scrollbar-width:none}
+.pulse-bar::-webkit-scrollbar{display:none}
+.pulse-pill{display:inline-flex;flex-direction:column;align-items:flex-start;padding:5px 12px;border-radius:8px;background:var(--card);border:1px solid var(--bd);cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;gap:1px;min-width:80px}
+.pulse-pill:hover{border-color:rgba(26,86,196,.4);transform:translateY(-1px);box-shadow:0 2px 8px rgba(26,86,196,.1)}
+.pulse-lbl{font-family:var(--fm);font-size:8px;color:var(--t3);letter-spacing:.6px;font-weight:600;text-transform:uppercase}
+.pulse-row{display:flex;align-items:baseline;gap:5px}
+.pulse-val{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--t)}
+.pulse-chg{font-family:var(--fm);font-size:10px;font-weight:600}
+.pulse-chg.up{color:#16a34a}.pulse-chg.dn{color:#dc2626}
+.pulse-div{width:1px;height:30px;background:var(--bd);flex-shrink:0;margin:0 2px;align-self:center}
+
+/* COMMODITY CARD — flex con icona */
+.com-icon{font-size:26px;flex-shrink:0;width:34px;text-align:center;line-height:1}
+.com-info{flex:1;min-width:0}
+
+/* GRADIENT BORDER per card premium */
+.card-premium{background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,rgba(26,86,196,.45) 0%,rgba(124,58,237,.35) 50%,rgba(6,182,212,.25) 100%) border-box;border:1.5px solid transparent!important}
+
+/* MOVERS BAR */
+.mv-bar-wrap{width:100%;height:3px;background:var(--bd);border-radius:2px;margin-top:4px;overflow:hidden}
+.mv-bar-fill{height:100%;border-radius:2px;transition:width .4s ease}
+.mv-bar-fill.up{background:#16a34a}.mv-bar-fill.dn{background:#dc2626}
 
 /* MODAL GRAFICO */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,28,46,.55);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(3px)}
@@ -684,9 +709,10 @@ html:not(.dark) .dm-toggle .dm-moon{opacity:0}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){
-  /* Nascondi hours-bar e tape per guadagnare spazio */
+  /* Nascondi hours-bar, tape e pulse-bar per guadagnare spazio */
   .hours-bar{display:none!important}
   .tape{display:none!important}
+  .pulse-bar{display:none!important}
   .page{margin-top:54px;padding:14px 18px 20px}
   .nav-time{display:none}
   /* Grids */
@@ -2342,6 +2368,43 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div class="tape" id="tape-container">
   <div class="tape-track" id="tape-track"></div>
 </div>
+<!-- MARKET PULSE BAR -->
+<div class="pulse-bar" id="pulse-bar">
+  <div class="pulse-pill" onclick="openModal('^GSPC','S&P 500')">
+    <div class="pulse-lbl">S&P 500</div>
+    <div class="pulse-row"><span class="pulse-val" id="pb-sp500">—</span><span class="pulse-chg" id="pb-sp500c">—</span></div>
+  </div>
+  <div class="pulse-div"></div>
+  <div class="pulse-pill" onclick="openModal('^IXIC','NASDAQ')">
+    <div class="pulse-lbl">NASDAQ</div>
+    <div class="pulse-row"><span class="pulse-val" id="pb-nasdaq">—</span><span class="pulse-chg" id="pb-nasdaqc">—</span></div>
+  </div>
+  <div class="pulse-div"></div>
+  <div class="pulse-pill" onclick="openModal('^DJI','Dow Jones')">
+    <div class="pulse-lbl">DOW JONES</div>
+    <div class="pulse-row"><span class="pulse-val" id="pb-dji">—</span><span class="pulse-chg" id="pb-djic">—</span></div>
+  </div>
+  <div class="pulse-div"></div>
+  <div class="pulse-pill" onclick="openModal('^VIX','VIX — Fear Index')">
+    <div class="pulse-lbl">VIX</div>
+    <div class="pulse-row"><span class="pulse-val" id="pb-vix">—</span><span class="pulse-chg" id="pb-vixc">—</span></div>
+  </div>
+  <div class="pulse-div"></div>
+  <div class="pulse-pill" onclick="openModal('BTC-USD','Bitcoin')">
+    <div class="pulse-lbl">BTC / USD</div>
+    <div class="pulse-row"><span class="pulse-val" id="pb-btc">—</span><span class="pulse-chg" id="pb-btcc">—</span></div>
+  </div>
+  <div class="pulse-div"></div>
+  <div class="pulse-pill" onclick="openModal('EURUSD=X','EUR/USD')">
+    <div class="pulse-lbl">EUR / USD</div>
+    <div class="pulse-row"><span class="pulse-val" id="pb-eurusd">—</span><span class="pulse-chg" id="pb-eurusdc">—</span></div>
+  </div>
+  <div class="pulse-div"></div>
+  <div class="pulse-pill" onclick="openModal('GC=F','Oro')">
+    <div class="pulse-lbl">ORO XAU</div>
+    <div class="pulse-row"><span class="pulse-val" id="pb-gold">—</span><span class="pulse-chg" id="pb-goldc">—</span></div>
+  </div>
+</div>
 </div>
 
 
@@ -2353,7 +2416,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <!-- 2 GRAFICI INTERATTIVI -->
   <div class="dash-charts">
     <!-- Grafico 1 -->
-    <div class="card">
+    <div class="card card-premium">
       <div class="ch" style="flex-wrap:wrap;gap:8px">
         <div><div class="ct" id="ch1-title">S&P 500</div><div class="cs" id="ch1-sub" data-i18n="common.loading">Caricamento...</div></div>
         <div class="cc-row">
@@ -2469,7 +2532,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     </div>
 
     <!-- Grafico 2 -->
-    <div class="card">
+    <div class="card card-premium">
       <div class="ch" style="flex-wrap:wrap;gap:8px">
         <div><div class="ct" id="ch2-title">Nasdaq 100</div><div class="cs" id="ch2-sub" data-i18n="common.loading">Caricamento...</div></div>
         <div class="cc-row">
@@ -2654,12 +2717,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <!-- COMMODITIES -->
   <div class="sdiv"><div class="sdiv-t">Commodities</div><div class="sdiv-l"></div></div>
   <div class="grid3">
-    <div class="com-item" onclick="openModal('GC=F',_t('com.gold'))"><div class="com-lbl" data-i18n="com.gold">Oro · XAU/USD</div><div class="com-p" id="c0p">—</div><div class="com-c" id="c0c">—</div><div class="com-spark"><svg class="spark" id="sp-c0" width="72" height="40"></svg></div></div>
-    <div class="com-item" onclick="openModal('BZ=F',_t('com.oil'))"><div class="com-lbl" data-i18n="com.oil">Petrolio Brent</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div><div class="com-spark"><svg class="spark" id="sp-c1" width="72" height="40"></svg></div></div>
-    <div class="com-item" onclick="openModal('PL=F',_t('com.platinum'))"><div class="com-lbl" data-i18n="com.platinum">Platino · XPT/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div><div class="com-spark"><svg class="spark" id="sp-c2" width="72" height="40"></svg></div></div>
-    <div class="com-item" onclick="openModal('SI=F',_t('com.silver'))"><div class="com-lbl" data-i18n="com.silver">Argento · XAG/USD</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div><div class="com-spark"><svg class="spark" id="sp-c3" width="72" height="40"></svg></div></div>
-    <div class="com-item" onclick="openModal('NG=F',_t('com.natgas'))"><div class="com-lbl" data-i18n="com.natgas">Gas naturale</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div><div class="com-spark"><svg class="spark" id="sp-c4" width="72" height="40"></svg></div></div>
-    <div class="com-item" onclick="openModal('CC=F',_t('com.cocoa'))"><div class="com-lbl" data-i18n="com.cocoa">Cacao · CC=F</div><div class="com-p" id="c5p">—</div><div class="com-c" id="c5c">—</div><div class="com-spark"><svg class="spark" id="sp-c5" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('GC=F',_t('com.gold'))"><div class="com-icon">🥇</div><div class="com-info"><div class="com-lbl" data-i18n="com.gold">Oro · XAU/USD</div><div class="com-p" id="c0p">—</div><div class="com-c" id="c0c">—</div></div><div class="com-spark"><svg class="spark" id="sp-c0" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('BZ=F',_t('com.oil'))"><div class="com-icon">🛢️</div><div class="com-info"><div class="com-lbl" data-i18n="com.oil">Petrolio Brent</div><div class="com-p" id="c1p">—</div><div class="com-c" id="c1c">—</div></div><div class="com-spark"><svg class="spark" id="sp-c1" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('PL=F',_t('com.platinum'))"><div class="com-icon">🪙</div><div class="com-info"><div class="com-lbl" data-i18n="com.platinum">Platino · XPT/USD</div><div class="com-p" id="c2p">—</div><div class="com-c" id="c2c">—</div></div><div class="com-spark"><svg class="spark" id="sp-c2" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('SI=F',_t('com.silver'))"><div class="com-icon">🔘</div><div class="com-info"><div class="com-lbl" data-i18n="com.silver">Argento · XAG/USD</div><div class="com-p" id="c3p">—</div><div class="com-c" id="c3c">—</div></div><div class="com-spark"><svg class="spark" id="sp-c3" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('NG=F',_t('com.natgas'))"><div class="com-icon">🔥</div><div class="com-info"><div class="com-lbl" data-i18n="com.natgas">Gas naturale</div><div class="com-p" id="c4p">—</div><div class="com-c" id="c4c">—</div></div><div class="com-spark"><svg class="spark" id="sp-c4" width="72" height="40"></svg></div></div>
+    <div class="com-item" onclick="openModal('CC=F',_t('com.cocoa'))"><div class="com-icon">🍫</div><div class="com-info"><div class="com-lbl" data-i18n="com.cocoa">Cacao · CC=F</div><div class="com-p" id="c5p">—</div><div class="com-c" id="c5c">—</div></div><div class="com-spark"><svg class="spark" id="sp-c5" width="72" height="40"></svg></div></div>
   </div>
 
   <!-- CRYPTO -->
@@ -2693,7 +2756,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
   <!-- MARKET HEATMAP -->
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Market Heatmap</div><div class="sdiv-l"></div></div>
-  <div class="card" id="heatmap-card">
+  <div class="card card-premium" id="heatmap-card">
     <div class="ch">
       <div><div class="ct">Stock Heatmap</div><div class="cs">Performance giornaliera per settore · oltre 170 titoli · clicca per analizzare</div></div>
       <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadHeatmap()">↻ Aggiorna</button>
@@ -5529,6 +5592,32 @@ async function loadVIX(){
   });
 }
 
+/* ── MARKET PULSE BAR ── */
+async function loadPulseBar(){
+  const items=[
+    {sym:'^GSPC', valId:'pb-sp500',  chgId:'pb-sp500c',  dec:0},
+    {sym:'^IXIC', valId:'pb-nasdaq', chgId:'pb-nasdaqc', dec:0},
+    {sym:'^DJI',  valId:'pb-dji',    chgId:'pb-djic',    dec:0},
+    {sym:'^VIX',  valId:'pb-vix',    chgId:'pb-vixc',    dec:2},
+    {sym:'BTC-USD',valId:'pb-btc',   chgId:'pb-btcc',    dec:0},
+    {sym:'EURUSD=X',valId:'pb-eurusd',chgId:'pb-eurusdc',dec:4},
+    {sym:'GC=F',  valId:'pb-gold',   chgId:'pb-goldc',   dec:0},
+  ];
+  const results=await Promise.all(items.map(it=>api(it.sym).catch(()=>null)));
+  results.forEach((q,i)=>{
+    if(!q)return;
+    const it=items[i];
+    const vEl=document.getElementById(it.valId);
+    const cEl=document.getElementById(it.chgId);
+    if(vEl)vEl.textContent=fmt(q.price,it.dec);
+    if(cEl){
+      const c=q.changePercent??0;
+      cEl.textContent=chgStr(c);
+      cEl.className='pulse-chg '+(c>=0?'up':'dn');
+    }
+  });
+}
+
 /* ── MOVERS ── */
 async function loadMovers(){
   const topEl=document.getElementById('movers-top');
@@ -5537,11 +5626,15 @@ async function loadMovers(){
 
   const renderMovers=(list,el)=>{
     if(!el)return;
-    el.innerHTML=list.map(m=>`
-      <div class="mover-item" onclick="openModal('${m.s}','${m.name}')">
-        <div><div class="mv-sym">${m.s}</div><div class="mv-name">${m.name}</div></div>
-        <span class="mv-chg ${m.c>=0?'up':'down'}">${chgStr(m.c)}</span>
-      </div>`).join('');
+    const maxAbs=Math.max(...list.map(m=>Math.abs(m.c||0)),0.01);
+    el.innerHTML=list.map(m=>{
+      const up=m.c>=0;const pct=Math.round(Math.abs(m.c||0)/maxAbs*100);
+      return`<div class="mover-item" onclick="openModal('${m.s}','${m.name}')">
+        <div style="flex:1;min-width:0"><div class="mv-sym">${m.s}</div><div class="mv-name">${m.name}</div>
+          <div class="mv-bar-wrap"><div class="mv-bar-fill ${up?'up':'dn'}" style="width:${pct}%"></div></div>
+        </div>
+        <span class="mv-chg ${up?'up':'down'}">${chgStr(m.c)}</span>
+      </div>`;}).join('');
   };
 
   // Filtra solo i ticker le cui borse hanno già aperto la sessione oggi
@@ -6901,6 +6994,7 @@ async function boot(){
     loadMovers(),
   ]);
   loadTape();
+  loadPulseBar();
   loadHeatmap();
   loadMcap('world');
   renderCalendar(); // async, non serve await — si aggiorna da sola
@@ -6908,7 +7002,7 @@ async function boot(){
 }
 boot();
 calcSim();
-setInterval(()=>{loadIndices();loadComs();loadCrypto();loadVIX();document.getElementById('dash-ts').textContent=_t('status.updated')+now();},60000);
+setInterval(()=>{loadIndices();loadComs();loadCrypto();loadVIX();loadPulseBar();document.getElementById('dash-ts').textContent=_t('status.updated')+now();},60000);
 
 /* ══════════════════════════════════════════
    AUTH — login / register / session
