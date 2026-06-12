@@ -1265,9 +1265,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .lw-mt-label{font-size:9px;color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
 .lw-mt-pct{font-size:16px;font-weight:800;line-height:1.2}
 .lw-mt-sub{font-size:10px;color:rgba(255,255,255,.72);margin-top:3px}
-.lw-measure-svg{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:96;overflow:visible}
-.lw-m-clear{position:absolute;z-index:99;width:18px;height:18px;border-radius:50%;background:rgba(245,158,11,.95);border:1px solid rgba(255,255,255,.5);color:#fff;font-size:13px;font-weight:700;line-height:18px;text-align:center;cursor:pointer;display:none;user-select:none;box-shadow:0 2px 6px rgba(0,0,0,.3)}
-.lw-m-clear:hover{background:#e67e00}
+.lw-m-clear{position:absolute;z-index:9999;width:20px;height:20px;border-radius:50%;background:rgba(245,158,11,.95);border:2px solid rgba(255,255,255,.7);color:#fff;font-size:14px;font-weight:700;line-height:18px;text-align:center;cursor:pointer;display:none;user-select:none;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.lw-m-clear:hover{background:#d97706}
 /* Sub-chart header */
 .sc-hdr{display:flex;align-items:center;gap:4px;padding:2px 10px;background:var(--s2);border-top:1px solid var(--bd);font-family:var(--fm);height:20px;flex-shrink:0}
 .sc-hdr-name{font-size:9px;font-weight:700;color:var(--t2);letter-spacing:.4px;text-transform:uppercase}
@@ -5022,7 +5021,6 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
   if(getComputedStyle(container).position==='static')container.style.position='relative';
   const old=container.querySelector('.lw-tooltip');if(old)old.remove();
   const oldMt=container.querySelector('.lw-measure-tip');if(oldMt)oldMt.remove();
-  const oldAl=container.querySelector('.lw-measure-svg');if(oldAl)oldAl.remove();
   const oldClear=container.querySelector('.lw-m-clear');if(oldClear)oldClear.remove();
   // Pulisce o crea la legend overlay
   let _leg=container.querySelector('.chart-legend');
@@ -5030,42 +5028,25 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
   else{_leg.innerHTML='';}
   const tip=document.createElement('div');tip.className='lw-tooltip';container.appendChild(tip);
   const mt=document.createElement('div');mt.className='lw-measure-tip';container.appendChild(mt);
-  // SVG overlay per la linea di misura
-  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
-  svg.className='lw-measure-svg';container.appendChild(svg);
-  const mLine=document.createElementNS('http://www.w3.org/2000/svg','line');
-  mLine.setAttribute('stroke','#f59e0b');mLine.setAttribute('stroke-width','1.8');mLine.setAttribute('stroke-dasharray','6,3');mLine.style.display='none';svg.appendChild(mLine);
-  const mDot1=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  mDot1.setAttribute('r','4');mDot1.setAttribute('fill','#f59e0b');mDot1.setAttribute('stroke','#fff');mDot1.setAttribute('stroke-width','1.5');mDot1.style.display='none';svg.appendChild(mDot1);
-  const mDot2=document.createElementNS('http://www.w3.org/2000/svg','circle');
-  mDot2.setAttribute('r','4');mDot2.setAttribute('fill','#f59e0b');mDot2.setAttribute('stroke','#fff');mDot2.setAttribute('stroke-width','1.5');mDot2.style.display='none';svg.appendChild(mDot2);
+  // Bottone × per cancellare la misura
   const mClear=document.createElement('div');mClear.className='lw-m-clear';mClear.textContent='×';container.appendChild(mClear);
   const firstClose=pts&&pts.length?+pts[0].close:null;
-  // Funzione per ottenere coordinate SVG da time/price
-  const pxOf=(time,price)=>{
-    const x=chart.timeScale().timeToCoordinate(time);
-    const y=mainSeries.priceToCoordinate(price);
-    return{x,y};
-  };
-  // Aggiorna SVG quando âncora + end sono entrambi impostati (per scroll/zoom)
-  const refreshFinalLine=()=>{
-    if(!container._measureAnchor||!container._measureEnd)return;
-    const{x:x1,y:y1}=pxOf(container._measureAnchor.time,container._measureAnchor.price);
-    const{x:x2,y:y2}=pxOf(container._measureEnd.time,container._measureEnd.price);
-    if(x1==null||y1==null||x2==null||y2==null)return;
-    mLine.setAttribute('x1',x1);mLine.setAttribute('y1',y1);mLine.setAttribute('x2',x2);mLine.setAttribute('y2',y2);
-    mDot1.setAttribute('cx',x1);mDot1.setAttribute('cy',y1);
-    mDot2.setAttribute('cx',x2);mDot2.setAttribute('cy',y2);
-    mClear.style.left=(x2+6)+'px';mClear.style.top=(y2-9)+'px';
-  };
+  // Line series per la linea di misura (gestita da LW charts = coordinate sempre corrette)
+  let mLineSeries=null;
+  const cmpTime=(t1,t2)=>{const k=t=>typeof t==='object'?new Date(t.year,t.month-1,t.day).getTime():t*1000;return k(t1)-k(t2);};
   const clearMeasureDraw=()=>{
-    mLine.style.display='none';mDot1.style.display='none';mDot2.style.display='none';mClear.style.display='none';
-    container._measureEnd=null;
+    if(mLineSeries){try{chart.removeSeries(mLineSeries);}catch(e){}mLineSeries=null;}
+    mClear.style.display='none';container._measureEnd=null;
   };
-  mClear.onclick=()=>{
-    clearMeasureDraw();container._measureAnchor=null;mt.classList.remove('vis');
-  };
-  chart.timeScale().subscribeVisibleLogicalRangeChange(refreshFinalLine);
+  mClear.onclick=()=>{clearMeasureDraw();container._measureAnchor=null;mt.classList.remove('vis');};
+  container._clearMeasure=()=>{clearMeasureDraw();container._measureAnchor=null;mt.classList.remove('vis');};
+  // Aggiorna posizione × su scroll/zoom
+  chart.timeScale().subscribeVisibleLogicalRangeChange(()=>{
+    if(!container._measureEnd||mClear.style.display==='none')return;
+    const x2=chart.timeScale().timeToCoordinate(container._measureEnd.time);
+    const y2=mainSeries.priceToCoordinate(container._measureEnd.price);
+    if(x2!=null&&y2!=null){mClear.style.left=(x2+6)+'px';mClear.style.top=(y2-10)+'px';}
+  });
   const tKey=t=>typeof t==='object'?`${t.year}-${t.month}-${t.day}`:String(t);
   const fmtDate=(t,full)=>{try{let d;if(typeof t==='object')d=new Date(t.year,t.month-1,t.day);else d=new Date(t*1000);return d.toLocaleDateString('it-IT',full?{day:'2-digit',month:'short',year:'numeric'}:{day:'2-digit',month:'short'});}catch(e){return '';}};
   chart.subscribeClick(param=>{
@@ -5078,20 +5059,13 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
       container._measureAnchor={price,time:param.time,dateStr:fmtDate(param.time,false)};
       container._measureEnd=null;
       clearMeasureDraw();
-      const{x:x1,y:y1}=pxOf(param.time,price);
-      if(x1!=null&&y1!=null){
-        mDot1.setAttribute('cx',x1);mDot1.setAttribute('cy',y1);mDot1.style.display='block';
-        mLine.setAttribute('x1',x1);mLine.setAttribute('y1',y1);mLine.setAttribute('x2',x1);mLine.setAttribute('y2',y1);mLine.style.display='block';
-      }
     } else if(!container._measureEnd){
       // 2° click: finalizza la linea
       container._measureEnd={price,time:param.time};
-      const{x:x2,y:y2}=pxOf(param.time,price);
-      if(x2!=null&&y2!=null){
-        mLine.setAttribute('x2',x2);mLine.setAttribute('y2',y2);
-        mDot2.setAttribute('cx',x2);mDot2.setAttribute('cy',y2);mDot2.style.display='block';
-        mClear.style.left=(x2+6)+'px';mClear.style.top=(y2-9)+'px';mClear.style.display='block';
-      }
+      // Posiziona il bottone ×
+      const x2=chart.timeScale().timeToCoordinate(param.time);
+      const y2=mainSeries.priceToCoordinate(price);
+      if(x2!=null&&y2!=null){mClear.style.left=(x2+6)+'px';mClear.style.top=(y2-10)+'px';mClear.style.display='block';}
     }
   });
   chart.subscribeCrosshairMove(param=>{
@@ -5099,14 +5073,17 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
     if(!param.time||!param.point||!param.seriesData||!param.seriesData.size){
       tip.classList.remove('vis');if(!container._measureAnchor)mt.classList.remove('vis');return;
     }
-    // Aggiorna linea live se ancora impostata ma end non ancora fissato
+    // Aggiorna linea live (LW line series) se ancora impostata ma end non fissato
     if(container._measureAnchor&&!container._measureEnd&&container._measureMode){
-      const{x:ax,y:ay}=pxOf(container._measureAnchor.time,container._measureAnchor.price);
-      if(ax!=null&&ay!=null){
-        mDot1.setAttribute('cx',ax);mDot1.setAttribute('cy',ay);mDot1.style.display='block';
-        mLine.setAttribute('x1',ax);mLine.setAttribute('y1',ay);
-        mLine.setAttribute('x2',param.point.x);mLine.setAttribute('y2',param.point.y);
-        mLine.style.display='block';
+      const a=container._measureAnchor;
+      if(tKey(a.time)!==tKey(param.time)){
+        const sorted=cmpTime(a.time,param.time)<=0
+          ?[{time:a.time,value:a.price},{time:param.time,value:close}]
+          :[{time:param.time,value:close},{time:a.time,value:a.price}];
+        if(!mLineSeries){
+          mLineSeries=chart.addLineSeries({color:'#f59e0b',lineWidth:2,lineStyle:LightweightCharts.LineStyle?LightweightCharts.LineStyle.Dashed:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,autoscaleInfoProvider:()=>null});
+        }
+        try{mLineSeries.setData(sorted);}catch(e){}
       }
     }
     const data=param.seriesData.get(mainSeries);
@@ -5183,11 +5160,9 @@ function toggleMeasure(containerId,btn){
   btn.classList.toggle('active',active);
   container.style.cursor=active?'crosshair':'';
   if(!active){
-    container._measureAnchor=null;container._measureEnd=null;
-    const mt=container.querySelector('.lw-measure-tip');if(mt)mt.classList.remove('vis');
-    const svg=container.querySelector('.lw-measure-svg');
-    if(svg){svg.querySelectorAll('line,circle').forEach(el=>el.style.display='none');}
-    const mc=container.querySelector('.lw-m-clear');if(mc)mc.style.display='none';
+    if(container._clearMeasure)container._clearMeasure();
+    else{container._measureAnchor=null;container._measureEnd=null;}
+    const mt2=container.querySelector('.lw-measure-tip');if(mt2)mt2.classList.remove('vis');
   }
 }
 // ── SUB-CHART HEADER ──
