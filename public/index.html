@@ -5031,11 +5031,11 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
   // Bottone × per cancellare la misura
   const mClear=document.createElement('div');mClear.className='lw-m-clear';mClear.textContent='×';container.appendChild(mClear);
   const firstClose=pts&&pts.length?+pts[0].close:null;
-  // Line series per la linea di misura (gestita da LW charts = coordinate sempre corrette)
-  let mLineSeries=null;
+  // Line series per la linea di misura — creata subito (non dentro event handler)
   const cmpTime=(t1,t2)=>{const k=t=>typeof t==='object'?new Date(t.year,t.month-1,t.day).getTime():t*1000;return k(t1)-k(t2);};
+  const mLineSeries=chart.addLineSeries({color:'#f59e0b',lineWidth:2,lineStyle:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,autoscaleInfoProvider:()=>null});
   const clearMeasureDraw=()=>{
-    if(mLineSeries){try{chart.removeSeries(mLineSeries);}catch(e){}mLineSeries=null;}
+    try{mLineSeries.setData([]);}catch(e){}
     mClear.style.display='none';container._measureEnd=null;
   };
   mClear.onclick=()=>{clearMeasureDraw();container._measureAnchor=null;mt.classList.remove('vis');};
@@ -5062,6 +5062,12 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
     } else if(!container._measureEnd){
       // 2° click: finalizza la linea
       container._measureEnd={price,time:param.time};
+      // Fissa la linea definitivamente
+      const a2=container._measureAnchor;
+      const sortedFinal=cmpTime(a2.time,param.time)<=0
+        ?[{time:a2.time,value:a2.price},{time:param.time,value:price}]
+        :[{time:param.time,value:price},{time:a2.time,value:a2.price}];
+      try{mLineSeries.setData(sortedFinal);}catch(e){}
       // Posiziona il bottone ×
       const x2=chart.timeScale().timeToCoordinate(param.time);
       const y2=mainSeries.priceToCoordinate(price);
@@ -5087,9 +5093,6 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
         const sorted=cmpTime(a.time,param.time)<=0
           ?[{time:a.time,value:a.price},{time:param.time,value:close}]
           :[{time:param.time,value:close},{time:a.time,value:a.price}];
-        if(!mLineSeries){
-          mLineSeries=chart.addLineSeries({color:'#f59e0b',lineWidth:2,lineStyle:LightweightCharts.LineStyle?LightweightCharts.LineStyle.Dashed:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,autoscaleInfoProvider:()=>null});
-        }
         try{mLineSeries.setData(sorted);}catch(e){}
       }
     }
