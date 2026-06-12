@@ -5031,17 +5031,36 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
   // Bottone × per cancellare la misura
   const mClear=document.createElement('div');mClear.className='lw-m-clear';mClear.textContent='×';container.appendChild(mClear);
   const firstClose=pts&&pts.length?+pts[0].close:null;
-  // Line series per la linea di misura — creata subito (non dentro event handler)
-  const cmpTime=(t1,t2)=>{const k=t=>typeof t==='object'?new Date(t.year,t.month-1,t.day).getTime():t*1000;return k(t1)-k(t2);};
-  const mLineSeries=chart.addLineSeries({color:'#f59e0b',lineWidth:2,lineStyle:1,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false,autoscaleInfoProvider:()=>null});
-  const clearMeasureDraw=()=>{
-    try{mLineSeries.setData([]);}catch(e){}
-    mClear.style.display='none';container._measureEnd=null;
+  // Canvas overlay per la linea di misura (non tocca LW charts, zero rischio crash)
+  let mCanvas=container.querySelector('.measure-canvas');
+  if(mCanvas)mCanvas.remove();
+  mCanvas=document.createElement('canvas');mCanvas.className='measure-canvas';
+  mCanvas.style.cssText='position:absolute;top:0;left:0;pointer-events:none;z-index:50';
+  container.appendChild(mCanvas);
+  const _syncCanvas=()=>{mCanvas.width=container.clientWidth;mCanvas.height=container.clientHeight;};
+  _syncCanvas();
+  new ResizeObserver(_syncCanvas).observe(container);
+  const _drawLine=(t1,p1,t2,p2)=>{
+    _syncCanvas();
+    const ctx=mCanvas.getContext('2d');
+    ctx.clearRect(0,0,mCanvas.width,mCanvas.height);
+    const x1=chart.timeScale().timeToCoordinate(t1);
+    const y1=mainSeries.priceToCoordinate(p1);
+    const x2=chart.timeScale().timeToCoordinate(t2);
+    const y2=mainSeries.priceToCoordinate(p2);
+    if(x1==null||y1==null||x2==null||y2==null)return;
+    ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);
+    ctx.setLineDash([6,3]);ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.stroke();
   };
+  const _clearCanvas=()=>{const ctx=mCanvas.getContext('2d');ctx.clearRect(0,0,mCanvas.width,mCanvas.height);};
+  const clearMeasureDraw=()=>{_clearCanvas();mClear.style.display='none';container._measureEnd=null;};
   mClear.onclick=()=>{clearMeasureDraw();container._measureAnchor=null;mt.classList.remove('vis');};
   container._clearMeasure=()=>{clearMeasureDraw();container._measureAnchor=null;mt.classList.remove('vis');};
-  // Aggiorna posizione × su scroll/zoom
+  // Ridisegna canvas + riposiziona × su scroll/zoom
   chart.timeScale().subscribeVisibleLogicalRangeChange(()=>{
+    if(container._measureAnchor&&container._measureEnd){
+      _drawLine(container._measureAnchor.time,container._measureAnchor.price,container._measureEnd.time,container._measureEnd.price);
+    }
     if(!container._measureEnd||mClear.style.display==='none')return;
     const x2=chart.timeScale().timeToCoordinate(container._measureEnd.time);
     const y2=mainSeries.priceToCoordinate(container._measureEnd.price);
@@ -5062,12 +5081,9 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
     } else if(!container._measureEnd){
       // 2° click: finalizza la linea
       container._measureEnd={price,time:param.time};
-      // Fissa la linea definitivamente
+      // Fissa la linea definitivamente sul canvas
       const a2=container._measureAnchor;
-      const sortedFinal=cmpTime(a2.time,param.time)<=0
-        ?[{time:a2.time,value:a2.price},{time:param.time,value:price}]
-        :[{time:param.time,value:price},{time:a2.time,value:a2.price}];
-      try{mLineSeries.setData(sortedFinal);}catch(e){}
+      _drawLine(a2.time,a2.price,param.time,price);
       // Posiziona il bottone ×
       const x2=chart.timeScale().timeToCoordinate(param.time);
       const y2=mainSeries.priceToCoordinate(price);
@@ -5086,15 +5102,11 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
     if(type==='candle'&&data.close!==undefined){open=data.open;high=data.high;low=data.low;close=data.close;price=close;}
     else{price=data.value??data.close;close=price;}
     if(price==null){tip.classList.remove('vis');return;}
-    // Aggiorna linea live (LW line series): close è ora definito
+    // Aggiorna linea live sul canvas
     if(container._measureAnchor&&!container._measureEnd&&container._measureMode){
       const a=container._measureAnchor;
-      if(tKey(a.time)!==tKey(param.time)){
-        const sorted=cmpTime(a.time,param.time)<=0
-          ?[{time:a.time,value:a.price},{time:param.time,value:close}]
-          :[{time:param.time,value:close},{time:a.time,value:a.price}];
-        try{mLineSeries.setData(sorted);}catch(e){}
-      }
+      if(tKey(a.time)!==tKey(param.time)){_drawLine(a.time,a.price,param.time,close);}
+      else{_clearCanvas();}
     }
     const dec=price<10?4:price<100?2:price<10000?2:0;
     const dateStr=fmtDate(param.time,true);
