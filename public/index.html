@@ -5073,7 +5073,14 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
     if(!param.time||!param.point||!param.seriesData||!param.seriesData.size){
       tip.classList.remove('vis');if(!container._measureAnchor)mt.classList.remove('vis');return;
     }
-    // Aggiorna linea live (LW line series) se ancora impostata ma end non fissato
+    // Estrai dati serie PRIMA di usare close/price
+    const data=param.seriesData.get(mainSeries);
+    if(!data){tip.classList.remove('vis');return;}
+    let price,open,high,low,close;
+    if(type==='candle'&&data.close!==undefined){open=data.open;high=data.high;low=data.low;close=data.close;price=close;}
+    else{price=data.value??data.close;close=price;}
+    if(price==null){tip.classList.remove('vis');return;}
+    // Aggiorna linea live (LW line series): close è ora definito
     if(container._measureAnchor&&!container._measureEnd&&container._measureMode){
       const a=container._measureAnchor;
       if(tKey(a.time)!==tKey(param.time)){
@@ -5086,12 +5093,6 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
         try{mLineSeries.setData(sorted);}catch(e){}
       }
     }
-    const data=param.seriesData.get(mainSeries);
-    if(!data){tip.classList.remove('vis');return;}
-    let price,open,high,low,close;
-    if(type==='candle'&&data.close!==undefined){open=data.open;high=data.high;low=data.low;close=data.close;price=close;}
-    else{price=data.value??data.close;close=price;}
-    if(price==null){tip.classList.remove('vis');return;}
     const dec=price<10?4:price<100?2:price<10000?2:0;
     const dateStr=fmtDate(param.time,true);
     const cW=container.clientWidth,cH=container.clientHeight;
