@@ -191,7 +191,7 @@ nav{height:54px;background:var(--b2);
   cursor:pointer;transition:all .15s}
 .crypto-item:hover{border-color:rgba(26,86,196,.4);box-shadow:0 3px 12px rgba(26,86,196,.1);transform:translateY(-1px)}
 .cry-l{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
-.cry-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
+.cry-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;object-fit:contain}
 .cry-name{font-size:12px;font-weight:600;color:var(--t);white-space:nowrap}
 .cry-sym{font-size:9px;color:var(--t3);font-family:var(--fm)}
 .cry-mid{flex-shrink:0}
@@ -2326,12 +2326,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
 <!-- MOBILE NAV DRAWER -->
 <div class="mobile-drawer" id="mobile-drawer">
-  <button class="mob-nav-btn active" id="mob-nb-dashboard" onclick="showPage('dashboard',document.getElementById('nb-dashboard'));closeMobileNav()">📊 Dashboard</button>
-  <button class="mob-nav-btn" id="mob-nb-screener" onclick="showPage('screener',document.getElementById('nb-screener'));closeMobileNav()">🔍 Screener</button>
-  <button class="mob-nav-btn" id="mob-nb-portafoglio" onclick="showPage('portafoglio',document.getElementById('nb-portafoglio'));closeMobileNav()">💼 Portafoglio</button>
-  <button class="mob-nav-btn" id="mob-nb-lab" onclick="showPage('lab',document.getElementById('nb-lab'));closeMobileNav()">🧪 Lab</button>
-  <button class="mob-nav-btn" id="mob-nb-news" onclick="showPage('news',document.getElementById('nb-news'));closeMobileNav()">📰 News</button>
-  <button class="mob-nav-btn" id="mob-nb-macro" onclick="showPage('macro',document.getElementById('nb-macro'));closeMobileNav()">🌐 Macro</button>
+  <button class="mob-nav-btn active" id="mob-nb-dashboard" onclick="showPage('dashboard',document.getElementById('nb-dashboard'));closeMobileNav()">📊 <span data-i18n="nav.dashboard">Dashboard</span></button>
+  <button class="mob-nav-btn" id="mob-nb-screener" onclick="showPage('screener',document.getElementById('nb-screener'));closeMobileNav()">🔍 <span data-i18n="nav.screener">Screener</span></button>
+  <button class="mob-nav-btn" id="mob-nb-portafoglio" onclick="showPage('portafoglio',document.getElementById('nb-portafoglio'));closeMobileNav()">💼 <span data-i18n="nav.portfolio">Portafoglio</span></button>
+  <button class="mob-nav-btn" id="mob-nb-lab" onclick="showPage('lab',document.getElementById('nb-lab'));closeMobileNav()">🧪 <span data-i18n="nav.lab">Strumenti</span></button>
+  <button class="mob-nav-btn" id="mob-nb-news" onclick="showPage('news',document.getElementById('nb-news'));closeMobileNav()">📰 <span data-i18n="nav.news">News</span></button>
+  <button class="mob-nav-btn" id="mob-nb-macro" onclick="showPage('macro',document.getElementById('nb-macro'));closeMobileNav()">🌐 <span data-i18n="nav.macro">Macro</span></button>
   <button id="mob-usermode-toggle" onclick="toggleUserMode();closeMobileNav()"
     style="display:none;width:calc(100% - 32px);margin:8px 16px 0;background:rgba(255,255,255,.1);
     border:1px solid rgba(255,255,255,.25);color:#fff;font-family:var(--ff);font-size:12px;
@@ -2357,7 +2357,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <!-- ═══ DASHBOARD ═══ -->
 <div class="page active" id="page-dashboard">
   <div class="pg-title">Dashboard</div>
-  <div class="pg-sub" data-i18n="dash.subtitle">Dati aggiornati in tempo reale · Clicca su qualsiasi indice, commodity o crypto per aprire il grafico</div>
+  <div class="pg-sub" data-i18n="dash.subtitle">Prezzi con ritardo max 15 min · Clicca su qualsiasi indice, commodity o crypto per aprire il grafico</div>
 
   <!-- 2 GRAFICI INTERATTIVI -->
   <div class="dash-charts">
@@ -2674,12 +2674,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <!-- CRYPTO -->
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t" data-i18n="dash.crypto.title">Criptovalute</div><div class="sdiv-l"></div></div>
   <div class="grid3">
-    <div class="crypto-item" onclick="openModal('BTC-USD','Bitcoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706">₿</div><div><div class="cry-name">Bitcoin</div><div class="cry-sym">BTC/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k0" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k0p">—</div><div class="cry-c" id="k0c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('ETH-USD','Ethereum')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4">Ξ</div><div><div class="cry-name">Ethereum</div><div class="cry-sym">ETH/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k1" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k1p">—</div><div class="cry-c" id="k1c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('SOL-USD','Solana')"><div class="cry-l"><div class="cry-ico" style="background:#F0FDF4;color:#059669">◎</div><div><div class="cry-name">Solana</div><div class="cry-sym">SOL/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k2" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k2p">—</div><div class="cry-c" id="k2c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('BNB-USD','BNB')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:11px">BNB</div><div><div class="cry-name">BNB</div><div class="cry-sym">BNB/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k3" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k3p">—</div><div class="cry-c" id="k3c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('XRP-USD','XRP')"><div class="cry-l"><div class="cry-ico" style="background:#EBF1FB;color:#1A56C4;font-size:11px">XRP</div><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k4" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div>
-    <div class="crypto-item" onclick="openModal('DOGE-USD','Dogecoin')"><div class="cry-l"><div class="cry-ico" style="background:#FEF3C7;color:#D97706;font-size:13px">Ð</div><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k5" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div>
+    <div class="crypto-item" onclick="openCryptoDetail('bitcoin')"><div class="cry-l"><img class="cry-ico" src="https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png" alt="BTC" onerror="this.style.display='none'"><div><div class="cry-name">Bitcoin</div><div class="cry-sym">BTC/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k0" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k0p">—</div><div class="cry-c" id="k0c">—</div></div></div>
+    <div class="crypto-item" onclick="openCryptoDetail('ethereum')"><div class="cry-l"><img class="cry-ico" src="https://assets.coingecko.com/coins/images/279/thumb/ethereum.png" alt="ETH" onerror="this.style.display='none'"><div><div class="cry-name">Ethereum</div><div class="cry-sym">ETH/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k1" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k1p">—</div><div class="cry-c" id="k1c">—</div></div></div>
+    <div class="crypto-item" onclick="openCryptoDetail('solana')"><div class="cry-l"><img class="cry-ico" src="https://assets.coingecko.com/coins/images/4128/thumb/solana.png" alt="SOL" onerror="this.style.display='none'"><div><div class="cry-name">Solana</div><div class="cry-sym">SOL/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k2" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k2p">—</div><div class="cry-c" id="k2c">—</div></div></div>
+    <div class="crypto-item" onclick="openCryptoDetail('binancecoin')"><div class="cry-l"><img class="cry-ico" src="https://assets.coingecko.com/coins/images/825/thumb/bnb-icon2_2x.png" alt="BNB" onerror="this.style.display='none'"><div><div class="cry-name">BNB</div><div class="cry-sym">BNB/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k3" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k3p">—</div><div class="cry-c" id="k3c">—</div></div></div>
+    <div class="crypto-item" onclick="openCryptoDetail('ripple')"><div class="cry-l"><img class="cry-ico" src="https://assets.coingecko.com/coins/images/44/thumb/xrp-symbol-white-128.png" alt="XRP" onerror="this.style.display='none'"><div><div class="cry-name">XRP</div><div class="cry-sym">XRP/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k4" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k4p">—</div><div class="cry-c" id="k4c">—</div></div></div>
+    <div class="crypto-item" onclick="openCryptoDetail('dogecoin')"><div class="cry-l"><img class="cry-ico" src="https://assets.coingecko.com/coins/images/5/thumb/dogecoin.png" alt="DOGE" onerror="this.style.display='none'"><div><div class="cry-name">Dogecoin</div><div class="cry-sym">DOGE/USD</div></div></div><div class="cry-mid"><svg class="spark" id="sp-k5" width="72" height="36"></svg></div><div class="cry-r"><div class="cry-p" id="k5p">—</div><div class="cry-c" id="k5c">—</div></div></div>
   </div>
 
   <!-- TOP 10 MARKET CAP -->
@@ -2774,7 +2774,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div class="page" id="page-screener">
   <div class="pg-title">Stock Screener</div>
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:14px">
-    <div class="pg-sub" style="margin-bottom:0" data-i18n="sc.subtitle">Indici mondiali con prezzi live · Fonte: Financial Modeling Prep · Clicca per l'analisi fondamentale</div>
+    <div class="pg-sub" style="margin-bottom:0" data-i18n="sc.subtitle">Azioni, ETF, crypto e obbligazioni con prezzi live · Fonte: Yahoo Finance · Clicca per l'analisi fondamentale</div>
     <div class="sc-quick-bar" style="margin-bottom:0">
       <button class="sc-quick-btn" onclick="openWlaPage()">★ Watchlist <span class="sc-quick-cnt" id="sc-wl-cnt" style="display:none">0</span></button>
     </div>
@@ -3292,7 +3292,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
 <!-- ═══ SIMULATORE ═══ -->
 <div class="page" id="page-lab">
-  <div class="pg-title">Lab</div>
+  <div class="pg-title" data-i18n="nav.lab">Strumenti</div>
   <div class="pg-sub" data-i18n="lab.subtitle">Simulatore · Backtest · Comparatore</div>
   <!-- Tab bar -->
   <div class="lab-tabs">
@@ -3344,6 +3344,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="fg" style="margin-bottom:0">
         <label style="display:flex;justify-content:space-between">RENDIMENTO %/ANNO<span id="srv" style="color:var(--b);font-weight:700">8%</span></label>
         <input type="range" id="sr" min="1" max="20" value="8" step="0.5" oninput="document.getElementById('srv').textContent=this.value+'%';calcSim()"/>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:4px;line-height:1.4">⚠ Ipotesi statica: tasso costante per tutta la durata. I rendimenti reali variano ogni anno e il capitale è a rischio.</div>
       </div>
       <select id="ss" style="display:none" onchange="calcSim()">
         <option value="balanced">Bilanciato (60/40)</option>
@@ -3614,7 +3615,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
 <!-- ═══ MACRO DASHBOARD ═══ -->
 <div class="page" id="page-macro">
-  <div class="pg-title">Macro Dashboard</div>
+  <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px">
+    <div class="pg-title">Macro Dashboard</div>
+    <a href="#macro-edu-body" onclick="event.preventDefault();document.getElementById('macro-edu-body').scrollIntoView({behavior:'smooth'})" style="font-size:11px;color:var(--b);font-family:var(--fm);text-decoration:none;white-space:nowrap">Guida Macro ↓</a>
+  </div>
   <div class="pg-sub" data-i18n="macro.sub">Tassi · Banche Centrali · Ciclo Economico · Forex · Condizioni del Credito</div>
 
   <!-- ══ ANALISI MACRO NARRATIVA ══ -->
@@ -6897,7 +6901,7 @@ async function loadMcap(region,btn){
         ${logoHtmlSm(it.sym,it.name)}
         <div>
           <div class="mcap-name">${it.name}</div>
-          <div class="mcap-sym">${it.sym}</div>
+          <div class="mcap-sym" style="display:flex;gap:4px;align-items:center">${it.sym}${it.sector?`<span style="font-size:9px;background:var(--s2);color:var(--t3);border-radius:3px;padding:1px 4px;white-space:nowrap">${it.sector}</span>`:''}${it.flag?`<span style="font-size:11px">${it.flag}</span>`:''}</div>
         </div>
       </div>
       <div class="mcap-bar-wrap">
@@ -6978,9 +6982,7 @@ const _TRANS_MAP=[
   {s:'#nb-dashboard',k:'nav.dashboard',t:'t'},{s:'#nb-screener',k:'nav.screener',t:'t'},
   {s:'#nb-portafoglio',k:'nav.portfolio',t:'t'},{s:'#nb-lab',k:'nav.lab',t:'t'},
   {s:'#nb-news',k:'nav.news',t:'t'},{s:'#nb-macro',k:'nav.macro',t:'t'},
-  {s:'#mob-nb-dashboard',k:'nav.dashboard',t:'t'},{s:'#mob-nb-screener',k:'nav.screener',t:'t'},
-  {s:'#mob-nb-portafoglio',k:'nav.portfolio',t:'t'},{s:'#mob-nb-lab',k:'nav.lab',t:'t'},
-  {s:'#mob-nb-news',k:'nav.news',t:'t'},{s:'#mob-nb-macro',k:'nav.macro',t:'t'},
+  /* mobile nav: i18n gestito via data-i18n span dentro ogni button */
   /* PORTFOLIO TABS */
   {s:'#ptab-btn-analisi',k:'port.tab.analysis',t:'t'},
   {s:'#ptab-btn-performance',k:'port.tab.performance',t:'t'},
@@ -8379,7 +8381,11 @@ async function removePortfolioItem(idx){
 async function renderPortfolio(){
   const el=document.getElementById('port-list');
   if(!portfolio.length){
-    el.innerHTML=`<div class="ld">${_t('port.empty')}</div>`;
+    el.innerHTML=`<div class="port-empty-panel">
+      <div style="font-size:36px;margin-bottom:12px">📊</div>
+      <div style="font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px">${_L({it:'Portafoglio vuoto',en:'Empty portfolio',de:'Leeres Portfolio'})}</div>
+      <div style="font-size:12px;color:var(--t3);font-family:var(--fm);max-width:300px;line-height:1.6">${_L({it:'Cerca un titolo (es. AAPL, ENI.MI, BTC-USD) nel campo in alto e premi ＋ per aggiungerlo.',en:'Search a ticker (e.g. AAPL, ENI.MI, BTC-USD) in the field above and press ＋ to add it.',de:'Suche einen Ticker (z.B. AAPL, ENI.MI, BTC-USD) im Feld oben und drücke ＋ zum Hinzufügen.'})}</div>
+    </div>`;
     document.getElementById('port-summary').innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:4px 0">'+_t('port.empty')+'</div>';
 
     return;

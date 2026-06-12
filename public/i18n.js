@@ -6,7 +6,7 @@ const TRANSLATIONS={
   it:{
     /* NAV */
     'nav.dashboard':'Dashboard','nav.screener':'Screener',
-    'nav.portfolio':'Portafoglio','nav.lab':'Lab',
+    'nav.portfolio':'Portafoglio','nav.lab':'Strumenti',
     'nav.news':'News','nav.macro':'Macro',
     'nav.login':'Accedi','nav.theme':'Cambia tema',
     'usermode.label':'⚡ Avanzata','usermode.title':'Passa alla modalità avanzata',
@@ -57,7 +57,7 @@ const TRANSLATIONS={
     'common.noneData':'Nessun dato disponibile',
     'common.back':'← Indietro',
     /* DASHBOARD */
-    'dash.subtitle':'Dati aggiornati in tempo reale · Clicca su qualsiasi indice, commodity o crypto per aprire il grafico',
+    'dash.subtitle':'Prezzi con ritardo max 15 min · Clicca su qualsiasi indice, commodity o crypto per aprire il grafico',
     'dash.line':'Linea','dash.candles':'Candele','dash.indicators':'Indicatori',
     'dash.vix':'VIX — Indice di Volatilità',
     'dash.movAvg':'Medie Mobili','dash.osc':'Oscillatori','dash.volBand':'Volatilità & Bande',
@@ -101,7 +101,7 @@ const TRANSLATIONS={
     'sc.bondEtf':'📊 ETF Obbligazionari — Prezzi Live',
     'sc.th.category':'CATEGORIA','sc.th.divYield':'YIELD DIV.','sc.th.addPort':'+ PORTAFOGLIO',
     'sc.allMarkets':'🌐 Tutti i mercati',
-    'sc.subtitle':"Indici mondiali con prezzi live · Fonte: Financial Modeling Prep · Clicca per l'analisi fondamentale",
+    'sc.subtitle':"Azioni, ETF, crypto e obbligazioni con prezzi live · Fonte: Yahoo Finance · Clicca per l'analisi fondamentale",
     /* PORTFOLIO */
     'port.loginRequired':'Accesso richiesto',
     'port.loginMsg':'Crea un account gratuito per salvare il tuo portafoglio',
@@ -112,7 +112,7 @@ const TRANSLATIONS={
     'port.buyPrice':'Prezzo acquisto','port.pricePh':'es. 150.00',
     'port.buyDate':'Data acquisto',
     'port.addBtn':'＋ Aggiungi',
-    'port.empty':'Nessun titolo aggiunto',
+    'port.empty':'Nessun titolo aggiunto · Usa il campo sopra per cercare un titolo e aggiungerlo al portafoglio',
     'port.exportPDF':'⬇ Esporta PDF','port.importCSV':'⬆ Importa CSV',
     'port.catAll':'Tutti','port.catStock':'Azioni','port.catETF':'ETF',
     'port.catCrypto':'Crypto','port.catComm':'Comm.',
@@ -1162,7 +1162,7 @@ const TRANSLATIONS={
   en:{
     /* NAV */
     'nav.dashboard':'Dashboard','nav.screener':'Screener',
-    'nav.portfolio':'Portfolio','nav.lab':'Lab',
+    'nav.portfolio':'Portfolio','nav.lab':'Tools',
     'nav.news':'News','nav.macro':'Macro',
     'nav.login':'Log in','nav.theme':'Toggle theme',
     'usermode.label':'⚡ Advanced','usermode.title':'Switch to advanced mode',
@@ -1213,7 +1213,7 @@ const TRANSLATIONS={
     'common.noneData':'No data available',
     'common.back':'← Back',
     /* DASHBOARD */
-    'dash.subtitle':'Real-time data · Click any index, commodity or crypto to open the chart',
+    'dash.subtitle':'Prices with up to 15 min delay · Click any index, commodity or crypto to open the chart',
     'dash.line':'Line','dash.candles':'Candles','dash.indicators':'Indicators',
     'dash.vix':'VIX — Volatility Index',
     'dash.movAvg':'Moving Averages','dash.osc':'Oscillators','dash.volBand':'Volatility & Bands',
@@ -1257,7 +1257,7 @@ const TRANSLATIONS={
     'sc.bondEtf':'📊 Bond ETFs — Live Prices',
     'sc.th.category':'CATEGORY','sc.th.divYield':'DIV. YIELD','sc.th.addPort':'+ PORTFOLIO',
     'sc.allMarkets':'🌐 All markets',
-    'sc.subtitle':'Global indices with live prices · Source: Financial Modeling Prep · Click for fundamental analysis',
+    'sc.subtitle':'Stocks, ETFs, crypto and bonds with live prices · Source: Yahoo Finance · Click for fundamental analysis',
     /* PORTFOLIO */
     'port.loginRequired':'Login required',
     'port.loginMsg':'Create a free account to save your portfolio',
@@ -1268,7 +1268,7 @@ const TRANSLATIONS={
     'port.buyPrice':'Buy price','port.pricePh':'e.g. 150.00',
     'port.buyDate':'Buy date',
     'port.addBtn':'＋ Add',
-    'port.empty':'No positions added',
+    'port.empty':'No positions added · Search a ticker above and add it to your portfolio',
     'port.exportPDF':'⬇ Export PDF','port.importCSV':'⬆ Import CSV',
     'port.catAll':'All','port.catStock':'Stocks','port.catETF':'ETF',
     'port.catCrypto':'Crypto','port.catComm':'Comm.',
@@ -2313,7 +2313,7 @@ const TRANSLATIONS={
   de:{
     /* NAV */
     'nav.dashboard':'Dashboard','nav.screener':'Screener',
-    'nav.portfolio':'Portfolio','nav.lab':'Lab',
+    'nav.portfolio':'Portfolio','nav.lab':'Werkzeuge',
     'nav.news':'Nachrichten','nav.macro':'Makro',
     'nav.login':'Anmelden','nav.theme':'Design wechseln',
     /* AUTH */
@@ -2349,7 +2349,7 @@ const TRANSLATIONS={
     'common.noneData':'Keine Daten verfügbar',
     'common.back':'← Zurück',
     /* DASHBOARD */
-    'dash.subtitle':'Echtzeit-Daten · Auf Index, Rohstoff oder Krypto klicken, um den Chart zu öffnen',
+    'dash.subtitle':'Kurse mit bis zu 15 Min. Verzögerung · Auf Index, Rohstoff oder Krypto klicken, um den Chart zu öffnen',
     'dash.line':'Linie','dash.candles':'Kerzen','dash.indicators':'Indikatoren',
     'dash.vix':'VIX — Volatilitätsindex',
     'dash.movAvg':'Gleitende Durchschnitte','dash.osc':'Oszillatoren','dash.volBand':'Volatilität & Bänder',
@@ -2393,7 +2393,7 @@ const TRANSLATIONS={
     'sc.bondEtf':'📊 Anleihen-ETFs — Live-Preise',
     'sc.th.category':'KATEGORIE','sc.th.divYield':'DIV.-REND.','sc.th.addPort':'+ PORTFOLIO',
     'sc.allMarkets':'🌐 Alle Märkte',
-    'sc.subtitle':'Globale Indizes mit Live-Preisen · Quelle: Financial Modeling Prep · Klicken für Fundamentalanalyse',
+    'sc.subtitle':'Aktien, ETFs, Krypto und Anleihen mit Live-Preisen · Quelle: Yahoo Finance · Klicken für Fundamentalanalyse',
     /* PORTFOLIO */
     'port.loginRequired':'Anmeldung erforderlich',
     'port.loginMsg':'Kostenloses Konto erstellen, um dein Portfolio zu speichern',
@@ -2404,7 +2404,7 @@ const TRANSLATIONS={
     'port.buyPrice':'Kaufpreis','port.pricePh':'z.B. 150.00',
     'port.buyDate':'Kaufdatum',
     'port.addBtn':'＋ Hinzufügen',
-    'port.empty':'Keine Positionen hinzugefügt',
+    'port.empty':'Keine Positionen hinzugefügt · Suche oben einen Ticker und füge ihn zum Portfolio hinzu',
     'port.exportPDF':'⬇ PDF exportieren','port.importCSV':'⬆ CSV importieren',
     'port.catAll':'Alle','port.catStock':'Aktien','port.catETF':'ETF',
     'port.catCrypto':'Krypto','port.catComm':'Rohst.',
