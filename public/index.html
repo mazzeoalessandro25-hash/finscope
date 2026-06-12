@@ -2695,7 +2695,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Market Heatmap</div><div class="sdiv-l"></div></div>
   <div class="card" id="heatmap-card">
     <div class="ch">
-      <div><div class="ct">Stock Heatmap</div><div class="cs">Performance giornaliera per settore · oltre 75 titoli · clicca per analizzare</div></div>
+      <div><div class="ct">Stock Heatmap</div><div class="cs">Performance giornaliera per settore · oltre 170 titoli · clicca per analizzare</div></div>
       <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadHeatmap()">↻ Aggiorna</button>
     </div>
     <div class="hm-toolbar">
@@ -9704,7 +9704,7 @@ function renderBuyZone(sd,qd){
 
 /* ══════════════════════════════════════════
    STOCK HEATMAP — stile Finviz treemap
-   3 righe · 10 settori · 83 titoli
+   4 righe · 11 settori · ~170 titoli
 ══════════════════════════════════════════ */
 // Ordinati per market cap decrescente all'interno di ogni settore
 const HM_STOCKS=[
@@ -9723,6 +9723,19 @@ const HM_STOCKS=[
   {s:'AMD',n:'AMD',sec:'Technology',mkt:'US'},
   {s:'QCOM',n:'Qualcomm',sec:'Technology',mkt:'US'},
   {s:'INTC',n:'Intel',sec:'Technology',mkt:'US'},
+  {s:'NOW',n:'ServiceNow',sec:'Technology',mkt:'US'},
+  {s:'INTU',n:'Intuit',sec:'Technology',mkt:'US'},
+  {s:'CSCO',n:'Cisco',sec:'Technology',mkt:'US'},
+  {s:'IBM',n:'IBM',sec:'Technology',mkt:'US'},
+  {s:'TXN',n:'Texas Instr.',sec:'Technology',mkt:'US'},
+  {s:'MU',n:'Micron',sec:'Technology',mkt:'US'},
+  {s:'AMAT',n:'App. Materials',sec:'Technology',mkt:'US'},
+  {s:'PLTR',n:'Palantir',sec:'Technology',mkt:'US'},
+  {s:'PANW',n:'Palo Alto',sec:'Technology',mkt:'US'},
+  {s:'CRWD',n:'CrowdStrike',sec:'Technology',mkt:'US'},
+  {s:'ARM',n:'ARM Holdings',sec:'Technology',mkt:'US'},
+  {s:'NET',n:'Cloudflare',sec:'Technology',mkt:'US'},
+  {s:'SNOW',n:'Snowflake',sec:'Technology',mkt:'US'},
   /* Consumer Cyclical — ~2T → ~45B */
   {s:'AMZN',n:'Amazon',sec:'Cons. Cycl.',mkt:'US'},
   {s:'TSLA',n:'Tesla',sec:'Cons. Cycl.',mkt:'US'},
@@ -9734,6 +9747,15 @@ const HM_STOCKS=[
   {s:'SBUX',n:'Starbucks',sec:'Cons. Cycl.',mkt:'US'},
   {s:'TGT',n:'Target',sec:'Cons. Cycl.',mkt:'US'},
   {s:'BMW.DE',n:'BMW',sec:'Cons. Cycl.',mkt:'EU'},
+  {s:'UBER',n:'Uber',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'ABNB',n:'Airbnb',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'LOW',n:"Lowe's",sec:'Cons. Cycl.',mkt:'US'},
+  {s:'CMG',n:'Chipotle',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'RACE.MI',n:'Ferrari',sec:'Cons. Cycl.',mkt:'IT'},
+  {s:'STLAM.MI',n:'Stellantis',sec:'Cons. Cycl.',mkt:'IT'},
+  {s:'ROST',n:'Ross Stores',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'F',n:'Ford',sec:'Cons. Cycl.',mkt:'US'},
+  {s:'GM',n:'Gen. Motors',sec:'Cons. Cycl.',mkt:'US'},
   /* Communication — ~400B → ~85B */
   {s:'NFLX',n:'Netflix',sec:'Communic.',mkt:'US'},
   {s:'T',n:'AT&T',sec:'Communic.',mkt:'US'},
@@ -9741,6 +9763,12 @@ const HM_STOCKS=[
   {s:'DIS',n:'Disney',sec:'Communic.',mkt:'US'},
   {s:'CMCSA',n:'Comcast',sec:'Communic.',mkt:'US'},
   {s:'SPOT',n:'Spotify',sec:'Communic.',mkt:'US'},
+  {s:'TMUS',n:'T-Mobile',sec:'Communic.',mkt:'US'},
+  {s:'CHTR',n:'Charter',sec:'Communic.',mkt:'US'},
+  {s:'WBD',n:'Warner Bros.',sec:'Communic.',mkt:'US'},
+  {s:'SNAP',n:'Snap',sec:'Communic.',mkt:'US'},
+  {s:'PINS',n:'Pinterest',sec:'Communic.',mkt:'US'},
+  {s:'RDDT',n:'Reddit',sec:'Communic.',mkt:'US'},
   /* Financial — ~650B → ~12B */
   {s:'JPM',n:'JPMorgan',sec:'Financial',mkt:'US'},
   {s:'V',n:'Visa',sec:'Financial',mkt:'US'},
@@ -9755,6 +9783,17 @@ const HM_STOCKS=[
   {s:'UCG.MI',n:'UniCredit',sec:'Financial',mkt:'IT'},
   {s:'ISP.MI',n:'Intesa SP',sec:'Financial',mkt:'IT'},
   {s:'MB.MI',n:'Mediobanca',sec:'Financial',mkt:'IT'},
+  {s:'C',n:'Citigroup',sec:'Financial',mkt:'US'},
+  {s:'SCHW',n:'Schwab',sec:'Financial',mkt:'US'},
+  {s:'COF',n:'Capital One',sec:'Financial',mkt:'US'},
+  {s:'PYPL',n:'PayPal',sec:'Financial',mkt:'US'},
+  {s:'CME',n:'CME Group',sec:'Financial',mkt:'US'},
+  {s:'SPGI',n:'S&P Global',sec:'Financial',mkt:'US'},
+  {s:'COIN',n:'Coinbase',sec:'Financial',mkt:'US'},
+  {s:'BAMI.MI',n:'Banco BPM',sec:'Financial',mkt:'IT'},
+  {s:'FBK.MI',n:'FinecoBank',sec:'Financial',mkt:'IT'},
+  {s:'SAN',n:'Santander',sec:'Financial',mkt:'EU'},
+  {s:'BBVA',n:'BBVA',sec:'Financial',mkt:'EU'},
   /* Healthcare — ~700B → ~120B */
   {s:'LLY',n:'Eli Lilly',sec:'Healthcare',mkt:'US'},
   {s:'UNH',n:'UnitedHealth',sec:'Healthcare',mkt:'US'},
@@ -9765,6 +9804,15 @@ const HM_STOCKS=[
   {s:'MRK',n:'Merck',sec:'Healthcare',mkt:'US'},
   {s:'AMGN',n:'Amgen',sec:'Healthcare',mkt:'US'},
   {s:'PFE',n:'Pfizer',sec:'Healthcare',mkt:'US'},
+  {s:'TMO',n:'Thermo Fisher',sec:'Healthcare',mkt:'US'},
+  {s:'ISRG',n:'Intuitive Surg.',sec:'Healthcare',mkt:'US'},
+  {s:'VRTX',n:'Vertex',sec:'Healthcare',mkt:'US'},
+  {s:'GILD',n:'Gilead',sec:'Healthcare',mkt:'US'},
+  {s:'REGN',n:'Regeneron',sec:'Healthcare',mkt:'US'},
+  {s:'MDT',n:'Medtronic',sec:'Healthcare',mkt:'US'},
+  {s:'BSX',n:'Boston Sci.',sec:'Healthcare',mkt:'US'},
+  {s:'REC.MI',n:'Recordati',sec:'Healthcare',mkt:'IT'},
+  {s:'GSK',n:'GSK',sec:'Healthcare',mkt:'EU'},
   /* Energy — ~500B → ~45B */
   {s:'XOM',n:'ExxonMobil',sec:'Energy',mkt:'US'},
   {s:'CVX',n:'Chevron',sec:'Energy',mkt:'US'},
@@ -9773,8 +9821,16 @@ const HM_STOCKS=[
   {s:'BP',n:'BP',sec:'Energy',mkt:'EU'},
   {s:'SLB',n:'SLB',sec:'Energy',mkt:'US'},
   {s:'ENI.MI',n:'ENI',sec:'Energy',mkt:'IT'},
+  {s:'SHEL',n:'Shell',sec:'Energy',mkt:'EU'},
+  {s:'OXY',n:'Occidental',sec:'Energy',mkt:'US'},
+  {s:'HAL',n:'Halliburton',sec:'Energy',mkt:'US'},
+  {s:'BKR',n:'Baker Hughes',sec:'Energy',mkt:'US'},
+  {s:'SRG.MI',n:'Snam',sec:'Energy',mkt:'IT'},
+  {s:'SPM.MI',n:'Saipem',sec:'Energy',mkt:'IT'},
   /* Space Tech */
   {s:'SPCX',n:'SpaceX',sec:'Space Tech',mkt:'US'},
+  {s:'RKLB',n:'Rocket Lab',sec:'Space Tech',mkt:'US'},
+  {s:'ASTS',n:'AST SpaceMobile',sec:'Space Tech',mkt:'US'},
   /* Industrials — ~175B → ~20B */
   {s:'RTX',n:'RTX',sec:'Industrials',mkt:'US'},
   {s:'CAT',n:'Caterpillar',sec:'Industrials',mkt:'US'},
@@ -9784,6 +9840,14 @@ const HM_STOCKS=[
   {s:'UPS',n:'UPS',sec:'Industrials',mkt:'US'},
   {s:'BA',n:'Boeing',sec:'Industrials',mkt:'US'},
   {s:'LDO.MI',n:'Leonardo',sec:'Industrials',mkt:'IT'},
+  {s:'GE',n:'GE Aerospace',sec:'Industrials',mkt:'US'},
+  {s:'DE',n:'Deere',sec:'Industrials',mkt:'US'},
+  {s:'ETN',n:'Eaton',sec:'Industrials',mkt:'US'},
+  {s:'NOC',n:'Northrop',sec:'Industrials',mkt:'US'},
+  {s:'GD',n:'Gen. Dynamics',sec:'Industrials',mkt:'US'},
+  {s:'FDX',n:'FedEx',sec:'Industrials',mkt:'US'},
+  {s:'CNHI.MI',n:'CNH Industrial',sec:'Industrials',mkt:'IT'},
+  {s:'PRY.MI',n:'Prysmian',sec:'Industrials',mkt:'IT'},
   /* Consumer Defensive — ~700B → ~130B */
   {s:'WMT',n:'Walmart',sec:'Cons. Def.',mkt:'US'},
   {s:'COST',n:'Costco',sec:'Cons. Def.',mkt:'US'},
@@ -9792,17 +9856,33 @@ const HM_STOCKS=[
   {s:'OR.PA',n:"L'Oréal",sec:'Cons. Def.',mkt:'EU'},
   {s:'PEP',n:'PepsiCo',sec:'Cons. Def.',mkt:'US'},
   {s:'PM',n:'Philip Morris',sec:'Cons. Def.',mkt:'US'},
+  {s:'NSRGY',n:'Nestlé',sec:'Cons. Def.',mkt:'EU'},
+  {s:'MDLZ',n:'Mondelez',sec:'Cons. Def.',mkt:'US'},
+  {s:'GIS',n:'General Mills',sec:'Cons. Def.',mkt:'US'},
+  {s:'EL',n:'Estée Lauder',sec:'Cons. Def.',mkt:'US'},
+  {s:'MONC.MI',n:'Moncler',sec:'Cons. Def.',mkt:'IT'},
+  {s:'CPR.MI',n:'Campari',sec:'Cons. Def.',mkt:'IT'},
+  {s:'BCU.MI',n:'Brunello Cucinelli',sec:'Cons. Def.',mkt:'IT'},
   /* Utilities — ~115B → ~18B */
   {s:'NEE',n:'NextEra',sec:'Utilities',mkt:'US'},
   {s:'DUK',n:'Duke Energy',sec:'Utilities',mkt:'US'},
   {s:'ENEL.MI',n:'Enel',sec:'Utilities',mkt:'IT'},
   {s:'SO',n:'Southern Co.',sec:'Utilities',mkt:'US'},
   {s:'TRN.MI',n:'Terna',sec:'Utilities',mkt:'IT'},
+  {s:'A2A.MI',n:'A2A',sec:'Utilities',mkt:'IT'},
+  {s:'AEP',n:'AEP',sec:'Utilities',mkt:'US'},
+  {s:'PCG',n:"PG&E",sec:'Utilities',mkt:'US'},
+  {s:'EXC',n:'Exelon',sec:'Utilities',mkt:'US'},
+  {s:'D',n:'Dominion Energy',sec:'Utilities',mkt:'US'},
   /* Materials — ~220B → ~30B */
   {s:'LIN',n:'Linde',sec:'Materials',mkt:'US'},
   {s:'FCX',n:'Freeport',sec:'Materials',mkt:'US'},
   {s:'NEM',n:'Newmont',sec:'Materials',mkt:'US'},
   {s:'BAS.DE',n:'BASF',sec:'Materials',mkt:'EU'},
+  {s:'BHP',n:'BHP Group',sec:'Materials',mkt:'EU'},
+  {s:'RIO',n:'Rio Tinto',sec:'Materials',mkt:'EU'},
+  {s:'VALE',n:'Vale',sec:'Materials',mkt:'US'},
+  {s:'SHW',n:'Sherwin-Williams',sec:'Materials',mkt:'US'},
 ];
 
 // Righe del treemap (settori → colonne proporzionali)
@@ -9810,6 +9890,7 @@ const HM_ROWS=[
   ['Technology','Cons. Cycl.','Communic.'],
   ['Financial','Healthcare','Energy'],
   ['Industrials','Cons. Def.','Utilities','Materials'],
+  ['Space Tech'],
 ];
 
 // Colore e stile header per settore (colore testo + bordo)
@@ -9824,6 +9905,7 @@ const HM_SEC_COLOR={
   'Cons. Def.':    {color:'#0D9488',bg:'#F0FDFA'},
   'Utilities':     {color:'#2563EB',bg:'#EFF6FF'},
   'Materials':     {color:'#92400E',bg:'#FEF3C7'},
+  'Space Tech':    {color:'#1C2951',bg:'#EEF2FF'},
 };
 
 let hmData={};
