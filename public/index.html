@@ -1296,7 +1296,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 /* Body */
 .crd-body{padding:20px 24px;max-width:1400px;margin:0 auto}
 /* 2-col layout: grafico sinistra, metriche destra */
-.crd-top{display:grid;grid-template-columns:1fr 320px;gap:16px;margin-bottom:14px;align-items:start}
+.crd-top{display:grid;grid-template-columns:1fr 260px;gap:16px;margin-bottom:14px;align-items:start}
 .crd-right{display:flex;flex-direction:column;gap:14px}
 /* Chart section */
 .crd-chart-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px 20px;margin-bottom:14px;overflow:hidden}
@@ -1335,8 +1335,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .fng-label{font-family:var(--fm);font-size:11px;font-weight:700;text-align:center;margin-top:2px}
 /* Responsive */
 @media(max-width:900px){.crd-top{grid-template-columns:1fr}}
-@media(max-width:800px){.crd-m4{grid-template-columns:repeat(2,1fr)}.crd-2col{grid-template-columns:1fr}.crd-level-3cols{grid-template-columns:1fr 1fr 1fr}}
-@media(max-width:500px){.crd-header{padding:10px 14px}.crd-body{padding:14px 14px}.crd-m4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.crd-m4{grid-template-columns:repeat(2,1fr)}.crd-2col{grid-template-columns:1fr}.crd-level-3cols{grid-template-columns:1fr 1fr 1fr}.crd-stat-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.crd-header{padding:10px 14px}.crd-body{padding:14px 14px}.crd-m4{grid-template-columns:repeat(2,1fr)}.crd-stat-strip{grid-template-columns:repeat(2,1fr)}}
+/* Stat strip nell'overlay crypto */
+.crd-stat-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.crd-stat-item{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:12px 14px}
+.crd-stat-lbl{font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px}
+.crd-stat-val{font-size:15px;font-weight:700;color:var(--t);margin-bottom:3px}
+.crd-stat-sub{font-family:var(--fm);font-size:10px;color:var(--t3)}
+/* Barre gainers/losers */
+.cry-gl-bar-wrap{height:3px;background:var(--s2);border-radius:2px;margin:4px 0;overflow:hidden}
+.cry-gl-bar-fill{height:100%;border-radius:2px;transition:width .4s}
 /* Quick Action Buttons — usati in tutti i detail overlay */
 .qa-btn{font-family:var(--fm);font-size:11px;font-weight:700;padding:7px 14px;border-radius:8px;border:none;background:var(--b);color:#fff;cursor:pointer;transition:all .15s;flex-shrink:0;white-space:nowrap}
 .qa-btn:hover{opacity:.82}
@@ -1363,13 +1372,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .crd-conv-inp:focus{border-color:rgba(26,86,196,.4);background:var(--card)}
 .fng-score{font-size:26px;font-weight:700;color:var(--t);text-align:center;font-family:var(--fm)}
 .fng-label{font-family:var(--fm);font-size:11px;font-weight:700;text-align:center;margin-top:2px}
-.cry-global-strip{display:grid;grid-template-columns:repeat(5,1fr);background:var(--card);border:1px solid var(--bd);border-radius:12px;overflow:hidden;margin-bottom:20px}
-.cry-global-item{padding:14px 16px;border-right:1px solid var(--bd)}
-.cry-global-item:last-child{border-right:none}
-.cry-global-lbl{font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px}
-.cry-global-val{font-size:16px;font-weight:700;color:var(--t)}
-.cry-global-sub{font-family:var(--fm);font-size:10px;color:var(--t2);margin-top:3px}
+.cry-global-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.cry-global-item{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px;border-top:3px solid var(--bd);transition:border-top-color .3s}
+.cry-global-lbl{font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:5px}
+.cry-global-val{font-size:18px;font-weight:800;color:var(--t)}
+.cry-global-sub{font-family:var(--fm);font-size:10px;color:var(--t2);margin-top:4px}
 @media(max-width:900px){.cry-global-strip{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:550px){.cry-global-strip{grid-template-columns:repeat(2,1fr)}}
 .cry-gl-strip{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
 .cry-gl-panel{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:14px 16px}
 .cry-gl-title{font-family:var(--fm);font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px}
@@ -1615,7 +1624,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   .pg-sub{font-size:12px;margin-bottom:12px}
 
   /* ── SEZIONI CRYPTO/COMMODITIES ── */
-  .cry-global-strip{grid-template-columns:repeat(3,1fr)!important}
+  .cry-global-strip{grid-template-columns:repeat(2,1fr)!important}
   .cry-gl-strip{grid-template-columns:1fr!important}
   .com-grid{grid-template-columns:1fr 1fr!important}
   /* Commodities: riduce prezzo e sparkline per stare in 2 colonne */
@@ -2082,6 +2091,30 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <button class="qa-btn qa-btn-ghost" onclick="crdQuickAlert()">🔔 Alert</button>
     </div>
 
+    <!-- STAT STRIP — 4 metriche chiave in riga -->
+    <div class="crd-stat-strip">
+      <div class="crd-stat-item" style="border-top:3px solid #3B82F6">
+        <div class="crd-stat-lbl">Market Cap</div>
+        <div class="crd-stat-val" id="crd-mcap">—</div>
+        <div class="crd-stat-sub" id="crd-mcap-sub">—</div>
+      </div>
+      <div class="crd-stat-item" style="border-top:3px solid #06B6D4">
+        <div class="crd-stat-lbl">Volume 24h</div>
+        <div class="crd-stat-val" id="crd-vol">—</div>
+        <div class="crd-stat-sub" id="crd-vol-sub">—</div>
+      </div>
+      <div class="crd-stat-item" style="border-top:3px solid #8B5CF6">
+        <div class="crd-stat-lbl">FDV</div>
+        <div class="crd-stat-val" id="crd-fdv">—</div>
+        <div class="crd-stat-sub" id="crd-fdv-sub">Fully Diluted</div>
+      </div>
+      <div class="crd-stat-item" style="border-top:3px solid #F59E0B">
+        <div class="crd-stat-lbl">Supply Circolante</div>
+        <div class="crd-stat-val" id="crd-supply">—</div>
+        <div class="crd-stat-sub" id="crd-supply-sub">—</div>
+      </div>
+    </div>
+
     <!-- TOP: grafico (sinistra) + metriche (destra) -->
     <div class="crd-top">
 
@@ -2138,39 +2171,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
 
-      <!-- DESTRA: metriche + Fear&Greed + convertitore + MCap comparison -->
+      <!-- DESTRA: Fear&Greed + convertitore -->
       <div class="crd-right">
-
-        <!-- 4 METRICHE CHIAVE (2×2) -->
-        <div class="crd-m4">
-          <div class="crd-m4-item">
-            <div class="crd-m4-lbl">Market Cap</div>
-            <div class="crd-m4-val" id="crd-mcap">—</div>
-            <div class="crd-m4-sub" id="crd-mcap-sub">—</div>
-          </div>
-          <div class="crd-m4-item">
-            <div class="crd-m4-lbl">Volume 24h</div>
-            <div class="crd-m4-val" id="crd-vol">—</div>
-            <div class="crd-m4-sub" id="crd-vol-sub">—</div>
-          </div>
-          <div class="crd-m4-item">
-            <div class="crd-m4-lbl">FDV</div>
-            <div class="crd-m4-val" id="crd-fdv">—</div>
-            <div class="crd-m4-sub" id="crd-fdv-sub">Fully Diluted</div>
-          </div>
-          <div class="crd-m4-item">
-            <div class="crd-m4-lbl">Supply Circolante</div>
-            <div class="crd-m4-val" id="crd-supply">—</div>
-            <div class="crd-m4-sub" id="crd-supply-sub">—</div>
-          </div>
-        </div>
 
         <!-- FEAR & GREED -->
         <div class="crd-inner-card" style="text-align:center">
           <div class="crd-inner-title">Fear &amp; Greed Index</div>
-          <canvas id="crd-fng-gauge" width="130" height="76" style="max-width:130px"></canvas>
-          <div class="fng-score" id="crd-fng-val">—</div>
-          <div class="fng-label" id="crd-fng-lbl">—</div>
+          <canvas id="crd-fng-gauge" width="220" height="126" style="max-width:220px;width:100%"></canvas>
+          <div class="fng-score" id="crd-fng-val" style="font-size:32px">—</div>
+          <div class="fng-label" id="crd-fng-lbl" style="font-size:13px">—</div>
           <div style="font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:4px" id="crd-fng-date">—</div>
         </div>
 
@@ -2845,12 +2854,32 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <!-- ═══ SEZIONE CRYPTO SCREENER ═══ -->
   <div id="sc-crypto-section" style="display:none">
     <!-- Global strip -->
-    <div class="cry-global-strip" style="margin-bottom:16px">
-      <div class="cry-global-item"><div class="cry-global-lbl">Total Market Cap</div><div class="cry-global-val" id="cry-g-mcap">—</div><div class="cry-global-sub" id="cry-g-mcap-sub">—</div></div>
-      <div class="cry-global-item"><div class="cry-global-lbl">BTC Dominance</div><div class="cry-global-val" id="cry-g-btc">—</div><div class="cry-global-sub" id="cry-g-btc-sub">—</div></div>
-      <div class="cry-global-item"><div class="cry-global-lbl">ETH Dominance</div><div class="cry-global-val" id="cry-g-eth">—</div><div class="cry-global-sub">vs. mercato crypto</div></div>
-      <div class="cry-global-item"><div class="cry-global-lbl">Volume 24h</div><div class="cry-global-val" id="cry-g-vol">—</div><div class="cry-global-sub" id="cry-g-vol-sub">—</div></div>
-      <div class="cry-global-item"><div class="cry-global-lbl">Fear &amp; Greed</div><div class="cry-global-val" id="cry-g-fng">—</div><div class="cry-global-sub" id="cry-g-fng-sub">—</div></div>
+    <div class="cry-global-strip">
+      <div class="cry-global-item" id="cry-card-mcap" style="border-top-color:#3B82F6">
+        <div class="cry-global-lbl"><span>📊</span>Total Market Cap</div>
+        <div class="cry-global-val" id="cry-g-mcap">—</div>
+        <div class="cry-global-sub" id="cry-g-mcap-sub">—</div>
+      </div>
+      <div class="cry-global-item" id="cry-card-btc" style="border-top-color:#F59E0B">
+        <div class="cry-global-lbl"><span>₿</span>BTC Dominance</div>
+        <div class="cry-global-val" id="cry-g-btc">—</div>
+        <div class="cry-global-sub" id="cry-g-btc-sub">—</div>
+      </div>
+      <div class="cry-global-item" style="border-top-color:#8B5CF6">
+        <div class="cry-global-lbl"><span>⬡</span>ETH Dominance</div>
+        <div class="cry-global-val" id="cry-g-eth">—</div>
+        <div class="cry-global-sub" data-i18n="cry.eth.sub">vs. mercato crypto</div>
+      </div>
+      <div class="cry-global-item" id="cry-card-vol" style="border-top-color:#06B6D4">
+        <div class="cry-global-lbl"><span>📈</span>Volume 24h</div>
+        <div class="cry-global-val" id="cry-g-vol">—</div>
+        <div class="cry-global-sub" id="cry-g-vol-sub">—</div>
+      </div>
+      <div class="cry-global-item" id="cry-card-fng" style="border-top-color:#EAB308">
+        <div class="cry-global-lbl"><span>🧠</span>Fear &amp; Greed</div>
+        <div class="cry-global-val" id="cry-g-fng">—</div>
+        <div class="cry-global-sub" id="cry-g-fng-sub">—</div>
+      </div>
     </div>
     <!-- Gainers / Losers -->
     <div class="cry-gl-strip" style="margin-bottom:16px">
@@ -2874,17 +2903,14 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <table class="tbl">
         <thead><tr>
           <th style="width:36px">#</th>
-          <th style="width:36px"></th>
           <th>NOME</th>
           <th>PREZZO</th>
           <th>24h %</th>
-          <th>7g %</th>
-          <th>30g %</th>
           <th>MARKET CAP</th>
           <th>VOLUME 24h</th>
           <th>SUPPLY %</th>
         </tr></thead>
-        <tbody id="cry-page-body"><tr><td colspan="10" class="ld" data-i18n="common.loading">Caricamento...</td></tr></tbody>
+        <tbody id="cry-page-body"><tr><td colspan="7" class="ld" data-i18n="common.loading">Caricamento...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -17191,9 +17217,13 @@ function _renderCryptoGlobal(d){
   }
   if(el('cry-g-fng')&&fng){
     const v=parseInt(fng.value);
+    const fngColor=v<25?'var(--r)':v<45?'var(--o)':v<55?'var(--t2)':'var(--g)';
     el('cry-g-fng').textContent=v+'/100';
-    el('cry-g-fng').style.color=v<25?'var(--r)':v<45?'var(--o)':v<55?'var(--t2)':'var(--g)';
+    el('cry-g-fng').style.color=fngColor;
     if(el('cry-g-fng-sub'))el('cry-g-fng-sub').textContent=_fngClassLabel(fng.value_classification);
+    // Aggiorna bordo superiore del card F&G con il colore del sentiment
+    const fngCard=document.getElementById('cry-card-fng');
+    if(fngCard){const bc=v<25?'#DC2626':v<45?'#EA580C':v<55?'#EAB308':'#16A34A';fngCard.style.borderTopColor=bc;}
   }
 }
 
@@ -17202,21 +17232,32 @@ function _renderCryptoGainersLosers(d){
   const sorted=coins.sort((a,b)=>(b.price_change_percentage_24h||0)-(a.price_change_percentage_24h||0));
   const gainers=sorted.slice(0,5);
   const losers=[...sorted].reverse().slice(0,5);
-  const makeRows=arr=>arr.map(c=>{
-    const chg=c.price_change_percentage_24h;
-    const bg=chg>=0?'var(--g2)':'var(--r2)';
-    const col=chg>=0?'var(--g)':'var(--r)';
-    return`<div class="cry-gl-row" onclick="openCryptoDetail('${c.id}')" style="cursor:pointer">
-      <img class="cry-gl-logo" src="${c.image}" alt="" onerror="this.style.display='none'">
-      <div style="flex:1"><div class="cry-gl-name">${c.name}</div><div class="cry-gl-sym">${c.symbol.toUpperCase()}</div></div>
-      <div style="font-family:var(--fm);font-size:11px;color:var(--t2);margin-right:6px">${_fmtCryptoPrice(c.current_price)}</div>
-      <div class="cry-gl-chg" style="background:${bg};color:${col}">${_fmtCryptoChg(chg)}</div>
-    </div>`;
-  }).join('');
+  const makeRows=(arr,isGainer)=>{
+    const maxAbs=Math.max(...arr.map(c=>Math.abs(c.price_change_percentage_24h||0)))||1;
+    return arr.map(c=>{
+      const chg=c.price_change_percentage_24h;
+      const col=isGainer?'var(--g)':'var(--r)';
+      const barW=Math.min(Math.abs(chg)/maxAbs*100,100).toFixed(1);
+      return`<div class="cry-gl-row" onclick="openCryptoDetail('${c.id}')" style="cursor:pointer;padding:8px 0">
+        <img class="cry-gl-logo" src="${c.image}" alt="" onerror="this.style.display='none'">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span class="cry-gl-name" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px">${c.name}</span>
+            <span style="font-family:var(--fm);font-size:12px;font-weight:700;color:${col}">${_fmtCryptoChg(chg)}</span>
+          </div>
+          <div class="cry-gl-bar-wrap"><div class="cry-gl-bar-fill" style="width:${barW}%;background:${col}"></div></div>
+          <div style="display:flex;justify-content:space-between">
+            <span class="cry-gl-sym">${c.symbol.toUpperCase()}</span>
+            <span style="font-family:var(--fm);font-size:10px;color:var(--t3)">${_fmtCryptoPrice(c.current_price)}</span>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  };
   const ge=document.getElementById('cry-gainers');
   const le=document.getElementById('cry-losers');
-  if(ge)ge.innerHTML=makeRows(gainers);
-  if(le)le.innerHTML=makeRows(losers);
+  if(ge)ge.innerHTML=makeRows(gainers,true);
+  if(le)le.innerHTML=makeRows(losers,false);
 }
 
 function _renderCryptoNarrative(d){
@@ -17258,17 +17299,21 @@ function _renderCryptoTable(tbodyId,coins){
   if(!tbody)return;
   tbody.innerHTML=coins.map((c,i)=>{
     const chg24=c.price_change_percentage_24h;
-    const chg7=c.price_change_percentage_7d_in_currency;
-    const chg30=c.price_change_percentage_30d_in_currency;
     const supplyPct=c.max_supply?(c.circulating_supply/c.max_supply*100):null;
+    const chgCol=chg24==null?'var(--t3)':chg24>=0?'var(--g)':'var(--r)';
     return`<tr onclick="openCryptoDetail('${c.id}')" style="cursor:pointer">
       <td><span class="crypto-rank">${i+1}</span></td>
-      <td><img class="crypto-logo" src="${c.image}" alt="" onerror="this.style.display='none'"></td>
-      <td><div style="font-weight:600;color:var(--t)">${c.name}</div><div style="font-family:var(--fm);font-size:10px;color:var(--t3)">${c.symbol.toUpperCase()}</div></td>
-      <td style="font-family:var(--fm);font-weight:600">${_fmtCryptoPrice(c.current_price)}</td>
-      <td class="${_chgClassCrypto(chg24)}" style="font-family:var(--fm);font-weight:700">${_fmtCryptoChg(chg24)}</td>
-      <td class="${_chgClassCrypto(chg7)}" style="font-family:var(--fm);font-weight:700">${_fmtCryptoChg(chg7)}</td>
-      <td class="${_chgClassCrypto(chg30)}" style="font-family:var(--fm);font-weight:700">${_fmtCryptoChg(chg30)}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:9px">
+          <img class="crypto-logo" src="${c.image}" alt="" onerror="this.style.display='none'">
+          <div>
+            <div style="font-weight:600;color:var(--t)">${c.name}</div>
+            <div style="font-family:var(--fm);font-size:10px;color:var(--t3)">${c.symbol.toUpperCase()}</div>
+          </div>
+        </div>
+      </td>
+      <td style="font-family:var(--fm);font-weight:700">${_fmtCryptoPrice(c.current_price)}</td>
+      <td style="font-family:var(--fm);font-weight:700;color:${chgCol}">${_fmtCryptoChg(chg24)}</td>
       <td style="font-family:var(--fm)">${_fmtCryptoCap(c.market_cap)}</td>
       <td style="font-family:var(--fm)">${_fmtCryptoCap(c.total_volume)}</td>
       <td style="font-family:var(--fm)">${supplyPct!=null?supplyPct.toFixed(1)+'%':'∞'}</td>
@@ -17421,26 +17466,30 @@ function _renderFngGauge(fng){
   if(!canvas)return;
   const v=parseInt(fng.value);
   const ctx=canvas.getContext('2d');
-  canvas.width=120;canvas.height=70;
-  ctx.clearRect(0,0,120,70);
-  const cx=60,cy=62,r=48;
+  canvas.width=220;canvas.height=126;
+  ctx.clearRect(0,0,220,126);
+  const cx=110,cy=112,r=88;
   // BG arc
   ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,0);
-  ctx.lineWidth=10;ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--bd')||'#e5e7eb';
+  ctx.lineWidth=14;ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--bd')||'#e5e7eb';
   ctx.stroke();
   // Colored arc
-  const grad=ctx.createLinearGradient(10,62,110,62);
+  const grad=ctx.createLinearGradient(20,112,200,112);
   grad.addColorStop(0,'#DC2626');grad.addColorStop(0.25,'#EA580C');grad.addColorStop(0.5,'#EAB308');
   grad.addColorStop(0.75,'#84CC16');grad.addColorStop(1,'#16A34A');
   const endAngle=Math.PI+(v/100)*Math.PI;
   ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,endAngle);
-  ctx.lineWidth=10;ctx.strokeStyle=grad;ctx.lineCap='round';
+  ctx.lineWidth=14;ctx.strokeStyle=grad;ctx.lineCap='round';
   ctx.stroke();
   // Needle
   const na=Math.PI+(v/100)*Math.PI;
-  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+(r-8)*Math.cos(na),cy+(r-8)*Math.sin(na));
-  ctx.lineWidth=2;ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--t')||'#111';
+  ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+(r-14)*Math.cos(na),cy+(r-14)*Math.sin(na));
+  ctx.lineWidth=3;ctx.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--t')||'#111';
   ctx.lineCap='round';ctx.stroke();
+  // Centro dot
+  ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);
+  ctx.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--t')||'#111';
+  ctx.fill();
   const el=id=>document.getElementById(id);
   if(el('crd-fng-val'))el('crd-fng-val').textContent=v;
   if(el('crd-fng-lbl')){
