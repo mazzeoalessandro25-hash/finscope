@@ -17132,6 +17132,14 @@ function _fmtCryptoChg(v){
 }
 function _chgClassCrypto(v){return v==null?'':v>=0?'up':'down';}
 
+// Traduce value_classification di alternative.me in base alla lingua corrente
+function _fngClassLabel(c){
+  if(!c)return c;
+  if(currentLang==='en')return c;
+  const map={'Extreme Fear':'Paura Estrema','Fear':'Paura','Neutral':'Neutrale','Greed':'Avidità','Extreme Greed':'Avidità Estrema'};
+  return map[c]||c;
+}
+
 async function _loadCryptoData(force=false){
   if(_cryptoData&&!force)return _cryptoData;
   const r=await fetch('/api/quote?type=crypto');
@@ -17143,7 +17151,7 @@ async function _loadCryptoData(force=false){
 /* ── CRYPTO PAGE ── */
 async function loadCryptoDashboard(){
   try{
-    const d=await _loadCryptoData();
+    const d=await _loadCryptoData(true);
     _renderCryptoGlobal(d);
     _renderCryptoGainersLosers(d);
     _renderCryptoNarrative(d);
@@ -17185,7 +17193,7 @@ function _renderCryptoGlobal(d){
     const v=parseInt(fng.value);
     el('cry-g-fng').textContent=v+'/100';
     el('cry-g-fng').style.color=v<25?'var(--r)':v<45?'var(--o)':v<55?'var(--t2)':'var(--g)';
-    el('cry-g-fng-sub').textContent=fng.value_classification;
+    if(el('cry-g-fng-sub'))el('cry-g-fng-sub').textContent=_fngClassLabel(fng.value_classification);
   }
 }
 
@@ -17227,11 +17235,12 @@ function _renderCryptoNarrative(d){
     else signals.push({i:'🟢',t:`<strong>BTC Dominance ${btcDom.toFixed(1)}%</strong> — ${_L({it:'Altseason in corso. Il capitale si distribuisce su ETH, DeFi e small cap.',en:'Altseason underway. Capital flowing into ETH, DeFi and small caps.'})}`});
   }
   if(fngV!=null){
-    if(fngV<25)signals.push({i:'🔴',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Paura estrema. Storicamente zona di accumulo per gli investitori di lungo periodo.',en:'Extreme fear. Historically an accumulation zone for long-term investors.'})}`});
-    else if(fngV<45)signals.push({i:'🟠',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Sentiment negativo. Mercato cauto, possibile opportunità per chi guarda al medio termine.',en:'Negative sentiment. Cautious market, possible opportunity for medium-term investors.'})}`});
-    else if(fngV<55)signals.push({i:'⚪',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Sentiment neutro. Mercato in equilibrio senza eccessi.',en:'Neutral sentiment. Market in balance with no excesses.'})}`});
-    else if(fngV<75)signals.push({i:'🟢',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Sentiment positivo. Momentum favorevole, ma attenzione a possibili correzioni.',en:'Positive sentiment. Favorable momentum, but watch for possible corrections.'})}`});
-    else signals.push({i:'⚠️',t:`<strong>Fear & Greed: ${fngV} — ${fng.value_classification}</strong> — ${_L({it:'Euforia di mercato. Possibile surriscaldamento, aumentare cautela.',en:'Market euphoria. Possible overheating — increase caution.'})}`});
+    const fngLbl=_fngClassLabel(fng.value_classification);
+    if(fngV<25)signals.push({i:'🔴',t:`<strong>Fear & Greed: ${fngV} — ${fngLbl}</strong> — ${_L({it:'Paura estrema. Storicamente zona di accumulo per gli investitori di lungo periodo.',en:'Extreme fear. Historically an accumulation zone for long-term investors.'})}`});
+    else if(fngV<45)signals.push({i:'🟠',t:`<strong>Fear & Greed: ${fngV} — ${fngLbl}</strong> — ${_L({it:'Sentiment negativo. Mercato cauto, possibile opportunità per chi guarda al medio termine.',en:'Negative sentiment. Cautious market, possible opportunity for medium-term investors.'})}`});
+    else if(fngV<55)signals.push({i:'⚪',t:`<strong>Fear & Greed: ${fngV} — ${fngLbl}</strong> — ${_L({it:'Sentiment neutro. Mercato in equilibrio senza eccessi.',en:'Neutral sentiment. Market in balance with no excesses.'})}`});
+    else if(fngV<75)signals.push({i:'🟢',t:`<strong>Fear & Greed: ${fngV} — ${fngLbl}</strong> — ${_L({it:'Sentiment positivo. Momentum favorevole, ma attenzione a possibili correzioni.',en:'Positive sentiment. Favorable momentum, but watch for possible corrections.'})}`});
+    else signals.push({i:'⚠️',t:`<strong>Fear & Greed: ${fngV} — ${fngLbl}</strong> — ${_L({it:'Euforia di mercato. Possibile surriscaldamento, aumentare cautela.',en:'Market euphoria. Possible overheating — increase caution.'})}`});
   }
   if(mcapChg!=null&&Math.abs(mcapChg)>3){
     const icon=mcapChg>0?'📈':'📉';
@@ -17293,25 +17302,21 @@ async function openCryptoDetail(coinId){
   const catEl=document.getElementById('crd-categories');if(catEl)catEl.innerHTML='';
   const linksEl=document.getElementById('crd-links');if(linksEl)linksEl.innerHTML='';
   // Populate from cache
+  let _detailCoin=null;
   try{
     const d=await _loadCryptoData();
-    const coin=d.coins.find(c=>c.id===coinId);
-    if(coin){_populateCryptoHeader(coin);_initConverter(coin);}
+    _detailCoin=d.coins.find(c=>c.id===coinId)||null;
+    if(_detailCoin){_populateCryptoHeader(_detailCoin);_initConverter(_detailCoin);}
     if(d.fng)_renderFngGauge(d.fng);
-    if(coin)_renderCryptoDetailNarrative(coin,d);
+    if(_detailCoin)_renderCryptoDetailNarrative(_detailCoin,d);
   }catch(e){}
   // Reset notizie
   const newsEl=document.getElementById('crd-news-list');
   if(newsEl)newsEl.innerHTML='<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">'+_t('load.news.dyn')+'</div>';
-  // Carica grafico, info e notizie in parallelo
+  // Carica grafico e info in parallelo; notizie con nome coin già disponibile
   loadCryptoChart(30,document.getElementById('crd-btn-30'));
   _fetchCryptoInfo(coinId);
-  // Notizie: le carichiamo dopo aver il nome della coin dai dati già caricati
-  try{
-    const dd=await _loadCryptoData();
-    const cc=dd.coins.find(c=>c.id===coinId);
-    if(cc)_fetchCryptoNews(cc.name);
-  }catch(e){}
+  if(_detailCoin)_fetchCryptoNews(_detailCoin.name);
 }
 
 function closeCryptoDetail(){
@@ -17439,7 +17444,7 @@ function _renderFngGauge(fng){
   const el=id=>document.getElementById(id);
   if(el('crd-fng-val'))el('crd-fng-val').textContent=v;
   if(el('crd-fng-lbl')){
-    el('crd-fng-lbl').textContent=fng.value_classification;
+    el('crd-fng-lbl').textContent=_fngClassLabel(fng.value_classification);
     el('crd-fng-lbl').style.color=v<25?'var(--r)':v<45?'var(--o)':v<55?'var(--t2)':'var(--g)';
   }
   if(el('crd-fng-date')&&fng.timestamp){
