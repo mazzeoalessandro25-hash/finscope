@@ -2388,6 +2388,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <option value="GOOGL">Alphabet</option>
               <option value="META">Meta</option>
               <option value="TSLA">Tesla</option>
+              <option value="SPCX">SpaceX</option>
               <option value="JPM">JPMorgan</option>
               <option value="V">Visa</option>
               <option value="BRK-B">Berkshire B</option>
@@ -2503,6 +2504,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <option value="GOOGL">Alphabet</option>
               <option value="META">Meta</option>
               <option value="TSLA">Tesla</option>
+              <option value="SPCX">SpaceX</option>
               <option value="JPM">JPMorgan</option>
               <option value="V">Visa</option>
               <option value="BRK-B">Berkshire B</option>
@@ -3961,6 +3963,7 @@ const STOCKS=[
   {s:'SLB',n:'SLB (Schlumberger)',sec:'Energy',t:'value',mkt:'US',score:68},
   {s:'OXY',n:'Occidental Petroleum',sec:'Energy',t:'dividend',mkt:'US',score:65},
   // ── USA · Industrials ──
+  {s:'SPCX',n:'SpaceX',sec:'Space Tech',t:'growth',mkt:'US',score:88},
   {s:'BA',n:'Boeing',sec:'Industrials',t:'value',mkt:'US',score:55},
   {s:'CAT',n:'Caterpillar',sec:'Industrials',t:'dividend',mkt:'US',score:76},
   {s:'LMT',n:'Lockheed Martin',sec:'Industrials',t:'dividend',mkt:'US',score:75},
@@ -4154,6 +4157,8 @@ const MOVERS_S=[
   /* ── US Consumer & Retail ── */
   'KO','WMT','COST','HD','TGT','MCD','SBUX','NKE','LULU','CMG','PG','BABA',
   'TJX','DLTR','DG','EL','CL','MNST','PM','MO','LVS','MGM','MAR','HLT','BKNG',
+  /* ── US Space & Aerospace ── */
+  'SPCX',
   /* ── US Energy & Industrial ── */
   'XOM','CVX','COP','BA','LMT','CAT','GE','HON','F','GM','NEE','SLB','HAL','BKR',
   'MMM','ETN','EMR','RTX','NOC','GD','DE','UPS','FDX','CSX','NSC','UNP',
@@ -6656,6 +6661,7 @@ const MCAP_DATA={
     {sym:'TSM',    name:'TSMC',               cap:'$1.0T', capNum:1000, sector:'Semiconduttori', flag:'🇹🇼', color:'#BE1833'},
     {sym:'LLY',    name:'Eli Lilly',          cap:'$750B', capNum:750,  sector:'Farmaceutica',   flag:'🇺🇸', color:'#D52B1E'},
     {sym:'TSLA',   name:'Tesla',              cap:'$900B', capNum:900,  sector:'Automotive',     flag:'🇺🇸', color:'#E82127'},
+    {sym:'SPCX',   name:'SpaceX',             cap:'$400B', capNum:400,  sector:'Space Tech',     flag:'🇺🇸', color:'#1C2951'},
     {sym:'AVGO',   name:'Broadcom',           cap:'$900B', capNum:900,  sector:'Semiconduttori', flag:'🇺🇸', color:'#CC0000'},
     {sym:'JPM',    name:'JPMorgan Chase',     cap:'$700B', capNum:700,  sector:'Finanza',        flag:'🇺🇸', color:'#005EB8'},
     {sym:'WMT',    name:'Walmart',            cap:'$700B', capNum:700,  sector:'Retail',         flag:'🇺🇸', color:'#0071CE'},
@@ -6689,6 +6695,7 @@ const MCAP_DATA={
     {sym:'JNJ',   name:'Johnson & Johnson',  cap:'$380B', capNum:380,  sector:'Healthcare',     flag:'🇺🇸', color:'#D52B1E'},
     {sym:'PG',    name:'Procter & Gamble',   cap:'$380B', capNum:380,  sector:'Beni consumo',   flag:'🇺🇸', color:'#003DA5'},
     {sym:'HD',    name:'Home Depot',         cap:'$350B', capNum:350,  sector:'Retail',         flag:'🇺🇸', color:'#F96302'},
+    {sym:'SPCX', name:'SpaceX',             cap:'$400B', capNum:400,  sector:'Space Tech',     flag:'🇺🇸', color:'#1C2951'},
     {sym:'BAC',   name:'Bank of America',    cap:'$350B', capNum:350,  sector:'Finanza',        flag:'🇺🇸', color:'#E31837'},
     {sym:'ABBV',  name:'AbbVie',             cap:'$340B', capNum:340,  sector:'Farmaceutica',   flag:'🇺🇸', color:'#071D49'},
     {sym:'CVX',   name:'Chevron',            cap:'$300B', capNum:300,  sector:'Energia',        flag:'🇺🇸', color:'#0072CE'},
@@ -9766,6 +9773,8 @@ const HM_STOCKS=[
   {s:'BP',n:'BP',sec:'Energy',mkt:'EU'},
   {s:'SLB',n:'SLB',sec:'Energy',mkt:'US'},
   {s:'ENI.MI',n:'ENI',sec:'Energy',mkt:'IT'},
+  /* Space Tech */
+  {s:'SPCX',n:'SpaceX',sec:'Space Tech',mkt:'US'},
   /* Industrials — ~175B → ~20B */
   {s:'RTX',n:'RTX',sec:'Industrials',mkt:'US'},
   {s:'CAT',n:'Caterpillar',sec:'Industrials',mkt:'US'},
