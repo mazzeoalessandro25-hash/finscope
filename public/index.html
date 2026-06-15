@@ -1249,7 +1249,7 @@ html.dark .auth-box{background:#1e293b}
 .mcap-bar-lbl{font-family:var(--fm);font-size:10px;font-weight:700;color:#fff;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.35);position:relative;z-index:1}
 .mcap-cap-val{font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t);width:50px;text-align:right;flex-shrink:0}
 .mcap-ref-note{font-size:10px;color:var(--t3);font-family:var(--fm);padding:10px 4px 2px;text-align:right;border-top:1px solid var(--bd);margin-top:6px}
-@media(max-width:600px){.mcap-id{width:120px}.mcap-name{max-width:72px}}
+@media(max-width:600px){.mcap-id{width:120px}.mcap-name{max-width:72px}.mcap-sector{display:none}}
 /* ═══ CHART CROSSHAIR TOOLTIP ═══ */
 .lw-tooltip{position:absolute;z-index:100;pointer-events:none;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 11px;box-shadow:0 4px 20px rgba(0,0,0,.13);font-family:var(--fm);font-size:11px;line-height:1.6;display:none;min-width:120px;white-space:nowrap}
 .lw-tooltip.vis{display:block}
@@ -6889,7 +6889,7 @@ async function loadMcap(region,btn){
         ${logoHtmlSm(it.sym,it.name)}
         <div>
           <div class="mcap-name">${it.name}</div>
-          <div class="mcap-sym" style="display:flex;gap:4px;align-items:center">${it.sym}${it.sector?`<span style="font-size:9px;background:var(--s2);color:var(--t3);border-radius:3px;padding:1px 4px;white-space:nowrap">${it.sector}</span>`:''}${it.flag?`<span style="font-size:11px">${it.flag}</span>`:''}</div>
+          <div class="mcap-sym" style="display:flex;gap:4px;align-items:center">${it.sym}${it.sector?`<span class="mcap-sector" style="font-size:9px;background:var(--s2);color:var(--t3);border-radius:3px;padding:1px 4px;white-space:nowrap">${it.sector}</span>`:''}${it.flag?`<span style="font-size:11px">${it.flag}</span>`:''}</div>
         </div>
       </div>
       <div class="mcap-bar-wrap">
