@@ -1740,13 +1740,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               Password dimenticata?
             </button>
           </div>
-          <input type="password" id="auth-pwd" name="password" placeholder="Minimo 8 caratteri" autocomplete="current-password"/>
+          <input type="password" id="auth-pwd" name="password" data-i18n-ph="auth.pwdPh.login" placeholder="Minimo 8 caratteri" autocomplete="current-password"/>
         </div>
         <button type="submit" class="auth-submit" id="auth-submit" data-i18n="auth.login">Accedi</button>
       </form>
       <p id="auth-gdpr-p" style="font-size:11px;color:var(--t3);text-align:center;margin-top:12px;line-height:1.5">
-        <span id="auth-gdpr-pre">Continuando accetti la nostra</span> <a href="/legal/privacy.html" target="_blank" style="color:var(--b)">Privacy Policy</a>.<br>
-        <span id="auth-gdpr-post">I tuoi dati sono trattati secondo il GDPR.</span>
+        <span id="auth-gdpr-pre" data-i18n="auth.gdpr.pre">Continuando accetti la nostra</span> <a href="/legal/privacy.html" target="_blank" style="color:var(--b)">Privacy Policy</a>.<br>
+        <span id="auth-gdpr-post" data-i18n="auth.gdpr.post">I tuoi dati sono trattati secondo il GDPR.</span>
       </p>
     </div>
 
@@ -1790,7 +1790,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <!-- ═══ STOCK DETAIL OVERLAY ═══ -->
 <div id="stock-detail-overlay" class="sd-overlay">
   <div class="sd-header">
-    <button class="sd-back" onclick="closeStockDetail()">← Indietro</button>
+    <button class="sd-back" onclick="closeStockDetail()" data-i18n="common.back">← Indietro</button>
     <div style="flex:1;min-width:0">
       <div class="sd-hdr-sym" id="sd-sym">—</div>
       <div class="sd-hdr-name" id="sd-name">—</div>
@@ -1799,7 +1799,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="sd-hdr-price" id="sd-hdr-price">—</div>
       <div style="display:flex;align-items:center;gap:8px;justify-content:flex-end">
         <div class="sd-hdr-chg" id="sd-hdr-chg">—</div>
-        <div id="sd-refresh-dot" style="width:7px;height:7px;border-radius:50%;background:var(--t3);flex-shrink:0;transition:background .3s" title="Aggiornamento automatico ogni 30s"></div>
+        <div id="sd-refresh-dot" style="width:7px;height:7px;border-radius:50%;background:var(--t3);flex-shrink:0;transition:background .3s" data-i18n-ti="common.refresh.title" title="Aggiornamento automatico ogni 30s"></div>
       </div>
     </div>
     <button class="star-btn" id="sd-wl-btn" onclick="sdToggleWl()" style="font-size:18px;padding:4px 8px;flex-shrink:0">★</button>
@@ -1857,7 +1857,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <button class="cc-btn" id="sd-ind-bb" onclick="toggleSdInd('bb',this)" style="color:#6366f1" data-i18n-ti="ind.bb" title="Bande di Bollinger (20,2)">Bollinger</button>
             </div>
           </div>
-          <button class="cc-btn" id="sd-measure-btn" onclick="toggleMeasure('sd-chart',this)" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
+          <button class="cc-btn" id="sd-measure-btn" onclick="toggleMeasure('sd-chart',this)" data-i18n-ti="common.measure.title" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 9.5L9.5 1.5M1.5 6.5V9.5H4.5M6.5 1.5H9.5V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
             <span data-i18n="common.measure">Misura</span>
           </button>
@@ -2467,7 +2467,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <button class="cc-btn" id="ch1-ind-bb" onclick="toggleDashInd(1,'bb',this)" style="color:#6366f1">Bollinger</button>
           </div>
         </div>
-        <button class="cc-btn" id="ch1-measure-btn" onclick="toggleMeasure('dashChart1',this)" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
+        <button class="cc-btn" id="ch1-measure-btn" onclick="toggleMeasure('dashChart1',this)" data-i18n-ti="common.measure.title" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
           <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 9.5L9.5 1.5M1.5 6.5V9.5H4.5M6.5 1.5H9.5V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Misura
         </button>
@@ -2583,7 +2583,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <button class="cc-btn" id="ch2-ind-bb" onclick="toggleDashInd(2,'bb',this)" style="color:#6366f1">Bollinger</button>
           </div>
         </div>
-        <button class="cc-btn" id="ch2-measure-btn" onclick="toggleMeasure('dashChart2',this)" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
+        <button class="cc-btn" id="ch2-measure-btn" onclick="toggleMeasure('dashChart2',this)" data-i18n-ti="common.measure.title" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
           <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 9.5L9.5 1.5M1.5 6.5V9.5H4.5M6.5 1.5H9.5V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
           Misura
         </button>
