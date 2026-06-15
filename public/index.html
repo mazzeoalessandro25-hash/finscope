@@ -1872,7 +1872,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="sd-section">
         <div class="sd-section-title" style="display:flex;align-items:center">
           <span data-i18n="sd.key.title">Dati chiave</span>
-          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.keydata">Prezzi e volumi aggiornati ogni 30 secondi durante l'orario di mercato.<br><br><b>Beta</b>: volatilità vs mercato. &gt;1 più volatile, &lt;1 meno volatile.<br><b>Short Ratio</b>: giorni necessari a coprire le posizioni short. Valori alti indicano alta pressione ribassista.</div></span>
+          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.keyData">Prezzi e volumi aggiornati ogni 30 secondi durante l'orario di mercato.<br><br><b>Beta</b>: volatilità vs mercato. &gt;1 più volatile, &lt;1 meno volatile.<br><b>Short Ratio</b>: giorni necessari a coprire le posizioni short. Valori alti indicano alta pressione ribassista.</div></span>
         </div>
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.change">Variazione</div><div class="sd-m-val" id="sdm-chg">—</div></div>
@@ -1894,7 +1894,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-section" id="sd-analyst-section" style="margin-bottom:16px">
       <div class="sd-section-title" style="display:flex;align-items:center">
         <span data-i18n="sd.analyst.title">Raccomandazione analisti</span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.analyst">Consenso degli analisti finanziari che coprono il titolo.<br><br><b>Score</b>: da 1 (Forte Acquisto) a 5 (Forte Vendita).<br><b>Target price</b>: prezzo obiettivo medio stimato a 12 mesi.<br><b>Upside</b>: potenziale di rialzo/ribasso rispetto al prezzo attuale.</div></span>
+        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.analysts">Consenso degli analisti finanziari che coprono il titolo.<br><br><b>Score</b>: da 1 (Forte Acquisto) a 5 (Forte Vendita).<br><b>Target price</b>: prezzo obiettivo medio stimato a 12 mesi.<br><b>Upside</b>: potenziale di rialzo/ribasso rispetto al prezzo attuale.</div></span>
       </div>
       <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">
         <div id="sdm-rec" style="font-size:15px;font-weight:700;font-family:var(--fm)">—</div>
@@ -1974,7 +1974,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="sd-section" style="margin-bottom:16px">
         <div class="sd-section-title" style="display:flex;align-items:center">
           <span data-i18n="sd.etf.overview">Panoramica ETF</span>
-          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etfdata"><b>TER</b>: costo annuo totale del fondo (Total Expense Ratio). Più basso è meglio.<br><b>AUM</b>: patrimonio gestito totale (Assets Under Management).<br><b>Rend. YTD</b>: rendimento dall'inizio dell'anno.<br><b>P/E Pond.</b>: rapporto prezzo/utili medio ponderato delle posizioni.<br><b>Beta 3A</b>: volatilità vs mercato su 3 anni.</div></span>
+          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etf"><b>TER</b>: costo annuo totale del fondo (Total Expense Ratio). Più basso è meglio.<br><b>AUM</b>: patrimonio gestito totale (Assets Under Management).<br><b>Rend. YTD</b>: rendimento dall'inizio dell'anno.<br><b>P/E Pond.</b>: rapporto prezzo/utili medio ponderato delle posizioni.<br><b>Beta 3A</b>: volatilità vs mercato su 3 anni.</div></span>
         </div>
         <div class="sd-mg" style="grid-template-columns:repeat(4,1fr)">
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfTER">TER (Costo Ann.)</div><div class="sd-m-val" id="etfm-ter">—</div></div>
@@ -1995,13 +1995,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <!-- Holdings + Settori affiancati -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
         <div class="sd-section">
-          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.top10">Top 10 Posizioni</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etftop10">Le prime 10 posizioni dell'ETF per peso. Mostrano la concentrazione del fondo e i principali sottostanti.</div></span></div>
+          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.top10">Top 10 Posizioni</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.holdings">Le prime 10 posizioni dell'ETF per peso. Mostrano la concentrazione del fondo e i principali sottostanti.</div></span></div>
           <div id="sd-etf-holdings" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
             <div class="ld" data-i18n="common.loading">Caricamento...</div>
           </div>
         </div>
         <div class="sd-section">
-          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.sectors">Allocazione Settoriale</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etfsectors">Distribuzione del patrimonio ETF per settore industriale. Mostra dove è concentrata l'esposizione del fondo.</div></span></div>
+          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.sectors">Allocazione Settoriale</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.sectorAlloc">Distribuzione del patrimonio ETF per settore industriale. Mostra dove è concentrata l'esposizione del fondo.</div></span></div>
           <div id="sd-etf-sectors" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
             <div class="ld">—</div>
           </div>
@@ -2013,7 +2013,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-desc-card" style="margin-bottom:16px" id="sd-wyckoff-section">
       <div class="sd-section-title" style="display:flex;align-items:center">
         <span data-i18n="sd.wyckoff.title">Wyckoff — Analisi OBV vs Prezzo</span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.obv">Confronto tra andamento del prezzo e OBV (On-Balance Volume). Una divergenza rialzista si verifica quando il prezzo scende ma l'OBV sale — possibile fase di Accumulazione. Una divergenza ribassista indica possibile Distribuzione.</div></span>
+        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.wyckoff">Confronto tra andamento del prezzo e OBV (On-Balance Volume). Una divergenza rialzista si verifica quando il prezzo scende ma l'OBV sale — possibile fase di Accumulazione. Una divergenza ribassista indica possibile Distribuzione.</div></span>
       </div>
       <div id="sd-wyckoff-content" style="margin-top:8px">
         <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
