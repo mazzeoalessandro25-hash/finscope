@@ -3070,10 +3070,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div style="margin-top:20px">
 
       <div class="port-tabs">
-        <button class="port-tab active" id="ptab-btn-panoramica" onclick="switchPortTab('panoramica')">📊 Panoramica</button>
-        <button class="port-tab" id="ptab-btn-rischio" onclick="switchPortTab('rischio')">📉 Rischio</button>
-        <button class="port-tab" id="ptab-btn-pianificazione" onclick="switchPortTab('pianificazione')">🎯 Pianificazione</button>
-        <button class="port-tab" id="ptab-btn-fisco" onclick="switchPortTab('fisco')">💰 Fisco &amp; Dividendi</button>
+        <button class="port-tab active" id="ptab-btn-panoramica" onclick="switchPortTab('panoramica')" data-i18n="port.tab.panoramica">📊 Panoramica</button>
+        <button class="port-tab" id="ptab-btn-rischio" onclick="switchPortTab('rischio')" data-i18n="port.tab.rischio">📉 Rischio</button>
+        <button class="port-tab" id="ptab-btn-pianificazione" onclick="switchPortTab('pianificazione')" data-i18n="port.tab.pianificazione">🎯 Pianificazione</button>
+        <button class="port-tab" id="ptab-btn-fisco" onclick="switchPortTab('fisco')" data-i18n="port.tab.fisco">💰 Fisco &amp; Dividendi</button>
       </div>
 
       <!-- PANORAMICA: performance vs benchmark + news -->
@@ -8661,7 +8661,7 @@ async function renderPortfolio(){
     </div>
     <!-- Breakdown valuta -->
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px">
-      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Breakdown valuta</div>
+      <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">${_t('port.currency.breakdown')}</div>
       ${totalEUR_inv>0?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px">
         <span style="font-size:11px;color:var(--t2);font-family:var(--fm)">🇪🇺 EUR</span>
         <div style="text-align:right">
@@ -15596,7 +15596,7 @@ async function loadPortfolioNews(){
   el.innerHTML=`
     <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:18px;align-items:start">
       <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--fm)">In evidenza</div>
+        <div style="font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--fm)">${_t('port.news.featured')}</div>
         ${featuredHTML||'<div class="ld" style="padding:8px">—</div>'}
       </div>
       <div>

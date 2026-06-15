@@ -126,6 +126,9 @@ const TRANSLATIONS={
     'port.tab.goals':'🎯 Obiettivi','port.tab.income':'💰 Reddito & Fisco',
     'port.tab.rebalance':'⚖️ Ribilanciamento','port.tab.news':'📰 News',
     'port.tab.pac':'📅 PAC',
+    'port.tab.panoramica':'📊 Panoramica','port.tab.rischio':'📉 Rischio',
+    'port.tab.pianificazione':'🎯 Pianificazione','port.tab.fisco':'💰 Fisco & Dividendi',
+    'port.news.featured':'In evidenza','port.currency.breakdown':'Breakdown valuta',
     /* PORTFOLIO CARDS */
     'port.card.analysis':'📊 Analisi del portafoglio',
     'port.card.analysis.sub':'Come è composto il tuo portafoglio e cosa fare per migliorarlo',
@@ -1313,6 +1316,9 @@ const TRANSLATIONS={
     'port.tab.goals':'🎯 Goals','port.tab.income':'💰 Income & Tax',
     'port.tab.rebalance':'⚖️ Rebalancing','port.tab.news':'📰 News',
     'port.tab.pac':'📅 Savings Plan',
+    'port.tab.panoramica':'📊 Overview','port.tab.rischio':'📉 Risk',
+    'port.tab.pianificazione':'🎯 Planning','port.tab.fisco':'💰 Tax & Dividends',
+    'port.news.featured':'Featured','port.currency.breakdown':'Currency breakdown',
     /* PORTFOLIO CARDS */
     'port.card.analysis':'📊 Portfolio analysis',
     'port.card.analysis.sub':'How your portfolio is composed and how to improve it',
