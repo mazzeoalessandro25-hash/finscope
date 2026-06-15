@@ -1859,7 +1859,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           </div>
           <button class="cc-btn" id="sd-measure-btn" onclick="toggleMeasure('sd-chart',this)" title="Misura rendimento tra due punti" style="display:flex;align-items:center;gap:4px">
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 9.5L9.5 1.5M1.5 6.5V9.5H4.5M6.5 1.5H9.5V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            Misura
+            <span data-i18n="common.measure">Misura</span>
           </button>
         </div>
         <div id="sd-chart" style="width:100%;height:300px"></div>
@@ -1918,7 +1918,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-funds" id="sd-funds-section">
       <div class="sd-section">
         <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span style="display:flex;align-items:center">Valutazione<span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.valuation"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
+          <span style="display:flex;align-items:center"><span data-i18n="sd.valuation">Valutazione</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.valuation"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
           <span id="sd-val-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
@@ -1932,7 +1932,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <div class="sd-section">
         <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span style="display:flex;align-items:center">Redditività<span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.profitability"><b>ROE</b>: rendimento sul capitale proprio. &gt;15% ottimo.<br><b>ROA</b>: rendimento sugli asset. &gt;5% buono.<br><b>Margine Lordo</b>: ricavi - costo del venduto / ricavi. &gt;40% eccellente.<br><b>Margine Netto</b>: utile netto / ricavi. Verde se positivo.<br><b>EBITDA</b>: utile prima di interessi, tasse e ammortamenti.</div></span></span>
+          <span style="display:flex;align-items:center"><span data-i18n="sd.profitability">Redditività</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.profitability"><b>ROE</b>: rendimento sul capitale proprio. &gt;15% ottimo.<br><b>ROA</b>: rendimento sugli asset. &gt;5% buono.<br><b>Margine Lordo</b>: ricavi - costo del venduto / ricavi. &gt;40% eccellente.<br><b>Margine Netto</b>: utile netto / ricavi. Verde se positivo.<br><b>EBITDA</b>: utile prima di interessi, tasse e ammortamenti.</div></span></span>
           <span id="sd-fund-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
@@ -2088,8 +2088,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <!-- ACTION ROW -->
     <div class="qa-action-row">
-      <button class="qa-btn" onclick="crdQuickPortfolio()">＋ Aggiungi al Portafoglio</button>
-      <button class="qa-btn qa-btn-ghost" onclick="crdQuickAlert()">🔔 Alert</button>
+      <button class="qa-btn" onclick="crdQuickPortfolio()" data-i18n="qm.addPortfolio">＋ Aggiungi al Portafoglio</button>
+      <button class="qa-btn qa-btn-ghost" onclick="crdQuickAlert()" data-i18n="qm.setAlert">🔔 Imposta Alert Prezzo</button>
     </div>
 
     <!-- STAT STRIP — 4 metriche chiave in riga -->
@@ -2643,11 +2643,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div class="ch"><div><div class="ct" data-i18n="dash.movers.title">Migliori e peggiori del giorno</div><div class="cs" data-i18n="dash.movers.sub">Top 5 · Bottom 5 · clicca per grafico</div></div></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
-          <div style="font-size:10px;font-weight:600;color:var(--g);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">▲ Migliori</div>
+          <div style="font-size:10px;font-weight:600;color:var(--g);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px" data-i18n="dash.moversTop">▲ Migliori</div>
           <div id="movers-top"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
         <div>
-          <div style="font-size:10px;font-weight:600;color:var(--r);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px">▼ Peggiori</div>
+          <div style="font-size:10px;font-weight:600;color:var(--r);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:6px" data-i18n="dash.moversBot">▼ Peggiori</div>
           <div id="movers-bot"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
         </div>
       </div>
@@ -2656,7 +2656,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <!-- INDICI UNIFICATI: USA + EUROPA + ASIA -->
     <div class="card" style="display:flex;flex-direction:column;overflow:hidden">
-      <div class="ch" style="flex-shrink:0"><div><div class="ct">Indici globali</div><div class="cs">USA · Europa · Asia · clicca per grafico</div></div></div>
+      <div class="ch" style="flex-shrink:0"><div><div class="ct" data-i18n="dash.globalIdx">Indici globali</div><div class="cs" data-i18n="dash.globalSub">USA · Europa · Asia · clicca per grafico</div></div></div>
       <div id="idx-list" style="overflow-y:auto;flex:1;min-height:0"><div class="ld" data-i18n="common.loading">Caricamento...</div></div>
     </div>
   </div>
@@ -2687,11 +2687,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t" data-i18n="dash.mktcap.title">Top 10 Capitalizzazione</div><div class="sdiv-l"></div></div>
   <div class="card" id="mcap-card">
     <div class="ch">
-      <div><div class="ct">Maggiori capitalizzazioni mondiali</div><div class="cs">Market cap indicativa · prezzi live · clicca per il grafico</div></div>
-      <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadMcap()">↻ Aggiorna</button>
+      <div><div class="ct" data-i18n="dash.topCapTitle">Maggiori capitalizzazioni mondiali</div><div class="cs" data-i18n="dash.topCapSub">Market cap indicativa · prezzi live · clicca per il grafico</div></div>
+      <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadMcap()" data-i18n="common.refresh">↻ Aggiorna</button>
     </div>
     <div class="mcap-filter">
-      <button class="mcap-btn active" id="mcap-btn-world" onclick="loadMcap('world',this)">🌍 Mondo</button>
+      <button class="mcap-btn active" id="mcap-btn-world" onclick="loadMcap('world',this)" data-i18n="mcap.world">🌍 Mondo</button>
       <button class="mcap-btn" onclick="loadMcap('usa',this)">🇺🇸 USA</button>
       <button class="mcap-btn" onclick="loadMcap('europa',this)">🇪🇺 Europa</button>
       <button class="mcap-btn" onclick="loadMcap('italia',this)">🇮🇹 Italia</button>
@@ -2705,11 +2705,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div class="sdiv" style="margin-top:20px"><div class="sdiv-t">Market Heatmap</div><div class="sdiv-l"></div></div>
   <div class="card" id="heatmap-card">
     <div class="ch">
-      <div><div class="ct">Stock Heatmap</div><div class="cs">Performance giornaliera per settore · oltre 170 titoli · clicca per analizzare</div></div>
-      <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadHeatmap()">↻ Aggiorna</button>
+      <div><div class="ct">Stock Heatmap</div><div class="cs" data-i18n="dash.heatmapCardSub">Performance giornaliera per settore · oltre 170 titoli · clicca per analizzare</div></div>
+      <button class="sc-btn" style="font-size:12px;padding:6px 14px" onclick="loadHeatmap()" data-i18n="common.refresh">↻ Aggiorna</button>
     </div>
     <div class="hm-toolbar">
-      <button class="hm-filter-btn active" onclick="hmSetFilter('all',this)">🌍 Tutti</button>
+      <button class="hm-filter-btn active" onclick="hmSetFilter('all',this)" data-i18n="hm.all">🌍 Tutti</button>
       <button class="hm-filter-btn" onclick="hmSetFilter('US',this)">🇺🇸 USA</button>
       <button class="hm-filter-btn" onclick="hmSetFilter('EU',this)">🇪🇺 Europa</button>
       <button class="hm-filter-btn" onclick="hmSetFilter('IT',this)">🇮🇹 Italia</button>
@@ -2967,7 +2967,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
         <!-- OVERVIEW: donut + stats -->
         <div id="port-panel-overview" class="port-analysis-card" style="flex:1">
-          <div id="port-summary"><div class="ld" style="padding:20px;text-align:center">Aggiungi titoli per vedere il riepilogo</div></div>
+          <div id="port-summary"><div class="ld" style="padding:20px;text-align:center" data-i18n="port.noItems.summary">Aggiungi titoli per vedere il riepilogo</div></div>
           <span id="port-summary-rate" style="display:none"></span>
         </div>
 
@@ -3335,17 +3335,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <div id="sim-info-box" style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.5;display:none"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div class="fg" style="margin-bottom:0"><label>CAPITALE (€)</label><input type="number" id="sc2" value="5000" min="100" oninput="calcSim()"/></div>
-        <div class="fg" style="margin-bottom:0"><label>MENSILE (€)</label><input type="number" id="sm" value="200" min="0" oninput="calcSim()"/></div>
+        <div class="fg" style="margin-bottom:0"><label data-i18n="lab.sim.capital">CAPITALE (€)</label><input type="number" id="sc2" value="5000" min="100" oninput="calcSim()"/></div>
+        <div class="fg" style="margin-bottom:0"><label data-i18n="lab.sim.monthly">MENSILE (€)</label><input type="number" id="sm" value="200" min="0" oninput="calcSim()"/></div>
       </div>
       <div class="fg" style="margin-bottom:0">
-        <label style="display:flex;justify-content:space-between">ANNI<span id="syv" style="color:var(--b);font-weight:700">10 anni</span></label>
-        <input type="range" id="sy" min="1" max="40" value="10" oninput="document.getElementById('syv').textContent=this.value+(currentLang==='en'?' yr':' anni');calcSim()"/>
+        <label style="display:flex;justify-content:space-between"><span data-i18n="lab.sim.years">ANNI</span><span id="syv" style="color:var(--b);font-weight:700">10 anni</span></label>
+        <input type="range" id="sy" min="1" max="40" value="10" oninput="document.getElementById('syv').textContent=this.value+_t('period.yr.suffix');calcSim()"/>
       </div>
       <div class="fg" style="margin-bottom:0">
-        <label style="display:flex;justify-content:space-between">RENDIMENTO %/ANNO<span id="srv" style="color:var(--b);font-weight:700">8%</span></label>
+        <label style="display:flex;justify-content:space-between"><span data-i18n="lab.sim.return">RENDIMENTO %/ANNO</span><span id="srv" style="color:var(--b);font-weight:700">8%</span></label>
         <input type="range" id="sr" min="1" max="20" value="8" step="0.5" oninput="document.getElementById('srv').textContent=this.value+'%';calcSim()"/>
-        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:4px;line-height:1.4">⚠ Ipotesi statica: tasso costante per tutta la durata. I rendimenti reali variano ogni anno e il capitale è a rischio.</div>
+        <div style="font-size:10px;color:var(--t3);font-family:var(--fm);margin-top:4px;line-height:1.4" data-i18n="lab.sim.disclaimer">⚠ Ipotesi statica: tasso costante per tutta la durata. I rendimenti reali variano ogni anno e il capitale è a rischio.</div>
       </div>
       <select id="ss" style="display:none" onchange="calcSim()">
         <option value="balanced">Bilanciato (60/40)</option>
@@ -3353,7 +3353,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <option value="conservative">Conservativo (40/60)</option>
         <option value="etf">Solo ETF globale</option>
       </select>
-      <div class="fg" id="sim-tax-row" style="display:none;margin-bottom:0"><label>TASSAZIONE AGEVOLATA</label>
+      <div class="fg" id="sim-tax-row" style="display:none;margin-bottom:0"><label data-i18n="lab.sim.taxRate">TASSAZIONE AGEVOLATA</label>
         <select id="sim-tax" onchange="calcSim()">
           <option value="15">15% (dopo 15+ anni)</option>
           <option value="9">9% (contributi datoriali)</option>
@@ -3363,16 +3363,16 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div style="border-top:1px solid var(--bd);margin:0 -16px"></div>
       <!-- 4 KPI 2x2 -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        <div class="rb"><div class="rl">VALORE FINALE</div><div class="rv2 g" id="rf">—</div></div>
-        <div class="rb"><div class="rl">INVESTITO</div><div class="rv2 b" id="ri">—</div></div>
-        <div class="rb"><div class="rl">GUADAGNO</div><div class="rv2 a" id="rg">—</div></div>
-        <div class="rb"><div class="rl">RENDIMENTO %</div><div class="rv2 g" id="rp">—</div></div>
+        <div class="rb"><div class="rl" data-i18n="lab.sim.finalVal">VALORE FINALE</div><div class="rv2 g" id="rf">—</div></div>
+        <div class="rb"><div class="rl" data-i18n="lab.sim.invested">INVESTITO</div><div class="rv2 b" id="ri">—</div></div>
+        <div class="rb"><div class="rl" data-i18n="lab.sim.gain">GUADAGNO</div><div class="rv2 a" id="rg">—</div></div>
+        <div class="rb"><div class="rl" data-i18n="lab.sim.returnPct">RENDIMENTO %</div><div class="rv2 g" id="rp">—</div></div>
       </div>
       <!-- Separatore -->
       <div style="border-top:1px solid var(--bd);margin:0 -16px"></div>
       <!-- Torta allocazione -->
       <div>
-        <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Allocazione</div>
+        <div style="font-size:10px;font-weight:700;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px" data-i18n="lab.sim.allocation">Allocazione</div>
         <div style="display:flex;gap:14px;align-items:center">
           <div style="width:90px;height:90px;flex-shrink:0"><canvas id="pieChart"></canvas></div>
           <div class="pie-leg" id="pie-leg" style="flex:1;gap:4px"></div>
@@ -3382,13 +3382,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- RIGHT: grafico full-height -->
     <div style="display:flex;flex-direction:column;gap:10px;height:100%">
       <div class="card" style="padding:16px;flex:1;display:flex;flex-direction:column">
-        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:14px">Proiezione — Interesse composto nel tempo</div>
+        <div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:14px" data-i18n="lab.sim.projTitle">Proiezione — Interesse composto nel tempo</div>
         <div style="position:relative;flex:1;min-height:0">
           <canvas id="simChart" style="position:absolute;top:0;left:0;width:100%!important;height:100%!important"></canvas>
         </div>
       </div>
       <div class="card" id="sim-tax-note-card" style="display:none">
-        <div class="ch"><div><div class="ct">Note fiscali</div><div class="cs">Vantaggi fiscali del veicolo selezionato</div></div></div>
+        <div class="ch"><div><div class="ct" data-i18n="lab.sim.taxTitle">Note fiscali</div><div class="cs" data-i18n="lab.sim.taxSub">Vantaggi fiscali del veicolo selezionato</div></div></div>
         <div id="sim-tax-note-content"></div>
       </div>
     </div>
@@ -3400,42 +3400,42 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- LEFT: Parametri -->
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="card">
-        <div class="ch"><div><div class="ct">Parametri</div><div class="cs">Configura il backtest</div></div></div>
+        <div class="ch"><div><div class="ct" data-i18n="lab.bt.title">Parametri</div><div class="cs" data-i18n="lab.bt.sub">Configura il backtest</div></div></div>
         <!-- Symbol -->
         <div class="fg" style="position:relative">
-          <label>TITOLO / ETF</label>
-          <input type="text" id="bt-sym-inp" placeholder="Es: AAPL, MSFT, SPY…" oninput="btSearchSym(this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
+          <label data-i18n="lab.bt.ticker">TITOLO / ETF</label>
+          <input type="text" id="bt-sym-inp" placeholder="Es: AAPL, MSFT, SPY…" data-i18n-ph="lab.bt.tickerPh" oninput="btSearchSym(this.value)" autocomplete="off" class="sc-inp" style="width:100%;box-sizing:border-box"/>
           <div id="bt-sym-dd" class="port-dd" style="display:none;max-height:180px;overflow-y:auto"></div>
         </div>
         <div id="bt-sym-badge" style="display:none;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:8px 12px;margin-top:-6px;margin-bottom:8px;font-size:12px;font-weight:600;color:var(--t);font-family:var(--fm)"></div>
         <!-- Periodo -->
         <div class="fg">
-          <label>PERIODO STORICO</label>
+          <label data-i18n="lab.bt.period">PERIODO STORICO</label>
           <div style="display:flex;gap:6px">
-            <button class="cc-btn" id="bt-p-1y" onclick="btSetPeriod('1y',this)">1A</button>
-            <button class="cc-btn" id="bt-p-2y" onclick="btSetPeriod('2y',this)">2A</button>
-            <button class="cc-btn active" id="bt-p-5y" onclick="btSetPeriod('5y',this)">5A</button>
+            <button class="cc-btn" id="bt-p-1y" onclick="btSetPeriod('1y',this)" data-i18n="period.1y">1A</button>
+            <button class="cc-btn" id="bt-p-2y" onclick="btSetPeriod('2y',this)" data-i18n="period.2y">2A</button>
+            <button class="cc-btn active" id="bt-p-5y" onclick="btSetPeriod('5y',this)" data-i18n="period.5y.short">5A</button>
             <button class="cc-btn" id="bt-p-10y" onclick="btSetPeriod('max',this)">Max</button>
           </div>
         </div>
         <!-- Strategia -->
         <div class="fg">
-          <label>STRATEGIA</label>
+          <label data-i18n="lab.bt.strategy">STRATEGIA</label>
           <select id="bt-strategy" onchange="btUpdateStratInfo()" style="width:100%;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--t);font-family:var(--fm);font-size:13px">
-            <option value="buyhold">📈 Buy &amp; Hold</option>
-            <option value="sma_cross">〜 Incrocio SMA (20/50)</option>
-            <option value="rsi_rev">↕ RSI Mean Reversion (14)</option>
+            <option value="buyhold" data-i18n="lab.bt.bh">📈 Buy &amp; Hold</option>
+            <option value="sma_cross" data-i18n="lab.bt.sma">〜 Incrocio SMA (20/50)</option>
+            <option value="rsi_rev" data-i18n="lab.bt.rsi">↕ RSI Mean Reversion (14)</option>
           </select>
         </div>
-        <div id="bt-strat-info" style="background:var(--s2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.65;margin-bottom:6px">
-          Acquista il titolo al primo giorno del periodo e mantieni fino alla fine. Strategia benchmark di riferimento.
+        <div id="bt-strat-info" style="background:var(--s2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.65;margin-bottom:6px" data-i18n="lab.bt.bhInfo">
+          Acquista il titolo al primo giorno del periodo e mantieni fino alla fine. Strategia benchmark di riferimento per confrontare le altre.
         </div>
         <!-- Capitale -->
         <div class="fg">
-          <label>CAPITALE INIZIALE (€)</label>
+          <label data-i18n="lab.bt.capital">CAPITALE INIZIALE (€)</label>
           <input type="number" id="bt-capital" value="10000" min="100" style="width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid var(--bd);border-radius:8px;background:var(--card);color:var(--t);font-family:var(--fm);font-size:13px"/>
         </div>
-        <button onclick="executeBacktest()" style="width:100%;padding:12px;background:var(--b);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fm);letter-spacing:.3px">▶ Esegui Backtest</button>
+        <button onclick="executeBacktest()" style="width:100%;padding:12px;background:var(--b);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fm);letter-spacing:.3px" data-i18n="lab.bt.run">▶ Esegui Backtest</button>
         <div id="bt-loading" style="display:none;text-align:center;padding:14px;font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="lab.bt.loading">⏳ Caricamento dati storici…</div>
         <div id="bt-error" style="display:none;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25);border-radius:8px;padding:10px 12px;font-size:11px;color:#dc2626;font-family:var(--fm);margin-top:8px"></div>
       </div>
@@ -3444,7 +3444,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div id="bt-results-col" style="display:none;flex-direction:column;gap:14px">
       <div class="card">
         <div class="ch"><div>
-          <div class="ct" id="bt-res-title">Risultati</div>
+          <div class="ct" id="bt-res-title" data-i18n="lab.bt.results">Risultati</div>
           <div class="cs" id="bt-res-sub">—</div>
         </div></div>
         <div class="bt-kpi-grid">
@@ -3477,7 +3477,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- LEFT: Selezione -->
     <div>
       <div class="card" style="margin-bottom:14px">
-        <div class="ch"><div><div class="ct">Titoli da confrontare</div><div class="cs">Aggiungi fino a 3 simboli</div></div></div>
+        <div class="ch"><div><div class="ct" data-i18n="lab.comp.title">Titoli da confrontare</div><div class="cs" data-i18n="lab.comp.sub">Aggiungi fino a 3 simboli</div></div></div>
         <!-- Slot 1 -->
         <div class="cmp-slot">
           <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
@@ -3516,7 +3516,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
       <div class="card" style="margin-bottom:14px">
-        <div class="ch"><div><div class="ct">Periodo</div></div></div>
+        <div class="ch"><div><div class="ct" data-i18n="lab.comp.period">Periodo</div></div></div>
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="cc-btn" id="cmp-p-1mo" onclick="cmpSetPeriod('1mo',this)">1M</button>
           <button class="cc-btn" id="cmp-p-3mo" onclick="cmpSetPeriod('3mo',this)">3M</button>
@@ -3535,7 +3535,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <!-- Grafico normalizzato -->
       <div class="card">
         <div class="ch" style="margin-bottom:14px">
-          <div><div class="ct">Performance normalizzata</div><div class="cs" id="cmp-chart-sub">Base 100 · Performance relativa nel periodo</div></div>
+          <div><div class="ct" data-i18n="lab.comp.perfTitle">Performance normalizzata</div><div class="cs" data-i18n="lab.comp.perfSub" id="cmp-chart-sub">Base 100 · Performance relativa nel periodo</div></div>
         </div>
         <div id="cmp-legend" style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px"></div>
         <div id="cmp-chart" style="width:100%;height:300px"></div>
@@ -3618,7 +3618,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div class="page" id="page-macro">
   <div style="display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px">
     <div class="pg-title">Macro Dashboard</div>
-    <a href="#macro-edu-body" onclick="event.preventDefault();document.getElementById('macro-edu-body').scrollIntoView({behavior:'smooth'})" style="font-size:11px;color:var(--b);font-family:var(--fm);text-decoration:none;white-space:nowrap">Guida Macro ↓</a>
+    <a href="#macro-edu-body" onclick="event.preventDefault();document.getElementById('macro-edu-body').scrollIntoView({behavior:'smooth'})" style="font-size:11px;color:var(--b);font-family:var(--fm);text-decoration:none;white-space:nowrap" data-i18n="macro.guideLink">Guida Macro ↓</a>
   </div>
   <div class="pg-sub" data-i18n="macro.sub">Tassi · Banche Centrali · Ciclo Economico · Forex · Condizioni del Credito</div>
 
@@ -3629,7 +3629,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="card">
       <div class="mac-hero-top">
         <div>
-          <div class="mac-regime-eyebrow">📋 Briefing Macro</div>
+          <div class="mac-regime-eyebrow" data-i18n="macro.briefing">📋 Briefing Macro</div>
           <div class="mac-regime-title" id="mac-regime-title">—</div>
           <div class="mac-regime-sub" id="mac-regime-sub">—</div>
         </div>
@@ -3643,7 +3643,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="mac-stat-sub" id="mss-10y-sub">—</div>
         </div>
         <div class="mac-stat-item" id="mss-spr-item">
-          <div class="mac-stat-lbl">Spread 10Y – 3M</div>
+          <div class="mac-stat-lbl" data-i18n="macro.spread">Spread 10Y – 3M</div>
           <div class="mac-stat-val" id="mss-spread">—</div>
           <div class="mac-stat-sub" id="mss-spread-sub">—</div>
         </div>
@@ -3678,7 +3678,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="mac-bk-head">
             <span class="mac-bk-ico">🏛</span>
             <div>
-              <div class="mac-bk-lbl">Tassi & Politica Monetaria</div>
+              <div class="mac-bk-lbl" data-i18n="macro.rates">Tassi & Politica Monetaria</div>
               <div id="mac-bk-badge-rates" class="mac-bk-badge"></div>
             </div>
           </div>
@@ -3691,7 +3691,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="mac-bk-head">
             <span class="mac-bk-ico">💵</span>
             <div>
-              <div class="mac-bk-lbl">Dollaro & Commodities</div>
+              <div class="mac-bk-lbl" data-i18n="macro.dollar">Dollaro & Commodities</div>
               <div id="mac-bk-badge-dollar" class="mac-bk-badge"></div>
             </div>
           </div>
@@ -3704,7 +3704,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="mac-bk-head">
             <span class="mac-bk-ico">💳</span>
             <div>
-              <div class="mac-bk-lbl">Mercato del Credito</div>
+              <div class="mac-bk-lbl" data-i18n="macro.credit">Mercato del Credito</div>
               <div id="mac-bk-badge-credit" class="mac-bk-badge"></div>
             </div>
           </div>
@@ -3716,20 +3716,20 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <!-- ── C: Asset class + Settori ── -->
     <div class="mac-2col">
       <div class="card">
-        <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">Outlook per Asset Class</div>
+        <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px" data-i18n="macro.outlook">Outlook per Asset Class</div>
         <div class="mac-ac-list" id="mac-ac-list"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
       </div>
       <div class="card">
-        <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">Posizionamento Settoriale</div>
+        <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px" data-i18n="macro.positioning">Posizionamento Settoriale</div>
         <div class="mac-sec-grid" id="mac-sector-row"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
       </div>
     </div>
 
     <!-- ── D: Appuntamenti ── -->
     <div class="card">
-      <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px">📅 Appuntamenti & Dati da Monitorare</div>
+      <div style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t2);letter-spacing:.8px;text-transform:uppercase;margin-bottom:12px" data-i18n="macro.calendar">📅 Appuntamenti & Dati da Monitorare</div>
       <div class="mac-watchlist" id="mac-watchlist"><span class="ld" style="font-size:11px" data-i18n="common.loading">Caricamento...</span></div>
-      <div class="mac-disclaimer">⚠ Indicazioni orientative basate sul ciclo macro e sui dati live. Non costituiscono consulenza di investimento — verifica sempre i fondamentali individuali prima di operare.</div>
+      <div class="mac-disclaimer" data-i18n="macro.disclaimer">⚠ Indicazioni orientative basate sul ciclo macro e sui dati live. Non costituiscono consulenza di investimento — verifica sempre i fondamentali individuali prima di operare.</div>
     </div>
 
   </div>
@@ -3742,7 +3742,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <div class="card">
       <div class="ch"><div>
-        <div class="ct">📈 Curva dei Rendimenti USA</div>
+        <div class="ct" data-i18n="macro.yieldCurve">📈 Curva dei Rendimenti USA</div>
         <div class="cs" id="macro-yield-sub">Treasury · 3M · 5Y · 10Y · 30Y</div>
       </div></div>
       <div style="position:relative;height:180px">
@@ -3750,12 +3750,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <div style="margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-          <span style="font-size:9px;font-weight:600;color:var(--t2);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase">Spread 10Y – 3M</span>
+          <span style="font-size:9px;font-weight:600;color:var(--t2);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase" data-i18n="macro.spread">Spread 10Y – 3M</span>
           <span id="macro-spread-badge" style="font-family:var(--fm);font-size:11px;font-weight:700;padding:2px 10px;border-radius:100px;border:1px solid var(--bd)">—</span>
         </div>
         <div class="macro-spread-bar"><div class="macro-spread-needle" id="macro-spread-needle" style="left:50%"></div></div>
         <div style="display:flex;justify-content:space-between;font-family:var(--fm);font-size:9px;color:var(--t3);margin-top:3px">
-          <span>−3% Inv.</span><span>0%</span><span>+3% Normale</span>
+          <span>−3% <span data-i18n="macro.spread.inv">Inv.</span></span><span>0%</span><span>+3% <span data-i18n="macro.spread.normal">Normale</span></span>
         </div>
         <div id="macro-spread-interp" style="margin-top:8px;font-size:11px;color:var(--t2);line-height:1.5;padding:8px 10px;background:var(--s2);border-radius:7px"></div>
       </div>
@@ -3763,8 +3763,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <div class="card">
       <div class="ch"><div>
-        <div class="ct">🏦 Banche Centrali</div>
-        <div class="cs">Tassi · Prossime riunioni · Bias</div>
+        <div class="ct" data-i18n="macro.centralBanks">🏦 Banche Centrali</div>
+        <div class="cs" data-i18n="macro.cbSub">Tassi · Prossime riunioni · Bias</div>
       </div></div>
       <div id="macro-cb-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
@@ -3780,7 +3780,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="card">
       <div class="ch">
         <div>
-          <div class="ct">🇺🇸 Snapshot USA</div>
+          <div class="ct" data-i18n="macro.usSnapshot">🇺🇸 Snapshot USA</div>
           <div class="cs" id="macro-us-upd">—</div>
         </div>
         <div id="macro-regime-badge"></div>
@@ -3790,7 +3790,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <div class="card">
       <div class="ch"><div>
-        <div class="ct">🇪🇺 Snapshot Eurozona</div>
+        <div class="ct" data-i18n="macro.euSnapshot">🇪🇺 Snapshot Eurozona</div>
         <div class="cs" id="macro-eu-upd">—</div>
       </div></div>
       <div id="macro-eu-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
@@ -3798,8 +3798,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <div class="card">
       <div class="ch"><div>
-        <div class="ct">💳 Condizioni del Credito</div>
-        <div class="cs">High Yield · Invest. Grade · Treasury</div>
+        <div class="ct" data-i18n="macro.creditCond">💳 Condizioni del Credito</div>
+        <div class="cs" data-i18n="macro.creditCondSub">High Yield · Invest. Grade · Treasury</div>
       </div></div>
       <div id="macro-credit-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
@@ -3814,16 +3814,16 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <div class="card">
       <div class="ch"><div>
-        <div class="ct">💱 Forex Globale</div>
-        <div class="cs">DXY · Valute principali · Live</div>
+        <div class="ct" data-i18n="macro.forexTitle">💱 Forex Globale</div>
+        <div class="cs" data-i18n="macro.forexSub">DXY · Valute principali · Live</div>
       </div></div>
       <div id="macro-forex-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
 
     <div class="card">
       <div class="ch"><div>
-        <div class="ct">🔍 Segnali Leading</div>
-        <div class="cs">Rame · Petrolio · Ratio Gold/Copper come indicatori macro</div>
+        <div class="ct" data-i18n="macro.leading">🔍 Segnali Leading</div>
+        <div class="cs" data-i18n="macro.leadingSub">Rame · Petrolio · Ratio Gold/Copper come indicatori macro</div>
       </div></div>
       <div id="macro-leading-content"><div class="ld" style="padding:20px 0" data-i18n="common.loading">Caricamento...</div></div>
     </div>
@@ -5539,12 +5539,12 @@ async function loadVIX(){
   const c=chgPct(d.price,d.prev);
   const absDiff=d.price-(d.prev||d.price);
   document.getElementById('vix-stats').innerHTML=`
-    <div class="vs-item"><div class="vs-val">${fmt(d.prev,2)}</div><div class="vs-lbl">Chiusura prec.</div></div>
-    <div class="vs-item"><div class="vs-val ${c>=0?'down':'up'}">${chgStr(c)}</div><div class="vs-lbl">Variazione %</div></div>
-    <div class="vs-item"><div class="vs-val ${absDiff>=0?'down':'up'}">${absDiff>=0?'+':''}${fmt(absDiff,2)}</div><div class="vs-lbl">Variazione pt</div></div>
-    <div class="vs-item"><div class="vs-val">${d.dayHigh?fmt(d.dayHigh,2):'—'}</div><div class="vs-lbl">Max giornaliero</div></div>
-    <div class="vs-item"><div class="vs-val">${d.dayLow?fmt(d.dayLow,2):'—'}</div><div class="vs-lbl">Min giornaliero</div></div>
-    <div class="vs-item"><div class="vs-val" style="font-size:11px">${v<15?'Bassa':v<25?'Normale':v<35?'Alta':'Estrema'}</div><div class="vs-lbl">Regime attuale</div></div>`;
+    <div class="vs-item"><div class="vs-val">${fmt(d.prev,2)}</div><div class="vs-lbl">${_t('vix.stat.prev')}</div></div>
+    <div class="vs-item"><div class="vs-val ${c>=0?'down':'up'}">${chgStr(c)}</div><div class="vs-lbl">${_t('vix.stat.chgPct')}</div></div>
+    <div class="vs-item"><div class="vs-val ${absDiff>=0?'down':'up'}">${absDiff>=0?'+':''}${fmt(absDiff,2)}</div><div class="vs-lbl">${_t('vix.stat.chgPt')}</div></div>
+    <div class="vs-item"><div class="vs-val">${d.dayHigh?fmt(d.dayHigh,2):'—'}</div><div class="vs-lbl">${_t('vix.stat.high')}</div></div>
+    <div class="vs-item"><div class="vs-val">${d.dayLow?fmt(d.dayLow,2):'—'}</div><div class="vs-lbl">${_t('vix.stat.low')}</div></div>
+    <div class="vs-item"><div class="vs-val" style="font-size:11px">${v<15?_t('vix.regime.low'):v<25?_t('vix.regime.normal'):v<35?_t('vix.regime.high'):_t('vix.regime.extreme')}</div><div class="vs-lbl">${_t('vix.stat.regime')}</div></div>`;
 }
 
 /* ── MOVERS ── */
@@ -6328,21 +6328,21 @@ async function runFA(){
   </div>`:'';
 
   el.innerHTML=`${scoreBlock}<div class="fa-grid">
-    <div class="rb"><div class="rl">PREZZO</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${qd?'$'+fmt(qd.price,2):'—'}</div></div>
-    <div class="rb"><div class="rl">VAR OGGI</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${chgStr(c)}</div></div>
+    <div class="rb"><div class="rl">${_t('lab.comp.price')}</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${qd?'$'+fmt(qd.price,2):'—'}</div></div>
+    <div class="rb"><div class="rl">${_t('lab.comp.chgToday')}</div><div class="rv2 ${up?'g':'down'}" style="font-size:17px">${chgStr(c)}</div></div>
     <div class="rb"><div class="rl">P/E</div><div class="rv2" style="font-size:17px">${sd?.pe?fmt(sd.pe,1):'—'}</div></div>
     <div class="rb"><div class="rl">P/B</div><div class="rv2" style="font-size:17px">${sd?.pb?fmt(sd.pb,1):'—'}</div></div>
     <div class="rb"><div class="rl">ROE</div><div class="rv2 g" style="font-size:17px">${sd?.roe?fmt(sd.roe*100,1)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">DIVIDENDO</div><div class="rv2 a" style="font-size:17px">${sd?.dividend?fmt(sd.dividend*100,2)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">MG. OPERATIVO</div><div class="rv2" style="font-size:15px">${sd?.operatingMargins?fmt(sd.operatingMargins*100,1)+'%':'—'}</div></div>
-    <div class="rb"><div class="rl">CRESCITA RIC.</div><div class="rv2 ${sd?.revenueGrowth>=0?'g':'down'}" style="font-size:15px">${sd?.revenueGrowth!=null?(sd.revenueGrowth>=0?'+':'')+fmt(sd.revenueGrowth*100,1)+'%':'—'}</div></div>
+    <div class="rb"><div class="rl">${_t('lab.comp.dividend')}</div><div class="rv2 a" style="font-size:17px">${sd?.dividend?fmt(sd.dividend*100,2)+'%':'—'}</div></div>
+    <div class="rb"><div class="rl">${_t('lab.comp.opMargin')}</div><div class="rv2" style="font-size:15px">${sd?.operatingMargins?fmt(sd.operatingMargins*100,1)+'%':'—'}</div></div>
+    <div class="rb"><div class="rl">${_t('lab.comp.revGrowth')}</div><div class="rv2 ${sd?.revenueGrowth>=0?'g':'down'}" style="font-size:15px">${sd?.revenueGrowth!=null?(sd.revenueGrowth>=0?'+':'')+fmt(sd.revenueGrowth*100,1)+'%':'—'}</div></div>
     <div class="rb"><div class="rl">52W MAX</div><div class="rv2" style="font-size:14px">${sd?.week52High?'$'+fmt(sd.week52High,2):'—'}</div></div>
     <div class="rb"><div class="rl">52W MIN</div><div class="rv2" style="font-size:14px">${sd?.week52Low?'$'+fmt(sd.week52Low,2):'—'}</div></div>
   </div>
   <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;margin-top:2px">
-    <div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">CONSENSUS ANALISTI</div>
+    <div><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">${_t('lab.comp.consensus')}</div>
     <div style="font-family:var(--fm);font-size:14px;font-weight:600;color:${recCol[rec]||'var(--o)'}">${recMap[rec]||'—'}</div></div>
-    ${sd?.targetPrice?`<div style="text-align:right"><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">TARGET ANALISTI</div><div style="font-family:var(--fm);font-size:14px;font-weight:600;color:var(--b)">$${fmt(sd.targetPrice,2)}</div></div>`:''}
+    ${sd?.targetPrice?`<div style="text-align:right"><div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:3px">${_t('lab.comp.target')}</div><div style="font-family:var(--fm);font-size:14px;font-weight:600;color:var(--b)">$${fmt(sd.targetPrice,2)}</div></div>`:''}
   </div>
   ${sd?.marketCap?`<div style="margin-top:8px;font-family:var(--fm);font-size:11px;color:var(--t3)">Market Cap: ${fmtLg(sd.marketCap)} · Beta: ${sd.beta?fmt(sd.beta,2):'—'} · EPS: ${sd.eps?'$'+fmt(sd.eps,2):'—'} · Debt/Eq: ${sd.debtToEquity?fmt(sd.debtToEquity,1):'—'}</div>`:''}
   ${renderBuyZone(sd,qd)}
@@ -7089,6 +7089,9 @@ function _applyDynamicTranslations(){
   const gdprPost=document.getElementById('auth-gdpr-post');
   if(gdprPre)gdprPre.textContent=currentLang==='en'?'By continuing you accept our':currentLang==='de'?'Mit der Nutzung akzeptierst du unsere':'Continuando accetti la nostra';
   if(gdprPost)gdprPost.textContent=currentLang==='en'?'Your data is processed under GDPR.':currentLang==='de'?'Deine Daten werden gemäß DSGVO verarbeitet.':'I tuoi dati sono trattati secondo il GDPR.';
+  // Simulator year display
+  const syEl=document.getElementById('sy');const syvEl=document.getElementById('syv');
+  if(syEl&&syvEl)syvEl.textContent=(syEl.value||'10')+_t('period.yr.suffix');
   // Port add toggle btn text (preserva solo testo)
   const portAddToggle=document.getElementById('port-add-toggle');
   if(portAddToggle&&portAddToggle.textContent.trim()!==_t('port.addTitle'))
@@ -10246,19 +10249,19 @@ async function loadDividendTracker(){
 
   el.innerHTML=`
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
-      <div class="rb"><div class="rl">REDDITO ANNUALE LORDO</div><div class="rv2 g">€${fmt(totalAnnualEUR,2)}</div></div>
-      <div class="rb"><div class="rl">REDDITO ANNUALE NETTO</div><div class="rv2 g">€${fmt(totalNetEUR,2)}</div></div>
-      <div class="rb"><div class="rl">YIELD PORTAFOGLIO</div><div class="rv2 a">${fmt(avgYield*100,2)}%</div></div>
-      <div class="rb"><div class="rl">MENSILE STIMATO LORDO</div><div class="rv2 b">€${fmt(totalAnnualEUR/12,2)}</div></div>
-      <div class="rb"><div class="rl">TRIMESTRALE STIMATO</div><div class="rv2 b">€${fmt(totalAnnualEUR/4,2)}</div></div>
-      <div class="rb"><div class="rl">TITOLI CON DIVIDENDI</div><div class="rv2 b">${rows.length}</div></div>
+      <div class="rb"><div class="rl">${_t('port.div.grossAnnual')}</div><div class="rv2 g">€${fmt(totalAnnualEUR,2)}</div></div>
+      <div class="rb"><div class="rl">${_t('port.div.netAnnual')}</div><div class="rv2 g">€${fmt(totalNetEUR,2)}</div></div>
+      <div class="rb"><div class="rl">${_t('port.div.yield')}</div><div class="rv2 a">${fmt(avgYield*100,2)}%</div></div>
+      <div class="rb"><div class="rl">${_t('port.div.grossMonthly')}</div><div class="rv2 b">€${fmt(totalAnnualEUR/12,2)}</div></div>
+      <div class="rb"><div class="rl">${_t('port.div.quarterly')}</div><div class="rv2 b">€${fmt(totalAnnualEUR/4,2)}</div></div>
+      <div class="rb"><div class="rl">${_t('port.div.count')}</div><div class="rv2 b">${rows.length}</div></div>
     </div>
 
     <!-- Tooltip dividendi (position:fixed, invisibile di default) -->
     <div id="div-cal-tt" style="display:none;position:fixed;z-index:9999;background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:9px 11px;pointer-events:none;box-shadow:0 4px 20px rgba(0,0,0,.18);min-width:140px;max-width:210px"></div>
 
     <!-- Calendario mensile -->
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">Calendario dividendi stimato (€)</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:10px">${_t('port.div.calTitle')}</div>
     <div style="display:flex;gap:4px;align-items:flex-end;height:60px;margin-bottom:4px">
       ${monthlyIncome.map((v,i)=>{
         const h=maxMonth>0?Math.round(v/maxMonth*52)+4:4;
@@ -10277,7 +10280,7 @@ async function loadDividendTracker(){
     </div>
 
     <!-- Dettaglio per titolo -->
-    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">Dettaglio per titolo</div>
+    <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${_t('port.div.detail')}</div>
     ${rows.map(r=>`<div class="div-row">
       <div>
         <div style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px">${r.sym}</div>
@@ -11380,7 +11383,7 @@ function _macroRenderPulse(d){
     if(el)el.className='macro-pulse-stat '+(spread<-0.5?'danger':spread<0?'warn':'safe');
     const v=document.getElementById('mps-spread-val');if(v)v.textContent=(spread>=0?'+':'')+fmt(spread,2)+'%';
     const c=document.getElementById('mps-spread-desc');
-    if(c){c.textContent=spread<0?'⚠ Curva invertita':spread<0.5?'Curva piatta':'Curva normale';c.style.color=spread<0?'var(--r)':spread<0.5?'var(--o)':'var(--g)';}
+    if(c){c.textContent=spread<0?'⚠ '+_t('macro.yield.inverted'):spread<0.5?_t('macro.yield.flat'):_t('macro.yield.normal');c.style.color=spread<0?'var(--r)':spread<0.5?'var(--o)':'var(--g)';}
   }
   // DXY
   const dxy=d.dxy;
@@ -13502,7 +13505,7 @@ function adaptOverlayForAssetType(sym){
   const etfSec=document.getElementById('sd-etf-section');
   if(etfSec)etfSec.style.display=isETF?'block':'none';
   const ct=document.getElementById('sd-company-title');
-  if(ct)ct.textContent=isETF?"Informazioni sull'ETF":"Sull'azienda";
+  if(ct)ct.textContent=isETF?_t('sd.etf.overview'):_t('sd.company.title');
   if(isETF){
     ['etfm-ter','etfm-aum','etfm-ytd','etfm-beta3','etfm-cat','etfm-family',
      'etfm-inception','etfm-type','etfm-pe','etfm-pb','etfm-stock-pos','etfm-bond-pos'
@@ -15343,17 +15346,17 @@ function renderTaxDashboard(){
     <!-- KPI fiscali in EUR -->
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px">
       <div class="rb">
-        <div class="rl">PLUSVALENZE LATENTI</div>
+        <div class="rl">${_t('port.tax.gains')}</div>
         <div class="rv2 g" style="font-size:18px">+€${fmt(totalGainEUR,0)}</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">se vendessi tutte le posizioni in gain</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${_t('port.tax.gainNote')}</div>
       </div>
       <div class="rb">
-        <div class="rl">MINUSVALENZE LATENTI</div>
+        <div class="rl">${_t('port.tax.losses')}</div>
         <div class="rv2 down" style="font-size:18px">-€${fmt(totalLossEUR,0)}</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">compensabili per 4 anni fiscali</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${_t('port.tax.lossNote')}</div>
       </div>
       <div class="rb">
-        <div class="rl">GUADAGNO NETTO</div>
+        <div class="rl">${_t('port.tax.netGain')}</div>
         <div class="rv2 ${netGainEUR>=0?'g':'down'}" style="font-size:18px">${netGainEUR>=0?'+':''}€${fmt(netGainEUR,0)}</div>
         <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">${_L({it:'plusvalenze − minusvalenze',en:'capital gains − losses'})}</div>
       </div>
