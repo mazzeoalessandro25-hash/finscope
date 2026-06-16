@@ -11306,13 +11306,13 @@ const MACRO_SNAP={
   regimeNote:{it:'Crescita moderata · inflazione sopra target Fed 2%',en:'Moderate growth · inflation above Fed 2% target'},
   cb:[
     {flag:'🇺🇸',name:'Federal Reserve',short:'Fed Funds Rate',rate:'4.25–4.50',
-     lastChg:'Sep 2024',next:'7 May 2026',bias:{it:'neutrale',en:'neutral'},biasDir:0},
+     lastChg:'Sep 2024',next:'29 Jul 2026',bias:{it:'neutrale',en:'neutral'},biasDir:0},
     {flag:'🇪🇺',name:'European Central Bank',short:'Deposit Facility Rate',rate:'2.40',
-     lastChg:'Mar 2026',next:'5 Jun 2026',bias:{it:'accomodante',en:'accommodative'},biasDir:-1},
+     lastChg:'Mar 2026',next:'23 Jul 2026',bias:{it:'accomodante',en:'accommodative'},biasDir:-1},
     {flag:'🇬🇧',name:'Bank of England',short:'Bank Rate',rate:'4.50',
-     lastChg:'Feb 2026',next:'May 2026',bias:{it:'neutrale',en:'neutral'},biasDir:0},
+     lastChg:'Feb 2026',next:'6 Aug 2026',bias:{it:'neutrale',en:'neutral'},biasDir:0},
     {flag:'🇯🇵',name:'Bank of Japan',short:'Policy Rate',rate:'0.50',
-     lastChg:'Jan 2026',next:'Apr 2026',bias:{it:'hawkish',en:'hawkish'},biasDir:1},
+     lastChg:'Jan 2026',next:'17 Jul 2026',bias:{it:'hawkish',en:'hawkish'},biasDir:1},
   ],
   // dir: 'up'|'down' = direzione vs precedente · better: true = cambiamento favorevole
   us:[
@@ -11337,12 +11337,138 @@ const MACRO_SNAP={
   updatedAt:'Apr 2026'
 };
 
+// Applica dati freschi da /api/macro a MACRO_SNAP prima del render
+function _macroApplyFresh(f){
+  if(!f) return;
+  const us=f.us||{}, eu=f.eu||{}, cb=f.cb||{};
+  const snap=MACRO_SNAP;
+
+  // ── Banche centrali ──
+  if(cb.nextFomc) snap.cb[0].next=cb.nextFomc;
+  if(cb.fedRate!=null) snap.cb[0].rate=(Math.round(cb.fedRate*4)/4).toFixed(2).replace(/\.?0+$/,'');
+  if(cb.nextEcb)  snap.cb[1].next=cb.nextEcb;
+  if(cb.nextBoe)  snap.cb[2].next=cb.nextBoe;
+  if(cb.nextBoj)  snap.cb[3].next=cb.nextBoj;
+
+  // Helper: formatta valore % con segno
+  const fmtPct=(v,decimals=1)=>v==null?null:(v>=0?'+':'')+v.toFixed(decimals)+'%';
+  // Helper: aggiorna item di MACRO_SNAP per confronto con valore precedente
+  function upd(item, newV, oldV){
+    if(newV==null) return;
+    const prev=item.v;
+    item.v=newV;
+    if(oldV!=null){
+      const delta=parseFloat(newV)-parseFloat(oldV);
+      item.dir=delta>0?'up':'down';
+      // 'better' dipende dal contesto (definito nel MACRO_SNAP originale)
+      // manteniamo la logica: per inflazione better=down, per occupazione better=up
+    }
+  }
+
+  // ── USA ──
+  const snapUS=snap.us;
+  // [0] GDP
+  if(us.gdpYoy!=null){
+    const v=fmtPct(us.gdpYoy);
+    const prev=snapUS[0].v;
+    snapUS[0].v=v;
+    if(us.gdpDate) snapUS[0].l={it:'PIL ('+us.gdpDate+')',en:'GDP ('+us.gdpDate+')'};
+    const prevNum=parseFloat(prev);
+    if(!isNaN(prevNum)){ snapUS[0].dir=us.gdpYoy>prevNum?'up':'down'; snapUS[0].p=prev; }
+  }
+  // [1] CPI YoY
+  if(us.cpiYoy!=null){
+    const v=fmtPct(us.cpiYoy);
+    snapUS[1].p=snapUS[1].v; snapUS[1].v=v;
+    if(us.cpiDate) snapUS[1].l='CPI YoY ('+us.cpiDate+')';
+    snapUS[1].dir=us.cpiYoy<parseFloat(snapUS[1].p||'99')?'down':'up';
+    snapUS[1].better=snapUS[1].dir==='down';
+  }
+  // [2] Core CPI YoY
+  if(us.coreCpiYoy!=null){
+    const v=fmtPct(us.coreCpiYoy);
+    snapUS[2].p=snapUS[2].v; snapUS[2].v=v;
+    snapUS[2].dir=us.coreCpiYoy<parseFloat(snapUS[2].p||'99')?'down':'up';
+    snapUS[2].better=snapUS[2].dir==='down';
+  }
+  // [3] PCE YoY
+  if(us.pceYoy!=null){
+    const v=fmtPct(us.pceYoy);
+    snapUS[3].p=snapUS[3].v; snapUS[3].v=v;
+    if(us.pceDate) snapUS[3].l='PCE YoY ('+us.pceDate+')';
+    snapUS[3].dir=us.pceYoy<parseFloat(snapUS[3].p||'99')?'down':'up';
+    snapUS[3].better=snapUS[3].dir==='down';
+  }
+  // [4] Core PCE YoY
+  if(us.corePceYoy!=null){
+    const v=fmtPct(us.corePceYoy);
+    snapUS[4].p=snapUS[4].v; snapUS[4].v=v;
+    snapUS[4].dir=us.corePceYoy<parseFloat(snapUS[4].p||'99')?'down':'up';
+    snapUS[4].better=snapUS[4].dir==='down';
+  }
+  // [5] Disoccupazione
+  if(us.unrate!=null){
+    const v=us.unrate.toFixed(1)+'%';
+    snapUS[5].p=snapUS[5].v; snapUS[5].v=v;
+    const prevU=us.unratePrev;
+    if(prevU!=null){ snapUS[5].dir=us.unrate>prevU?'up':'down'; snapUS[5].better=us.unrate<prevU; }
+  }
+  // [6] NFP
+  if(us.nfpChange!=null){
+    const v=(us.nfpChange>=0?'+':'')+us.nfpChange+'K';
+    snapUS[6].p=snapUS[6].v; snapUS[6].v=v;
+    if(us.nfpDate) snapUS[6].l='NFP ('+us.nfpDate+')';
+    const prevNFP=parseInt(snapUS[6].p||'0');
+    if(!isNaN(prevNFP)){ snapUS[6].dir=us.nfpChange>prevNFP?'up':'down'; snapUS[6].better=us.nfpChange>prevNFP; }
+  }
+  // [7] ISM Manifatturiero — non disponibile su FRED, mantieni hardcoded
+  // [8] ISM Servizi — non disponibile su FRED, mantieni hardcoded
+
+  // ── EU ──
+  const snapEU=snap.eu;
+  // [0] PIL
+  if(eu.gdpYoy!=null){
+    const v=fmtPct(eu.gdpYoy);
+    snapEU[0].p=snapEU[0].v; snapEU[0].v=v;
+    snapEU[0].dir=eu.gdpYoy>parseFloat(snapEU[0].p||'0')?'up':'down';
+    snapEU[0].better=snapEU[0].dir==='up';
+  }
+  // [1] CPI YoY
+  if(eu.cpiYoy!=null){
+    const v=fmtPct(eu.cpiYoy);
+    snapEU[1].p=snapEU[1].v; snapEU[1].v=v;
+    if(eu.cpiDate) snapEU[1].l='CPI YoY ('+eu.cpiDate+')';
+    snapEU[1].dir=eu.cpiYoy<parseFloat(snapEU[1].p||'99')?'down':'up';
+    snapEU[1].better=snapEU[1].dir==='down';
+  }
+  // [2] Core CPI YoY
+  if(eu.coreCpiYoy!=null){
+    const v=fmtPct(eu.coreCpiYoy);
+    snapEU[2].p=snapEU[2].v; snapEU[2].v=v;
+    snapEU[2].dir=eu.coreCpiYoy<parseFloat(snapEU[2].p||'99')?'down':'up';
+    snapEU[2].better=snapEU[2].dir==='down';
+  }
+  // [3] Disoccupazione
+  if(eu.unrate!=null){
+    const v=eu.unrate.toFixed(1)+'%';
+    snapEU[3].p=snapEU[3].v; snapEU[3].v=v;
+    const prevE=eu.unratePrev;
+    if(prevE!=null){ snapEU[3].dir=eu.unrate>prevE?'up':'down'; snapEU[3].better=eu.unrate<prevE; }
+  }
+  // [4] PMI Manifatturiero — mantieni hardcoded
+  // [5] PMI Servizi — mantieni hardcoded
+
+  // Aggiorna updatedAt con il mese del dato più recente disponibile
+  if(us.cpiDate) snap.updatedAt=us.cpiDate;
+  else if(f.fetchedAt) snap.updatedAt=new Date(f.fetchedAt).toLocaleDateString('en-US',{month:'short',year:'numeric'});
+}
+
 async function loadMacroDashboard(){
-  // Render sezioni hardcoded immediatamente
+  // Render snapshot hardcoded immediatamente (dati baseline)
   _macroRenderCB();
   _macroRenderSnapshot();
 
-  // Fetch live in parallelo
+  // Fetch live in parallelo: Yahoo Finance (mercati) + FRED (macro indicatori)
   const SYMS={
     t3m:'^IRX', t5y:'^FVX', t10y:'^TNX', t30y:'^TYX',
     dxy:'DX-Y.NYB',
@@ -11352,8 +11478,18 @@ async function loadMacroDashboard(){
     copper:'HG=F', oil:'BZ=F', gold:'GC=F', vix:'^VIX'
   };
   const keys=Object.keys(SYMS);
-  const results=await Promise.all(keys.map(k=>api(SYMS[k])));
+  const [results, macroFresh]=await Promise.all([
+    Promise.all(keys.map(k=>api(SYMS[k]))),
+    fetch('/api/macro').then(r=>r.ok?r.json():null).catch(()=>null)
+  ]);
   const d={};keys.forEach((k,i)=>{d[k]=results[i];});
+
+  // Aggiorna MACRO_SNAP con dati freschi FRED, poi ri-render CB e snapshot
+  if(macroFresh){
+    _macroApplyFresh(macroFresh);
+    _macroRenderCB();
+    _macroRenderSnapshot();
+  }
 
   _macroRenderPulse(d);
   _macroRenderEdu();
