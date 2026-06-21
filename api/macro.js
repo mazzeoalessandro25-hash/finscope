@@ -51,6 +51,25 @@ async function kvSet(key, value, ttlSeconds) {
   } catch { /* ignora */ }
 }
 
+// Fetch dati Eurostat/ECB — restituisce già il tasso YoY direttamente
+// path es. 'ICP/M.U2.N.000000.4.ANR' → HICP Eurozona YoY
+async function ecbFetch(path) {
+  try {
+    const url = `https://data-api.ecb.europa.eu/service/data/${path}?lastNObservations=4&format=csvdata`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000), headers: { Accept: 'text/csv' } });
+    if (!r.ok) return null;
+    const text = await r.text();
+    // CSV: prima riga = header (KEY,...,TIME_PERIOD,OBS_VALUE), poi dati
+    const lines = text.trim().split('\n').filter(l => !l.startsWith('KEY') && l.trim());
+    const obs = lines.map(l => {
+      const cols = l.split(',');
+      return { date: cols[cols.length - 2], value: parseFloat(cols[cols.length - 1]) };
+    }).filter(o => !isNaN(o.value));
+    // Ordine descrescente: [0] = più recente
+    return obs.reverse();
+  } catch { return null; }
+}
+
 // Fetch osservazioni FRED con timeout 5s
 async function fredFetch(seriesId, limit) {
   const key = process.env.FRED_API_KEY;
@@ -105,12 +124,12 @@ function yoyQuarterly(obs) {
   return ((v0 / v4 - 1) * 100);
 }
 
-// Formatta mese da ISO date string "YYYY-MM-DD"
+// Formatta mese da ISO date string "YYYY-MM-DD" o "YYYY-MM"
 function fmtMonth(iso) {
   if (!iso) return null;
   const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const [y, m] = iso.split('-');
-  return months[parseInt(m) - 1] + ' ' + y;
+  const parts = iso.split('-');
+  return months[parseInt(parts[1]) - 1] + ' ' + parts[0];
 }
 
 export default async function handler(req, res) {
@@ -122,7 +141,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=86400');
 
   // Prova cache Redis (TTL 6h)
-  const CACHE_KEY = 'finedge:macro:v3';
+  const CACHE_KEY = 'finedge:macro:v4';
   const cached = await kvGet(CACHE_KEY);
   if (cached) {
     try { return res.json(JSON.parse(cached)); } catch { /* ignora, ri-fetch */ }
@@ -149,10 +168,11 @@ export default async function handler(req, res) {
     fredFetch('PAYEMS',      4),  // Buste paga non-agricole (migliaia)
     fredFetch('GDPC1',       8),  // PIL reale USA (trimestrale)
     fredFetch('FEDFUNDS',    4),  // Fed Funds Rate effettivo (più affidabile di DFEDTARU)
-    fredFetch('CP0000EZ17M086NEST', 18), // HICP Eurozona (indice)
-    fredFetch('LRHUTTTTEZM156S',     6), // Disoccupazione Eurozona
-    fredFetch('CLVMNACSCAB1GQEA19',  8), // PIL reale Eurozona (trimestrale)
-    fredFetch('CPGRLE01EZM659N',    18), // Core HICP Eurozona (se disponibile)
+    // EU: ECB API (tasso YoY già calcolato, no chiave richiesta)
+    ecbFetch('ICP/M.U2.N.000000.4.ANR'),   // HICP Eurozona YoY %
+    ecbFetch('LFSI/M.I8.S.UNEHRT.TOTAL0.15_74.T'), // Disoccupazione Eurozona
+    fredFetch('CLVMNACSCAB1GQEA19',  8),   // PIL reale Eurozona (FRED, trimestrale)
+    ecbFetch('ICP/M.U2.N.XEF000.4.ANR'),   // Core HICP Eurozona YoY %
   ]);
 
   // Calcola valori
@@ -165,10 +185,11 @@ export default async function handler(req, res) {
   const nfpChange   = monthlyChange(payemsObs); // in migliaia
   const gdpYoy      = yoyQuarterly(gdpObs);
   const fedRate     = latest(fedRateObs);
-  const euCpiYoy    = yoy(euCpiObs);
-  const euCoreCpiYoy = yoy(euCoreCpiObs);
-  const euUnrate    = latest(euUnrateObs);
-  const euUnratePrev = prev(euUnrateObs);
+  // ECB restituisce già il tasso YoY direttamente, non serve calcolare dall'indice
+  const euCpiYoy    = euCpiObs?.[0]?.value    ?? null;
+  const euCoreCpiYoy = euCoreCpiObs?.[0]?.value ?? null;
+  const euUnrate    = euUnrateObs?.[0]?.value  ?? null;
+  const euUnratePrev = euUnrateObs?.[1]?.value  ?? null;
   const euGdpYoy    = yoyQuarterly(euGdpObs);
 
   // Calcola prossime riunioni CB
@@ -201,8 +222,8 @@ export default async function handler(req, res) {
       unrate:     euUnrate,
       unratePrev: euUnratePrev,
       gdpYoy:     euGdpYoy !== null     ? parseFloat(euGdpYoy.toFixed(1))     : null,
-      cpiDate:    euCpiObs?.[0]?.date   ? fmtMonth(euCpiObs[0].date)   : null,
-      unrateDate: euUnrateObs?.[0]?.date ? fmtMonth(euUnrateObs[0].date) : null,
+      cpiDate:    euCpiObs?.[0]?.date    ? fmtMonth(euCpiObs[0].date)    : null,
+      unrateDate: euUnrateObs?.[0]?.date ? fmtMonth(euUnrateObs[0].date)  : null,
     },
     cb: { nextFomc, nextEcb, nextBoe, nextBoj, fedRate },
     fetchedAt: new Date().toISOString(),
