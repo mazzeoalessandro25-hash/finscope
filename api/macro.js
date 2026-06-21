@@ -133,23 +133,26 @@ export default async function handler(req, res) {
   }
 
   // Fetch US e EU in parallelo
+  // Nota: richiestiamo più osservazioni del necessario perché FRED può restituire
+  // valori '.' (mancanti) per i mesi non ancora pubblicati — dopo il filtraggio
+  // ci servono almeno 13 valori validi per calcolare YoY
   const [
     cpiObs, coreCpiObs, pceObs, corePceObs,
     unrateObs, payemsObs, gdpObs, fedRateObs,
     euCpiObs, euUnrateObs, euGdpObs, euCoreCpiObs
   ] = await Promise.all([
-    fredFetch('CPIAUCSL',   13),  // CPI All Items mensile
-    fredFetch('CPILFESL',   13),  // Core CPI mensile
-    fredFetch('PCEPI',      13),  // PCE mensile
-    fredFetch('PCEPILFE',   13),  // Core PCE mensile
-    fredFetch('UNRATE',      2),  // Disoccupazione USA
-    fredFetch('PAYEMS',      2),  // Buste paga non-agricole (migliaia)
-    fredFetch('GDPC1',       5),  // PIL reale USA (trimestrale)
-    fredFetch('DFEDTARU',    1),  // Fed Funds Rate upper target
-    fredFetch('CP0000EZ17M086NEST', 13), // HICP Eurozona (indice)
-    fredFetch('LRHUTTTTEZM156S',     2), // Disoccupazione Eurozona
-    fredFetch('CLVMNACSCAB1GQEA19',  5), // PIL reale Eurozona (trimestrale)
-    fredFetch('CPGRLE01EZM659N',    13), // Core HICP Eurozona (se disponibile)
+    fredFetch('CPIAUCSL',   18),  // CPI All Items mensile (+buffer per dati mancanti)
+    fredFetch('CPILFESL',   18),  // Core CPI mensile
+    fredFetch('PCEPI',      18),  // PCE mensile
+    fredFetch('PCEPILFE',   18),  // Core PCE mensile
+    fredFetch('UNRATE',      4),  // Disoccupazione USA
+    fredFetch('PAYEMS',      4),  // Buste paga non-agricole (migliaia)
+    fredFetch('GDPC1',       8),  // PIL reale USA (trimestrale)
+    fredFetch('FEDFUNDS',    4),  // Fed Funds Rate effettivo (più affidabile di DFEDTARU)
+    fredFetch('CP0000EZ17M086NEST', 18), // HICP Eurozona (indice)
+    fredFetch('LRHUTTTTEZM156S',     6), // Disoccupazione Eurozona
+    fredFetch('CLVMNACSCAB1GQEA19',  8), // PIL reale Eurozona (trimestrale)
+    fredFetch('CPGRLE01EZM659N',    18), // Core HICP Eurozona (se disponibile)
   ]);
 
   // Calcola valori
