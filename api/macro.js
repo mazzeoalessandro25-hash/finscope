@@ -51,22 +51,34 @@ async function kvSet(key, value, ttlSeconds) {
   } catch { /* ignora */ }
 }
 
-// Fetch dati Eurostat/ECB — restituisce già il tasso YoY direttamente
+// Fetch dati ECB Statistical Data Warehouse via SDMX-JSON
 // path es. 'ICP/M.U2.N.000000.4.ANR' → HICP Eurozona YoY
+// L'ECB restituisce il tasso YoY come valore diretto (non indice)
 async function ecbFetch(path) {
   try {
-    const url = `https://data-api.ecb.europa.eu/service/data/${path}?lastNObservations=4&format=csvdata`;
-    const r = await fetch(url, { signal: AbortSignal.timeout(8000), headers: { Accept: 'text/csv' } });
+    const url = `https://data-api.ecb.europa.eu/service/data/${path}?lastNObservations=4&format=jsondata`;
+    const r = await fetch(url, { signal: AbortSignal.timeout(8000), headers: { Accept: 'application/json' } });
     if (!r.ok) return null;
-    const text = await r.text();
-    // CSV: prima riga = header (KEY,...,TIME_PERIOD,OBS_VALUE), poi dati
-    const lines = text.trim().split('\n').filter(l => !l.startsWith('KEY') && l.trim());
-    const obs = lines.map(l => {
-      const cols = l.split(',');
-      return { date: cols[cols.length - 2], value: parseFloat(cols[cols.length - 1]) };
-    }).filter(o => !isNaN(o.value));
-    // Ordine descrescente: [0] = più recente
-    return obs.reverse();
+    const d = await r.json();
+
+    // Struttura SDMX-JSON: dimensions.observation contiene TIME_PERIOD con i valori
+    const obsDims = d.structure?.dimensions?.observation || [];
+    const timeDim = obsDims.find(dim => dim.id === 'TIME_PERIOD');
+    const timeValues = timeDim?.values || [];
+
+    // Prima serie disponibile nel dataset
+    const dataset = d.dataSets?.[0];
+    const seriesKey = Object.keys(dataset?.series || {})[0];
+    if (!seriesKey) return null;
+    const observations = dataset.series[seriesKey].observations || {};
+
+    // Mappa indice numerico → {date, value}, ordina decrescente ([0] = più recente)
+    const result = Object.entries(observations)
+      .map(([idx, vals]) => ({ date: timeValues[parseInt(idx)]?.id, value: vals[0] }))
+      .filter(o => o.date && o.value !== null && !isNaN(o.value))
+      .sort((a, b) => b.date.localeCompare(a.date));
+
+    return result.length ? result : null;
   } catch { return null; }
 }
 
@@ -141,7 +153,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=86400');
 
   // Prova cache Redis (TTL 6h)
-  const CACHE_KEY = 'finedge:macro:v4';
+  const CACHE_KEY = 'finedge:macro:v5';
   const cached = await kvGet(CACHE_KEY);
   if (cached) {
     try { return res.json(JSON.parse(cached)); } catch { /* ignora, ri-fetch */ }
