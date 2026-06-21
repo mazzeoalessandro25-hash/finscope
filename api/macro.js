@@ -153,7 +153,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=86400');
 
   // Prova cache Redis (TTL 6h)
-  const CACHE_KEY = 'finedge:macro:v5';
+  const CACHE_KEY = 'finedge:macro:v6';
   const cached = await kvGet(CACHE_KEY);
   if (cached) {
     try { return res.json(JSON.parse(cached)); } catch { /* ignora, ri-fetch */ }
@@ -182,7 +182,7 @@ export default async function handler(req, res) {
     fredFetch('FEDFUNDS',    4),  // Fed Funds Rate effettivo (più affidabile di DFEDTARU)
     // EU: ECB API (tasso YoY già calcolato, no chiave richiesta)
     ecbFetch('ICP/M.U2.N.000000.4.ANR'),   // HICP Eurozona YoY %
-    ecbFetch('LFSI/M.I8.S.UNEHRT.TOTAL0.15_74.T'), // Disoccupazione Eurozona
+    ecbFetch('LFSI/M.U2.S.UNEHRT.TOTAL0.15_74.T'), // Disoccupazione Eurozona (U2 = Euro area)
     fredFetch('CLVMNACSCAB1GQEA19',  8),   // PIL reale Eurozona (FRED, trimestrale)
     ecbFetch('ICP/M.U2.N.XEF000.4.ANR'),   // Core HICP Eurozona YoY %
   ]);
