@@ -231,6 +231,11 @@ nav{height:54px;background:var(--b2);
 .nf-btn{background:var(--card);border:1px solid var(--bd);color:var(--t2);font-family:var(--fm);font-size:11px;padding:5px 14px;border-radius:100px;cursor:pointer;transition:all .15s;font-weight:500}
 .nf-btn:hover{background:var(--b3);border-color:rgba(26,86,196,.25);color:var(--b)}
 .nf-btn.active{background:var(--b);border-color:var(--b);color:#fff}
+.nf-cat-wrap{position:relative;flex-shrink:0}
+.nf-cat-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:4px;z-index:200;min-width:155px;box-shadow:0 4px 20px rgba(0,0,0,.12)}
+.nf-cat-menu.open{display:block}
+.nf-cat-menu button{display:block;width:100%;text-align:left;background:none;border:none;color:var(--t2);font-family:var(--fm);font-size:12px;font-weight:500;padding:7px 12px;border-radius:7px;cursor:pointer;transition:background .1s;white-space:nowrap}
+.nf-cat-menu button:hover{background:var(--b3);color:var(--b)}
 .news-search-wrap{display:flex;gap:8px;margin-bottom:14px;max-width:460px}
 .news-search-inp{flex:1;font-family:var(--ff);font-size:13px;padding:8px 13px;border:1px solid var(--bd);border-radius:9px;background:var(--card);color:var(--t);outline:none;transition:border-color .15s}
 .news-search-inp:focus{border-color:var(--b);box-shadow:0 0 0 3px rgba(26,86,196,.07)}
@@ -3574,16 +3579,19 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   </div>
   <div id="news-port-pills" class="news-port-pills"></div>
   <div class="nf">
-    <button class="nf-btn active" onclick="loadNews('mercati',this)" data-i18n="news.tab.markets">🌐 Mercati</button>
-    <button class="nf-btn" onclick="loadNews('italia',this)" data-i18n="news.tab.italy">🇮🇹 Italia</button>
-    <button class="nf-btn" onclick="loadNews('usa',this)" data-i18n="news.tab.usa">🇺🇸 USA</button>
-    <button class="nf-btn" onclick="loadNews('commodities',this)" data-i18n="news.tab.comm">🛢 Commodities</button>
-    <button class="nf-btn" onclick="loadNews('forex',this)" data-i18n="news.tab.forex">💱 Forex</button>
-    <button class="nf-btn" onclick="loadNews('crypto',this)" data-i18n="news.tab.crypto">₿ Crypto</button>
-    <button class="nf-btn" onclick="loadNews('macro',this)" data-i18n="news.tab.macro">Macro</button>
-  </div>
-  <div class="nf" style="margin-top:-4px">
-    <span style="font-size:10px;font-weight:600;font-family:var(--fm);color:var(--t3);letter-spacing:.5px;text-transform:uppercase;align-self:center;flex-shrink:0" data-i18n="news.sect.label">Sectors</span>
+    <div class="nf-cat-wrap" id="nf-cat-wrap">
+      <button class="nf-btn active" id="nf-cat-btn" onclick="toggleNewsCatMenu()"><span id="nf-cat-label">🌐 Mercati</span> ▾</button>
+      <div class="nf-cat-menu" id="nf-cat-menu">
+        <button data-cat="mercati" onclick="selectNewsCategory('mercati')" data-i18n="news.tab.markets">🌐 Mercati</button>
+        <button data-cat="italia" onclick="selectNewsCategory('italia')" data-i18n="news.tab.italy">🇮🇹 Italia</button>
+        <button data-cat="usa" onclick="selectNewsCategory('usa')" data-i18n="news.tab.usa">🇺🇸 USA</button>
+        <button data-cat="commodities" onclick="selectNewsCategory('commodities')" data-i18n="news.tab.comm">🛢 Commodities</button>
+        <button data-cat="forex" onclick="selectNewsCategory('forex')" data-i18n="news.tab.forex">💱 Forex</button>
+        <button data-cat="crypto" onclick="selectNewsCategory('crypto')" data-i18n="news.tab.crypto">₿ Crypto</button>
+        <button data-cat="macro" onclick="selectNewsCategory('macro')" data-i18n="news.tab.macro">Macro</button>
+      </div>
+    </div>
+    <div style="width:1px;height:16px;background:var(--bd);flex-shrink:0;align-self:center"></div>
     <button class="nf-btn" onclick="loadNews('technology',this)" data-i18n="news.sect.tech">💻 Tech</button>
     <button class="nf-btn" onclick="loadNews('financials',this)" data-i18n="news.sect.fin">🏦 Finance</button>
     <button class="nf-btn" onclick="loadNews('healthcare',this)" data-i18n="news.sect.hc">💊 Healthcare</button>
@@ -4841,7 +4849,7 @@ function showPage(id,btn){
   if(btn)btn.classList.add('active');
   const mobBtn=document.getElementById('mob-nb-'+id);
   if(mobBtn)mobBtn.classList.add('active');
-  if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati');
+  if(id==='news'&&document.getElementById('news-grid').children.length<=1)loadNews('mercati',document.getElementById('nf-cat-btn'));
   if(id==='screener'&&dynamicStocks.length===0)loadScreener();
   if(id==='screener'){updateScQuickCounts&&updateScQuickCounts();}
   if(id==='portafoglio')showPortfolioState();
@@ -6497,7 +6505,17 @@ function _newsLoadMore(){
     if(btn)btn.style.display='none';
   }
 }
-function newsRefresh(){loadNews(_newsCurCat);}
+function newsRefresh(){loadNews(_newsCurCat,_newsCurCat&&!['technology','financials','healthcare','energy','consumer','industrials'].includes(_newsCurCat)?document.getElementById('nf-cat-btn'):null);}
+function toggleNewsCatMenu(){document.getElementById('nf-cat-menu').classList.toggle('open');}
+function selectNewsCategory(cat){
+  const menu=document.getElementById('nf-cat-menu');
+  const lbl=document.getElementById('nf-cat-label');
+  const item=menu.querySelector('[data-cat="'+cat+'"]');
+  if(lbl&&item)lbl.textContent=item.textContent;
+  menu.classList.remove('open');
+  loadNews(cat,document.getElementById('nf-cat-btn'));
+}
+document.addEventListener('click',function(e){if(!e.target.closest('#nf-cat-wrap')){const m=document.getElementById('nf-cat-menu');if(m)m.classList.remove('open');}});
 async function loadNews(category,btn){
   _newsCurCat=category;
   document.querySelectorAll('.nf-btn').forEach(b=>b.classList.remove('active'));
