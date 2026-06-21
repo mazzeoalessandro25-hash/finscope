@@ -11509,7 +11509,7 @@ function _macroRenderPulse(d){
     if(el)el.className='macro-pulse-stat '+(t10.price>4.8?'danger':t10.price>4.0?'warn':'safe');
     const v=document.getElementById('mps-10y-val');if(v)v.textContent=fmt(t10.price,2)+'%';
     const c=document.getElementById('mps-10y-chg');
-    if(c){c.className='mps-chg '+(chg>=0?'up':'down');c.textContent=(chg>=0?'+':'')+fmt(chg,3)+' bp oggi';}
+    if(c){c.className='mps-chg '+(chg>=0?'up':'down');c.textContent=(chg>=0?'+':'')+fmt(chg,3)+' bp '+_L({it:'oggi',en:'today'});}
   }
   // Spread 10Y-3M
   const t3=d.t3m;
@@ -11529,7 +11529,7 @@ function _macroRenderPulse(d){
     if(el)el.className='macro-pulse-stat '+(dxy.price>105?'danger':dxy.price>102?'warn':'');
     const v=document.getElementById('mps-dxy-val');if(v)v.textContent=fmt(dxy.price,2);
     const c=document.getElementById('mps-dxy-chg');
-    if(c){c.className='mps-chg '+(chg>=0?'up':'down');c.textContent=chgStr(chg)+' oggi';}
+    if(c){c.className='mps-chg '+(chg>=0?'up':'down');c.textContent=chgStr(chg)+' '+_L({it:'oggi',en:'today'});}
     const desc=document.getElementById('mps-dxy-desc');
     if(desc)desc.textContent=dxy.price>104?_t('macro.dxy.veryStrong'):dxy.price>101?_t('macro.dxy.strong'):dxy.price>98?_t('macro.dxy.neutral'):_t('macro.dxy.weak');
   }
@@ -11641,15 +11641,15 @@ function _macroRenderCredit(d){
     </div>`;
   }).join('')
   +(signal?`<div style="margin-top:10px;padding:8px 12px;border-radius:8px;background:var(--s2);border:1px solid var(--bd)">
-    <div style="font-size:9px;font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:3px">Segnale credito</div>
+    <div style="font-size:9px;font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;color:var(--t3);margin-bottom:3px">${_L({it:'Segnale credito',en:'Credit signal'})}</div>
     <div style="font-size:11px;font-weight:600;color:${sigCol}">${signal}</div>
   </div>`:'')
   +`<div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--bd)">
-    <div style="font-size:9px;font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:8px">Come interpretare</div>
+    <div style="font-size:9px;font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:8px">${_L({it:'Come interpretare',en:'How to read'})}</div>
     <div style="display:flex;flex-direction:column;gap:5px">
-      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--g)">HYG ↑ &gt; LQD ↑</span> → risk-on, condizioni creditizie espansive</div>
-      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--r)">HYG ↓ &gt; LQD ↓</span> → stress creditizio, spread in allargamento</div>
-      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--b)">TLT ↑</span> → tassi lunghi in calo (flight to safety o pivot Fed)</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--g)">HYG ↑ &gt; LQD ↑</span> → ${_L({it:'risk-on, condizioni creditizie espansive',en:'risk-on, expansive credit conditions'})}</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--r)">HYG ↓ &gt; LQD ↓</span> → ${_L({it:'stress creditizio, spread in allargamento',en:'credit stress, spreads widening'})}</div>
+      <div style="font-size:10px;color:var(--t2);line-height:1.4"><span style="font-family:var(--fm);font-weight:600;color:var(--b)">TLT ↑</span> → ${_L({it:'tassi lunghi in calo (flight to safety o pivot Fed)',en:'long rates falling (flight to safety or Fed pivot)'})}</div>
     </div>
   </div>`;
 }
@@ -11715,7 +11715,7 @@ function _macroRenderForex(d){
     </div>
     <div style="text-align:right">
       <div style="font-family:var(--fm);font-size:13px;font-weight:600;color:${dxyUp?'var(--g)':'var(--r)'}">${dxyChg!=null?chgStr(dxyChg):'—'}</div>
-      <div style="font-size:10px;color:var(--t3);margin-top:4px">Oggi</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px">${_L({it:'Oggi',en:'Today'})}</div>
     </div>
   </div>
   <div style="display:flex;flex-direction:column;gap:2px">
