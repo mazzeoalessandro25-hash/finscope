@@ -2208,7 +2208,7 @@ async function submitLpReset(){
     const r=await fetch('/api/auth?action=reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,code,newPassword:pwd})});
     const d=await r.json();
     if(!r.ok||!d.ok){errEl.textContent=d.error||_t('auth.err.unknown');errEl.classList.add('show');return;}
-    okEl.textContent=currentLang==='en'?'Password updated! Please log in.':'Password aggiornata! Effettua il login.';
+    okEl.textContent=_t('auth.ok.pwdReset');
     okEl.classList.add('show');
     setTimeout(()=>showLpView('main'),2000);
   }catch{
@@ -2290,7 +2290,7 @@ function showTransition(onDone) {
 
   /* ── Sottotitolo ── */
   var txt = document.createElement('div');
-  txt.textContent = 'Caricamento dashboard...';
+  txt.textContent = typeof _t==='function'?_t('common.loadingDash'):'Loading...';
   txt.style.cssText =
     'font-size:11px;color:rgba(255,255,255,.45);font-family:sans-serif;' +
     'letter-spacing:.12em;text-transform:uppercase;' +

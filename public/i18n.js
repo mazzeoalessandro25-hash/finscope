@@ -43,9 +43,10 @@ const TRANSLATIONS={
     'auth.err.conn':'Errore di connessione. Riprova.',
     'auth.err.unknown':'Errore sconosciuto',
     'auth.ok.codeSent':'Controlla la tua email — il codice è valido per 15 minuti',
+    'auth.ok.pwdReset':'Password aggiornata! Effettua il login.',
     'auth.emailAccount':'Email del tuo account',
     /* COMMON */
-    'common.loading':'Caricamento...','common.add':'Aggiungi',
+    'common.loading':'Caricamento...','common.loadingDash':'Caricamento dashboard...','common.add':'Aggiungi',
     'common.fnote':'Dati da Yahoo Finance · Ritardo max 15 min · Solo uso informativo · Non costituisce consulenza finanziaria',
     'footer.chiSiamo':'Chi siamo','footer.contatti':'Contatti','footer.termini':'Termini',
     'common.delete':'Elimina','common.save':'Salva',
@@ -1233,9 +1234,10 @@ const TRANSLATIONS={
     'auth.err.conn':'Connection error. Please try again.',
     'auth.err.unknown':'Unknown error',
     'auth.ok.codeSent':'Check your email — the reset code is valid for 15 minutes',
+    'auth.ok.pwdReset':'Password updated! Please log in.',
     'auth.emailAccount':'Your account email',
     /* COMMON */
-    'common.loading':'Loading...','common.add':'Add',
+    'common.loading':'Loading...','common.loadingDash':'Loading dashboard...','common.add':'Add',
     'common.fnote':'Data from Yahoo Finance · Max 15 min delay · For informational use only · Not financial advice',
     'footer.chiSiamo':'About us','footer.contatti':'Contact','footer.termini':'Terms',
     'common.delete':'Delete','common.save':'Save',

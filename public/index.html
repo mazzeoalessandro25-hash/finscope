@@ -4423,7 +4423,7 @@ let modalSym='', modalRange='1mo', modalType='candle';
 let sortKey='score', sortDir=-1;
 let watchlist=JSON.parse(localStorage.getItem('fs_wl')||'[]');
 
-const fmt=(n,d=2)=>n==null||isNaN(n)?'—':n.toLocaleString('it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmt=(n,d=2)=>n==null||isNaN(n)?'—':n.toLocaleString(currentLang==='en'?'en-US':'it-IT',{minimumFractionDigits:d,maximumFractionDigits:d});
 const fmtLg=n=>!n?'—':n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(1)+'B':n>=1e6?(n/1e6).toFixed(0)+'M':'—';
 const chgPct=(p,v)=>v?((p-v)/v*100):null;
 const chgStr=c=>c==null?'—':(c>=0?'+':'')+fmt(c,2)+'%';
@@ -5103,7 +5103,7 @@ function attachLWTooltip(chart,container,mainSeries,type,pts){
     if(x2!=null&&y2!=null){mClear.style.left=(x2+6)+'px';mClear.style.top=(y2-10)+'px';}
   });
   const tKey=t=>typeof t==='object'?`${t.year}-${t.month}-${t.day}`:String(t);
-  const fmtDate=(t,full)=>{try{let d;if(typeof t==='object')d=new Date(t.year,t.month-1,t.day);else d=new Date(t*1000);return d.toLocaleDateString('it-IT',full?{day:'2-digit',month:'short',year:'numeric'}:{day:'2-digit',month:'short'});}catch(e){return '';}};
+  const fmtDate=(t,full)=>{try{let d;if(typeof t==='object')d=new Date(t.year,t.month-1,t.day);else d=new Date(t*1000);const _fl=currentLang==='en'?'en-GB':'it-IT';return d.toLocaleDateString(_fl,full?{day:'2-digit',month:'short',year:'numeric'}:{day:'2-digit',month:'short'});}catch(e){return '';}};
   chart.subscribeClick(param=>{
     if(!container._measureMode)return;
     if(!param.time||!param.seriesData||!param.seriesData.size)return;
@@ -6391,11 +6391,12 @@ async function runFA(){
 function newsTimeAgo(ts){
   if(!ts)return'';
   const d=Math.floor(Date.now()/1000-ts);
-  if(d<60)return'Adesso';
-  if(d<3600)return Math.floor(d/60)+' min fa';
-  if(d<86400)return Math.floor(d/3600)+' ore fa';
-  if(d<172800)return'Ieri';
-  return new Date(ts*1000).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
+  const loc=currentLang==='en'?'en-GB':'it-IT';
+  if(d<60)return _L({it:'Adesso',en:'Now'});
+  if(d<3600)return Math.floor(d/60)+' min '+_L({it:'fa',en:'ago'});
+  if(d<86400)return Math.floor(d/3600)+'h '+_L({it:'fa',en:'ago'});
+  if(d<172800)return _L({it:'Ieri',en:'Yesterday'});
+  return new Date(ts*1000).toLocaleDateString(loc,{day:'2-digit',month:'short'});
 }
 function getNewsBadge(title,time){
   const t=(title||'').toLowerCase();
@@ -6403,11 +6404,11 @@ function getNewsBadge(title,time){
   const bull=['rally','surge','soar','gain',' rise','record high','boost','bullish','jump','climb','rialzo','crescita','positiv','guadagn'];
   const bear=['crash','plunge',' fall','drop','slump','decline','recession','fear','crisis','sell-off','bearish','calo','crollo','ribasso','perdita','negativ'];
   const cb=['federal reserve','fed rate','ecb rate','bce rate','banca centrale','rate hike','rate cut','interest rate','powell','lagarde','tassi'];
-  if(bull.some(w=>t.includes(w)))return'<span class="news-badge bullish">\ud83d\udcc8 Rialzo</span>';
-  if(bear.some(w=>t.includes(w)))return'<span class="news-badge bearish">\ud83d\udcc9 Calo</span>';
-  if(cb.some(w=>t.includes(w)))return'<span class="news-badge cb">\ud83c\udfe6 Banca Centrale</span>';
-  if(age<1800)return'<span class="news-badge breaking">\ud83d\udd34 Breaking</span>';
-  if(age<3600)return'<span class="news-badge recent">\ud83d\udd50 Recente</span>';
+  if(bull.some(w=>t.includes(w)))return`<span class="news-badge bullish">📈 ${_L({it:'Rialzo',en:'Bullish'})}</span>`;
+  if(bear.some(w=>t.includes(w)))return`<span class="news-badge bearish">📉 ${_L({it:'Calo',en:'Bearish'})}</span>`;
+  if(cb.some(w=>t.includes(w)))return`<span class="news-badge cb">🏦 ${_L({it:'Banca Centrale',en:'Central Bank'})}</span>`;
+  if(age<1800)return'<span class="news-badge breaking">🔴 Breaking</span>';
+  if(age<3600)return`<span class="news-badge recent">🕐 ${_L({it:'Recente',en:'Recent'})}</span>`;
   return'';
 }
 // \u2500\u2500\u2500 News helpers \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500
@@ -7958,7 +7959,7 @@ function renderPacPlans(){
     const totalInvested=(p.log||[]).reduce((s,l)=>s+l.amount,0);
     const execCount=(p.log||[]).length;
     const freqLabel=p.freq==='quarterly'?_t('pac.freq.quarterly'):_t('pac.freq.monthly');
-    const dayLabel=p.dayOfMonth?` · ${currentLang==='en'?'day':'giorno'} ${p.dayOfMonth}`:'';
+    const dayLabel=p.dayOfMonth?` · ${_L({it:'giorno',en:'day'})} ${p.dayOfMonth}`:'';
     const csym=p.currency==='EUR'?'€':'$';
     const statusText=p.active?(isDue?_t('pac.due'):_t('pac.active')):_t('pac.paused');
     const statusColor=p.active?(isDue?'var(--o)':'var(--g)'):'var(--t3)';
@@ -8439,7 +8440,7 @@ async function renderPortfolio(){
     const barColor=stateClass==='pos'?'#059669':stateClass==='neg'?'#DC2626':'var(--b)';
     const holdDays=item.buyDate?Math.floor((Date.now()-new Date(item.buyDate).getTime())/(86400000)):null;
     const holdStr=holdDays!=null?(holdDays<30?holdDays+'g':(holdDays<365?Math.floor(holdDays/30)+'m':Math.floor(holdDays/365)+'a '+Math.floor((holdDays%365)/30)+'m')):'';
-    const dateDisplay=item.buyDate?new Date(item.buyDate).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'}):'';
+    const dateDisplay=item.buyDate?new Date(item.buyDate).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{day:'2-digit',month:'short',year:'numeric'}):'';
     const itemCat=item.cat||detectPortCat(item.sym);
     return`<div class="port-item ${stateClass}" id="port-item-${i}" data-cat="${itemCat}" onclick="openFA('${item.sym}')" style="cursor:pointer">
       <div style="display:flex;gap:8px;align-items:flex-start">
@@ -9008,8 +9009,9 @@ async function loadPortfolioEarnings(assets, noDailyData=false){
 
   const rows = relevant.map(e=>{
     const dt   = new Date(e.date+'T12:00:00');
-    const day  = dt.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
-    const dow  = dt.toLocaleDateString('it-IT',{weekday:'short'});
+    const _eLoc2=currentLang==='en'?'en-GB':'it-IT';
+    const day  = dt.toLocaleDateString(_eLoc2,{day:'numeric',month:'short'});
+    const dow  = dt.toLocaleDateString(_eLoc2,{weekday:'short'});
     const isBmo = e.time==='bmo';
     const badge = isBmo
       ? `<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(217,119,6,.15);color:#D97706;font-weight:600;white-space:nowrap">☀ Pre-Mkt</span>`
@@ -12584,8 +12586,9 @@ async function exportPortfolioPDF(){
   const RED=[185,28,28];
   const WHITE=[255,255,255];
   const now=new Date();
-  const dateStr=now.toLocaleDateString('it-IT',{day:'2-digit',month:'long',year:'numeric'});
-  const timeStr=now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+  const _pdfLoc=currentLang==='en'?'en-GB':'it-IT';
+  const dateStr=now.toLocaleDateString(_pdfLoc,{day:'2-digit',month:'long',year:'numeric'});
+  const timeStr=now.toLocaleTimeString(_pdfLoc,{hour:'2-digit',minute:'2-digit'});
 
   // ── HEADER BAND ──
   doc.setFillColor(BLUE[0],BLUE[1],BLUE[2]);
@@ -13682,7 +13685,7 @@ function renderETFData(etf){
   sdSet('etfm-type',etf.legalType||'ETF');
   // Inception date
   if(etf.inceptionDate){
-    try{sdSet('etfm-inception',new Date(etf.inceptionDate).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'}));}
+    try{sdSet('etfm-inception',new Date(etf.inceptionDate).toLocaleDateString(currentLang==='en'?'en-GB':'it-IT',{day:'2-digit',month:'short',year:'numeric'}));}
     catch{sdSet('etfm-inception','—');}
   }else sdSet('etfm-inception','—');
   // Equity ratios
