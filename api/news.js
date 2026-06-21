@@ -297,6 +297,95 @@ const CATEGORIES = {
       'vix','volatility index','dxy','dollar index',
     ],
   },
+  technology: {
+    rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+    ],
+    finnhub: 'general',
+    yahooTickers: ['AAPL','MSFT','NVDA','GOOGL','META','AMD','INTC','ORCL','CRM','AVGO','QCOM','TSM','ASML','ADBE'],
+    yahooQueries: ['technology stocks AI semiconductor', 'artificial intelligence software cloud computing'],
+    keywords: [
+      'technology','tech stocks','semiconductor','software','cloud computing','artificial intelligence',
+      'ai','machine learning','chip','microchip','silicon','nvidia','apple','microsoft','google','alphabet','meta',
+      'amd','intel','oracle','salesforce','broadcom','qualcomm','tsmc','asml','adobe',
+      'iphone','android','aws','azure','google cloud','chatgpt','openai','data center',
+    ],
+  },
+  financials: {
+    rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://feeds.a.dj.com/rss/RSSMarketsMain.xml'], name: 'WSJ Markets', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+    ],
+    finnhub: 'general',
+    yahooTickers: ['JPM','BAC','WFC','GS','MS','BLK','C','AXP','V','MA','BRK-B','USB','SCHW'],
+    yahooQueries: ['bank financial stocks earnings', 'investment banking wall street finance'],
+    keywords: [
+      'bank','banking','financial','finance','jpmorgan','goldman sachs','morgan stanley','bank of america',
+      'wells fargo','citigroup','blackrock','visa','mastercard','american express','berkshire',
+      'insurance','asset management','hedge fund','private equity','ipo','merger','acquisition',
+      'credit card','fintech','payment','lending','mortgage','interest rate hike','fed funds',
+    ],
+  },
+  healthcare: {
+    rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+    ],
+    finnhub: 'general',
+    yahooTickers: ['JNJ','UNH','LLY','MRK','ABBV','PFE','TMO','ABT','DHR','BMY','AMGN','GILD','ISRG','CVS'],
+    yahooQueries: ['healthcare pharmaceutical biotech stocks', 'drug fda approval clinical trial biotech'],
+    keywords: [
+      'healthcare','health care','pharmaceutical','pharma','biotech','biotechnology','drug','medicine',
+      'fda','clinical trial','vaccine','cancer','therapy','medical device','hospital',
+      'johnson','unitedhealth','eli lilly','merck','abbvie','pfizer','thermo fisher','abbott',
+      'amgen','gilead','intuitive surgical','cvs health','humana','cigna','biontech','moderna',
+    ],
+  },
+  energy: {
+    rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://www.cnbc.com/id/100727362/device/rss/rss.html'], name: 'CNBC Energy', specific: true },
+    ],
+    finnhub: 'general',
+    yahooTickers: ['XOM','CVX','COP','EOG','SLB','PSX','VLO','OXY','MPC','HAL','BKR','NEE','FSLR'],
+    yahooQueries: ['energy oil gas stocks', 'renewable energy solar wind power electricity'],
+    keywords: [
+      'energy','oil company','gas company','exxon','chevron','conocophillips','schlumberger','halliburton',
+      'phillips 66','valero','occidental','marathon','baker hughes','nextera','first solar',
+      'opec','oil price','gas price','lng','refinery','pipeline','drilling','renewable','solar','wind','nuclear',
+    ],
+  },
+  consumer: {
+    rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+    ],
+    finnhub: 'general',
+    yahooTickers: ['AMZN','WMT','HD','COST','TGT','LOW','MCD','SBUX','NKE','PG','KO','PEP','EL','CL'],
+    yahooQueries: ['consumer retail stocks spending', 'e-commerce retail sales consumer staples discretionary'],
+    keywords: [
+      'consumer','retail','e-commerce','amazon','walmart','home depot','costco','target','lowes',
+      'mcdonald','starbucks','nike','procter gamble','coca-cola','pepsi','luxury','lvmh',
+      'spending','sales','shopping','consumer confidence','consumer goods','restaurant','food','beverage',
+    ],
+  },
+  industrials: {
+    rss: [
+      { urls: ['https://feeds.reuters.com/reuters/businessNews'], name: 'Reuters', specific: false },
+      { urls: ['https://www.cnbc.com/id/100003114/device/rss/rss.html'], name: 'CNBC', specific: false },
+    ],
+    finnhub: 'general',
+    yahooTickers: ['BA','CAT','GE','HON','UPS','RTX','LMT','DE','FDX','MMM','EMR','ETN','CARR'],
+    yahooQueries: ['industrial manufacturing aerospace defense stocks', 'supply chain logistics freight'],
+    keywords: [
+      'industrial','manufacturing','aerospace','defense','logistics','transportation','infrastructure',
+      'boeing','caterpillar','general electric','honeywell','ups','fedex','raytheon','lockheed',
+      'john deere','3m','emerson','eaton','supply chain','freight','shipping','construction',
+      'machinery','equipment','automation','robot',
+    ],
+  },
 };
 
 // ─── Handler ──────────────────────────────────────────────────

@@ -177,6 +177,8 @@ const TRANSLATIONS={
     'news.tab.markets':'🌐 Mercati','news.tab.italy':'🇮🇹 Italia',
     'news.tab.usa':'🇺🇸 USA','news.tab.comm':'🛢 Commodities',
     'news.tab.forex':'💱 Forex','news.tab.crypto':'₿ Crypto','news.tab.macro':'Macro',
+    'news.sect.label':'Settori','news.sect.tech':'💻 Tech','news.sect.fin':'🏦 Finanza',
+    'news.sect.hc':'💊 Healthcare','news.sect.en':'⚡ Energy','news.sect.cons':'🛍 Consumer','news.sect.ind':'🏭 Industriali',
     'news.subtitle':'Ultime notizie finanziarie · RSS, Finnhub, Yahoo Finance',
     /* LAB */
     'lab.tab.sim':'📈 Simulatore','lab.tab.backtest':'⏮ Backtest','lab.tab.compare':'⚖ Comparatore',
@@ -1368,6 +1370,8 @@ const TRANSLATIONS={
     'news.tab.markets':'🌐 Markets','news.tab.italy':'🇮🇹 Italy',
     'news.tab.usa':'🇺🇸 USA','news.tab.comm':'🛢 Commodities',
     'news.tab.forex':'💱 Forex','news.tab.crypto':'₿ Crypto','news.tab.macro':'Macro',
+    'news.sect.label':'Sectors','news.sect.tech':'💻 Tech','news.sect.fin':'🏦 Finance',
+    'news.sect.hc':'💊 Healthcare','news.sect.en':'⚡ Energy','news.sect.cons':'🛍 Consumer','news.sect.ind':'🏭 Industrials',
     'news.subtitle':'Latest financial news · RSS, Finnhub, Yahoo Finance',
     /* LAB */
     'lab.tab.sim':'📈 Simulator','lab.tab.backtest':'⏮ Backtest','lab.tab.compare':'⚖ Comparator',
@@ -2532,6 +2536,8 @@ const TRANSLATIONS={
     'news.tab.markets':'🌐 Märkte','news.tab.italy':'🇮🇹 Italien',
     'news.tab.usa':'🇺🇸 USA','news.tab.comm':'🛢 Rohstoffe',
     'news.tab.forex':'💱 Devisen','news.tab.crypto':'₿ Krypto','news.tab.macro':'Makro',
+    'news.sect.label':'Sektoren','news.sect.tech':'💻 Tech','news.sect.fin':'🏦 Finanzen',
+    'news.sect.hc':'💊 Gesundheit','news.sect.en':'⚡ Energie','news.sect.cons':'🛍 Konsum','news.sect.ind':'🏭 Industrie',
     'news.subtitle':'Neueste Finanznachrichten · RSS, Finnhub, Yahoo Finance',
     /* LAB */
     'lab.tab.sim':'📈 Simulator','lab.tab.backtest':'⏮ Backtest','lab.tab.compare':'⚖ Vergleich',
