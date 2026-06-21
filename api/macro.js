@@ -122,7 +122,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=86400');
 
   // Prova cache Redis (TTL 6h)
-  const CACHE_KEY = 'finedge:macro:v2';
+  const CACHE_KEY = 'finedge:macro:v3';
   const cached = await kvGet(CACHE_KEY);
   if (cached) {
     try { return res.json(JSON.parse(cached)); } catch { /* ignora, ri-fetch */ }
