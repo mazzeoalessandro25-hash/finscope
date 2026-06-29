@@ -177,7 +177,7 @@ Modifica il footer (componente condiviso o ripetuto) per:
 1. Aggiungere il link "Affiliazioni" o "Trasparenza" accanto agli altri link legali. Nuovo ordine consigliato:
    Home · Chi siamo · Contatti · Privacy · Cookie · Termini · Disclaimer · Affiliazioni
 
-2. Aggiungere un'EMAIL PUBBLICA DI CONTATTO visibile (es. info@finedge.it). FERMATI E CHIEDIMI quale email vuole usare prima di scriverla.
+2. Aggiungere un'EMAIL PUBBLICA DI CONTATTO visibile (es. finedgehq@gmail.com). FERMATI E CHIEDIMI quale email vuole usare prima di scriverla.
 
 3. Aggiungere micro-testo disclosure (solo in pagine che potrebbero contenere link affiliati, NON nelle pagine legali pure):
    "FinEdge può ricevere commissioni dai link partner. Nessun costo aggiuntivo per te. [Maggiori info →](/affiliazioni.html)"
@@ -284,7 +284,7 @@ Dopo aver applicato tutti i task precedenti:
 7. Fammi un REPORT FINALE con:
    - Lista completa file modificati (con un summary di cosa è cambiato in ognuno)
    - Lista nuovi file creati
-   - Eventuali avvisi di cose da fare manualmente fuori dal codice (es. "configurare DNS MX per email info@finedge.it", "deploy su Vercel", "verifica visualizzazione mobile dopo deploy")
+   - Eventuali avvisi di cose da fare manualmente fuori dal codice (es. "configurare DNS MX per email finedgehq@gmail.com", "deploy su Vercel", "verifica visualizzazione mobile dopo deploy")
    - Checklist test manuali post-deploy
    - Eventuali raccomandazioni aggiuntive
 
@@ -315,7 +315,7 @@ Inizia con il Task 0 (audit preliminare). Fammi il report e attendi conferma.
 2. **Verifica visuale**: controlla che il design sia rimasto coerente (footer, header, pagine legali)
 3. **Verifica responsive**: prova su mobile (DevTools Chrome → modalità responsive)
 4. **Verifica link**: clicca tutti i link del footer su almeno 3 pagine diverse
-5. **Verifica email**: configura DNS / forwarder per l'email pubblica scelta (info@finedge.it o simili)
+5. **Verifica email**: configura DNS / forwarder per l'email pubblica scelta (finedgehq@gmail.com o simili)
 6. **Deploy Vercel**: `git push` o deploy manuale
 7. **Test live**: ripeti i test sul sito live dopo il deploy
 8. **Attendi 24-48h**: lascia il tempo a Google di re-crawlare prima di candidarti agli affiliate
