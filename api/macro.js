@@ -1,5 +1,5 @@
 // Indicatori macroeconomici live da FRED API (St. Louis Fed)
-// Cache Vercel edge 6h · stale-while-revalidate 24h
+// Cache Vercel edge 6h · stale-while-revalidate 6h
 // Richiede env: FRED_API_KEY (gratuito su fred.stlouisfed.org)
 
 const FRED_BASE = 'https://api.stlouisfed.org/fred/series/observations';
@@ -149,8 +149,8 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // Cache Vercel edge 6h, stale 24h
-  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=86400');
+  // Cache Vercel edge 6h, stale 6h
+  res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=21600');
 
   // Prova cache Redis (TTL 6h)
   const CACHE_KEY = 'finedge:macro:v6';
