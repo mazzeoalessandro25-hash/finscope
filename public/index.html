@@ -6538,11 +6538,13 @@ function loadNewsSearch(q){
   if(inp)inp.value=q;
   _renderNews(q.trim());
 }
+const _NEWS_KNOWN_CATS=new Set(['mercati','italia','usa','commodities','forex','crypto','macro','technology','financials','healthcare','energy','consumer','industrials']);
 async function _renderNews(category){
   const grid=document.getElementById('news-grid');
   grid.innerHTML='<div class="ld">'+_t('load.news2')+'</div>';
   try{
-    const r=await fetch('/api/news?category='+encodeURIComponent(category));
+    const newsUrl=_NEWS_KNOWN_CATS.has(category)?'/api/news?category='+encodeURIComponent(category):'/api/news?q='+encodeURIComponent(category);
+    const r=await fetch(newsUrl);
     const data=await r.json();
     if(!data?.news?.length){grid.innerHTML='<div class="ld">'+_t('empty.news.avail')+'</div>';return;}
     _newsAllItems=data.news;
