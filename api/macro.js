@@ -43,10 +43,10 @@ async function kvSet(key, value, ttlSeconds) {
   const token = process.env.KV_REST_API_TOKEN;
   if (!base || !token) return;
   try {
-    await fetch(`${base}/set/${encodeURIComponent(key)}`, {
+    await fetch(`${base}/pipeline`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ value, ex: ttlSeconds })
+      body: JSON.stringify([['SET', key, value, 'EX', ttlSeconds]])
     });
   } catch { /* ignora */ }
 }
@@ -153,7 +153,7 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 's-maxage=21600, stale-while-revalidate=21600');
 
   // Prova cache Redis (TTL 6h)
-  const CACHE_KEY = 'finedge:macro:v6';
+  const CACHE_KEY = 'finedge:macro:v7';
   const cached = await kvGet(CACHE_KEY);
   if (cached) {
     try { return res.json(JSON.parse(cached)); } catch { /* ignora, ri-fetch */ }
