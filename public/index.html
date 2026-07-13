@@ -507,7 +507,7 @@ body.dark select:not(.lang-select){background-image:url("data:image/svg+xml,%3Cs
 .port-item.neu{border-left-color:#94a3b8!important}
 .port-sym{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)}
 .port-name{font-size:10px;color:var(--t2);font-weight:500;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
-.port-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:0;line-height:1}
+.port-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:6px;line-height:1;min-width:32px;min-height:32px;display:flex;align-items:center;justify-content:center}
 .port-del:hover{color:var(--r)}
 /* Port tabs */
 .port-tabs{display:flex;gap:0;border-bottom:2px solid var(--bd);margin-bottom:14px;overflow-x:auto}
@@ -1509,6 +1509,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   #port-summary,#port-daily-text{max-width:100%;overflow-x:hidden}
   /* Lista titoli: scrollabile con altezza massima */
   #port-list{max-height:360px}
+  /* Edit panel portafoglio: input impilati su mobile */
+  .port-edit-row{flex-direction:column;align-items:stretch!important}
+  .port-edit-row .port-inp{width:100%!important;box-sizing:border-box}
+  .port-edit-row .port-btn{width:100%;box-sizing:border-box}
   /* Riepilogo giornata: override inline style="height:580px" */
   #port-daily-outer{height:auto!important;min-width:0;width:100%;box-sizing:border-box}
   /* KPI e hero: 2 colonne */
@@ -8373,7 +8377,9 @@ function togglePortGroup(){
 function togglePortEdit(idx){
   const el=document.getElementById('port-edit-'+idx);
   if(!el)return;
-  el.style.display=el.style.display==='none'||!el.style.display?'block':'none';
+  const show=el.style.display==='none'||!el.style.display;
+  el.style.display=show?'block':'none';
+  if(show)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);
 }
 
 async function savePortEdit(idx){
@@ -13139,7 +13145,7 @@ async function _importAutoSearchTickers(total){
     try{
       const r=await fetch('/api/quote?type=search&q='+encodeURIComponent(q));
       const res=await r.json();
-      const best=_importPickBestQuote(res.quotes||[]);
+      const best=_importPickBestQuote(res.quotes||[],p.sym);
       if(best&&best.symbol){
         data[i].sym=best.symbol;
         if(inp){inp.value=best.symbol;inp.title=best.name+' ('+best.exchange+')';}
@@ -13155,12 +13161,14 @@ async function _importAutoSearchTickers(total){
   const confirmBtn=document.getElementById('port-import-confirm-btn');
   if(confirmBtn){confirmBtn.disabled=false;confirmBtn.style.opacity='1';}
 }
-function _importPickBestQuote(quotes){
+function _importPickBestQuote(quotes,origSym){
   if(!quotes.length)return null;
-  // Borsa Italiana: sia per suffisso .MI sia per campo exchange MIL/BIT
-  const mi=quotes.find(q=>q.symbol.endsWith('.MI')||q.exchange==='MIL'||q.exchange==='BIT');
-  if(mi)return mi;
-  // Altrimenti primo risultato (Yahoo ordina già per rilevanza/liquidità)
+  // 1. Match esatto col ticker originale estratto dal file
+  if(origSym){const exact=quotes.find(q=>q.symbol===origSym);if(exact)return exact;}
+  // 2. Borsa Italiana solo se l'origSym non era già un ticker US puro
+  const looksUS=origSym&&/^[A-Z]{1,5}(-[A-Z]{1,3})?$/.test(origSym);
+  if(!looksUS){const mi=quotes.find(q=>q.symbol.endsWith('.MI')||q.exchange==='MIL'||q.exchange==='BIT');if(mi)return mi;}
+  // 3. Primo risultato (Yahoo ordina per rilevanza/liquidità)
   return quotes[0];
 }
 function _importLooksTicker(s){
@@ -13251,7 +13259,7 @@ function parsePortCSV(text){
       }
 
     // ── REVOLUT / TRADING 212 (,, colonne Ticker/Symbol + Type/Action)
-    } else if(fmt==='revolut'||fmt==='t212'||(fmt==='auto'&&(l0low.includes('ticker')||l0low.includes('symbol'))&&(l0low.includes(',type,')||l0low.includes(',action,')))){
+    } else if(fmt==='revolut'||fmt==='t212'||(fmt==='auto'&&(()=>{const _h=_parseCSVRow(l0,',').map(h=>h.toLowerCase().trim());return(_h.includes('ticker')||_h.includes('symbol'))&&(_h.includes('type')||_h.includes('action'));})())){
       const hdr=_parseCSVRow(l0,',').map(h=>h.toLowerCase().trim());
       const iSym=hdr.findIndex(h=>h==='ticker'||h==='symbol');
       const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('shares')||h==='qty');
