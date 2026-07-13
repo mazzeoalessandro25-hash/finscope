@@ -16098,7 +16098,7 @@ function btRenderResults(sym,strategy,capital,pts,result){
   const tcnt=document.getElementById('bt-trades-count');
   if(tradesCard&&tbody&&trades.length>0){
     tradesCard.style.display='block';
-    if(tcnt)tcnt.textContent=trades.length+' operazioni nel periodo';
+    if(tcnt)tcnt.textContent=trades.length+' '+_L({it:'operazioni nel periodo',en:'trades in period'});
     let prevVal=capital;
     tbody.innerHTML=trades.slice(0,30).map((t,i)=>{
       const pnl=t.type==='SELL'?t.portVal-prevVal:null;
@@ -16760,7 +16760,7 @@ function renderTransactionHistory(){
         <div style="text-align:right;font-family:var(--fm);font-size:11px;font-weight:600;color:var(--t)">${cur}${fmt(tx.total,0)}</div>
       </div>`;
     }).join('')}
-    ${_transactions.length>50?`<div style="padding:8px 0;font-size:10px;color:var(--t3);font-family:var(--fm);text-align:center">Ultime 50 di ${_transactions.length} transazioni</div>`:''}`;
+    ${_transactions.length>50?`<div style="padding:8px 0;font-size:10px;color:var(--t3);font-family:var(--fm);text-align:center">${_L({it:'Ultime 50 di',en:'Last 50 of'})} ${_transactions.length} ${_L({it:'transazioni',en:'transactions'})}</div>`:''}`;
 }
 function clearTransactionHistory(){
   if(!confirm(_L({it:'Cancellare tutto lo storico transazioni?',en:'Delete all transaction history?'})))return;
@@ -16846,7 +16846,7 @@ function renderPriceAlerts(){
         </div>
         <div>
           <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${_L({it:'Prezzo',en:'Price'})}</div>
-          <input type="number" id="alert-price" placeholder="es. 150.00" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
+          <input type="number" id="alert-price" placeholder="${_L({it:'es. 150.00',en:'e.g. 150.00'})}" style="width:100%;background:var(--s1);border:1px solid var(--bd);color:var(--t);padding:7px 8px;border-radius:7px;font-size:12px;font-family:var(--fm);outline:none"/>
         </div>
         <button onclick="addPriceAlert()" style="background:var(--b);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-family:var(--fm);font-weight:600;cursor:pointer;white-space:nowrap">${_L({it:'+ Aggiungi',en:'+ Add'})}</button>
       </div>
