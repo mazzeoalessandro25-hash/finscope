@@ -496,7 +496,7 @@ body.dark select:not(.lang-select){background-image:url("data:image/svg+xml,%3Cs
 #port-list{display:flex;flex-direction:column}
 .port-item{display:block;padding:12px 14px;background:var(--card);
   border:none;border-left:4px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:0;cursor:pointer;transition:.15s}
-.port-date-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-family:var(--fm);color:var(--t3);background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:1px 5px;margin-top:3px}
+.port-date-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-family:var(--fm);color:var(--t3)}
 .port-item:first-child{border-radius:12px 12px 0 0}
 .port-item:last-child{border-radius:0 0 12px 12px;border-bottom:none}
 .port-item:only-child{border-radius:12px}
@@ -8496,6 +8496,7 @@ async function renderPortfolio(){
                 <span class="port-cat-badge ${itemCat}">${itemCat==='stock'?_t('port.cat.stock'):itemCat==='etf'?'ETF':itemCat==='crypto'?'Crypto':_t('port.catComm')}</span>
               </div>
               <div class="port-name">${name}</div>
+              ${dateDisplay?`<div style="margin-top:2px"><span class="port-date-badge">📅 ${dateDisplay}${holdStr?` · ${holdStr}`:''}</span></div>`:''}
             </div>
             <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
               <div style="text-align:right">
@@ -8508,26 +8509,21 @@ async function renderPortfolio(){
               </div>
             </div>
           </div>
-          <!-- Riga 2: data acquisto + durata -->
-          ${dateDisplay?`<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px">
-            <span class="port-date-badge">📅 ${dateDisplay}</span>
-            ${holdStr?`<span style="font-size:9px;color:var(--t3);font-family:var(--fm)">· ${_t('port.heldFor')} ${holdStr}</span>`:''}
-          </div>`:''}
           <!-- Sparkline full-width -->
-          <svg id="psp-${i}" width="100%" height="32" style="display:block;margin:4px 0 6px"></svg>
+          <svg id="psp-${i}" width="100%" height="44" style="display:block;margin:6px 0 6px"></svg>
           <!-- Stats row: P&L | Rendimento | Valore posizione -->
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;border-top:1px solid var(--bd);padding-top:6px">
             <div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">${_t('port.pnlTotal')}</div>
-              <div style="font-family:var(--fm);font-size:11px;font-weight:700" class="${up?'up':'down'}">${pnl!=null?(up?'+':'-')+csym+fmt(Math.abs(pnl),2):'—'}</div>
+              <div style="font-family:var(--fm);font-size:12px;font-weight:700" class="${up?'up':'down'}">${pnl!=null?(up?'+':'-')+csym+fmt(Math.abs(pnl),2):'—'}</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">${_t('port.pnlTotal')}</div>
             </div>
             <div style="text-align:center">
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">${_t('port.return')}</div>
-              <div style="font-family:var(--fm);font-size:11px;font-weight:700" class="${pnlPct!=null?(pnlPct>=0?'up':'down'):''}">${pnlPct!=null?(pnlPct>=0?'+':'')+fmt(pnlPct,2)+'%':'—'}</div>
+              <div style="font-family:var(--fm);font-size:12px;font-weight:700" class="${pnlPct!=null?(pnlPct>=0?'up':'down'):''}">${pnlPct!=null?(pnlPct>=0?'+':'')+fmt(pnlPct,2)+'%':'—'}</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">${_t('port.return')}</div>
             </div>
             <div style="text-align:right">
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-bottom:2px">${item.qty} × ${csym}${fmt(item.buyPrice,2)}</div>
-              <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(item.qty*curPrice,2):'—'}</div>
+              <div style="font-family:var(--fm);font-size:12px;font-weight:700;color:var(--t)">${curPrice!=null?csym+fmt(item.qty*curPrice,2):'—'}</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);margin-top:1px">${item.qty} × ${csym}${fmt(item.buyPrice,2)}</div>
             </div>
           </div>
         </div>
