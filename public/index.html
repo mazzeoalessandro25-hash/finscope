@@ -10221,12 +10221,44 @@ async function checkAlerts(){
 /* ══════════════════════════════════════════
    FEATURE 2: DIVIDEND TRACKER
 ══════════════════════════════════════════ */
+// Ritenuta standard alla fonte per exchange (applicata a non-residenti)
+const _DIV_SRC_W={'MI':0.26,'L':0,'PA':0.128,'DE':0.26375,'F':0.26375,'AS':0.15,'SW':0.35,'VX':0.35,'MC':0.19,'BR':0.30};
+// Profili fiscali per paese di residenza
+const _DIV_PROFILES={
+  IT:{label:'🇮🇹 Italia',   domestic:0.26,   home:'MI',        homeSrcW:0},
+  US:{label:'🇺🇸 USA',      domestic:0.15,   home:'',          homeSrcW:0},
+  DE:{label:'🇩🇪 Germania', domestic:0.26375,home:'DE',        homeSrcW:0},
+  FR:{label:'🇫🇷 Francia',  domestic:0.30,   home:'PA',        homeSrcW:0},
+  UK:{label:'🇬🇧 UK',       domestic:0.0875, home:'L',         homeSrcW:0},
+  NL:{label:'🇳🇱 Olanda',   domestic:0.15,   home:'AS',        homeSrcW:0},
+  CH:{label:'🇨🇭 Svizzera', domestic:0.22,   home:['SW','VX'], homeSrcW:0},
+  ES:{label:'🇪🇸 Spagna',   domestic:0.19,   home:'MC',        homeSrcW:0},
+  BE:{label:'🇧🇪 Belgio',   domestic:0.30,   home:'BR',        homeSrcW:0},
+};
+// Calcola fattore netto e label per un titolo dato il paese di residenza
+function _divTaxInfo(sym,code){
+  const p=_DIV_PROFILES[code]||_DIV_PROFILES.IT;
+  const sfx=(sym.match(/\.([A-Z0-9]+)$/)||[])[1]||'';
+  const isHome=Array.isArray(p.home)?p.home.includes(sfx):sfx===p.home;
+  const srcW=isHome?p.homeSrcW:(_DIV_SRC_W[sfx]??0.15);
+  const net=(1-srcW)*(1-p.domestic);
+  const domPct=Math.round(p.domestic*10000)/100;
+  const srcPct=Math.round(srcW*10000)/100;
+  const label=srcW>0?`${srcPct}% fonte+${domPct}% ${code}`:`${domPct}% ${code}`;
+  return{net,srcW,domestic:p.domestic,label};
+}
+function _setDivTaxCountry(v){
+  localStorage.setItem('finedge_tax_country',v);
+  loadDividendTracker();
+}
 async function loadDividendTracker(){
   const el=document.getElementById('div-tracker-content');
   if(!el)return;
   if(!portfolio.length){
     el.innerHTML='<div class="ld" style="padding:10px">'+_t('port.hint.add.dividends')+'</div>';return;
   }
+  const taxCountry=localStorage.getItem('finedge_tax_country')||'IT';
+  const _taxProfile=_DIV_PROFILES[taxCountry]||_DIV_PROFILES.IT;
   el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.div')+'</div>';
   const summaries=await Promise.all(portfolio.map(item=>api(item.sym,'summary')));
   // Usa prezzi correnti da _lastPortQuotes se disponibili, altrimenti ri-fetch
@@ -10250,13 +10282,10 @@ async function loadDividendTracker(){
     const curValEUR=isEUR?curVal:curVal/fxRate;          // in EUR
     const annualIncome=curVal*divYield;                  // nella valuta originale
     const annualIncomeEUR=isEUR?annualIncome:annualIncome/fxRate;
-    // Ritenuta alla fonte (Italia):
-    // .MI = azione italiana → solo 26% IT → 0.74
-    // .L  = azione UK → 0% UK + 26% IT → 0.74
-    // tutto il resto (US, DE, FR, DK, NL, CH, EU…) → 15% trattato + 26% IT = 37.1% → 0.629
-    const sfx=(item.sym.match(/\.([A-Z0-9]+)$/)||[])[1]||'';
-    const withholdFactor=(sfx==='MI')?0.74:(sfx==='L')?0.74:0.629;
-    const taxLabel=(sfx==='MI')?'IT 26%':(sfx==='L')?'UK 0%+IT 26%':'15%+IT 26%';
+    // Ritenuta calcolata dinamicamente in base al paese di residenza fiscale selezionato
+    const _ti=_divTaxInfo(item.sym,taxCountry);
+    const withholdFactor=_ti.net;
+    const taxLabel=_ti.label;
     const annualNet=annualIncome*withholdFactor;
     const annualNetEUR=annualIncomeEUR*withholdFactor;
     totalAnnualEUR+=annualIncomeEUR;
@@ -10290,6 +10319,12 @@ async function loadDividendTracker(){
   const nowMonth=new Date().getMonth();
 
   el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:14px">
+      <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">Residenza fiscale:</span>
+      <select onchange="_setDivTaxCountry(this.value)" style="font-size:11px;font-family:var(--fm);background:var(--s2);color:var(--t);border:1px solid var(--bd);border-radius:6px;padding:3px 8px;cursor:pointer">
+        ${Object.entries(_DIV_PROFILES).map(([k,v])=>`<option value="${k}"${k===taxCountry?' selected':''}>${v.label}</option>`).join('')}
+      </select>
+    </div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
       <div class="rb"><div class="rl">${_t('port.div.grossAnnual')}</div><div class="rv2 g">€${fmt(totalAnnualEUR,2)}</div></div>
       <div class="rb"><div class="rl">${_t('port.div.netAnnual')}</div><div class="rv2 g">€${fmt(totalNetEUR,2)}</div></div>
@@ -10339,11 +10374,22 @@ async function loadDividendTracker(){
       </div>
     </div>`).join('')}
     <div style="margin-top:8px;padding:10px;background:var(--s2);border-radius:8px;font-size:10px;color:var(--t3);font-family:var(--fm);line-height:1.7">
-      <strong>Tassazione dividendi (Italia):</strong><br>
-      · Azioni <strong>italiane (.MI)</strong>: ritenuta 26% applicata dall'intermediario — fattore netto 0.74<br>
-      · Azioni <strong>UK (.L)</strong>: 0% ritenuta UK + 26% IT — fattore netto 0.74<br>
-      · Azioni <strong>USA, EU (DE/FR/DK/NL/CH…)</strong>: 15% ritenuta alla fonte (trattato IT) + 26% IT = 37.1% eff. — fattore netto 0.629<br>
-      I totali sono in €, convertiti a cambio ${fmt(fxRate,4)} $/€. Stime indicative — consulta un commercialista per la tua situazione specifica.
+      <strong>${_taxProfile.label} — tassazione dividendi (stima):</strong><br>
+      ${(()=>{
+        const p=_taxProfile;
+        const domPct=fmt(p.domestic*100,2);
+        const homeExch=Array.isArray(p.home)?p.home.join('/'):(p.home||'US');
+        const homeLabel=homeExch?`.${homeExch.replace('/','/.') }`:'USA';
+        const homeFactor=fmt((1-p.homeSrcW)*(1-p.domestic)*100,1);
+        const ukFactor=fmt((1-(_DIV_SRC_W['L']??0))*(1-p.domestic)*100,1);
+        const usFactor=fmt((1-0.15)*(1-p.domestic)*100,1);
+        const homeExchCode=p.home===''?'US':homeExch;
+        return`· Azioni <strong>${homeLabel} (domestiche)</strong>: ${p.homeSrcW>0?fmt(p.homeSrcW*100,2)+'% fonte + ':''}${domPct}% ${taxCountry} — fattore netto ${homeFactor}%<br>`
+          +(taxCountry!=='UK'?`· Azioni <strong>UK (.L)</strong>: 0% fonte + ${domPct}% ${taxCountry} — fattore netto ${ukFactor}%<br>`:'')
+          +(taxCountry!=='US'?`· Azioni <strong>USA (senza suffisso)</strong>: 15% ritenuta USA + ${domPct}% ${taxCountry} (su netto) — fattore netto ${usFactor}%<br>`:'')
+          +`· Altre azioni estere: ritenuta fonte variabile (10–35%) + ${domPct}% ${taxCountry}`;
+      })()}
+      <br>I totali sono in €, cambio ${fmt(fxRate,4)} $/€. <em>Stime indicative — consulta un commercialista.</em>
     </div>`;
 }
 
