@@ -10222,12 +10222,15 @@ async function checkAlerts(){
    FEATURE 2: DIVIDEND TRACKER
 ══════════════════════════════════════════ */
 // Ritenuta standard alla fonte per exchange (applicata a non-residenti)
-const _DIV_SRC_W={'MI':0.26,'L':0,'PA':0.128,'DE':0.26375,'F':0.26375,'AS':0.15,'SW':0.35,'VX':0.35,'MC':0.19,'BR':0.30};
+// Ritenuta alla fonte standard per exchange per NON-residenti (dopo trattati OCSE)
+// DE/F: la Germania applica 26.375% ma i trattati bilaterali (EU+USA) riducono a 15%
+// PA: la Francia applica 25% domestico ma i trattati riducono a 15%
+const _DIV_SRC_W={'MI':0.26,'L':0,'PA':0.15,'DE':0.15,'F':0.15,'AS':0.15,'SW':0.35,'VX':0.35,'MC':0.19,'BR':0.30};
 // Profili fiscali per paese di residenza
 const _DIV_PROFILES={
-  IT:{label:'🇮🇹 Italia',   domestic:0.26,   home:'MI',        homeSrcW:0},
-  US:{label:'🇺🇸 USA',      domestic:0.15,   home:'',          homeSrcW:0},
-  DE:{label:'🇩🇪 Germania', domestic:0.26375,home:'DE',        homeSrcW:0},
+  IT:{label:'🇮🇹 Italia',   domestic:0.26,   home:'MI',          homeSrcW:0},
+  US:{label:'🇺🇸 USA',      domestic:0.15,   home:'',            homeSrcW:0},
+  DE:{label:'🇩🇪 Germania', domestic:0.26375,home:['DE','F'],    homeSrcW:0},
   FR:{label:'🇫🇷 Francia',  domestic:0.30,   home:'PA',        homeSrcW:0},
   UK:{label:'🇬🇧 UK',       domestic:0.0875, home:'L',         homeSrcW:0},
   NL:{label:'🇳🇱 Olanda',   domestic:0.15,   home:'AS',        homeSrcW:0},
