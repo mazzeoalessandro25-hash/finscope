@@ -2000,8 +2000,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfIssuer">Emittente</div><div class="sd-m-val" id="etfm-family">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfInception">Data lancio</div><div class="sd-m-val" id="etfm-inception">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfStruct">Struttura</div><div class="sd-m-val" id="etfm-type">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">P/E Pond.</div><div class="sd-m-val" id="etfm-pe">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">P/B Pond.</div><div class="sd-m-val" id="etfm-pb">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfPE">P/E Pond.</div><div class="sd-m-val" id="etfm-pe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfPB">P/B Pond.</div><div class="sd-m-val" id="etfm-pb">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfEqPct">% Azionario</div><div class="sd-m-val" id="etfm-stock-pos">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfBondPct">% Obbligaz.</div><div class="sd-m-val" id="etfm-bond-pos">—</div></div>
         </div>
@@ -2080,7 +2080,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <div id="crypto-detail-overlay" class="crd-overlay">
   <!-- HEADER STICKY -->
   <div class="crd-header">
-    <button class="sd-back" onclick="closeCryptoDetail()">← Indietro</button>
+    <button class="sd-back" onclick="closeCryptoDetail()" data-i18n="common.back">← Indietro</button>
     <img class="crd-hdr-logo" id="crd-logo" src="" alt="">
     <div style="flex:1;min-width:0">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
@@ -2125,7 +2125,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="crd-stat-sub" id="crd-fdv-sub">Fully Diluted</div>
       </div>
       <div class="crd-stat-item" style="border-top:3px solid #F59E0B">
-        <div class="crd-stat-lbl">Supply Circolante</div>
+        <div class="crd-stat-lbl" data-i18n="cry.supply.circ">Supply Circolante</div>
         <div class="crd-stat-val" id="crd-supply">—</div>
         <div class="crd-stat-sub" id="crd-supply-sub">—</div>
       </div>
@@ -2159,7 +2159,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <!-- POSIZIONE NEL RANGE STORICO: ATL → Prezzo attuale → ATH -->
         <div class="crd-level-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-            <div style="font-family:var(--fm);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase">Posizione nel Range Storico</div>
+            <div style="font-family:var(--fm);font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase" data-i18n="cry.level.range">Posizione nel Range Storico</div>
             <div id="crd-ath-badge" style="font-family:var(--fm);font-size:11px;font-weight:700;padding:2px 10px;border-radius:6px;background:var(--s2);border:1px solid var(--bd)">—</div>
           </div>
           <div class="crd-level-bar-outer">
@@ -2173,7 +2173,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <div id="crd-atl-chg" style="font-family:var(--fm);font-size:10px;font-weight:700;color:var(--g);margin-top:2px">—</div>
             </div>
             <div style="text-align:center;border-left:1px solid var(--bd);border-right:1px solid var(--bd);padding:0 10px">
-              <div style="font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px">Prezzo attuale</div>
+              <div style="font-family:var(--fm);font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px" data-i18n="cmp.metric.price">Prezzo attuale</div>
               <div id="crd-price-center" style="font-size:16px;font-weight:800;color:var(--t)">—</div>
               <div id="crd-price-center-chg" style="font-family:var(--fm);font-size:10px;font-weight:700;margin-top:3px">—</div>
             </div>
@@ -2309,7 +2309,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div class="nav-items">
     <button class="nav-btn active" id="nb-dashboard" onclick="showPage('dashboard',this)">Dashboard</button>
     <button class="nav-btn" id="nb-screener" onclick="showPage('screener',this)">Screener</button>
-    <button class="nav-btn" id="nb-portafoglio" onclick="showPage('portafoglio',this)">Portafoglio</button>
+    <button class="nav-btn" id="nb-portafoglio" onclick="showPage('portafoglio',this)" data-i18n="nav.portfolio">Portafoglio</button>
     <button class="nav-btn" id="nb-lab" onclick="showPage('lab',this)">Lab</button>
     <button class="nav-btn" id="nb-news" onclick="showPage('news',this)">News</button>
     <button class="nav-btn" id="nb-macro" onclick="showPage('macro',this)">Macro</button>
@@ -2327,7 +2327,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="nav-time" id="clock">--:--:--</div>
     <div style="font-family:var(--fm);font-size:9px;color:rgba(255,255,255,.35);letter-spacing:.5px">v2.1</div>
     <div class="nav-user" id="nav-user-area">
-      <button class="nav-login-btn" onclick="window.location.href='./about.html'">Accedi</button>
+      <button class="nav-login-btn" onclick="window.location.href='./about.html'" data-i18n="nav.login">Accedi</button>
     </div>
     <button id="usermode-toggle" onclick="toggleUserMode()" data-i18n-ti="usermode.title" title="Passa alla modalità avanzata"
       style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;
@@ -2351,7 +2351,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <button id="mob-usermode-toggle" onclick="toggleUserMode();closeMobileNav()"
     style="display:none;width:calc(100% - 32px);margin:8px 16px 0;background:rgba(255,255,255,.1);
     border:1px solid rgba(255,255,255,.25);color:#fff;font-family:var(--ff);font-size:12px;
-    font-weight:600;padding:10px;border-radius:8px;cursor:pointer;text-align:center">⚡ Passa a Avanzata</button>
+    font-weight:600;padding:10px;border-radius:8px;cursor:pointer;text-align:center" data-i18n="usermode.label">⚡ Avanzata</button>
   <div id="mob-user-area" style="padding:12px 16px;border-top:1px solid rgba(255,255,255,.1);margin-top:4px"></div>
 </div>
 

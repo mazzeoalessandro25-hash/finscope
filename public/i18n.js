@@ -979,6 +979,7 @@ const TRANSLATIONS={
     'cry.panel.info':'Informazioni','cry.panel.news':'Ultime Notizie',
     'cry.panel.converter':'Convertitore',
     'cry.panel.days7':'7 giorni','cry.panel.days30':'30 giorni','cry.panel.year1':'1 anno',
+    'cry.level.range':'Posizione nel Range Storico','cry.supply.circ':'Supply Circolante',
     'port.news.loading':'Raccolta notizie in corso…',
     /* ── INVESTOR PROFILES ── */
     'prof.income':'Income','prof.conservative':'Conservativo','prof.moderate':'Moderato',
@@ -1088,6 +1089,7 @@ const TRANSLATIONS={
     'sd.lbl.etfIssuer':'Emittente',
     'sd.lbl.etfInception':'Data lancio',
     'sd.lbl.etfStruct':'Struttura',
+    'sd.lbl.etfPE':'P/E Pond.','sd.lbl.etfPB':'P/B Pond.',
     'sd.lbl.etfEqPct':'% Azionario',
     'sd.lbl.etfBondPct':'% Obbligaz.',
     'sd.lbl.avgTarget':'Target medio',
@@ -2157,6 +2159,7 @@ const TRANSLATIONS={
     'cry.panel.info':'Information','cry.panel.news':'Latest News',
     'cry.panel.converter':'Converter',
     'cry.panel.days7':'7 days','cry.panel.days30':'30 days','cry.panel.year1':'1 year',
+    'cry.level.range':'Historical Range','cry.supply.circ':'Circulating Supply',
     'port.news.loading':'Loading news…',
     /* ── INVESTOR PROFILES ── */
     'prof.income':'Income','prof.conservative':'Conservative','prof.moderate':'Moderate',
@@ -2266,6 +2269,7 @@ const TRANSLATIONS={
     'sd.lbl.etfIssuer':'Issuer',
     'sd.lbl.etfInception':'Inception Date',
     'sd.lbl.etfStruct':'Structure',
+    'sd.lbl.etfPE':'Wtd. P/E','sd.lbl.etfPB':'Wtd. P/B',
     'sd.lbl.etfEqPct':'% Equity',
     'sd.lbl.etfBondPct':'% Bonds',
     'sd.lbl.avgTarget':'Avg. Target',
