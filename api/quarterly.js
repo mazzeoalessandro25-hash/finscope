@@ -53,24 +53,29 @@ export default async function handler(req, res) {
       const est = estR.ok ? await estR.json() : [];
 
       if (Array.isArray(inc) && inc.length > 0 && inc[0]?.revenue != null) {
+        // inc[0] = trimestre più recente, inc[n-1] = più vecchio (FMP ordine desc)
+        // Mostriamo i 4 più recenti; inc[i+4] = stesso trimestre anno precedente (YoY)
         const MS45D = 45 * 86400 * 1000;
-        const quarters = inc.map(q => {
+        const display = inc.slice(0, Math.min(4, inc.length));
+        const quarters = display.map((q, i) => {
           const qDate = new Date(q.date);
-          // earnings-surprises: data = data annuncio (settimane dopo fine trimestre)
           const from  = new Date(q.date); from.setDate(from.getDate() - 10);
           const until = new Date(q.date); until.setDate(until.getDate() + 90);
           const s = Array.isArray(sur)
             ? sur.find(x => { const d = new Date(x.date); return d >= from && d <= until; })
             : null;
-          // analyst-estimates: data = fine trimestre, confronto diretto ±45gg
+          // analyst-estimates (piano premium FMP) — fallback a YoY se null
           const e = Array.isArray(est)
             ? est.find(x => Math.abs(new Date(x.date) - qDate) < MS45D)
             : null;
+          // Stesso trimestre anno precedente (4 posizioni in avanti nell'array desc)
+          const prevQ = inc[i + 4] ?? null;
           const yr = q.calendarYear || String(q.date || '').slice(2, 4);
           return {
             label:           `${q.period || ''}'${String(yr).slice(-2)}`,
             revenue:         q.revenue   ?? null,
             revenueEstimate: e?.estimatedRevenueAvg ?? null,
+            revenuePrevYear: prevQ?.revenue ?? null,
             netIncome:       q.netIncome ?? null,
             epsActual:       q.eps       ?? s?.actualEarningResult ?? null,
             epsEstimate:     s?.estimatedEarning ?? null,

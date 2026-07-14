@@ -17403,15 +17403,26 @@ async function loadQuarterlyData(sym){
     <div style="position:absolute;left:0;right:0;top:0;border-top:1px dashed var(--bd);opacity:.35;pointer-events:none"></div>
     <div style="position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--bd);opacity:.25;pointer-events:none"></div>`;
 
-  // ── Revenue: doppia barra (stima grigia + actual blu) se disponibile, altrimenti singola ──
+  // ── Revenue: stima analisti (FMP premium) > anno precedente (YoY) > singola barra ──
   const hasRev=qs.some(q=>q.revenue!=null);
-  const hasRevEst=qs.some(q=>q.revenueEstimate!=null);
-  const allRevV=[...qs.map(q=>q.revenue),...qs.map(q=>q.revenueEstimate)].filter(v=>v!=null).map(Math.abs);
+  const useRevEst=qs.some(q=>q.revenueEstimate!=null);              // FMP analyst-estimates
+  const useRevYoy=!useRevEst&&qs.some(q=>q.revenuePrevYear!=null);  // fallback YoY
+  const hasRevRef=useRevEst||useRevYoy;
+  const allRevV=[...qs.map(q=>q.revenue),...qs.map(q=>useRevEst?q.revenueEstimate:q.revenuePrevYear)].filter(v=>v!=null).map(Math.abs);
   const revMax=Math.max(...allRevV,1);
 
-  const revBeats=qs.filter(q=>q.revenueEstimate!=null&&q.revenue!=null&&q.revenue>=q.revenueEstimate).length;
-  const revTotal=qs.filter(q=>q.revenueEstimate!=null&&q.revenue!=null).length;
-  const revBeatStr=revTotal>0?`<span style="font-size:9px;font-family:var(--fm);color:${revBeats/revTotal>=0.5?'#10B981':'#EF4444'};font-weight:600">${revBeats}/${revTotal} beat</span>`:'';
+  // Ref per ogni trimestre: stima analisti oppure anno precedente
+  const revRef=q=>useRevEst?q.revenueEstimate:q.revenuePrevYear;
+  const revRefLabel=useRevEst?_L({it:'Stima',en:'Est.'}):_L({it:'Anno prec.',en:'Prev. year'});
+  const revRefPrefix=useRevEst?_L({it:'S',en:'E'}):_L({it:'AP',en:'PY'});
+
+  const revComps=qs.filter(q=>revRef(q)!=null&&q.revenue!=null);
+  const revBeats=revComps.filter(q=>q.revenue>=revRef(q)).length;
+  const revBeatStr=revComps.length>0
+    ?(useRevEst
+       ?`<span style="font-size:9px;font-family:var(--fm);color:${revBeats/revComps.length>=0.5?'#10B981':'#EF4444'};font-weight:600">${revBeats}/${revComps.length} beat</span>`
+       :`<span style="font-size:9px;font-family:var(--fm);color:var(--t3)">YoY</span>`)
+    :'';
 
   const revChart=hasRev?`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px">
@@ -17419,9 +17430,9 @@ async function loadQuarterlyData(sym){
         <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">${_L({it:'Ricavi Trimestrali',en:'Quarterly Revenue'})}</span>
         ${revBeatStr}
       </div>
-      ${hasRevEst?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      ${hasRevRef?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
         <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
-          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${_L({it:'Stima',en:'Est.'})}
+          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${revRefLabel}
         </span>
         <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
           <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#1A56C4;opacity:.85"></span>${_L({it:'Effettivo',en:'Actual'})}
@@ -17439,14 +17450,12 @@ async function loadQuarterlyData(sym){
           <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">
             ${gridLines}
             ${qs.map(q=>{
-              const rv2=q.revenue,re=q.revenueEstimate;
+              const rv2=q.revenue,ref=revRef(q);
               const hA=toH(Math.abs(rv2??0)/revMax);
-              const hE=re!=null?toH(Math.abs(re)/revMax):0;
-              const beat=rv2!=null&&re!=null&&rv2>=re;
-              const miss=rv2!=null&&re!=null&&rv2<re;
-              if(hasRevEst){
+              const hE=ref!=null?toH(Math.abs(ref)/revMax):0;
+              if(hasRevRef){
                 return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%">
-                  ${re!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
+                  ${ref!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
                   ${rv2!=null?`<div style="width:10px;height:${hA}px;background:#1A56C4;border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.85"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
                 </div>`;
               }
@@ -17457,15 +17466,14 @@ async function loadQuarterlyData(sym){
           </div>
           <div style="display:flex;gap:6px;margin-top:5px">
             ${qs.map(q=>{
-              const rv2=q.revenue,re=q.revenueEstimate;
-              const beat=rv2!=null&&re!=null&&rv2>=re;
-              const miss=rv2!=null&&re!=null&&rv2<re;
-              const col=beat?'#10B981':miss?'#EF4444':'var(--t)';
-              const pct=rv2!=null&&re!=null?((rv2-re)/Math.abs(re)*100):null;
+              const rv2=q.revenue,ref=revRef(q);
+              const grow=rv2!=null&&ref!=null&&rv2>=ref;
+              const col=rv2!=null&&ref!=null?(grow?'#10B981':'#EF4444'):'var(--t)';
+              const pct=rv2!=null&&ref!=null?((rv2-ref)/Math.abs(ref)*100):null;
               const pctStr=pct!=null?`${pct>=0?'+':''}${pct.toFixed(1)}%`:'';
               return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px">
                 <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
-                ${re!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">S: ${fmtV(re)}</div>`:(hasRevEst?'<div style="font-size:7px">&nbsp;</div>':'')}
+                ${ref!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${revRefPrefix}: ${fmtV(ref)}</div>`:(hasRevRef?'<div style="font-size:7px">&nbsp;</div>':'')}
                 <div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(rv2)}</div>
                 ${pctStr?`<div style="font-size:7.5px;color:${col};font-family:var(--fm);font-weight:700;text-align:center;white-space:nowrap">${pctStr}</div>`:''}
               </div>`;
