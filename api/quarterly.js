@@ -6,13 +6,23 @@ import { yf } from './_lib/yahoo.js';
 
 const tout = ms => new Promise((_, r) => setTimeout(() => r(new Error('timeout')), ms));
 
-// Unix timestamp → "Q3'25"
-function tsToLabel(ts) {
-  const d = new Date(Number(ts) * 1000);
-  if (isNaN(d)) return '';
+// Converte qualsiasi formato data (Date, ISO string, Unix ts, {raw:N}) → Date o null
+function toDate(v) {
+  if (!v) return null;
+  if (v instanceof Date) return isNaN(v) ? null : v;
+  if (typeof v === 'string') { const d = new Date(v); return isNaN(d) ? null : d; }
+  if (typeof v === 'number') return new Date(v * 1000); // Unix timestamp in secondi
+  if (typeof v === 'object' && 'raw' in v) return new Date(Number(v.raw) * 1000);
+  return null;
+}
+
+// Date → "Q3'25"
+function dateToLabel(d) {
+  if (!d) return '';
   return `Q${Math.ceil((d.getMonth() + 1) / 3)}'${String(d.getFullYear()).slice(2)}`;
 }
-// Estrae valore raw da {raw:N} o numero diretto
+
+// Estrae valore numerico da {raw:N} o numero diretto (NON usare per date)
 const rv = v => (v != null && typeof v === 'object' && 'raw' in v) ? v.raw : (typeof v === 'number' ? v : null);
 
 export default async function handler(req, res) {
@@ -61,6 +71,7 @@ export default async function handler(req, res) {
   }
 
   // ── 2. yahoo-finance2: gestisce cookie/crumb automaticamente ─────────────
+  // Nota: i campi date (quarter, endDate) sono Date object in v3, non Unix timestamp
   try {
     const data = await Promise.race([
       yf.quoteSummary(symbol, {
@@ -73,16 +84,19 @@ export default async function handler(req, res) {
     const incHist = data?.incomeStatementHistoryQuarterly?.incomeStatementHistory || [];
 
     if (epsHist.length || incHist.length) {
-      const incByTs = incHist.map(q => ({
-        ts:        rv(q.endDate),
+      // Mappa income statement per date (confronto in ms, non in secondi)
+      const incByDate = incHist.map(q => ({
+        date:      toDate(q.endDate),
         revenue:   rv(q.totalRevenue),
         netIncome: rv(q.netIncome),
-      })).filter(q => q.ts);
+      })).filter(q => q.date);
+
+      const MS50D = 50 * 86400 * 1000; // 50 giorni in millisecondi
 
       let quarters = epsHist.map(e => {
-        const ts  = rv(e.quarter);
-        const lbl = ts ? tsToLabel(ts) : '';
-        const inc = ts ? incByTs.find(q => Math.abs(q.ts - ts) < 50 * 86400) : null;
+        const d   = toDate(e.quarter);
+        const lbl = d ? dateToLabel(d) : '';
+        const inc = d ? incByDate.find(q => Math.abs(q.date - d) < MS50D) : null;
         return {
           label:       lbl,
           revenue:     inc?.revenue   ?? null,
@@ -92,12 +106,12 @@ export default async function handler(req, res) {
         };
       }).filter(q => q.label);
 
-      // Solo income statement (senza EPS)
+      // Fallback solo income statement (senza EPS)
       if (!quarters.length && incHist.length) {
         quarters = [...incHist].reverse().map(q => {
-          const ts = rv(q.endDate);
+          const d = toDate(q.endDate);
           return {
-            label:       ts ? tsToLabel(ts) : '',
+            label:       d ? dateToLabel(d) : '',
             revenue:     rv(q.totalRevenue),
             netIncome:   rv(q.netIncome),
             epsActual:   null,
