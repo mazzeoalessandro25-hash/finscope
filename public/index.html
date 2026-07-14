@@ -17380,7 +17380,10 @@ async function loadQuarterlyData(sym){
   }catch(_){}
 
   if(sdSym!==sym)return;
-  if(!data?.ok||!data.quarters?.length){el.innerHTML='';return;}
+  if(!data?.ok||!data.quarters?.length){
+    el.innerHTML=`<div class="sd-section-title"><span>${_L({it:'Risultati Trimestrali',en:'Quarterly Results'})}</span></div><div style="font-size:11px;color:var(--t3);font-family:var(--fm);padding:4px 0">${_L({it:'Dati non disponibili',en:'Data not available'})}</div>`;
+    return;
+  }
 
   const qs=data.quarters;
   const CH=56; // altezza area barre in px
