@@ -1929,6 +1929,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div id="sd-score-section" style="display:none;margin-bottom:16px">
       <div id="sd-score-wrap"></div>
     </div>
+    <!-- Risultati Trimestrali (stock only, hidden for ETF/crypto) -->
+    <div id="sd-quarterly" style="margin-bottom:16px"></div>
     <!-- Sezioni fondamentali: 4 colonne -->
     <div class="sd-funds" id="sd-funds-section">
       <div class="sd-section">
@@ -1982,9 +1984,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
     </div>
-    <!-- Risultati Trimestrali (stock only, hidden for ETF/crypto) -->
-    <div id="sd-quarterly" style="margin-bottom:16px"></div>
-
     <!-- ══ SEZIONE ETF (visibile solo per ETF) ══ -->
     <div id="sd-etf-section" style="display:none">
 
@@ -17389,6 +17388,16 @@ async function loadQuarterlyData(sym){
   const CH=76; // altezza area barre in px
   const toH=f=>Math.max(3,Math.round(f*CH));
 
+  // Arrotonda al prossimo valore "bello" per la scala Y (es. 47B → 50B, 10.3B → 12B)
+  const niceMax=v=>{
+    if(!v||v<=0)return 1;
+    const exp=Math.floor(Math.log10(v));
+    const mag=Math.pow(10,exp);
+    const n=v/mag;
+    const nice=n<=1?1:n<=1.2?1.2:n<=1.5?1.5:n<=2?2:n<=2.5?2.5:n<=3?3:n<=4?4:n<=5?5:n<=6?6:n<=8?8:10;
+    return nice*mag;
+  };
+
   const fmtV=v=>{
     if(v==null)return'—';
     const a=Math.abs(v);
@@ -17409,7 +17418,7 @@ async function loadQuarterlyData(sym){
   const useRevYoy=!useRevEst&&qs.some(q=>q.revenuePrevYear!=null);  // fallback YoY
   const hasRevRef=useRevEst||useRevYoy;
   const allRevV=[...qs.map(q=>q.revenue),...qs.map(q=>useRevEst?q.revenueEstimate:q.revenuePrevYear)].filter(v=>v!=null).map(Math.abs);
-  const revMax=Math.max(...allRevV,1);
+  const revMax=niceMax(Math.max(...allRevV,1));
 
   // Ref per ogni trimestre: stima analisti oppure anno precedente
   const revRef=q=>useRevEst?q.revenueEstimate:q.revenuePrevYear;
@@ -17490,7 +17499,7 @@ async function loadQuarterlyData(sym){
   let epsChart='';
   if(hasEps){
     const allEpsV=[...qs.map(q=>q.epsActual),...qs.map(q=>q.epsEstimate)].filter(v=>v!=null).map(Math.abs);
-    const epsMax=Math.max(...allEpsV,0.01);
+    const epsMax=niceMax(Math.max(...allEpsV,0.01));
 
     const beats=qs.filter(q=>q.epsEstimate!=null&&q.epsActual!=null&&q.epsActual>=q.epsEstimate).length;
     const total=qs.filter(q=>q.epsEstimate!=null&&q.epsActual!=null).length;
@@ -17513,8 +17522,8 @@ async function loadQuarterlyData(sym){
       <div style="display:flex;gap:0;align-items:flex-start">
         <!-- Asse Y -->
         <div style="height:${CH}px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:5px;min-width:26px;flex-shrink:0">
-          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${epsMax.toFixed(2)}</span>
-          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${(epsMax/2).toFixed(2)}</span>
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(epsMax)}</span>
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(epsMax/2)}</span>
           <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">0</span>
         </div>
         <!-- Barre + etichette -->
