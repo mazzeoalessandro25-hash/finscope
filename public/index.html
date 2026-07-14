@@ -17366,7 +17366,7 @@ async function loadInsiderForStock(sym){
 }
 
 /* ══════════════════════════════════════════════════════════
-   RISULTATI TRIMESTRALI — due barre per trimestre con valori
+   RISULTATI TRIMESTRALI — due barre per trimestre, scala y, beat%
    ══════════════════════════════════════════════════════════ */
 async function loadQuarterlyData(sym){
   const el=document.getElementById('sd-quarterly');
@@ -17386,7 +17386,7 @@ async function loadQuarterlyData(sym){
   }
 
   const qs=data.quarters;
-  const CH=60; // altezza area barre in px
+  const CH=76; // altezza area barre in px
   const toH=f=>Math.max(3,Math.round(f*CH));
 
   const fmtV=v=>{
@@ -17398,7 +17398,12 @@ async function loadQuarterlyData(sym){
     return v.toFixed(2);
   };
 
-  // ── Revenue: barra per trimestre + valore sotto ──
+  // Griglia orizzontale su area barre (linee tratteggiate a 0%, 50%, 100%)
+  const gridLines=`
+    <div style="position:absolute;left:0;right:0;top:0;border-top:1px dashed var(--bd);opacity:.35;pointer-events:none"></div>
+    <div style="position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--bd);opacity:.25;pointer-events:none"></div>`;
+
+  // ── Revenue: barra + asse Y + valore sotto ──
   const hasRev=qs.some(q=>q.revenue!=null);
   const revMax=Math.max(...qs.map(q=>Math.abs(q.revenue??0)),1);
 
@@ -17407,21 +17412,36 @@ async function loadQuarterlyData(sym){
       <div style="margin-bottom:10px">
         <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">${_L({it:'Ricavi Trimestrali',en:'Quarterly Revenue'})}</span>
       </div>
-      <div style="display:flex;gap:6px;align-items:flex-end">
-        ${qs.map(q=>{
-          const hR=toH(Math.abs(q.revenue??0)/revMax);
-          return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-            <div style="width:100%;display:flex;align-items:flex-end;justify-content:center;height:${CH}px">
-              <div style="width:14px;height:${hR}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:0.85"></div>
-            </div>
-            <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
-            <div style="font-size:8px;color:var(--t);font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(q.revenue)}</div>
-          </div>`;
-        }).join('')}
+      <div style="display:flex;gap:0;align-items:flex-start">
+        <!-- Asse Y -->
+        <div style="height:${CH}px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:5px;min-width:32px;flex-shrink:0">
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(revMax)}</span>
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(revMax/2)}</span>
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">0</span>
+        </div>
+        <!-- Barre + etichette -->
+        <div style="flex:1">
+          <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">
+            ${gridLines}
+            ${qs.map(q=>{
+              const hR=toH(Math.abs(q.revenue??0)/revMax);
+              return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%">
+                <div style="width:18px;height:${hR}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:0.85"></div>
+              </div>`;
+            }).join('')}
+          </div>
+          <div style="display:flex;gap:6px;margin-top:5px">
+            ${qs.map(q=>`
+              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+                <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
+                <div style="font-size:8px;color:var(--t);font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(q.revenue)}</div>
+              </div>`).join('')}
+          </div>
+        </div>
       </div>
     </div>`:'';
 
-  // ── EPS: barra stima (grigia) + barra effettivo (verde/rosso) affiancate per trimestre ──
+  // ── EPS: stima (grigia) + effettivo (colorato) + asse Y + beat% ──
   const hasEps=qs.some(q=>q.epsActual!=null);
   const hasEst=qs.some(q=>q.epsEstimate!=null);
 
@@ -17436,7 +17456,7 @@ async function loadQuarterlyData(sym){
 
     epsChart=`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">EPS ${_L({it:'Trimestrale',en:'Quarterly'})}</span>
         ${beatStr}
       </div>
@@ -17448,24 +17468,47 @@ async function loadQuarterlyData(sym){
           <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#10B981"></span>${_L({it:'Effettivo',en:'Actual'})}
         </span>
       </div>`:''}
-      <div style="display:flex;gap:6px;align-items:flex-end">
-        ${qs.map(q=>{
-          const va=q.epsActual,ve=q.epsEstimate;
-          const hA=va!=null?toH(Math.abs(va)/epsMax):0;
-          const hE=ve!=null?toH(Math.abs(ve)/epsMax):0;
-          const beat=va!=null&&ve!=null&&va>=ve;
-          const miss=va!=null&&ve!=null&&va<ve;
-          const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
-          return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
-            <div style="width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;height:${CH}px">
-              ${ve!=null?`<div style="width:8px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:8px;flex-shrink:0"></div>'}
-              ${va!=null?`<div style="width:8px;height:${hA}px;background:${col};border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.9"></div>`:'<div style="width:8px;flex-shrink:0"></div>'}
-            </div>
-            <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
-            ${ve!=null?`<div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${_L({it:'S',en:'E'})}: ${ve.toFixed(2)}</div>`:'<div style="font-size:7.5px"> </div>'}
-            ${va!=null?`<div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${va.toFixed(2)}</div>`:''}
-          </div>`;
-        }).join('')}
+      <div style="display:flex;gap:0;align-items:flex-start">
+        <!-- Asse Y -->
+        <div style="height:${CH}px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:5px;min-width:26px;flex-shrink:0">
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${epsMax.toFixed(2)}</span>
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${(epsMax/2).toFixed(2)}</span>
+          <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">0</span>
+        </div>
+        <!-- Barre + etichette -->
+        <div style="flex:1">
+          <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">
+            ${gridLines}
+            ${qs.map(q=>{
+              const va=q.epsActual,ve=q.epsEstimate;
+              const hA=va!=null?toH(Math.abs(va)/epsMax):0;
+              const hE=ve!=null?toH(Math.abs(ve)/epsMax):0;
+              const beat=va!=null&&ve!=null&&va>=ve;
+              const miss=va!=null&&ve!=null&&va<ve;
+              const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
+              return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%">
+                ${ve!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
+                ${va!=null?`<div style="width:10px;height:${hA}px;background:${col};border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.9"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
+              </div>`;
+            }).join('')}
+          </div>
+          <div style="display:flex;gap:6px;margin-top:5px">
+            ${qs.map(q=>{
+              const va=q.epsActual,ve=q.epsEstimate;
+              const beat=va!=null&&ve!=null&&va>=ve;
+              const miss=va!=null&&ve!=null&&va<ve;
+              const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
+              const pct=va!=null&&ve!=null?((va-ve)/Math.abs(ve)*100):null;
+              const pctStr=pct!=null?`${pct>=0?'+':''}${pct.toFixed(1)}%`:'';
+              return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px">
+                <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
+                ${ve!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">S: ${ve.toFixed(2)}</div>`:'<div style="font-size:7px">&nbsp;</div>'}
+                ${va!=null?`<div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${va.toFixed(2)}</div>`:''}
+                ${pctStr?`<div style="font-size:7.5px;color:${col};font-family:var(--fm);font-weight:700;text-align:center;white-space:nowrap">${pctStr}</div>`:''}
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
       </div>
     </div>`;
   }
@@ -17473,7 +17516,7 @@ async function loadQuarterlyData(sym){
   el.innerHTML=`
     <div class="sd-section-title" style="display:flex;align-items:center">
       <span>${_L({it:'Risultati Trimestrali',en:'Quarterly Results'})}</span>
-      <span class="sd-info-btn">i<div class="sd-tip">${_L({it:'Ricavi e EPS degli ultimi trimestri. Per EPS: barra grigia = stima analisti, barra colorata = effettivo. Verde = battuto le stime.',en:'Revenue and EPS for recent quarters. For EPS: grey bar = analyst estimate, colored bar = actual. Green = beat estimates.'})}</div></span>
+      <span class="sd-info-btn">i<div class="sd-tip">${_L({it:'Ricavi e EPS degli ultimi trimestri. Per EPS: barra grigia = stima analisti, barra colorata = effettivo. Verde = battuto le stime, rosso = mancato.',en:'Revenue and EPS for recent quarters. Grey bar = analyst estimate, colored bar = actual. Green = beat, red = miss.'})}</div></span>
     </div>
     <div style="display:grid;grid-template-columns:${hasRev&&hasEps?'1fr 1fr':'1fr'};gap:12px;margin-bottom:4px">
       ${revChart}${epsChart}
