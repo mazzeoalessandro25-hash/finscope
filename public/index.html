@@ -17403,15 +17403,30 @@ async function loadQuarterlyData(sym){
     <div style="position:absolute;left:0;right:0;top:0;border-top:1px dashed var(--bd);opacity:.35;pointer-events:none"></div>
     <div style="position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--bd);opacity:.25;pointer-events:none"></div>`;
 
-  // ── Revenue: barra + asse Y + valore sotto ──
+  // ── Revenue: doppia barra (stima grigia + actual blu) se disponibile, altrimenti singola ──
   const hasRev=qs.some(q=>q.revenue!=null);
-  const revMax=Math.max(...qs.map(q=>Math.abs(q.revenue??0)),1);
+  const hasRevEst=qs.some(q=>q.revenueEstimate!=null);
+  const allRevV=[...qs.map(q=>q.revenue),...qs.map(q=>q.revenueEstimate)].filter(v=>v!=null).map(Math.abs);
+  const revMax=Math.max(...allRevV,1);
+
+  const revBeats=qs.filter(q=>q.revenueEstimate!=null&&q.revenue!=null&&q.revenue>=q.revenueEstimate).length;
+  const revTotal=qs.filter(q=>q.revenueEstimate!=null&&q.revenue!=null).length;
+  const revBeatStr=revTotal>0?`<span style="font-size:9px;font-family:var(--fm);color:${revBeats/revTotal>=0.5?'#10B981':'#EF4444'};font-weight:600">${revBeats}/${revTotal} beat</span>`:'';
 
   const revChart=hasRev?`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px">
-      <div style="margin-bottom:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">${_L({it:'Ricavi Trimestrali',en:'Quarterly Revenue'})}</span>
+        ${revBeatStr}
       </div>
+      ${hasRevEst?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${_L({it:'Stima',en:'Est.'})}
+        </span>
+        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#1A56C4;opacity:.85"></span>${_L({it:'Effettivo',en:'Actual'})}
+        </span>
+      </div>`:''}
       <div style="display:flex;gap:0;align-items:flex-start">
         <!-- Asse Y -->
         <div style="height:${CH}px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:5px;min-width:32px;flex-shrink:0">
@@ -17424,18 +17439,37 @@ async function loadQuarterlyData(sym){
           <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">
             ${gridLines}
             ${qs.map(q=>{
-              const hR=toH(Math.abs(q.revenue??0)/revMax);
+              const rv2=q.revenue,re=q.revenueEstimate;
+              const hA=toH(Math.abs(rv2??0)/revMax);
+              const hE=re!=null?toH(Math.abs(re)/revMax):0;
+              const beat=rv2!=null&&re!=null&&rv2>=re;
+              const miss=rv2!=null&&re!=null&&rv2<re;
+              if(hasRevEst){
+                return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%">
+                  ${re!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
+                  ${rv2!=null?`<div style="width:10px;height:${hA}px;background:#1A56C4;border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.85"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
+                </div>`;
+              }
               return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%">
-                <div style="width:18px;height:${hR}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:0.85"></div>
+                <div style="width:18px;height:${hA}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:0.85"></div>
               </div>`;
             }).join('')}
           </div>
           <div style="display:flex;gap:6px;margin-top:5px">
-            ${qs.map(q=>`
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+            ${qs.map(q=>{
+              const rv2=q.revenue,re=q.revenueEstimate;
+              const beat=rv2!=null&&re!=null&&rv2>=re;
+              const miss=rv2!=null&&re!=null&&rv2<re;
+              const col=beat?'#10B981':miss?'#EF4444':'var(--t)';
+              const pct=rv2!=null&&re!=null?((rv2-re)/Math.abs(re)*100):null;
+              const pctStr=pct!=null?`${pct>=0?'+':''}${pct.toFixed(1)}%`:'';
+              return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px">
                 <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
-                <div style="font-size:8px;color:var(--t);font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(q.revenue)}</div>
-              </div>`).join('')}
+                ${re!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">S: ${fmtV(re)}</div>`:(hasRevEst?'<div style="font-size:7px">&nbsp;</div>':'')}
+                <div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(rv2)}</div>
+                ${pctStr?`<div style="font-size:7.5px;color:${col};font-family:var(--fm);font-weight:700;text-align:center;white-space:nowrap">${pctStr}</div>`:''}
+              </div>`;
+            }).join('')}
           </div>
         </div>
       </div>

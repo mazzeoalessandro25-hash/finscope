@@ -35,34 +35,45 @@ export default async function handler(req, res) {
 
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=1800');
 
-  // ── 1. FMP: 8 trimestri, income-statement + earnings-surprises ───────────
+  // ── 1. FMP: 8 trimestri, income-statement + earnings-surprises + analyst-estimates ───
   const FMP_KEY = process.env.FMP_API_KEY;
   if (FMP_KEY) {
     try {
       const base = symbol.split('.')[0];
-      const [incR, surR] = await Promise.all([
+      const [incR, surR, estR] = await Promise.all([
         fetch(`https://financialmodelingprep.com/api/v3/income-statement/${base}?period=quarter&limit=8&apikey=${FMP_KEY}`,
           { signal: AbortSignal.timeout(6000) }),
         fetch(`https://financialmodelingprep.com/api/v3/earnings-surprises/${base}?limit=12&apikey=${FMP_KEY}`,
           { signal: AbortSignal.timeout(6000) }),
+        fetch(`https://financialmodelingprep.com/api/v3/analyst-estimates/${base}?period=quarter&limit=8&apikey=${FMP_KEY}`,
+          { signal: AbortSignal.timeout(6000) }),
       ]);
       const inc = incR.ok ? await incR.json() : [];
       const sur = surR.ok ? await surR.json() : [];
+      const est = estR.ok ? await estR.json() : [];
 
       if (Array.isArray(inc) && inc.length > 0 && inc[0]?.revenue != null) {
+        const MS45D = 45 * 86400 * 1000;
         const quarters = inc.map(q => {
+          const qDate = new Date(q.date);
+          // earnings-surprises: data = data annuncio (settimane dopo fine trimestre)
           const from  = new Date(q.date); from.setDate(from.getDate() - 10);
           const until = new Date(q.date); until.setDate(until.getDate() + 90);
           const s = Array.isArray(sur)
             ? sur.find(x => { const d = new Date(x.date); return d >= from && d <= until; })
             : null;
+          // analyst-estimates: data = fine trimestre, confronto diretto ±45gg
+          const e = Array.isArray(est)
+            ? est.find(x => Math.abs(new Date(x.date) - qDate) < MS45D)
+            : null;
           const yr = q.calendarYear || String(q.date || '').slice(2, 4);
           return {
-            label:       `${q.period || ''}'${String(yr).slice(-2)}`,
-            revenue:     q.revenue   ?? null,
-            netIncome:   q.netIncome ?? null,
-            epsActual:   q.eps       ?? s?.actualEarningResult ?? null,
-            epsEstimate: s?.estimatedEarning ?? null,
+            label:           `${q.period || ''}'${String(yr).slice(-2)}`,
+            revenue:         q.revenue   ?? null,
+            revenueEstimate: e?.estimatedRevenueAvg ?? null,
+            netIncome:       q.netIncome ?? null,
+            epsActual:       q.eps       ?? s?.actualEarningResult ?? null,
+            epsEstimate:     s?.estimatedEarning ?? null,
           };
         }).reverse();
         return res.json({ ok: true, source: 'fmp', quarters });
