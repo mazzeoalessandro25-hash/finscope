@@ -17366,7 +17366,7 @@ async function loadInsiderForStock(sym){
 }
 
 /* ══════════════════════════════════════════════════════════
-   RISULTATI TRIMESTRALI — barre sottili con stima vs effettivo
+   RISULTATI TRIMESTRALI — due barre per trimestre con valori
    ══════════════════════════════════════════════════════════ */
 async function loadQuarterlyData(sym){
   const el=document.getElementById('sd-quarterly');
@@ -17386,8 +17386,8 @@ async function loadQuarterlyData(sym){
   }
 
   const qs=data.quarters;
-  const CH=56; // altezza area barre in px
-  const toH=f=>Math.max(3,Math.round(f*CH)); // frazione 0-1 → px
+  const CH=60; // altezza area barre in px
+  const toH=f=>Math.max(3,Math.round(f*CH));
 
   const fmtV=v=>{
     if(v==null)return'—';
@@ -17398,54 +17398,57 @@ async function loadQuarterlyData(sym){
     return v.toFixed(2);
   };
 
-  // ── Revenue: barra singola sottile ──
+  // ── Revenue: barra per trimestre + valore sotto ──
   const hasRev=qs.some(q=>q.revenue!=null);
-  const revMax=Math.max(...qs.map(q=>q.revenue??0),1);
-  const latestRev=qs[qs.length-1]?.revenue;
+  const revMax=Math.max(...qs.map(q=>Math.abs(q.revenue??0)),1);
 
   const revChart=hasRev?`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px">
-      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
-        <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">${_L({it:'Ricavi',en:'Revenue'})}</span>
-        ${latestRev!=null?`<span style="font-size:11px;font-weight:700;font-family:var(--fm);color:var(--t)">${fmtV(latestRev)}</span>`:''}
+      <div style="margin-bottom:10px">
+        <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">${_L({it:'Ricavi Trimestrali',en:'Quarterly Revenue'})}</span>
       </div>
-      <div style="display:flex;align-items:flex-end;gap:4px;height:${CH}px">
-        ${qs.map(q=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
-          <div style="width:8px;height:${toH((q.revenue??0)/revMax)}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:0.85"></div>
-        </div>`).join('')}
-      </div>
-      <div style="display:flex;gap:4px;margin-top:3px">
-        ${qs.map(q=>`<div style="flex:1;text-align:center;font-size:7px;color:var(--t3);font-family:var(--fm);white-space:nowrap;overflow:hidden">${q.label||''}</div>`).join('')}
+      <div style="display:flex;gap:6px;align-items:flex-end">
+        ${qs.map(q=>{
+          const hR=toH(Math.abs(q.revenue??0)/revMax);
+          return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+            <div style="width:100%;display:flex;align-items:flex-end;justify-content:center;height:${CH}px">
+              <div style="width:14px;height:${hR}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:0.85"></div>
+            </div>
+            <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
+            <div style="font-size:8px;color:var(--t);font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(q.revenue)}</div>
+          </div>`;
+        }).join('')}
       </div>
     </div>`:'';
 
-  // ── EPS: stima (grigia) + effettivo (verde/rosso) affiancati ──
+  // ── EPS: barra stima (grigia) + barra effettivo (verde/rosso) affiancate per trimestre ──
   const hasEps=qs.some(q=>q.epsActual!=null);
   const hasEst=qs.some(q=>q.epsEstimate!=null);
-  const latestEps=qs[qs.length-1]?.epsActual;
-  const latestBeat=qs[qs.length-1]?.epsEstimate!=null&&qs[qs.length-1]?.epsActual>=qs[qs.length-1]?.epsEstimate;
 
   let epsChart='';
   if(hasEps){
     const allEpsV=[...qs.map(q=>q.epsActual),...qs.map(q=>q.epsEstimate)].filter(v=>v!=null).map(Math.abs);
     const epsMax=Math.max(...allEpsV,0.01);
 
-    // Conta beat/miss
     const beats=qs.filter(q=>q.epsEstimate!=null&&q.epsActual!=null&&q.epsActual>=q.epsEstimate).length;
     const total=qs.filter(q=>q.epsEstimate!=null&&q.epsActual!=null).length;
-    const beatStr=total>0?`<span style="font-size:9px;font-family:var(--fm);color:${beats/total>=0.5?'#10B981':'#EF4444'}">${beats}/${total} beat</span>`:'';
+    const beatStr=total>0?`<span style="font-size:9px;font-family:var(--fm);color:${beats/total>=0.5?'#10B981':'#EF4444'};font-weight:600">${beats}/${total} beat</span>`:'';
 
     epsChart=`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">EPS</span>
-          ${hasEst?`<span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)"><span style="display:inline-block;width:6px;height:10px;border-radius:1px;background:var(--bd);border:1px solid var(--t3);opacity:.7"></span>${_L({it:'Stima',en:'Est.'})}</span>`:''}
-          ${beatStr}
-        </div>
-        ${latestEps!=null?`<span style="font-size:11px;font-weight:700;font-family:var(--fm);color:${latestBeat?'#10B981':'var(--t)'}">${latestEps.toFixed(2)}</span>`:''}
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">EPS ${_L({it:'Trimestrale',en:'Quarterly'})}</span>
+        ${beatStr}
       </div>
-      <div style="display:flex;align-items:flex-end;gap:4px;height:${CH}px">
+      ${hasEst?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${_L({it:'Stima',en:'Est.'})}
+        </span>
+        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
+          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#10B981"></span>${_L({it:'Effettivo',en:'Actual'})}
+        </span>
+      </div>`:''}
+      <div style="display:flex;gap:6px;align-items:flex-end">
         ${qs.map(q=>{
           const va=q.epsActual,ve=q.epsEstimate;
           const hA=va!=null?toH(Math.abs(va)/epsMax):0;
@@ -17453,14 +17456,16 @@ async function loadQuarterlyData(sym){
           const beat=va!=null&&ve!=null&&va>=ve;
           const miss=va!=null&&ve!=null&&va<ve;
           const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
-          return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:2px;height:100%">
-            ${ve!=null?`<div style="width:6px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:''}
-            ${va!=null?`<div style="width:6px;height:${hA}px;background:${col};border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.9"></div>`:''}
+          return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px">
+            <div style="width:100%;display:flex;align-items:flex-end;justify-content:center;gap:2px;height:${CH}px">
+              ${ve!=null?`<div style="width:8px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:8px;flex-shrink:0"></div>'}
+              ${va!=null?`<div style="width:8px;height:${hA}px;background:${col};border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.9"></div>`:'<div style="width:8px;flex-shrink:0"></div>'}
+            </div>
+            <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
+            ${ve!=null?`<div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${_L({it:'S',en:'E'})}: ${ve.toFixed(2)}</div>`:'<div style="font-size:7.5px"> </div>'}
+            ${va!=null?`<div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${va.toFixed(2)}</div>`:''}
           </div>`;
         }).join('')}
-      </div>
-      <div style="display:flex;gap:4px;margin-top:3px">
-        ${qs.map(q=>`<div style="flex:1;text-align:center;font-size:7px;color:var(--t3);font-family:var(--fm);white-space:nowrap;overflow:hidden">${q.label||''}</div>`).join('')}
       </div>
     </div>`;
   }
@@ -17470,7 +17475,7 @@ async function loadQuarterlyData(sym){
       <span>${_L({it:'Risultati Trimestrali',en:'Quarterly Results'})}</span>
       <span class="sd-info-btn">i<div class="sd-tip">${_L({it:'Ricavi e EPS degli ultimi trimestri. Per EPS: barra grigia = stima analisti, barra colorata = effettivo. Verde = battuto le stime.',en:'Revenue and EPS for recent quarters. For EPS: grey bar = analyst estimate, colored bar = actual. Green = beat estimates.'})}</div></span>
     </div>
-    <div style="display:grid;grid-template-columns:${hasRev&&hasEps?'1fr 1fr':'1fr'};gap:12px">
+    <div style="display:grid;grid-template-columns:${hasRev&&hasEps?'1fr 1fr':'1fr'};gap:12px;margin-bottom:4px">
       ${revChart}${epsChart}
     </div>`;
 }
