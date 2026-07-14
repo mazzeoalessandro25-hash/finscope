@@ -17371,7 +17371,7 @@ async function loadInsiderForStock(sym){
 async function loadQuarterlyData(sym){
   const el=document.getElementById('sd-quarterly');
   if(!el)return;
-  el.innerHTML='';
+  el.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm);padding:4px 0">${_t('common.loading')}</div>`;
 
   let data=null;
   try{
