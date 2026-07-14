@@ -1,23 +1,33 @@
 // Risultati trimestrali: Revenue + EPS actual vs estimate
-// Fonte primaria: FMP (8 trimestri) | Fallback: Yahoo Finance (4 trimestri)
-// Cache 1h (dati che cambiano solo ogni 3 mesi)
+// Fonti: FMP (primario) → yahoo-finance2 quoteSummary → Yahoo chart API
+// Cache 1h
 
 import { yf } from './_lib/yahoo.js';
 
 const tout = ms => new Promise((_, r) => setTimeout(() => r(new Error('timeout')), ms));
 
 // "2Q2025" → "Q2'25"
-function normYahooLabel(d) {
-  const m = String(d || '').match(/^(\d)Q(\d{4})$/);
-  return m ? `Q${m[1]}'${m[2].slice(2)}` : String(d || '');
+function normYahooLabel(s) {
+  const m = String(s || '').match(/^(\d)Q(\d{4})$/);
+  return m ? `Q${m[1]}'${m[2].slice(2)}` : String(s || '');
 }
 
-// Estrae il valore raw da un oggetto Yahoo {raw, fmt} o un numero diretto
-function raw(v) {
-  if (v == null) return null;
-  if (typeof v === 'object') return v.raw ?? null;
-  return typeof v === 'number' ? v : null;
+// Unix timestamp → "Q3'25"
+function labelFromTs(ts) {
+  const d = new Date(ts * 1000);
+  if (isNaN(d)) return null;
+  return `Q${Math.ceil((d.getMonth() + 1) / 3)}'${String(d.getFullYear()).slice(2)}`;
 }
+
+// ISO date string → "Q3'25"
+function labelFromISO(s) {
+  const d = new Date(s);
+  if (isNaN(d)) return null;
+  return `Q${Math.ceil((d.getMonth() + 1) / 3)}'${String(d.getFullYear()).slice(2)}`;
+}
+
+// Valore raw da oggetto Yahoo {raw} o numero
+const raw = v => (v != null && typeof v === 'object' && 'raw' in v) ? v.raw : (typeof v === 'number' ? v : null);
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,79 +43,95 @@ export default async function handler(req, res) {
   const FMP_KEY = process.env.FMP_API_KEY;
   if (FMP_KEY) {
     try {
-      const baseSym = symbol.split('.')[0];
+      const base = symbol.split('.')[0];
       const [incR, surR] = await Promise.all([
-        fetch(`https://financialmodelingprep.com/api/v3/income-statement/${baseSym}?period=quarter&limit=8&apikey=${FMP_KEY}`,
+        fetch(`https://financialmodelingprep.com/api/v3/income-statement/${base}?period=quarter&limit=8&apikey=${FMP_KEY}`,
           { signal: AbortSignal.timeout(6000) }),
-        fetch(`https://financialmodelingprep.com/api/v3/earnings-surprises/${baseSym}?limit=12&apikey=${FMP_KEY}`,
+        fetch(`https://financialmodelingprep.com/api/v3/earnings-surprises/${base}?limit=12&apikey=${FMP_KEY}`,
           { signal: AbortSignal.timeout(6000) }),
       ]);
+      const inc = incR.ok ? await incR.json() : [];
+      const sur = surR.ok ? await surR.json() : [];
 
-      const incData = incR.ok ? await incR.json() : [];
-      const surData = surR.ok ? await surR.json() : [];
-
-      if (Array.isArray(incData) && incData.length > 0) {
-        // Mappa earnings-surprises: per ogni quarter end, trova il report entro 90gg
-        const quarters = incData.map(q => {
-          const qEnd   = new Date(q.date);
+      if (Array.isArray(inc) && inc.length > 0 && inc[0]?.revenue != null) {
+        const quarters = inc.map(q => {
           const qFrom  = new Date(q.date); qFrom.setDate(qFrom.getDate() - 10);
           const qUntil = new Date(q.date); qUntil.setDate(qUntil.getDate() + 90);
-
-          const sur = Array.isArray(surData)
-            ? surData.find(s => { const sd = new Date(s.date); return sd >= qFrom && sd <= qUntil; })
+          const s = Array.isArray(sur)
+            ? sur.find(x => { const d = new Date(x.date); return d >= qFrom && d <= qUntil; })
             : null;
-
-          const yr  = q.calendarYear || String(q.date || '').slice(2, 4);
-          const label = `${q.period || ''}'${String(yr).slice(-2)}`;
-
+          const yr = q.calendarYear || String(q.date || '').slice(2, 4);
           return {
-            label,
-            revenue:     q.revenue     ?? null,
-            netIncome:   q.netIncome   ?? null,
-            epsActual:   q.eps         ?? sur?.actualEarningResult ?? null,
-            epsEstimate: sur?.estimatedEarning ?? null,
+            label:       `${q.period || ''}'${String(yr).slice(-2)}`,
+            revenue:     q.revenue   ?? null,
+            netIncome:   q.netIncome ?? null,
+            epsActual:   q.eps       ?? s?.actualEarningResult ?? null,
+            epsEstimate: s?.estimatedEarning ?? null,
           };
-        }).reverse(); // dal più vecchio al più recente
+        }).reverse(); // oldest → newest
 
         return res.json({ ok: true, source: 'fmp', quarters });
       }
     } catch (_) { /* fall through */ }
   }
 
-  // ── 2. Yahoo Finance: moduli earnings + incomeStatementHistoryQuarterly ──
+  // ── 2. yahoo-finance2 quoteSummary (moduli earnings disponibili in v3) ──
   try {
     const data = await Promise.race([
       yf.quoteSummary(symbol, {
         modules: ['earnings', 'incomeStatementHistoryQuarterly'],
       }),
-      tout(8000),
+      tout(7000),
     ]);
 
-    // Revenue + net earnings trimestrali da financialsChart
     const finQ = data?.earnings?.financialsChart?.quarterly || [];
-    // EPS actual vs estimate da earningsChart
-    const epsQ = data?.earnings?.earningsChart?.quarterly || [];
+    const epsQ = data?.earnings?.earningsChart?.quarterly   || [];
+    const incQ = data?.incomeStatementHistoryQuarterly?.incomeStatementHistory || [];
 
-    if (!finQ.length && !epsQ.length) throw new Error('no data');
+    if (finQ.length || epsQ.length || incQ.length) {
+      const epsMap = {};
+      epsQ.forEach(e => { if (e.date) epsMap[normYahooLabel(e.date)] = e; });
 
-    // Mappa EPS per date-key
-    const epsMap = {};
-    epsQ.forEach(e => { if (e.date) epsMap[e.date] = e; });
+      const quarters = (finQ.length ? finQ : incQ).map(q => {
+        const lbl  = normYahooLabel(q.date) || labelFromISO(raw(q.endDate));
+        const eps  = epsMap[lbl] || {};
+        return {
+          label:       lbl || '',
+          revenue:     raw(q.revenue)    ?? raw(q.totalRevenue) ?? null,
+          netIncome:   raw(q.earnings)   ?? raw(q.netIncome)    ?? null,
+          epsActual:   raw(eps.actual)   ?? null,
+          epsEstimate: raw(eps.estimate) ?? null,
+        };
+      });
 
-    const quarters = finQ.map(q => {
-      const eps = epsMap[q.date] || {};
-      return {
-        label:       normYahooLabel(q.date),
-        revenue:     raw(q.revenue),
-        netIncome:   raw(q.earnings),
-        epsActual:   raw(eps.actual),
-        epsEstimate: raw(eps.estimate),
-      };
-    }); // Yahoo restituisce già dal più vecchio al più recente
+      if (quarters.length) return res.json({ ok: true, source: 'yahoo-qs', quarters });
+    }
+  } catch (_) { /* fall through */ }
 
-    if (!quarters.length) throw new Error('empty');
+  // ── 3. Yahoo Finance chart API — earnings events (EPS only, no revenue) ──
+  try {
+    const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=3mo&range=3y&events=earnings`;
+    const r = await fetch(url, {
+      signal: AbortSignal.timeout(7000),
+      headers: { 'User-Agent': 'Mozilla/5.0', Accept: 'application/json' },
+    });
+    if (!r.ok) throw new Error('chart api');
+    const data   = await r.json();
+    const events = data?.chart?.result?.[0]?.events?.earnings || {};
 
-    return res.json({ ok: true, source: 'yahoo', quarters });
+    const quarters = Object.values(events)
+      .sort((a, b) => a.date - b.date)
+      .slice(-8)
+      .map(e => ({
+        label:       e.quarter ? normYahooLabel(e.quarter) : labelFromTs(e.date),
+        revenue:     null,
+        netIncome:   null,
+        epsActual:   e.epsActual    ?? null,
+        epsEstimate: e.epsEstimate  ?? null,
+      }))
+      .filter(q => q.label && q.epsActual != null);
+
+    if (quarters.length) return res.json({ ok: true, source: 'yahoo-chart', quarters });
   } catch (_) { /* fall through */ }
 
   return res.json({ ok: false, quarters: [] });
