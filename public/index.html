@@ -2987,6 +2987,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   <div id="port-content" style="display:none">
 
 
+    <!-- Banner earnings imminenti — visibile in cima alla vista portafoglio -->
+    <div id="port-earn-main" style="display:none;margin-bottom:14px;padding:10px 14px;border-radius:8px;background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.4)">
+      <div style="font-size:11px;font-weight:700;color:#D97706;font-family:var(--fm);margin-bottom:5px;letter-spacing:.2px">⚡ Earnings in arrivo questa settimana</div>
+      <div id="port-earn-main-list" style="font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.8"></div>
+    </div>
+
     <!-- ── 3-COLUMN LAYOUT: donut | lista | giornata ── -->
     <div class="port-2col">
 
@@ -8743,6 +8749,7 @@ async function renderPortfolio(){
   if(portfolio.length>0) loadPortfolioEarnings(portfolio.map(i=>({sym:i.sym})), dailyItems.length===0);
   // Banner earnings imminenti (≤7g) via Yahoo — copre qualsiasi ticker
   const _pea=document.getElementById('port-earn-alert');if(_pea)_pea.style.display='none';
+  const _pem=document.getElementById('port-earn-main');if(_pem)_pem.style.display='none';
   if(portfolio.length>0) loadEarningsForPortfolio(portfolio.map(i=>i.sym));
   // Interactive allocation donut
   setTimeout(()=>{
@@ -17436,9 +17443,6 @@ async function loadEarningsDate(sym){
 
 async function loadEarningsForPortfolio(symbols){
   if(!symbols||!symbols.length)return;
-  const alert=document.getElementById('port-earn-alert');
-  const alertList=document.getElementById('port-earn-alert-list');
-  if(!alert||!alertList)return;
   try{
     const r=await fetch(`/api/earnings-next?symbols=${symbols.map(encodeURIComponent).join(',')}`);
     if(!r.ok)return;
@@ -17446,7 +17450,7 @@ async function loadEarningsForPortfolio(symbols){
     const result=data?.result||{};
     const today=new Date();
     const locale=currentLang==='en'?'en-GB':'it-IT';
-    // Filtra solo earnings entro 7 giorni, ordina per data
+    // Filtra earnings entro 7 giorni, ordina per data
     const imminent=Object.entries(result)
       .filter(([,info])=>info?.date)
       .map(([sym,info])=>{
@@ -17456,7 +17460,6 @@ async function loadEarningsForPortfolio(symbols){
       })
       .filter(x=>x.daysUntil>=0&&x.daysUntil<=7)
       .sort((a,b)=>a.daysUntil-b.daysUntil);
-    if(!imminent.length){alert.style.display='none';return;}
     const rows=imminent.map(({sym,d,daysUntil})=>{
       const name=scData[sym]?.name||sym;
       const dateStr=d.toLocaleDateString(locale,{day:'numeric',month:'short'});
@@ -17469,9 +17472,23 @@ async function loadEarningsForPortfolio(symbols){
         <span style="color:#D97706;font-weight:600">${dateStr} · ${cd}</span>
       </div>`;
     }).join('');
-    alertList.innerHTML=rows;
-    alert.style.display='block';
-  }catch{if(alert)alert.style.display='none';}
+    // Popola banner principale (sempre visibile) e banner nel riepilogo mercati
+    const mainBanner=document.getElementById('port-earn-main');
+    const mainList=document.getElementById('port-earn-main-list');
+    if(mainBanner&&mainList){
+      if(imminent.length){mainList.innerHTML=rows;mainBanner.style.display='block';}
+      else mainBanner.style.display='none';
+    }
+    const alertBanner=document.getElementById('port-earn-alert');
+    const alertList=document.getElementById('port-earn-alert-list');
+    if(alertBanner&&alertList){
+      if(imminent.length){alertList.innerHTML=rows;alertBanner.style.display='block';}
+      else alertBanner.style.display='none';
+    }
+  }catch{
+    const b=document.getElementById('port-earn-main');if(b)b.style.display='none';
+    const a=document.getElementById('port-earn-alert');if(a)a.style.display='none';
+  }
 }
 
 /* ══════════════════════════════════════════════════════════
