@@ -17365,7 +17365,7 @@ async function loadInsiderForStock(sym){
 }
 
 /* ══════════════════════════════════════════════════════════
-   RISULTATI TRIMESTRALI — due barre per trimestre, scala y, beat%
+   RISULTATI TRIMESTRALI — storico + previsioni future
    ══════════════════════════════════════════════════════════ */
 async function loadQuarterlyData(sym){
   const el=document.getElementById('sd-quarterly');
@@ -17385,10 +17385,12 @@ async function loadQuarterlyData(sym){
   }
 
   const qs=data.quarters;
-  const CH=76; // altezza area barre in px
-  const toH=f=>Math.max(3,Math.round(f*CH));
+  const histQs=qs.filter(q=>!q.isForecast);
+  const fcQs=qs.filter(q=>q.isForecast);
+  const hasFc=fcQs.length>0;
 
-  // Arrotonda al prossimo valore "bello" per la scala Y (es. 47B → 50B, 10.3B → 12B)
+  const CH=76;
+  const toH=f=>Math.max(3,Math.round(f*CH));
   const niceMax=v=>{
     if(!v||v<=0)return 1;
     const exp=Math.floor(Math.log10(v));
@@ -17397,7 +17399,6 @@ async function loadQuarterlyData(sym){
     const nice=n<=1?1:n<=1.2?1.2:n<=1.5?1.5:n<=2?2:n<=2.5?2.5:n<=3?3:n<=4?4:n<=5?5:n<=6?6:n<=8?8:10;
     return nice*mag;
   };
-
   const fmtV=v=>{
     if(v==null)return'—';
     const a=Math.abs(v);
@@ -17407,31 +17408,53 @@ async function loadQuarterlyData(sym){
     return v.toFixed(2);
   };
 
-  // Griglia orizzontale su area barre (linee tratteggiate a 0%, 50%, 100%)
+  // Divisore verticale storico → previsione
+  const barDiv=hasFc?`<div style="width:1px;background:var(--bd);opacity:.5;align-self:stretch;flex-shrink:0"></div>`:'';
+  const lblDiv=hasFc?`<div style="width:1px;flex-shrink:0"></div>`:'';
+
   const gridLines=`
     <div style="position:absolute;left:0;right:0;top:0;border-top:1px dashed var(--bd);opacity:.35;pointer-events:none"></div>
     <div style="position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--bd);opacity:.25;pointer-events:none"></div>`;
 
-  // ── Revenue: stima analisti (FMP premium) > anno precedente (YoY) > singola barra ──
-  const hasRev=qs.some(q=>q.revenue!=null);
-  const useRevEst=qs.some(q=>q.revenueEstimate!=null);              // FMP analyst-estimates
-  const useRevYoy=!useRevEst&&qs.some(q=>q.revenuePrevYear!=null);  // fallback YoY
+  // ── REVENUE ──
+  const hasRev=qs.some(q=>q.revenue!=null||(q.isForecast&&q.revenueEstimate!=null));
+  const useRevEst=histQs.some(q=>q.revenueEstimate!=null);
+  const useRevYoy=!useRevEst&&histQs.some(q=>q.revenuePrevYear!=null);
   const hasRevRef=useRevEst||useRevYoy;
-  const allRevV=[...qs.map(q=>q.revenue),...qs.map(q=>useRevEst?q.revenueEstimate:q.revenuePrevYear)].filter(v=>v!=null).map(Math.abs);
+  const revRef=q=>useRevEst?q.revenueEstimate:q.revenuePrevYear;
+  const revRefLabel=useRevEst?_L({it:'Stima',en:'Est.'}):_L({it:'Anno prec.',en:'Prev. yr'});
+  const revRefPfx=useRevEst?_L({it:'S',en:'E'}):_L({it:'AP',en:'PY'});
+
+  const allRevV=[...histQs.map(q=>q.revenue),...histQs.map(q=>revRef(q)),...fcQs.map(q=>q.revenueEstimate)].filter(v=>v!=null).map(Math.abs);
   const revMax=niceMax(Math.max(...allRevV,1));
 
-  // Ref per ogni trimestre: stima analisti oppure anno precedente
-  const revRef=q=>useRevEst?q.revenueEstimate:q.revenuePrevYear;
-  const revRefLabel=useRevEst?_L({it:'Stima',en:'Est.'}):_L({it:'Anno prec.',en:'Prev. year'});
-  const revRefPrefix=useRevEst?_L({it:'S',en:'E'}):_L({it:'AP',en:'PY'});
-
-  const revComps=qs.filter(q=>revRef(q)!=null&&q.revenue!=null);
+  const revComps=histQs.filter(q=>revRef(q)!=null&&q.revenue!=null);
   const revBeats=revComps.filter(q=>q.revenue>=revRef(q)).length;
-  const revBeatStr=revComps.length>0
-    ?(useRevEst
-       ?`<span style="font-size:9px;font-family:var(--fm);color:${revBeats/revComps.length>=0.5?'#10B981':'#EF4444'};font-weight:600">${revBeats}/${revComps.length} beat</span>`
-       :`<span style="font-size:9px;font-family:var(--fm);color:var(--t3)">YoY</span>`)
-    :'';
+  const revBeatStr=revComps.length>0?(useRevEst?`<span style="font-size:9px;font-family:var(--fm);color:${revBeats/revComps.length>=.5?'#10B981':'#EF4444'};font-weight:600">${revBeats}/${revComps.length} beat</span>`:`<span style="font-size:9px;font-family:var(--fm);color:var(--t3)">YoY</span>`):'';
+
+  // barre storiche revenue
+  const revHBars=histQs.map(q=>{
+    const rv2=q.revenue,ref=revRef(q);
+    const hA=toH(Math.abs(rv2??0)/revMax),hE=ref!=null?toH(Math.abs(ref)/revMax):0;
+    if(hasRevRef)return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%">${ref!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}${rv2!=null?`<div style="width:10px;height:${hA}px;background:#1A56C4;border-radius:2px 2px 0 0;flex-shrink:0;opacity:.85"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}</div>`;
+    return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%"><div style="width:18px;height:${hA}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:.85"></div></div>`;
+  }).join('');
+  // barre previsione revenue
+  const revFBars=fcQs.map(q=>{
+    const hF=q.revenueEstimate!=null?toH(Math.abs(q.revenueEstimate)/revMax):3;
+    return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%">${q.revenueEstimate!=null?`<div style="width:${hasRevRef?'10px':'18px'};height:${hF}px;background:rgba(26,86,196,.1);border:1.5px dashed #1A56C4;border-radius:2px 2px 0 0;box-sizing:border-box"></div>`:''}</div>`;
+  }).join('');
+  // etichette storiche revenue
+  const revHLbls=histQs.map(q=>{
+    const rv2=q.revenue,ref=revRef(q);
+    const grow=rv2!=null&&ref!=null&&rv2>=ref;
+    const col=rv2!=null&&ref!=null?(grow?'#10B981':'#EF4444'):'var(--t)';
+    const pct=rv2!=null&&ref!=null?((rv2-ref)/Math.abs(ref)*100):null;
+    const pctStr=pct!=null?`${pct>=0?'+':''}${pct.toFixed(1)}%`:'';
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>${ref!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${revRefPfx}: ${fmtV(ref)}</div>`:(hasRevRef?'<div style="font-size:7px">&nbsp;</div>':'')}<div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(rv2)}</div>${pctStr?`<div style="font-size:7.5px;color:${col};font-family:var(--fm);font-weight:700;text-align:center;white-space:nowrap">${pctStr}</div>`:''}</div>`;
+  }).join('');
+  // etichette previsione revenue
+  const revFLbls=fcQs.map(q=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap;opacity:.6">~${q.label||''}</div>${hasRevRef?'<div style="font-size:7px">&nbsp;</div>':''}<div style="font-size:8px;color:#1A56C4;font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap;opacity:.7">${fmtV(q.revenueEstimate)}</div></div>`).join('');
 
   const revChart=hasRev?`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px">
@@ -17439,126 +17462,82 @@ async function loadQuarterlyData(sym){
         <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">${_L({it:'Ricavi Trimestrali',en:'Quarterly Revenue'})}</span>
         ${revBeatStr}
       </div>
-      ${hasRevRef?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
-          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${revRefLabel}
-        </span>
-        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
-          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#1A56C4;opacity:.85"></span>${_L({it:'Effettivo',en:'Actual'})}
-        </span>
-      </div>`:''}
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        ${hasRevRef?`<span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${revRefLabel}</span>`:''}
+        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#1A56C4;opacity:.85"></span>${_L({it:'Effettivo',en:'Actual'})}</span>
+        ${hasFc?`<span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:rgba(26,86,196,.1);border:1.5px dashed #1A56C4;box-sizing:border-box"></span>${_L({it:'Previsione',en:'Forecast'})}</span>`:''}
+      </div>
       <div style="display:flex;gap:0;align-items:flex-start">
-        <!-- Asse Y -->
         <div style="height:${CH}px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:5px;min-width:32px;flex-shrink:0">
           <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(revMax)}</span>
           <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(revMax/2)}</span>
           <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">0</span>
         </div>
-        <!-- Barre + etichette -->
         <div style="flex:1">
-          <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">
-            ${gridLines}
-            ${qs.map(q=>{
-              const rv2=q.revenue,ref=revRef(q);
-              const hA=toH(Math.abs(rv2??0)/revMax);
-              const hE=ref!=null?toH(Math.abs(ref)/revMax):0;
-              if(hasRevRef){
-                return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%">
-                  ${ref!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
-                  ${rv2!=null?`<div style="width:10px;height:${hA}px;background:#1A56C4;border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.85"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
-                </div>`;
-              }
-              return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;height:100%">
-                <div style="width:18px;height:${hA}px;background:#1A56C4;border-radius:2px 2px 0 0;opacity:0.85"></div>
-              </div>`;
-            }).join('')}
-          </div>
-          <div style="display:flex;gap:6px;margin-top:5px">
-            ${qs.map(q=>{
-              const rv2=q.revenue,ref=revRef(q);
-              const grow=rv2!=null&&ref!=null&&rv2>=ref;
-              const col=rv2!=null&&ref!=null?(grow?'#10B981':'#EF4444'):'var(--t)';
-              const pct=rv2!=null&&ref!=null?((rv2-ref)/Math.abs(ref)*100):null;
-              const pctStr=pct!=null?`${pct>=0?'+':''}${pct.toFixed(1)}%`:'';
-              return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px">
-                <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
-                ${ref!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${revRefPrefix}: ${fmtV(ref)}</div>`:(hasRevRef?'<div style="font-size:7px">&nbsp;</div>':'')}
-                <div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${fmtV(rv2)}</div>
-                ${pctStr?`<div style="font-size:7.5px;color:${col};font-family:var(--fm);font-weight:700;text-align:center;white-space:nowrap">${pctStr}</div>`:''}
-              </div>`;
-            }).join('')}
-          </div>
+          <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">${gridLines}${revHBars}${barDiv}${revFBars}</div>
+          <div style="display:flex;gap:6px;margin-top:5px">${revHLbls}${lblDiv}${revFLbls}</div>
         </div>
       </div>
     </div>`:'';
 
-  // ── EPS: stima (grigia) + effettivo (colorato) + asse Y + beat% ──
-  const hasEps=qs.some(q=>q.epsActual!=null);
-  const hasEst=qs.some(q=>q.epsEstimate!=null);
+  // ── EPS ──
+  const hasEps=qs.some(q=>q.epsActual!=null||(q.isForecast&&q.epsEstimate!=null));
+  const hasEst=histQs.some(q=>q.epsEstimate!=null);
+
+  const allEpsV=[...histQs.map(q=>q.epsActual),...histQs.map(q=>q.epsEstimate),...fcQs.map(q=>q.epsEstimate)].filter(v=>v!=null).map(Math.abs);
+  const epsMax=niceMax(Math.max(...allEpsV,.01));
+
+  const epsBeatQs=histQs.filter(q=>q.epsEstimate!=null&&q.epsActual!=null);
+  const epsBeats=epsBeatQs.filter(q=>q.epsActual>=q.epsEstimate).length;
+  const beatStr=epsBeatQs.length>0?`<span style="font-size:9px;font-family:var(--fm);color:${epsBeats/epsBeatQs.length>=.5?'#10B981':'#EF4444'};font-weight:600">${epsBeats}/${epsBeatQs.length} beat</span>`:'';
+
+  // barre storiche EPS
+  const epsHBars=histQs.map(q=>{
+    const va=q.epsActual,ve=q.epsEstimate;
+    const hA=va!=null?toH(Math.abs(va)/epsMax):0,hE=ve!=null?toH(Math.abs(ve)/epsMax):0;
+    const beat=va!=null&&ve!=null&&va>=ve,miss=va!=null&&ve!=null&&va<ve;
+    const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
+    return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%">${ve!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}${va!=null?`<div style="width:10px;height:${hA}px;background:${col};border-radius:2px 2px 0 0;flex-shrink:0;opacity:.9"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}</div>`;
+  }).join('');
+  // barre previsione EPS (singola barra tratteggiata nella posizione "actual")
+  const epsFBars=fcQs.map(q=>{
+    const hF=q.epsEstimate!=null?toH(Math.abs(q.epsEstimate)/epsMax):3;
+    return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%"><div style="width:10px;flex-shrink:0"></div>${q.epsEstimate!=null?`<div style="width:10px;height:${hF}px;background:rgba(100,116,139,.12);border:1.5px dashed var(--t3);border-radius:2px 2px 0 0;flex-shrink:0;box-sizing:border-box"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}</div>`;
+  }).join('');
+  // etichette storiche EPS
+  const epsHLbls=histQs.map(q=>{
+    const va=q.epsActual,ve=q.epsEstimate;
+    const beat=va!=null&&ve!=null&&va>=ve,miss=va!=null&&ve!=null&&va<ve;
+    const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
+    const pct=va!=null&&ve!=null?((va-ve)/Math.abs(ve)*100):null;
+    const pctStr=pct!=null?`${pct>=0?'+':''}${pct.toFixed(1)}%`:'';
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>${ve!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">S: ${ve.toFixed(2)}</div>`:'<div style="font-size:7px">&nbsp;</div>'}${va!=null?`<div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${va.toFixed(2)}</div>`:''}${pctStr?`<div style="font-size:7.5px;color:${col};font-family:var(--fm);font-weight:700;text-align:center;white-space:nowrap">${pctStr}</div>`:''}</div>`;
+  }).join('');
+  // etichette previsione EPS
+  const epsFLbls=fcQs.map(q=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px"><div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap;opacity:.6">~${q.label||''}</div><div style="font-size:7px">&nbsp;</div>${q.epsEstimate!=null?`<div style="font-size:8px;color:var(--t3);font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap;opacity:.7">${q.epsEstimate.toFixed(2)}</div>`:''}</div>`).join('');
 
   let epsChart='';
   if(hasEps){
-    const allEpsV=[...qs.map(q=>q.epsActual),...qs.map(q=>q.epsEstimate)].filter(v=>v!=null).map(Math.abs);
-    const epsMax=niceMax(Math.max(...allEpsV,0.01));
-
-    const beats=qs.filter(q=>q.epsEstimate!=null&&q.epsActual!=null&&q.epsActual>=q.epsEstimate).length;
-    const total=qs.filter(q=>q.epsEstimate!=null&&q.epsActual!=null).length;
-    const beatStr=total>0?`<span style="font-size:9px;font-family:var(--fm);color:${beats/total>=0.5?'#10B981':'#EF4444'};font-weight:600">${beats}/${total} beat</span>`:'';
-
     epsChart=`
     <div style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 12px">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
         <span style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase">EPS ${_L({it:'Trimestrale',en:'Quarterly'})}</span>
         ${beatStr}
       </div>
-      ${hasEst?`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
-          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${_L({it:'Stima',en:'Est.'})}
-        </span>
-        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)">
-          <span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#10B981"></span>${_L({it:'Effettivo',en:'Actual'})}
-        </span>
-      </div>`:''}
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap">
+        ${hasEst?`<span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:var(--s3,#e2e8f0);border:1px solid var(--bd)"></span>${_L({it:'Stima',en:'Est.'})}</span>`:''}
+        <span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:#10B981"></span>${_L({it:'Effettivo',en:'Actual'})}</span>
+        ${hasFc?`<span style="display:flex;align-items:center;gap:3px;font-size:8px;font-family:var(--fm);color:var(--t3)"><span style="display:inline-block;width:8px;height:8px;border-radius:1px;background:rgba(100,116,139,.12);border:1.5px dashed var(--t3);box-sizing:border-box"></span>${_L({it:'Previsione',en:'Forecast'})}</span>`:''}
+      </div>
       <div style="display:flex;gap:0;align-items:flex-start">
-        <!-- Asse Y -->
         <div style="height:${CH}px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-right:5px;min-width:26px;flex-shrink:0">
           <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(epsMax)}</span>
           <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">${fmtV(epsMax/2)}</span>
           <span style="font-size:7px;color:var(--t3);font-family:var(--fm);line-height:1">0</span>
         </div>
-        <!-- Barre + etichette -->
         <div style="flex:1">
-          <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">
-            ${gridLines}
-            ${qs.map(q=>{
-              const va=q.epsActual,ve=q.epsEstimate;
-              const hA=va!=null?toH(Math.abs(va)/epsMax):0;
-              const hE=ve!=null?toH(Math.abs(ve)/epsMax):0;
-              const beat=va!=null&&ve!=null&&va>=ve;
-              const miss=va!=null&&ve!=null&&va<ve;
-              const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
-              return`<div style="flex:1;display:flex;align-items:flex-end;justify-content:center;gap:3px;height:100%">
-                ${ve!=null?`<div style="width:10px;height:${hE}px;background:var(--s3,#e2e8f0);border:1px solid var(--bd);border-radius:2px 2px 0 0;flex-shrink:0"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
-                ${va!=null?`<div style="width:10px;height:${hA}px;background:${col};border-radius:2px 2px 0 0;flex-shrink:0;opacity:0.9"></div>`:'<div style="width:10px;flex-shrink:0"></div>'}
-              </div>`;
-            }).join('')}
-          </div>
-          <div style="display:flex;gap:6px;margin-top:5px">
-            ${qs.map(q=>{
-              const va=q.epsActual,ve=q.epsEstimate;
-              const beat=va!=null&&ve!=null&&va>=ve;
-              const miss=va!=null&&ve!=null&&va<ve;
-              const col=beat?'#10B981':miss?'#EF4444':'#1A56C4';
-              const pct=va!=null&&ve!=null?((va-ve)/Math.abs(ve)*100):null;
-              const pctStr=pct!=null?`${pct>=0?'+':''}${pct.toFixed(1)}%`:'';
-              return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:1px">
-                <div style="font-size:7.5px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">${q.label||''}</div>
-                ${ve!=null?`<div style="font-size:7px;color:var(--t3);font-family:var(--fm);text-align:center;white-space:nowrap">S: ${ve.toFixed(2)}</div>`:'<div style="font-size:7px">&nbsp;</div>'}
-                ${va!=null?`<div style="font-size:8px;color:${col};font-family:var(--fm);font-weight:600;text-align:center;white-space:nowrap">${va.toFixed(2)}</div>`:''}
-                ${pctStr?`<div style="font-size:7.5px;color:${col};font-family:var(--fm);font-weight:700;text-align:center;white-space:nowrap">${pctStr}</div>`:''}
-              </div>`;
-            }).join('')}
-          </div>
+          <div style="height:${CH}px;display:flex;gap:6px;align-items:flex-end;position:relative;border-bottom:1px solid var(--bd)">${gridLines}${epsHBars}${barDiv}${epsFBars}</div>
+          <div style="display:flex;gap:6px;margin-top:5px">${epsHLbls}${lblDiv}${epsFLbls}</div>
         </div>
       </div>
     </div>`;
@@ -17567,7 +17546,7 @@ async function loadQuarterlyData(sym){
   el.innerHTML=`
     <div class="sd-section-title" style="display:flex;align-items:center">
       <span>${_L({it:'Risultati Trimestrali',en:'Quarterly Results'})}</span>
-      <span class="sd-info-btn">i<div class="sd-tip">${_L({it:'Ricavi e EPS degli ultimi trimestri. Per EPS: barra grigia = stima analisti, barra colorata = effettivo. Verde = battuto le stime, rosso = mancato.',en:'Revenue and EPS for recent quarters. Grey bar = analyst estimate, colored bar = actual. Green = beat, red = miss.'})}</div></span>
+      <span class="sd-info-btn">i<div class="sd-tip">${_L({it:'Ricavi e EPS: dati storici + previsioni future (barre tratteggiate). Grigia = stima analisti, colorata = effettivo. ~ = previsione consenso.',en:'Revenue and EPS: historical + future forecasts (dashed bars). Grey = analyst estimate, colored = actual. ~ = consensus forecast.'})}</div></span>
     </div>
     <div style="display:grid;grid-template-columns:${hasRev&&hasEps?'1fr 1fr':'1fr'};gap:12px;margin-bottom:4px">
       ${revChart}${epsChart}
