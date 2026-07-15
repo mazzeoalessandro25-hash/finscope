@@ -93,8 +93,11 @@ export default async function handler(req, res) {
       if (r.ok) {
         const raw = await r.json();
         const list = Array.isArray(raw.earningsCalendar) ? raw.earningsCalendar : [];
+        // all=1 → nessun filtro (tutti i titoli), default → solo quelli nel watch-set
+        const showAll = req.query.all === '1';
         const events = list
           .filter(e => {
+            if (showAll) return true;
             const sym  = e.symbol || '';
             const base = sym.split('.')[0];
             return WATCH_SYMBOLS.has(sym) || WATCH_BASE.has(base);

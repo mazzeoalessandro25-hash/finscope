@@ -13519,14 +13519,16 @@ async function _fetchEco(y,m){
   }catch{return[];}
 }
 
-async function _fetchEarn(y,m){
-  const cached=_calApiCache.get('earn',y,m);
+async function _fetchEarn(y,m,all=false){
+  const cacheKey=all?'earn-all':'earn';
+  const cached=_calApiCache.get(cacheKey,y,m);
   if(cached)return cached;
   try{
-    const r=await fetch(`/api/earnings?year=${y}&month=${m}`);
+    const url=all?`/api/earnings?year=${y}&month=${m}&all=1`:`/api/earnings?year=${y}&month=${m}`;
+    const r=await fetch(url);
     const d=await r.json();
     const evs=(d.ok&&Array.isArray(d.events))?d.events:[];
-    _calApiCache.set('earn',y,m,evs);
+    _calApiCache.set(cacheKey,y,m,evs);
     return evs;
   }catch{return[];}
 }
@@ -13535,14 +13537,74 @@ function calChangeMonth(d){
   calMonth+=d;
   if(calMonth>11){calMonth=0;calYear++;}
   if(calMonth<0){calMonth=11;calYear--;}
-  renderCalendar();
+  if(calViewTab==='earnings') renderEarningsList();
+  else renderCalendar();
 }
 
 function setCalViewTab(tab,btn){
   calViewTab=tab;
   document.querySelectorAll('.cal-tab-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  renderCalendar();
+  if(tab==='earnings') renderEarningsList();
+  else renderCalendar();
+}
+
+async function renderEarningsList(){
+  const el=document.getElementById('eco-calendar-content');
+  const titleEl=document.getElementById('cal-month-title');
+  const legend=document.querySelector('#eco-calendar-card .cal-legend');
+  if(!el)return;
+  if(legend)legend.style.display='none';
+  const _loc=currentLang==='en'?'en-US':'it-IT';
+  const m=calMonth+1;
+  const monthName=new Date(calYear,calMonth,1).toLocaleDateString(_loc,{month:'long',year:'numeric'});
+  if(titleEl)titleEl.textContent=monthName.charAt(0).toUpperCase()+monthName.slice(1);
+  el.innerHTML='<div class="ld">'+_t('common.loading')+'</div>';
+
+  const evs=await _fetchEarn(calYear,m,true);
+
+  if(!evs.length){
+    el.innerHTML=`<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">${_L({it:'Nessun earnings trovato per questo mese.',en:'No earnings found for this month.'})}</div>`;
+    return;
+  }
+
+  // Aggiorna subtitle
+  const subEl=document.getElementById('cal-sub-info');
+  const bmo=evs.filter(e=>e.time==='bmo').length;
+  const amc=evs.filter(e=>e.time==='amc').length;
+  if(subEl)subEl.textContent=`${evs.length} aziende · ☀ ${bmo} pre-mkt · 🌙 ${amc} post-mkt`;
+
+  // Raggruppa per data
+  const byDate={};
+  evs.forEach(e=>{if(e.date)(byDate[e.date]||(byDate[e.date]=[])).push(e);});
+  const dates=Object.keys(byDate).sort();
+
+  let html='<div style="display:flex;flex-direction:column">';
+  dates.forEach(dateStr=>{
+    const d=new Date(dateStr+'T12:00:00');
+    const dayLabel=d.toLocaleDateString(_loc,{weekday:'long',day:'numeric',month:'long'});
+    html+=`<div style="padding:10px 0 5px;font-size:10.5px;font-weight:700;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--bd)">${dayLabel.charAt(0).toUpperCase()+dayLabel.slice(1)}</div>`;
+    byDate[dateStr].forEach(e=>{
+      const isBmo=e.time==='bmo';
+      const isAmc=e.time==='amc';
+      const timeBadge=isBmo
+        ?`<span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(217,119,6,.12);color:#D97706;font-weight:600;white-space:nowrap;flex-shrink:0">☀ Pre</span>`
+        :isAmc
+        ?`<span style="font-size:9px;padding:2px 6px;border-radius:3px;background:rgba(26,86,196,.1);color:#1A56C4;font-weight:600;white-space:nowrap;flex-shrink:0">🌙 Post</span>`
+        :`<span style="font-size:9px;padding:2px 6px;border-radius:3px;background:var(--s3);color:var(--t3);font-weight:600;white-space:nowrap;flex-shrink:0">—</span>`;
+      let eps='';
+      if(e.epsActual!=null) eps=`<span style="font-size:10px;color:var(--t3);font-family:var(--fm)">EPS: <strong style="color:var(--t)">${e.epsActual.toFixed(2)}</strong></span>`;
+      else if(e.epsEstimate!=null) eps=`<span style="font-size:10px;color:var(--t3);font-family:var(--fm)">est: ${e.epsEstimate.toFixed(2)}</span>`;
+      html+=`<div onclick="openFA('${e.symbol}')" style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+        ${timeBadge}
+        <span style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px;min-width:52px">${e.symbol}</span>
+        <span style="color:var(--t2);flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.name||''}</span>
+        ${eps}
+      </div>`;
+    });
+  });
+  html+='</div>';
+  el.innerHTML=html;
 }
 
 let _calEvMap={};
@@ -13606,6 +13668,8 @@ function closeCalDayModal(){
 async function renderCalendar(){
   const el=document.getElementById('eco-calendar-content');
   const titleEl=document.getElementById('cal-month-title');
+  const legend=document.querySelector('#eco-calendar-card .cal-legend');
+  if(legend)legend.style.display='';
   if(!el)return;
   const today=new Date();today.setHours(0,0,0,0);
   const _calLocale=currentLang==='en'?'en-US':'it-IT';
