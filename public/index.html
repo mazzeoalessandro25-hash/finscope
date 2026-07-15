@@ -3063,6 +3063,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <button id="port-refresh-btn" onclick="refreshPortfolio()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)" data-i18n="port.daily.refresh">↻ Aggiorna</button>
             </div>
           </div>
+          <!-- Banner earnings imminenti (≤7g) — popolato da loadEarningsForPortfolio -->
+          <div id="port-earn-alert" style="display:none;margin-bottom:14px;padding:10px 13px;border-radius:7px;background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.4)">
+            <div style="font-size:11px;font-weight:700;color:#D97706;font-family:var(--fm);margin-bottom:6px;letter-spacing:.2px">⚡ Earnings in arrivo questa settimana</div>
+            <div id="port-earn-alert-list" style="font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.8"></div>
+          </div>
           <div id="port-daily-text" style="font-size:12px;color:var(--t2);line-height:1.6">
             <div class="ld" style="padding:8px 0" data-i18n="port.news.loading">Raccolta notizie in corso…</div>
           </div>
@@ -8510,7 +8515,6 @@ async function renderPortfolio(){
               </div>
               <div class="port-name">${name}</div>
               ${dateDisplay?`<div style="margin-top:2px"><span class="port-date-badge">📅 ${dateDisplay}${holdStr?` · ${holdStr}`:''}</span></div>`:''}
-              <div id="pef-${item.sym.replace(/\./g,'-')}"></div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
               <div style="text-align:right">
@@ -8737,6 +8741,8 @@ async function renderPortfolio(){
   if(dailyItems.length>0) loadPortDailyAnalysis(dailyItems, dailyPnlUSD, dailyPnlPct, totalValUSD);
   // Carica earnings prossimi per i titoli in portafoglio (sempre, indipendente dal daily)
   if(portfolio.length>0) loadPortfolioEarnings(portfolio.map(i=>({sym:i.sym})), dailyItems.length===0);
+  // Banner earnings imminenti (≤7g) via Yahoo — copre qualsiasi ticker
+  const _pea=document.getElementById('port-earn-alert');if(_pea)_pea.style.display='none';
   if(portfolio.length>0) loadEarningsForPortfolio(portfolio.map(i=>i.sym));
   // Interactive allocation donut
   setTimeout(()=>{
@@ -17430,27 +17436,42 @@ async function loadEarningsDate(sym){
 
 async function loadEarningsForPortfolio(symbols){
   if(!symbols||!symbols.length)return;
+  const alert=document.getElementById('port-earn-alert');
+  const alertList=document.getElementById('port-earn-alert-list');
+  if(!alert||!alertList)return;
   try{
     const r=await fetch(`/api/earnings-next?symbols=${symbols.map(encodeURIComponent).join(',')}`);
     if(!r.ok)return;
     const data=await r.json();
     const result=data?.result||{};
     const today=new Date();
-    Object.entries(result).forEach(([sym,info])=>{
-      if(!info?.date)return;
-      const id='pef-'+sym.replace(/\./g,'-');
-      const el=document.getElementById(id);
-      if(!el)return;
-      const d=new Date(info.date+'T12:00:00');
-      const locale=currentLang==='en'?'en-GB':'it-IT';
-      const daysUntil=Math.ceil((d-today)/86400000);
-      if(daysUntil<-1)return; // earnings già passati
+    const locale=currentLang==='en'?'en-GB':'it-IT';
+    // Filtra solo earnings entro 7 giorni, ordina per data
+    const imminent=Object.entries(result)
+      .filter(([,info])=>info?.date)
+      .map(([sym,info])=>{
+        const d=new Date(info.date+'T12:00:00');
+        const daysUntil=Math.ceil((d-today)/86400000);
+        return{sym,d,daysUntil};
+      })
+      .filter(x=>x.daysUntil>=0&&x.daysUntil<=7)
+      .sort((a,b)=>a.daysUntil-b.daysUntil);
+    if(!imminent.length){alert.style.display='none';return;}
+    const rows=imminent.map(({sym,d,daysUntil})=>{
+      const name=scData[sym]?.name||sym;
       const dateStr=d.toLocaleDateString(locale,{day:'numeric',month:'short'});
-      const urgent=daysUntil>=0&&daysUntil<=7;
-      const col=urgent?'#D97706':'var(--t3)';
-      el.innerHTML=`<span style="font-size:9px;color:${col};font-family:var(--fm)${urgent?';font-weight:700':''};margin-top:2px;display:inline-block">📅 Earnings: ${dateStr}${urgent?` · ${daysUntil}g`:''}</span>`;
-    });
-  }catch{/* ignora */}
+      let cd='';
+      if(daysUntil===0)cd=_L({it:'oggi',en:'today'});
+      else if(daysUntil===1)cd=_L({it:'domani',en:'tomorrow'});
+      else cd=_L({it:`tra ${daysUntil}g`,en:`in ${daysUntil}d`});
+      return`<div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0">
+        <span><span style="font-weight:700;color:var(--t)">${sym}</span><span style="color:var(--t3);margin-left:5px">${name}</span></span>
+        <span style="color:#D97706;font-weight:600">${dateStr} · ${cd}</span>
+      </div>`;
+    }).join('');
+    alertList.innerHTML=rows;
+    alert.style.display='block';
+  }catch{if(alert)alert.style.display='none';}
 }
 
 /* ══════════════════════════════════════════════════════════
