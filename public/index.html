@@ -13595,11 +13595,11 @@ async function renderEarningsList(){
       let eps='';
       if(e.epsActual!=null) eps=`<span style="font-size:10px;color:var(--t3);font-family:var(--fm)">EPS: <strong style="color:var(--t)">${e.epsActual.toFixed(2)}</strong></span>`;
       else if(e.epsEstimate!=null) eps=`<span style="font-size:10px;color:var(--t3);font-family:var(--fm)">est: ${e.epsEstimate.toFixed(2)}</span>`;
-      html+=`<div onclick="openFA('${e.symbol}')" style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
+      html+=`<div onclick="openFA('${e.symbol}')" style="display:flex;align-items:center;gap:8px;padding:8px 4px;border-bottom:1px solid var(--bd);cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--s2)'" onmouseout="this.style.background=''">
         ${timeBadge}
-        <span style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px;min-width:52px">${e.symbol}</span>
-        <span style="color:var(--t2);flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.name||''}</span>
-        ${eps}
+        <span style="font-family:var(--fm);font-weight:700;color:var(--t);font-size:12px;min-width:44px;flex-shrink:0">${e.symbol}</span>
+        <span style="color:var(--t2);flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0">${e.name||''}</span>
+        <span style="flex-shrink:0;white-space:nowrap">${eps}</span>
       </div>`;
     });
   });
@@ -17531,9 +17531,9 @@ async function loadEarningsForPortfolio(symbols){
       if(daysUntil===0)cd=_L({it:'oggi',en:'today'});
       else if(daysUntil===1)cd=_L({it:'domani',en:'tomorrow'});
       else cd=_L({it:`tra ${daysUntil}g`,en:`in ${daysUntil}d`});
-      return`<div style="display:flex;align-items:center;justify-content:space-between;padding:2px 0">
-        <span><span style="font-weight:700;color:var(--t)">${sym}</span><span style="color:var(--t3);margin-left:5px">${name}</span></span>
-        <span style="color:#D97706;font-weight:600">${dateStr} · ${cd}</span>
+      return`<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;padding:2px 0">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1"><span style="font-weight:700;color:var(--t)">${sym}</span><span style="color:var(--t3);margin-left:5px">${name}</span></span>
+        <span style="color:#D97706;font-weight:600;white-space:nowrap;flex-shrink:0">${dateStr} · ${cd}</span>
       </div>`;
     }).join('');
     // Popola banner principale (sempre visibile) e banner nel riepilogo mercati
