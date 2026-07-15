@@ -790,6 +790,9 @@ html:not(.dark) .dm-toggle .dm-moon{opacity:0}
   .sd-funds{grid-template-columns:1fr}
   .sd-rec-grid{grid-template-columns:1fr}
 }
+.quarterly-grid{display:grid;gap:12px;margin-bottom:4px}
+@media(min-width:601px){.quarterly-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.quarterly-grid{grid-template-columns:1fr}}
 
 /* ═══ THEME TRANSITIONS ═══ */
 body,nav,.card,.auth-box,.hours-bar,.tape,.port-hero-kpi,.rb,.macro-stat,.alert-item,.wl-card,
@@ -17739,7 +17742,7 @@ async function loadQuarterlyData(sym){
       <span>${_L({it:'Risultati Trimestrali',en:'Quarterly Results'})}</span>
       <span class="sd-info-btn">i<div class="sd-tip">${_L({it:'Ricavi e EPS: dati storici + previsioni future (barre tratteggiate). Grigia = stima analisti, colorata = effettivo. ~ = previsione consenso.',en:'Revenue and EPS: historical + future forecasts (dashed bars). Grey = analyst estimate, colored = actual. ~ = consensus forecast.'})}</div></span>
     </div>
-    <div style="display:grid;grid-template-columns:${hasRev&&hasEps?'1fr 1fr':'1fr'};gap:12px;margin-bottom:4px">
+    <div class="quarterly-grid" style="${hasRev&&hasEps?'':'grid-template-columns:1fr'}">
       ${revChart}${epsChart}
     </div>`;
 }
