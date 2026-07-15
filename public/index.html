@@ -1166,7 +1166,7 @@ html.dark .auth-box{background:#1e293b}
   display:flex;align-items:center;gap:4px}
 
 /* ═══ STOCK DETAIL OVERLAY ═══ */
-.sd-overlay{position:fixed;inset:0;background:var(--bg);z-index:2000;overflow-y:auto;
+.sd-overlay{position:fixed;inset:0;background:var(--bg);z-index:2000;overflow-y:auto;overflow-x:hidden;
   transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;pointer-events:none}
 .sd-overlay.open{transform:translateX(0);pointer-events:auto}
 .sd-header{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--bd);
@@ -1594,9 +1594,9 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   /* Chart: sovrascrive inline style="height:300px" */
   #sd-chart{height:220px!important}
   /* Sezioni fondamentali */
-  .sd-funds{grid-template-columns:1fr 1fr!important}
+  .sd-funds{grid-template-columns:1fr!important}
   /* Analisti */
-  .sd-rec-grid{grid-template-columns:1fr 1fr!important}
+  .sd-rec-grid{grid-template-columns:1fr!important}
   .sd-rec-labels{font-size:7px}
   /* ETF: panoramica da 4 a 2 colonne (sovrascrive inline style) */
   #sd-etf-section .sd-mg{grid-template-columns:1fr 1fr!important}
