@@ -119,9 +119,45 @@ export default async function handler(req, res) {
           return res.json({ ok: true, events, source: 'finnhub', from, to });
         }
       }
-    } catch (_) {
-      // fall through to hardcoded
-    }
+    } catch (_) { /* fall through */ }
+  }
+
+  // ── FMP earnings calendar (seconda fonte, copertura più ampia) ──
+  const FMP_KEY = process.env.FMP_API_KEY;
+  if (FMP_KEY) {
+    try {
+      const url = `https://financialmodelingprep.com/api/v3/earning_calendar?from=${from}&to=${to}&apikey=${FMP_KEY}`;
+      const r = await fetch(url, { signal: AbortSignal.timeout(7000) });
+      if (r.ok) {
+        const list = await r.json();
+        if (Array.isArray(list) && list.length > 0) {
+          const showAll = req.query.all === '1';
+          const events = list
+            .filter(e => {
+              if (showAll) return true;
+              const sym  = e.symbol || '';
+              const base = sym.split('.')[0];
+              return WATCH_SYMBOLS.has(sym) || WATCH_BASE.has(base);
+            })
+            .map(e => ({
+              date:            String(e.date || '').slice(0, 10),
+              symbol:          e.symbol || '',
+              name:            e.company || NAME_MAP[e.symbol] || e.symbol || '',
+              epsEstimate:     e.epsEstimated ?? null,
+              epsActual:       e.eps          ?? null,
+              revenueEstimate: e.revenueEstimated ?? null,
+              revenueActual:   e.revenue         ?? null,
+              time:            null, // FMP non fornisce BMO/AMC nel piano base
+            }))
+            .filter(e => e.date && e.symbol)
+            .sort((a, b) => a.date.localeCompare(b.date));
+
+          if (events.length > 0) {
+            return res.json({ ok: true, events, source: 'fmp', from, to });
+          }
+        }
+      }
+    } catch (_) { /* fall through */ }
   }
 
   // ── Hardcoded fallback ──
