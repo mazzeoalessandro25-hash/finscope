@@ -1902,6 +1902,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="sd-m"><div class="sd-m-lbl">Beta</div><div class="sd-m-val" id="sdm-beta">—</div></div>
           <div class="sd-m" id="sd-row-emp"><div class="sd-m-lbl" data-i18n="sd.lbl.employees">Dipendenti</div><div class="sd-m-val" id="sdm-emp">—</div></div>
           <div class="sd-m" id="sd-row-short"><div class="sd-m-lbl">Short Ratio</div><div class="sd-m-val" id="sdm-short">—</div></div>
+          <div class="sd-m" id="sd-row-nextearn"><div class="sd-m-lbl">Prossimi Earnings</div><div class="sd-m-val" id="sdm-nextearn" style="font-size:11px">—</div></div>
         </div>
       </div>
     </div>
@@ -8499,6 +8500,7 @@ async function renderPortfolio(){
               </div>
               <div class="port-name">${name}</div>
               ${dateDisplay?`<div style="margin-top:2px"><span class="port-date-badge">📅 ${dateDisplay}${holdStr?` · ${holdStr}`:''}</span></div>`:''}
+              <div id="pef-${item.sym.replace(/\./g,'-')}"></div>
             </div>
             <div style="display:flex;align-items:flex-start;gap:4px;flex-shrink:0">
               <div style="text-align:right">
@@ -8725,6 +8727,7 @@ async function renderPortfolio(){
   if(dailyItems.length>0) loadPortDailyAnalysis(dailyItems, dailyPnlUSD, dailyPnlPct, totalValUSD);
   // Carica earnings prossimi per i titoli in portafoglio (sempre, indipendente dal daily)
   if(portfolio.length>0) loadPortfolioEarnings(portfolio.map(i=>({sym:i.sym})), dailyItems.length===0);
+  if(portfolio.length>0) loadEarningsForPortfolio(portfolio.map(i=>i.sym));
   // Interactive allocation donut
   setTimeout(()=>{
     const dc=document.getElementById('port-alloc-donut');
@@ -13891,7 +13894,7 @@ function openStockDetail(sym){
    'sdm-roe','sdm-roa','sdm-gm','sdm-om','sdm-pm','sdm-ebitda',
    'sdm-revg','sdm-earng','sdm-rev','sdm-fcf','sdm-div','sdm-shares',
    'sdm-cash','sdm-debt','sdm-de','sdm-cr','sdm-qr','sdm-float',
-   'sdm-target','sdm-target-range','sdm-upside'
+   'sdm-target','sdm-target-range','sdm-upside','sdm-nextearn'
   ].forEach(id=>{
     const el=document.getElementById(id);
     if(el){el.textContent='···';el.className='sd-m-val';}
@@ -13917,6 +13920,7 @@ function openStockDetail(sym){
   loadWyckoffAnalysis(sym);
   loadInsiderForStock(sym);
   loadQuarterlyData(sym);
+  loadEarningsDate(sym);
   // Auto-refresh prezzo ogni 30s
   if(sdPriceTimer)clearInterval(sdPriceTimer);
   sdPriceTimer=setInterval(()=>{if(sdSym)refreshSdPrice(sdSym);},30000);
@@ -17362,6 +17366,55 @@ async function loadInsiderForStock(sym){
   } catch(e){
     section.style.display='none';
   }
+}
+
+/* ══════════════════════════════════════════════════════════
+   EARNINGS DATE — stock detail + portfolio cards
+   ══════════════════════════════════════════════════════════ */
+async function loadEarningsDate(sym){
+  const el=document.getElementById('sdm-nextearn');
+  if(!el)return;
+  try{
+    const r=await fetch(`/api/earnings-next?symbols=${encodeURIComponent(sym)}`);
+    if(!r.ok)return;
+    const data=await r.json();
+    if(sdSym!==sym)return;
+    const info=data?.result?.[sym];
+    if(!info?.date){el.textContent='—';return;}
+    const d=new Date(info.date+'T12:00:00');
+    const locale=currentLang==='en'?'en-GB':'it-IT';
+    const daysUntil=Math.ceil((d-new Date())/86400000);
+    el.textContent=d.toLocaleDateString(locale,{day:'numeric',month:'short',year:'numeric'});
+    if(daysUntil>=0&&daysUntil<=14){
+      el.style.color=daysUntil<=7?'#D97706':'var(--t)';
+      el.style.fontWeight='600';
+    }
+  }catch{/* ignora */}
+}
+
+async function loadEarningsForPortfolio(symbols){
+  if(!symbols||!symbols.length)return;
+  try{
+    const r=await fetch(`/api/earnings-next?symbols=${symbols.map(encodeURIComponent).join(',')}`);
+    if(!r.ok)return;
+    const data=await r.json();
+    const result=data?.result||{};
+    const today=new Date();
+    Object.entries(result).forEach(([sym,info])=>{
+      if(!info?.date)return;
+      const id='pef-'+sym.replace(/\./g,'-');
+      const el=document.getElementById(id);
+      if(!el)return;
+      const d=new Date(info.date+'T12:00:00');
+      const locale=currentLang==='en'?'en-GB':'it-IT';
+      const daysUntil=Math.ceil((d-today)/86400000);
+      if(daysUntil<-1)return; // earnings già passati
+      const dateStr=d.toLocaleDateString(locale,{day:'numeric',month:'short'});
+      const urgent=daysUntil>=0&&daysUntil<=7;
+      const col=urgent?'#D97706':'var(--t3)';
+      el.innerHTML=`<span style="font-size:9px;color:${col};font-family:var(--fm)${urgent?';font-weight:700':''};margin-top:2px;display:inline-block">📅 Earnings: ${dateStr}${urgent?` · ${daysUntil}g`:''}</span>`;
+    });
+  }catch{/* ignora */}
 }
 
 /* ══════════════════════════════════════════════════════════
