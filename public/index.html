@@ -1822,6 +1822,17 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <button class="qa-btn qa-btn-ghost" onclick="sdQuickAlert()">🔔<span class="qa-label"> Alert</span></button>
   </div>
   <div class="sd-body">
+    <!-- Banner Prossimi Earnings — primo elemento visibile -->
+    <div id="sd-earnings-banner" style="display:none;margin-bottom:14px;padding:11px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:20px;line-height:1">📅</span>
+        <div>
+          <div style="font-size:9.5px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px">Prossimi Earnings</div>
+          <div style="font-size:14px;font-weight:700;color:var(--t);font-family:var(--fm)" id="sdm-earn-date">—</div>
+        </div>
+      </div>
+      <div id="sdm-earn-countdown" style="font-size:11px;font-weight:700;font-family:var(--fm);padding:5px 12px;border-radius:5px;background:var(--s3);color:var(--t3);flex-shrink:0"></div>
+    </div>
     <!-- Chart + Metriche rapide -->
     <!-- Info settore sopra il grafico -->
     <div id="sd-sector-bar" style="display:none;margin-bottom:12px;font-size:11px;color:var(--t3);font-family:var(--fm)">
@@ -1902,7 +1913,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div class="sd-m"><div class="sd-m-lbl">Beta</div><div class="sd-m-val" id="sdm-beta">—</div></div>
           <div class="sd-m" id="sd-row-emp"><div class="sd-m-lbl" data-i18n="sd.lbl.employees">Dipendenti</div><div class="sd-m-val" id="sdm-emp">—</div></div>
           <div class="sd-m" id="sd-row-short"><div class="sd-m-lbl">Short Ratio</div><div class="sd-m-val" id="sdm-short">—</div></div>
-          <div class="sd-m" id="sd-row-nextearn"><div class="sd-m-lbl">Prossimi Earnings</div><div class="sd-m-val" id="sdm-nextearn" style="font-size:11px">—</div></div>
         </div>
       </div>
     </div>
@@ -13894,7 +13904,7 @@ function openStockDetail(sym){
    'sdm-roe','sdm-roa','sdm-gm','sdm-om','sdm-pm','sdm-ebitda',
    'sdm-revg','sdm-earng','sdm-rev','sdm-fcf','sdm-div','sdm-shares',
    'sdm-cash','sdm-debt','sdm-de','sdm-cr','sdm-qr','sdm-float',
-   'sdm-target','sdm-target-range','sdm-upside','sdm-nextearn'
+   'sdm-target','sdm-target-range','sdm-upside'
   ].forEach(id=>{
     const el=document.getElementById(id);
     if(el){el.textContent='···';el.className='sd-m-val';}
@@ -13915,6 +13925,7 @@ function openStockDetail(sym){
   if(_wyEl)_wyEl.innerHTML=`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('load.wyckoff')}</div>`;
   // Load
   const _qEl=document.getElementById('sd-quarterly');if(_qEl)_qEl.innerHTML='';
+  const _eb=document.getElementById('sd-earnings-banner');if(_eb)_eb.style.display='none';
   loadSdChart(sym,'1mo',null);
   loadSdData(sym);
   loadWyckoffAnalysis(sym);
@@ -17372,24 +17383,49 @@ async function loadInsiderForStock(sym){
    EARNINGS DATE — stock detail + portfolio cards
    ══════════════════════════════════════════════════════════ */
 async function loadEarningsDate(sym){
-  const el=document.getElementById('sdm-nextearn');
-  if(!el)return;
+  const banner=document.getElementById('sd-earnings-banner');
+  const dateEl=document.getElementById('sdm-earn-date');
+  const cdEl=document.getElementById('sdm-earn-countdown');
+  if(!banner||!dateEl||!cdEl)return;
   try{
     const r=await fetch(`/api/earnings-next?symbols=${encodeURIComponent(sym)}`);
     if(!r.ok)return;
     const data=await r.json();
     if(sdSym!==sym)return;
     const info=data?.result?.[sym];
-    if(!info?.date){el.textContent='—';return;}
+    if(!info?.date){banner.style.display='none';return;}
     const d=new Date(info.date+'T12:00:00');
     const locale=currentLang==='en'?'en-GB':'it-IT';
     const daysUntil=Math.ceil((d-new Date())/86400000);
-    el.textContent=d.toLocaleDateString(locale,{day:'numeric',month:'short',year:'numeric'});
-    if(daysUntil>=0&&daysUntil<=14){
-      el.style.color=daysUntil<=7?'#D97706':'var(--t)';
-      el.style.fontWeight='600';
+    dateEl.textContent=d.toLocaleDateString(locale,{day:'numeric',month:'long',year:'numeric'});
+    // Countdown label
+    let cdText='';
+    if(daysUntil<=0) cdText=_L({it:'Oggi / Ieri',en:'Today / Yesterday'});
+    else if(daysUntil===1) cdText=_L({it:'Domani',en:'Tomorrow'});
+    else cdText=_L({it:`tra ${daysUntil} giorni`,en:`in ${daysUntil} days`});
+    cdEl.textContent=cdText;
+    // Colori dinamici in base all'urgenza
+    if(daysUntil>=0&&daysUntil<=7){
+      banner.style.background='rgba(217,119,6,.07)';
+      banner.style.borderColor='rgba(217,119,6,.45)';
+      cdEl.style.background='rgba(217,119,6,.15)';
+      cdEl.style.color='#D97706';
+      dateEl.style.color='#D97706';
+    }else if(daysUntil<=30){
+      banner.style.background='rgba(26,86,196,.05)';
+      banner.style.borderColor='rgba(26,86,196,.25)';
+      cdEl.style.background='rgba(26,86,196,.1)';
+      cdEl.style.color='#1A56C4';
+      dateEl.style.color='var(--t)';
+    }else{
+      banner.style.background='var(--s2)';
+      banner.style.borderColor='var(--bd)';
+      cdEl.style.background='var(--s3)';
+      cdEl.style.color='var(--t3)';
+      dateEl.style.color='var(--t)';
     }
-  }catch{/* ignora */}
+    banner.style.display='flex';
+  }catch{banner.style.display='none';}
 }
 
 async function loadEarningsForPortfolio(symbols){
