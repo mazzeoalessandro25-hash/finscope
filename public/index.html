@@ -7387,6 +7387,9 @@ async function submitAuth(){
       localStorage.setItem(USER_KEY, JSON.stringify(d.user));
       localStorage.setItem('fs_login_at', Date.now().toString());
       currentToken=d.user.id; currentUser=d.user;
+      window.guestMode=false;
+      var _gb=document.getElementById('guest-banner');if(_gb)_gb.remove();
+      document.querySelectorAll('.page').forEach(function(p){p.style.marginTop='126px';});
       updateNavUser();
       closeAuthModal();
       loadUserData();
