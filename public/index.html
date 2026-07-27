@@ -7497,13 +7497,13 @@ async function verifySession(){
   const token=localStorage.getItem(TOKEN_KEY);
   const user=localStorage.getItem(USER_KEY);
   const loginAt=localStorage.getItem('fs_login_at');
-  if(!token||!user){window.location.href='./about.html';return;}
+  if(!token||!user){window.guestMode=true;return;}
   // Sessione valida 30 giorni, nessuna chiamata API: il login è già avvenuto
   if(loginAt&&Date.now()-parseInt(loginAt)>30*24*3600*1000){
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem('fs_login_at');
-    window.location.href='./about.html';return;
+    window.guestMode=true;return;
   }
   currentToken=token;
   currentUser=JSON.parse(user);
