@@ -1722,7 +1722,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .tut-help-btn{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.75);width:28px;height:28px;border-radius:50%;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-family:var(--fm);line-height:1}
 .tut-help-btn:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.45)}
 </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3015670894312311" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -19108,12 +19107,18 @@ const TUTO = (() => {
 <script>
 (function(){
   var KEY='fs_cookie_consent';
+  function loadAdSense(){
+    if(document.querySelector('script[src*="pagead2"]'))return;
+    var s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';
+    s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3015670894312311';
+    document.head.appendChild(s);
+  }
   var b=document.getElementById('ck-banner');
-  if(!b||localStorage.getItem(KEY))return;
+  if(!b||localStorage.getItem(KEY)){if(localStorage.getItem(KEY)==='all')loadAdSense();return;}
   setTimeout(function(){b.classList.add('show');},700);
   function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
   document.getElementById('ck-accept').onclick=function(){
-    localStorage.setItem(KEY,'all');_hide();
+    localStorage.setItem(KEY,'all');_hide();loadAdSense();
     if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
   };
   document.getElementById('ck-reject').onclick=function(){

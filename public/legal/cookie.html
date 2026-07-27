@@ -137,7 +137,6 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   footer{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
 }
 </style>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3015670894312311" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -567,12 +566,18 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
 <script>
 (function(){
   var KEY='fs_cookie_consent';
+  function loadAdSense(){
+    if(document.querySelector('script[src*="pagead2"]'))return;
+    var s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';
+    s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3015670894312311';
+    document.head.appendChild(s);
+  }
   var b=document.getElementById('ck-banner');
-  if(!b||localStorage.getItem(KEY))return;
+  if(!b||localStorage.getItem(KEY)){if(localStorage.getItem(KEY)==='all')loadAdSense();return;}
   setTimeout(function(){b.classList.add('show');},700);
   function _hide(){b.classList.remove('show');setTimeout(function(){b.style.display='none';},420);}
   document.getElementById('ck-accept').onclick=function(){
-    localStorage.setItem(KEY,'all');_hide();
+    localStorage.setItem(KEY,'all');_hide();loadAdSense();
     if(typeof gtag==='function'){gtag('consent','update',{ad_storage:'granted',analytics_storage:'granted'});}
   };
   document.getElementById('ck-reject').onclick=function(){
