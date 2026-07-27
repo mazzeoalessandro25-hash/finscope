@@ -3935,40 +3935,67 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
 <script src="/i18n.js"></script>
 <script>
-// Redirect immediato alla landing page se non autenticato
+// Modalità ospite: utenti non loggati possono sfogliare dashboard, screener e schede titolo
 (function(){
   var t=localStorage.getItem('fs_token');
   var u=localStorage.getItem('fs_user');
   var at=localStorage.getItem('fs_login_at');
-  if(!t||!u){window.location.replace('./about.html');return;}
-  if(at&&Date.now()-parseInt(at)>30*24*3600*1000){
-    localStorage.removeItem('fs_token');
-    localStorage.removeItem('fs_user');
-    localStorage.removeItem('fs_login_at');
-    window.location.replace('./about.html');
-    return;
-  }
-  // Se arriviamo dal login, mostra subito overlay scuro che svanisce
-  try{
-    if(sessionStorage.getItem('fe_from_login')){
-      sessionStorage.removeItem('fe_from_login');
-      var ov=document.createElement('div');
-      ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;'+
-        'background:radial-gradient(ellipse at 50% 55%,#1a3a8a 0%,#0b1e55 45%,#060e22 100%);'+
-        'transition:opacity .55s ease;pointer-events:none;';
-      document.documentElement.appendChild(ov);
-      // Fade out appena il DOM è pronto
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          setTimeout(function(){
-            ov.style.opacity='0';
-            setTimeout(function(){ov.remove();},600);
-          },120);
-        });
-      });
+  if(t&&u){
+    if(at&&Date.now()-parseInt(at)>30*24*3600*1000){
+      localStorage.removeItem('fs_token');
+      localStorage.removeItem('fs_user');
+      localStorage.removeItem('fs_login_at');
+      window.guestMode=true;
+    } else {
+      // Utente loggato: mostra overlay di transizione dal login
+      try{
+        if(sessionStorage.getItem('fe_from_login')){
+          sessionStorage.removeItem('fe_from_login');
+          var ov=document.createElement('div');
+          ov.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;'+
+            'background:radial-gradient(ellipse at 50% 55%,#1a3a8a 0%,#0b1e55 45%,#060e22 100%);'+
+            'transition:opacity .55s ease;pointer-events:none;';
+          document.documentElement.appendChild(ov);
+          // Fade out appena il DOM è pronto
+          requestAnimationFrame(function(){
+            requestAnimationFrame(function(){
+              setTimeout(function(){
+                ov.style.opacity='0';
+                setTimeout(function(){ov.remove();},600);
+              },120);
+            });
+          });
+        }
+      }catch(e){}
     }
-  }catch(e){}
+  } else {
+    window.guestMode=true;
+  }
 })();
+
+// Banner ospite — visibile solo agli utenti non autenticati
+if(window.guestMode){
+  (function(){
+    var hdr=document.querySelector('.site-header');
+    if(!hdr)return;
+    var b=document.createElement('div');
+    b.id='guest-banner';
+    b.style.cssText='background:#1448A8;color:#fff;padding:7px 20px;font-size:12px;font-weight:600;'+
+      'display:flex;align-items:center;justify-content:center;gap:10px;flex-shrink:0;'+
+      'font-family:"Plus Jakarta Sans",sans-serif;letter-spacing:-.1px;';
+    b.innerHTML='<span style="opacity:.85">Stai navigando come ospite — schede titolo, screener e mercati sono liberi</span>'+
+      '<button onclick="openAuthModal()" style="background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);'+
+      'border-radius:5px;color:#fff;padding:3px 11px;font-size:11px;font-weight:700;cursor:pointer;'+
+      'font-family:inherit;white-space:nowrap;transition:background .15s"'+
+      ' onmouseover="this.style.background=\'rgba(255,255,255,.3)\'"'+
+      ' onmouseout="this.style.background=\'rgba(255,255,255,.18)\'">Accedi \u2192</button>';
+    hdr.appendChild(b);
+    // Adatta margin-top delle pagine all'altezza aggiuntiva del banner (~34px)
+    document.querySelectorAll('.page').forEach(function(p){
+      p.style.marginTop='160px';
+    });
+  })();
+}
 
 
 const API='/api/quote';
@@ -4869,6 +4896,8 @@ function switchLabTab(tab){
 }
 
 function showPage(id,btn){
+  // Portafoglio e alerts richiedono login
+  if(window.guestMode&&(id==='portafoglio'||id==='alerts')){openAuthModal();return;}
   // chiudi overlay crypto se aperto
   const crdOv=document.getElementById('crypto-detail-overlay');
   if(crdOv&&crdOv.classList.contains('open')){crdOv.classList.remove('open');}
@@ -6283,6 +6312,7 @@ function openFA(sym){
   openStockDetail(sym);
 }
 function quickAddToPortfolio(sym,name){
+  if(window.guestMode){openAuthModal();return;}
   showPage('portafoglio',document.getElementById('nb-portafoglio'));
   setTimeout(()=>{
     const wrap=document.getElementById('port-add-form-wrap');
@@ -14209,6 +14239,7 @@ async function refreshSdPrice(sym){
 }
 
 function sdToggleWl(){
+  if(window.guestMode){openAuthModal();return;}
   const i=watchlist.indexOf(sdSym);
   if(i===-1)watchlist.push(sdSym);else watchlist.splice(i,1);
   localStorage.setItem('fs_wl',JSON.stringify(watchlist));
@@ -18552,6 +18583,7 @@ function _quickAlertModal(sym, price){
 
 /* -- Stock detail buttons -- */
 function sdQuickPortfolio(){
+  if(window.guestMode){openAuthModal();return;}
   const sym=(document.getElementById('sd-sym')?.textContent||'').trim();
   const name=(document.getElementById('sd-name')?.textContent||sym).trim();
   const priceText=(document.getElementById('sd-hdr-price')?.textContent||'').replace(/[^0-9.,]/g,'').replace(',','.');
@@ -18560,6 +18592,7 @@ function sdQuickPortfolio(){
   _quickPortfolioModal(sym,name,price,typeof detectPortCat==='function'?detectPortCat(sym):'stock',isEU?'EUR':'USD');
 }
 function sdQuickAlert(){
+  if(window.guestMode){openAuthModal();return;}
   const sym=(document.getElementById('sd-sym')?.textContent||'').trim();
   const priceText=(document.getElementById('sd-hdr-price')?.textContent||'').replace(/[^0-9.,]/g,'').replace(',','.');
   const price=parseFloat(priceText)||0;
