@@ -18846,6 +18846,7 @@ const TUTORIAL_STEPS = [
   },
   // ── 10. WATCHLIST ───────────────────────────────────────────────
   {
+    setup: () => { window.scrollTo(0, 0); },
     target: () => document.querySelector('.sc-quick-bar'),
     title: () => _L({it:'★ Watchlist personale',en:'★ Personal watchlist'}),
     desc: () => _L({it:'Clicca sulla stella ★ accanto a qualsiasi titolo per salvarlo in Watchlist. Qui trovi sempre i tuoi titoli preferiti.',en:'Click the ★ star next to any stock to save it to your Watchlist. Your favorite stocks are always here.'}),
