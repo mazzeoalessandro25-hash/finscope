@@ -18992,7 +18992,7 @@ const TUTO = (() => {
     document.getElementById('tut-box').style.display = 'block';
 
     // Se c'è un cambio pagina aspetta più a lungo (dati potrebbero non essere pronti)
-    setTimeout(_position, s.page ? 450 : 100);
+    setTimeout(_position, s.page ? 250 : 50);
   }
 
   function _position() {
@@ -19035,7 +19035,7 @@ const TUTO = (() => {
     }
 
     // Desktop: scroll first, then position after scroll settles
-    el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    el.scrollIntoView({ behavior: 'instant', block: 'nearest' });
     setTimeout(() => {
       const rect = el.getBoundingClientRect();
       spotlight.style.display = 'block';
@@ -19078,7 +19078,7 @@ const TUTO = (() => {
 
       box.style.left = left + 'px';
       box.style.top  = top  + 'px';
-    }, 350);
+    }, 120);
   }
 
   function _close() {
