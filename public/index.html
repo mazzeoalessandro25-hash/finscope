@@ -18838,8 +18838,8 @@ const TUTORIAL_STEPS = [
   },
   // ── 9. SCREENER — STOCK CLICK ───────────────────────────────────
   {
-    // Target la prima riga della tabella (piccola) invece dell'intera table
-    target: () => document.getElementById('sc-body')?.querySelector('tr:first-child') || document.getElementById('sc-body'),
+    // Target la prima riga; se non ancora caricata, usa il selettore mercato
+    target: () => document.getElementById('sc-body')?.querySelector('tr:first-child') || document.getElementById('sc-idx-select'),
     title: () => _L({it:'📄 Apri la scheda di un titolo',en:'📄 Open a stock\'s detail'}),
     desc: () => _L({it:'Clicca sul nome di qualsiasi titolo nella tabella per aprire la sua pagina completa: grafico, dati fondamentali, FinEdge Score, insider trading e molto altro.',en:'Click any stock name in the table to open its full page: chart, fundamental data, FinEdge Score, insider transactions and more.'}),
     location: () => _L({it:'Screener › Tabella titoli',en:'Screener › Stock table'}),
@@ -18866,7 +18866,7 @@ const TUTORIAL_STEPS = [
   },
   // ── 12. PORTFOLIO OVERVIEW ──────────────────────────────────────
   {
-    target: () => document.getElementById('port-panel-overview'),
+    target: () => document.getElementById('port-panel-overview')?.querySelector('.ch') || document.getElementById('port-panel-overview'),
     title: () => _L({it:'🍩 Panoramica portafoglio',en:'🍩 Portfolio overview'}),
     desc: () => _L({it:'Il grafico a torta mostra la distribuzione dei tuoi investimenti. Sotto trovi il P&L totale, il valore di mercato e la variazione giornaliera.',en:'The pie chart shows your investment distribution. Below you find total P&L, market value and daily change.'}),
     location: () => _L({it:'Portafoglio › Panoramica',en:'Portfolio › Overview'}),
@@ -18993,8 +18993,8 @@ const TUTO = (() => {
     document.getElementById('tut-overlay').style.display = 'block';
     document.getElementById('tut-box').style.display = 'block';
 
-    // Position after DOM has settled and box has its final height
-    setTimeout(_position, 100);
+    // Se c'è un cambio pagina aspetta più a lungo (dati potrebbero non essere pronti)
+    setTimeout(_position, s.page ? 450 : 100);
   }
 
   function _position() {
@@ -19036,7 +19036,7 @@ const TUTO = (() => {
       return; // CSS handles box position
     }
 
-    // Desktop: scroll first, then position after scroll settles (same delay as mobile)
+    // Desktop: scroll first, then position after scroll settles
     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     setTimeout(() => {
       const rect = el.getBoundingClientRect();
