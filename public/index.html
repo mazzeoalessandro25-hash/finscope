@@ -18818,12 +18818,11 @@ const TUTORIAL_STEPS = [
   },
   // ── 7. GLOBAL INDICES ───────────────────────────────────────────
   {
-    // Target l'header della card per non avere uno spotlight alto tutta la pagina
-    target: () => document.getElementById('idx-list')?.closest('.card')?.querySelector('.ch,.ct') || document.getElementById('idx-list')?.closest('.card'),
+    target: () => document.getElementById('idx-list')?.closest('.card'),
     title: () => _L({it:'🌍 Indici globali',en:'🌍 Global indices'}),
     desc: () => _L({it:'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei e molti altri indici in un\'unica lista. Clicca per aprire il grafico storico di ciascuno.',en:'S&P 500, NASDAQ, DAX, FTSE MIB, Nikkei and many more in one list. Click to open the historical chart for each.'}),
     location: () => _L({it:'Dashboard › Indici globali',en:'Dashboard › Global indices'}),
-    pos: 'bottom',
+    pos: 'left',
     page: 'dashboard'
   },
   // ── 8. SCREENER ─────────────────────────────────────────────────
