@@ -3994,8 +3994,82 @@ if(window.guestMode){
     document.querySelectorAll('.page').forEach(function(p){
       p.style.marginTop='160px';
     });
+
+    // Modal conversione — appare dopo 60 secondi, una volta per sessione
+    if(!sessionStorage.getItem('fe_guest_modal_shown')){
+      setTimeout(function(){
+        if(window.guestMode&&!document.getElementById('guest-conv-modal')){
+          sessionStorage.setItem('fe_guest_modal_shown','1');
+          var overlay=document.createElement('div');
+          overlay.id='guest-conv-modal';
+          overlay.style.cssText='position:fixed;inset:0;z-index:9998;background:rgba(10,18,35,.75);'+
+            'display:flex;align-items:center;justify-content:center;padding:20px;'+
+            'backdrop-filter:blur(4px);animation:gcm-in .3s ease;';
+          overlay.innerHTML=
+            '<div style="background:#fff;border-radius:20px;max-width:460px;width:100%;overflow:hidden;'+
+            'box-shadow:0 24px 64px rgba(0,0,0,.35);animation:gcm-scale .3s ease;">'+
+              // Header blu
+              '<div style="background:linear-gradient(135deg,#1A56C4,#1448A8);padding:28px 32px 24px;">'+
+                '<p style="margin:0 0 4px;font-size:22px;font-weight:800;color:#fff;letter-spacing:-.5px;">'+
+                  'Fin<span style="color:#93c5fd;">Edge</span>'+
+                '</p>'+
+                '<p style="margin:0;font-size:13px;color:rgba(255,255,255,.7);">Il tuo portafoglio, sempre sotto controllo</p>'+
+              '</div>'+
+              // Body
+              '<div style="padding:24px 32px 28px;">'+
+                '<p style="margin:0 0 16px;font-size:16px;font-weight:700;color:#0F1C2E;letter-spacing:-.3px;">'+
+                  'Registrati gratis e sblocca il portafoglio'+
+                '</p>'+
+                '<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px;">'+
+                  '<div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#4A6080;">'+
+                    '<span style="width:20px;height:20px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">✓</span>'+
+                    'Portafoglio live con P&amp;L in tempo reale'+
+                  '</div>'+
+                  '<div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#4A6080;">'+
+                    '<span style="width:20px;height:20px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">✓</span>'+
+                    'Risk analytics: Sharpe, VaR, drawdown'+
+                  '</div>'+
+                  '<div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#4A6080;">'+
+                    '<span style="width:20px;height:20px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">✓</span>'+
+                    'Watchlist, alert prezzi e recap giornaliero'+
+                  '</div>'+
+                  '<div style="display:flex;align-items:center;gap:10px;font-size:13px;color:#4A6080;">'+
+                    '<span style="width:20px;height:20px;border-radius:50%;background:#D1FAE5;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;">✓</span>'+
+                    'Completamente gratuito — nessuna carta richiesta'+
+                  '</div>'+
+                '</div>'+
+                '<button onclick="document.getElementById(\'guest-conv-modal\').remove();openAuthModal();" '+
+                  'style="width:100%;background:linear-gradient(135deg,#1A56C4,#1448A8);color:#fff;border:none;'+
+                  'border-radius:10px;padding:13px;font-size:15px;font-weight:700;cursor:pointer;'+
+                  'font-family:\'Plus Jakarta Sans\',sans-serif;letter-spacing:-.2px;transition:opacity .15s;"'+
+                  ' onmouseover="this.style.opacity=\'.88\'" onmouseout="this.style.opacity=\'1\'">'+
+                  'Crea account gratuito \u2192'+
+                '</button>'+
+                '<button onclick="document.getElementById(\'guest-conv-modal\').remove();" '+
+                  'style="width:100%;background:none;border:none;color:#8499B0;font-size:12px;'+
+                  'cursor:pointer;padding:10px;font-family:\'Plus Jakarta Sans\',sans-serif;margin-top:4px;">'+
+                  'Continua come ospite'+
+                '</button>'+
+              '</div>'+
+            '</div>';
+          // Chiudi cliccando fuori
+          overlay.addEventListener('click',function(e){
+            if(e.target===overlay)overlay.remove();
+          });
+          document.body.appendChild(overlay);
+        }
+      },60000);
+    }
   })();
 }
+
+// Animazioni modal conversione
+(function(){
+  var s=document.createElement('style');
+  s.textContent='@keyframes gcm-in{from{opacity:0}to{opacity:1}}'+
+    '@keyframes gcm-scale{from{transform:scale(.93);opacity:0}to{transform:scale(1);opacity:1}}';
+  document.head.appendChild(s);
+})();
 
 
 const API='/api/quote';
