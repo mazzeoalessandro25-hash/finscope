@@ -18883,8 +18883,7 @@ const TUTORIAL_STEPS = [
   },
   // ── 14. MARKET SUMMARY ──────────────────────────────────────────
   {
-    // Target l'header della card (piccolo) invece dell'intero pannello (580px)
-    target: () => document.querySelector('#port-daily-outer .port-analysis-card > div:first-child') || document.getElementById('port-daily-outer'),
+    target: () => document.getElementById('port-daily-outer'),
     title: () => _L({it:'📊 Riepilogo Mercati',en:'📊 Market Summary'}),
     desc: () => _L({it:'Ogni giorno FinEdge genera un briefing AI sui mercati legato ai titoli del tuo portafoglio: performance, notizie rilevanti e prossimi earnings.',en:'Every day FinEdge generates an AI market briefing tied to your portfolio stocks: performance, relevant news and upcoming earnings.'}),
     location: () => _L({it:'Portafoglio › Riepilogo mercati',en:'Portfolio › Market summary'}),
