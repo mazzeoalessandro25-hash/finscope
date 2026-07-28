@@ -18891,6 +18891,7 @@ const TUTORIAL_STEPS = [
     pos: 'bottom',
     page: 'portafoglio',
     setup: () => {
+      window.scrollTo(0, 0);
       const el = document.getElementById('port-daily-outer');
       if (el && el.style.display === 'none') { el.style.display = 'block'; el._tut_forced = true; }
     },
