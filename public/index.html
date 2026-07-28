@@ -18791,12 +18791,11 @@ const TUTORIAL_STEPS = [
   },
   // ── 4. CHARTS ───────────────────────────────────────────────────
   {
-    // Target solo la barra controlli del primo grafico (più piccola del chart intero)
-    target: () => document.querySelector('.dash-charts .card:first-child .ch') || document.querySelector('.dash-charts .card:first-child'),
+    target: () => document.querySelector('.dash-charts .card:first-child'),
     title: () => _L({it:'📈 Grafici interattivi',en:'📈 Interactive charts'}),
     desc: () => _L({it:'Due grafici configurabili: scegli qualsiasi indice, azione o crypto dal menu a tendina. Puoi scegliere candele o linea e cambiare il periodo.',en:'Two configurable charts: choose any index, stock or crypto from the dropdown. Switch between candles and line, and change the period.'}),
     location: () => _L({it:'Dashboard › Grafici',en:'Dashboard › Charts'}),
-    pos: 'bottom',
+    pos: 'right',
     page: 'dashboard'
   },
   // ── 5. MOVERS ───────────────────────────────────────────────────
