@@ -19036,9 +19036,11 @@ const TUTO = (() => {
       return; // CSS handles box position
     }
 
-    // Desktop: scroll first, then position after scroll settles
+    // Desktop: sblocca overflow temporaneamente per permettere lo scroll, poi riposiziona
+    document.body.style.overflow = '';
     el.scrollIntoView({ behavior: 'instant', block: 'nearest' });
     setTimeout(() => {
+      document.body.style.overflow = 'hidden';
       const rect = el.getBoundingClientRect();
       spotlight.style.display = 'block';
       spotlight.style.top    = (rect.top  - PAD) + 'px';
