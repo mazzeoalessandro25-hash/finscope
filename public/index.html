@@ -11303,8 +11303,10 @@ async function loadPortTargets(){
   const totalCurValEUR=rows.reduce((s,r)=>s+(_toEUR(r.curVal,r.item.currency)||0),0);
   const totalTargetValEUR=coverageCount>0?rows.filter(r=>r.targetVal!=null).reduce((s,r)=>s+(_toEUR(r.targetVal,r.item.currency)||0),0):null;
   const totalInvEUR2=rows.reduce((s,r)=>s+(_toEUR(r.invested,r.item.currency)||0),0);
-  const totalGainEUR=totalTargetValEUR!=null?totalTargetValEUR-totalCurValEUR:null;
-  const totalUpsideEUR=totalCurValEUR>0&&totalGainEUR!=null?(totalGainEUR/totalCurValEUR*100):null;
+  // Valore corrente dei soli titoli coperti da target analisti (base corretta per calcolo upside)
+  const coveredCurValEUR=rows.filter(r=>r.targetVal!=null).reduce((s,r)=>s+(_toEUR(r.curVal,r.item.currency)||0),0);
+  const totalGainEUR=totalTargetValEUR!=null?totalTargetValEUR-coveredCurValEUR:null;
+  const totalUpsideEUR=coveredCurValEUR>0&&totalGainEUR!=null?(totalGainEUR/coveredCurValEUR*100):null;
   const totalPnlEUR2=totalCurValEUR-totalInvEUR2;
   const totalPnlPct2=totalInvEUR2>0?(totalPnlEUR2/totalInvEUR2*100):null;
 
@@ -11370,7 +11372,7 @@ async function loadPortTargets(){
         <!-- Col 4: Guadagno potenziale in EUR -->
         <div style="text-align:right;min-width:70px">
           <div style="font-family:var(--fm);font-size:12px;font-weight:600;color:${gainEUR2==null?'var(--t3)':gainEUR2>=0?'var(--g)':'var(--r)'}">${gainEUR2!=null?(gainEUR2>=0?'+':'')+'€'+fmt(gainEUR2,0):'—'}</div>
-          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${gainFromCostPct!=null?(gainFromCostPct>=0?'+':'')+fmt(gainFromCostPct,1)+'% '+_L({it:'dal costo',en:'from cost'}):gainEUR2!=null?_L({it:'dal prezzo att.',en:'from cur. price'}):''}</div>
+          <div style="font-size:8px;color:var(--t3);font-family:var(--fm)">${r.upside!=null?(r.upside>=0?'+':'')+fmt(r.upside,1)+'% '+_L({it:'dal prezzo att.',en:'from cur. price'}):''}</div>
         </div>
         <!-- Col 5: Break-even netto -->
         <div style="text-align:right;min-width:70px">
