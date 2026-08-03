@@ -16631,8 +16631,8 @@ function renderStressTest(){
     </div>
     <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${_t('stress.scenariosTitle')}</div>
     ${scenarios.map(s=>{
-      const portChange=portfolioBeta*s.market;
-      const newValEUR=totalValEUR*(1+portChange/100);
+      const portChange=Math.max(portfolioBeta*s.market,-100);
+      const newValEUR=Math.max(totalValEUR*(1+portChange/100),0);
       const deltaEUR=newValEUR-totalValEUR;
       const barW=Math.min(Math.abs(portChange)/45*100,100);
       const isPos=portChange>=0;
@@ -16651,8 +16651,8 @@ function renderStressTest(){
     <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--bd)">
       <div style="font-size:10px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px">${_t('stress.histTitle')}</div>
       ${historicalScenarios.map(s=>{
-        const portChange=portfolioBeta*s.market;
-        const newValEUR=totalValEUR*(1+portChange/100);
+        const portChange=Math.max(portfolioBeta*s.market,-100);
+        const newValEUR=Math.max(totalValEUR*(1+portChange/100),0);
         const deltaEUR=newValEUR-totalValEUR;
         const barW=Math.min(Math.abs(portChange)/65*100,100);
         return`<div style="display:grid;grid-template-columns:1fr 55px 1fr 110px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)">
