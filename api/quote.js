@@ -347,19 +347,43 @@ export default async function handler(req, res) {
       if (!d) return res.status(404).json({ error: 'no data' });
 
       // Fallback analisti via Finnhub per titoli europei (Yahoo non restituisce targetMeanPrice per listing secondari)
+      // Mapping ticker EU (senza suffisso) → ADR USA per Finnhub + flag needsUsdToEur per conversione valuta
+      const EU_ADR_MAP = {
+        'NOV':    { adr: 'NVO',   usdToEur: true  }, // Novo Nordisk Frankfurt → NYSE ADR (target in USD → converti in EUR)
+        'NOVO-B': { adr: 'NVO',   usdToEur: true  }, // Novo Nordisk Copenhagen
+        'ASML':   { adr: 'ASML',  usdToEur: false }, // già quotata in USD su Nasdaq
+      };
       let targetPrice = d.financialData?.targetMeanPrice ?? null;
       let rec         = d.financialData?.recommendationKey ?? null;
       const isEuropean = /\.(MI|PA|DE|AS|MC|SW|BR|VI|LS|OL|ST|HE|CO|L|IR)$/i.test(symbol);
       if (targetPrice === null && isEuropean && process.env.FINNHUB_KEY) {
         try {
           const baseSym = symbol.replace(/\.[^.]+$/, '');
-          const [ptRes, recRes] = await Promise.all([
-            fetch(`https://finnhub.io/api/v1/stock/price-target?symbol=${encodeURIComponent(baseSym)}&token=${process.env.FINNHUB_KEY}`, { signal: AbortSignal.timeout(4000) }),
-            fetch(`https://finnhub.io/api/v1/recommendation?symbol=${encodeURIComponent(baseSym)}&token=${process.env.FINNHUB_KEY}`, { signal: AbortSignal.timeout(4000) }),
+          const adrEntry = EU_ADR_MAP[baseSym];
+          const finnhubSym = adrEntry ? adrEntry.adr : baseSym;
+          const needsConversion = adrEntry?.usdToEur ?? false;
+
+          // Fetch tasso EUR/USD in parallelo solo se serve la conversione
+          const [ptRes, recRes, fxRes] = await Promise.all([
+            fetch(`https://finnhub.io/api/v1/stock/price-target?symbol=${encodeURIComponent(finnhubSym)}&token=${process.env.FINNHUB_KEY}`, { signal: AbortSignal.timeout(4000) }),
+            fetch(`https://finnhub.io/api/v1/recommendation?symbol=${encodeURIComponent(finnhubSym)}&token=${process.env.FINNHUB_KEY}`, { signal: AbortSignal.timeout(4000) }),
+            needsConversion
+              ? fetch('https://query1.finance.yahoo.com/v8/finance/chart/EURUSD=X?interval=1d&range=1d', { headers: { 'User-Agent': 'Mozilla/5.0' }, signal: AbortSignal.timeout(4000) })
+              : Promise.resolve(null),
           ]);
+
           if (ptRes.ok) {
             const pt = await ptRes.json();
-            if (pt?.targetMean > 0) targetPrice = pt.targetMean;
+            if (pt?.targetMean > 0) {
+              let tp = pt.targetMean;
+              // Converti da USD a EUR se il target viene dall'ADR americano
+              if (needsConversion && fxRes?.ok) {
+                const fxData = await fxRes.json();
+                const eurUsd = fxData?.chart?.result?.[0]?.meta?.regularMarketPrice ?? null;
+                if (eurUsd > 0) tp = tp / eurUsd;
+              }
+              targetPrice = tp;
+            }
           }
           if (rec === null && recRes.ok) {
             const recData = await recRes.json();
