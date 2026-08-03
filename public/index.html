@@ -3069,17 +3069,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
               <button id="port-refresh-btn" onclick="refreshPortfolio()" style="background:none;border:1px solid var(--bd);border-radius:6px;cursor:pointer;color:var(--t3);font-size:11px;padding:3px 8px;font-family:var(--fm)" data-i18n="port.daily.refresh">↻ Aggiorna</button>
             </div>
           </div>
-          <!-- Banner earnings imminenti (≤7g) — popolato da loadEarningsForPortfolio -->
-          <div id="port-earn-alert" style="display:none;margin-bottom:14px;padding:10px 13px;border-radius:7px;background:rgba(217,119,6,.07);border:1px solid rgba(217,119,6,.4)">
-            <div style="font-size:11px;font-weight:700;color:#D97706;font-family:var(--fm);margin-bottom:6px;letter-spacing:.2px">⚡ Earnings in arrivo questa settimana</div>
-            <div id="port-earn-alert-list" style="font-size:11px;color:var(--t2);font-family:var(--fm);line-height:1.8"></div>
-          </div>
           <div id="port-daily-text" style="font-size:12px;color:var(--t2);line-height:1.6">
             <div class="ld" style="padding:8px 0" data-i18n="port.news.loading">Raccolta notizie in corso…</div>
-          </div>
-          <div id="port-earnings-section" style="margin-top:16px;border-top:1px solid var(--bd);padding-top:14px;display:none">
-            <div style="font-size:11px;font-weight:700;color:var(--t);font-family:var(--fm);margin-bottom:8px;letter-spacing:.2px" data-i18n="port.daily.earnings">📅 Prossimi Earnings in Portafoglio</div>
-            <div id="port-earnings-list" style="font-size:11px;color:var(--t2);line-height:1.7"></div>
           </div>
         </div>
       </div>
@@ -9342,51 +9333,8 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
       : _L({it:`Leggera correzione. ${avgIdx<0?'Il ribasso è in linea col tono generale dei mercati.':'Monitorare i titoli con maggiore debolezza relativa.'}`,en:`Minor correction. ${avgIdx<0?'The decline aligns with the general market tone.':'Monitor holdings showing relative weakness.'}`});
   }
 
-  // ── SEZIONE 5: Earnings ──
-  let earningsText='';
-  if(earningsCtx){
-    const{upcoming=[],recent=[]}=earningsCtx;
-    const _eNow=new Date();
-    upcoming.forEach(e=>{
-      const dt=new Date(e.date+'T12:00:00');
-      const diffDays=Math.round((dt-_eNow)/86400000);
-      const _eLoc=currentLang==='en'?'en-GB':'it-IT';
-      const whenStr=diffDays===0?_L({it:'oggi',en:'today'}):diffDays===1?_L({it:'domani',en:'tomorrow'}):_L({it:`tra ${diffDays} giorni (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`,en:`in ${diffDays} days (${dt.toLocaleDateString(_eLoc,{weekday:'long',day:'numeric',month:'long'})})`});
-      const timingStr=e.time==='bmo'
-        ?`<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(217,119,6,.15);color:#D97706;font-weight:600">☀ ${_L({it:'pre-apertura',en:'pre-market'})}</span>`
-        :`<span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(26,86,196,.12);color:#1A56C4;font-weight:600">🌙 ${_L({it:'post-chiusura',en:'post-close'})}</span>`;
-      const nameStr=e.name&&e.name!==e.symbol?` (${e.name})`:'';
-      earningsText+=`• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'riporterà',en:'reports'})} <strong>${whenStr}</strong> ${timingStr}\n`;
-    });
-    recent.forEach(e=>{
-      const dt=new Date(e.date+'T12:00:00');
-      const diffDays=Math.round((_eNow-dt)/86400000);
-      const whenStr=diffDays===0?_L({it:'oggi',en:'today'}):diffDays===1?_L({it:'ieri',en:'yesterday'}):_L({it:`${diffDays} giorni fa`,en:`${diffDays} days ago`});
-      const nameStr=e.name&&e.name!==e.symbol?` (${e.name})`:'';
-      let resultsStr='';
-      if(e.epsActual!==null&&e.epsActual!==undefined){
-        const beat=e.epsEstimate!=null?e.epsActual-e.epsEstimate:null;
-        const beatPct=beat!=null&&e.epsEstimate!==0?beat/Math.abs(e.epsEstimate)*100:null;
-        const beatBadge=beatPct!=null?(beatPct>=0?` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(5,150,105,.12);color:#059669;font-weight:600">▲ beat +${beatPct.toFixed(1)}%</span>`:` <span style="font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(220,38,38,.1);color:#DC2626;font-weight:600">▼ miss ${beatPct.toFixed(1)}%</span>`):'';
-        resultsStr+=`EPS <strong>$${e.epsActual.toFixed(2)}</strong>`;
-        if(e.epsEstimate!=null) resultsStr+=` vs ${_L({it:'stima',en:'est.'})} $${e.epsEstimate.toFixed(2)}`;
-        resultsStr+=beatBadge;
-      }
-      if(e.revenueActual!=null){
-        const rev=e.revenueActual;
-        const revFmt=rev>=1e12?`$${(rev/1e12).toFixed(2)}T`:rev>=1e9?`$${(rev/1e9).toFixed(1)}B`:`$${(rev/1e6).toFixed(0)}M`;
-        if(resultsStr) resultsStr+=' · ';
-        resultsStr+=`Revenue <strong>${revFmt}</strong>`;
-      }
-      const quarterStr=e.quarter?` — ${e.quarter}${e.fiscalYear?' '+e.fiscalYear:''}`:'';
-      if(resultsStr) earningsText+=`• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr}: ${resultsStr}\n`;
-      else earningsText+=`• <strong>${e.symbol}</strong>${nameStr} ${_L({it:'ha riportato',en:'reported'})} ${whenStr}${quarterStr} — ${_L({it:'dati in attesa',en:'data pending'})}\n`;
-    });
-  }
-
   return [
     macro.trim()        ?`**${_L({it:'Cosa succede oggi',en:"Today's Market"})}**\n${macro.trim()}`:'',
-    earningsText.trim() ?`**📅 ${_L({it:'Earnings',en:'Earnings'})}**\n${earningsText.trim()}`:'',
     `**${_L({it:'Il tuo portafoglio',en:'Your Portfolio'})}**\n${portText.trim()}`,
     evidenzaText.trim() ?`**${_L({it:'Titoli in evidenza',en:'Stocks in Focus'})}**\n${evidenzaText.trim()}`:'',
     `**${_L({it:'Sintesi',en:'Summary'})}**\n${sintesi}`,
@@ -9445,6 +9393,29 @@ function renderPortDailyText(el, payload){
 
   const ICONS={'Cosa succede oggi':'🌐',"Today's Market":'🌐','Il tuo portafoglio':'📋','Your Portfolio':'📋','Earnings':'📅'};
 
+  // Mini-grid indici principali (dati già disponibili in indicesMap — zero chiamate aggiuntive)
+  const _mkIdxPill=(label,d)=>{
+    const chg=d?.price&&d?.prev?(d.price-d.prev)/d.prev*100:null;
+    if(chg===null)return '';
+    const up=chg>=0;
+    return`<div style="display:flex;flex-direction:column;align-items:center;padding:5px 9px;background:${up?'rgba(5,150,105,.07)':'rgba(220,38,38,.07)'};border:1px solid ${up?'rgba(5,150,105,.2)':'rgba(220,38,38,.2)'};border-radius:7px;min-width:56px">
+      <div style="font-size:8px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap">${label}</div>
+      <div style="font-family:var(--fm);font-size:11px;font-weight:700;color:${up?'#059669':'#DC2626'};margin-top:2px">${up?'+':''}${chg.toFixed(2)}%</div>
+    </div>`;
+  };
+  const _fxPill=(typeof _lastFxRate!=='undefined'&&_lastFxRate)
+    ?`<div style="display:flex;flex-direction:column;align-items:center;padding:5px 9px;background:rgba(26,86,196,.07);border:1px solid rgba(26,86,196,.2);border-radius:7px;min-width:56px"><div style="font-size:8px;color:var(--t3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.4px;white-space:nowrap">EUR/USD</div><div style="font-family:var(--fm);font-size:11px;font-weight:700;color:var(--b);margin-top:2px">${_lastFxRate.toFixed(4)}</div></div>`
+    :'';
+  const _idxPills=[
+    _mkIdxPill('S&P 500',indicesMap['^GSPC']),
+    _mkIdxPill('Nasdaq',indicesMap['^IXIC']),
+    _mkIdxPill('Dow',indicesMap['^DJI']),
+    _mkIdxPill('Gold',indicesMap['GC=F']),
+    _mkIdxPill('Oil (WTI)',indicesMap['CL=F']),
+    _fxPill
+  ].filter(Boolean).join('');
+  const idxGridHtml=_idxPills?`<div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--bd)">${_idxPills}</div>`:'';
+
   // Sezioni di testo normali (escludo Evidenza e Sintesi — trattate separatamente)
   const textSectionsHtml=sections
     .filter(s=>!s.title||(!_isEvidenza(s.title)&&!_isSintesi(s.title)))
@@ -9498,7 +9469,7 @@ function renderPortDailyText(el, payload){
     <div style="font-size:12px;color:var(--t2);line-height:1.6">${_esc(_sintesiSec.content)}</div>
   </div>`:'';
 
-  el.innerHTML=`${textSectionsHtml}${moversHtml}${sintesiHtml}`;
+  el.innerHTML=`${idxGridHtml}${textSectionsHtml}${moversHtml}${sintesiHtml}`;
 }
 
 function _timeAgo(ts){
