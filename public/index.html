@@ -9758,9 +9758,11 @@ function renderPortRisk(items,quotes){
     const cat=item.cat||detectPortCat(item.sym);
     cats[cat]=(cats[cat]||0)+1;
   });
-  const total=usdVal+eurVal;
-  const usdPct=total>0?Math.round(usdVal/total*100):0;
-  const eurPct=total>0?Math.round(eurVal/total*100):0;
+  // Converti EUR in USD per avere una base comune (coerente con renderPortAlloc)
+  const _fxRisk=_lastFxRate||1.08;
+  const totalUSD=usdVal+eurVal*_fxRisk;
+  const usdPct=totalUSD>0?Math.round(usdVal/totalUSD*100):0;
+  const eurPct=totalUSD>0?Math.round(eurVal*_fxRisk/totalUSD*100):0;
   const divers=Object.keys(cats).length;
   el.innerHTML=`
     <div class="port-risk-item"><span class="port-pos-lbl">Esposizione USD</span><span class="port-pos-val">${usdPct}%</span></div>
