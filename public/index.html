@@ -10839,10 +10839,10 @@ function renderPortAnalysis(portItems, quotes){
 
     // ── Concentrazione singolo titolo ────────────────────────────────────
     if(maxConc>0.40){
-      const topSym=items.find(it=>totalInv>0&&it.invested/totalInv>=maxConc-0.001)?.sym||'';
+      const topSym=items.reduce((a,b)=>b.mktVal>a.mktVal?b:a).sym||'';
       recs.push({cls:'bad',txt:_L({it:`⚠ ${topSym} pesa ${fmt(maxConc*100,1)}% del portafoglio — concentrazione eccessiva. Regola generale: nessun titolo oltre il 20-25%.`,en:`⚠ ${topSym} represents ${fmt(maxConc*100,1)}% of the portfolio — excessive concentration. General rule: no single holding above 20-25%.`})});
     } else if(maxConc>0.25){
-      const topSym=items.find(it=>totalInv>0&&it.invested/totalInv>=maxConc-0.001)?.sym||'';
+      const topSym=items.reduce((a,b)=>b.mktVal>a.mktVal?b:a).sym||'';
       recs.push({cls:'warn',txt:_L({it:`ℹ ${topSym} pesa ${fmt(maxConc*100,1)}% — posizione significativa. Monitora la correlazione con il resto del portafoglio.`,en:`ℹ ${topSym} represents ${fmt(maxConc*100,1)}% — a significant position. Monitor its correlation with the rest of the portfolio.`})});
     }
 
@@ -10886,8 +10886,8 @@ function renderPortAnalysis(portItems, quotes){
   const dash=score/100*C2;
 
   // --- Calcolo segnali acquisto aggregati portafoglio ---
-  let avgPnlPct=0,avgUpside=0,avgFinScore=0,avgDailyChg=0;
-  let totalScoreWeight=0,nWithUpside=0;
+  let avgPnlPct=0,avgFinScore=0,avgDailyChg=0;
+  let totalScoreWeight=0;
   portItems.forEach((item,i)=>{
     const q=quotes[i];
     const sd2=scSummary[item.sym]||scData[item.sym];
@@ -10902,8 +10902,6 @@ function renderPortAnalysis(portItems, quotes){
     // Qualità: normalizza sul peso effettivo dei titoli con dati disponibili
     const fss2=sd2?calcFinEdgeScore(sd2,q):null;
     if(fss2?.total!=null){avgFinScore+=fss2.total*w;totalScoreWeight+=w;}
-    const target2=(q?.target||sd2?.targetPrice)||null;
-    if(target2&&curP>0){avgUpside+=((target2-curP)/curP*100)*w;nWithUpside++;}
   });
   // Normalizza il FinEdge Score sul peso effettivo dei titoli con dati
   if(totalScoreWeight>0) avgFinScore=avgFinScore/totalScoreWeight;
@@ -11062,6 +11060,7 @@ function renderPortAnalysis(portItems, quotes){
             let sig,sigCol,sigBg;
             if(bad===0&&ok>=3){sig=_t('sig.buy');sigCol='#065F46';sigBg='rgba(5,150,105,.12)';}
             else if(bad===0&&ok>=2){sig=_t('sig.hold');sigCol='#047857';sigBg='rgba(16,185,129,.10)';}
+            else if(bad>=3){sig=_L({it:'RIDUCI',en:'REDUCE'});sigCol='#7F0000';sigBg='rgba(127,0,0,.10)';}
             else if(bad>=2){sig=_t('macro.signal.watch');sigCol='#B91C1C';sigBg='rgba(220,38,38,.10)';}
             else{sig=_t('macro.signal.neutral');sigCol='#92400E';sigBg='rgba(245,158,11,.10)';}
             return`<div style="background:${sigBg};border:1px solid var(--bd);border-radius:8px;padding:9px 10px">
@@ -11159,16 +11158,23 @@ async function runWhatIf(){
     const [newQ,newSum]=await Promise.all([api(newSym),api(newSym,'summary')]);
     if(!newQ?.price){el.innerHTML=`<div style="font-size:11px;color:var(--r);font-family:var(--fm)">${_t('val.ticker.pre')}${newSym} ${_t('val.ticker.notfound2')}</div>`;return;}
     const allS2=STOCKS.concat(customStocks);
-    const totalInv2=portfolio.reduce((s,item)=>s+item.qty*item.buyPrice,0);
-    const posWeight=totalInv2>0?(pos.qty*pos.buyPrice)/totalInv2:0;
-    // Current weighted beta & yield
-    const curBeta=_lastPortQuotes.length===portfolio.length
-      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const b=q?.beta??(scSummary[item.sym]||scData[item.sym])?.beta??1;return s+b*(item.qty*item.buyPrice);},0)/totalInv2
+    // Pesi su valore corrente di mercato (coerenti con analisi principale, non sul prezzo di acquisto)
+    const fxRWI=_lastFxRate||1.08;
+    const hasQuotes=_lastPortQuotes.length===portfolio.length;
+    const totalMktWI=hasQuotes
+      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const p=q?.price??item.buyPrice;const isE=(q?.currency||item.currency||'USD')==='EUR';return s+item.qty*p*(isE?fxRWI:1);},0)||1
+      :portfolio.reduce((s,item)=>s+item.qty*item.buyPrice,0)||1;
+    const posIdx=portfolio.indexOf(pos);
+    const oldQ=hasQuotes?_lastPortQuotes[posIdx]:null;
+    const posPrice=oldQ?.price??pos.buyPrice;
+    const isPosEUR=(oldQ?.currency||pos.currency||'USD')==='EUR';
+    const posWeight=(pos.qty*posPrice*(isPosEUR?fxRWI:1))/totalMktWI;
+    const curBeta=hasQuotes
+      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];const b=q?.beta??(scSummary[item.sym]||scData[item.sym])?.beta??1;const p=q?.price??item.buyPrice;const isE=(q?.currency||item.currency||'USD')==='EUR';return s+b*(item.qty*p*(isE?fxRWI:1));},0)/totalMktWI
       :1;
-    const curYield=_lastPortQuotes.length===portfolio.length
-      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];let y=q?.divYield??null;if(y===null){const sd=(scSummary[item.sym]||scData[item.sym]);const r=sd?.dividend??0;const n=r>1?r/100:r;y=n<=0.25?n:0;}return s+y*(item.qty*item.buyPrice);},0)/totalInv2
+    const curYield=hasQuotes
+      ?portfolio.reduce((s,item,i)=>{const q=_lastPortQuotes[i];let y=q?.divYield??null;if(y===null){const sd=(scSummary[item.sym]||scData[item.sym]);const r=sd?.dividend??0;const n=r>1?r/100:r;y=n<=0.25?n:0;}const p=q?.price??item.buyPrice;const isE=(q?.currency||item.currency||'USD')==='EUR';return s+y*(item.qty*p*(isE?fxRWI:1));},0)/totalMktWI
       :0;
-    const oldQ=_lastPortQuotes[portfolio.indexOf(pos)];
     const oldBeta=oldQ?.beta??(scSummary[oldSym]||scData[oldSym])?.beta??1;
     const oldYieldVal=oldQ?.divYield??0;
     const newBetaVal=newQ?.beta??newSum?.beta??1;
