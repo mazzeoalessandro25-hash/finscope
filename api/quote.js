@@ -345,6 +345,42 @@ export default async function handler(req, res) {
     if (type === 'summary') {
       const d = await fetchQuoteSummary(symbol);
       if (!d) return res.status(404).json({ error: 'no data' });
+
+      // Fallback analisti via Finnhub per titoli europei (Yahoo non restituisce targetMeanPrice per listing secondari)
+      let targetPrice = d.financialData?.targetMeanPrice ?? null;
+      let rec         = d.financialData?.recommendationKey ?? null;
+      const isEuropean = /\.(MI|PA|DE|AS|MC|SW|BR|VI|LS|OL|ST|HE|CO|L|IR)$/i.test(symbol);
+      if (targetPrice === null && isEuropean && process.env.FINNHUB_KEY) {
+        try {
+          const baseSym = symbol.replace(/\.[^.]+$/, '');
+          const [ptRes, recRes] = await Promise.all([
+            fetch(`https://finnhub.io/api/v1/stock/price-target?symbol=${encodeURIComponent(baseSym)}&token=${process.env.FINNHUB_KEY}`, { signal: AbortSignal.timeout(4000) }),
+            fetch(`https://finnhub.io/api/v1/recommendation?symbol=${encodeURIComponent(baseSym)}&token=${process.env.FINNHUB_KEY}`, { signal: AbortSignal.timeout(4000) }),
+          ]);
+          if (ptRes.ok) {
+            const pt = await ptRes.json();
+            if (pt?.targetMean > 0) targetPrice = pt.targetMean;
+          }
+          if (rec === null && recRes.ok) {
+            const recData = await recRes.json();
+            // Finnhub restituisce array ordinato per data — prende il più recente
+            const latest = Array.isArray(recData) ? recData[0] : null;
+            if (latest) {
+              const { strongBuy = 0, buy = 0, hold = 0, sell = 0, strongSell = 0 } = latest;
+              const total = strongBuy + buy + hold + sell + strongSell;
+              if (total > 0) {
+                const score = (strongBuy * 1 + buy * 2 + hold * 3 + sell * 4 + strongSell * 5) / total;
+                if (score <= 1.5)      rec = 'strongbuy';
+                else if (score <= 2.5) rec = 'buy';
+                else if (score <= 3.5) rec = 'hold';
+                else if (score <= 4.5) rec = 'sell';
+                else                   rec = 'strongsell';
+              }
+            }
+          }
+        } catch (_) { /* fallback silenzioso */ }
+      }
+
       return res.json({
         pe:               d.summaryDetail?.trailingPE ?? null,
         forwardPE:        d.defaultKeyStatistics?.forwardPE ?? null,
@@ -353,8 +389,8 @@ export default async function handler(req, res) {
         roe:              d.financialData?.returnOnEquity ?? null,
         roa:              d.financialData?.returnOnAssets ?? null,
         dividend:         d.summaryDetail?.dividendYield ?? null,
-        targetPrice:      d.financialData?.targetMeanPrice ?? null,
-        rec:              d.financialData?.recommendationKey ?? null,
+        targetPrice,
+        rec,
         marketCap:        d.summaryDetail?.marketCap ?? null,
         eps:              d.defaultKeyStatistics?.trailingEps ?? null,
         beta:             d.summaryDetail?.beta ?? null,
