@@ -13445,25 +13445,41 @@ function parsePortCSV(text){
       }
 
     // ── REVOLUT / TRADING 212 (,, colonne Ticker/Symbol + Type/Action)
-    } else if(fmt==='revolut'||fmt==='t212'||(fmt==='auto'&&(()=>{const _h=_parseCSVRow(l0,',').map(h=>h.toLowerCase().trim());return(_h.includes('ticker')||_h.includes('symbol'))&&(_h.includes('type')||_h.includes('action'));})())){
-      const hdr=_parseCSVRow(l0,',').map(h=>h.toLowerCase().trim());
+    } else if(fmt==='revolut'||fmt==='t212'||(fmt==='auto'&&(()=>{for(let _i=0;_i<Math.min(5,lines.length);_i++){const _h=_parseCSVRow(lines[_i],',').map(h=>h.toLowerCase().trim());if((_h.includes('ticker')||_h.includes('symbol'))&&(_h.includes('type')||_h.includes('action')))return true;}return false;})())){
+      // Cerca l'intestazione nelle prime 5 righe (alcuni export hanno metadati iniziali)
+      let hdrIdx=0,hdr=[];
+      for(let _i=0;_i<Math.min(5,lines.length);_i++){
+        const _h=_parseCSVRow(lines[_i],',').map(h=>h.toLowerCase().trim());
+        if((_h.includes('ticker')||_h.includes('symbol'))&&(_h.includes('type')||_h.includes('action'))){hdrIdx=_i;hdr=_h;break;}
+      }
+      if(!hdr.length)hdr=_parseCSVRow(l0,',').map(h=>h.toLowerCase().trim());
       const iSym=hdr.findIndex(h=>h==='ticker'||h==='symbol');
-      const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('shares')||h==='qty');
+      const iQty=hdr.findIndex(h=>h.includes('quant')||h.includes('shares')||h==='qty'||h.includes('no. of'));
       const iPrice=hdr.findIndex(h=>h.includes('price')&&!h.includes('total'));
       const iDate=hdr.findIndex(h=>h.includes('date')||h==='time');
       const iType=hdr.findIndex(h=>h==='type'||h==='action');
       if(iSym>=0&&iQty>=0&&iPrice>=0){
-        for(let i=1;i<lines.length;i++){
+        // Aggrega per ticker: somma acquisti, sottrae vendite, prezzo medio ponderato
+        const aggr={};
+        for(let i=hdrIdx+1;i<lines.length;i++){
           if(!lines[i].trim())continue;
           const cols=_parseCSVRow(lines[i],',');
-          const typeVal=iType>=0?(cols[iType]||'').toUpperCase().trim():'';
-          if(typeVal&&typeVal!=='BUY'&&typeVal!=='ACQUISTO')continue;
           const sym=(cols[iSym]||'').toUpperCase().replace(/[^A-Z0-9.]/g,'');
           const qty=parseFloat((cols[iQty]||'').replace(/[^0-9.]/g,''));
           const price=parseFloat((cols[iPrice]||'').replace(/[^0-9.]/g,''));
-          const rawDate=(cols[iDate]||'').trim().split(/[T ]/)[0];
-          const date=_xlsDate(rawDate)||rawDate;
-          if(sym&&qty>0&&price>0)parsed.push({sym,qty,price,date,origName:sym});
+          if(!sym||isNaN(qty)||qty<=0||isNaN(price)||price<=0)continue;
+          const typeVal=iType>=0?(cols[iType]||'').toUpperCase().trim():'';
+          if(!aggr[sym])aggr[sym]={buyQty:0,buyTotal:0,sellQty:0,date:''};
+          if(!typeVal||typeVal==='BUY'||typeVal==='ACQUISTO'){
+            aggr[sym].buyQty+=qty;aggr[sym].buyTotal+=qty*price;
+            if(!aggr[sym].date){const rd=(cols[iDate]||'').trim().split(/[T ]/)[0];aggr[sym].date=_xlsDate(rd)||rd;}
+          } else if(typeVal==='SELL'||typeVal==='VENDITA'){
+            aggr[sym].sellQty+=qty;
+          }
+        }
+        for(const[sym,a] of Object.entries(aggr)){
+          const netQty=Math.round((a.buyQty-a.sellQty)*10000)/10000;
+          if(netQty>0&&a.buyTotal>0)parsed.push({sym,qty:netQty,price:Math.round(a.buyTotal/a.buyQty*100)/100,date:a.date,origName:sym});
         }
       }
 
