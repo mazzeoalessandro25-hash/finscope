@@ -9262,6 +9262,16 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     else if(clC<-1.5) macro+=_L({it:`Il petrolio perde terreno in modo deciso (<strong>${s(clC)}</strong>): buona notizia per il fronte inflazionistico, che potrebbe allentare la pressione sulle politiche monetarie. `,en:`Oil falls sharply (<strong>${s(clC)}</strong>): good news for the inflation front, which could ease pressure on monetary policy. `});
     else macro+=_L({it:`Il petrolio arretra (<strong>${s(clC)}</strong>), contribuendo a un quadro macro leggermente più favorevole sul versante dei prezzi. `,en:`Oil retreats (<strong>${s(clC)}</strong>), contributing to a slightly more favorable macro picture on the price front. `});
   }
+  // Frase 4: EUR/USD — impatto cambio sulle posizioni in dollari
+  if(_fxR>0.5&&_fxR<3){
+    if(_fxR>1.12) macro+=_L({it:`Sul fronte valutario, EUR/USD si attesta a <strong>${_fxR.toFixed(4)}</strong>: un euro forte riduce il rendimento in euro dei titoli quotati in dollari. Gli investitori europei con posizioni in USD devono tenere conto dell'effetto cambio nel calcolo del rendimento reale. `,en:`On the FX front, EUR/USD stands at <strong>${_fxR.toFixed(4)}</strong>: a strong euro reduces the EUR return on USD-denominated holdings. European investors with USD positions should factor in the FX effect when calculating actual returns. `});
+    else if(_fxR<1.04) macro+=_L({it:`Il dollaro si mantiene forte sull'euro (EUR/USD <strong>${_fxR.toFixed(4)}</strong>): per gli investitori europei, i titoli americani valgono di più in euro grazie all'effetto cambio favorevole, che amplifica i guadagni (e le perdite) in valuta estera. `,en:`The dollar remains strong vs the euro (EUR/USD <strong>${_fxR.toFixed(4)}</strong>): for European investors, USD holdings are worth more in EUR thanks to the favorable FX effect, which amplifies both gains and losses in foreign currency. `});
+    else macro+=_L({it:`EUR/USD a <strong>${_fxR.toFixed(4)}</strong>: il cambio è in una fascia sostanzialmente neutrale, con impatto valutario limitato sulle posizioni in dollari per gli investitori europei. `,en:`EUR/USD at <strong>${_fxR.toFixed(4)}</strong>: the exchange rate is in a broadly neutral range, with limited FX impact on USD positions for European investors. `});
+  }
+  // Frase 5: tema principale dalle notizie macro
+  if(macroNews.length>0&&macroNews[0].title){
+    macro+=_L({it:`Sul fronte delle notizie: <em>"${macroNews[0].title}"</em>${macroNews[0].publisher?' ('+macroNews[0].publisher+')':''}. `,en:`On the news front: <em>"${macroNews[0].title}"</em>${macroNews[0].publisher?' ('+macroNews[0].publisher+')':''}. `});
+  }
 
   // ── SEZIONE 2: Il tuo portafoglio ──
   let portText='';
@@ -9298,6 +9308,19 @@ function buildDailyAnalysisText(assets, totalChgUSD, totalChgPct, newsMap, macro
     else if(diff>-0.3)portText+=_L({it:'La performance è risultata in linea con l\'andamento generale degli indici. ',en:'Performance was broadly in line with the general market trend. '});
     else if(diff>-1)  portText+=_L({it:`Lieve sottoperformance rispetto agli indici (${diff.toFixed(1)}pp): una divergenza contenuta, ma da monitorare se dovesse persistere nelle prossime sedute. `,en:`Slight underperformance vs indices (${diff.toFixed(1)}pp): a contained divergence, but worth monitoring if it persists in coming sessions. `});
     else              portText+=_L({it:`Sottoperformance marcata rispetto al mercato (${diff.toFixed(1)}pp): vale la pena analizzare le posizioni che hanno contribuito maggiormente alla divergenza negativa. `,en:`Marked underperformance vs market (${diff.toFixed(1)}pp): worth analyzing the positions that contributed most to the negative divergence. `});
+  }
+  // Frase 4: maggior contribuente in € assoluti (diverso dal miglior % — è quello che ha spostato di più il portafoglio in €)
+  const _byContrib=[...assets].sort((a,b)=>Math.abs(b.chgUSD)-Math.abs(a.chgUSD));
+  const _topC=_byContrib[0];
+  if(_topC&&Math.abs(_topC.chgUSD/_fxR)>=20){
+    const _cEUR=_topC.chgUSD/_fxR;
+    const _cDir=_cEUR>=0;
+    portText+=_L({it:`Il titolo con il maggiore impatto in valore assoluto è <strong>${_topC.sym}</strong> (${_cDir?'+':'−'}€${Math.abs(_cEUR).toFixed(0)}): è il singolo contribuente più rilevante al risultato della giornata, indipendentemente dalla sua variazione percentuale. `,en:`The holding with the largest absolute impact is <strong>${_topC.sym}</strong> (${_cDir?'+':'−'}€${Math.abs(_cEUR).toFixed(0)}): it is the single most relevant contributor to today's result, regardless of its percentage move. `});
+  }
+  // Frase 5: dispersione intraday — quante posizioni si sono mosse oltre 1%
+  const _nBig=assets.filter(a=>Math.abs(a.chgPct)>=1).length;
+  if(_nBig>0&&tot>1){
+    portText+=_L({it:`${_nBig} posizion${_nBig===1?'e':'i'} su ${tot} ha${_nBig===1?'':'nno'} registrato movimenti superiori all'1% nella seduta${_nBig===tot?' — una giornata ad alta dispersione interna':_nBig<=1?' — volatilità concentrata su un singolo nome':''}.`,en:`${_nBig} out of ${tot} position${_nBig===1?'':'s'} moved more than 1% during the session${_nBig===tot?' — a high internal dispersion day':_nBig<=1?' — volatility concentrated on a single name':''}.`});
   }
 
   // ── SEZIONE 3: Titoli in evidenza ──
