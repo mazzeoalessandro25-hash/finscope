@@ -15110,7 +15110,6 @@ async function loadRiskMetrics(){
   }
   el.innerHTML='<div class="ld" style="padding:10px">'+_t('load.history12')+'</div>';
 
-  const RISK_FREE=0.045; // 4.5% risk-free (US 3m T-bill)
   const [spyHist,...histData]=await Promise.all([
     api('SPY','history&range=1y'),
     ...portfolio.map(item=>api(item.sym,'history&range=1y'))
@@ -15140,7 +15139,7 @@ async function loadRiskMetrics(){
     return r;
   });
 
-  // Portfolio daily returns — pesati per VALORE CORRENTE DI MERCATO (standard industry)
+  // Valori correnti per calcolo eurFrac e portVal
   const _fxR2=_lastFxRate||1.08;
   const curVals=portfolio.map((item,pi)=>{
     const q=quotes[pi];
@@ -15149,7 +15148,21 @@ async function loadRiskMetrics(){
     return item.qty*curP*(isEUR?_fxR2:1);
   });
   const totalCurVal2=curVals.reduce((s,v)=>s+v,0)||1;
-  const wts=curVals.map(v=>v/totalCurVal2);
+  // Quota EUR del portafoglio → adatta risk-free e valuta display
+  const eurFrac=curVals.reduce((s,v,i)=>{const q=quotes[i];return s+((q?.currency||portfolio[i].currency||'USD')==='EUR'?v:0);},0)/totalCurVal2;
+  // Risk-free: tasso BCE (3.5%) per portafogli EUR-dominanti, US T-bill (4.5%) altrimenti
+  const RISK_FREE=eurFrac>0.5?0.035:0.045;
+  // Valuta display per VaR/CVaR assoluto
+  const dispCur=eurFrac>0.5?'€':'$';
+  // Pesi iniziali (prezzi t-252) — elimina hindsight bias da pesi correnti
+  const initVals=portfolio.map((item,pi)=>{
+    const startPrice=histData[pi]?.points?.[0]?.close??item.buyPrice;
+    const q=quotes[pi];
+    const isEUR=(q?.currency||item.currency||'USD')==='EUR';
+    return item.qty*startPrice*(isEUR?_fxR2:1);
+  });
+  const totalInitVal=initVals.reduce((s,v)=>s+v,0)||1;
+  const wts=initVals.map(v=>v/totalInitVal);
   const minLen=stockRets.reduce((mn,r)=>r.length?Math.min(mn,r.length):mn,999);
   const portRets=[];
   for(let di=0;di<minLen&&minLen<999;di++){
@@ -15192,8 +15205,10 @@ async function loadRiskMetrics(){
     const q=quotes[i];const isEUR=(q?.currency||item.currency||'USD')==='EUR';
     return s+item.qty*(q?.price??item.buyPrice)*(isEUR?_fxR2:1);
   },0);
-  const var95Abs=Math.abs(var95)*portVal;
-  const cvar95Abs=Math.abs(cvar95)*portVal;
+  // VaR assoluto nella valuta primaria del portafoglio
+  const dispPortVal=eurFrac>0.5?portVal/_fxR2:portVal;
+  const var95Abs=Math.abs(var95)*dispPortVal;
+  const cvar95Abs=Math.abs(cvar95)*dispPortVal;
 
   // Beta vs SPY (covarianza/varianza — n si cancella, invariante rispetto a pop/sample)
   const spyLen=Math.min(portRets.length,spyRets.length);
@@ -15215,6 +15230,18 @@ async function loadRiskMetrics(){
 
   // Calmar — rendimento geometrico annualizzato / max drawdown (entrambi composti)
   const calmar=maxDD>0?annRetGeom/maxDD:0;
+
+  // Tracking Error vs SPY (std annualizzata delle diff giornaliere di rendimento)
+  const tLen=Math.min(portRets.length,spyRets.length);
+  const trackDiffs=portRets.slice(0,tLen).map((r,i)=>r-spyRets[i]);
+  const trackingError=_std(trackDiffs)*Math.sqrt(252);
+  // SPY rendimento geometrico annualizzato sullo stesso periodo
+  const spyCompRet=spyRets.slice(0,tLen).reduce((acc,r)=>acc*(1+r),1)-1;
+  const spyAnnRetGeom=tLen>0?Math.pow(1+spyCompRet,252/tLen)-1:0;
+  // Information Ratio = (portRet - benchRet) / TrackingError
+  const infoRatio=trackingError>0?(annRetGeom-spyAnnRetGeom)/trackingError:0;
+  // Treynor Ratio = (annRet - Rf) / Beta
+  const treynor=Math.abs(beta)>0.01?(annRetArith-RISK_FREE)/beta:0;
 
   // Correlation matrix — usa slice(-len) per prendere gli N dati più recenti
   // (coerente con renderCorrelationMatrix e più rilevante per l'analisi attuale)
@@ -15247,7 +15274,7 @@ async function loadRiskMetrics(){
   // Distribuzione normale assume kurtosi=3; i ritorni reali hanno kurtosi >3 (eventi estremi
   // più frequenti). t(5) ha kurtosi=9 e si avvicina a quella osservata nei mercati azionari.
   // Formula: dS = S·exp((μ - ½σ²)dt + σ·√dt·t₅)
-  const MC_SIMS=5000,MC_DAYS=252,MC_STEPS=20;
+  const MC_SIMS=5000,MC_DAYS=260,MC_STEPS=20; // 260/20=13 giorni/step (divisione intera — fix fan chart)
   const mcSigma=_std(portRets);
   const mcMuRecent=_mean(portRets);
   const mcMuLT=0.10/252;
@@ -15355,12 +15382,12 @@ async function loadRiskMetrics(){
       <div class="rb">
         <div class="rl" style="display:flex;align-items:center">${_t('risk.var')}${tip(_t('risk.tip.var'))}</div>
         <div class="rv2 down" style="font-size:20px">-${fmt(Math.abs(var95)*100,2)}%</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -$${fmt(var95Abs,0)}/${_t('risk.varSub')}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -${dispCur}${fmt(var95Abs,0)}/${_t('risk.varSub')}</div>
       </div>
       <div class="rb">
         <div class="rl" style="display:flex;align-items:center">${_t('risk.cvar')}${tip(_t('risk.tip.cvar'))}</div>
         <div class="rv2 down" style="font-size:20px">-${fmt(Math.abs(cvar95)*100,2)}%</div>
-        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -$${fmt(cvar95Abs,0)}/${_t('risk.varSub')}</div>
+        <div style="font-size:9px;font-family:var(--fm);color:var(--t3)">≈ -${dispCur}${fmt(cvar95Abs,0)}/${_t('risk.varSub')}</div>
       </div>
       <div class="rb">
         <div class="rl" style="display:flex;align-items:center">${_t('risk.beta')}${tip(_t('risk.tip.beta'))}</div>
@@ -15369,8 +15396,8 @@ async function loadRiskMetrics(){
       </div>
     </div>
 
-    <!-- 3 metriche avanzate -->
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
+    <!-- 6 metriche avanzate: Sortino · Calmar · Ann.Ret · Tracking Error · Info Ratio · Treynor -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px">
       <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
         <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">${_t('risk.sortino')}${tip(_t('risk.tip.sortino'))}</div>
         <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${sortino>=1?'var(--g)':sortino>=0.5?'var(--o)':'var(--r)'}">${fmt(sortino,2)}</div>
@@ -15387,11 +15414,28 @@ async function loadRiskMetrics(){
         <div style="font-size:10px;color:var(--t2);margin-top:4px">${_t('risk.annRetSub')}</div>
       </div>
     </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--bd)">
+      <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">Tracking Error${tip(_L({it:'Std annualizzata della differenza di rendimento giornaliero portafoglio vs SPY. Misura il rischio attivo: quanto ci si discosta dal benchmark.',en:'Annualized std of daily return difference vs SPY. Measures active risk: how much the portfolio deviates from the benchmark.'}))}</div>
+        <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${trackingError*100>20?'var(--r)':trackingError*100>10?'var(--o)':'var(--g)'}">${fmt(trackingError*100,1)}%</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">${_L({it:'vs SPY · annualizzato',en:'vs SPY · annualized'})}</div>
+      </div>
+      <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">Information Ratio${tip(_L({it:'(Rendimento portafoglio − SPY) / Tracking Error. Qualità dell\'alpha per unità di rischio attivo. > 0.5 buono, > 1 eccellente.',en:'(Portfolio return − SPY) / Tracking Error. Quality of alpha per unit of active risk. > 0.5 good, > 1 excellent.'}))}</div>
+        <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${infoRatio>=1?'var(--g)':infoRatio>=0.5?'var(--o)':'var(--r)'}">${fmt(infoRatio,2)}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">${_L({it:'Alpha / rischio attivo',en:'Alpha / active risk'})}</div>
+      </div>
+      <div style="padding:12px;background:var(--s2);border-radius:8px;border:1px solid var(--bd)">
+        <div style="font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center">Treynor Ratio${tip(_L({it:'(Rendimento − Risk-free) / Beta. Come lo Sharpe ma normalizza per il rischio sistematico anziché la volatilità totale.',en:'(Return − Risk-free) / Beta. Like Sharpe but normalizes by systematic risk rather than total volatility.'}))}</div>
+        <div style="font-family:var(--fm);font-size:18px;font-weight:700;color:${treynor>=0.07?'var(--g)':treynor>=0.04?'var(--o)':'var(--r)'}">${fmt(treynor,3)}</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:4px">${_L({it:'Excess return / Beta',en:'Excess return / Beta'})}</div>
+      </div>
+    </div>
 
     <!-- VaR + CVaR spiegazione -->
     <div style="padding:10px 14px;background:var(--b3);border-radius:8px;border-left:3px solid var(--b);margin-bottom:14px;font-size:11px;color:var(--t2);line-height:1.6;font-family:var(--fm)">
-      <strong style="color:var(--t)">VaR 95%: −${fmt(Math.abs(var95)*100,2)}%/${_t('risk.varSub')}</strong> — ${_t('risk.varExplain').replace('{p}','95')} <strong>$${fmt(var95Abs,0)}</strong>. ${_t('risk.varExplain2')}<br>
-      <strong style="color:var(--t)">CVaR 95%: −${fmt(Math.abs(cvar95)*100,2)}%/${_t('risk.varSub')}</strong> — ${_t('risk.cvarExplain')} <strong>$${fmt(cvar95Abs,0)}</strong>. ${_t('risk.cvarExplain2')}
+      <strong style="color:var(--t)">VaR 95%: −${fmt(Math.abs(var95)*100,2)}%/${_t('risk.varSub')}</strong> — ${_t('risk.varExplain').replace('{p}','95')} <strong>${dispCur}${fmt(var95Abs,0)}</strong>. ${_t('risk.varExplain2')}<br>
+      <strong style="color:var(--t)">CVaR 95%: −${fmt(Math.abs(cvar95)*100,2)}%/${_t('risk.varSub')}</strong> — ${_t('risk.cvarExplain')} <strong>${dispCur}${fmt(cvar95Abs,0)}</strong>. ${_t('risk.cvarExplain2')}
     </div>
 
     <!-- Monte Carlo -->
@@ -15463,7 +15507,7 @@ async function loadRiskMetrics(){
             <div style="height:5px;width:${bw}%;background:${vc};border-radius:10px"></div>
           </div>
           <div style="font-family:var(--fm);font-size:11px;font-weight:600;color:${vc};width:46px;text-align:right">${fmt(sv,1)}%</div>
-          <div style="font-family:var(--fm);font-size:10px;color:${sr>=0?'var(--g)':'var(--r)'};width:55px;text-align:right">${sr>=0?'+':''}${fmt(sr,1)}% (3m)</div>
+          <div style="font-family:var(--fm);font-size:10px;color:${sr>=0?'var(--g)':'var(--r)'};width:55px;text-align:right">${sr>=0?'+':''}${fmt(sr,1)}% (12m)</div>
         </div>`;
       }).join('')}
     </div>
