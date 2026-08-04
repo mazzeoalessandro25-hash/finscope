@@ -6766,15 +6766,20 @@ function calcFinEdgeScore(sd, qd){
   det.momentum=m; s+=m;
 
   // 4. CONSENSUS ANALISTI (20pts)
-  // sd.rec da Yahoo Finance può essere camelCase ('strongBuy') — normalizza a lowercase
+  // Yahoo Finance restituisce rec come 'strong_buy' (underscore) o 'strongBuy' (camelCase)
+  // Normalizziamo: lowercase + rimozione underscore → 'strongbuy'
   const cp={strongbuy:20,buy:16,hold:9,underperform:4,sell:4,strongsell:0};
-  det.consensus=cp[sd.rec?.toLowerCase()]??9; s+=det.consensus;
+  det.consensus=cp[(sd.rec||'').toLowerCase().replace(/_/g,'')]??9; s+=det.consensus;
 
-  // 5. STABILITÀ BETA (10pts): beta 0.6-1.4 = ottimale
+  // 5. STABILITÀ BETA (10pts): beta basso = stabile = meglio
+  // Beta <0.4 (difensivi tipo JNJ, KO) premiati — non penalizzati come beta altissimo
   if(sd.beta!=null){
-    if(sd.beta>=0.6&&sd.beta<=1.4)det.stabilita=10;
-    else if(sd.beta>=0.4&&sd.beta<=1.8)det.stabilita=6;
-    else det.stabilita=3;
+    if(sd.beta>=0.6&&sd.beta<=1.4)det.stabilita=10;  // ottimale
+    else if(sd.beta>=0.4&&sd.beta<0.6)det.stabilita=8; // molto difensivo
+    else if(sd.beta<0.4)det.stabilita=7;              // ultra-difensivo (alta stabilità)
+    else if(sd.beta<=1.8)det.stabilita=6;             // sopra media
+    else if(sd.beta<=2.5)det.stabilita=3;             // alta volatilità
+    else det.stabilita=1;                             // molto alta volatilità
   } else det.stabilita=5;
   s+=det.stabilita;
 
