@@ -6718,7 +6718,7 @@ async function _renderNews(category){
 
 /* ══════════════════════════════════════════
    FINEDGE SCORE — Metrica proprietaria 5D
-   Valutazione(25) · Redditività(25) · Momentum(20) · Consensus(20) · Stabilità(10)
+   Valutazione(25) · Redditività(25) · Sconto 52W(20) · Consensus(20) · Stabilità(10)
 ══════════════════════════════════════════ */
 function calcFinEdgeScore(sd, qd){
   if(!sd) return {total:null,details:{}};
@@ -6750,16 +6750,18 @@ function calcFinEdgeScore(sd, qd){
   }
   det.redditivita=Math.min(25,p); s+=det.redditivita;
 
-  // 3. MOMENTUM 52W (20pts): zona ottimale = 35%-72% del range
+  // 3. SCONTO DI PREZZO 52W (20pts): premia titoli a sconto rispetto al range annuale
+  // Logica coerente con il resto dello score (P/E basso, P/B basso = buono):
+  // se i fondamentali sono solidi, il titolo vicino ai minimi 52W è un'opportunità d'acquisto.
   let m=0;
   if(sd.week52High&&sd.week52Low&&qd?.price){
     const range=sd.week52High-sd.week52Low;
     const pos=range>0?(qd.price-sd.week52Low)/range:0.5;
-    if(pos>=0.35&&pos<=0.72)m=20;       // sweet spot: trend rialzista non ipercomprato
-    else if(pos>=0.20&&pos<0.35)m=15;   // vicino ai minimi — potenziale ma incertezza
-    else if(pos>0.72&&pos<=0.87)m=12;   // vicino ai massimi — cautela
-    else if(pos>0.87)m=7;               // ipercomprato
-    else m=10;                          // vicino ai minimi 52W — rischio elevato
+    if(pos<0.20)m=20;              // forte sconto — massima opportunità d'ingresso
+    else if(pos<0.40)m=16;        // buona zona d'ingresso
+    else if(pos<0.65)m=12;        // prezzo nella media del range
+    else if(pos<0.80)m=8;         // prezzo elevato, meno conveniente
+    else m=4;                     // vicino ai massimi 52W — poco sconto
   } else m=10;
   det.momentum=m; s+=m;
 
@@ -14639,7 +14641,7 @@ function renderSdFinEdgeScore(){
   const rating=ratings.find(r=>sc>=r.min)||ratings[ratings.length-1];
   const dimLabels2={valutazione:_t('fa.dim.valutazione'),redditivita:_t('fa.dim.redditivita'),momentum:_t('fa.dim.momentum'),consensus:_t('fa.dim.consensus'),stabilita:_t('fa.dim.stabilita')};
   const dimMax2={valutazione:25,redditivita:25,momentum:20,consensus:20,stabilita:10};
-  const dimTips={valutazione:_L({it:'P/E + P/B vs benchmark',en:'P/E + P/B vs benchmark'}),redditivita:_L({it:'ROE, EPS, margini operativi',en:'ROE, EPS, operating margins'}),momentum:_L({it:'Posizione range 52 settimane',en:'Position in 52-week range'}),consensus:_L({it:'Raccomandazione analisti',en:'Analyst recommendation'}),stabilita:_L({it:'Beta — volatilità di mercato',en:'Beta — market volatility'})};
+  const dimTips={valutazione:_L({it:'P/E + P/B vs benchmark',en:'P/E + P/B vs benchmark'}),redditivita:_L({it:'ROE, EPS, margini operativi',en:'ROE, EPS, operating margins'}),momentum:_L({it:'Sconto rispetto al massimo 52 settimane',en:'Discount vs 52-week high'}),consensus:_L({it:'Raccomandazione analisti',en:'Analyst recommendation'}),stabilita:_L({it:'Beta — volatilità di mercato',en:'Beta — market volatility'})};
   const dims=Object.entries(fss.details).map(([k,v])=>{
     const max=dimMax2[k]||10;
     const pct=Math.round(v/max*100);

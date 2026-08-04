@@ -1008,7 +1008,7 @@ const TRANSLATIONS={
     'sd.nanalysts.suffix':' analisti coprono il titolo',
     /* ── FA DIMENSIONS ── */
     'fa.dim.valutazione':'Valutazione','fa.dim.redditivita':'Redditività',
-    'fa.dim.momentum':'Momentum','fa.dim.consensus':'Consensus','fa.dim.stabilita':'Stabilità',
+    'fa.dim.momentum':'Sconto 52W','fa.dim.consensus':'Consensus','fa.dim.stabilita':'Stabilità',
     /* ── BOND / RATE LABELS ── */
     'bond.3m':'3 Mesi','bond.5y':'5 Anni','bond.10y':'10 Anni','bond.30y':'30 Anni',
     /* ── BACKTESTER RANGE ── */
@@ -2188,7 +2188,7 @@ const TRANSLATIONS={
     'sd.nanalysts.suffix':' analysts cover this stock',
     /* ── FA DIMENSIONS ── */
     'fa.dim.valutazione':'Valuation','fa.dim.redditivita':'Profitability',
-    'fa.dim.momentum':'Momentum','fa.dim.consensus':'Consensus','fa.dim.stabilita':'Stability',
+    'fa.dim.momentum':'52W Discount','fa.dim.consensus':'Consensus','fa.dim.stabilita':'Stability',
     /* ── BOND / RATE LABELS ── */
     'bond.3m':'3 Months','bond.5y':'5 Years','bond.10y':'10 Years','bond.30y':'30 Years',
     /* ── BACKTESTER RANGE ── */
