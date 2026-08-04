@@ -6764,8 +6764,9 @@ function calcFinEdgeScore(sd, qd){
   det.momentum=m; s+=m;
 
   // 4. CONSENSUS ANALISTI (20pts)
-  const cp={strongbuy:20,buy:16,hold:9,sell:4,strongsell:0};
-  det.consensus=cp[sd.rec]??9; s+=det.consensus;
+  // sd.rec da Yahoo Finance può essere camelCase ('strongBuy') — normalizza a lowercase
+  const cp={strongbuy:20,buy:16,hold:9,underperform:4,sell:4,strongsell:0};
+  det.consensus=cp[sd.rec?.toLowerCase()]??9; s+=det.consensus;
 
   // 5. STABILITÀ BETA (10pts): beta 0.6-1.4 = ottimale
   if(sd.beta!=null){
