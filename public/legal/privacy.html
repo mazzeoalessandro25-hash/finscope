@@ -135,6 +135,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   footer{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
 }
 </style>
+    <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -229,10 +230,11 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
       <li><strong>Alert prezzi</strong> — notifiche di prezzo che imposti volontariamente su singoli strumenti finanziari.</li>
       <li><strong>Piani PAC</strong> — configurazioni di piani di accumulo che inserisci volontariamente (ticker, importo, frequenza).</li>
       <li><strong>Log tecnici anonimi</strong> — generati automaticamente da Vercel (IP anonimizzato, percorso richiesta, timestamp). Servono solo per la sicurezza e la diagnostica.</li>
+      <li><strong>Statistiche di navigazione aggregate</strong> — raccolte da Vercel Analytics. Nessun cookie, nessun dato personale, nessun IP memorizzato. Vengono registrati solo conteggi aggregati: quante visite riceve il sito, quali pagine sono più visitate, da quale paese o browser arrivano i visitatori. Non viene costruito alcun profilo individuale.</li>
     </ul>
     <div class="plain">
       <span class="plain-label">In parole semplici</span>
-      <p>Raccogliamo il minimo indispensabile. Non c'è tracciamento comportamentale interno, nessun profilo costruito su di te. Il sito può mostrare annunci (AdSense) e link affiliati con il tuo consenso — ma i dati del tuo portafoglio non vengono mai usati per fini pubblicitari.</p>
+      <p>Raccogliamo il minimo indispensabile. Usiamo Vercel Analytics per sapere quante persone visitano il sito — ma senza cookie e senza dati personali: sono solo numeri aggregati, non profili. Il sito può mostrare annunci (AdSense) e link affiliati con il tuo consenso — ma i dati del tuo portafoglio non vengono mai usati per fini pubblicitari.</p>
     </div>
   </div>
 
@@ -276,7 +278,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
       </div>
       <div class="provider-card">
         <div class="provider-name">Vercel</div>
-        <div class="provider-role">Hosting e infrastruttura</div>
+        <div class="provider-role">Hosting, infrastruttura e analytics anonime</div>
         <a href="https://vercel.com/legal/privacy-policy" target="_blank" class="provider-url">vercel.com/legal →</a>
       </div>
       <div class="provider-card">
@@ -315,6 +317,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
       <li><strong>Dati di account</strong> — conservati per tutta la durata dell'account attivo.</li>
       <li><strong>Portafoglio e watchlist</strong> — conservati fino alla cancellazione esplicita da parte dell'utente o alla chiusura dell'account.</li>
       <li><strong>Log tecnici anonimi</strong> — conservati da Vercel per un massimo di 30 giorni, poi eliminati automaticamente.</li>
+      <li><strong>Statistiche di navigazione aggregate</strong> — conservate da Vercel Analytics in forma anonima e aggregata, senza scadenza definita. Non contengono dati personali.</li>
     </ul>
     <p class="legal-text">Alla cancellazione dell'account, tutti i dati personali vengono eliminati entro 30 giorni, salvo obblighi di legge.</p>
     <div class="plain">
@@ -458,13 +461,13 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
   var pl=qa('.plain-label');
   Array(9).fill('In plain terms').forEach(function(v,i){if(pl[i])pl[i].textContent=v;});
   var pp=qa('.plain p');
-  ['Alessandro Mazzeo is the individual who manages FinEdge. If you have questions about your data, he is your direct point of contact.','We process your data because it is essential for you to use FinEdge. Without an email you cannot log in; without a saved portfolio you have no service. Nothing more.','We collect the bare minimum. There is no internal behavioural tracking, no profile built on you. The site may show ads (AdSense) and affiliate links with your consent — but your portfolio data is never used for advertising purposes.','Your data is used only to make FinEdge work for you. Full stop.','We use reliable, widely-adopted tools. Yahoo Finance and CoinGecko never receive your personal data — only anonymous requests for public prices. For other US-based providers, legal agreements are in place that protect your data outside the EU.','We keep your data as long as you use the service. If you delete your account, we delete everything within a month.','You have full control over your data. A single email is enough to request anything: a copy, a correction, or complete deletion.','Technical cookies keep you logged in — mandatory. Advertising (AdSense) and affiliate cookies are activated only if you give consent via the banner. We do not build profiles on you, we do not sell your data. If you click a partner link, the broker can know you arrived from FinEdge: that is how affiliate marketing works, declared and transparent.',''].forEach(function(v,i){if(pp[i]&&v)pp[i].textContent=v;});
+  ['Alessandro Mazzeo is the individual who manages FinEdge. If you have questions about your data, he is your direct point of contact.','We process your data because it is essential for you to use FinEdge. Without an email you cannot log in; without a saved portfolio you have no service. Nothing more.','We collect the bare minimum. We use Vercel Analytics to know how many people visit the site — but without cookies and without personal data: only aggregate numbers, not profiles. The site may show ads (AdSense) and affiliate links with your consent — but your portfolio data is never used for advertising purposes.','Your data is used only to make FinEdge work for you. Full stop.','We use reliable, widely-adopted tools. Yahoo Finance and CoinGecko never receive your personal data — only anonymous requests for public prices. For other US-based providers, legal agreements are in place that protect your data outside the EU.','We keep your data as long as you use the service. If you delete your account, we delete everything within a month.','You have full control over your data. A single email is enough to request anything: a copy, a correction, or complete deletion.','Technical cookies keep you logged in — mandatory. Advertising (AdSense) and affiliate cookies are activated only if you give consent via the banner. We do not build profiles on you, we do not sell your data. If you click a partner link, the broker can know you arrived from FinEdge: that is how affiliate marketing works, declared and transparent.',''].forEach(function(v,i){if(pp[i]&&v)pp[i].textContent=v;});
   var lt=qa('.legal-text');
   if(lt[0])lt[0].innerHTML='The Data Controller pursuant to art. 4 no. 7 of EU Reg. 2016/679 (GDPR) is <strong>Alessandro Mazzeo</strong>, founder and developer of FinEdge. For any enquiry, contact the Controller via the support form available in the application.';
   if(lt[1])h('.card:nth-of-type(2) ul','<li><strong>Performance of contract (art. 6.1.b GDPR)</strong> — account data is necessary to provide you with the service.</li><li><strong>Legitimate interest (art. 6.1.f GDPR)</strong> — anonymous technical logs serve to maintain the security and correct functioning of the platform.</li><li><strong>Consent (art. 6.1.a GDPR)</strong> — for any optional communication by email, if we were ever to activate it.</li>');
-  if(lt[3])h('.card:nth-of-type(3) ul','<li><strong>Email</strong> — used for login and password recovery. Not used for marketing.</li><li><strong>Password</strong> — never stored in plain text. Encrypted with <strong>bcrypt</strong> by Clerk before being saved. Not even we can see it.</li><li><strong>Portfolio and watchlist</strong> — data you enter voluntarily: tickers, quantities, purchase prices.</li><li><strong>Price alerts</strong> — price notifications you voluntarily set on individual financial instruments.</li><li><strong>PAC plans</strong> — accumulation plan configurations you enter voluntarily (ticker, amount, frequency).</li><li><strong>Anonymous technical logs</strong> — automatically generated by Vercel (anonymised IP, request path, timestamp). Used only for security and diagnostics.</li>');
+  if(lt[3])h('.card:nth-of-type(3) ul','<li><strong>Email</strong> — used for login and password recovery. Not used for marketing.</li><li><strong>Password</strong> — never stored in plain text. Encrypted with <strong>bcrypt</strong> by Clerk before being saved. Not even we can see it.</li><li><strong>Portfolio and watchlist</strong> — data you enter voluntarily: tickers, quantities, purchase prices.</li><li><strong>Price alerts</strong> — price notifications you voluntarily set on individual financial instruments.</li><li><strong>PAC plans</strong> — accumulation plan configurations you enter voluntarily (ticker, amount, frequency).</li><li><strong>Anonymous technical logs</strong> — automatically generated by Vercel (anonymised IP, request path, timestamp). Used only for security and diagnostics.</li><li><strong>Aggregate navigation statistics</strong> — collected by Vercel Analytics. No cookies, no personal data, no IP stored. Only aggregate counts: how many visits the site receives, which pages are most visited, and from which country or browser visitors come. No individual profile is built.</li>');
   var prov=qa('.provider-role');
-  ['Authentication & account management','Hosting and infrastructure','Portfolio & watchlist database','Stock market data (read-only)','Crypto market data (read-only)'].forEach(function(v,i){if(prov[i])prov[i].textContent=v;});
+  ['Authentication & account management','Hosting, infrastructure and anonymous analytics','Portfolio & watchlist database','Stock market data (read-only)','Crypto market data (read-only)'].forEach(function(v,i){if(prov[i])prov[i].textContent=v;});
   if(lt[6])lt[6].innerHTML='The providers listed above (except Yahoo Finance and CoinGecko, which receive only anonymous requests for public data) act as Data Processors pursuant to art. 28 GDPR. Clerk, Vercel, and Upstash are based in the United States: data transfers occur in compliance with the guarantees provided under Chapter V GDPR, via <strong>Standard Contractual Clauses (SCC)</strong> adopted by the European Commission and/or EU-U.S. Data Privacy Framework certification where applicable.';
   var rn=qa('.right-name'),rd=qa('.right-desc');
   ['Access (art. 15)','Rectification (art. 16)','Erasure (art. 17)','Portability (art. 20)','Objection (art. 21)','Restriction (art. 18)'].forEach(function(v,i){if(rn[i])rn[i].textContent=v;});
