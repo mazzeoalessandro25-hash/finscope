@@ -1190,6 +1190,17 @@ html.dark .auth-box{background:#1e293b}
 .sd-m-val.up{color:var(--g)}.sd-m-val.down{color:var(--r)}
 .sd-funds{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px}
 .sd-desc-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:16px}
+/* ── Termometro del Titolo ── */
+.sd-sent-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:18px;margin-bottom:16px;position:relative;overflow:hidden}
+.sd-sent-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(26,86,196,.03) 0%,transparent 55%);pointer-events:none;border-radius:12px}
+.sd-sent-grid{display:grid;grid-template-columns:1fr 210px;gap:20px;align-items:start}
+.sd-sent-metric{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;transition:border-color .15s}
+.sd-sent-metric:hover{border-color:var(--bd2)}
+.sd-sent-metric-lbl{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;font-family:var(--fm);margin-bottom:3px}
+.sd-sent-metric-val{font-size:14px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.2}
+.sd-sent-bar{height:3px;background:var(--bd);border-radius:2px;margin-top:6px;overflow:hidden}
+.sd-sent-bar-fill{height:3px;border-radius:2px;transition:width .7s cubic-bezier(.4,0,.2,1);width:0%}
+@media(max-width:700px){.sd-sent-grid{grid-template-columns:1fr!important}}
 .sd-desc-txt{font-size:12px;color:var(--t2);line-height:1.75;margin-top:8px}
 .sd-rec-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:700;font-family:var(--fm)}
 .sd-rec-badge.strongbuy{background:#D1FAE5;color:#047857}
@@ -2036,6 +2047,75 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ══ TERMOMETRO DEL TITOLO — Sentiment Gauge ══ -->
+    <div class="sd-sent-card" id="sd-sentiment-section" style="display:none">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:14px">
+        <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.9px;font-family:var(--fm)" data-i18n="sent.title">TERMOMETRO DEL TITOLO</div>
+        <span style="font-size:9px;color:var(--b);font-family:var(--fm);font-weight:700;background:var(--b3);padding:2px 7px;border-radius:4px;letter-spacing:.3px">✦ <span data-i18n="sent.proprietary">Metrica proprietaria</span></span>
+        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.sentiment">Tooltip</div></span>
+      </div>
+      <!-- Body: gauge sinistra + metriche destra -->
+      <div class="sd-sent-grid">
+        <!-- Colonna sinistra: gauge -->
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <canvas id="sd-sent-canvas" width="280" height="160" style="width:100%;max-width:280px;display:block"></canvas>
+          <!-- Score + Zona -->
+          <div style="text-align:center;margin-top:-6px;min-height:54px">
+            <div id="sd-sent-score" style="font-family:var(--fm);font-size:36px;font-weight:800;color:var(--t);line-height:1;letter-spacing:-1px">—</div>
+            <div id="sd-sent-zone" style="font-family:var(--fm);font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;margin-top:4px;color:var(--t3)">—</div>
+          </div>
+          <!-- Etichette zone -->
+          <div style="display:flex;justify-content:space-between;width:100%;max-width:264px;margin-top:8px;padding:0 2px">
+            <span style="font-size:8px;color:#059669;font-family:var(--fm);font-weight:700;letter-spacing:.3px" data-i18n="sent.zone.oversold">IPERVENDUTO</span>
+            <span style="font-size:8px;color:var(--t3);font-family:var(--fm);font-weight:700;letter-spacing:.3px" data-i18n="sent.zone.neutral">NEUTRALE</span>
+            <span style="font-size:8px;color:#DC2626;font-family:var(--fm);font-weight:700;letter-spacing:.3px" data-i18n="sent.zone.overbought">IPERCOMPRATO</span>
+          </div>
+          <!-- Verdict -->
+          <div id="sd-sent-verdict" style="margin-top:10px;width:100%;max-width:280px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:10px 13px;font-size:11px;font-family:var(--fm);color:var(--t2);line-height:1.65"></div>
+        </div>
+        <!-- Colonna destra: metriche -->
+        <div style="display:flex;flex-direction:column;gap:8px;padding-top:4px">
+          <!-- RSI 14 -->
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl">RSI (14)</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:4px">
+              <div class="sd-sent-metric-val" id="sd-sent-rsi">—</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="sd-sent-rsi-lbl"></div>
+            </div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-rsi-bar"></div></div>
+          </div>
+          <!-- Posizione 52 Settimane -->
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl" data-i18n="sent.metric.pos52w">Posizione 52 Settimane</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:4px">
+              <div class="sd-sent-metric-val" id="sd-sent-52w">—</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="sd-sent-52w-lbl"></div>
+            </div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-52w-bar"></div></div>
+          </div>
+          <!-- Trend OBV -->
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl" data-i18n="sent.metric.obv">Trend OBV (3m)</div>
+            <div style="margin:2px 0 1px">
+              <div class="sd-sent-metric-val" id="sd-sent-obv">—</div>
+            </div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-obv-bar"></div></div>
+          </div>
+          <!-- Volume Ratio -->
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl" data-i18n="sent.metric.vol">Volume Ratio</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:4px">
+              <div class="sd-sent-metric-val" id="sd-sent-vol">—</div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="sd-sent-vol-lbl"></div>
+            </div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-vol-bar"></div></div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
     </div>
 
     <!-- Wyckoff OBV Analysis -->
@@ -14145,12 +14225,21 @@ function openStockDetail(sym){
   if(sdWyckoffChartInst){sdWyckoffChartInst.remove();sdWyckoffChartInst=null;}
   const _wyEl=document.getElementById('sd-wyckoff-content');
   if(_wyEl)_wyEl.innerHTML=`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('load.wyckoff')}</div>`;
+  // Reset Sentiment Gauge
+  const _sgSec=document.getElementById('sd-sentiment-section');
+  if(_sgSec)_sgSec.style.display='none';
+  const _sgScore=document.getElementById('sd-sent-score');
+  if(_sgScore){_sgScore.textContent='—';_sgScore.style.color='var(--t)';}
+  const _sgZone=document.getElementById('sd-sent-zone');
+  if(_sgZone){_sgZone.textContent='—';_sgZone.style.color='var(--t3)';}
+  ['sd-sent-rsi-bar','sd-sent-52w-bar','sd-sent-obv-bar','sd-sent-vol-bar'].forEach(id=>{const b=document.getElementById(id);if(b)b.style.width='0%';});
   // Load
   const _qEl=document.getElementById('sd-quarterly');if(_qEl)_qEl.innerHTML='';
   const _eb=document.getElementById('sd-earnings-banner');if(_eb)_eb.style.display='none';
   loadSdChart(sym,'1mo',null);
   loadSdData(sym);
   loadWyckoffAnalysis(sym);
+  loadSentimentGauge(sym);
   loadInsiderForStock(sym);
   loadQuarterlyData(sym);
   loadEarningsDate(sym);
@@ -14329,6 +14418,240 @@ async function loadWyckoffAnalysis(sym){
     if(document.getElementById('sd-wyckoff-content')===el)
       el.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('wy.unavailable')}</div>`;
   }
+}
+
+/* ══════════════════════════════════════════
+   TERMOMETRO DEL TITOLO — Sentiment Gauge
+══════════════════════════════════════════ */
+async function loadSentimentGauge(sym){
+  const sec=document.getElementById('sd-sentiment-section');
+  if(!sec)return;
+  // Nasconde per ETF e crypto
+  if(sym&&detectPortCat(sym)!=='stock'){sec.style.display='none';return;}
+  try{
+    const data=await api(sym,'history&range=1y');
+    if(sdSym!==sym)return;
+    const rawPts=Array.isArray(data)?data:(data?.points||[]);
+    if(rawPts.length<15){sec.style.display='none';return;}
+    const pts=rawPts.filter(d=>d.close!=null).sort((a,b)=>a.time-b.time);
+    const closes=pts.map(p=>+p.close);
+    const volumes=pts.map(p=>+(p.volume||0));
+
+    // ── RSI(14) — usa calcRSI già esistente ──
+    const rsiArr=calcRSI(closes,14);
+    const rsiVal=rsiArr.length?rsiArr[rsiArr.length-1].value:null;
+
+    // ── Posizione 52 Settimane (da storico 1 anno) ──
+    const minP=Math.min(...closes),maxP=Math.max(...closes);
+    const lastClose=closes[closes.length-1];
+    const pos52=maxP>minP?+((lastClose-minP)/(maxP-minP)*100).toFixed(1):50;
+
+    // ── Trend OBV — ultimi 20 punti ──
+    let obvScore=0;
+    if(pts.length>=20){
+      const obv=[];let cum=0;
+      for(let i=0;i<pts.length;i++){
+        if(i===0){obv.push(0);continue;}
+        const dir=closes[i]>closes[i-1]?1:closes[i]<closes[i-1]?-1:0;
+        cum+=dir*volumes[i];obv.push(cum);
+      }
+      const sl=obv.slice(-20);
+      const minO=Math.min(...sl),maxO=Math.max(...sl);
+      if(maxO>minO){
+        const normO=sl.map(o=>(o-minO)/(maxO-minO)*100);
+        const trend=normO[normO.length-1]-normO[0];
+        obvScore=Math.min(Math.max(Math.round(trend*1.2),-100),100);
+      }
+    }
+
+    // ── Volume Ratio — ultimo vs media anno ──
+    const nonZeroVols=volumes.filter(v=>v>0);
+    const avgVol=nonZeroVols.length?nonZeroVols.reduce((a,b)=>a+b,0)/nonZeroVols.length:0;
+    const lastVol=volumes[volumes.length-1];
+    const volRatio=avgVol>0?+(lastVol/avgVol).toFixed(2):null;
+
+    // ── Score composito −100..+100 ──
+    const rsiS=rsiVal!=null?Math.round((rsiVal-50)*2):0;
+    const p52S=Math.round((pos52-50)*2);
+    const volS=volRatio!=null?Math.min(Math.max(Math.round((volRatio-1)*80),-100),100):0;
+    const finalScore=Math.min(Math.max(
+      Math.round(rsiS*0.40+p52S*0.30+obvScore*0.20+volS*0.10)
+    ,-100),100);
+
+    _renderSentimentGauge(finalScore,rsiVal,pos52,obvScore,volRatio);
+    sec.style.display='block';
+  }catch(e){
+    const s=document.getElementById('sd-sentiment-section');
+    if(s)s.style.display='none';
+  }
+}
+
+function _renderSentimentGauge(score,rsiVal,pos52,obvScore,volRatio){
+  // ── Zona e colori ──
+  let zKey,zColor,vKey;
+  if(score<=-50){zKey='sent.zone.label.panic';zColor='#059669';vKey='sent.verdict.panic';}
+  else if(score<=-20){zKey='sent.zone.label.oversold';zColor='#10B981';vKey='sent.verdict.oversold';}
+  else if(score<=20){zKey='sent.zone.label.neutral';zColor='var(--t2)';vKey='sent.verdict.neutral';}
+  else if(score<=50){zKey='sent.zone.label.overbought';zColor='#F59E0B';vKey='sent.verdict.overbought';}
+  else{zKey='sent.zone.label.fomo';zColor='#DC2626';vKey='sent.verdict.fomo';}
+
+  // ── Canvas ──
+  const canvas=document.getElementById('sd-sent-canvas');
+  if(canvas)_drawSentimentCanvas(canvas,score,zColor);
+
+  // ── Score + Zona ──
+  const $=id=>document.getElementById(id);
+  const scoreEl=$('sd-sent-score');
+  if(scoreEl){scoreEl.textContent=(score>0?'+':'')+score;scoreEl.style.color=zColor;}
+  const zoneEl=$('sd-sent-zone');
+  if(zoneEl){zoneEl.textContent=_t(zKey);zoneEl.style.color=zColor;}
+  const verdictEl=$('sd-sent-verdict');
+  if(verdictEl)verdictEl.innerHTML=_t(vKey);
+
+  // ── RSI metric ──
+  const rsiEl=$('sd-sent-rsi');
+  if(rsiEl&&rsiVal!=null){
+    rsiEl.textContent=rsiVal.toFixed(1);
+    const rc=rsiVal<30?'#059669':rsiVal>70?'#DC2626':'var(--t)';
+    rsiEl.style.color=rc;
+    const rl=$('sd-sent-rsi-lbl');
+    if(rl)rl.textContent=rsiVal<30?_t('sent.rsi.low'):rsiVal>70?_t('sent.rsi.high'):_t('sent.rsi.mid');
+    const rb=$('sd-sent-rsi-bar');
+    if(rb){rb.style.width=rsiVal+'%';rb.style.background=rsiVal<30?'#059669':rsiVal>70?'#DC2626':'#8b5cf6';}
+  }
+
+  // ── 52W metric ──
+  const p52El=$('sd-sent-52w');
+  if(p52El&&pos52!=null){
+    p52El.textContent=pos52.toFixed(0)+'%';
+    const pc=pos52<25?'#DC2626':pos52>75?'#059669':'var(--t)';
+    p52El.style.color=pc;
+    const pl=$('sd-sent-52w-lbl');
+    if(pl)pl.textContent=pos52<25?_t('sent.pos52.low'):pos52>75?_t('sent.pos52.high'):_t('sent.pos52.mid');
+    const pb=$('sd-sent-52w-bar');
+    if(pb){pb.style.width=pos52+'%';pb.style.background=pos52<25?'#DC2626':pos52>75?'#059669':'#1A56C4';}
+  }
+
+  // ── OBV metric ──
+  const obvEl=$('sd-sent-obv');
+  if(obvEl){
+    obvEl.textContent=obvScore>10?_t('sent.obv.bull'):obvScore<-10?_t('sent.obv.bear'):_t('sent.obv.neutral');
+    obvEl.style.color=obvScore>10?'#10B981':obvScore<-10?'#DC2626':'var(--t2)';
+    const ob=$('sd-sent-obv-bar');
+    if(ob){
+      const op=(Math.min(Math.max(obvScore,-100),100)+100)/2;
+      ob.style.width=op+'%';
+      ob.style.background=obvScore>10?'#10B981':obvScore<-10?'#DC2626':'#6B7280';
+    }
+  }
+
+  // ── Volume Ratio metric ──
+  const volEl=$('sd-sent-vol');
+  if(volEl&&volRatio!=null){
+    volEl.textContent=volRatio.toFixed(2)+'×';
+    volEl.style.color=volRatio<0.7?'var(--t3)':volRatio>1.5?'#D97706':'var(--t)';
+    const vl=$('sd-sent-vol-lbl');
+    if(vl)vl.textContent=volRatio<0.7?_t('sent.vol.low'):volRatio>1.3?_t('sent.vol.high'):_t('sent.vol.mid');
+    const vb=$('sd-sent-vol-bar');
+    if(vb){const vp=Math.min(volRatio/2*100,100);vb.style.width=vp+'%';vb.style.background=volRatio<0.7?'#6B7280':volRatio>1.5?'#D97706':'#F59E0B';}
+  }
+}
+
+function _drawSentimentCanvas(canvas,score,accentColor){
+  const ctx=canvas.getContext('2d');
+  const W=280,H=160;
+  canvas.width=W;canvas.height=H;
+  ctx.clearRect(0,0,W,H);
+
+  const isDark=document.documentElement.classList.contains('dark');
+  const colBd   =isDark?'#334155':'#D8E2EF';
+  const colCard  =isDark?'#1e293b':'#ffffff';
+  const colT3    =isDark?'#64748b':'#8499B0';
+
+  const cx=W/2; // 140
+  const cy=H-14; // 146 — base piatta del semicerchio
+  const R=112;  // raggio
+
+  // Mapping score (−100..+100) → posizione 0..1 → angolo π..2π
+  const pos=(score+100)/200;
+  const fillEnd=Math.PI+pos*Math.PI;
+
+  // ── 1. ARC BACKGROUND (grigio pieno) ──
+  ctx.beginPath();
+  ctx.arc(cx,cy,R,Math.PI,0,false); // false = clockwise → semicerchio superiore
+  ctx.lineWidth=18;
+  ctx.strokeStyle=colBd;
+  ctx.lineCap='butt';
+  ctx.stroke();
+
+  // ── 2. ZONE OVERLAYS (semi-trasparenti sui segmenti) ──
+  const zones=[
+    {from:-100,to:-50,c:isDark?'rgba(5,150,105,.28)':'rgba(5,150,105,.20)'},
+    {from:-50, to:-20,c:isDark?'rgba(16,185,129,.20)':'rgba(16,185,129,.15)'},
+    {from:-20, to: 20,c:isDark?'rgba(148,163,184,.14)':'rgba(148,163,184,.10)'},
+    {from: 20, to: 50,c:isDark?'rgba(245,158,11,.22)':'rgba(245,158,11,.16)'},
+    {from: 50, to:100,c:isDark?'rgba(220,38,38,.26)':'rgba(220,38,38,.19)'},
+  ];
+  zones.forEach(z=>{
+    const sa=Math.PI+((z.from+100)/200)*Math.PI;
+    const ea=Math.PI+((z.to+100)/200)*Math.PI;
+    ctx.beginPath();ctx.arc(cx,cy,R,sa,ea,false);
+    ctx.lineWidth=18;ctx.strokeStyle=z.c;ctx.lineCap='butt';ctx.stroke();
+  });
+
+  // ── 3. FILLED ARC (da sinistra fino allo score) ──
+  if(pos>0.005){
+    const grad=ctx.createLinearGradient(cx-R,cy,cx+R,cy);
+    grad.addColorStop(0,   '#059669');
+    grad.addColorStop(0.28,'#10B981');
+    grad.addColorStop(0.5, '#94A3B8');
+    grad.addColorStop(0.72,'#F59E0B');
+    grad.addColorStop(1,   '#DC2626');
+    ctx.shadowColor=accentColor||'#94A3B8';
+    ctx.shadowBlur=11;
+    ctx.beginPath();ctx.arc(cx,cy,R,Math.PI,fillEnd,false);
+    ctx.lineWidth=18;ctx.strokeStyle=grad;ctx.lineCap='round';ctx.stroke();
+    ctx.shadowBlur=0;
+  }
+
+  // ── 4. TICK MARKS a −100, −50, 0, +50, +100 ──
+  [-100,-50,0,50,100].forEach(v=>{
+    const ta=Math.PI+((v+100)/200)*Math.PI;
+    const iRad=v===0?R-13:R-10;
+    const oRad=v===0?R+13:R+10;
+    ctx.beginPath();
+    ctx.moveTo(cx+iRad*Math.cos(ta),cy+iRad*Math.sin(ta));
+    ctx.lineTo(cx+oRad*Math.cos(ta),cy+oRad*Math.sin(ta));
+    ctx.lineWidth=v===0?2.5:1.5;
+    ctx.strokeStyle=v===0?colT3:colT3+'99';
+    ctx.lineCap='round';
+    ctx.stroke();
+  });
+
+  // ── 5. NEEDLE ──
+  const nColor=score<=-50?'#059669':score<=-20?'#10B981':score<=20?'#6B7280':score<=50?'#F59E0B':'#DC2626';
+  ctx.save();
+  ctx.translate(cx,cy);
+  ctx.rotate(fillEnd);
+  ctx.shadowColor=nColor;
+  ctx.shadowBlur=14;
+  ctx.beginPath();
+  ctx.moveTo(R-12,0);   // punta
+  ctx.lineTo(-14,-6);   // base sinistra
+  ctx.lineTo(-14, 6);   // base destra
+  ctx.closePath();
+  ctx.fillStyle=nColor;
+  ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.restore();
+
+  // ── 6. HUB CENTRALE (3 cerchi concentrici) ──
+  ctx.beginPath();ctx.arc(cx,cy,12,0,Math.PI*2);
+  ctx.fillStyle=nColor;ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,7,0,Math.PI*2);
+  ctx.fillStyle=colCard;ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,3.5,0,Math.PI*2);
+  ctx.fillStyle=nColor;ctx.fill();
 }
 
 async function refreshSdPrice(sym){
