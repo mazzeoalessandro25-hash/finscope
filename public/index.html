@@ -2057,53 +2057,49 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <span style="font-size:9px;color:var(--b);font-family:var(--fm);font-weight:700;background:var(--b3);padding:2px 7px;border-radius:4px">✦ <span data-i18n="sent.proprietary">Metrica proprietaria</span></span>
         <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.sentiment">Tooltip</div></span>
       </div>
-      <!-- Body: flex row, si adatta automaticamente -->
-      <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
-        <!-- Sinistra: canvas + zona label + score sotto -->
-        <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:0">
+      <!-- Body: gauge sinistra, zona+score+verdict destra -->
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+        <!-- Gauge -->
+        <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center">
           <canvas id="sd-sent-canvas" width="256" height="148" style="width:256px;max-width:100%;display:block"></canvas>
-          <!-- Zona e score HTML sotto il canvas, sempre leggibili -->
-          <div style="text-align:center;margin-top:12px;margin-bottom:6px;line-height:1.1">
-            <div id="sd-sent-zone-lbl" style="font-size:9px;font-weight:700;font-family:var(--fm);letter-spacing:.9px;text-transform:uppercase;color:var(--t3)"></div>
-            <div id="sd-sent-score-lbl" style="font-size:34px;font-weight:800;font-family:var(--fm);color:var(--t);line-height:1.1;margin-top:1px"></div>
-          </div>
-          <!-- Etichette posizione arco -->
-          <div style="display:flex;justify-content:space-between;width:236px;max-width:100%">
+          <div style="display:flex;justify-content:space-between;width:236px;max-width:100%;margin-top:3px">
             <span style="font-size:8px;color:#059669;font-family:var(--fm);font-weight:700" data-i18n="sent.zone.oversold">IPERVENDUTO</span>
             <span style="font-size:8px;color:var(--t3);font-family:var(--fm);font-weight:700" data-i18n="sent.zone.neutral">NEUTRALE</span>
             <span style="font-size:8px;color:#DC2626;font-family:var(--fm);font-weight:700" data-i18n="sent.zone.overbought">IPERCOMPRATO</span>
           </div>
         </div>
-        <!-- Destra: 4 metriche in griglia 2×2 + verdict — flex:1 riempie lo spazio disponibile -->
-        <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl">RSI (14)</div>
-              <div class="sd-sent-metric-val" id="sd-sent-rsi">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px" id="sd-sent-rsi-lbl"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-rsi-bar"></div></div>
-            </div>
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl" data-i18n="sent.metric.pos52w">Pos. 52W</div>
-              <div class="sd-sent-metric-val" id="sd-sent-52w">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px" id="sd-sent-52w-lbl"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-52w-bar"></div></div>
-            </div>
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl" data-i18n="sent.metric.obv">OBV Trend</div>
-              <div class="sd-sent-metric-val" id="sd-sent-obv" style="font-size:12px">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-obv-bar"></div></div>
-            </div>
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl" data-i18n="sent.metric.vol">Volume Ratio</div>
-              <div class="sd-sent-metric-val" id="sd-sent-vol">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px" id="sd-sent-vol-lbl"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-vol-bar"></div></div>
-            </div>
-          </div>
-          <!-- Verdict compatto -->
-          <div id="sd-sent-verdict" style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;font-size:11px;font-family:var(--fm);color:var(--t2);line-height:1.6;margin-top:1px"></div>
+        <!-- Zona + score grande + verdict -->
+        <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:4px">
+          <div id="sd-sent-zone-lbl" style="font-size:9px;font-weight:700;font-family:var(--fm);letter-spacing:.9px;text-transform:uppercase;color:var(--t3)"></div>
+          <div id="sd-sent-score-lbl" style="font-size:46px;font-weight:800;font-family:var(--fm);color:var(--t);line-height:1"></div>
+          <div id="sd-sent-verdict" style="font-size:12px;font-family:var(--fm);color:var(--t2);line-height:1.6;margin-top:4px"></div>
+        </div>
+      </div>
+      <!-- 4 metriche — riga compatta separata -->
+      <div style="display:flex;margin-top:14px;padding-top:12px;border-top:1px solid var(--bd);flex-wrap:wrap;gap:0">
+        <div style="flex:1;min-width:80px;padding-right:12px;border-right:1px solid var(--bd)">
+          <div class="sd-sent-metric-lbl">RSI (14)</div>
+          <div id="sd-sent-rsi" style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.2;margin-top:2px">—</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:12px;margin-top:1px" id="sd-sent-rsi-lbl"></div>
+          <div class="sd-sent-bar" style="margin-top:5px"><div class="sd-sent-bar-fill" id="sd-sent-rsi-bar"></div></div>
+        </div>
+        <div style="flex:1;min-width:80px;padding:0 12px;border-right:1px solid var(--bd)">
+          <div class="sd-sent-metric-lbl" data-i18n="sent.metric.pos52w">Pos. 52W</div>
+          <div id="sd-sent-52w" style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.2;margin-top:2px">—</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:12px;margin-top:1px" id="sd-sent-52w-lbl"></div>
+          <div class="sd-sent-bar" style="margin-top:5px"><div class="sd-sent-bar-fill" id="sd-sent-52w-bar"></div></div>
+        </div>
+        <div style="flex:1;min-width:80px;padding:0 12px;border-right:1px solid var(--bd)">
+          <div class="sd-sent-metric-lbl" data-i18n="sent.metric.obv">OBV Trend</div>
+          <div id="sd-sent-obv" style="font-size:13px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.2;margin-top:2px">—</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:12px;margin-top:1px"></div>
+          <div class="sd-sent-bar" style="margin-top:5px"><div class="sd-sent-bar-fill" id="sd-sent-obv-bar"></div></div>
+        </div>
+        <div style="flex:1;min-width:80px;padding-left:12px">
+          <div class="sd-sent-metric-lbl" data-i18n="sent.metric.vol">Volume Ratio</div>
+          <div id="sd-sent-vol" style="font-size:15px;font-weight:800;color:var(--t);font-family:var(--fm);line-height:1.2;margin-top:2px">—</div>
+          <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:12px;margin-top:1px" id="sd-sent-vol-lbl"></div>
+          <div class="sd-sent-bar" style="margin-top:5px"><div class="sd-sent-bar-fill" id="sd-sent-vol-bar"></div></div>
         </div>
       </div>
       <!-- Tesi combinata — inline dopo le metriche -->
