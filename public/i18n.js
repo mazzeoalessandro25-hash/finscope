@@ -469,6 +469,16 @@ const TRANSLATIONS={
     'sent.pos52.low':'Vicino ai minimi','sent.pos52.mid':'Intermedio','sent.pos52.high':'Vicino ai massimi',
     'sent.vol.low':'Sotto media','sent.vol.mid':'In linea','sent.vol.high':'Sopra media',
     'sent.obv.bull':'▲ Accumulazione','sent.obv.neutral':'→ Laterale','sent.obv.bear':'▼ Distribuzione',
+    /* STORICO DEL TERMOMETRO */
+    'sentchart.title':'STORICO TERMOMETRO',
+    'sentchart.tab.1y':'1A',
+    'tip.sd.sentchart':'Andamento storico del FinEdge Score nel tempo. Calcolato giornalmente su RSI, posizione 52 settimane, trend OBV e volume ratio. Le zone rosse indicano periodi di ipercomprato, le zone verdi di ipervenduto.',
+    /* WYCKOFF OSCILLATORE */
+    'wyosc.title':'Wyckoff — Oscillatore Accumulo/Distribuzione',
+    'tip.sd.wyosc':'L\'<b>Oscillatore Wyckoff</b> mostra la differenza tra OBV e la sua media mobile a 20 periodi, centrata su zero. Valori positivi indicano pressione di acquisto (accumulazione) superiore alla media; valori negativi indicano distribuzione. Verde = accumulazione dominante · Rosso = distribuzione dominante.',
+    /* DPO — OSCILLATORE DI CICLO */
+    'dpo.title':'DPO — Oscillatore di Ciclo',
+    'tip.sd.dpo':'Il <b>Detrended Price Oscillator (DPO)</b> rimuove il trend dal prezzo confrontando il prezzo attuale con la SMA(20) ritardata di 11 giorni. Il risultato mette in evidenza i cicli del titolo indipendentemente dalla direzione generale. Picchi del DPO = massimi ciclici · Minimi del DPO = minimi ciclici potenziali.',
     /* RISK METRICS — TOOLTIPS */
     'risk.tip.sharpe':'Rendimento in eccesso rispetto al tasso privo di rischio (4,5% T-Bill USA), diviso per la volatilità annualizzata. Formula: (Rendimento annuo − 4,5%) ÷ Volatilità. >1,5 = eccellente · 1–1,5 = buono · 0,5–1 = sufficiente · <0,5 = da migliorare. Pesi per valore corrente di mercato, std dev campionaria (÷n−1).',
     'risk.tip.maxDD':'La perdita massima registrata dal picco al minimo successivo nell\'intero periodo analizzato. Calcolato su rendimenti composti giornalieri. Esempio: se il portafoglio passa da 100 a 70, il Max Drawdown è −30%. Misura il peggior scenario storico vissuto.',
@@ -1676,6 +1686,16 @@ const TRANSLATIONS={
     'sent.pos52.low':'Near lows','sent.pos52.mid':'Mid-range','sent.pos52.high':'Near highs',
     'sent.vol.low':'Below avg','sent.vol.mid':'In line','sent.vol.high':'Above avg',
     'sent.obv.bull':'▲ Accumulation','sent.obv.neutral':'→ Ranging','sent.obv.bear':'▼ Distribution',
+    /* STORICO DEL TERMOMETRO */
+    'sentchart.title':'THERMOMETER HISTORY',
+    'sentchart.tab.1y':'1Y',
+    'tip.sd.sentchart':'Historical trend of the FinEdge Score over time. Calculated daily from RSI, 52-week position, OBV trend and volume ratio. Red zones indicate overbought periods, green zones indicate oversold conditions.',
+    /* WYCKOFF OSCILLATORE */
+    'wyosc.title':'Wyckoff — Accumulation/Distribution Oscillator',
+    'tip.sd.wyosc':'The <b>Wyckoff Oscillator</b> shows the difference between OBV and its 20-period moving average, centred on zero. Positive values indicate buying pressure (accumulation) above average; negative values indicate distribution. Green = dominant accumulation · Red = dominant distribution.',
+    /* DPO — CYCLE OSCILLATOR */
+    'dpo.title':'DPO — Cycle Oscillator',
+    'tip.sd.dpo':'The <b>Detrended Price Oscillator (DPO)</b> removes the price trend by comparing the current price to the SMA(20) shifted back 11 days. The result highlights the stock\'s cycles regardless of overall direction. DPO peaks = cyclical highs · DPO troughs = potential cyclical lows.',
     /* RISK METRICS — TOOLTIPS */
     'risk.tip.sharpe':'Excess return over the risk-free rate (4.5% US T-Bill), divided by annualised volatility. Formula: (Annual return − 4.5%) ÷ Volatility. >1.5 = excellent · 1–1.5 = good · 0.5–1 = adequate · <0.5 = needs improvement. Weights by current market value, sample std dev (÷n−1).',
     'risk.tip.maxDD':'The maximum loss recorded from peak to subsequent trough over the entire period analysed. Calculated on compounded daily returns. Example: if the portfolio drops from 100 to 70, Max Drawdown is −30%. Measures the worst historical scenario experienced.',
