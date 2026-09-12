@@ -475,7 +475,7 @@ const TRANSLATIONS={
     'tip.sd.sentchart':'Andamento storico del FinEdge Score nel tempo. Calcolato giornalmente su RSI, posizione 52 settimane, trend OBV e volume ratio. Le zone rosse indicano periodi di ipercomprato, le zone verdi di ipervenduto.',
     /* ANALISI AVANZATA — CARD UNIFICATA */
     'adv.title':'Analisi Avanzata',
-    'tip.sd.advanced':'La card <b>Analisi Avanzata</b> combina tre indicatori proprietari in una tesi d\'investimento in tempo reale.<br><br><b>Storico Termometro</b> — FinEdge Score giornaliero (RSI + posizione 52W + OBV + volume). Zone rosse = ipercomprato · Zone verdi = ipervenduto.<br><b>Wyckoff Oscillatore</b> — OBV relativo alla sua SMA20, centrato su zero. Verde = accumulazione · Rosso = distribuzione.<br><b>DPO</b> — Detrended Price Oscillator: rimuove il trend e mette in evidenza i cicli del titolo.<br><br>La <b>tesi combinata</b> si aggiorna man mano che i dati caricano.',
+    'tip.sd.advanced':'La <b>tesi combinata</b> sintetizza tre segnali in tempo reale: FinEdge Score (sentiment), Wyckoff OBV (accumulo/distribuzione) e DPO (fase ciclica). I chip colorati mostrano l\'allineamento dei segnali — verde = rialzista, rosso = ribassista, grigio = neutro.',
     'wyosc.label':'WYCKOFF OSC',
     'wyosc.title':'Wyckoff — Oscillatore Accumulo/Distribuzione',
     'tip.sd.wyosc':'L\'<b>Oscillatore Wyckoff</b> mostra la differenza tra OBV e la sua media mobile a 20 periodi, centrata su zero. Valori positivi indicano pressione di acquisto (accumulazione) superiore alla media; valori negativi indicano distribuzione. Verde = accumulazione dominante · Rosso = distribuzione dominante.',
@@ -1697,7 +1697,7 @@ const TRANSLATIONS={
     'tip.sd.sentchart':'Historical trend of the FinEdge Score over time. Calculated daily from RSI, 52-week position, OBV trend and volume ratio. Red zones indicate overbought periods, green zones indicate oversold conditions.',
     /* ANALISI AVANZATA — CARD UNIFICATA */
     'adv.title':'Advanced Analysis',
-    'tip.sd.advanced':'The <b>Advanced Analysis</b> card combines three proprietary indicators into a real-time investment thesis.<br><br><b>Thermometer History</b> — daily FinEdge Score (RSI + 52W position + OBV + volume). Red zones = overbought · Green zones = oversold.<br><b>Wyckoff Oscillator</b> — OBV relative to its SMA20, centred on zero. Green = accumulation · Red = distribution.<br><b>DPO</b> — Detrended Price Oscillator: removes trend and highlights the stock\'s cycles.<br><br>The <b>combined thesis</b> updates in real time as data loads.',
+    'tip.sd.advanced':'The <b>combined thesis</b> synthesises three real-time signals: FinEdge Score (sentiment), Wyckoff OBV (accumulation/distribution) and DPO (cycle phase). Colour-coded chips show signal alignment — green = bullish, red = bearish, grey = neutral.',
     'wyosc.label':'WYCKOFF OSC',
     'wyosc.title':'Wyckoff — Accumulation/Distribution Oscillator',
     'tip.sd.wyosc':'The <b>Wyckoff Oscillator</b> shows the difference between OBV and its 20-period moving average, centred on zero. Positive values indicate buying pressure (accumulation) above average; negative values indicate distribution. Green = dominant accumulation · Red = dominant distribution.',
