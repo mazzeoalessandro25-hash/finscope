@@ -2059,75 +2059,51 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
       <!-- Body: flex row, si adatta automaticamente -->
       <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
-        <!-- Sinistra: canvas + zona label + score sotto -->
-        <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:0">
-          <canvas id="sd-sent-canvas" width="256" height="148" style="width:256px;max-width:100%;display:block"></canvas>
-          <!-- Zona e score HTML sotto il canvas, sempre leggibili -->
-          <div style="text-align:center;margin-top:12px;margin-bottom:6px;line-height:1.1">
-            <div id="sd-sent-zone-lbl" style="font-size:9px;font-weight:700;font-family:var(--fm);letter-spacing:.9px;text-transform:uppercase;color:var(--t3)"></div>
-            <div id="sd-sent-score-lbl" style="font-size:34px;font-weight:800;font-family:var(--fm);color:var(--t);line-height:1.1;margin-top:1px"></div>
-          </div>
-          <!-- Etichette posizione arco -->
+        <!-- Sinistra: canvas con score dentro + label zone -->
+        <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:5px">
+          <canvas id="sd-sent-canvas" width="256" height="172" style="width:256px;max-width:100%;display:block"></canvas>
           <div style="display:flex;justify-content:space-between;width:236px;max-width:100%">
             <span style="font-size:8px;color:#059669;font-family:var(--fm);font-weight:700" data-i18n="sent.zone.oversold">IPERVENDUTO</span>
             <span style="font-size:8px;color:var(--t3);font-family:var(--fm);font-weight:700" data-i18n="sent.zone.neutral">NEUTRALE</span>
             <span style="font-size:8px;color:#DC2626;font-family:var(--fm);font-weight:700" data-i18n="sent.zone.overbought">IPERCOMPRATO</span>
           </div>
         </div>
-        <!-- Destra: 4 metriche in griglia 2×2 + verdict -->
-        <div style="flex:0 0 268px;min-width:0;display:flex;flex-direction:column;gap:6px">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl">RSI (14)</div>
+        <!-- Destra: 4 metriche + verdict -->
+        <div style="flex:1;min-width:155px;display:flex;flex-direction:column;gap:6px">
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl">RSI (14)</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
               <div class="sd-sent-metric-val" id="sd-sent-rsi">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px" id="sd-sent-rsi-lbl"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-rsi-bar"></div></div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="sd-sent-rsi-lbl"></div>
             </div>
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl" data-i18n="sent.metric.pos52w">Pos. 52W</div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-rsi-bar"></div></div>
+          </div>
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl" data-i18n="sent.metric.pos52w">Posizione 52 Settimane</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
               <div class="sd-sent-metric-val" id="sd-sent-52w">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px" id="sd-sent-52w-lbl"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-52w-bar"></div></div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="sd-sent-52w-lbl"></div>
             </div>
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl" data-i18n="sent.metric.obv">OBV Trend</div>
-              <div class="sd-sent-metric-val" id="sd-sent-obv" style="font-size:12px">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-obv-bar"></div></div>
-            </div>
-            <div class="sd-sent-metric">
-              <div class="sd-sent-metric-lbl" data-i18n="sent.metric.vol">Volume Ratio</div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-52w-bar"></div></div>
+          </div>
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl" data-i18n="sent.metric.obv">Trend OBV (3m)</div>
+            <div class="sd-sent-metric-val" id="sd-sent-obv" style="margin:2px 0 1px">—</div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-obv-bar"></div></div>
+          </div>
+          <div class="sd-sent-metric">
+            <div class="sd-sent-metric-lbl" data-i18n="sent.metric.vol">Volume Ratio</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
               <div class="sd-sent-metric-val" id="sd-sent-vol">—</div>
-              <div style="font-size:9px;color:var(--t3);font-family:var(--fm);min-height:13px;margin-top:1px" id="sd-sent-vol-lbl"></div>
-              <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-vol-bar"></div></div>
+              <div style="font-size:9px;color:var(--t3);font-family:var(--fm)" id="sd-sent-vol-lbl"></div>
             </div>
+            <div class="sd-sent-bar"><div class="sd-sent-bar-fill" id="sd-sent-vol-bar"></div></div>
           </div>
           <!-- Verdict compatto -->
           <div id="sd-sent-verdict" style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;font-size:11px;font-family:var(--fm);color:var(--t2);line-height:1.6;margin-top:1px"></div>
         </div>
       </div>
       <div style="margin-top:10px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
-    </div>
-
-    <!-- Storico del Termometro — Sentiment Score History -->
-    <div class="sd-sent-card" id="sd-sentchart-section" style="display:none">
-      <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap">
-        <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.9px;font-family:var(--fm)" data-i18n="sentchart.title">STORICO TERMOMETRO</div>
-        <span style="font-size:9px;color:var(--b);font-family:var(--fm);font-weight:700;background:var(--b3);padding:2px 7px;border-radius:4px">✦ <span data-i18n="sent.proprietary">Metrica proprietaria</span></span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.sentchart">Tooltip</div></span>
-        <div style="display:flex;gap:4px;margin-left:auto" id="sd-sentchart-tabs">
-          <button class="cal-tab-btn active" onclick="sdSentChartRange('3m',this)">3M</button>
-          <button class="cal-tab-btn" onclick="sdSentChartRange('6m',this)">6M</button>
-          <button class="cal-tab-btn" onclick="sdSentChartRange('1a',this)" data-i18n="sentchart.tab.1y">1A</button>
-        </div>
-      </div>
-      <div style="position:relative;user-select:none" id="sd-sentchart-wrap">
-        <canvas id="sd-sentchart-canvas" style="width:100%;display:block;cursor:crosshair"></canvas>
-        <div id="sd-sentchart-vline" style="position:absolute;width:1px;background:var(--bd2);pointer-events:none;display:none;opacity:.6"></div>
-        <div id="sd-sentchart-dot" style="position:absolute;width:7px;height:7px;border-radius:50%;background:#1A56C4;border:2px solid var(--card);pointer-events:none;display:none;transform:translate(-50%,-50%)"></div>
-        <div id="sd-sentchart-tooltip" style="position:absolute;pointer-events:none;display:none;background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-family:var(--fm);font-size:10px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:10"></div>
-      </div>
-      <div style="margin-top:8px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
     </div>
 
     <!-- Wyckoff OBV Analysis -->
@@ -2137,28 +2113,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.wyckoff">Confronto tra andamento del prezzo e OBV (On-Balance Volume). Una divergenza rialzista si verifica quando il prezzo scende ma l'OBV sale — possibile fase di Accumulazione. Una divergenza ribassista indica possibile Distribuzione.</div></span>
       </div>
       <div id="sd-wyckoff-content" style="margin-top:8px">
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
-      </div>
-    </div>
-
-    <!-- Wyckoff Oscillatore — OBV vs SMA(OBV) centrato su zero -->
-    <div class="sd-desc-card" style="margin-bottom:16px" id="sd-wyosc-section">
-      <div class="sd-section-title" style="display:flex;align-items:center">
-        <span data-i18n="wyosc.title">Wyckoff — Oscillatore Accumulo/Distribuzione</span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.wyosc">Tooltip</div></span>
-      </div>
-      <div id="sd-wyosc-content" style="margin-top:8px">
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
-      </div>
-    </div>
-
-    <!-- DPO — Detrended Price Oscillator -->
-    <div class="sd-desc-card" style="margin-bottom:16px" id="sd-dpo-section">
-      <div class="sd-section-title" style="display:flex;align-items:center">
-        <span data-i18n="dpo.title">DPO — Oscillatore di Ciclo</span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.dpo">Tooltip</div></span>
-      </div>
-      <div id="sd-dpo-content" style="margin-top:8px">
         <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
       </div>
     </div>
@@ -14265,16 +14219,6 @@ function openStockDetail(sym){
   ['sd-sent-rsi','sd-sent-52w','sd-sent-obv','sd-sent-vol'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='—';el.style.color='var(--t)';}});
   ['sd-sent-rsi-bar','sd-sent-52w-bar','sd-sent-obv-bar','sd-sent-vol-bar'].forEach(id=>{const b=document.getElementById(id);if(b)b.style.width='0%';});
   const _sgV=document.getElementById('sd-sent-verdict');if(_sgV)_sgV.innerHTML='';
-  const _sgZone=document.getElementById('sd-sent-zone-lbl');if(_sgZone)_sgZone.textContent='';
-  const _sgScore=document.getElementById('sd-sent-score-lbl');if(_sgScore)_sgScore.textContent='';
-  // Reset Sentiment Chart
-  const _scSec=document.getElementById('sd-sentchart-section');if(_scSec)_scSec.style.display='none';
-  _sdSentChartData=null;
-  // Reset Wyckoff Oscillatore e DPO
-  const _wyoscEl=document.getElementById('sd-wyosc-content');
-  if(_wyoscEl)_wyoscEl.innerHTML=`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
-  const _dpoEl=document.getElementById('sd-dpo-content');
-  if(_dpoEl)_dpoEl.innerHTML=`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
   // Load
   const _qEl=document.getElementById('sd-quarterly');if(_qEl)_qEl.innerHTML='';
   const _eb=document.getElementById('sd-earnings-banner');if(_eb)_eb.style.display='none';
@@ -14282,9 +14226,6 @@ function openStockDetail(sym){
   loadSdData(sym);
   loadWyckoffAnalysis(sym);
   loadSentimentGauge(sym);
-  loadSentimentChart(sym);
-  loadWyckoffOscillator(sym);
-  loadDPO(sym);
   loadInsiderForStock(sym);
   loadQuarterlyData(sym);
   loadEarningsDate(sym);
@@ -14466,427 +14407,6 @@ async function loadWyckoffAnalysis(sym){
 }
 
 /* ══════════════════════════════════════════
-   STORICO DEL TERMOMETRO — Sentiment History Chart
-══════════════════════════════════════════ */
-let _sdSentChartData=null;
-let _sentChartRange='3m';
-
-async function loadSentimentChart(sym){
-  const sec=document.getElementById('sd-sentchart-section');
-  if(!sec)return;
-  try{
-    const d=await api(sym,'history&range=1y');
-    if(sdSym!==sym)return;
-    const pts=(d?.points||[]).filter(p=>p&&p.close!=null&&p.time);
-    if(pts.length<20)return;
-    pts.sort((a,b)=>a.time-b.time);
-    const dates=pts.map(p=>new Date(p.time*1000).toISOString().slice(0,10));
-    const closes=pts.map(p=>+p.close);
-    const volumes=pts.map(p=>+(p.volume||0));
-
-    // RSI pre-calcolato per tutti i punti
-    const rsiArr=calcRSI(closes,14);
-    const rsiMap={};rsiArr.forEach(r=>rsiMap[r.idx]=r.value);
-
-    // OBV cumulativo
-    const obv=new Array(closes.length).fill(0);
-    for(let j=1;j<closes.length;j++){
-      if(closes[j]>closes[j-1])obv[j]=obv[j-1]+volumes[j];
-      else if(closes[j]<closes[j-1])obv[j]=obv[j-1]-volumes[j];
-      else obv[j]=obv[j-1];
-    }
-
-    // Score rolling per ogni giorno (partendo da giorno 14)
-    const scores=[];
-    for(let i=14;i<closes.length;i++){
-      const rsi=rsiMap[i]??null;
-      const w=closes.slice(Math.max(0,i-251),i+1);
-      const hi=Math.max(...w),lo=Math.min(...w);
-      const pos52=hi>lo?(closes[i]-lo)/(hi-lo)*100:50;
-      const obvW=obv.slice(Math.max(0,i-62),i+1);
-      let obvScore=0;
-      if(obvW.length>=2){
-        const ref=Math.abs(obvW[0])||Math.abs(obvW[obvW.length-1])||1;
-        obvScore=Math.min(Math.max(Math.round((obvW[obvW.length-1]-obvW[0])/ref*100),-100),100);
-      }
-      const vW=volumes.slice(Math.max(0,i-251),i+1);
-      const avgV=vW.reduce((a,b)=>a+b,0)/(vW.length||1);
-      const volRatio=avgV>0?volumes[i]/avgV:1;
-      const rsiS=rsi!=null?Math.round((rsi-50)*2):0;
-      const p52S=Math.round((pos52-50)*2);
-      const volS=Math.min(Math.max(Math.round((volRatio-1)*80),-100),100);
-      const score=Math.min(Math.max(Math.round(rsiS*0.40+p52S*0.30+obvScore*0.20+volS*0.10),-100),100);
-      scores.push({date:dates[i],score});
-    }
-    if(!scores.length)return;
-    _sdSentChartData=scores;
-    sec.style.display='block';
-    _sentChartRange='3m';
-    document.querySelectorAll('#sd-sentchart-tabs .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
-    _drawSentChart('3m');
-    _initSentChartHover();
-  }catch(e){
-    const s=document.getElementById('sd-sentchart-section');if(s)s.style.display='none';
-  }
-}
-
-function sdSentChartRange(range,btn){
-  _sentChartRange=range;
-  document.querySelectorAll('#sd-sentchart-tabs .cal-tab-btn').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  _drawSentChart(range);
-}
-
-function _drawSentChart(range){
-  const canvas=document.getElementById('sd-sentchart-canvas');
-  if(!canvas||!_sdSentChartData)return;
-  // Filtra per range
-  const days=range==='3m'?90:range==='6m'?180:365;
-  const cutDate=new Date();cutDate.setDate(cutDate.getDate()-days);
-  const cutStr=cutDate.toISOString().slice(0,10);
-  const pts=_sdSentChartData.filter(d=>d.date>=cutStr);
-  if(pts.length<2)return;
-  canvas._sentPts=pts;
-
-  const dpr=Math.min(window.devicePixelRatio||1,2);
-  const W=canvas.clientWidth||400;
-  const H=160;
-  canvas.width=Math.round(W*dpr);
-  canvas.height=Math.round(H*dpr);
-  canvas.style.height=H+'px';
-  const ctx=canvas.getContext('2d');
-  ctx.scale(dpr,dpr);
-
-  const isDark=document.documentElement.classList.contains('dark');
-  const colBd=isDark?'#334155':'#E2E8F0';
-  const colT3=isDark?'#64748b':'#7A90A8';
-
-  const PAD={top:10,right:8,bottom:24,left:34};
-  const cW=W-PAD.left-PAD.right;
-  const cH=H-PAD.top-PAD.bottom;
-  const n=pts.length;
-  const yMin=-110,yMax=110;
-  const toX=i=>PAD.left+(n>1?i/(n-1):0.5)*cW;
-  const toY=v=>PAD.top+(1-(v-yMin)/220)*cH;
-  canvas._sentLayout={toX,toY,PAD,W,H,cW,cH};
-
-  ctx.clearRect(0,0,W,H);
-
-  // Clip area grafico
-  ctx.save();
-  ctx.beginPath();ctx.rect(PAD.left,PAD.top,cW,cH);ctx.clip();
-
-  // Zone colorate
-  ctx.fillStyle='rgba(220,38,38,0.07)';
-  ctx.fillRect(PAD.left,toY(100),cW,toY(50)-toY(100));
-  ctx.fillStyle='rgba(5,150,105,0.07)';
-  ctx.fillRect(PAD.left,toY(-50),cW,toY(-100)-toY(-50));
-
-  // Fill area sotto la linea (rispetto allo zero)
-  ctx.beginPath();
-  pts.forEach((p,i)=>{const x=toX(i),y=toY(p.score);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.lineTo(toX(n-1),toY(0));ctx.lineTo(toX(0),toY(0));ctx.closePath();
-  const gFill=ctx.createLinearGradient(0,toY(100),0,toY(-100));
-  gFill.addColorStop(0,'rgba(220,38,38,0.13)');
-  gFill.addColorStop(0.5,'rgba(26,86,196,0.04)');
-  gFill.addColorStop(1,'rgba(5,150,105,0.13)');
-  ctx.fillStyle=gFill;ctx.fill();
-
-  // Linea score
-  ctx.beginPath();
-  pts.forEach((p,i)=>{const x=toX(i),y=toY(p.score);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
-  ctx.strokeStyle='#1A56C4';ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.lineCap='round';ctx.stroke();
-
-  ctx.restore();
-
-  // Linee griglia + etichette Y
-  [-100,-50,0,50,100].forEach(v=>{
-    const y=toY(v);
-    ctx.beginPath();ctx.moveTo(PAD.left,y);ctx.lineTo(PAD.left+cW,y);
-    ctx.strokeStyle=v===0?colT3+'cc':colBd;
-    ctx.lineWidth=v===0?1.5:0.8;
-    ctx.setLineDash(v===0?[]:[3,3]);ctx.stroke();ctx.setLineDash([]);
-    ctx.fillStyle=colT3;ctx.font='600 8px "IBM Plex Mono",monospace';
-    ctx.textAlign='right';ctx.textBaseline='middle';
-    ctx.fillText(v>0?'+'+v:String(v),PAD.left-3,y);
-  });
-
-  // Etichette X (date)
-  const isIt=document.documentElement.lang!=='en';
-  const months=isIt?['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const nLab=Math.min(5,n);
-  const idxs=[0];
-  for(let i=1;i<nLab-1;i++)idxs.push(Math.round(i*(n-1)/(nLab-1)));
-  idxs.push(n-1);
-  const uniq=[...new Set(idxs)];
-  ctx.fillStyle=colT3;ctx.font='600 8px "IBM Plex Mono",monospace';ctx.textBaseline='top';
-  uniq.forEach((idx,ii)=>{
-    const x=toX(idx);
-    const[,mm,dd]=pts[idx].date.split('-');
-    ctx.textAlign=ii===0?'left':ii===uniq.length-1?'right':'center';
-    ctx.fillText(months[parseInt(mm)-1]+' '+dd,x,H-PAD.bottom+4);
-  });
-}
-
-function _initSentChartHover(){
-  const wrap=document.getElementById('sd-sentchart-wrap');
-  const canvas=document.getElementById('sd-sentchart-canvas');
-  const vline=document.getElementById('sd-sentchart-vline');
-  const dot=document.getElementById('sd-sentchart-dot');
-  const tip=document.getElementById('sd-sentchart-tooltip');
-  if(!wrap||!canvas||canvas._sentHoverReady)return;
-  canvas._sentHoverReady=true;
-  const isIt=()=>document.documentElement.lang!=='en';
-  const months_it=['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
-  const months_en=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  function onMove(e){
-    const rect=canvas.getBoundingClientRect();
-    const mx=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
-    const pts=canvas._sentPts;const lay=canvas._sentLayout;
-    if(!pts||!lay)return;
-    const{toX,toY,PAD,W,H,cW,cH}=lay;
-    const n=pts.length;
-    let bi=0,bd=Infinity;
-    for(let i=0;i<n;i++){const dx=Math.abs(toX(i)-mx);if(dx<bd){bd=dx;bi=i;}}
-    const pt=pts[bi];
-    const x=toX(bi),y=toY(pt.score);
-    vline.style.left=x+'px';vline.style.top=PAD.top+'px';vline.style.height=cH+'px';vline.style.display='block';
-    const sc=pt.score;
-    const dotCol=sc>50?'#DC2626':sc<-50?'#059669':'#1A56C4';
-    dot.style.left=x+'px';dot.style.top=y+'px';dot.style.background=dotCol;dot.style.display='block';
-    const[,mm,dd]=pt.date.split('-');
-    const mon=(isIt()?months_it:months_en)[parseInt(mm)-1];
-    const scStr=(sc>0?'+':'')+sc;
-    tip.innerHTML=`<span style="color:var(--t3)">${dd} ${mon}</span>&nbsp;&nbsp;<span style="font-weight:800;color:${dotCol}">${scStr}</span>`;
-    const tipW=tip.offsetWidth||90;
-    tip.style.left=(x+tipW+14>W?x-tipW-8:x+8)+'px';
-    tip.style.top=(PAD.top+4)+'px';
-    tip.style.display='block';
-  }
-  function onLeave(){vline.style.display='none';dot.style.display='none';tip.style.display='none';}
-  wrap.addEventListener('mousemove',onMove);
-  wrap.addEventListener('mouseleave',onLeave);
-  wrap.addEventListener('touchmove',onMove,{passive:true});
-  wrap.addEventListener('touchend',onLeave);
-}
-
-/* ══════════════════════════════════════════
-   OSCILLATORE CANVAS — renderer condiviso per Wyckoff Osc e DPO
-   Istogramma centrato su zero con hover tooltip
-══════════════════════════════════════════ */
-function _drawOscillatorCanvas(canvasId,wrapId,vlineId,tipId,pts,values,colPos,colNeg){
-  const canvas=document.getElementById(canvasId);
-  if(!canvas||!pts.length)return;
-  const dpr=Math.min(window.devicePixelRatio||1,2);
-  const W=canvas.clientWidth||400;
-  const H=130;
-  canvas.width=Math.round(W*dpr);
-  canvas.height=Math.round(H*dpr);
-  canvas.style.height=H+'px';
-  const ctx=canvas.getContext('2d');
-  ctx.scale(dpr,dpr);
-  const isDark=document.documentElement.classList.contains('dark');
-  const colT3=isDark?'#64748b':'#7A90A8';
-  const PAD={top:6,right:8,bottom:22,left:6};
-  const cW=W-PAD.left-PAD.right;
-  const cH=H-PAD.top-PAD.bottom;
-  const n=pts.length;
-  const maxV=Math.max(...values.map(Math.abs),0.0001);
-  const toX=i=>PAD.left+(n>1?i/(n-1):0.5)*cW;
-  const toY=v=>PAD.top+(1-(v+maxV)/(2*maxV))*cH;
-  const zeroY=toY(0);
-  canvas._oscLayout={toX,toY,PAD,W,H,cW,cH,zeroY};
-  canvas._oscPts=pts;
-  canvas._oscVals=values;
-  ctx.clearRect(0,0,W,H);
-  ctx.save();
-  ctx.beginPath();ctx.rect(PAD.left,PAD.top,cW,cH);ctx.clip();
-  // Barre istogramma
-  const barW=Math.max(1.5,cW/n*0.85);
-  values.forEach((v,i)=>{
-    const x=toX(i);
-    const y=v>=0?toY(v):zeroY;
-    const h=Math.max(1,Math.abs(toY(v)-zeroY));
-    ctx.fillStyle=v>=0?colPos+'cc':colNeg+'cc';
-    ctx.fillRect(x-barW/2,y,barW,h);
-  });
-  // Linea zero
-  ctx.beginPath();ctx.moveTo(PAD.left,zeroY);ctx.lineTo(PAD.left+cW,zeroY);
-  ctx.strokeStyle=colT3+'cc';ctx.lineWidth=1;ctx.setLineDash([3,3]);ctx.stroke();ctx.setLineDash([]);
-  ctx.restore();
-  // Etichette X (date)
-  const isIt=document.documentElement.lang!=='en';
-  const months=isIt?['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const nLab=Math.min(4,n);
-  const idxs=[0];
-  for(let i=1;i<nLab-1;i++)idxs.push(Math.round(i*(n-1)/(nLab-1)));
-  if(n>1)idxs.push(n-1);
-  const uniq=[...new Set(idxs)];
-  ctx.fillStyle=colT3;ctx.font='600 8px "IBM Plex Mono",monospace';ctx.textBaseline='top';
-  uniq.forEach((idx,ii)=>{
-    const x=toX(idx);
-    const t=new Date(pts[idx].time*1000);
-    const lbl=months[t.getMonth()]+' '+t.getDate();
-    ctx.textAlign=ii===0?'left':ii===uniq.length-1?'right':'center';
-    ctx.fillText(lbl,x,H-PAD.bottom+3);
-  });
-  // Hover
-  const wrap=document.getElementById(wrapId);
-  const vline=document.getElementById(vlineId);
-  const tip=document.getElementById(tipId);
-  if(!wrap||canvas._oscHoverReady)return;
-  canvas._oscHoverReady=true;
-  function onMove(e){
-    const rect=canvas.getBoundingClientRect();
-    const mx=(e.touches?e.touches[0].clientX:e.clientX)-rect.left;
-    const lay=canvas._oscLayout;const vv=canvas._oscVals;const pp=canvas._oscPts;
-    if(!lay||!vv||!pp)return;
-    let bi=0,bd=Infinity;
-    for(let i=0;i<vv.length;i++){const dx=Math.abs(lay.toX(i)-mx);if(dx<bd){bd=dx;bi=i;}}
-    const x=lay.toX(bi);const val=vv[bi];
-    const dateStr=new Date(pp[bi].time*1000).toLocaleDateString(isIt?'it-IT':'en-GB',{day:'2-digit',month:'short'});
-    vline.style.left=x+'px';vline.style.top=lay.PAD.top+'px';vline.style.height=lay.cH+'px';vline.style.display='block';
-    const vc=val>=0?colPos:colNeg;
-    tip.innerHTML=`<span style="color:var(--t3)">${dateStr}</span>&nbsp;&nbsp;<span style="font-weight:800;color:${vc}">${val>=0?'+':''}${val.toFixed(0)}</span>`;
-    const tipW=tip.offsetWidth||100;
-    tip.style.left=(x+tipW+14>lay.W?x-tipW-8:x+8)+'px';
-    tip.style.top=(lay.PAD.top+4)+'px';
-    tip.style.display='block';
-  }
-  function onLeave(){vline.style.display='none';tip.style.display='none';}
-  wrap.addEventListener('mousemove',onMove);
-  wrap.addEventListener('mouseleave',onLeave);
-  wrap.addEventListener('touchmove',onMove,{passive:true});
-  wrap.addEventListener('touchend',onLeave);
-}
-
-/* ══════════════════════════════════════════
-   WYCKOFF OSCILLATORE — OBV vs SMA(OBV) centrato su zero
-══════════════════════════════════════════ */
-async function loadWyckoffOscillator(sym){
-  const el=document.getElementById('sd-wyosc-content');
-  if(!el)return;
-  try{
-    const d=await api(sym,'history&range=6mo');
-    if(sdSym!==sym)return;
-    const rawPts=Array.isArray(d)?d:(d?.points||[]);
-    if(rawPts.length<25){
-      el.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Dati storici insufficienti per l\'oscillatore.',en:'Insufficient historical data for oscillator.'})}</div>`;
-      return;
-    }
-    const pts=rawPts.filter(p=>p.close!=null&&p.volume!=null).sort((a,b)=>a.time-b.time);
-    // Calcola OBV cumulativo
-    const obv=[0];
-    for(let i=1;i<pts.length;i++){
-      const dir=pts[i].close>pts[i-1].close?1:pts[i].close<pts[i-1].close?-1:0;
-      obv.push(obv[i-1]+dir*pts[i].volume);
-    }
-    // SMA(20) su OBV
-    const obvSma=obv.map((_,i)=>{
-      if(i<19)return null;
-      return obv.slice(i-19,i+1).reduce((a,b)=>a+b,0)/20;
-    });
-    // Oscillatore = OBV − SMA(OBV)
-    const osc=obv.map((v,i)=>obvSma[i]!=null?v-obvSma[i]:null);
-    const validPts=pts.filter((_,i)=>osc[i]!=null);
-    const validOsc=osc.filter(v=>v!=null);
-    if(validPts.length<5){
-      el.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Dati insufficienti.',en:'Insufficient data.'})}</div>`;
-      return;
-    }
-    const lastOsc=validOsc[validOsc.length-1];
-    const prevOsc=validOsc.length>=2?validOsc[validOsc.length-2]:0;
-    const maxAbs=Math.max(...validOsc.map(Math.abs),1);
-    const pctStrength=+(Math.abs(lastOsc)/maxAbs*100).toFixed(0);
-    let signal,sigCol,sigIcon;
-    if(lastOsc>0&&lastOsc>prevOsc){signal=_L({it:'Accumulazione crescente',en:'Growing accumulation'});sigCol='#10B981';sigIcon='▲';}
-    else if(lastOsc>0){signal=_L({it:'Accumulazione in calo',en:'Fading accumulation'});sigCol='#6B7280';sigIcon='↗';}
-    else if(lastOsc<0&&lastOsc<prevOsc){signal=_L({it:'Distribuzione crescente',en:'Growing distribution'});sigCol='#EF4444';sigIcon='▼';}
-    else{signal=_L({it:'Distribuzione in calo',en:'Fading distribution'});sigCol='#6B7280';sigIcon='↘';}
-    el.innerHTML=`
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap">
-        <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${sigCol}">${sigIcon} ${signal}</span>
-        <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${_L({it:'Intensità',en:'Strength'})}: <b style="color:${sigCol}">${pctStrength}%</b></span>
-      </div>
-      <div style="position:relative;user-select:none" id="sd-wyosc-wrap">
-        <canvas id="sd-wyosc-canvas" style="width:100%;display:block;cursor:crosshair"></canvas>
-        <div id="sd-wyosc-vline" style="position:absolute;width:1px;background:var(--bd2);pointer-events:none;display:none;opacity:.6;top:0"></div>
-        <div id="sd-wyosc-tooltip" style="position:absolute;pointer-events:none;display:none;background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-family:var(--fm);font-size:10px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:10"></div>
-      </div>
-      <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">${_L({it:'⚠ OBV − SMA20(OBV) centrato su zero · Solo scopo informativo',en:'⚠ OBV − SMA20(OBV) centred on zero · For informational purposes only'})}</div>
-    `;
-    requestAnimationFrame(()=>_drawOscillatorCanvas('sd-wyosc-canvas','sd-wyosc-wrap','sd-wyosc-vline','sd-wyosc-tooltip',validPts,validOsc,'#10B981','#EF4444'));
-  }catch(e){
-    const el2=document.getElementById('sd-wyosc-content');
-    if(el2)el2.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Oscillatore non disponibile.',en:'Oscillator unavailable.'})}</div>`;
-  }
-}
-
-/* ══════════════════════════════════════════
-   DPO — Detrended Price Oscillator (cicli)
-══════════════════════════════════════════ */
-async function loadDPO(sym){
-  const el=document.getElementById('sd-dpo-content');
-  if(!el)return;
-  try{
-    const d=await api(sym,'history&range=6mo');
-    if(sdSym!==sym)return;
-    const rawPts=Array.isArray(d)?d:(d?.points||[]);
-    if(rawPts.length<25){
-      el.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Dati storici insufficienti per il DPO.',en:'Insufficient historical data for DPO.'})}</div>`;
-      return;
-    }
-    const pts=rawPts.filter(p=>p.close!=null).sort((a,b)=>a.time-b.time);
-    const closes=pts.map(p=>+p.close);
-    // DPO(20) = Close[i] − SMA20[i−(20/2+1)] = Close[i] − SMA20[i−11]
-    const period=20,shift=Math.floor(period/2)+1;
-    const sma20=closes.map((_,i)=>{
-      if(i<period-1)return null;
-      return closes.slice(i-period+1,i+1).reduce((a,b)=>a+b,0)/period;
-    });
-    const dpo=closes.map((c,i)=>{
-      const smaIdx=i-shift;
-      return smaIdx>=0&&sma20[smaIdx]!=null?c-sma20[smaIdx]:null;
-    });
-    const validPts=pts.filter((_,i)=>dpo[i]!=null);
-    const validDpo=dpo.filter(v=>v!=null);
-    if(validPts.length<5){
-      el.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Dati insufficienti.',en:'Insufficient data.'})}</div>`;
-      return;
-    }
-    const lastDpo=validDpo[validDpo.length-1];
-    const maxAbs=Math.max(...validDpo.map(Math.abs),0.0001);
-    const cyclePos=lastDpo/maxAbs*100;
-    // Stima lunghezza media del ciclo tramite cross dello zero
-    let crosses=0;
-    for(let i=1;i<validDpo.length;i++){if((validDpo[i]>=0)!==(validDpo[i-1]>=0))crosses++;}
-    const avgCycleLen=crosses>1?Math.round(validPts.length*2/crosses):null;
-    let phase,phaseCol;
-    if(cyclePos>60){phase=_L({it:'Ciclo in cima — rischio di inversione',en:'Cycle at peak — reversal risk'});phaseCol='#EF4444';}
-    else if(cyclePos>0){phase=_L({it:'Ciclo in salita',en:'Cycle ascending'});phaseCol='#10B981';}
-    else if(cyclePos>-60){phase=_L({it:'Ciclo in discesa',en:'Cycle descending'});phaseCol='#F59E0B';}
-    else{phase=_L({it:'Ciclo in fondo — possibile rimbalzo',en:'Cycle at trough — possible bounce'});phaseCol='#10B981';}
-    el.innerHTML=`
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap">
-        <span style="font-size:12px;font-weight:700;font-family:var(--fm);color:${phaseCol}">${phase}</span>
-        <span style="font-size:10px;color:var(--t3);font-family:var(--fm)">DPO: <b style="color:${phaseCol}">${lastDpo>=0?'+':''}${lastDpo.toFixed(2)}</b></span>
-        ${avgCycleLen?`<span style="font-size:10px;color:var(--t3);font-family:var(--fm)">${_L({it:'Ciclo medio',en:'Avg cycle'})}: <b style="color:var(--t)">${avgCycleLen}gg</b></span>`:''}
-      </div>
-      <div style="position:relative;user-select:none" id="sd-dpo-wrap">
-        <canvas id="sd-dpo-canvas" style="width:100%;display:block;cursor:crosshair"></canvas>
-        <div id="sd-dpo-vline" style="position:absolute;width:1px;background:var(--bd2);pointer-events:none;display:none;opacity:.6;top:0"></div>
-        <div id="sd-dpo-tooltip" style="position:absolute;pointer-events:none;display:none;background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-family:var(--fm);font-size:10px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:10"></div>
-      </div>
-      <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">${_L({it:'⚠ DPO(20) = Prezzo − SMA20 ritardata di 11 giorni · Elimina il trend, evidenzia i cicli · Solo scopo informativo',en:'⚠ DPO(20) = Price − SMA20 shifted back 11 days · Removes trend, highlights cycles · For informational purposes only'})}</div>
-    `;
-    requestAnimationFrame(()=>_drawOscillatorCanvas('sd-dpo-canvas','sd-dpo-wrap','sd-dpo-vline','sd-dpo-tooltip',validPts,validDpo,'#10B981','#EF4444'));
-  }catch(e){
-    const el2=document.getElementById('sd-dpo-content');
-    if(el2)el2.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'DPO non disponibile.',en:'DPO unavailable.'})}</div>`;
-  }
-}
-
-/* ══════════════════════════════════════════
    TERMOMETRO DEL TITOLO — Sentiment Gauge
 ══════════════════════════════════════════ */
 async function loadSentimentGauge(sym){
@@ -14960,15 +14480,9 @@ function _renderSentimentGauge(score,rsiVal,pos52,obvScore,volRatio){
   else if(score<=50){zKey='sent.zone.label.overbought';zColor='#F59E0B';vKey='sent.verdict.overbought';}
   else{zKey='sent.zone.label.fomo';zColor='#DC2626';vKey='sent.verdict.fomo';}
 
-  // Canvas: solo arco + ago (score e zona label sono HTML sotto)
+  // Score e zona label disegnati DENTRO il canvas — no HTML overlap
   const canvas=document.getElementById('sd-sent-canvas');
   if(canvas)_drawSentimentCanvas(canvas,score,_t(zKey),zColor);
-
-  // Zona label e score come HTML — sempre leggibili
-  const zoneLblEl=document.getElementById('sd-sent-zone-lbl');
-  if(zoneLblEl){zoneLblEl.textContent=_t(zKey);zoneLblEl.style.color=zColor;}
-  const scoreLblEl=document.getElementById('sd-sent-score-lbl');
-  if(scoreLblEl){scoreLblEl.textContent=(score>0?'+':'')+score;scoreLblEl.style.color=zColor;}
 
   const $=id=>document.getElementById(id);
   const vEl=$('sd-sent-verdict');if(vEl)vEl.innerHTML=_t(vKey);
@@ -15009,7 +14523,7 @@ function _renderSentimentGauge(score,rsiVal,pos52,obvScore,volRatio){
 
 function _drawSentimentCanvas(canvas,score,zoneLabel,nColor){
   const ctx=canvas.getContext('2d');
-  const W=256,H=148;
+  const W=256,H=172;
   canvas.width=W;canvas.height=H;
   ctx.clearRect(0,0,W,H);
 
@@ -15019,7 +14533,7 @@ function _drawSentimentCanvas(canvas,score,zoneLabel,nColor){
   const colT3   =isDark?'#64748b':'#7A90A8';
 
   const cx=W/2;  // 128
-  const cy=H-8;  // 140 — base del semicerchio
+  const cy=H-12; // 160 — base del semicerchio
   const R=104;   // top:56 | sides:24&232
 
   const pos=(score+100)/200;         // 0..1
@@ -15028,7 +14542,7 @@ function _drawSentimentCanvas(canvas,score,zoneLabel,nColor){
   // ── 1. BG ARC ──
   ctx.beginPath();
   ctx.arc(cx,cy,R,Math.PI,0,false);
-  ctx.lineWidth=16;ctx.strokeStyle=colBd;ctx.lineCap='butt';ctx.stroke();
+  ctx.lineWidth=20;ctx.strokeStyle=colBd;ctx.lineCap='butt';ctx.stroke();
 
   // ── 2. FILLED ARC — gradiente vivido, nessun overlay sbiadito ──
   if(pos>0.004){
@@ -15038,50 +14552,55 @@ function _drawSentimentCanvas(canvas,score,zoneLabel,nColor){
     grad.addColorStop(0.5, '#64748B');
     grad.addColorStop(0.74,'#F59E0B');
     grad.addColorStop(1,   '#DC2626');
-    ctx.shadowColor=nColor;ctx.shadowBlur=14;
+    ctx.shadowColor=nColor;ctx.shadowBlur=18;
     ctx.beginPath();ctx.arc(cx,cy,R,Math.PI,fillEnd,false);
-    ctx.lineWidth=16;ctx.strokeStyle=grad;ctx.lineCap='round';ctx.stroke();
+    ctx.lineWidth=20;ctx.strokeStyle=grad;ctx.lineCap='round';ctx.stroke();
     ctx.shadowBlur=0;
   }
 
   // ── 3. TICK MARKS ──
   [-100,-50,0,50,100].forEach(v=>{
     const ta=Math.PI+((v+100)/200)*Math.PI;
-    const ri=v===0?R-12:R-9,ro=v===0?R+12:R+9;
+    const ri=v===0?R-14:R-11,ro=v===0?R+14:R+11;
     ctx.beginPath();
     ctx.moveTo(cx+ri*Math.cos(ta),cy+ri*Math.sin(ta));
     ctx.lineTo(cx+ro*Math.cos(ta),cy+ro*Math.sin(ta));
-    ctx.lineWidth=v===0?2:1.2;
+    ctx.lineWidth=v===0?2.5:1.5;
     ctx.strokeStyle=v===0?colT3:colT3+'99';
     ctx.lineCap='round';ctx.stroke();
   });
 
-  // ── 4. NEEDLE (linea sottile + punta elegante) ──
+  // ── 4. NEEDLE ──
   ctx.save();
   ctx.translate(cx,cy);ctx.rotate(fillEnd);
-  // Corpo dell'ago
+  ctx.shadowColor=nColor;ctx.shadowBlur=18;
   ctx.beginPath();
-  ctx.moveTo(-6,0);
-  ctx.lineTo(R-20,0);
-  ctx.lineWidth=2;ctx.strokeStyle=nColor;ctx.lineCap='round';
-  ctx.shadowColor=nColor;ctx.shadowBlur=10;
-  ctx.stroke();
-  // Punta a freccia
-  ctx.beginPath();
-  ctx.moveTo(R-12,0);
-  ctx.lineTo(R-21,-3.5);
-  ctx.lineTo(R-21, 3.5);
+  ctx.moveTo(R-10,0);   // punta
+  ctx.lineTo(-13,-5.5); // base sx
+  ctx.lineTo(-13, 5.5); // base dx
   ctx.closePath();
   ctx.fillStyle=nColor;ctx.fill();
   ctx.shadowBlur=0;ctx.restore();
 
-  // ── 5. HUB (anello raffinato + punto centrale) ──
-  ctx.beginPath();ctx.arc(cx,cy,9,0,Math.PI*2);
-  ctx.fillStyle=colCard;ctx.fill();
-  ctx.strokeStyle=nColor;ctx.lineWidth=2.5;ctx.stroke();
-  ctx.beginPath();ctx.arc(cx,cy,3,0,Math.PI*2);
-  ctx.fillStyle=nColor;ctx.fill();
+  // ── 5. HUB (3 cerchi concentrici) ──
+  ctx.beginPath();ctx.arc(cx,cy,12,0,Math.PI*2);ctx.fillStyle=nColor;ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,7,0,Math.PI*2);ctx.fillStyle=colCard;ctx.fill();
+  ctx.beginPath();ctx.arc(cx,cy,3.5,0,Math.PI*2);ctx.fillStyle=nColor;ctx.fill();
 
+  // ── 6. SCORE TEXT (dentro l'arco, no overlap con hub) ──
+  const scoreY=cy-R*0.44; // ~114 — centro visivo dell'area interna
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='800 36px "IBM Plex Mono",monospace';
+  ctx.fillStyle=nColor;
+  ctx.fillText((score>0?'+':'')+score,cx,scoreY);
+
+  // ── 7. ZONE LABEL (sotto score) ──
+  if(zoneLabel){
+    ctx.font='700 8px "IBM Plex Mono",monospace';
+    ctx.fillStyle=nColor;ctx.globalAlpha=0.72;
+    ctx.fillText(zoneLabel.toUpperCase(),cx,scoreY+25);
+    ctx.globalAlpha=1;
+  }
 }
 
 async function refreshSdPrice(sym){
