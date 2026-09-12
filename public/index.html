@@ -2113,14 +2113,14 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div class="sd-desc-card" style="margin-bottom:16px;padding:12px 14px" id="sd-charts-section">
       <!-- Tab bar -->
       <div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap" id="sd-charts-tabs">
-        <button class="cal-tab-btn active" onclick="sdChartTab('storico',this)" data-i18n="sentchart.title">STORICO</button>
+        <button class="cal-tab-btn active" onclick="sdChartTab('obv',this)" data-i18n="sd.wyckoff.tab">OBV vs PREZZO</button>
+        <button class="cal-tab-btn" onclick="sdChartTab('storico',this)" data-i18n="sentchart.title">STORICO</button>
         <button class="cal-tab-btn" onclick="sdChartTab('wyosc',this)" data-i18n="wyosc.label">WYCKOFF OSC</button>
         <button class="cal-tab-btn" onclick="sdChartTab('dpo',this)" data-i18n="dpo.label">DPO</button>
-        <button class="cal-tab-btn" onclick="sdChartTab('obv',this)" data-i18n="sd.wyckoff.tab">OBV vs PREZZO</button>
         <span class="sd-info-btn" style="margin-left:auto">i<div class="sd-tip" data-i18n-html="tip.sd.advanced">Tooltip</div></span>
       </div>
       <!-- STORICO TERMOMETRO -->
-      <div id="sdct-storico">
+      <div id="sdct-storico" style="display:none">
         <div style="display:flex;justify-content:flex-end;gap:4px;margin-bottom:6px" id="sd-sentchart-tabs">
           <button class="cal-tab-btn active" onclick="sdSentChartRange('3m',this)">3M</button>
           <button class="cal-tab-btn" onclick="sdSentChartRange('6m',this)">6M</button>
@@ -2142,8 +2142,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div id="sdct-dpo" style="display:none">
         <div id="sd-dpo-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
       </div>
-      <!-- OBV vs PREZZO (Wyckoff Analysis) -->
-      <div id="sdct-obv" style="display:none">
+      <!-- OBV vs PREZZO (Wyckoff Analysis) — visibile di default -->
+      <div id="sdct-obv">
         <div id="sd-wyckoff-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
       </div>
       <div style="margin-top:8px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
@@ -14271,13 +14271,15 @@ function openStockDetail(sym){
   const _wycEl=document.getElementById('sd-wyckoff-content');
   if(_wycEl)_wycEl.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
   // Reset tab grafici: torna sempre su STORICO
-  ['sdct-storico','sdct-wyosc','sdct-dpo','sdct-obv'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.display=i===0?'':'none';});
+  // Reset tab: OBV vs PREZZO è il primo (indice 0)
+  ['sdct-obv','sdct-storico','sdct-wyosc','sdct-dpo'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.display=i===0?'':'none';});
   document.querySelectorAll('#sd-charts-tabs .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   // Load
   const _qEl=document.getElementById('sd-quarterly');if(_qEl)_qEl.innerHTML='';
   const _eb=document.getElementById('sd-earnings-banner');if(_eb)_eb.style.display='none';
   loadSdChart(sym,'1mo',null);
   loadSdData(sym);
+  loadWyckoffAnalysis(sym);
   loadSentimentGauge(sym);
   loadSentimentChart(sym);
   loadWyckoffOscillator(sym);
@@ -14482,17 +14484,11 @@ function sdChartTab(tab,btn){
   if(tab==='wyosc'&&_wyoscRedraw)requestAnimationFrame(_wyoscRedraw);
   if(tab==='dpo'&&_dpoRedraw)requestAnimationFrame(_dpoRedraw);
   if(tab==='obv'){
-    if(_wyckoffSymLoaded!==sdSym){
-      // Prima apertura per questo simbolo: carica ora che il div è visibile
-      _wyckoffSymLoaded=sdSym;
-      if(sdSym)loadWyckoffAnalysis(sdSym);
-    } else {
-      // Già caricato: basta fare resize del chart LightweightCharts
-      requestAnimationFrame(()=>requestAnimationFrame(()=>{
-        const chartEl=document.getElementById('sd-wyckoff-chart');
-        if(chartEl&&sdWyckoffChartInst)sdWyckoffChartInst.resize(chartEl.clientWidth||400,200);
-      }));
-    }
+    // Resize del chart LightweightCharts (già caricato all'apertura)
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      const chartEl=document.getElementById('sd-wyckoff-chart');
+      if(chartEl&&sdWyckoffChartInst)sdWyckoffChartInst.resize(chartEl.clientWidth||400,200);
+    }));
   }
 }
 
