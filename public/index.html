@@ -2106,11 +2106,15 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <div id="sd-sent-verdict" style="background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 11px;font-size:11px;font-family:var(--fm);color:var(--t2);line-height:1.6;margin-top:1px"></div>
         </div>
       </div>
-      <div style="margin-top:10px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
+      <!-- Tesi combinata — inline dopo le metriche -->
+      <div id="sd-adv-thesis" style="padding:10px 12px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);margin-top:10px">
+        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
+      </div>
+      <div style="margin-top:8px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
     </div>
 
-    <!-- Wyckoff OBV Analysis -->
-    <div class="sd-desc-card" style="margin-bottom:16px" id="sd-wyckoff-section">
+    <!-- [RIMOSSO: Wyckoff OBV Analysis — ora in tab dentro sd-charts-section] -->
+    <div class="sd-desc-card" style="margin-bottom:16px;display:none" id="sd-wyckoff-section">
       <div class="sd-section-title" style="display:flex;align-items:center">
         <span data-i18n="sd.wyckoff.title">Wyckoff — Analisi OBV vs Prezzo</span>
         <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.wyckoff">Confronto tra andamento del prezzo e OBV (On-Balance Volume). Una divergenza rialzista si verifica quando il prezzo scende ma l'OBV sale — possibile fase di Accumulazione. Una divergenza ribassista indica possibile Distribuzione.</div></span>
@@ -2120,54 +2124,39 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       </div>
     </div>
 
-    <!-- Analisi Avanzata — Card Unificata: Storico Termometro + Wyckoff Osc + DPO -->
-    <div class="sd-desc-card" style="margin-bottom:16px" id="sd-advanced-section">
-      <!-- Header -->
-      <div style="display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap">
-        <div class="sd-section-title" style="margin:0"><span data-i18n="adv.title">Analisi Avanzata</span></div>
-        <span style="font-size:9px;color:var(--b);font-family:var(--fm);font-weight:700;background:var(--b3);padding:2px 7px;border-radius:4px">✦ <span data-i18n="sent.proprietary">Metrica proprietaria</span></span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.advanced">Tooltip</div></span>
-      </div>
-      <!-- TESI COMBINATA IN TEMPO REALE -->
-      <div id="sd-adv-thesis" style="padding:12px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);margin-bottom:16px">
-        <div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
+    <!-- GRAFICI TECNICI — card compatta con 3 tab -->
+    <div class="sd-desc-card" style="margin-bottom:16px;padding:12px 14px" id="sd-charts-section">
+      <!-- Tab bar -->
+      <div style="display:flex;gap:4px;margin-bottom:10px;flex-wrap:wrap" id="sd-charts-tabs">
+        <button class="cal-tab-btn active" onclick="sdChartTab('storico',this)" data-i18n="sentchart.title">STORICO</button>
+        <button class="cal-tab-btn" onclick="sdChartTab('wyosc',this)" data-i18n="wyosc.label">WYCKOFF OSC</button>
+        <button class="cal-tab-btn" onclick="sdChartTab('dpo',this)" data-i18n="dpo.label">DPO</button>
+        <span class="sd-info-btn" style="margin-left:auto">i<div class="sd-tip" data-i18n-html="tip.sd.advanced">Tooltip</div></span>
       </div>
       <!-- STORICO TERMOMETRO -->
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;flex-wrap:wrap">
-        <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;font-family:var(--fm)" data-i18n="sentchart.title">STORICO TERMOMETRO</div>
-        <span style="font-size:9px;color:var(--b);font-family:var(--fm);font-weight:700;background:var(--b3);padding:1px 6px;border-radius:4px">✦</span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.sentchart">Tooltip</div></span>
-        <div style="display:flex;gap:4px;margin-left:auto" id="sd-sentchart-tabs">
+      <div id="sdct-storico">
+        <div style="display:flex;justify-content:flex-end;gap:4px;margin-bottom:6px" id="sd-sentchart-tabs">
           <button class="cal-tab-btn active" onclick="sdSentChartRange('3m',this)">3M</button>
           <button class="cal-tab-btn" onclick="sdSentChartRange('6m',this)">6M</button>
           <button class="cal-tab-btn" onclick="sdSentChartRange('1a',this)" data-i18n="sentchart.tab.1y">1A</button>
         </div>
-      </div>
-      <div id="sd-sentchart-inner-load" style="font-size:11px;color:var(--t3);font-family:var(--fm);padding:20px 0;text-align:center" data-i18n="common.loading">Caricamento...</div>
-      <div style="position:relative;user-select:none;display:none" id="sd-sentchart-wrap">
-        <canvas id="sd-sentchart-canvas" style="width:100%;display:block;cursor:crosshair;height:160px"></canvas>
-        <div id="sd-sentchart-vline" style="position:absolute;width:1px;background:var(--bd2);pointer-events:none;display:none;opacity:.6"></div>
-        <div id="sd-sentchart-dot" style="position:absolute;width:7px;height:7px;border-radius:50%;background:#1A56C4;border:2px solid var(--card);pointer-events:none;display:none;transform:translate(-50%,-50%)"></div>
-        <div id="sd-sentchart-tooltip" style="position:absolute;pointer-events:none;display:none;background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-family:var(--fm);font-size:10px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:10"></div>
-      </div>
-      <!-- WYCKOFF OSC + DPO — 2 colonne -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;font-family:var(--fm);margin-bottom:6px;display:flex;align-items:center;gap:4px">
-            <span data-i18n="wyosc.label">WYCKOFF OSC</span>
-            <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.wyosc">Tooltip</div></span>
-          </div>
-          <div id="sd-wyosc-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
-        </div>
-        <div>
-          <div style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.7px;font-family:var(--fm);margin-bottom:6px;display:flex;align-items:center;gap:4px">
-            <span data-i18n="dpo.label">DPO — CICLO</span>
-            <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.dpo">Tooltip</div></span>
-          </div>
-          <div id="sd-dpo-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
+        <div id="sd-sentchart-inner-load" style="font-size:11px;color:var(--t3);font-family:var(--fm);padding:16px 0;text-align:center" data-i18n="common.loading">Caricamento...</div>
+        <div style="position:relative;user-select:none;display:none" id="sd-sentchart-wrap">
+          <canvas id="sd-sentchart-canvas" style="width:100%;display:block;cursor:crosshair;height:90px"></canvas>
+          <div id="sd-sentchart-vline" style="position:absolute;width:1px;background:var(--bd2);pointer-events:none;display:none;opacity:.6"></div>
+          <div id="sd-sentchart-dot" style="position:absolute;width:7px;height:7px;border-radius:50%;background:#1A56C4;border:2px solid var(--card);pointer-events:none;display:none;transform:translate(-50%,-50%)"></div>
+          <div id="sd-sentchart-tooltip" style="position:absolute;pointer-events:none;display:none;background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-family:var(--fm);font-size:10px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:10"></div>
         </div>
       </div>
-      <div style="margin-top:10px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
+      <!-- WYCKOFF OSC -->
+      <div id="sdct-wyosc" style="display:none">
+        <div id="sd-wyosc-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
+      </div>
+      <!-- DPO -->
+      <div id="sdct-dpo" style="display:none">
+        <div id="sd-dpo-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
+      </div>
+      <div style="margin-top:8px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
     </div>
 
     <!-- Insider Transactions -->
@@ -14275,24 +14264,28 @@ function openStockDetail(sym){
   const _sgZone=document.getElementById('sd-sent-zone-lbl');if(_sgZone)_sgZone.textContent='';
   const _sgScore=document.getElementById('sd-sent-score-lbl');if(_sgScore)_sgScore.textContent='';
   // Reset Analisi Avanzata
-  _sdSentChartData=null;
+  _sdSentChartData=null;_wyoscRedraw=null;_dpoRedraw=null;
   _advState={sentScore:null,wyOsc:null,wyStrength:null,dpoPos:null};
   const _advThesis=document.getElementById('sd-adv-thesis');
   if(_advThesis){_advThesis.style.background='var(--s2)';_advThesis.style.borderColor='var(--bd)';_advThesis.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;}
   const _scLoad=document.getElementById('sd-sentchart-inner-load');
   if(_scLoad)_scLoad.style.display='';
+  const _scWrap=document.getElementById('sd-sentchart-wrap');
+  if(_scWrap)_scWrap.style.display='none';
   const _scCanvas=document.getElementById('sd-sentchart-canvas');
   if(_scCanvas){const _ctx=_scCanvas.getContext('2d');_ctx.clearRect(0,0,_scCanvas.width,_scCanvas.height);}
   const _wyoscEl=document.getElementById('sd-wyosc-content');
   if(_wyoscEl)_wyoscEl.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
   const _dpoEl=document.getElementById('sd-dpo-content');
   if(_dpoEl)_dpoEl.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
+  // Reset tab grafici: torna sempre su STORICO
+  ['sdct-storico','sdct-wyosc','sdct-dpo'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.display=i===0?'':'none';});
+  document.querySelectorAll('#sd-charts-tabs .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   // Load
   const _qEl=document.getElementById('sd-quarterly');if(_qEl)_qEl.innerHTML='';
   const _eb=document.getElementById('sd-earnings-banner');if(_eb)_eb.style.display='none';
   loadSdChart(sym,'1mo',null);
   loadSdData(sym);
-  loadWyckoffAnalysis(sym);
   loadSentimentGauge(sym);
   loadSentimentChart(sym);
   loadWyckoffOscillator(sym);
@@ -14483,6 +14476,19 @@ async function loadWyckoffAnalysis(sym){
 let _sdSentChartData=null;
 let _sentChartRange='3m';
 let _advState={sentScore:null,wyOsc:null,wyStrength:null,dpoPos:null};
+let _wyoscRedraw=null,_dpoRedraw=null;
+
+/* Switching tab grafici tecnici */
+function sdChartTab(tab,btn){
+  ['storico','wyosc','dpo'].forEach(t=>{
+    const el=document.getElementById('sdct-'+t);
+    if(el)el.style.display=t===tab?'':'none';
+  });
+  document.querySelectorAll('#sd-charts-tabs .cal-tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
+  if(tab==='storico'&&_sdSentChartData?.length)requestAnimationFrame(()=>_drawSentChart(_sentChartRange||'3m'));
+  if(tab==='wyosc'&&_wyoscRedraw)requestAnimationFrame(_wyoscRedraw);
+  if(tab==='dpo'&&_dpoRedraw)requestAnimationFrame(_dpoRedraw);
+}
 
 /* ── Tesi Combinata: renderizza il verdict in base ai 3 indicatori disponibili ── */
 function _renderAdvancedThesis(){
@@ -14888,7 +14894,8 @@ async function loadWyckoffOscillator(sym){
     `;
     _advState.wyOsc=lastOsc;_advState.wyStrength=pctStrength;
     _renderAdvancedThesis();
-    requestAnimationFrame(()=>_drawOscillatorCanvas('sd-wyosc-canvas','sd-wyosc-wrap','sd-wyosc-vline','sd-wyosc-tooltip',validPts,validOsc,'#10B981','#EF4444',110));
+    _wyoscRedraw=()=>_drawOscillatorCanvas('sd-wyosc-canvas','sd-wyosc-wrap','sd-wyosc-vline','sd-wyosc-tooltip',validPts,validOsc,'#10B981','#EF4444',90);
+    requestAnimationFrame(_wyoscRedraw);
   }catch(e){
     const el2=document.getElementById('sd-wyosc-content');
     if(el2)el2.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'Oscillatore non disponibile.',en:'Oscillator unavailable.'})}</div>`;
@@ -14954,7 +14961,8 @@ async function loadDPO(sym){
     `;
     _advState.dpoPos=cyclePos;
     _renderAdvancedThesis();
-    requestAnimationFrame(()=>_drawOscillatorCanvas('sd-dpo-canvas','sd-dpo-wrap','sd-dpo-vline','sd-dpo-tooltip',validPts,validDpo,'#10B981','#EF4444',110));
+    _dpoRedraw=()=>_drawOscillatorCanvas('sd-dpo-canvas','sd-dpo-wrap','sd-dpo-vline','sd-dpo-tooltip',validPts,validDpo,'#10B981','#EF4444',90);
+    requestAnimationFrame(_dpoRedraw);
   }catch(e){
     const el2=document.getElementById('sd-dpo-content');
     if(el2)el2.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_L({it:'DPO non disponibile.',en:'DPO unavailable.'})}</div>`;
