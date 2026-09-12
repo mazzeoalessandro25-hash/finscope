@@ -2127,6 +2127,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <button class="cal-tab-btn active" onclick="sdChartTab('storico',this)" data-i18n="sentchart.title">STORICO</button>
         <button class="cal-tab-btn" onclick="sdChartTab('wyosc',this)" data-i18n="wyosc.label">WYCKOFF OSC</button>
         <button class="cal-tab-btn" onclick="sdChartTab('dpo',this)" data-i18n="dpo.label">DPO</button>
+        <button class="cal-tab-btn" onclick="sdChartTab('obv',this)" data-i18n="sd.wyckoff.tab">OBV vs PREZZO</button>
         <span class="sd-info-btn" style="margin-left:auto">i<div class="sd-tip" data-i18n-html="tip.sd.advanced">Tooltip</div></span>
       </div>
       <!-- STORICO TERMOMETRO -->
@@ -2151,6 +2152,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <!-- DPO -->
       <div id="sdct-dpo" style="display:none">
         <div id="sd-dpo-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
+      </div>
+      <!-- OBV vs PREZZO (Wyckoff Analysis) -->
+      <div id="sdct-obv" style="display:none">
+        <div id="sd-wyckoff-content"><div style="font-size:11px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div></div>
       </div>
       <div style="margin-top:8px;font-size:9px;color:var(--t3);font-family:var(--fm)" data-i18n="sent.disclaimer">⚠ Analisi tecnica automatica · Solo scopo informativo</div>
     </div>
@@ -14274,14 +14279,17 @@ function openStockDetail(sym){
   if(_wyoscEl)_wyoscEl.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
   const _dpoEl=document.getElementById('sd-dpo-content');
   if(_dpoEl)_dpoEl.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
+  const _wycEl=document.getElementById('sd-wyckoff-content');
+  if(_wycEl)_wycEl.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;
   // Reset tab grafici: torna sempre su STORICO
-  ['sdct-storico','sdct-wyosc','sdct-dpo'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.display=i===0?'':'none';});
+  ['sdct-storico','sdct-wyosc','sdct-dpo','sdct-obv'].forEach((id,i)=>{const el=document.getElementById(id);if(el)el.style.display=i===0?'':'none';});
   document.querySelectorAll('#sd-charts-tabs .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   // Load
   const _qEl=document.getElementById('sd-quarterly');if(_qEl)_qEl.innerHTML='';
   const _eb=document.getElementById('sd-earnings-banner');if(_eb)_eb.style.display='none';
   loadSdChart(sym,'1mo',null);
   loadSdData(sym);
+  loadWyckoffAnalysis(sym);
   loadSentimentGauge(sym);
   loadSentimentChart(sym);
   loadWyckoffOscillator(sym);
@@ -14476,7 +14484,7 @@ let _wyoscRedraw=null,_dpoRedraw=null;
 
 /* Switching tab grafici tecnici */
 function sdChartTab(tab,btn){
-  ['storico','wyosc','dpo'].forEach(t=>{
+  ['storico','wyosc','dpo','obv'].forEach(t=>{
     const el=document.getElementById('sdct-'+t);
     if(el)el.style.display=t===tab?'':'none';
   });
@@ -14484,6 +14492,10 @@ function sdChartTab(tab,btn){
   if(tab==='storico'&&_sdSentChartData?.length)requestAnimationFrame(()=>_drawSentChart(_sentChartRange||'3m'));
   if(tab==='wyosc'&&_wyoscRedraw)requestAnimationFrame(_wyoscRedraw);
   if(tab==='dpo'&&_dpoRedraw)requestAnimationFrame(_dpoRedraw);
+  if(tab==='obv')requestAnimationFrame(()=>{
+    const chartEl=document.getElementById('sd-wyckoff-chart');
+    if(chartEl&&sdWyckoffChartInst)sdWyckoffChartInst.resize(chartEl.clientWidth,200);
+  });
 }
 
 /* ── Tesi Combinata: renderizza il verdict in base ai 3 indicatori disponibili ── */
