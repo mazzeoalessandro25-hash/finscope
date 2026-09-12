@@ -2074,8 +2074,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <span style="font-size:8px;color:#DC2626;font-family:var(--fm);font-weight:700" data-i18n="sent.zone.overbought">IPERCOMPRATO</span>
           </div>
         </div>
-        <!-- Destra: 4 metriche in griglia 2×2 + verdict -->
-        <div style="flex:0 0 268px;min-width:0;display:flex;flex-direction:column;gap:6px">
+        <!-- Destra: 4 metriche in griglia 2×2 + verdict — flex:1 riempie lo spazio disponibile -->
+        <div style="flex:1;min-width:220px;display:flex;flex-direction:column;gap:6px">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
             <div class="sd-sent-metric">
               <div class="sd-sent-metric-lbl">RSI (14)</div>
@@ -2143,9 +2143,9 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
           <button class="cal-tab-btn" onclick="sdSentChartRange('1a',this)" data-i18n="sentchart.tab.1y">1A</button>
         </div>
       </div>
-      <div id="sd-sentchart-inner-load" style="font-size:11px;color:var(--t3);font-family:var(--fm);padding:4px 0" data-i18n="common.loading">Caricamento...</div>
-      <div style="position:relative;user-select:none" id="sd-sentchart-wrap">
-        <canvas id="sd-sentchart-canvas" style="width:100%;display:block;cursor:crosshair"></canvas>
+      <div id="sd-sentchart-inner-load" style="font-size:11px;color:var(--t3);font-family:var(--fm);padding:20px 0;text-align:center" data-i18n="common.loading">Caricamento...</div>
+      <div style="position:relative;user-select:none;display:none" id="sd-sentchart-wrap">
+        <canvas id="sd-sentchart-canvas" style="width:100%;display:block;cursor:crosshair;height:160px"></canvas>
         <div id="sd-sentchart-vline" style="position:absolute;width:1px;background:var(--bd2);pointer-events:none;display:none;opacity:.6"></div>
         <div id="sd-sentchart-dot" style="position:absolute;width:7px;height:7px;border-radius:50%;background:#1A56C4;border:2px solid var(--card);pointer-events:none;display:none;transform:translate(-50%,-50%)"></div>
         <div id="sd-sentchart-tooltip" style="position:absolute;pointer-events:none;display:none;background:var(--card);border:1px solid var(--bd);border-radius:6px;padding:5px 9px;font-family:var(--fm);font-size:10px;color:var(--t);white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.12);z-index:10"></div>
@@ -14591,6 +14591,8 @@ async function loadSentimentChart(sym){
     _advState.sentScore=scores[scores.length-1].score;
     const _scLoad=document.getElementById('sd-sentchart-inner-load');
     if(_scLoad)_scLoad.style.display='none';
+    const _scWrap=document.getElementById('sd-sentchart-wrap');
+    if(_scWrap)_scWrap.style.display='';
     _sentChartRange='3m';
     document.querySelectorAll('#sd-sentchart-tabs .cal-tab-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
     _drawSentChart('3m');
