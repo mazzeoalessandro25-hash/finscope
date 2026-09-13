@@ -14456,7 +14456,7 @@ async function loadWyckoffAnalysis(sym){
       ...chartBase,
       width:priceEl.clientWidth,height:160,
       leftPriceScale:{visible:false}, // OBV su asse sx nascosto (scala indipendente)
-      timeScale:{borderColor:theme.border,visible:false},
+      timeScale:{borderColor:theme.border,visible:false,fixLeftEdge:true,fixRightEdge:true},
     });
     // Linea prezzo — asse destro (valori reali)
     const priceS=sdWyckoffChartInst.addLineSeries({
@@ -14483,13 +14483,12 @@ async function loadWyckoffAnalysis(sym){
     obvLineS.setData(pts.map((p,i)=>({time:p.time,value:obv[i]})));
 
     // Pannello OBV (basso) — istogramma verde/rosso, asse tempo visibile
-    // scala Y nascosta + padding-right per allinearsi al pannello sopra
     sdWyckoffObvInst=LightweightCharts.createChart(obvEl,{
       ...chartBase,
       width:obvEl.clientWidth,height:80,
-      rightPriceScale:{visible:false}, // nascosto: i valori OBV sono grandi e non intuitivi
+      rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.1,bottom:.1},visible:true},
       leftPriceScale:{visible:false},
-      timeScale:{borderColor:theme.border,timeVisible:true,secondsVisible:false},
+      timeScale:{borderColor:theme.border,timeVisible:true,secondsVisible:false,fixLeftEdge:true,fixRightEdge:true},
     });
     const obvHistS=sdWyckoffObvInst.addHistogramSeries({
       priceLineVisible:false,lastValueVisible:false,
@@ -14518,6 +14517,17 @@ async function loadWyckoffAnalysis(sym){
 
     sdWyckoffChartInst.timeScale().fitContent();
     sdWyckoffObvInst.timeScale().fitContent();
+
+    // Dopo il rendering, allinea le scale misurando la larghezza effettiva
+    requestAnimationFrame(()=>{
+      if(!sdWyckoffChartInst||!sdWyckoffObvInst)return;
+      const pScaleW=sdWyckoffChartInst.priceScale('right').width();
+      const oScaleW=sdWyckoffObvInst.priceScale('right').width();
+      if(pScaleW!==oScaleW){
+        // Aggiusta la larghezza del pannello OBV per pareggiare le scale
+        sdWyckoffObvInst.applyOptions({width:obvEl.clientWidth-(pScaleW-oScaleW)});
+      }
+    });
 
     // Resize observer su entrambi
     new ResizeObserver(()=>{
