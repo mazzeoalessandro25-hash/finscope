@@ -14063,7 +14063,7 @@ setInterval(()=>{
 let sdSym='', sdRange='1mo', sdType='candle', sdChartInst=null, sdPriceTimer=null;
 let sdLastValData=null, sdLastFundData=null;
 let sdIndicators=new Set(), sdIndSeries={}, sdRsiInst=null, sdMacdInst=null, sdStochInst=null, sdLastPts=null, sdVolSeries=null;
-let sdWyckoffChartInst=null;
+let sdWyckoffChartInst=null,sdWyckoffObvInst=null;
 
 const SECTOR_NAMES_IT={
   technology:'Tecnologia',financialServices:'Finanziari',healthcare:'Salute',
@@ -14250,6 +14250,7 @@ function openStockDetail(sym){
   document.getElementById('sd-btn-line').classList.remove('active');
   // Reset Wyckoff
   if(sdWyckoffChartInst){sdWyckoffChartInst.remove();sdWyckoffChartInst=null;}
+  if(sdWyckoffObvInst){sdWyckoffObvInst.remove();sdWyckoffObvInst=null;}
   const _wyEl=document.getElementById('sd-wyckoff-content');
   if(_wyEl)_wyEl.innerHTML=`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('load.wyckoff')}</div>`;
   // Reset Sentiment Gauge
@@ -14304,6 +14305,7 @@ function closeStockDetail(){
   document.body.style.overflow='';
   if(sdChartInst){sdChartInst.remove();sdChartInst=null;}
   if(sdWyckoffChartInst){sdWyckoffChartInst.remove();sdWyckoffChartInst=null;}
+  if(sdWyckoffObvInst){sdWyckoffObvInst.remove();sdWyckoffObvInst=null;}
   if(sdPriceTimer){clearInterval(sdPriceTimer);sdPriceTimer=null;}
   sdSym='';
 }
@@ -14410,60 +14412,105 @@ async function loadWyckoffAnalysis(sym){
           <div style="font-size:9px;color:var(--t3);font-family:var(--fm);line-height:1.4">${_t('wy.disclaimer')}</div>
         </div>
 
-        <!-- COLONNA DESTRA: grafico interattivo -->
+        <!-- COLONNA DESTRA: due pannelli TradingView style -->
         <div>
-          <div style="display:flex;gap:14px;margin-bottom:6px;align-items:center">
-            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:#1A56C4;letter-spacing:.5px">${_t('wy.legend.price')}</span>
-            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:#10B981;letter-spacing:.5px">${_t('wy.legend.obv')}</span>
-            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:rgba(100,116,139,.6);letter-spacing:.5px">${_t('wy.legend.sma')}</span>
+          <!-- Legenda pannello prezzo -->
+          <div style="display:flex;gap:12px;margin-bottom:4px;align-items:center">
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:#1A56C4;letter-spacing:.5px">── ${_t('wy.legend.price')}</span>
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:rgba(100,116,139,.6);letter-spacing:.5px">- - ${_t('wy.legend.sma')}</span>
           </div>
-          <div id="sd-wyckoff-chart" style="width:100%;height:200px;border-radius:6px;overflow:hidden"></div>
+          <!-- Pannello prezzo -->
+          <div id="sd-wyckoff-price-chart" style="width:100%;height:150px;border-radius:6px 6px 0 0;overflow:hidden"></div>
+          <!-- Separatore OBV label -->
+          <div style="display:flex;gap:10px;align-items:center;padding:3px 8px;background:var(--s2);border-left:1px solid var(--bd);border-right:1px solid var(--bd)">
+            <span style="font-size:9px;font-weight:700;font-family:var(--fm);color:var(--t3);letter-spacing:.5px">OBV</span>
+            <span style="font-size:9px;font-family:var(--fm);color:var(--t3)"><span style="color:#10B981">▉</span> ${_t('wy.obv.acc')}</span>
+            <span style="font-size:9px;font-family:var(--fm);color:var(--t3)"><span style="color:#EF4444">▉</span> ${_t('wy.obv.dist')}</span>
+          </div>
+          <!-- Pannello OBV -->
+          <div id="sd-wyckoff-obv-chart" style="width:100%;height:80px;border-radius:0 0 6px 6px;overflow:hidden"></div>
         </div>
       </div>
     `;
 
-    // Crea grafico LightweightCharts
-    const chartEl=document.getElementById('sd-wyckoff-chart');
-    if(!chartEl)return;
-    if(sdWyckoffChartInst){sdWyckoffChartInst.remove();}
+    // ── Crea i due pannelli TradingView style ──
+    const priceEl=document.getElementById('sd-wyckoff-price-chart');
+    const obvEl=document.getElementById('sd-wyckoff-obv-chart');
+    if(!priceEl||!obvEl)return;
+    if(sdWyckoffChartInst){sdWyckoffChartInst.remove();sdWyckoffChartInst=null;}
+    if(sdWyckoffObvInst){sdWyckoffObvInst.remove();sdWyckoffObvInst=null;}
     const theme=getLWChartTheme();
-    sdWyckoffChartInst=LightweightCharts.createChart(chartEl,{
-      width:chartEl.clientWidth,height:200,
+    const chartBase={
       layout:{background:{color:theme.bg},textColor:theme.text,fontSize:10},
       grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
-      rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.06,bottom:.06},visible:true},
+      rightPriceScale:{borderColor:theme.border,scaleMargins:{top:.08,bottom:.08},visible:true},
       leftPriceScale:{visible:false},
-      timeScale:{borderColor:theme.border,timeVisible:true,secondsVisible:false},
       crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
       handleScroll:true,handleScale:true,
-    });
+    };
 
-    // Linea Prezzo normalizzato
+    // Pannello PREZZO (alto) — asse tempo nascosto
+    sdWyckoffChartInst=LightweightCharts.createChart(priceEl,{
+      ...chartBase,
+      width:priceEl.clientWidth,height:150,
+      timeScale:{borderColor:theme.border,visible:false},
+    });
     const priceS=sdWyckoffChartInst.addLineSeries({
       color:'#1A56C4',lineWidth:2,priceLineVisible:false,lastValueVisible:true,
       title:_t('wy.chart.price'),crosshairMarkerVisible:true,crosshairMarkerRadius:4,
     });
-    // Linea OBV normalizzato
-    const obvS=sdWyckoffChartInst.addLineSeries({
-      color:'#10B981',lineWidth:2,priceLineVisible:false,lastValueVisible:true,
-      title:'OBV',crosshairMarkerVisible:true,crosshairMarkerRadius:4,lineStyle:0,
-    });
-    // SMA20 su normP
-    const sma20S=sdWyckoffChartInst.addLineSeries({
-      color:'rgba(100,116,139,.5)',lineWidth:1,lineStyle:2,priceLineVisible:false,
+    // SMA20 su prezzo reale
+    const sma20Real=[];
+    for(let i=19;i<pts.length;i++){
+      sma20Real.push({time:pts[i].time,value:+(prices.slice(i-19,i+1).reduce((a,b)=>a+b,0)/20).toFixed(4)});
+    }
+    const smaS=sdWyckoffChartInst.addLineSeries({
+      color:'rgba(100,116,139,.6)',lineWidth:1,lineStyle:2,priceLineVisible:false,
       lastValueVisible:false,crosshairMarkerVisible:false,title:'',
     });
+    priceS.setData(pts.map(p=>({time:p.time,value:+p.close})));
+    smaS.setData(sma20Real);
 
-    const lwPts=pts.map((p,i)=>({time:p.time,value:normP[i]}));
-    const lwObv=pts.map((p,i)=>({time:p.time,value:normO[i]}));
-    const lwSma=sma20.map(r=>({time:pts[r.idx].time,value:r.v}));
+    // Pannello OBV (basso) — istogramma verde/rosso, asse tempo visibile
+    sdWyckoffObvInst=LightweightCharts.createChart(obvEl,{
+      ...chartBase,
+      width:obvEl.clientWidth,height:80,
+      timeScale:{borderColor:theme.border,timeVisible:true,secondsVisible:false},
+      rightPriceScale:{...chartBase.rightPriceScale,scaleMargins:{top:.1,bottom:.1}},
+    });
+    const obvHistS=sdWyckoffObvInst.addHistogramSeries({
+      priceLineVisible:false,lastValueVisible:false,
+      priceFormat:{type:'volume'},
+    });
+    obvHistS.setData(pts.map((p,i)=>({
+      time:p.time,
+      value:obv[i],
+      color:i===0?'#6B7280':obv[i]>=obv[i-1]?'#10B981':'#EF4444',
+    })));
 
-    priceS.setData(lwPts);
-    obvS.setData(lwObv);
-    sma20S.setData(lwSma);
+    // Sync time scale tra i due pannelli
+    let _wySyncing=false;
+    sdWyckoffChartInst.timeScale().subscribeVisibleLogicalRangeChange(range=>{
+      if(_wySyncing||!range)return;
+      _wySyncing=true;
+      sdWyckoffObvInst.timeScale().setVisibleLogicalRange(range);
+      _wySyncing=false;
+    });
+    sdWyckoffObvInst.timeScale().subscribeVisibleLogicalRangeChange(range=>{
+      if(_wySyncing||!range)return;
+      _wySyncing=true;
+      sdWyckoffChartInst.timeScale().setVisibleLogicalRange(range);
+      _wySyncing=false;
+    });
 
     sdWyckoffChartInst.timeScale().fitContent();
-    new ResizeObserver(()=>{if(sdWyckoffChartInst)sdWyckoffChartInst.applyOptions({width:chartEl.clientWidth});}).observe(chartEl);
+    sdWyckoffObvInst.timeScale().fitContent();
+
+    // Resize observer su entrambi
+    new ResizeObserver(()=>{
+      if(sdWyckoffChartInst)sdWyckoffChartInst.applyOptions({width:priceEl.clientWidth});
+      if(sdWyckoffObvInst)sdWyckoffObvInst.applyOptions({width:obvEl.clientWidth});
+    }).observe(priceEl);
 
   }catch(e){
     if(document.getElementById('sd-wyckoff-content')===el)
@@ -14489,8 +14536,10 @@ function sdChartTab(tab,btn){
   document.querySelectorAll('#sd-charts-tabs .cal-tab-btn').forEach(b=>b.classList.toggle('active',b===btn));
   if(tab==='storico'&&_sdSentChartData?.length)requestAnimationFrame(()=>_drawSentChart(_sentChartRange||'3m'));
   if(tab==='obv')requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    const chartEl=document.getElementById('sd-wyckoff-chart');
-    if(chartEl&&sdWyckoffChartInst)sdWyckoffChartInst.resize(chartEl.clientWidth||400,200);
+    const priceEl=document.getElementById('sd-wyckoff-price-chart');
+    const obvEl=document.getElementById('sd-wyckoff-obv-chart');
+    if(priceEl&&sdWyckoffChartInst)sdWyckoffChartInst.applyOptions({width:priceEl.clientWidth||400});
+    if(obvEl&&sdWyckoffObvInst)sdWyckoffObvInst.applyOptions({width:obvEl.clientWidth||400});
   }));
 }
 
