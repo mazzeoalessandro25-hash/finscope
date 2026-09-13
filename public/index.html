@@ -5279,7 +5279,7 @@ function buildLWChart(container,type,pts,opts={}){
     grid:{vertLines:{color:t.grid},horzLines:{color:t.grid}},
     crosshair:{mode:LightweightCharts.CrosshairMode.Normal},
     rightPriceScale:{borderColor:t.border},
-    timeScale:{borderColor:t.border,timeVisible,secondsVisible:false},
+    timeScale:{borderColor:t.border,timeVisible,secondsVisible:false,fixLeftEdge:true,fixRightEdge:true},
     handleScroll:true,handleScale:true,
   });
   let mainSeries;
@@ -9741,7 +9741,7 @@ async function loadPortChart(sym,range){
       layout:{background:{color:isDark?'#1e293b':'#f8fafc'},textColor:isDark?'#94a3b8':'#475569'},
       grid:{vertLines:{color:isDark?'#334155':'#e2e8f0'},horzLines:{color:isDark?'#334155':'#e2e8f0'}},
       rightPriceScale:{borderColor:isDark?'#334155':'#cbd5e1'},
-      timeScale:{borderColor:isDark?'#334155':'#cbd5e1',timeVisible:true,secondsVisible:false},
+      timeScale:{borderColor:isDark?'#334155':'#cbd5e1',timeVisible:true,secondsVisible:false,fixLeftEdge:true,fixRightEdge:true},
     });
     let series;
     if(portChartType==='candle'){
@@ -17270,7 +17270,7 @@ function btRenderResults(sym,strategy,capital,pts,result){
       layout:{background:{color:theme.bg},textColor:theme.text},
       grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
       rightPriceScale:{borderColor:theme.border},
-      timeScale:{borderColor:theme.border,timeVisible:false},
+      timeScale:{borderColor:theme.border,timeVisible:false,fixLeftEdge:true,fixRightEdge:true},
       handleScroll:true,handleScale:true,
     });
     const portSeries=btChartInst.addAreaSeries({lineColor:'#1A56C4',topColor:'rgba(26,86,196,.18)',bottomColor:'rgba(26,86,196,0)',lineWidth:2,title:_L({it:'Portafoglio',en:'Portfolio'})});
@@ -17401,7 +17401,7 @@ function cmpRenderChart(results){
     layout:{background:{color:theme.bg},textColor:theme.text},
     grid:{vertLines:{color:theme.grid},horzLines:{color:theme.grid}},
     rightPriceScale:{borderColor:theme.border},
-    timeScale:{borderColor:theme.border,timeVisible:false},
+    timeScale:{borderColor:theme.border,timeVisible:false,fixLeftEdge:true,fixRightEdge:true},
     handleScroll:true,handleScale:true,
   });
 
@@ -19326,7 +19326,7 @@ async function loadCryptoChart(days, btn){
       layout:{background:{type:'Solid',color:'transparent'},textColor},
       grid:{vertLines:{color:gridColor},horzLines:{color:gridColor}},
       rightPriceScale:{borderColor:'transparent',scaleMargins:{top:.08,bottom:.22}},
-      timeScale:{borderColor:'transparent',timeVisible:true},
+      timeScale:{borderColor:'transparent',timeVisible:true,fixLeftEdge:true,fixRightEdge:true},
       crosshair:{mode:LightweightCharts.CrosshairMode.Normal}
     });
 
