@@ -2061,7 +2061,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
       <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
         <!-- Gauge -->
         <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:center">
-          <canvas id="sd-sent-canvas" width="256" height="148" style="width:256px;max-width:100%;display:block"></canvas>
+          <canvas id="sd-sent-canvas" width="256" height="168" style="width:256px;max-width:100%;display:block"></canvas>
           <div style="display:flex;justify-content:space-between;width:236px;max-width:100%;margin-top:25px">
             <span style="font-size:8px;color:#059669;font-family:var(--fm);font-weight:700" data-i18n="sent.zone.oversold">IPERVENDUTO</span>
             <span style="font-size:8px;color:var(--t3);font-family:var(--fm);font-weight:700" data-i18n="sent.zone.neutral">NEUTRALE</span>
@@ -15096,7 +15096,7 @@ function _renderSentimentGauge(score,rsiVal,pos52,obvScore,volRatio){
 
 function _drawSentimentCanvas(canvas,score,zoneLabel,nColor){
   const ctx=canvas.getContext('2d');
-  const W=256,H=148;
+  const W=256,H=168;
   canvas.width=W;canvas.height=H;
   ctx.clearRect(0,0,W,H);
 
@@ -15106,7 +15106,7 @@ function _drawSentimentCanvas(canvas,score,zoneLabel,nColor){
   const colT3   =isDark?'#64748b':'#7A90A8';
 
   const cx=W/2;  // 128
-  const cy=H-8;  // 140 — base del semicerchio
+  const cy=H-8;  // 160 — base del semicerchio
   const R=104;   // top:56 | sides:24&232
 
   const pos=(score+100)/200;         // 0..1
