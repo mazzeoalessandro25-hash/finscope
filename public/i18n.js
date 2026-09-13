@@ -440,7 +440,7 @@ const TRANSLATIONS={
     'wy.obv.acc':'▲ Accumulaz.','wy.obv.dist':'▼ Distribuz.','wy.obv.neutral':'→ Neutrale',
     'wy.sma.above':'▲ Sopra','wy.sma.below':'▼ Sotto',
     'wy.disclaimer':'⚠ Analisi automatica basata su OBV · Solo scopo informativo',
-    'wy.legend.price':'── PREZZO (norm.)','wy.legend.obv':'── OBV (norm.)','wy.legend.sma':'── SMA20',
+    'wy.legend.price':'── PREZZO','wy.legend.obv':'── OBV','wy.legend.sma':'- - SMA20',
     'wy.chart.price':'Prezzo',
     /* TERMOMETRO DEL TITOLO — SENTIMENT GAUGE */
     'sent.title':'TERMOMETRO DEL TITOLO',
@@ -1662,7 +1662,7 @@ const TRANSLATIONS={
     'wy.obv.acc':'▲ Accum.','wy.obv.dist':'▼ Distrib.','wy.obv.neutral':'→ Neutral',
     'wy.sma.above':'▲ Above','wy.sma.below':'▼ Below',
     'wy.disclaimer':'⚠ Automated OBV-based analysis · For informational purposes only',
-    'wy.legend.price':'── PRICE (norm.)','wy.legend.obv':'── OBV (norm.)','wy.legend.sma':'── SMA20',
+    'wy.legend.price':'── PRICE','wy.legend.obv':'── OBV','wy.legend.sma':'- - SMA20',
     'wy.chart.price':'Price',
     /* TERMOMETRO DEL TITOLO — SENTIMENT GAUGE */
     'sent.title':'STOCK THERMOMETER',
@@ -2863,7 +2863,7 @@ const TRANSLATIONS={
     'wy.obv.acc':'▲ Akkum.','wy.obv.dist':'▼ Distrib.','wy.obv.neutral':'→ Neutral',
     'wy.sma.above':'▲ Drüber','wy.sma.below':'▼ Drunter',
     'wy.disclaimer':'⚠ Automatische OBV-Analyse · Nur zu Informationszwecken',
-    'wy.legend.price':'── KURS (norm.)','wy.legend.obv':'── OBV (norm.)','wy.legend.sma':'── SMA20',
+    'wy.legend.price':'── KURS','wy.legend.obv':'── OBV','wy.legend.sma':'- - SMA20',
     'wy.chart.price':'Kurs',
     /* ── MACRO EDU INLINE LABELS ── */
     'macro.cycle.title':'⏱ Der Wirtschaftszyklus','macro.cycle.sub':'4 Phasen · Zentralbanken und Märkte bewegen sich vorhersehbar durch sie hindurch',
