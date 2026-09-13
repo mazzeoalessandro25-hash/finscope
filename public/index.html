@@ -14509,10 +14509,11 @@ function _renderAdvancedThesis(){
   }
   if(s.wyOsc!==null){
     const wyTrending=s.wyOscPrev===null||s.wyOsc>s.wyOscPrev; // true = segnale in rafforzamento
-    if(s.wyOsc>0&&wyTrending){bull++;chips.push({it:`OBV: accumulazione (${s.wyStrength}%)`,en:`OBV: accumulation (${s.wyStrength}%)`,col:'#10B981'});}
-    else if(s.wyOsc<0&&!wyTrending){bear++;chips.push({it:`OBV: distribuzione (${s.wyStrength}%)`,en:`OBV: distribution (${s.wyStrength}%)`,col:'#EF4444'});}
-    else if(s.wyOsc>0){chips.push({it:`OBV: accumulazione in calo (${s.wyStrength}%)`,en:`OBV: fading accumulation (${s.wyStrength}%)`,col:'#6B7280'});}
-    else{chips.push({it:`OBV: distribuzione in calo (${s.wyStrength}%)`,en:`OBV: fading distribution (${s.wyStrength}%)`,col:'#6B7280'});}
+    const wyLbl=s.wyStrength<30?_L({it:'debole',en:'weak'}):s.wyStrength<65?_L({it:'moderato',en:'moderate'}):_L({it:'forte',en:'strong'});
+    if(s.wyOsc>0&&wyTrending){bull++;chips.push({it:`OBV: accumulazione ${wyLbl}`,en:`OBV: ${wyLbl} accumulation`,col:'#10B981'});}
+    else if(s.wyOsc<0&&!wyTrending){bear++;chips.push({it:`OBV: distribuzione ${wyLbl}`,en:`OBV: ${wyLbl} distribution`,col:'#EF4444'});}
+    else if(s.wyOsc>0){chips.push({it:`OBV: accumulazione in calo`,en:`OBV: fading accumulation`,col:'#6B7280'});}
+    else{chips.push({it:`OBV: distribuzione in calo`,en:`OBV: fading distribution`,col:'#6B7280'});}
   }
   if(s.dpoPos!==null){
     if(s.dpoPos<-40){bull++;chips.push({it:'DPO: ciclo al minimo',en:'DPO: cycle at trough',col:'#10B981'});}
@@ -15066,7 +15067,7 @@ function _renderSentimentGauge(score,rsiVal,pos52,obvScore,volRatio){
   // RSI
   const rsiEl=$('sd-sent-rsi');
   if(rsiEl&&rsiVal!=null){
-    rsiEl.textContent=rsiVal.toFixed(1);
+    rsiEl.textContent=Math.round(rsiVal);
     rsiEl.style.color=rsiVal<30?'#059669':rsiVal>70?'#DC2626':'var(--t)';
     const rl=$('sd-sent-rsi-lbl');if(rl)rl.textContent=rsiVal<30?_t('sent.rsi.low'):rsiVal>70?_t('sent.rsi.high'):_t('sent.rsi.mid');
     const rb=$('sd-sent-rsi-bar');if(rb){rb.style.width=rsiVal+'%';rb.style.background=rsiVal<30?'#059669':rsiVal>70?'#DC2626':'#8b5cf6';}
@@ -15090,7 +15091,7 @@ function _renderSentimentGauge(score,rsiVal,pos52,obvScore,volRatio){
   // Volume
   const volEl=$('sd-sent-vol');
   if(volEl&&volRatio!=null){
-    volEl.textContent=volRatio.toFixed(2)+'×';
+    volEl.textContent=volRatio.toFixed(2)+'× media';
     volEl.style.color=volRatio<0.7?'var(--t3)':volRatio>1.5?'#D97706':'var(--t)';
     const vl=$('sd-sent-vol-lbl');if(vl)vl.textContent=volRatio<0.7?_t('sent.vol.low'):volRatio>1.3?_t('sent.vol.high'):_t('sent.vol.mid');
     const vb=$('sd-sent-vol-bar');if(vb){const vp=Math.min(volRatio/2*100,100);vb.style.width=vp+'%';vb.style.background=volRatio<0.7?'#6B7280':volRatio>1.5?'#D97706':'#F59E0B';}
