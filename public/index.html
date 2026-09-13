@@ -1619,6 +1619,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
   #sd-insider-section .sd-section-title > div{flex-wrap:wrap;gap:4px}
   /* Azienda + News: colonna singola (override inline style="grid-template-columns:1fr 1fr") */
   #sd-bottom-row{grid-template-columns:1fr!important}
+  /* Tab navigation — pagina singolo titolo */
+  .sd-nav-tab{font-family:var(--fm);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);background:none;border:none;border-bottom:2px solid transparent;padding:10px 16px;cursor:pointer;margin-bottom:-1px;transition:color .15s,border-color .15s;white-space:nowrap;flex-shrink:0}
+  .sd-nav-tab:hover{color:var(--t)}
+  .sd-nav-tab.active{color:var(--b);border-bottom-color:var(--b)}
   /* Tooltip: previeni overflow sul bordo destro */
   .sd-info-btn .sd-tip{left:auto;right:0;transform:none;width:min(220px,calc(100vw - 28px))}
   .sd-tip::after{left:auto;right:10px;transform:none}
@@ -1834,6 +1838,14 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <button class="qa-btn qa-btn-ghost" onclick="sdQuickAlert()">🔔<span class="qa-label"> Alert</span></button>
   </div>
   <div class="sd-body">
+    <!-- Tab navigation stock detail -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--bd);margin:0 -16px 20px;padding:0 16px;overflow-x:auto" id="sd-tab-nav">
+      <button class="sd-nav-tab active" data-tab="panoramica" onclick="sdTab('panoramica',this)">Panoramica</button>
+      <button class="sd-nav-tab" data-tab="analisi" onclick="sdTab('analisi',this)">Analisi</button>
+      <button class="sd-nav-tab" data-tab="fondamentali" onclick="sdTab('fondamentali',this)">Fondamentali</button>
+    </div>
+    <!-- ═ Tab: Panoramica ═ -->
+    <div id="sdt-panoramica">
     <!-- Banner Prossimi Earnings — primo elemento visibile -->
     <div id="sd-earnings-banner" style="display:none;margin-bottom:14px;padding:11px 14px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);flex-direction:row;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:10px">
@@ -1900,7 +1912,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
             <span data-i18n="common.measure">Misura</span>
           </button>
         </div>
-        <div id="sd-chart" style="width:100%;height:300px"></div>
+        <div id="sd-chart" style="width:100%;height:360px"></div>
         <div id="sd-rsi-chart" style="display:none;width:100%;height:90px;margin-top:3px;border-top:1px solid var(--bd)"></div>
         <div id="sd-macd-chart" style="display:none;width:100%;height:100px;margin-top:3px;border-top:1px solid var(--bd)"></div>
         <div id="sd-stoch-chart" style="display:none;width:100%;height:85px;margin-top:3px;border-top:1px solid var(--bd)"></div>
@@ -1946,6 +1958,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
     </div>
+    </div><!-- /sdt-panoramica -->
+
+    <!-- ═ Tab: Analisi ═ -->
+    <div id="sdt-analisi" style="display:none">
     <!-- ══ TERMOMETRO DEL TITOLO — Sentiment Gauge ══ -->
     <div class="sd-sent-card" id="sd-sentiment-section" style="display:none">
       <!-- Header -->
@@ -2097,6 +2113,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div class="sd-rec-item"><div class="sd-rec-item-lbl" data-i18n="sd.lbl.targetRange">Range target</div><div class="sd-rec-item-val" id="sdm-target-range" style="font-size:11px">—</div></div>
       </div>
     </div>
+    </div><!-- /sdt-analisi -->
+
+    <!-- ═ Tab: Fondamentali ═ -->
+    <div id="sdt-fondamentali" style="display:none">
     <!-- Risultati Trimestrali (stock only, hidden for ETF/crypto) -->
     <div id="sd-quarterly" style="margin-bottom:16px"></div>
     <!-- Sezioni fondamentali: 4 colonne -->
@@ -2193,7 +2213,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
     </div>
-
+    </div><!-- /sdt-fondamentali -->
 
   </div>
 </div>
@@ -14309,6 +14329,26 @@ function closeStockDetail(){
   if(sdWyckoffObvInst){sdWyckoffObvInst.remove();sdWyckoffObvInst=null;}
   if(sdPriceTimer){clearInterval(sdPriceTimer);sdPriceTimer=null;}
   sdSym='';
+  sdTab('panoramica'); // reset al tab Panoramica alla chiusura
+}
+
+function sdTab(tab, btn){
+  document.querySelectorAll('.sd-nav-tab').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  else document.querySelector(`.sd-nav-tab[data-tab="${tab}"]`)?.classList.add('active');
+  ['panoramica','analisi','fondamentali'].forEach(t=>{
+    const el=document.getElementById('sdt-'+t);
+    if(el) el.style.display=t===tab?'':'none';
+  });
+  // Ridimensiona grafici LightweightCharts dopo che il tab diventa visibile
+  if(tab==='analisi'){
+    requestAnimationFrame(()=>{
+      const priceEl=document.getElementById('sd-wyckoff-price-chart');
+      const obvEl=document.getElementById('sd-wyckoff-obv-chart');
+      if(priceEl&&sdWyckoffChartInst)sdWyckoffChartInst.applyOptions({width:priceEl.clientWidth||400});
+      if(obvEl&&sdWyckoffObvInst)sdWyckoffObvInst.applyOptions({width:obvEl.clientWidth||400});
+    });
+  }
 }
 
 async function loadWyckoffAnalysis(sym){
