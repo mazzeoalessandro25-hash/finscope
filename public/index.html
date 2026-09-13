@@ -14262,7 +14262,7 @@ function openStockDetail(sym){
   const _sgScore=document.getElementById('sd-sent-score-lbl');if(_sgScore)_sgScore.textContent='';
   // Reset Analisi Avanzata
   _sdSentChartData=null;_wyoscRedraw=null;_dpoRedraw=null;_wyckoffSymLoaded='';
-  _advState={sentScore:null,wyOsc:null,wyStrength:null,dpoPos:null};
+  _advState={sentScore:null,wyOsc:null,wyOscPrev:null,wyStrength:null,dpoPos:null};
   const _advThesis=document.getElementById('sd-adv-thesis');
   if(_advThesis){_advThesis.style.background='var(--s2)';_advThesis.style.borderColor='var(--bd)';_advThesis.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;}
   const _scLoad=document.getElementById('sd-sentchart-inner-load');
@@ -14476,7 +14476,7 @@ async function loadWyckoffAnalysis(sym){
 ══════════════════════════════════════════ */
 let _sdSentChartData=null;
 let _sentChartRange='3m';
-let _advState={sentScore:null,wyOsc:null,wyStrength:null,dpoPos:null};
+let _advState={sentScore:null,wyOsc:null,wyOscPrev:null,wyStrength:null,dpoPos:null};
 let _wyoscRedraw=null,_dpoRedraw=null;
 let _wyckoffSymLoaded=''; // caricamento lazy del tab OBV vs PREZZO
 
@@ -14508,8 +14508,11 @@ function _renderAdvancedThesis(){
     else{chips.push({it:`Score: ${s.sentScore>=0?'+':''}${s.sentScore}`,en:`Score: ${s.sentScore>=0?'+':''}${s.sentScore}`,col:'#6B7280'});}
   }
   if(s.wyOsc!==null){
-    if(s.wyOsc>0){bull++;chips.push({it:`OBV: accumulazione (${s.wyStrength}%)`,en:`OBV: accumulation (${s.wyStrength}%)`,col:'#10B981'});}
-    else{bear++;chips.push({it:`OBV: distribuzione (${s.wyStrength}%)`,en:`OBV: distribution (${s.wyStrength}%)`,col:'#EF4444'});}
+    const wyTrending=s.wyOscPrev===null||s.wyOsc>s.wyOscPrev; // true = segnale in rafforzamento
+    if(s.wyOsc>0&&wyTrending){bull++;chips.push({it:`OBV: accumulazione (${s.wyStrength}%)`,en:`OBV: accumulation (${s.wyStrength}%)`,col:'#10B981'});}
+    else if(s.wyOsc<0&&!wyTrending){bear++;chips.push({it:`OBV: distribuzione (${s.wyStrength}%)`,en:`OBV: distribution (${s.wyStrength}%)`,col:'#EF4444'});}
+    else if(s.wyOsc>0){chips.push({it:`OBV: accumulazione in calo (${s.wyStrength}%)`,en:`OBV: fading accumulation (${s.wyStrength}%)`,col:'#6B7280'});}
+    else{chips.push({it:`OBV: distribuzione in calo (${s.wyStrength}%)`,en:`OBV: fading distribution (${s.wyStrength}%)`,col:'#6B7280'});}
   }
   if(s.dpoPos!==null){
     if(s.dpoPos<-40){bull++;chips.push({it:'DPO: ciclo al minimo',en:'DPO: cycle at trough',col:'#10B981'});}
@@ -14525,11 +14528,11 @@ function _renderAdvancedThesis(){
     icon='▼';col='#EF4444';bg='rgba(239,68,68,0.08)';
     title=_L({it:'ZONA DI DISTRIBUZIONE',en:'DISTRIBUTION ZONE'});
     desc=_L({it:'Tre segnali allineati al ribasso: euforia nel sentiment, pressione di vendita sull\'OBV e ciclo in zona di picco. La combinazione suggerisce elevata probabilità di correzione — gestire il rischio con attenzione.',en:'Three bearish signals aligned: euphoric sentiment, OBV selling pressure and cycle near peak. The combination suggests elevated probability of correction — manage risk carefully.'});
-  } else if(bull>bear){
+  } else if(bull>bear&&(bull+bear)>=2){
     icon='↗';col='#10B981';bg='rgba(16,185,129,0.06)';
     title=_L({it:'PREVALENZA RIALZISTA',en:'BULLISH PREVALENCE'});
     desc=_L({it:'Segnali prevalentemente positivi ma non unanimi. La tesi rialzista è parzialmente supportata — monitorare e attendere maggiore convergenza prima di agire.',en:'Predominantly positive signals but not unanimous. The bullish case is partially supported — monitor and wait for greater convergence before acting.'});
-  } else if(bear>bull){
+  } else if(bear>bull&&(bull+bear)>=2){
     icon='↘';col='#F59E0B';bg='rgba(245,158,11,0.07)';
     title=_L({it:'PREVALENZA RIBASSISTA',en:'BEARISH PREVALENCE'});
     desc=_L({it:'Segnali prevalentemente negativi. La pressione ribassista prevale ma non è confermata da tutti gli indicatori — ridurre l\'esposizione o aumentare la cautela.',en:'Predominantly negative signals. Bearish pressure prevails but not confirmed by all indicators — reduce exposure or increase caution.'});
@@ -14896,7 +14899,7 @@ async function loadWyckoffOscillator(sym){
       </div>
       <div style="margin-top:6px;font-size:9px;color:var(--t3);font-family:var(--fm)">${_L({it:'⚠ OBV − SMA20(OBV) centrato su zero · Solo scopo informativo',en:'⚠ OBV − SMA20(OBV) centred on zero · For informational purposes only'})}</div>
     `;
-    _advState.wyOsc=lastOsc;_advState.wyStrength=pctStrength;
+    _advState.wyOsc=lastOsc;_advState.wyOscPrev=prevOsc;_advState.wyStrength=pctStrength;
     _renderAdvancedThesis();
     _wyoscRedraw=()=>_drawOscillatorCanvas('sd-wyosc-canvas','sd-wyosc-wrap','sd-wyosc-vline','sd-wyosc-tooltip',validPts,validOsc,'#10B981','#EF4444',90);
     requestAnimationFrame(_wyoscRedraw);
