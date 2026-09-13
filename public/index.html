@@ -1928,7 +1928,11 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
     </div>
-    <!-- Notizie + Descrizione — subito dopo il grafico -->
+    <!-- FinEdge Score Breakdown -->
+    <div id="sd-score-section" style="display:none;margin-bottom:16px">
+      <div id="sd-score-wrap"></div>
+    </div>
+    <!-- Notizie + Descrizione -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px" id="sd-bottom-row">
       <div class="sd-desc-card" style="margin-bottom:0">
         <div class="sd-section-title" style="display:flex;align-items:center" id="sd-company-title"><span data-i18n="sd.company.title">Sull'azienda</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.company">Descrizione del business e attività principale dell'azienda. Include settore, industria e sito web ufficiale.</div></span></div>
@@ -1942,127 +1946,6 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
       </div>
     </div>
-    <!-- FinEdge Score Breakdown -->
-    <div id="sd-score-section" style="display:none;margin-bottom:16px">
-      <div id="sd-score-wrap"></div>
-    </div>
-    <!-- Raccomandazione analisti -->
-    <div class="sd-section" id="sd-analyst-section" style="margin-bottom:16px">
-      <div class="sd-section-title" style="display:flex;align-items:center">
-        <span data-i18n="sd.analyst.title">Raccomandazione analisti</span>
-        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.analysts">Consenso degli analisti finanziari che coprono il titolo.<br><br><b>Score</b>: da 1 (Forte Acquisto) a 5 (Forte Vendita).<br><b>Target price</b>: prezzo obiettivo medio stimato a 12 mesi.<br><b>Upside</b>: potenziale di rialzo/ribasso rispetto al prezzo attuale.</div></span>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">
-        <div id="sdm-rec" style="font-size:15px;font-weight:700;font-family:var(--fm)">—</div>
-        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" id="sdm-nanalysts"></div>
-      </div>
-      <div class="sd-rec-bar-wrap">
-        <div class="sd-rec-bar"><div class="sd-rec-marker" id="sd-rec-marker" style="left:50%"></div></div>
-        <div class="sd-rec-labels"><span data-i18n="sd.rec.strongBuy">Forte Acquisto</span><span data-i18n="sd.rec.buy">Acquisto</span><span data-i18n="sd.rec.neutral">Neutrale</span><span data-i18n="sd.rec.sell">Vendita</span><span data-i18n="sd.rec.strongSell">Forte Vendita</span></div>
-      </div>
-      <div class="sd-rec-grid">
-        <div class="sd-rec-item"><div class="sd-rec-item-lbl" data-i18n="sd.lbl.avgTarget">Target medio</div><div class="sd-rec-item-val" id="sdm-target">—</div></div>
-        <div class="sd-rec-item"><div class="sd-rec-item-lbl" data-i18n="sd.lbl.upside">Upside potenziale</div><div class="sd-rec-item-val" id="sdm-upside">—</div></div>
-        <div class="sd-rec-item"><div class="sd-rec-item-lbl" data-i18n="sd.lbl.targetRange">Range target</div><div class="sd-rec-item-val" id="sdm-target-range" style="font-size:11px">—</div></div>
-      </div>
-    </div>
-    <!-- Risultati Trimestrali (stock only, hidden for ETF/crypto) -->
-    <div id="sd-quarterly" style="margin-bottom:16px"></div>
-    <!-- Sezioni fondamentali: 4 colonne -->
-    <div class="sd-funds" id="sd-funds-section">
-      <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span style="display:flex;align-items:center"><span data-i18n="sd.valuation">Valutazione</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.valuation"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
-          <span id="sd-val-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
-        </div>
-        <div class="sd-mg">
-          <div class="sd-m"><div class="sd-m-lbl">P/E Trailing</div><div class="sd-m-val" id="sdm-pe">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">P/E Forward</div><div class="sd-m-val" id="sdm-fpe">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">P/B</div><div class="sd-m-val" id="sdm-pb">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">P/S</div><div class="sd-m-val" id="sdm-ps">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">EPS (TTM)</div><div class="sd-m-val" id="sdm-eps">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">EPS Forward</div><div class="sd-m-val" id="sdm-feps">—</div></div>
-        </div>
-      </div>
-      <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
-          <span style="display:flex;align-items:center"><span data-i18n="sd.profitability">Redditività</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.profitability"><b>ROE</b>: rendimento sul capitale proprio. &gt;15% ottimo.<br><b>ROA</b>: rendimento sugli asset. &gt;5% buono.<br><b>Margine Lordo</b>: ricavi - costo del venduto / ricavi. &gt;40% eccellente.<br><b>Margine Netto</b>: utile netto / ricavi. Verde se positivo.<br><b>EBITDA</b>: utile prima di interessi, tasse e ammortamenti.</div></span></span>
-          <span id="sd-fund-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
-        </div>
-        <div class="sd-mg">
-          <div class="sd-m"><div class="sd-m-lbl">ROE</div><div class="sd-m-val" id="sdm-roe">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">ROA</div><div class="sd-m-val" id="sdm-roa">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.grossMargin">Margine Lordo</div><div class="sd-m-val" id="sdm-gm">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.operMargin">Margine Operativo</div><div class="sd-m-val" id="sdm-om">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.netMargin">Margine Netto</div><div class="sd-m-val" id="sdm-pm">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">EBITDA</div><div class="sd-m-val" id="sdm-ebitda">—</div></div>
-        </div>
-      </div>
-      <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.growth.title">Crescita</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.growth"><b>Cresc. Ricavi/Utili</b>: variazione YoY (anno su anno). ▲ verde = crescita, ▼ rosso = calo.<br><b>Free Cash Flow</b>: liquidità generata dopo le spese in conto capitale. Più alto è meglio.<br><b>Azioni Circolanti</b>: numero totale di azioni emesse.</div></span></div>
-        <div class="sd-mg">
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.revGrowth">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.earnGrowth">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalRev">Ricavi Totali</div><div class="sd-m-val" id="sdm-rev">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Free Cash Flow</div><div class="sd-m-val" id="sdm-fcf">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.divPct">Dividendo %</div><div class="sd-m-val" id="sdm-div">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.shares">Azioni Circ.</div><div class="sd-m-val" id="sdm-shares">—</div></div>
-        </div>
-      </div>
-      <div class="sd-section">
-        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.bs.title">Bilancio</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.balance"><b>Debt/Equity</b>: debito totale / capitale proprio. &lt;1 solido, &gt;2 attenzione.<br><b>Current Ratio</b>: attivo corrente / passivo corrente. &gt;1.5 buono.<br><b>Quick Ratio</b>: come Current Ratio ma senza le scorte. &gt;1 buono.<br><b>Float</b>: azioni disponibili per la negoziazione pubblica.</div></span></div>
-        <div class="sd-mg">
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalCash">Cassa Totale</div><div class="sd-m-val" id="sdm-cash">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalDebt">Debito Totale</div><div class="sd-m-val" id="sdm-debt">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Debt/Equity</div><div class="sd-m-val" id="sdm-de">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Current Ratio</div><div class="sd-m-val" id="sdm-cr">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Quick Ratio</div><div class="sd-m-val" id="sdm-qr">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.floatShares">Float Azioni</div><div class="sd-m-val" id="sdm-float">—</div></div>
-        </div>
-      </div>
-    </div>
-    <!-- ══ SEZIONE ETF (visibile solo per ETF) ══ -->
-    <div id="sd-etf-section" style="display:none">
-
-      <!-- Panoramica -->
-      <div class="sd-section" style="margin-bottom:16px">
-        <div class="sd-section-title" style="display:flex;align-items:center">
-          <span data-i18n="sd.etf.overview">Panoramica ETF</span>
-          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etf"><b>TER</b>: costo annuo totale del fondo (Total Expense Ratio). Più basso è meglio.<br><b>AUM</b>: patrimonio gestito totale (Assets Under Management).<br><b>Rend. YTD</b>: rendimento dall'inizio dell'anno.<br><b>P/E Pond.</b>: rapporto prezzo/utili medio ponderato delle posizioni.<br><b>Beta 3A</b>: volatilità vs mercato su 3 anni.</div></span>
-        </div>
-        <div class="sd-mg" style="grid-template-columns:repeat(4,1fr)">
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfTER">TER (Costo Ann.)</div><div class="sd-m-val" id="etfm-ter">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfAUM">AUM (Patrimonio)</div><div class="sd-m-val" id="etfm-aum">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfYTD">Rendimento YTD</div><div class="sd-m-val" id="etfm-ytd">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfBeta3">Beta 3 anni</div><div class="sd-m-val" id="etfm-beta3">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfCat">Categoria</div><div class="sd-m-val" id="etfm-cat">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfIssuer">Emittente</div><div class="sd-m-val" id="etfm-family">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfInception">Data lancio</div><div class="sd-m-val" id="etfm-inception">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfStruct">Struttura</div><div class="sd-m-val" id="etfm-type">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfPE">P/E Pond.</div><div class="sd-m-val" id="etfm-pe">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfPB">P/B Pond.</div><div class="sd-m-val" id="etfm-pb">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfEqPct">% Azionario</div><div class="sd-m-val" id="etfm-stock-pos">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfBondPct">% Obbligaz.</div><div class="sd-m-val" id="etfm-bond-pos">—</div></div>
-        </div>
-      </div>
-
-      <!-- Holdings + Settori affiancati -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
-        <div class="sd-section">
-          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.top10">Top 10 Posizioni</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.holdings">Le prime 10 posizioni dell'ETF per peso. Mostrano la concentrazione del fondo e i principali sottostanti.</div></span></div>
-          <div id="sd-etf-holdings" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
-            <div class="ld" data-i18n="common.loading">Caricamento...</div>
-          </div>
-        </div>
-        <div class="sd-section">
-          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.sectors">Allocazione Settoriale</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.sectorAlloc">Distribuzione del patrimonio ETF per settore industriale. Mostra dove è concentrata l'esposizione del fondo.</div></span></div>
-          <div id="sd-etf-sectors" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
-            <div class="ld">—</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- ══ TERMOMETRO DEL TITOLO — Sentiment Gauge ══ -->
     <div class="sd-sent-card" id="sd-sentiment-section" style="display:none">
       <!-- Header -->
@@ -2193,6 +2076,124 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" data-i18n="common.loading">Caricamento...</div>
       </div>
     </div>
+
+    <!-- Raccomandazione analisti -->
+    <div class="sd-section" id="sd-analyst-section" style="margin-bottom:16px">
+      <div class="sd-section-title" style="display:flex;align-items:center">
+        <span data-i18n="sd.analyst.title">Raccomandazione analisti</span>
+        <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.analysts">Consenso degli analisti finanziari che coprono il titolo.<br><br><b>Score</b>: da 1 (Forte Acquisto) a 5 (Forte Vendita).<br><b>Target price</b>: prezzo obiettivo medio stimato a 12 mesi.<br><b>Upside</b>: potenziale di rialzo/ribasso rispetto al prezzo attuale.</div></span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px">
+        <div id="sdm-rec" style="font-size:15px;font-weight:700;font-family:var(--fm)">—</div>
+        <div style="font-size:12px;color:var(--t3);font-family:var(--fm)" id="sdm-nanalysts"></div>
+      </div>
+      <div class="sd-rec-bar-wrap">
+        <div class="sd-rec-bar"><div class="sd-rec-marker" id="sd-rec-marker" style="left:50%"></div></div>
+        <div class="sd-rec-labels"><span data-i18n="sd.rec.strongBuy">Forte Acquisto</span><span data-i18n="sd.rec.buy">Acquisto</span><span data-i18n="sd.rec.neutral">Neutrale</span><span data-i18n="sd.rec.sell">Vendita</span><span data-i18n="sd.rec.strongSell">Forte Vendita</span></div>
+      </div>
+      <div class="sd-rec-grid">
+        <div class="sd-rec-item"><div class="sd-rec-item-lbl" data-i18n="sd.lbl.avgTarget">Target medio</div><div class="sd-rec-item-val" id="sdm-target">—</div></div>
+        <div class="sd-rec-item"><div class="sd-rec-item-lbl" data-i18n="sd.lbl.upside">Upside potenziale</div><div class="sd-rec-item-val" id="sdm-upside">—</div></div>
+        <div class="sd-rec-item"><div class="sd-rec-item-lbl" data-i18n="sd.lbl.targetRange">Range target</div><div class="sd-rec-item-val" id="sdm-target-range" style="font-size:11px">—</div></div>
+      </div>
+    </div>
+    <!-- Risultati Trimestrali (stock only, hidden for ETF/crypto) -->
+    <div id="sd-quarterly" style="margin-bottom:16px"></div>
+    <!-- Sezioni fondamentali: 4 colonne -->
+    <div class="sd-funds" id="sd-funds-section">
+      <div class="sd-section">
+        <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center"><span data-i18n="sd.valuation">Valutazione</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.valuation"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
+          <span id="sd-val-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
+        </div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl">P/E Trailing</div><div class="sd-m-val" id="sdm-pe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/E Forward</div><div class="sd-m-val" id="sdm-fpe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/B</div><div class="sd-m-val" id="sdm-pb">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/S</div><div class="sd-m-val" id="sdm-ps">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EPS (TTM)</div><div class="sd-m-val" id="sdm-eps">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EPS Forward</div><div class="sd-m-val" id="sdm-feps">—</div></div>
+        </div>
+      </div>
+      <div class="sd-section">
+        <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
+          <span style="display:flex;align-items:center"><span data-i18n="sd.profitability">Redditività</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.profitability"><b>ROE</b>: rendimento sul capitale proprio. &gt;15% ottimo.<br><b>ROA</b>: rendimento sugli asset. &gt;5% buono.<br><b>Margine Lordo</b>: ricavi - costo del venduto / ricavi. &gt;40% eccellente.<br><b>Margine Netto</b>: utile netto / ricavi. Verde se positivo.<br><b>EBITDA</b>: utile prima di interessi, tasse e ammortamenti.</div></span></span>
+          <span id="sd-fund-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
+        </div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl">ROE</div><div class="sd-m-val" id="sdm-roe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">ROA</div><div class="sd-m-val" id="sdm-roa">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.grossMargin">Margine Lordo</div><div class="sd-m-val" id="sdm-gm">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.operMargin">Margine Operativo</div><div class="sd-m-val" id="sdm-om">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.netMargin">Margine Netto</div><div class="sd-m-val" id="sdm-pm">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EBITDA</div><div class="sd-m-val" id="sdm-ebitda">—</div></div>
+        </div>
+      </div>
+      <div class="sd-section">
+        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.growth.title">Crescita</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.growth"><b>Cresc. Ricavi/Utili</b>: variazione YoY (anno su anno). ▲ verde = crescita, ▼ rosso = calo.<br><b>Free Cash Flow</b>: liquidità generata dopo le spese in conto capitale. Più alto è meglio.<br><b>Azioni Circolanti</b>: numero totale di azioni emesse.</div></span></div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.revGrowth">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.earnGrowth">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalRev">Ricavi Totali</div><div class="sd-m-val" id="sdm-rev">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Free Cash Flow</div><div class="sd-m-val" id="sdm-fcf">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.divPct">Dividendo %</div><div class="sd-m-val" id="sdm-div">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.shares">Azioni Circ.</div><div class="sd-m-val" id="sdm-shares">—</div></div>
+        </div>
+      </div>
+      <div class="sd-section">
+        <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.bs.title">Bilancio</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.balance"><b>Debt/Equity</b>: debito totale / capitale proprio. &lt;1 solido, &gt;2 attenzione.<br><b>Current Ratio</b>: attivo corrente / passivo corrente. &gt;1.5 buono.<br><b>Quick Ratio</b>: come Current Ratio ma senza le scorte. &gt;1 buono.<br><b>Float</b>: azioni disponibili per la negoziazione pubblica.</div></span></div>
+        <div class="sd-mg">
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalCash">Cassa Totale</div><div class="sd-m-val" id="sdm-cash">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalDebt">Debito Totale</div><div class="sd-m-val" id="sdm-debt">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Debt/Equity</div><div class="sd-m-val" id="sdm-de">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Current Ratio</div><div class="sd-m-val" id="sdm-cr">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Quick Ratio</div><div class="sd-m-val" id="sdm-qr">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.floatShares">Float Azioni</div><div class="sd-m-val" id="sdm-float">—</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- ══ SEZIONE ETF (visibile solo per ETF) ══ -->
+    <div id="sd-etf-section" style="display:none">
+
+      <!-- Panoramica -->
+      <div class="sd-section" style="margin-bottom:16px">
+        <div class="sd-section-title" style="display:flex;align-items:center">
+          <span data-i18n="sd.etf.overview">Panoramica ETF</span>
+          <span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.etf"><b>TER</b>: costo annuo totale del fondo (Total Expense Ratio). Più basso è meglio.<br><b>AUM</b>: patrimonio gestito totale (Assets Under Management).<br><b>Rend. YTD</b>: rendimento dall'inizio dell'anno.<br><b>P/E Pond.</b>: rapporto prezzo/utili medio ponderato delle posizioni.<br><b>Beta 3A</b>: volatilità vs mercato su 3 anni.</div></span>
+        </div>
+        <div class="sd-mg" style="grid-template-columns:repeat(4,1fr)">
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfTER">TER (Costo Ann.)</div><div class="sd-m-val" id="etfm-ter">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfAUM">AUM (Patrimonio)</div><div class="sd-m-val" id="etfm-aum">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfYTD">Rendimento YTD</div><div class="sd-m-val" id="etfm-ytd">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfBeta3">Beta 3 anni</div><div class="sd-m-val" id="etfm-beta3">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfCat">Categoria</div><div class="sd-m-val" id="etfm-cat">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfIssuer">Emittente</div><div class="sd-m-val" id="etfm-family">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfInception">Data lancio</div><div class="sd-m-val" id="etfm-inception">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfStruct">Struttura</div><div class="sd-m-val" id="etfm-type">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfPE">P/E Pond.</div><div class="sd-m-val" id="etfm-pe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfPB">P/B Pond.</div><div class="sd-m-val" id="etfm-pb">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfEqPct">% Azionario</div><div class="sd-m-val" id="etfm-stock-pos">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.etfBondPct">% Obbligaz.</div><div class="sd-m-val" id="etfm-bond-pos">—</div></div>
+        </div>
+      </div>
+
+      <!-- Holdings + Settori affiancati -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="sd-section">
+          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.top10">Top 10 Posizioni</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.holdings">Le prime 10 posizioni dell'ETF per peso. Mostrano la concentrazione del fondo e i principali sottostanti.</div></span></div>
+          <div id="sd-etf-holdings" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
+            <div class="ld" data-i18n="common.loading">Caricamento...</div>
+          </div>
+        </div>
+        <div class="sd-section">
+          <div class="sd-section-title" style="display:flex;align-items:center"><span data-i18n="sd.etf.sectors">Allocazione Settoriale</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.sectorAlloc">Distribuzione del patrimonio ETF per settore industriale. Mostra dove è concentrata l'esposizione del fondo.</div></span></div>
+          <div id="sd-etf-sectors" style="display:flex;flex-direction:column;gap:7px;margin-top:8px">
+            <div class="ld">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
   </div>
 </div>
