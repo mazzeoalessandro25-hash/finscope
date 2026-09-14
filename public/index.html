@@ -3179,7 +3179,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
         </div>
         <div id="port-list"><div class="ld" style="padding:20px;text-align:center" data-i18n="port.empty">Nessun titolo aggiunto</div></div>
         <div style="display:flex;gap:6px;margin-top:2px">
-          <button class="sc-btn" style="font-size:11px;flex:1" onclick="exportPortfolioPDF()" data-i18n="port.exportPDF">⬇ Esporta PDF</button>
+          <button class="sc-btn" style="font-size:11px;flex:1" id="port-export-pdf-btn" onclick="exportPortfolioPDF()" data-i18n="port.exportPDF">⬇ Esporta PDF</button>
           <button class="sc-btn" style="font-size:11px;flex:1;background:var(--s2);color:var(--b);border:1px solid var(--b)" onclick="openPortImport()" data-i18n="port.importCSV">⬆ Importa CSV</button>
         </div>
       </div>
@@ -8672,16 +8672,22 @@ async function removePortfolioItem(idx){
 async function renderPortfolio(){
   const el=document.getElementById('port-list');
   if(!portfolio.length){
+    // Nascondi elementi non necessari con portafoglio vuoto
+    const _ov=document.getElementById('port-panel-overview');if(_ov)_ov.style.display='none';
+    const _cb=document.getElementById('port-cat-bar');if(_cb)_cb.style.display='none';
+    const _ep=document.getElementById('port-export-pdf-btn');if(_ep)_ep.style.display='none';
     el.innerHTML=`<div class="port-empty-panel">
       <div style="font-size:36px;margin-bottom:12px">📊</div>
       <div style="font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px">${_L({it:'Portafoglio vuoto',en:'Empty portfolio',de:'Leeres Portfolio'})}</div>
       <div style="font-size:12px;color:var(--t3);font-family:var(--fm);max-width:280px;line-height:1.6;margin-bottom:16px">${_L({it:'Aggiungi il tuo primo titolo per iniziare a tracciare il portafoglio.',en:'Add your first ticker to start tracking your portfolio.',de:'Füge deinen ersten Titel hinzu, um dein Portfolio zu verfolgen.'})}</div>
       <button onclick="togglePortAddForm()" style="background:var(--b);color:#fff;border:none;padding:10px 22px;border-radius:9px;font-family:var(--fm);font-weight:700;font-size:13px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--b2)'" onmouseout="this.style.background='var(--b)'">${_L({it:'＋ Aggiungi titolo',en:'＋ Add ticker',de:'＋ Titel hinzufügen'})}</button>
     </div>`;
-    document.getElementById('port-summary').innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:4px 0">'+_t('port.empty')+'</div>';
-
     return;
   }
+  // Ripristina visibilità elementi quando ci sono titoli
+  const _ov2=document.getElementById('port-panel-overview');if(_ov2)_ov2.style.display='';
+  const _cb2=document.getElementById('port-cat-bar');if(_cb2)_cb2.style.display='';
+  const _ep2=document.getElementById('port-export-pdf-btn');if(_ep2)_ep2.style.display='';
 
   // Fetch prezzi + cambio EUR/USD in parallelo
   const [quotes, fxData] = await Promise.all([
