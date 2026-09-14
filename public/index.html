@@ -8676,6 +8676,8 @@ async function renderPortfolio(){
     const _ov=document.getElementById('port-panel-overview');if(_ov)_ov.style.display='none';
     const _cb=document.getElementById('port-cat-bar');if(_cb)_cb.style.display='none';
     const _ep=document.getElementById('port-export-pdf-btn');if(_ep)_ep.style.display='none';
+    // Espandi port-left a piena larghezza
+    const _g=document.querySelector('.port-2col');if(_g)_g.style.gridTemplateColumns='1fr';
     el.innerHTML=`<div class="port-empty-panel">
       <div style="font-size:36px;margin-bottom:12px">📊</div>
       <div style="font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px">${_L({it:'Portafoglio vuoto',en:'Empty portfolio',de:'Leeres Portfolio'})}</div>
@@ -8684,10 +8686,11 @@ async function renderPortfolio(){
     </div>`;
     return;
   }
-  // Ripristina visibilità elementi quando ci sono titoli
+  // Ripristina visibilità e layout quando ci sono titoli
   const _ov2=document.getElementById('port-panel-overview');if(_ov2)_ov2.style.display='';
   const _cb2=document.getElementById('port-cat-bar');if(_cb2)_cb2.style.display='';
   const _ep2=document.getElementById('port-export-pdf-btn');if(_ep2)_ep2.style.display='';
+  const _g2=document.querySelector('.port-2col');if(_g2)_g2.style.gridTemplateColumns='';
 
   // Fetch prezzi + cambio EUR/USD in parallelo
   const [quotes, fxData] = await Promise.all([
