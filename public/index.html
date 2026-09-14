@@ -8547,7 +8547,8 @@ async function renderPortfolio(){
     el.innerHTML=`<div class="port-empty-panel">
       <div style="font-size:36px;margin-bottom:12px">📊</div>
       <div style="font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px">${_L({it:'Portafoglio vuoto',en:'Empty portfolio',de:'Leeres Portfolio'})}</div>
-      <div style="font-size:12px;color:var(--t3);font-family:var(--fm);max-width:300px;line-height:1.6">${_L({it:'Cerca un titolo (es. AAPL, ENI.MI, BTC-USD) nel campo in alto e premi ＋ per aggiungerlo.',en:'Search a ticker (e.g. AAPL, ENI.MI, BTC-USD) in the field above and press ＋ to add it.',de:'Suche einen Ticker (z.B. AAPL, ENI.MI, BTC-USD) im Feld oben und drücke ＋ zum Hinzufügen.'})}</div>
+      <div style="font-size:12px;color:var(--t3);font-family:var(--fm);max-width:280px;line-height:1.6;margin-bottom:16px">${_L({it:'Aggiungi il tuo primo titolo per iniziare a tracciare il portafoglio.',en:'Add your first ticker to start tracking your portfolio.',de:'Füge deinen ersten Titel hinzu, um dein Portfolio zu verfolgen.'})}</div>
+      <button onclick="togglePortAddForm()" style="background:var(--b);color:#fff;border:none;padding:10px 22px;border-radius:9px;font-family:var(--fm);font-weight:700;font-size:13px;cursor:pointer;transition:background .15s" onmouseover="this.style.background='var(--b2)'" onmouseout="this.style.background='var(--b)'">${_L({it:'＋ Aggiungi titolo',en:'＋ Add ticker',de:'＋ Titel hinzufügen'})}</button>
     </div>`;
     document.getElementById('port-summary').innerHTML='<div style="color:var(--t3);font-size:12px;font-family:var(--fm);padding:4px 0">'+_t('port.empty')+'</div>';
 
