@@ -14297,6 +14297,7 @@ function openStockDetail(sym){
   // Reset Analisi Avanzata
   _sdSentChartData=null;_wyoscRedraw=null;_dpoRedraw=null;_wyckoffSymLoaded='';
   _advState={sentScore:null,wyOsc:null,wyOscPrev:null,wyStrength:null,dpoPos:null};
+  _sentGaugeLoaded=false;
   const _advThesis=document.getElementById('sd-adv-thesis');
   if(_advThesis){_advThesis.style.background='var(--s2)';_advThesis.style.borderColor='var(--bd)';_advThesis.innerHTML=`<div style="font-size:11px;color:var(--t3);font-family:var(--fm)">${_t('common.loading')}</div>`;}
   const _scLoad=document.getElementById('sd-sentchart-inner-load');
@@ -14359,6 +14360,8 @@ function sdTab(tab, btn){
       const obvEl=document.getElementById('sd-wyckoff-obv-chart');
       if(priceEl&&sdWyckoffChartInst)sdWyckoffChartInst.applyOptions({width:priceEl.clientWidth||400});
       if(obvEl&&sdWyckoffObvInst)sdWyckoffObvInst.applyOptions({width:obvEl.clientWidth||400});
+      // Ricarica termometro se non ancora caricato (es. tab aperto prima del completamento)
+      if(!_sentGaugeLoaded&&sdSym)loadSentimentGauge(sdSym);
     });
   }
 }
@@ -14600,6 +14603,7 @@ async function loadWyckoffAnalysis(sym){
 let _sdSentChartData=null;
 let _sentChartRange='3m';
 let _advState={sentScore:null,wyOsc:null,wyOscPrev:null,wyStrength:null,dpoPos:null};
+let _sentGaugeLoaded=false; // true dopo che il termometro è stato renderizzato con successo
 let _wyoscRedraw=null,_dpoRedraw=null;
 let _wyckoffSymLoaded=''; // caricamento lazy del tab OBV vs PREZZO
 
@@ -15169,6 +15173,7 @@ async function loadSentimentGauge(sym){
 
     _renderSentimentGauge(finalScore,rsiVal,pos52,obvScore,volRatio);
     sec.style.display='block';
+    _sentGaugeLoaded=true;
   }catch(e){
     console.error('loadSentimentGauge error:',e);
     const sv=document.getElementById('sd-sent-verdict');
