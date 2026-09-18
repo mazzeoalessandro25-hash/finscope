@@ -248,18 +248,6 @@ body{
   background:#EBF1FB;color:#1A56C4;font-family:var(--fm);font-size:10px;font-weight:600}
 .sc-cnt{font-family:var(--fm);font-size:11px;color:var(--t3);margin-left:auto}
 
-/* Scene 5: AI */
-.ai-scene-hdr{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.ai-badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;
-  background:rgba(124,58,237,.12);color:#7C3AED;font-size:11px;font-weight:700;font-family:var(--fm)}
-.ai-who{font-size:13px;color:var(--t2)}
-.ai-card{background:#fff;border:1px solid var(--bd);border-left:3px solid #7C3AED;border-radius:14px;
-  padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.04);margin-bottom:10px}
-.ai-tag{display:flex;align-items:center;gap:6px;margin-bottom:10px}
-.ai-tag-lbl{font-size:10px;font-weight:600;color:#7C3AED;font-family:var(--fm);letter-spacing:.3px}
-.ai-text{font-size:12px;line-height:1.75;color:var(--t);font-family:var(--ff);min-height:90px}
-.ai-cursor{display:inline-block;width:2px;height:13px;background:#1A56C4;vertical-align:middle;margin-left:1px;animation:cursorBlink .75s infinite}
-@keyframes cursorBlink{0%,100%{opacity:1}50%{opacity:0}}
 
 .ind-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .ind-label{font-size:11px;color:var(--t2);width:88px;flex-shrink:0}
@@ -1115,9 +1103,6 @@ function resetAll(){
     const el = document.getElementById(id);
     if(el) el.classList.remove('in');
   });
-  // ai text
-  const at = document.getElementById('aiText');
-  if(at) at.innerHTML = '';
   // ind bars
   for(let i=0;i<3;i++){
     const el = document.getElementById('ind'+i);

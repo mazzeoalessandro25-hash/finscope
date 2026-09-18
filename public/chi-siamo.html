@@ -227,13 +227,13 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <div class="what-sub">Dashboard · Screener · Portafoglio · Lab · News · Macro</div>
     <div class="feature-list">
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">FinEdge Score — punteggio proprietario 0–100</span></div>
-      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Price Target con AI Analysis</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Price Target — in arrivo</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Screener su 5.000+ azioni globali</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Portafoglio live con P&amp;L in tempo reale</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Simulatore PAC e crescita portafoglio</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Risk Analytics: Sharpe, VaR, drawdown</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Dashboard Macro con regime di mercato</span></div>
-      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">News aggregate con sentiment AI</span></div>
+      <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">News aggregate con sentiment automatico</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Calendario earnings e dividendi</span></div>
       <div class="feature-item"><div class="feature-dot"></div><span class="feature-text">Disponibile in Italiano e Inglese</span></div>
     </div>
@@ -271,7 +271,6 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
     <div class="stack-badge">Chart.js</div>
     <div class="stack-badge">Clerk (auth)</div>
     <div class="stack-badge">Upstash Redis</div>
-    <div class="stack-badge">Claude AI</div>
   </div>
 
   <!-- CTA -->
@@ -399,7 +398,7 @@ document.addEventListener('DOMContentLoaded',function(){
   t('.what-title','One tool. Everything you need.');
   t('.what-sub','Dashboard · Screener · Portfolio · Lab · News · Macro');
   var fi=qa('.feature-text');
-  ['FinEdge Score — proprietary score 0–100','Price Target with AI Analysis','Screener for 5,000+ global stocks','Live portfolio with real-time P&L','PAC and portfolio growth simulator','Risk Analytics: Sharpe, VaR, drawdown','Macro Dashboard with market regime','Aggregated news with AI sentiment','Earnings and dividends calendar','Available in Italian and English'].forEach(function(v,i){if(fi[i])fi[i].textContent=v;});
+  ['FinEdge Score — proprietary score 0–100','Price Target — coming soon','Screener for 5,000+ global stocks','Live portfolio with real-time P&L','PAC and portfolio growth simulator','Risk Analytics: Sharpe, VaR, drawdown','Macro Dashboard with market regime','Aggregated news with automatic sentiment','Earnings and dividends calendar','Available in Italian and English'].forEach(function(v,i){if(fi[i])fi[i].textContent=v;});
   var vt=qa('.value-title'),vx=qa('.value-text');
   ['Privacy first','Speed and simplicity','Transparency'].forEach(function(v,i){if(vt[i])vt[i].textContent=v;});
   ['No internal behavioral tracking. No profile sold. The site is supported by declared ads and affiliations — never by your personal data.','Clean interface, fast loading. Financial complexity made simple.','Every algorithm is explained. We know where the data comes from and we always say when it is delayed.'].forEach(function(v,i){if(vx[i])vx[i].textContent=v;});
