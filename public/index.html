@@ -7448,7 +7448,7 @@ if(_urlLangParam&&_LANGS_SUPPORTED.includes(_urlLangParam)){
   if(_stored&&_LANGS_SUPPORTED.includes(_stored)){currentLang=_stored;}
   else{
     const _nav=(navigator.language||'').slice(0,2).toLowerCase();
-    currentLang=_LANGS_SUPPORTED.includes(_nav)?_nav:'it';
+    currentLang=_nav==='it'?'it':'en';
     localStorage.setItem('fs_lang',currentLang);
   }
 }

@@ -368,7 +368,7 @@ footer{background:#0D1A2B;padding:24px 40px;display:flex;justify-content:space-b
 // ─── lang switcher ───
 function setLangPage(lang){localStorage.setItem('fs_lang',lang);location.reload();}
 document.addEventListener('DOMContentLoaded',function(){
-  var lang=localStorage.getItem('fs_lang')||'it';
+  var lang=localStorage.getItem('fs_lang')||(((navigator.language||'').slice(0,2).toLowerCase()==='it')?'it':'en');
   var sel=document.getElementById('lang-sel-cs');if(sel)sel.value=lang;
   if(lang==='en'){var bl=document.getElementById('back-lbl');if(bl)bl.textContent='Back to home';}
 });
