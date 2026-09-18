@@ -14661,11 +14661,11 @@ function _renderAdvancedThesis(){
     icon='▼';col='#EF4444';bg='rgba(239,68,68,0.08)';
     title=_L({it:'ZONA DI DISTRIBUZIONE',en:'DISTRIBUTION ZONE'});
     desc=_L({it:'Tre segnali allineati al ribasso: euforia nel sentiment, pressione di vendita sull\'OBV e ciclo in zona di picco. La combinazione suggerisce elevata probabilità di correzione — gestire il rischio con attenzione.',en:'Three bearish signals aligned: euphoric sentiment, OBV selling pressure and cycle near peak. The combination suggests elevated probability of correction — manage risk carefully.'});
-  } else if(bull>bear&&(bull+bear)>=2){
+  } else if(bull>bear){
     icon='↗';col='#10B981';bg='rgba(16,185,129,0.06)';
     title=_L({it:'PREVALENZA RIALZISTA',en:'BULLISH PREVALENCE'});
     desc=_L({it:'Segnali prevalentemente positivi ma non unanimi. La tesi rialzista è parzialmente supportata — monitorare e attendere maggiore convergenza prima di agire.',en:'Predominantly positive signals but not unanimous. The bullish case is partially supported — monitor and wait for greater convergence before acting.'});
-  } else if(bear>bull&&(bull+bear)>=2){
+  } else if(bear>bull){
     icon='↘';col='#F59E0B';bg='rgba(245,158,11,0.07)';
     title=_L({it:'PREVALENZA RIBASSISTA',en:'BEARISH PREVALENCE'});
     desc=_L({it:'Segnali prevalentemente negativi. La pressione ribassista prevale ma non è confermata da tutti gli indicatori — ridurre l\'esposizione o aumentare la cautela.',en:'Predominantly negative signals. Bearish pressure prevails but not confirmed by all indicators — reduce exposure or increase caution.'});
