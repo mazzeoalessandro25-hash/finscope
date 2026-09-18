@@ -14237,7 +14237,7 @@ function openStockDetail(sym){
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
   adaptOverlayForAssetType(sym);
-  sdTab('analisi'); // apri sempre sul tab Analisi (Termometro del Titolo)
+  sdTab('panoramica'); // apri sempre sul tab Panoramica
   // Reset header
   document.getElementById('sd-sym').textContent=sym;
   document.getElementById('sd-name').textContent=_t('common.loading');
@@ -14341,7 +14341,7 @@ function closeStockDetail(){
   if(sdWyckoffObvInst){sdWyckoffObvInst.remove();sdWyckoffObvInst=null;}
   if(sdPriceTimer){clearInterval(sdPriceTimer);sdPriceTimer=null;}
   sdSym='';
-  sdTab('analisi'); // reset al tab Analisi alla chiusura
+  sdTab('panoramica'); // reset al tab Panoramica alla chiusura
 }
 
 function sdTab(tab, btn){
