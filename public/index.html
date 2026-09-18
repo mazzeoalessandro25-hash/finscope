@@ -14237,6 +14237,7 @@ function openStockDetail(sym){
   overlay.classList.add('open');
   document.body.style.overflow='hidden';
   adaptOverlayForAssetType(sym);
+  sdTab('analisi'); // apri sempre sul tab Analisi (Termometro del Titolo)
   // Reset header
   document.getElementById('sd-sym').textContent=sym;
   document.getElementById('sd-name').textContent=_t('common.loading');
@@ -14284,12 +14285,13 @@ function openStockDetail(sym){
   if(sdWyckoffObvInst){sdWyckoffObvInst.remove();sdWyckoffObvInst=null;}
   const _wyEl=document.getElementById('sd-wyckoff-content');
   if(_wyEl)_wyEl.innerHTML=`<div style="font-size:12px;color:var(--t3);font-family:var(--fm)">${_t('load.wyckoff')}</div>`;
-  // Reset Sentiment Gauge
+  // Reset Sentiment Gauge — visibile subito per i titoli azionari, nascosto per ETF/crypto
   const _sgSec=document.getElementById('sd-sentiment-section');
-  if(_sgSec)_sgSec.style.display='none';
+  const _isSentStock=detectPortCat(sym)==='stock';
+  if(_sgSec)_sgSec.style.display=_isSentStock?'block':'none';
   ['sd-sent-rsi','sd-sent-52w','sd-sent-obv','sd-sent-vol'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='—';el.style.color='var(--t)';}});
   ['sd-sent-rsi-bar','sd-sent-52w-bar','sd-sent-obv-bar','sd-sent-vol-bar'].forEach(id=>{const b=document.getElementById(id);if(b)b.style.width='0%';});
-  const _sgV=document.getElementById('sd-sent-verdict');if(_sgV)_sgV.innerHTML='';
+  const _sgV=document.getElementById('sd-sent-verdict');if(_sgV)_sgV.innerHTML=_isSentStock?`<span style="color:var(--t3);font-size:11px;font-family:var(--fm)">${_t('common.loading')}</span>`:'';
   const _sgZone=document.getElementById('sd-sent-zone-lbl');if(_sgZone)_sgZone.textContent='';
   const _sgScore=document.getElementById('sd-sent-score-lbl');if(_sgScore)_sgScore.textContent='';
   // Reset Analisi Avanzata
@@ -14339,7 +14341,7 @@ function closeStockDetail(){
   if(sdWyckoffObvInst){sdWyckoffObvInst.remove();sdWyckoffObvInst=null;}
   if(sdPriceTimer){clearInterval(sdPriceTimer);sdPriceTimer=null;}
   sdSym='';
-  sdTab('panoramica'); // reset al tab Panoramica alla chiusura
+  sdTab('analisi'); // reset al tab Analisi alla chiusura
 }
 
 function sdTab(tab, btn){
@@ -15112,7 +15114,11 @@ async function loadSentimentGauge(sym){
     const data=await api(sym,'history&range=1y');
     if(sdSym!==sym)return;
     const rawPts=Array.isArray(data)?data:(data?.points||[]);
-    if(rawPts.length<15){sec.style.display='none';return;}
+    if(rawPts.length<15){
+      const sv=document.getElementById('sd-sent-verdict');
+      if(sv)sv.innerHTML=`<span style="color:var(--t3);font-size:11px;font-family:var(--fm)">Dati storici insufficienti per il calcolo</span>`;
+      return;
+    }
     const pts=rawPts.filter(d=>d.close!=null).sort((a,b)=>a.time-b.time);
     const closes=pts.map(p=>+p.close);
     const volumes=pts.map(p=>+(p.volume||0));
@@ -15161,8 +15167,9 @@ async function loadSentimentGauge(sym){
     _renderSentimentGauge(finalScore,rsiVal,pos52,obvScore,volRatio);
     sec.style.display='block';
   }catch(e){
-    const s=document.getElementById('sd-sentiment-section');
-    if(s)s.style.display='none';
+    console.error('loadSentimentGauge error:',e);
+    const sv=document.getElementById('sd-sent-verdict');
+    if(sv)sv.innerHTML=`<span style="color:var(--t3);font-size:11px;font-family:var(--fm)">Errore nel caricamento dei dati</span>`;
   }
 }
 
