@@ -15096,9 +15096,12 @@ async function loadSentimentGauge(sym){
   // Nasconde per ETF e crypto
   if(sym&&detectPortCat(sym)!=='stock'){sec.style.display='none';return;}
   try{
+    console.log('[Termometro] fetch start:',sym);
     const data=await api(sym,'history&range=1y');
-    if(sdSym!==sym)return;
+    console.log('[Termometro] fetch done:',sym,'data:',data?'ok':'null','sdSym:',sdSym);
+    if(sdSym!==sym){console.warn('[Termometro] sdSym mismatch — sym:',sym,'sdSym:',sdSym);return;}
     const rawPts=Array.isArray(data)?data:(data?.points||[]);
+    console.log('[Termometro] rawPts:',rawPts.length);
     if(rawPts.length<15){
       const sv=document.getElementById('sd-sent-verdict');
       if(sv)sv.innerHTML=`<span style="color:var(--t3);font-size:11px;font-family:var(--fm)">Dati storici insufficienti per il calcolo</span>`;
