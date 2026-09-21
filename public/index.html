@@ -15341,7 +15341,7 @@ async function refreshSdPrice(sym){
       if(ep){
         const ec=chgPct(ep,d.prev);
         const eUp=ec==null||ec>=0;
-        const label=ms==='PRE'?'🌅 Pre-market':'🌙 After-hours';
+        const label=ms==='PRE'?'Pre-market':'After-hours';
         extEl.style.display='block';
         extEl.style.color=eUp?'var(--g)':'var(--r)';
         extEl.textContent=label+': '+cur+fmt(ep,ep<10?4:2)+' '+chgStr(ec);
