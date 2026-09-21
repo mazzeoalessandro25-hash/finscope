@@ -114,12 +114,15 @@ export default async function handler(req, res) {
     const q = await fetchYahooQuote(symbol);
     if (!q) return res.status(404).json({ error: 'no data' });
     return res.json({
-      price:    q.regularMarketPrice ?? null,
-      prev:     q.regularMarketPreviousClose ?? null,
-      currency: q.currency || 'USD',
-      dayHigh:  q.regularMarketDayHigh ?? null,
-      dayLow:   q.regularMarketDayLow ?? null,
-      volume:   q.regularMarketVolume ?? null,
+      price:           q.regularMarketPrice ?? null,
+      prev:            q.regularMarketPreviousClose ?? null,
+      currency:        q.currency || 'USD',
+      dayHigh:         q.regularMarketDayHigh ?? null,
+      dayLow:          q.regularMarketDayLow ?? null,
+      volume:          q.regularMarketVolume ?? null,
+      marketState:     q.marketState ?? null,
+      preMarketPrice:  q.preMarketPrice ?? null,
+      postMarketPrice: q.postMarketPrice ?? null,
     });
   }
 
