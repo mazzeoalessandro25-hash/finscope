@@ -15339,7 +15339,7 @@ async function refreshSdPrice(sym){
       const ms=d.marketState;
       const ep=ms==='PRE'?d.preMarketPrice:(ms==='POST'?d.postMarketPrice:null);
       if(ep){
-        const ec=chgPct(ep,d.prev);
+        const ec=chgPct(ep,d.price);
         const eUp=ec==null||ec>=0;
         const label=ms==='PRE'?'Pre-market':'After-hours';
         extEl.style.display='block';
