@@ -167,6 +167,8 @@ export default async function handler(req, res) {
     floatShares:       sd?.defaultKeyStatistics?.floatShares ?? null,
     roe:               sd?.financialData?.returnOnEquity ?? null,
     roa:               sd?.financialData?.returnOnAssets ?? null,
+    grossProfits:      sd?.financialData?.grossProfits ?? null,
+    netIncomeToCommon: sd?.defaultKeyStatistics?.netIncomeToCommon ?? null,
     grossMargins:      sd?.financialData?.grossMargins ?? null,
     operatingMargins:  sd?.financialData?.operatingMargins ?? null,
     profitMargins:     sd?.financialData?.profitMargins ?? null,
