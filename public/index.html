@@ -1738,12 +1738,12 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .tut-help-btn:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.45)}
 
 /* ── IncomeFlow: "Come guadagna" (port da finedge-income-flow kit) ────────── */
-.fe-if{--fe-navy:#0F1C2E;--fe-blue:#1A56C4;--fe-cyan:#1A56C4;--fe-sky:#EBF1FB;--fe-red:#DC2626;--fe-red-text:#DC2626;--fe-green:#059669;--fe-green-text:#059669;--fe-muted:#4A6080;--fe-line:#D8E2EF;--fe-soft:#F0F4FA;font-family:var(--ff);color:var(--fe-navy);display:flex;flex-direction:column;gap:20px;margin-bottom:16px}
+.fe-if{--fe-navy:#0F1C2E;--fe-blue:#1A56C4;--fe-cyan:#1A56C4;--fe-sky:#EBF1FB;--fe-red:#DC2626;--fe-red-text:#DC2626;--fe-green:#059669;--fe-green-text:#059669;--fe-muted:#4A6080;--fe-line:#D8E2EF;--fe-soft:#F0F4FA;font-family:var(--ff);color:var(--fe-navy);display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
 .fe-if-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
 .fe-if-headtext{display:flex;flex-direction:column;gap:10px;flex:1 1 300px;min-width:0}
 .fe-if-eyebrow{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--fe-blue);text-transform:uppercase}
 .fe-if-eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--fe-green)}
-.fe-if-title{margin:0;font-size:clamp(22px,2.8vw,32px);line-height:1.15;font-weight:800;letter-spacing:-.03em}
+.fe-if-title{margin:0;font-size:clamp(16px,1.8vw,20px);line-height:1.2;font-weight:800;letter-spacing:-.02em}
 .fe-if-title em{font-style:normal;color:var(--fe-blue)}
 .fe-if-chips{display:flex;flex-wrap:wrap;gap:8px}
 .fe-if-chip{padding:6px 12px;border-radius:999px;background:var(--fe-soft);font-size:13px;font-weight:600;color:var(--fe-muted)}
@@ -1751,13 +1751,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .fe-if-chip--good{background:#E3F8EF;color:#0B6B43}
 .fe-if-up{color:var(--fe-green-text);font-weight:800}
 .fe-if-down{color:var(--fe-red-text);font-weight:800}
-.fe-if-card{border-radius:20px;border:1px solid var(--fe-line);background:#fff;box-shadow:0 20px 50px -30px rgba(5,54,95,.28);padding:20px 20px 12px;display:flex;flex-direction:column;gap:8px}
+.fe-if-card{border-radius:14px;border:1px solid var(--fe-line);background:#fff;box-shadow:0 8px 24px -12px rgba(5,54,95,.18);padding:14px 14px 10px;display:flex;flex-direction:column;gap:6px}
 .fe-if-cardhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:0 4px;font-size:13px;font-weight:600;color:var(--fe-muted)}
 .fe-if-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px}
 .fe-if-legend span{display:flex;align-items:center;gap:6px}
 .fe-if-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
 .fe-if-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.fe-if-canvas{position:relative;width:100%;min-width:1040px}
+.fe-if-canvas{position:relative;width:100%;min-width:800px}
 .fe-if-svg{position:absolute;inset:0;width:100%;height:100%;animation:fe-if-reveal 1.6s cubic-bezier(.45,0,.2,1) both}
 .fe-if-link{transition:opacity .25s ease}
 .fe-if-node{cursor:pointer}
@@ -15659,7 +15659,7 @@ function _ifBuild(s){
 
 // ── layoutFlow ───────────────────────────────────────────────────────────────
 function _ifLayout(flow,opts){
-  const o=Object.assign({width:1520,height:920,nodeWidth:18,nodeGap:40,padTop:130,padBottom:110,marginLeft:300,marginRight:280},opts||{});
+  const o=Object.assign({width:1520,height:640,nodeWidth:16,nodeGap:28,padTop:90,padBottom:80,marginLeft:280,marginRight:260},opts||{});
   const byId=new Map(flow.nodes.map(n=>[n.id,n]));
   const inL=new Map(),outL=new Map();
   flow.nodes.forEach(n=>{inL.set(n.id,[]);outL.set(n.id,[]);});
