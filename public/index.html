@@ -1766,13 +1766,13 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .fe-if-label[data-side='right']{transform:translate(14px,-50%);align-items:flex-start}
 .fe-if-label[data-side='top']{transform:translate(-50%,calc(-100% - 10px));align-items:center;text-align:center}
 .fe-if-label[data-side='bottom']{transform:translate(-50%,10px);align-items:center;text-align:center}
-.fe-if-name{font-size:13px;font-weight:800;line-height:1.15;letter-spacing:-.01em}
-.fe-if-value{font-size:17px;font-weight:800;line-height:1.1;letter-spacing:-.03em}
-.fe-if-sub{font-size:11px;font-weight:600;color:var(--fe-muted)}
-.fe-if-label[data-emph='main'] .fe-if-name,.fe-if-label[data-emph='hero'] .fe-if-name{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fe-blue)}
+.fe-if-name{font-size:11px;font-weight:800;line-height:1.15;letter-spacing:-.01em}
+.fe-if-value{font-size:14px;font-weight:800;line-height:1.1;letter-spacing:-.03em}
+.fe-if-sub{font-size:10px;font-weight:600;color:var(--fe-muted)}
+.fe-if-label[data-emph='main'] .fe-if-name,.fe-if-label[data-emph='hero'] .fe-if-name{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--fe-blue)}
 .fe-if-label[data-emph='hero'] .fe-if-name{color:var(--fe-green-text)}
-.fe-if-label[data-emph='main'] .fe-if-value{font-size:26px}
-.fe-if-label[data-emph='hero'] .fe-if-value{font-size:30px}
+.fe-if-label[data-emph='main'] .fe-if-value{font-size:20px}
+.fe-if-label[data-emph='hero'] .fe-if-value{font-size:24px}
 .fe-if-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:12px;color:var(--fe-muted);font-weight:500}
 .fe-if-empty{padding:40px 20px;text-align:center;color:var(--fe-muted);font-weight:600}
 .fe-if-swipe{display:none;font-size:11px;font-weight:700;color:var(--fe-muted);text-align:center}
@@ -15659,7 +15659,7 @@ function _ifBuild(s){
 
 // ── layoutFlow ───────────────────────────────────────────────────────────────
 function _ifLayout(flow,opts){
-  const o=Object.assign({width:1520,height:440,nodeWidth:14,nodeGap:20,padTop:64,padBottom:56,marginLeft:260,marginRight:240},opts||{});
+  const o=Object.assign({width:1520,height:380,nodeWidth:12,nodeGap:18,padTop:56,padBottom:50,marginLeft:250,marginRight:230},opts||{});
   const byId=new Map(flow.nodes.map(n=>[n.id,n]));
   const inL=new Map(),outL=new Map();
   flow.nodes.forEach(n=>{inL.set(n.id,[]);outL.set(n.id,[]);});
@@ -15727,8 +15727,8 @@ function _ifLayout(flow,opts){
     });
   });
   // anti-sovrapposizione etichette laterali
-  const PX=1.4;
-  const estH=n=>{let h=17+21+(n.sub?15:0)+8;if(n.emphasis==='main')h+=12;if(n.emphasis==='hero')h+=16;if(n.label.length>22)h+=17;if((n.sub||'').length>30)h+=15;return h*PX;};
+  const PX=1.55;
+  const estH=n=>{let h=12+15+(n.sub?12:0)+8;if(n.emphasis==='main')h+=7;if(n.emphasis==='hero')h+=11;if(n.label.length>22)h+=12;if((n.sub||'').length>30)h+=10;return h*PX;};
   for(let c=0;c<nCols;c++){
     ['left','right'].forEach(side=>{
       const ls=[...laid.values()].filter(n=>n.col===c&&n.side===side).sort((a,b)=>a.ay-b.ay);
