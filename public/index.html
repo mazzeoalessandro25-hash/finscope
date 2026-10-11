@@ -1736,6 +1736,52 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .tut-fwd:hover{filter:brightness(1.12)}
 .tut-help-btn{background:none;border:1px solid rgba(255,255,255,.25);color:rgba(255,255,255,.75);width:28px;height:28px;border-radius:50%;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-family:var(--fm);line-height:1}
 .tut-help-btn:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.45)}
+
+/* ── IncomeFlow: "Come guadagna" (port da finedge-income-flow kit) ────────── */
+.fe-if{--fe-navy:#05365F;--fe-blue:#085A8C;--fe-cyan:#2BB8F0;--fe-sky:#7FD4F7;--fe-red:#FF5C6C;--fe-red-text:#C42F3C;--fe-green:#22C98A;--fe-green-text:#0B8A55;--fe-muted:#5A6F84;--fe-line:#E1EAF2;--fe-soft:#F0F5F9;font-family:var(--ff);color:var(--fe-navy);display:flex;flex-direction:column;gap:20px;margin-bottom:16px}
+.fe-if-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+.fe-if-headtext{display:flex;flex-direction:column;gap:10px;flex:1 1 300px;min-width:0}
+.fe-if-eyebrow{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--fe-blue);text-transform:uppercase}
+.fe-if-eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--fe-green)}
+.fe-if-title{margin:0;font-size:clamp(18px,2.2vw,22px);line-height:1.2;font-weight:800;letter-spacing:-.025em}
+.fe-if-title em{font-style:normal;color:var(--fe-blue)}
+.fe-if-chips{display:flex;flex-wrap:wrap;gap:8px}
+.fe-if-chip{padding:6px 12px;border-radius:999px;background:var(--fe-soft);font-size:13px;font-weight:600;color:var(--fe-muted)}
+.fe-if-chip b{font-weight:800;color:var(--fe-navy)}
+.fe-if-chip--good{background:#E3F8EF;color:#0B6B43}
+.fe-if-up{color:var(--fe-green-text);font-weight:800}
+.fe-if-down{color:var(--fe-red-text);font-weight:800}
+.fe-if-card{border-radius:20px;border:1px solid var(--fe-line);background:#fff;box-shadow:0 20px 50px -30px rgba(5,54,95,.28);padding:20px 20px 12px;display:flex;flex-direction:column;gap:8px}
+.fe-if-cardhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;padding:0 4px;font-size:13px;font-weight:600;color:var(--fe-muted)}
+.fe-if-legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px}
+.fe-if-legend span{display:flex;align-items:center;gap:6px}
+.fe-if-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
+.fe-if-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.fe-if-canvas{position:relative;width:100%;min-width:1040px}
+.fe-if-svg{position:absolute;inset:0;width:100%;height:100%;animation:fe-if-reveal 1.6s cubic-bezier(.45,0,.2,1) both}
+.fe-if-link{transition:opacity .25s ease}
+.fe-if-node{cursor:pointer}
+.fe-if-label{position:absolute;display:flex;flex-direction:column;gap:1px;max-width:190px;padding:4px 8px;border-radius:10px;background:rgba(255,255,255,.9);transition:opacity .25s ease;animation:fe-if-fade .5s ease both}
+.fe-if-label[data-side='left']{transform:translate(calc(-100% - 14px),-50%);align-items:flex-end;text-align:right}
+.fe-if-label[data-side='right']{transform:translate(14px,-50%);align-items:flex-start}
+.fe-if-label[data-side='top']{transform:translate(-50%,calc(-100% - 10px));align-items:center;text-align:center}
+.fe-if-label[data-side='bottom']{transform:translate(-50%,10px);align-items:center;text-align:center}
+.fe-if-name{font-size:13px;font-weight:800;line-height:1.15;letter-spacing:-.01em}
+.fe-if-value{font-size:17px;font-weight:800;line-height:1.1;letter-spacing:-.03em}
+.fe-if-sub{font-size:11px;font-weight:600;color:var(--fe-muted)}
+.fe-if-label[data-emph='main'] .fe-if-name,.fe-if-label[data-emph='hero'] .fe-if-name{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--fe-blue)}
+.fe-if-label[data-emph='hero'] .fe-if-name{color:var(--fe-green-text)}
+.fe-if-label[data-emph='main'] .fe-if-value{font-size:26px}
+.fe-if-label[data-emph='hero'] .fe-if-value{font-size:30px}
+.fe-if-foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:12px;color:var(--fe-muted);font-weight:500}
+.fe-if-empty{padding:40px 20px;text-align:center;color:var(--fe-muted);font-weight:600}
+.fe-if-swipe{display:none;font-size:11px;font-weight:700;color:var(--fe-muted);text-align:center}
+@media(max-width:760px){.fe-if-swipe{display:block}.fe-if-card{padding:14px 10px 10px;border-radius:16px}}
+.fe-if-hint-touch{display:none}
+@media(hover:none){.fe-if-hint-hover{display:none}.fe-if-hint-touch{display:inline}}
+@keyframes fe-if-reveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes fe-if-fade{from{opacity:0}to{opacity:1}}
+@media(prefers-reduced-motion:reduce){.fe-if-svg,.fe-if-label{animation:none}}
 </style>
     <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -15519,205 +15565,287 @@ function renderValuation(d, cur){
   renderSdFinEdgeScore();
 }
 
-// ─── SANKEY: VISUALIZZAZIONE SEMPLIFICATA CONTO ECONOMICO ──────────────────
-function renderSankeyChart(d, cur) {
-  const el = document.getElementById('sd-sankey');
-  if (!el) return;
+// ─── COME GUADAGNA: port vanilla JS di finedge-income-flow (kit React/TS) ───
 
-  // Solo per stock con ricavi disponibili (non ETF, non crypto senza ricavi)
-  const rev = d.totalRevenue;
-  if (!rev || rev <= 0 || d.etf) { el.style.display = 'none'; return; }
+// ── format ──────────────────────────────────────────────────────────────────
+const _ifNf1=new Intl.NumberFormat('it-IT',{minimumFractionDigits:1,maximumFractionDigits:1});
+const _ifNf0=new Intl.NumberFormat('it-IT',{maximumFractionDigits:0});
+const _ifSyms={USD:'$',EUR:'€',GBP:'£',CHF:'CHF',JPY:'¥'};
+function _ifPickUnit(m){return m>=1e9?'bn':m>=1e6?'mn':'unit';}
+function _ifFmtMoney(v,currency,negative,unit){
+  const a=Math.abs(v),sym=_ifSyms[currency]||currency;
+  const u=unit||_ifPickUnit(a);
+  const body=u==='bn'?_ifNf1.format(a/1e9)+' Mld':u==='mn'?_ifNf0.format(a/1e6)+' Mln':_ifNf0.format(a);
+  return(negative?'−':'')+body+' '+sym;
+}
+function _ifFmtYoY(yoy){
+  if(yoy===undefined||!Number.isFinite(yoy))return undefined;
+  const p=Math.round(yoy*100);
+  return(p>=0?'+':'−')+Math.abs(p)+'% a/a';
+}
+function _ifFmtPct(x){const v=Math.round(x*100);return(v<0?'−':'')+Math.abs(v)+'%';}
 
-  const sym = cur === '€' ? '€' : '$';
-
-  // Valori derivati dal conto economico
-  const gp   = d.grossMargins     != null ? rev * d.grossMargins     : null;
-  const cogs = gp                 != null ? rev - gp                 : null;
-  const oi   = d.operatingMargins != null ? rev * d.operatingMargins : null;
-  const opex = (gp != null && oi != null && gp > oi) ? gp - oi : null;
-  const ni   = d.profitMargins    != null ? rev * d.profitMargins    : null;
-  const tax  = (oi != null && ni != null && oi > ni)  ? oi - ni  : null;
-
-  // Nasconde il grafico se non ci sono dati sufficienti o se i profitti sono negativi
-  if (!gp || gp <= 0) { el.style.display = 'none'; return; }
-
-  // Formattazione valore assoluto (es. 3.7B, 450M)
-  const fv = v => {
-    if (v == null) return '—';
-    const a = Math.abs(v), s = v < 0 ? '−' : '';
-    if (a >= 1e12) return s + (a/1e12).toFixed(1) + 'T';
-    if (a >= 1e9)  return s + (a/1e9).toFixed(1)  + 'B';
-    if (a >= 1e6)  return s + (a/1e6).toFixed(0)  + 'M';
-    return s + a.toFixed(0);
-  };
-  // Formattazione percentuale con segno
-  const fp = v => v != null ? (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%' : '';
-
-  // ── Layout SVG ──────────────────────────────────────────────────────────────
-  const W = 700, H = 260;
-  const TOP = 62, CH = 136; // area chart: y=62..198
-  const NW = 10;            // larghezza nodi (barre verticali)
-  const CX = [70, 220, 370, 520]; // centri X delle 4 colonne
-
-  // Altezza proporzionale al rapporto v/rev (minimo 3px per visibilità)
-  const toH = v => (v == null || rev <= 0) ? 0 : Math.max(3, (Math.abs(v) / rev) * CH);
-
-  // Altezze barre
-  const gpH   = toH(gp);
-  const cogsH = toH(cogs);
-  const oiH   = oi != null && oi > 0 ? toH(oi) : 0;
-  const opexH = opex != null && opex > 0 ? toH(opex) : 0;
-  const niH   = ni  != null && ni  > 0 ? toH(ni)  : 0;
-  const taxH  = tax != null && tax  > 0 ? toH(tax) : 0;
-
-  // Y top di ogni nodo (i profitti partono dall'alto, i costi iniziano dopo)
-  const gpY   = TOP;
-  const cogsY = TOP + gpH;
-  const oiY   = TOP;
-  const opexY = TOP + oiH;
-  const niY   = TOP;
-  const taxY  = TOP + niH;
-
-  // Colori
-  const CG = '#059669', CR = '#DC2626', CB = '#1A56C4', CA = '#D97706';
-  const CG2 = 'rgba(5,150,105,0.15)', CR2 = 'rgba(220,38,38,0.13)', CA2 = 'rgba(217,119,6,0.15)';
-
-  // ── Path Bezier per flusso Sankey ─────────────────────────────────────────
-  // (x1,y1t,y1b) → (x2,y2t,y2b): area piena con curve
-  const sp = (x1, y1t, y1b, x2, y2t, y2b) => {
-    const mx = (x1 + x2) / 2;
-    return `M${x1},${y1t} C${mx},${y1t} ${mx},${y2t} ${x2},${y2t} ` +
-           `L${x2},${y2b} C${mx},${y2b} ${mx},${y1b} ${x1},${y1b} Z`;
-  };
-
-  // Bordi X usati nei path (entrata/uscita dai nodi)
-  const x0r = CX[0]+NW/2, x1l = CX[1]-NW/2, x1r = CX[1]+NW/2;
-  const x2l = CX[2]-NW/2, x2r = CX[2]+NW/2, x3l = CX[3]-NW/2;
-
-  // ── Nodi (barre verticali colorate) ───────────────────────────────────────
-  const rect = (cx, y, h, fill) =>
-    `<rect x="${cx-NW/2}" y="${y}" width="${NW}" height="${h}" fill="${fill}" rx="3"/>`;
-
-  const nodes = [
-    rect(CX[0], TOP, CH, CB),                                      // Revenue (piena)
-    gp   != null              ? rect(CX[1], gpY,   gpH,   CG) : '', // Gross Profit
-    cogs != null              ? rect(CX[1], cogsY, cogsH, CR) : '', // COGS
-    oiH  > 0                  ? rect(CX[2], oiY,   oiH,   CG) : '', // Op. Income
-    opexH > 0                 ? rect(CX[2], opexY, opexH, CA) : '', // Op. Expenses
-    niH  > 0                  ? rect(CX[3], niY,   niH,   CG) : '', // Net Income
-    taxH > 0                  ? rect(CX[3], taxY,  taxH,  CR) : '', // Tax + Other
-  ].join('');
-
-  // ── Flussi ─────────────────────────────────────────────────────────────────
-  const flows = [
-    gp   != null  ? `<path d="${sp(x0r, gpY,   gpY+gpH,     x1l, gpY,   gpY+gpH)}"   fill="${CG2}"/>` : '',
-    cogs != null  ? `<path d="${sp(x0r, cogsY, cogsY+cogsH, x1l, cogsY, cogsY+cogsH)}" fill="${CR2}"/>` : '',
-    oiH  > 0 && gp != null ? `<path d="${sp(x1r, oiY,   oiY+oiH,     x2l, oiY,   oiY+oiH)}"   fill="${CG2}"/>` : '',
-    opexH > 0              ? `<path d="${sp(x1r, opexY, opexY+opexH, x2l, opexY, opexY+opexH)}" fill="${CA2}"/>` : '',
-    niH  > 0 && oiH > 0   ? `<path d="${sp(x2r, niY,   niY+niH,     x3l, niY,   niY+niH)}"   fill="${CG2}"/>` : '',
-    taxH > 0               ? `<path d="${sp(x2r, taxY,  taxY+taxH,   x3l, taxY,  taxY+taxH)}"  fill="${CR2}"/>` : '',
-  ].join('');
-
-  // ── Labels ─────────────────────────────────────────────────────────────────
-  // Riga di testo SVG (singola)
-  const t = (x, y, text, anchor, color, size, bold) =>
-    `<text x="${x}" y="${y}" text-anchor="${anchor||'middle'}" fill="${color||'var(--t)'}" ` +
-    `font-size="${size||10}" font-weight="${bold?700:500}" font-family="var(--fm)">${text}</text>`;
-
-  // Linea tratteggiata di connessione verticale
-  const dash = (x, y1, y2, color) =>
-    `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${color}" stroke-width="1" stroke-dasharray="3,2" opacity="0.45"/>`;
-
-  // Label SOPRA la barra (per profitti: Gross Profit, Op Income)
-  const topLbl = (cx, barY, lines) => {
-    const botY = barY - 7;  // base dell'ultima riga di testo
-    const startY = botY - (lines.length - 1) * 14;
-    return dash(cx, botY + 2, barY - 1, lines[1] ? lines[1].c : lines[0].c) +
-      lines.map((l, i) => t(cx, startY + i*14, l.v, 'middle', l.c, l.s||10, l.b)).join('');
-  };
-
-  // Label SOTTO la barra (per costi: COGS, OpEx, Tax)
-  const botLbl = (cx, barY, barH, lines) => {
-    const topY = barY + barH + 10;
-    return dash(cx, barY + barH + 1, topY - 3, lines[1] ? lines[1].c : lines[0].c) +
-      lines.map((l, i) => t(cx, topY + i*14, l.v, 'middle', l.c, l.s||10, l.b)).join('');
-  };
-
-  const labels = [
-    // Revenue: label a sinistra del nodo
-    t(CX[0]-16, TOP + CH/2 - 16, 'Ricavi',       'end', 'var(--t3)', 10, true),
-    t(CX[0]-16, TOP + CH/2 - 2,  sym+fv(rev),    'end', CB, 13, true),
-    d.revenueGrowth != null
-      ? t(CX[0]-16, TOP + CH/2 + 12, fp(d.revenueGrowth)+' YoY', 'end',
-          d.revenueGrowth >= 0 ? CG : CR, 9, false)
-      : '',
-
-    // Gross Profit: label sopra
-    gp != null ? topLbl(CX[1], gpY, [
-      {v:'Utile Lordo', c:'var(--t3)', b:true},
-      {v:sym+fv(gp),    c:CG, s:11, b:true},
-      ...(d.grossMargins != null ? [{v:fp(d.grossMargins)+' m.', c:CG, s:9}] : []),
-    ]) : '',
-
-    // COGS: label sotto
-    cogs != null ? botLbl(CX[1], cogsY, cogsH, [
-      {v:'COGS',             c:'var(--t3)', b:true},
-      {v:'('+sym+fv(cogs)+')', c:CR, s:11, b:true},
-    ]) : '',
-
-    // Op Income: label sopra
-    oiH > 0 ? topLbl(CX[2], oiY, [
-      {v:'Utile Oper.', c:'var(--t3)', b:true},
-      {v:sym+fv(oi),    c:CG, s:11, b:true},
-      ...(d.operatingMargins != null ? [{v:fp(d.operatingMargins)+' m.', c:CG, s:9}] : []),
-    ]) : '',
-
-    // Op Expenses: label sotto
-    opexH > 0 ? botLbl(CX[2], opexY, opexH, [
-      {v:'Spese Oper.',       c:'var(--t3)', b:true},
-      {v:'('+sym+fv(opex)+')', c:CA, s:11, b:true},
-    ]) : '',
-
-    // Net Income: label a destra
-    niH > 0 ? [
-      t(CX[3]+16, niY + niH/2 - 14, 'Utile Netto',     'start', 'var(--t3)', 10, true),
-      t(CX[3]+16, niY + niH/2 - 0,  sym+fv(ni),         'start', CG, 11, true),
-      ...(d.profitMargins != null
-        ? [t(CX[3]+16, niY + niH/2 + 13, fp(d.profitMargins)+' m.', 'start', CG, 9, false)]
-        : []),
-      ...(d.freeCashflow != null
-        ? [t(CX[3]+16, niY + niH/2 + 26, 'FCF: '+sym+fv(d.freeCashflow), 'start', 'var(--t3)', 9, false)]
-        : []),
-    ].join('') : '',
-
-    // Tax + Other: label a destra
-    taxH > 0 ? [
-      t(CX[3]+16, taxY + taxH/2 - 7,  'Tasse+Altro',      'start', 'var(--t3)', 10, true),
-      t(CX[3]+16, taxY + taxH/2 + 6,  '('+sym+fv(tax)+')', 'start', CR, 10, true),
-    ].join('') : '',
-  ].join('');
-
-  el.style.display = 'block';
-  el.innerHTML = `
-    <div class="sd-section" style="margin-bottom:16px">
-      <div class="sd-section-title" style="display:flex;align-items:center;margin-bottom:4px">
-        <span>${_L({it:'Come guadagna',en:'How it makes money'})}</span>
-        <span class="sd-info-btn">i<div class="sd-tip">${_L({
-          it:'Conto economico semplificato (TTM). <b>COGS</b>: costo del venduto. <b>Utile Lordo</b>: Ricavi − COGS. <b>Spese Oper.</b>: marketing, R&D, G&amp;A. <b>Utile Netto</b>: profitto finale dopo tasse e interessi.',
-          en:'Simplified income statement (TTM). <b>COGS</b>: cost of goods sold. <b>Gross Profit</b>: Revenue − COGS. <b>Op. Expenses</b>: marketing, R&amp;D, G&amp;A. <b>Net Income</b>: final profit after taxes and interest.'
-        })}</div></span>
-      </div>
-      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
-        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet"
-             style="width:100%;min-width:300px;height:auto;display:block;overflow:visible">
-          ${flows}
-          ${nodes}
-          ${labels}
-        </svg>
-      </div>
-    </div>`;
+// ── buildIncomeFlow ──────────────────────────────────────────────────────────
+function _ifBuild(s){
+  const rev=s.revenue,op=s.operatingIncome,net=s.netIncome;
+  if(!(rev>0))return{ok:false,reason:'invalid'};
+  if(op<=0||net<=0)return{ok:false,reason:'loss'};
+  const nodes=[],links=[];
+  const por=v=>_ifFmtPct(v/rev)+' dei ricavi';
+  // segmenti di ricavo (facoltativi)
+  const segs=(s.revenueSegments||[]).filter(x=>x.value>0);
+  segs.forEach((seg,i)=>{
+    const id='seg'+i;
+    nodes.push({id,label:seg.label,value:seg.value,kind:i%2===0?'revenue':'revenueAlt',sub:_ifFmtYoY(seg.yoy)});
+    links.push({source:id,target:'rev',value:seg.value});
+  });
+  // ricavi
+  nodes.push({id:'rev',label:'Ricavi',value:rev,kind:'revenue',emphasis:'main',sub:_ifFmtYoY(s.revenueYoY)});
+  // utile lordo (solo se c'è costo del venduto)
+  let opexFrom='rev',opexBase=rev;
+  const cogs=s.costOfRevenue||0;
+  if(cogs>0&&cogs<rev){
+    const gross=rev-cogs;
+    nodes.push({id:'cogs',label:'Costo del venduto',value:cogs,kind:'cost',sub:por(cogs)});
+    nodes.push({id:'gross',label:'Utile lordo',value:gross,kind:'profit',sub:'Margine '+_ifFmtPct(gross/rev)});
+    links.push({source:'rev',target:'gross',value:gross});
+    links.push({source:'rev',target:'cogs',value:cogs});
+    opexFrom='gross';opexBase=gross;
+  }
+  // utile operativo e costi operativi
+  const opex=Math.max(opexBase-op,0);
+  nodes.push({id:'op',label:'Utile operativo',value:op,kind:'profit',sub:'Margine '+_ifFmtPct(op/rev)});
+  links.push({source:opexFrom,target:'op',value:Math.min(op,opexBase)});
+  if(opex>0){
+    nodes.push({id:'opex',label:'Costi operativi',value:opex,kind:'cost',sub:_ifFmtYoY(s.operatingExpensesYoY)||por(opex)});
+    links.push({source:opexFrom,target:'opex',value:opex});
+  }
+  // utile netto
+  const diff=op-net;
+  if(diff>=0){
+    nodes.push({id:'net',label:'Utile netto',value:net,kind:'profit',emphasis:'hero',sub:'Margine '+_ifFmtPct(net/rev)});
+    links.push({source:'op',target:'net',value:net});
+    if(diff>0){
+      const tr=s.effectiveTaxRate!==undefined?'Aliquota '+_ifFmtPct(s.effectiveTaxRate):por(diff);
+      nodes.push({id:'tax',label:'Imposte e altro',value:diff,kind:'cost',sub:tr});
+      links.push({source:'op',target:'tax',value:diff});
+    }
+  }else{
+    nodes.push({id:'oinc',label:'Altri proventi',value:-diff,kind:'revenueAlt'});
+    nodes.push({id:'net',label:'Utile netto',value:net,kind:'profit',emphasis:'hero',sub:'Margine '+_ifFmtPct(net/rev)});
+    links.push({source:'op',target:'net',value:op});
+    links.push({source:'oinc',target:'net',value:-diff});
+  }
+  // dettaglio costi operativi (max 3 voci)
+  if(opex>0&&s.operatingExpenses&&s.operatingExpenses.length){
+    const items=[...s.operatingExpenses].filter(x=>x.value>0).sort((a,b)=>b.value-a.value);
+    const top=items.slice(0,3);
+    let used=top.reduce((a,x)=>a+x.value,0);
+    if(used>opex){const f=opex/used;top.forEach(x=>x.value*=f);used=opex;}
+    top.forEach((x,i)=>{
+      const id='ox'+i;
+      const sub=[por(x.value),_ifFmtYoY(x.yoy)].filter(Boolean).join(' · ');
+      nodes.push({id,label:x.label,value:x.value,kind:'cost',sub});
+      links.push({source:'opex',target:id,value:x.value});
+    });
+    const rest=opex-used;
+    if(rest/opex>0.01){
+      nodes.push({id:'oxr',label:'Altri costi',value:rest,kind:'cost',sub:por(rest)});
+      links.push({source:'opex',target:'oxr',value:rest});
+    }
+  }
+  return{ok:true,flow:{nodes,links}};
 }
 
+// ── layoutFlow ───────────────────────────────────────────────────────────────
+function _ifLayout(flow,opts){
+  const o=Object.assign({width:1520,height:780,nodeWidth:18,nodeGap:34,padTop:110,padBottom:90,marginLeft:300,marginRight:280},opts||{});
+  const byId=new Map(flow.nodes.map(n=>[n.id,n]));
+  const inL=new Map(),outL=new Map();
+  flow.nodes.forEach(n=>{inL.set(n.id,[]);outL.set(n.id,[]);});
+  flow.links.forEach(l=>{outL.get(l.source).push(l);inL.get(l.target).push(l);});
+  // colonne: cammino più lungo dalle radici
+  const col=new Map();
+  const visit=(id,seen=new Set())=>{
+    if(col.has(id))return col.get(id);
+    if(seen.has(id))throw new Error('Ciclo nel flusso');
+    seen.add(id);
+    const ins=inL.get(id);
+    const c=ins.length?Math.max(...ins.map(l=>visit(l.source,seen)+1)):0;
+    col.set(id,c);return c;
+  };
+  flow.nodes.forEach(n=>visit(n.id));
+  // radici tirate a sinistra
+  flow.nodes.forEach(n=>{
+    if(!inL.get(n.id).length&&outL.get(n.id).length)
+      col.set(n.id,Math.min(...outL.get(n.id).map(l=>col.get(l.target)))-1);
+  });
+  const minC=Math.min(...col.values());
+  col.forEach((v,k)=>col.set(k,v-minC));
+  const nCols=Math.max(...col.values())+1;
+  // valore di ciascun nodo
+  const val=new Map();
+  flow.nodes.forEach(n=>{
+    const i=inL.get(n.id).reduce((a,l)=>a+l.value,0);
+    const u=outL.get(n.id).reduce((a,l)=>a+l.value,0);
+    val.set(n.id,Math.max(i,u,n.value));
+  });
+  // ordine nodi nelle colonne (meno incroci)
+  const columns=Array.from({length:nCols},()=>[]);
+  const rank=new Map();
+  for(let c=0;c<nCols;c++){
+    const ids=flow.nodes.filter(n=>col.get(n.id)===c).map(n=>n.id);
+    const key=id=>{
+      const ins=inL.get(id);
+      if(!ins.length)return[Infinity,flow.nodes.findIndex(n=>n.id===id)];
+      return ins.reduce((b,l)=>{const r=rank.get(l.source)??1e6,li=outL.get(l.source).indexOf(l);return r<b[0]||(r===b[0]&&li<b[1])?[r,li]:b;},[Infinity,Infinity]);
+    };
+    ids.sort((a,b)=>{const ka=key(a),kb=key(b);return ka[0]-kb[0]||ka[1]-kb[1];});
+    columns[c]=ids;ids.forEach((id,i)=>rank.set(id,c*1000+i));
+  }
+  // scala verticale
+  const innerH=o.height-o.padTop-o.padBottom;
+  const k=Math.min(...columns.filter(c=>c.length).map(ids=>{
+    const sum=ids.reduce((a,id)=>a+val.get(id),0);
+    return(innerH-o.nodeGap*(ids.length-1))/sum;
+  }));
+  const usableW=o.width-o.marginLeft-o.marginRight-o.nodeWidth;
+  const colX=c=>o.marginLeft+(nCols===1?0:(c*usableW)/(nCols-1));
+  // posizioni nodi
+  const laid=new Map();
+  columns.forEach((ids,c)=>{
+    const hs=ids.map(id=>Math.max(val.get(id)*k,3));
+    const total=hs.reduce((a,h)=>a+h,0)+o.nodeGap*Math.max(ids.length-1,0);
+    let y=o.padTop+(innerH-total)/2;
+    ids.forEach((id,i)=>{
+      const n=byId.get(id),h=hs[i];
+      const hasOut=outL.get(id).length>0;
+      const side=n.labelSide||(c===0?(n.emphasis==='main'?'top':'left'):c===nCols-1||!hasOut?'right':i===0?'top':i===ids.length-1?'bottom':'right');
+      const x=colX(c),ax=side==='left'?x:side==='right'?x+o.nodeWidth:x+o.nodeWidth/2,ay=side==='top'?y:side==='bottom'?y+h:y+h/2;
+      laid.set(id,{...n,col:c,x,y,h,side,ax,ay});
+      y+=h+o.nodeGap;
+    });
+  });
+  // anti-sovrapposizione etichette laterali
+  const PX=1.4;
+  const estH=n=>{let h=17+21+(n.sub?15:0)+8;if(n.emphasis==='main')h+=12;if(n.emphasis==='hero')h+=16;if(n.label.length>22)h+=17;if((n.sub||'').length>30)h+=15;return h*PX;};
+  for(let c=0;c<nCols;c++){
+    ['left','right'].forEach(side=>{
+      const ls=[...laid.values()].filter(n=>n.col===c&&n.side===side).sort((a,b)=>a.ay-b.ay);
+      if(ls.length<2)return;
+      for(let i=1;i<ls.length;i++){const min=ls[i-1].ay+estH(ls[i-1])/2+estH(ls[i])/2;if(ls[i].ay<min)ls[i].ay=min;}
+      const last=ls[ls.length-1],over=last.ay+estH(last)/2-o.height;
+      if(over>0){last.ay-=over;for(let i=ls.length-2;i>=0;i--){const max=ls[i+1].ay-estH(ls[i+1])/2-estH(ls[i])/2;if(ls[i].ay>max)ls[i].ay=max;}}
+    });
+  }
+  // calcolo path dei link (Bezier cubica)
+  const inOff=new Map(),outOrder=new Map();
+  laid.forEach(n=>{
+    const outs=[...outL.get(n.id)].sort((a,b)=>laid.get(a.target).y-laid.get(b.target).y);
+    let acc=0;outs.forEach(l=>{outOrder.set(l,acc);acc+=l.value*k;});
+    const ins=[...inL.get(n.id)].sort((a,b)=>laid.get(a.source).y-laid.get(b.source).y);
+    let acc2=0;ins.forEach(l=>{inOff.set(l.source+'>'+l.target,acc2);acc2+=l.value*k;});
+  });
+  const r=n=>Math.round(n*10)/10;
+  const lLinks=flow.links.map(l=>{
+    const a=laid.get(l.source),b=laid.get(l.target),h=Math.max(l.value*k,1.5);
+    const y0=a.y+outOrder.get(l),y1=b.y+inOff.get(l.source+'>'+l.target);
+    const x0=a.x+o.nodeWidth,x1=b.x,m=(x0+x1)/2;
+    const d=`M${r(x0)},${r(y0)} C${r(m)},${r(y0)} ${r(m)},${r(y1)} ${r(x1)},${r(y1)} L${r(x1)},${r(y1+h)} C${r(m)},${r(y1+h)} ${r(m)},${r(y0+h)} ${r(x0)},${r(y0+h)} Z`;
+    return{source:l.source,target:l.target,value:l.value,kind:b.kind,d};
+  });
+  return{width:o.width,height:o.height,nodeWidth:o.nodeWidth,nodes:[...laid.values()],links:lLinks};
+}
+
+// ── renderSankeyChart ────────────────────────────────────────────────────────
+function renderSankeyChart(d,cur){
+  const el=document.getElementById('sd-sankey');
+  if(!el)return;
+  const rev=d.totalRevenue;
+  if(!rev||rev<=0||d.etf){el.style.display='none';return;}
+  const currency=cur==='€'?'EUR':'USD';
+  const opIncome=d.operatingMargins!=null?rev*d.operatingMargins:null;
+  const netIncome=d.profitMargins!=null?rev*d.profitMargins:null;
+  if(!opIncome||!netIncome){el.style.display='none';return;}
+  const stmt={currency,revenue:rev,revenueYoY:d.revenueGrowth??undefined,costOfRevenue:d.grossMargins!=null?rev*(1-d.grossMargins):undefined,operatingIncome:opIncome,netIncome};
+  const built=_ifBuild(stmt);
+  const company=(document.getElementById('sd-name')?.textContent||sdSym||'').trim();
+  el.style.display='block';
+  if(!built.ok){
+    const msg=built.reason==='loss'
+      ?_L({it:`${company} ha chiuso il periodo in perdita: il grafico è disponibile solo per i periodi in utile.`,en:`${company} reported a loss: the chart is only available for profitable periods.`})
+      :_L({it:'Dati non disponibili.',en:'Data not available.'});
+    el.innerHTML=`<div class="fe-if"><p class="fe-if-empty">${msg}</p></div>`;
+    return;
+  }
+  const L=_ifLayout(built.flow);
+  const unit=_ifPickUnit(Math.max(...built.flow.nodes.map(n=>n.value)));
+  const FILL={revenue:'#2BB8F0',revenueAlt:'#7FD4F7',cost:'#FF5C6C',profit:'#22C98A'};
+  const NODE_C={revenue:'#085A8C',revenueAlt:'#7FD4F7',cost:'#FF5C6C',profit:'#22C98A'};
+  const VTXT={revenue:'#05365F',revenueAlt:'#05365F',cost:'#C42F3C',profit:'#0B8A55'};
+  const ariaLbl=`Flusso conto economico ${company}: ricavi ${_ifFmtMoney(rev,currency)}, utile operativo ${_ifFmtMoney(opIncome,currency)}, utile netto ${_ifFmtMoney(netIncome,currency)}.`;
+  const pct=(v,t)=>`${(v/t*100).toFixed(2)}%`;
+  const svgLinks=L.links.map(l=>`<path class="fe-if-link" data-src="${l.source}" data-tgt="${l.target}" d="${l.d}" fill="${FILL[l.kind]}" opacity="0.32"/>`).join('');
+  const svgNodes=L.nodes.map(n=>`<rect class="fe-if-node" data-id="${n.id}" x="${n.x}" y="${n.y}" width="${L.nodeWidth}" height="${n.h}" rx="5" fill="${NODE_C[n.kind]}"/>`).join('');
+  const htmlLabels=L.nodes.map(n=>`<div class="fe-if-label" data-id="${n.id}" data-side="${n.side}"${n.emphasis?` data-emph="${n.emphasis}"`:''}
+    style="left:${pct(n.ax,L.width)};top:${pct(n.ay,L.height)};animation-delay:${0.3+n.col*0.22}s" aria-hidden="true">
+    <span class="fe-if-name">${n.label}</span>
+    <span class="fe-if-value" style="color:${VTXT[n.kind]}">${_ifFmtMoney(n.value,currency,n.kind==='cost',unit)}</span>
+    ${n.sub?`<span class="fe-if-sub">${n.sub}</span>`:''}
+  </div>`).join('');
+  const yoy=d.revenueGrowth;
+  const yoyHtml=yoy!=null?` <span class="${yoy>=0?'fe-if-up':'fe-if-down'}">${yoy>=0?'+':'−'}${Math.abs(Math.round(yoy*100))}%</span>`:'';
+  el.innerHTML=`
+  <section class="fe-if" aria-labelledby="fe-if-h">
+    <div class="fe-if-head">
+      <div class="fe-if-headtext">
+        <span class="fe-if-eyebrow">${_L({it:'Dati fondamentali · Conto economico',en:'Fundamentals · Income Statement'})}</span>
+        <h2 id="fe-if-h" class="fe-if-title">${_L({it:`Come guadagna <em>${company}</em>`,en:`How <em>${company}</em> makes money`})}</h2>
+        <div class="fe-if-chips">
+          <span class="fe-if-chip">${_L({it:'Ricavi',en:'Revenue'})} <b>${_ifFmtMoney(rev,currency)}</b>${yoyHtml}</span>
+          <span class="fe-if-chip">${_L({it:'Margine operativo',en:'Op. margin'})} <b>${_ifFmtPct(opIncome/rev)}</b></span>
+          <span class="fe-if-chip${netIncome>0?' fe-if-chip--good':''}">${_L({it:'Margine netto',en:'Net margin'})} <b>${_ifFmtPct(netIncome/rev)}</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="fe-if-card">
+      <div class="fe-if-cardhead">
+        <span class="fe-if-hint-hover">${_L({it:'Passa sopra un blocco per seguire i soldi',en:'Hover a block to follow the money'})}</span>
+        <span class="fe-if-hint-touch">${_L({it:'Tocca un blocco per seguire i soldi',en:'Tap a block to follow the money'})}</span>
+        <div class="fe-if-legend" aria-hidden="true">
+          <span><i style="background:#2BB8F0"></i>${_L({it:'Ricavi',en:'Revenue'})}</span>
+          <span><i style="background:#FF5C6C"></i>${_L({it:'Costi',en:'Costs'})}</span>
+          <span><i style="background:#22C98A"></i>${_L({it:'Utile',en:'Profit'})}</span>
+        </div>
+      </div>
+      <span class="fe-if-swipe">← ${_L({it:'Scorri il grafico',en:'Scroll chart'})} →</span>
+      <div class="fe-if-scroll">
+        <div class="fe-if-canvas" role="img" aria-label="${ariaLbl}" style="aspect-ratio:${L.width}/${L.height}">
+          <svg class="fe-if-svg" viewBox="0 0 ${L.width} ${L.height}" aria-hidden="true">${svgLinks}${svgNodes}</svg>
+          ${htmlLabels}
+        </div>
+      </div>
+    </div>
+    <div class="fe-if-foot">
+      <span>${_L({it:'Fonte: bilanci societari · ultimi 12 mesi · variazioni anno su anno',en:'Source: company filings · trailing 12 months · year-over-year changes'})}</span>
+      <span>${_L({it:'Contenuto informativo · non è consulenza finanziaria.',en:'Informational content · not financial advice.'})}</span>
+    </div>
+  </section>`;
+  // hover interattivo: passa sopra un nodo per evidenziare i flussi collegati
+  const paths=el.querySelectorAll('.fe-if-link');
+  const rects=el.querySelectorAll('.fe-if-node');
+  const lbls=el.querySelectorAll('.fe-if-label');
+  const setHover=hid=>{
+    paths.forEach(p=>{const lit=hid&&(p.dataset.src===hid||p.dataset.tgt===hid);p.style.opacity=hid?(lit?'0.7':'0.08'):'0.32';});
+    lbls.forEach(lb=>{if(!hid){lb.style.opacity='';return;}const id=lb.dataset.id;const linked=id===hid||L.links.some(l=>(l.source===hid&&l.target===id)||(l.target===hid&&l.source===id));lb.style.opacity=linked?'1':'0.3';});
+  };
+  let curHov=null;
+  rects.forEach(rect=>{
+    rect.addEventListener('mouseenter',()=>{curHov=rect.dataset.id;setHover(curHov);});
+    rect.addEventListener('mouseleave',()=>{curHov=null;setHover(null);});
+    rect.addEventListener('click',()=>{curHov=curHov===rect.dataset.id?null:rect.dataset.id;setHover(curHov);});
+  });
+}
 // Applica i dati fondamentali (bilancio) all'UI
 function renderFundamentals(d, cur){
   function pctArrow(id,v,threshold){
