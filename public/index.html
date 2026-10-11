@@ -1743,7 +1743,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .fe-if-headtext{display:flex;flex-direction:column;gap:10px;flex:1 1 300px;min-width:0}
 .fe-if-eyebrow{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--fe-blue);text-transform:uppercase}
 .fe-if-eyebrow::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--fe-green)}
-.fe-if-title{margin:0;font-size:clamp(18px,2.2vw,22px);line-height:1.2;font-weight:800;letter-spacing:-.025em}
+.fe-if-title{margin:0;font-size:clamp(22px,2.8vw,32px);line-height:1.15;font-weight:800;letter-spacing:-.03em}
 .fe-if-title em{font-style:normal;color:var(--fe-blue)}
 .fe-if-chips{display:flex;flex-wrap:wrap;gap:8px}
 .fe-if-chip{padding:6px 12px;border-radius:999px;background:var(--fe-soft);font-size:13px;font-weight:600;color:var(--fe-muted)}
@@ -2164,10 +2164,10 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 
     <!-- ═ Tab: Fondamentali ═ -->
     <div id="sdt-fondamentali" style="display:none">
+    <!-- Sankey: "Come guadagna" — prima cosa visibile nel tab -->
+    <div id="sd-sankey" style="display:none"></div>
     <!-- Risultati Trimestrali (stock only, hidden for ETF/crypto) -->
     <div id="sd-quarterly" style="margin-bottom:16px"></div>
-    <!-- Sankey: conto economico semplificato (nascosto di default, mostrato da renderSankeyChart) -->
-    <div id="sd-sankey" style="display:none"></div>
     <!-- Sezioni fondamentali: 4 colonne -->
     <div class="sd-funds" id="sd-funds-section">
       <div class="sd-section">
@@ -15659,7 +15659,7 @@ function _ifBuild(s){
 
 // ── layoutFlow ───────────────────────────────────────────────────────────────
 function _ifLayout(flow,opts){
-  const o=Object.assign({width:1520,height:780,nodeWidth:18,nodeGap:34,padTop:110,padBottom:90,marginLeft:300,marginRight:280},opts||{});
+  const o=Object.assign({width:1520,height:920,nodeWidth:18,nodeGap:40,padTop:130,padBottom:110,marginLeft:300,marginRight:280},opts||{});
   const byId=new Map(flow.nodes.map(n=>[n.id,n]));
   const inL=new Map(),outL=new Map();
   flow.nodes.forEach(n=>{inL.set(n.id,[]);outL.set(n.id,[]);});
