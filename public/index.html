@@ -1757,7 +1757,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .fe-if-legend span{display:flex;align-items:center;gap:6px}
 .fe-if-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
 .fe-if-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.fe-if-canvas{position:relative;width:100%;min-width:800px}
+.fe-if-canvas{position:relative;width:100%;min-width:640px}
 .fe-if-svg{position:absolute;inset:0;width:100%;height:100%;animation:fe-if-reveal 1.6s cubic-bezier(.45,0,.2,1) both}
 .fe-if-link{transition:opacity .25s ease}
 .fe-if-node{cursor:pointer}
@@ -15659,7 +15659,7 @@ function _ifBuild(s){
 
 // ── layoutFlow ───────────────────────────────────────────────────────────────
 function _ifLayout(flow,opts){
-  const o=Object.assign({width:1520,height:640,nodeWidth:16,nodeGap:28,padTop:90,padBottom:80,marginLeft:280,marginRight:260},opts||{});
+  const o=Object.assign({width:1520,height:440,nodeWidth:14,nodeGap:20,padTop:64,padBottom:56,marginLeft:260,marginRight:240},opts||{});
   const byId=new Map(flow.nodes.map(n=>[n.id,n]));
   const inL=new Map(),outL=new Map();
   flow.nodes.forEach(n=>{inL.set(n.id,[]);outL.set(n.id,[]);});
