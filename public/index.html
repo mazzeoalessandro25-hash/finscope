@@ -2120,6 +2120,8 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
     <div id="sdt-fondamentali" style="display:none">
     <!-- Risultati Trimestrali (stock only, hidden for ETF/crypto) -->
     <div id="sd-quarterly" style="margin-bottom:16px"></div>
+    <!-- Sankey: conto economico semplificato (nascosto di default, mostrato da renderSankeyChart) -->
+    <div id="sd-sankey" style="display:none"></div>
     <!-- Sezioni fondamentali: 4 colonne -->
     <div class="sd-funds" id="sd-funds-section">
       <div class="sd-section">
@@ -15517,6 +15519,205 @@ function renderValuation(d, cur){
   renderSdFinEdgeScore();
 }
 
+// ─── SANKEY: VISUALIZZAZIONE SEMPLIFICATA CONTO ECONOMICO ──────────────────
+function renderSankeyChart(d, cur) {
+  const el = document.getElementById('sd-sankey');
+  if (!el) return;
+
+  // Solo per stock con ricavi disponibili (non ETF, non crypto senza ricavi)
+  const rev = d.totalRevenue;
+  if (!rev || rev <= 0 || d.etf) { el.style.display = 'none'; return; }
+
+  const sym = cur === '€' ? '€' : '$';
+
+  // Valori derivati dal conto economico
+  const gp   = d.grossMargins     != null ? rev * d.grossMargins     : null;
+  const cogs = gp                 != null ? rev - gp                 : null;
+  const oi   = d.operatingMargins != null ? rev * d.operatingMargins : null;
+  const opex = (gp != null && oi != null && gp > oi) ? gp - oi : null;
+  const ni   = d.profitMargins    != null ? rev * d.profitMargins    : null;
+  const tax  = (oi != null && ni != null && oi > ni)  ? oi - ni  : null;
+
+  // Nasconde il grafico se non ci sono dati sufficienti o se i profitti sono negativi
+  if (!gp || gp <= 0) { el.style.display = 'none'; return; }
+
+  // Formattazione valore assoluto (es. 3.7B, 450M)
+  const fv = v => {
+    if (v == null) return '—';
+    const a = Math.abs(v), s = v < 0 ? '−' : '';
+    if (a >= 1e12) return s + (a/1e12).toFixed(1) + 'T';
+    if (a >= 1e9)  return s + (a/1e9).toFixed(1)  + 'B';
+    if (a >= 1e6)  return s + (a/1e6).toFixed(0)  + 'M';
+    return s + a.toFixed(0);
+  };
+  // Formattazione percentuale con segno
+  const fp = v => v != null ? (v >= 0 ? '+' : '') + (v * 100).toFixed(1) + '%' : '';
+
+  // ── Layout SVG ──────────────────────────────────────────────────────────────
+  const W = 700, H = 260;
+  const TOP = 62, CH = 136; // area chart: y=62..198
+  const NW = 10;            // larghezza nodi (barre verticali)
+  const CX = [70, 220, 370, 520]; // centri X delle 4 colonne
+
+  // Altezza proporzionale al rapporto v/rev (minimo 3px per visibilità)
+  const toH = v => (v == null || rev <= 0) ? 0 : Math.max(3, (Math.abs(v) / rev) * CH);
+
+  // Altezze barre
+  const gpH   = toH(gp);
+  const cogsH = toH(cogs);
+  const oiH   = oi != null && oi > 0 ? toH(oi) : 0;
+  const opexH = opex != null && opex > 0 ? toH(opex) : 0;
+  const niH   = ni  != null && ni  > 0 ? toH(ni)  : 0;
+  const taxH  = tax != null && tax  > 0 ? toH(tax) : 0;
+
+  // Y top di ogni nodo (i profitti partono dall'alto, i costi iniziano dopo)
+  const gpY   = TOP;
+  const cogsY = TOP + gpH;
+  const oiY   = TOP;
+  const opexY = TOP + oiH;
+  const niY   = TOP;
+  const taxY  = TOP + niH;
+
+  // Colori
+  const CG = '#059669', CR = '#DC2626', CB = '#1A56C4', CA = '#D97706';
+  const CG2 = 'rgba(5,150,105,0.15)', CR2 = 'rgba(220,38,38,0.13)', CA2 = 'rgba(217,119,6,0.15)';
+
+  // ── Path Bezier per flusso Sankey ─────────────────────────────────────────
+  // (x1,y1t,y1b) → (x2,y2t,y2b): area piena con curve
+  const sp = (x1, y1t, y1b, x2, y2t, y2b) => {
+    const mx = (x1 + x2) / 2;
+    return `M${x1},${y1t} C${mx},${y1t} ${mx},${y2t} ${x2},${y2t} ` +
+           `L${x2},${y2b} C${mx},${y2b} ${mx},${y1b} ${x1},${y1b} Z`;
+  };
+
+  // Bordi X usati nei path (entrata/uscita dai nodi)
+  const x0r = CX[0]+NW/2, x1l = CX[1]-NW/2, x1r = CX[1]+NW/2;
+  const x2l = CX[2]-NW/2, x2r = CX[2]+NW/2, x3l = CX[3]-NW/2;
+
+  // ── Nodi (barre verticali colorate) ───────────────────────────────────────
+  const rect = (cx, y, h, fill) =>
+    `<rect x="${cx-NW/2}" y="${y}" width="${NW}" height="${h}" fill="${fill}" rx="3"/>`;
+
+  const nodes = [
+    rect(CX[0], TOP, CH, CB),                                      // Revenue (piena)
+    gp   != null              ? rect(CX[1], gpY,   gpH,   CG) : '', // Gross Profit
+    cogs != null              ? rect(CX[1], cogsY, cogsH, CR) : '', // COGS
+    oiH  > 0                  ? rect(CX[2], oiY,   oiH,   CG) : '', // Op. Income
+    opexH > 0                 ? rect(CX[2], opexY, opexH, CA) : '', // Op. Expenses
+    niH  > 0                  ? rect(CX[3], niY,   niH,   CG) : '', // Net Income
+    taxH > 0                  ? rect(CX[3], taxY,  taxH,  CR) : '', // Tax + Other
+  ].join('');
+
+  // ── Flussi ─────────────────────────────────────────────────────────────────
+  const flows = [
+    gp   != null  ? `<path d="${sp(x0r, gpY,   gpY+gpH,     x1l, gpY,   gpY+gpH)}"   fill="${CG2}"/>` : '',
+    cogs != null  ? `<path d="${sp(x0r, cogsY, cogsY+cogsH, x1l, cogsY, cogsY+cogsH)}" fill="${CR2}"/>` : '',
+    oiH  > 0 && gp != null ? `<path d="${sp(x1r, oiY,   oiY+oiH,     x2l, oiY,   oiY+oiH)}"   fill="${CG2}"/>` : '',
+    opexH > 0              ? `<path d="${sp(x1r, opexY, opexY+opexH, x2l, opexY, opexY+opexH)}" fill="${CA2}"/>` : '',
+    niH  > 0 && oiH > 0   ? `<path d="${sp(x2r, niY,   niY+niH,     x3l, niY,   niY+niH)}"   fill="${CG2}"/>` : '',
+    taxH > 0               ? `<path d="${sp(x2r, taxY,  taxY+taxH,   x3l, taxY,  taxY+taxH)}"  fill="${CR2}"/>` : '',
+  ].join('');
+
+  // ── Labels ─────────────────────────────────────────────────────────────────
+  // Riga di testo SVG (singola)
+  const t = (x, y, text, anchor, color, size, bold) =>
+    `<text x="${x}" y="${y}" text-anchor="${anchor||'middle'}" fill="${color||'var(--t)'}" ` +
+    `font-size="${size||10}" font-weight="${bold?700:500}" font-family="var(--fm)">${text}</text>`;
+
+  // Linea tratteggiata di connessione verticale
+  const dash = (x, y1, y2, color) =>
+    `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}" stroke="${color}" stroke-width="1" stroke-dasharray="3,2" opacity="0.45"/>`;
+
+  // Label SOPRA la barra (per profitti: Gross Profit, Op Income)
+  const topLbl = (cx, barY, lines) => {
+    const botY = barY - 7;  // base dell'ultima riga di testo
+    const startY = botY - (lines.length - 1) * 14;
+    return dash(cx, botY + 2, barY - 1, lines[1] ? lines[1].c : lines[0].c) +
+      lines.map((l, i) => t(cx, startY + i*14, l.v, 'middle', l.c, l.s||10, l.b)).join('');
+  };
+
+  // Label SOTTO la barra (per costi: COGS, OpEx, Tax)
+  const botLbl = (cx, barY, barH, lines) => {
+    const topY = barY + barH + 10;
+    return dash(cx, barY + barH + 1, topY - 3, lines[1] ? lines[1].c : lines[0].c) +
+      lines.map((l, i) => t(cx, topY + i*14, l.v, 'middle', l.c, l.s||10, l.b)).join('');
+  };
+
+  const labels = [
+    // Revenue: label a sinistra del nodo
+    t(CX[0]-16, TOP + CH/2 - 16, 'Ricavi',       'end', 'var(--t3)', 10, true),
+    t(CX[0]-16, TOP + CH/2 - 2,  sym+fv(rev),    'end', CB, 13, true),
+    d.revenueGrowth != null
+      ? t(CX[0]-16, TOP + CH/2 + 12, fp(d.revenueGrowth)+' YoY', 'end',
+          d.revenueGrowth >= 0 ? CG : CR, 9, false)
+      : '',
+
+    // Gross Profit: label sopra
+    gp != null ? topLbl(CX[1], gpY, [
+      {v:'Utile Lordo', c:'var(--t3)', b:true},
+      {v:sym+fv(gp),    c:CG, s:11, b:true},
+      ...(d.grossMargins != null ? [{v:fp(d.grossMargins)+' m.', c:CG, s:9}] : []),
+    ]) : '',
+
+    // COGS: label sotto
+    cogs != null ? botLbl(CX[1], cogsY, cogsH, [
+      {v:'COGS',             c:'var(--t3)', b:true},
+      {v:'('+sym+fv(cogs)+')', c:CR, s:11, b:true},
+    ]) : '',
+
+    // Op Income: label sopra
+    oiH > 0 ? topLbl(CX[2], oiY, [
+      {v:'Utile Oper.', c:'var(--t3)', b:true},
+      {v:sym+fv(oi),    c:CG, s:11, b:true},
+      ...(d.operatingMargins != null ? [{v:fp(d.operatingMargins)+' m.', c:CG, s:9}] : []),
+    ]) : '',
+
+    // Op Expenses: label sotto
+    opexH > 0 ? botLbl(CX[2], opexY, opexH, [
+      {v:'Spese Oper.',       c:'var(--t3)', b:true},
+      {v:'('+sym+fv(opex)+')', c:CA, s:11, b:true},
+    ]) : '',
+
+    // Net Income: label a destra
+    niH > 0 ? [
+      t(CX[3]+16, niY + niH/2 - 14, 'Utile Netto',     'start', 'var(--t3)', 10, true),
+      t(CX[3]+16, niY + niH/2 - 0,  sym+fv(ni),         'start', CG, 11, true),
+      ...(d.profitMargins != null
+        ? [t(CX[3]+16, niY + niH/2 + 13, fp(d.profitMargins)+' m.', 'start', CG, 9, false)]
+        : []),
+      ...(d.freeCashflow != null
+        ? [t(CX[3]+16, niY + niH/2 + 26, 'FCF: '+sym+fv(d.freeCashflow), 'start', 'var(--t3)', 9, false)]
+        : []),
+    ].join('') : '',
+
+    // Tax + Other: label a destra
+    taxH > 0 ? [
+      t(CX[3]+16, taxY + taxH/2 - 7,  'Tasse+Altro',      'start', 'var(--t3)', 10, true),
+      t(CX[3]+16, taxY + taxH/2 + 6,  '('+sym+fv(tax)+')', 'start', CR, 10, true),
+    ].join('') : '',
+  ].join('');
+
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="sd-section" style="margin-bottom:16px">
+      <div class="sd-section-title" style="display:flex;align-items:center;margin-bottom:4px">
+        <span>${_L({it:'Come guadagna',en:'How it makes money'})}</span>
+        <span class="sd-info-btn">i<div class="sd-tip">${_L({
+          it:'Conto economico semplificato (TTM). <b>COGS</b>: costo del venduto. <b>Utile Lordo</b>: Ricavi − COGS. <b>Spese Oper.</b>: marketing, R&D, G&amp;A. <b>Utile Netto</b>: profitto finale dopo tasse e interessi.',
+          en:'Simplified income statement (TTM). <b>COGS</b>: cost of goods sold. <b>Gross Profit</b>: Revenue − COGS. <b>Op. Expenses</b>: marketing, R&amp;D, G&amp;A. <b>Net Income</b>: final profit after taxes and interest.'
+        })}</div></span>
+      </div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet"
+             style="width:100%;min-width:300px;height:auto;display:block;overflow:visible">
+          ${flows}
+          ${nodes}
+          ${labels}
+        </svg>
+      </div>
+    </div>`;
+}
+
 // Applica i dati fondamentali (bilancio) all'UI
 function renderFundamentals(d, cur){
   function pctArrow(id,v,threshold){
@@ -15626,6 +15827,7 @@ function renderFundamentals(d, cur){
   }
   if(d.etf) renderETFData(d.etf);
   sdLastFundData=d;
+  renderSankeyChart(d, cur);
   renderSdFinEdgeScore();
 }
 
