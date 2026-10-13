@@ -1738,16 +1738,18 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .tut-help-btn:hover{background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.45)}
 
 /* ── IncomeFlow: "Come guadagna" (port da finedge-income-flow kit) ────────── */
-.fe-if{--fe-navy:#0F1C2E;--fe-blue:#1A56C4;--fe-cyan:#1A56C4;--fe-sky:#EBF1FB;--fe-red:#DC2626;--fe-red-text:#DC2626;--fe-green:#059669;--fe-green-text:#059669;--fe-muted:#4A6080;--fe-line:#D8E2EF;--fe-soft:#F0F4FA;font-family:var(--ff);color:var(--fe-navy);display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.fe-if{--fe-navy:#0F1C2E;--fe-blue:#1A56C4;--fe-cyan:#1A56C4;--fe-sky:#EBF1FB;--fe-red:#DC2626;--fe-red-text:#DC2626;--fe-green:#059669;--fe-green-text:#059669;--fe-muted:#4A6080;--fe-line:#D8E2EF;--fe-soft:#F0F4FA;--fe-label-bg:rgba(255,255,255,.92);font-family:var(--ff);color:var(--fe-navy);display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+body.dark .fe-if{--fe-navy:var(--t);--fe-muted:var(--t2);--fe-soft:var(--s3);--fe-label-bg:rgba(17,30,48,.95)}
 .fe-if-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
 .fe-if-headtext{display:flex;flex-direction:column;gap:10px;flex:1 1 300px;min-width:0}
 .fe-if-eyebrow{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;font-family:var(--fm);border-bottom:1px solid var(--bd);padding-bottom:8px;margin-bottom:2px}
-.fe-if-title{margin:0;font-size:14px;line-height:1.3;font-weight:700;color:var(--t1)}
+.fe-if-title{margin:0;font-size:14px;line-height:1.3;font-weight:700;color:var(--t)}
 .fe-if-title em{font-style:normal;color:var(--fe-blue)}
 .fe-if-chips{display:flex;flex-wrap:wrap;gap:8px}
-.fe-if-chip{padding:6px 12px;border-radius:999px;background:var(--fe-soft);font-size:13px;font-weight:600;color:var(--fe-muted)}
+.fe-if-chip{padding:6px 12px;border-radius:999px;background:var(--fe-soft);font-size:13px;font-weight:600;color:var(--fe-muted);border:1px solid var(--bd)}
 .fe-if-chip b{font-weight:800;color:var(--fe-navy)}
-.fe-if-chip--good{background:#E3F8EF;color:#0B6B43}
+.fe-if-chip--good{background:#E3F8EF;color:#0B6B43;border-color:#B6EDD8}
+body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A30}
 .fe-if-up{color:var(--fe-green-text);font-weight:800}
 .fe-if-down{color:var(--fe-red-text);font-weight:800}
 .fe-if-card{border-radius:8px;border:1px solid var(--bd);background:var(--s2);box-shadow:none;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
@@ -1760,7 +1762,7 @@ html.dark .lw-tooltip{box-shadow:0 4px 20px rgba(0,0,0,.4)}
 .fe-if-svg{position:absolute;inset:0;width:100%;height:100%;animation:fe-if-reveal 1.6s cubic-bezier(.45,0,.2,1) both}
 .fe-if-link{transition:opacity .25s ease}
 .fe-if-node{cursor:pointer}
-.fe-if-label{position:absolute;display:flex;flex-direction:column;gap:1px;max-width:190px;padding:4px 8px;border-radius:10px;background:rgba(255,255,255,.9);transition:opacity .25s ease;animation:fe-if-fade .5s ease both}
+.fe-if-label{position:absolute;display:flex;flex-direction:column;gap:1px;max-width:190px;padding:4px 8px;border-radius:10px;background:var(--fe-label-bg);border:1px solid var(--bd);transition:opacity .25s ease;animation:fe-if-fade .5s ease both}
 .fe-if-label[data-side='left']{transform:translate(calc(-100% - 14px),-50%);align-items:flex-end;text-align:right}
 .fe-if-label[data-side='right']{transform:translate(14px,-50%);align-items:flex-start}
 .fe-if-label[data-side='top']{transform:translate(-50%,calc(-100% - 10px));align-items:center;text-align:center}
