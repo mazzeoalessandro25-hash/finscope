@@ -914,6 +914,31 @@ html.dark .auth-box{background:#1e293b}
 
 /* ═══ FEATURE 5: PORTFOLIO PERF CHART ═══ */
 .port-perf-card{margin-top:16px}
+
+/* ═══ CAPM RISK ANALYSIS ═══ */
+.capm-meta-strip{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--fm);font-size:10px;color:var(--t3);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--bd)}
+.capm-meta-strip span{display:flex;align-items:center;gap:3px}
+.capm-bench-sel{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.capm-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.capm-kpi{background:var(--s2);border-radius:10px;padding:12px 14px}
+.capm-kpi-lbl{font-family:var(--fm);font-size:9px;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:5px;display:flex;align-items:center;gap:3px}
+.capm-kpi-val{font-size:20px;font-weight:700;color:var(--t);font-family:var(--fm)}
+.capm-kpi-sub{font-size:10px;color:var(--t2);margin-top:3px}
+.capm-var-bar{display:flex;height:10px;border-radius:5px;overflow:hidden;margin:8px 0}
+.capm-var-sys{background:#1A56C4}
+.capm-var-idio{background:#94a3b8}
+.capm-simple-box{background:var(--s2);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--t);line-height:1.6;border-left:3px solid var(--b)}
+.capm-disclaimer{font-family:var(--fm);font-size:10px;color:var(--t3);margin-top:12px;padding:8px 10px;background:var(--s2);border-radius:7px;line-height:1.5}
+.capm-compare-tbl{width:100%;border-collapse:collapse;font-family:var(--fm);font-size:11px}
+.capm-compare-tbl th{font-size:9px;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;padding:5px 8px;border-bottom:1px solid var(--bd);text-align:right;font-weight:600}
+.capm-compare-tbl th:first-child{text-align:left}
+.capm-compare-tbl td{padding:7px 8px;border-bottom:1px solid var(--bd);color:var(--t);text-align:right}
+.capm-compare-tbl td:first-child{text-align:left;font-weight:600;color:var(--t)}
+.capm-compare-tbl tr:last-child td{border-bottom:none}
+.capm-compare-tbl .port-row td{background:rgba(26,86,196,.05);font-weight:700}
+.capm-loading{padding:20px;text-align:center;font-family:var(--fm);font-size:12px;color:var(--t3)}
+html.dark .capm-simple-box{border-left-color:#3b82f6}
+@media(max-width:700px){.capm-kpi-grid{grid-template-columns:1fr 1fr!important}}
 .port-kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
 .port-analysis-2col{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}
 .port-dist-item{margin-bottom:10px}
@@ -3318,6 +3343,18 @@ body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A3
           </div>
           <canvas id="portPerfChart" height="90"></canvas>
         </div>
+
+        <!-- TABELLA CAPM — visibile solo in preview (FEATURE_CAPM) -->
+        <div class="card" style="margin-top:10px;display:none" id="capm-compare-card">
+          <div class="ch">
+            <div>
+              <div class="ct"><span>📐 Metriche aggiustate per il rischio</span><span class="info-icon">i<span class="info-tip">Beta, Alpha di Jensen annualizzato, Sharpe e Treynor calcolati con regressione OLS su rendimenti settimanali (2 anni, benchmark MSCI World). Permettono di confrontare rendimenti tenendo conto del rischio assunto.</span></span></div>
+              <div class="cs" id="capm-compare-sub">Beta · Alpha Jensen · Sharpe · Treynor · 2 anni · settimanale · MSCI World</div>
+            </div>
+          </div>
+          <div id="capm-compare-content"><div class="capm-loading">Caricamento…</div></div>
+        </div>
+
         <div class="card" style="margin-top:10px" id="port-cagr-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.cagr">📊 Rendimenti per titolo</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.returns">Rendimento totale e CAGR (tasso annuo composto) per ogni posizione. Il CAGR normalizza il rendimento sulla durata dell'investimento, così puoi confrontare titoli detenuti per periodi diversi.</span></span></div><div class="cs" data-i18n="port.cs.cagr">P&L % · CAGR annualizzato · Periodo di detenzione</div></div></div>
           <div id="port-cagr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
@@ -3341,6 +3378,28 @@ body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A3
         <div class="card" style="margin-top:10px" id="corr-card">
           <div class="ch"><div><div class="ct"><span data-i18n="port.ct.corr">🔗 Correlazioni</span><span class="info-icon">i<span class="info-tip" data-i18n-html="tip.info.corr">Misura quanto i titoli si muovono insieme. +1 = perfettamente correlati, 0 = indipendenti, -1 = inversamente correlati. Basato sugli ultimi 3 mesi di prezzi giornalieri.</span></span></div><div class="cs" data-i18n="port.cs.corr">Matrice di correlazione 3 mesi · Verde = correlati · Rosso = inversamente correlati</div></div></div>
           <div id="corr-content"><div class="ld" style="padding:10px" data-i18n="common.loading">Caricamento...</div></div>
+        </div>
+
+        <!-- ANALISI CAPM — visibile solo in preview (FEATURE_CAPM) -->
+        <div class="card" style="margin-top:10px;display:none" id="capm-card">
+          <div class="ch" style="flex-wrap:wrap;gap:8px">
+            <div>
+              <div class="ct"><span>📐 Analisi CAPM</span><span class="info-icon">i<span class="info-tip">Beta (regressione OLS), Alpha di Jensen annualizzato, Sharpe, Treynor, R² e scomposizione della varianza (sistematica vs specifica). Rendimenti settimanali adjusted close, finestra 2 anni. Benchmark selezionabile.</span></span></div>
+              <div class="cs">Beta · Alpha · Sharpe · Treynor · R² · Scomposizione varianza</div>
+            </div>
+            <!-- Selezione benchmark -->
+            <div class="capm-bench-sel">
+              <button class="port-sort-btn active" id="capm-bench-ACWI" onclick="setCAPMBench('ACWI',this)">🌍 MSCI World</button>
+              <button class="port-sort-btn" id="capm-bench-SPY" onclick="setCAPMBench('SPY',this)">📊 S&amp;P 500</button>
+              <button class="port-sort-btn" id="capm-bench-^FTSEMIB" onclick="setCAPMBench('^FTSEMIB',this)">🇮🇹 FTSE MIB</button>
+            </div>
+          </div>
+          <!-- Toggle Simple / Advanced -->
+          <div style="display:flex;gap:6px;margin-bottom:12px">
+            <button class="port-sort-btn active" id="capm-mode-simple" onclick="setCAPMMode('simple',this)">Simple</button>
+            <button class="port-sort-btn" id="capm-mode-advanced" onclick="setCAPMMode('advanced',this)">Advanced</button>
+          </div>
+          <div id="capm-content"><div class="capm-loading">Caricamento analisi CAPM…</div></div>
         </div>
       </div>
 
@@ -7508,6 +7567,10 @@ let authTab='login';
 let portfolio=[];
 let pacPlans=[];
 
+// ── FEATURE FLAG: Analisi CAPM ────────────────────────────────────────────
+// Attivo in preview (*.vercel.app, localhost, ecc.), disattivo su finedge.it
+const FEATURE_CAPM=!['finedge.it','www.finedge.it'].includes(window.location.hostname);
+
 // ── MODALITÀ SEMPLICE / AVANZATA ──────────────────────────────────────────
 let userMode='simple';         // 'simple' | 'advanced'
 let _cachedUserPrefs={};       // ultima copia prefs salvata
@@ -8661,8 +8724,8 @@ function switchPortTab(name){
   if(btn)btn.classList.add('active');
   if(panel)panel.classList.add('active');
   // Carica contenuti lazy al primo accesso
-  if(name==='panoramica'){loadPortPerf();loadBenchmark();renderPortPerfSummary();loadPortfolioNews();}
-  if(name==='rischio'){try{renderPortAnalysis(portfolio,_lastPortQuotes);}catch(e){}loadRiskMetrics();renderStressTest();renderCorrelationMatrix();}
+  if(name==='panoramica'){loadPortPerf();loadBenchmark();renderPortPerfSummary();loadPortfolioNews();if(FEATURE_CAPM&&portfolio.length)loadCAPMComparison();}
+  if(name==='rischio'){try{renderPortAnalysis(portfolio,_lastPortQuotes);}catch(e){}loadRiskMetrics();renderStressTest();renderCorrelationMatrix();if(FEATURE_CAPM&&portfolio.length)loadCAPMMetrics();}
   if(name==='pianificazione'){loadPortTargets();renderPersonalTargets();renderPortGoal();renderRebalancing();renderTransactionHistory();renderPacPlans();renderPacLog();autoExecuteDuePacs();}
   if(name==='fisco'){loadDividendTracker();renderTaxDashboard();renderPriceAlerts();}
 }
@@ -11731,6 +11794,321 @@ async function loadPortPerf(range,btn){
 
   }catch(e){console.warn('loadPortPerf error',e);}
   loadDiv.style.display='none';
+}
+
+/* ══════════════════════════════════════════
+   ANALISI CAPM — feature/analisi-rischio-capm
+   Attivo solo in preview (FEATURE_CAPM=true)
+══════════════════════════════════════════ */
+
+// Stato CAPM condiviso tra le due funzioni
+let _capmBench='ACWI';
+let _capmMode='simple';
+let _capmCache=null;          // { bench, data, ts } — cache risultato API
+let _capmCompareCache=null;   // { data, ts } — cache per tabella panoramica
+
+// ── Helper UI ─────────────────────────────────────────────────────────────
+
+function setCAPMBench(bench,btn){
+  _capmBench=bench;
+  _capmCache=null;  // invalida cache
+  document.querySelectorAll('.capm-bench-sel .port-sort-btn').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  loadCAPMMetrics();
+}
+
+function setCAPMMode(mode,btn){
+  _capmMode=mode;
+  document.querySelectorAll('#capm-card .port-sort-btn[id^="capm-mode-"]').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderCAPMContent(_capmCache?.data);
+}
+
+function _capmFmt(v,dec=2,pct=false){
+  if(v==null||!isFinite(v))return'—';
+  const s=(v*100).toFixed(dec);
+  return pct?(v>=0?'+':'')+s+'%':(v>=0?'+':'')+s;
+}
+function _capmNum(v,dec=2){
+  if(v==null||!isFinite(v))return'—';
+  return v.toFixed(dec);
+}
+
+// ── Chiamata API CAPM ─────────────────────────────────────────────────────
+
+async function _fetchCAPM(bench,activeBenches){
+  const body={
+    portfolio:portfolio.map(i=>({sym:i.sym,qty:i.qty,buyPrice:i.buyPrice,currency:i.currency||'USD'})),
+    bench,
+    activeBenches:activeBenches||[],
+    period:'2y'
+  };
+  const r=await fetch('/api/capm',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  if(!r.ok)throw new Error('capm api error '+r.status);
+  return r.json();
+}
+
+// ── Rendering CAPM (tab Rischio) ──────────────────────────────────────────
+
+function renderCAPMContent(data){
+  const el=document.getElementById('capm-content');
+  if(!el||!data)return;
+
+  // Gestisci errori API
+  if(data.error){
+    const msgs={
+      insufficient_data:_L({it:`Dati storici insufficienti (${data.n||0} settimane disponibili, minimo 52). Riprova tra qualche settimana.`,en:`Insufficient historical data (${data.n||0} weeks available, minimum 52). Try again in a few weeks.`}),
+      zero_market_variance:_L({it:'Il benchmark selezionato non ha variazione di prezzo nel periodo. Scegli un altro benchmark.',en:'The selected benchmark has no price variation in the period. Choose a different benchmark.'}),
+      benchmark_unavailable:_L({it:'Benchmark non disponibile. Prova a selezionarne un altro.',en:'Benchmark unavailable. Try selecting a different one.'}),
+    };
+    el.innerHTML=`<div style="padding:10px;color:var(--r);font-family:var(--fm);font-size:12px">${msgs[data.error]||_L({it:'Errore nel calcolo CAPM.',en:'CAPM calculation error.'})}</div>`;
+    return;
+  }
+
+  const p=data.portfolio;
+  const m=data.meta;
+  if(!p||p.error){
+    el.innerHTML=`<div style="padding:10px;color:var(--r);font-family:var(--fm);font-size:12px">${_L({it:'Dati insufficienti per il calcolo.',en:'Insufficient data for calculation.'})}</div>`;
+    return;
+  }
+
+  // Colori di qualità
+  const betaCol=p.beta>1.3?'var(--r)':p.beta<0.7?'var(--b)':'var(--g)';
+  const sharpeCol=p.sharpe>=1?'var(--g)':p.sharpe>=0.5?'var(--o)':'var(--r)';
+  const alphaCol=p.alphaAnnual>=0?'var(--g)':'var(--r)';
+  const r2Lbl=p.r2>=0.7?_L({it:'Alta',en:'High'}):p.r2>=0.4?_L({it:'Media',en:'Medium'}):_L({it:'Bassa',en:'Low'});
+
+  // Strip metadati
+  const metaStrip=`<div class="capm-meta-strip">
+    <span>📊 ${_L({it:'Benchmark',en:'Benchmark'})}: <strong>${m.bench}</strong></span>
+    <span>📅 ${_L({it:'Periodo',en:'Period'})}: <strong>${m.startWk} → ${m.endWk}</strong></span>
+    <span>📈 ${_L({it:'Frequenza',en:'Frequency'})}: <strong>${_L({it:'Settimanale',en:'Weekly'})} (n=${m.n})</strong></span>
+    <span>💰 ${_L({it:'Risk-free',en:'Risk-free'})}: <strong>${(m.rfAnnual*100).toFixed(2)}%</strong> · ${m.rfSource}</span>
+  </div>`;
+
+  // Warning note dati
+  const adjNote=`<div class="capm-disclaimer">${m.adjCloseNote?.[currentLang==='en'?'en':'it']||''}</div>`;
+
+  if(_capmMode==='simple'){
+    const sysPctDisp=Math.round(p.sysPct*100);
+    const idioPctDisp=100-sysPctDisp;
+    const simpleText=_L({
+      it:`Il <strong>${sysPctDisp}%</strong> delle oscillazioni del tuo portafoglio dipende dai movimenti generali del mercato (rischio sistematico), mentre il <strong>${idioPctDisp}%</strong> dipende dalle scelte specifiche dei titoli che hai selezionato (rischio idiosincratico).`,
+      en:`<strong>${sysPctDisp}%</strong> of your portfolio's fluctuations come from general market movements (systematic risk), while <strong>${idioPctDisp}%</strong> come from the specific stocks you chose (idiosyncratic risk).`
+    });
+    // Barra scomposizione
+    const barHtml=`<div class="capm-var-bar">
+      <div class="capm-var-sys" style="width:${sysPctDisp}%"></div>
+      <div class="capm-var-idio" style="flex:1"></div>
+    </div>
+    <div style="display:flex;gap:16px;font-family:var(--fm);font-size:10px;color:var(--t2);margin-bottom:12px">
+      <span><span style="display:inline-block;width:8px;height:8px;background:#1A56C4;border-radius:2px;margin-right:4px"></span>${_L({it:'Sistematico (mercato)',en:'Systematic (market)'})}: ${sysPctDisp}%</span>
+      <span><span style="display:inline-block;width:8px;height:8px;background:#94a3b8;border-radius:2px;margin-right:4px"></span>${_L({it:'Specifico (titoli)',en:'Idiosyncratic (stocks)'})}: ${idioPctDisp}%</span>
+    </div>`;
+
+    el.innerHTML=metaStrip+`<div class="capm-simple-box">${simpleText}</div>`+barHtml+adjNote+
+      `<div class="capm-disclaimer" style="margin-top:6px">⚠️ ${_L({it:'Contenuto informativo · non è consulenza finanziaria. Rendimenti a pesi costanti (non TWR). Dati adjusted close.',en:'Informational content · not financial advice. Constant-weight returns (not TWR). Adjusted close data.'})}</div>`;
+    return;
+  }
+
+  // Advanced mode: tutti i KPI
+  el.innerHTML=metaStrip+`
+  <div class="capm-kpi-grid">
+    <div class="capm-kpi">
+      <div class="capm-kpi-lbl">Beta${tip(_L({it:'Regressione OLS dei rendimenti settimanali in eccesso del portafoglio su quelli del benchmark. Beta = 1 → stessa volatilità del mercato.',en:'OLS regression of portfolio excess returns on benchmark excess returns. Beta = 1 → same volatility as market.'}))}</div>
+      <div class="capm-kpi-val" style="color:${betaCol}">${_capmNum(p.beta)}</div>
+      <div class="capm-kpi-sub">${p.beta>1?_L({it:'Più volatile del mercato',en:'More volatile than market'}):p.beta<1?_L({it:'Meno volatile del mercato',en:'Less volatile than market'}):_L({it:'In linea col mercato',en:'In line with market'})}</div>
+    </div>
+    <div class="capm-kpi">
+      <div class="capm-kpi-lbl">Alpha Jensen${tip(_L({it:'α = Rp − [Rf + β(Rm − Rf)], annualizzato. Rendimento extra rispetto a quanto spiegato dal CAPM. Positivo = sovraperformance aggiustata per il rischio.',en:'α = Rp − [Rf + β(Rm − Rf)], annualized. Extra return vs CAPM prediction. Positive = risk-adjusted outperformance.'}))}</div>
+      <div class="capm-kpi-val" style="color:${alphaCol}">${_capmFmt(p.alphaAnnual,1,true)}</div>
+      <div class="capm-kpi-sub">${_L({it:'annualizzato',en:'annualized'})}</div>
+    </div>
+    <div class="capm-kpi">
+      <div class="capm-kpi-lbl">R²${tip(_L({it:'Quota della varianza del portafoglio spiegata dal benchmark. R²=0.7 → il 70% delle oscillazioni è sistematico.',en:'Share of portfolio variance explained by the benchmark. R²=0.7 → 70% of fluctuations are systematic.'}))}</div>
+      <div class="capm-kpi-val">${_capmNum(p.r2)}</div>
+      <div class="capm-kpi-sub">${r2Lbl}</div>
+    </div>
+    <div class="capm-kpi">
+      <div class="capm-kpi-lbl">Sharpe${tip(_L({it:'(Rp − Rf) / σp, annualizzato. Rendimento per unità di volatilità totale. >1 = buono.',en:'(Rp − Rf) / σp, annualized. Return per unit of total volatility. >1 = good.'}))}</div>
+      <div class="capm-kpi-val" style="color:${sharpeCol}">${_capmNum(p.sharpe)}</div>
+      <div class="capm-kpi-sub">${p.sharpe>=1?_L({it:'Buono',en:'Good'}):p.sharpe>=0.5?_L({it:'Sufficiente',en:'Adequate'}):_L({it:'Da migliorare',en:'Needs improvement'})}</div>
+    </div>
+    <div class="capm-kpi">
+      <div class="capm-kpi-lbl">Treynor${tip(_L({it:'(Rp − Rf) / β. Come Sharpe ma normalizza per il rischio sistematico anziché la volatilità totale.',en:'(Rp − Rf) / β. Like Sharpe but normalizes by systematic risk instead of total volatility.'}))}</div>
+      <div class="capm-kpi-val">${_capmNum(p.treynor)}</div>
+      <div class="capm-kpi-sub">${_L({it:'rendimento/rischio sist.',en:'return/syst. risk'})}</div>
+    </div>
+    <div class="capm-kpi">
+      <div class="capm-kpi-lbl">${_L({it:'Vol. annua',en:'Ann. vol.'})}${tip(_L({it:'Volatilità annualizzata del portafoglio: deviazione standard settimanale × √52.',en:'Annualized portfolio volatility: weekly std dev × √52.'}))}</div>
+      <div class="capm-kpi-val">${_capmFmt(p.annVolPort,1,true)}</div>
+      <div class="capm-kpi-sub">${_L({it:'std settimanale × √52',en:'weekly std × √52'})}</div>
+    </div>
+    <div class="capm-kpi">
+      <div class="capm-kpi-lbl">${_L({it:'Rend. ann.',en:'Ann. return'})}${tip(_L({it:'Rendimento aritmetico annualizzato: media settimanale × 52.',en:'Annualized arithmetic return: weekly mean × 52.'}))}</div>
+      <div class="capm-kpi-val" style="color:${p.annRetArith>=0?'var(--g)':'var(--r)'}">${_capmFmt(p.annRetArith,1,true)}</div>
+      <div class="capm-kpi-sub">${_L({it:'media × 52',en:'mean × 52'})}</div>
+    </div>
+    <div class="capm-kpi" style="grid-column:span 1">
+      <div class="capm-kpi-lbl">${_L({it:'Osservazioni',en:'Observations'})}</div>
+      <div class="capm-kpi-val" style="font-size:16px">${p.n}</div>
+      <div class="capm-kpi-sub">${_L({it:'settimane allineate',en:'aligned weeks'})}</div>
+    </div>
+  </div>
+  <!-- Scomposizione varianza -->
+  <div style="margin-bottom:12px">
+    <div style="font-family:var(--fm);font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">${_L({it:'Scomposizione della varianza',en:'Variance decomposition'})}</div>
+    <div class="capm-var-bar">
+      <div class="capm-var-sys" style="width:${Math.round(p.sysPct*100)}%"></div>
+      <div class="capm-var-idio" style="flex:1"></div>
+    </div>
+    <div style="display:flex;gap:16px;font-family:var(--fm);font-size:10px;color:var(--t2)">
+      <span><span style="display:inline-block;width:8px;height:8px;background:#1A56C4;border-radius:2px;margin-right:4px"></span>${_L({it:'Sistematica (β²σ²m)',en:'Systematic (β²σ²m)'})}: ${Math.round(p.sysPct*100)}%</span>
+      <span><span style="display:inline-block;width:8px;height:8px;background:#94a3b8;border-radius:2px;margin-right:4px"></span>${_L({it:'Specifica (titoli)',en:'Idiosyncratic (stocks)'})}: ${Math.round(p.idioPct*100)}%</span>
+    </div>
+    <div style="font-family:var(--fm);font-size:10px;color:var(--t3);margin-top:4px">${_L({it:`σ²p = β²·σ²m + σ²ε  →  sistematica: ${(p.sysBeta*10000).toFixed(4)}  specifica: ${(p.idioVar*10000).toFixed(4)}  (×10⁻⁴, settimanale)`,en:`σ²p = β²·σ²m + σ²ε  →  systematic: ${(p.sysBeta*10000).toFixed(4)}  idiosyncratic: ${(p.idioVar*10000).toFixed(4)}  (×10⁻⁴, weekly)`})}</div>
+  </div>
+  ${adjNote}
+  <div class="capm-disclaimer">⚠️ ${_L({it:'Contenuto informativo · non è consulenza finanziaria. I rendimenti sono calcolati a pesi costanti (approssimazione standard, non TWR). I prezzi adjusted close approssimano il total return ma non garantiscono accuratezza al 100% per tutti i titoli.',en:'Informational content · not financial advice. Returns use constant weights (standard approximation, not TWR). Adjusted close prices approximate total return but do not guarantee 100% accuracy for all securities.'})}</div>`;
+}
+
+async function loadCAPMMetrics(){
+  if(!FEATURE_CAPM||!portfolio.length)return;
+  const card=document.getElementById('capm-card');
+  if(!card)return;
+  card.style.display='block';
+
+  const el=document.getElementById('capm-content');
+  if(!el)return;
+
+  // Usa cache se disponibile e fresca (< 5 minuti), stesso benchmark
+  if(_capmCache&&_capmCache.bench===_capmBench&&Date.now()-_capmCache.ts<300000){
+    renderCAPMContent(_capmCache.data);
+    return;
+  }
+
+  el.innerHTML='<div class="capm-loading">'+_L({it:'Calcolo CAPM in corso (dati settimanali 2 anni)…',en:'Computing CAPM metrics (2-year weekly data)…'})+'</div>';
+  try{
+    const data=await _fetchCAPM(_capmBench,[]);
+    _capmCache={bench:_capmBench,data,ts:Date.now()};
+    renderCAPMContent(data);
+  }catch(e){
+    el.innerHTML=`<div style="padding:10px;color:var(--r);font-family:var(--fm);font-size:12px">${_L({it:'Errore nel caricamento dei dati CAPM.',en:'Error loading CAPM data.'})}</div>`;
+    console.warn('loadCAPMMetrics error',e);
+  }
+}
+
+// ── Tabella comparativa (tab Panoramica) ───────────────────────────────────
+
+async function loadCAPMComparison(){
+  if(!FEATURE_CAPM||!portfolio.length)return;
+  const card=document.getElementById('capm-compare-card');
+  if(!card)return;
+  card.style.display='block';
+
+  const el=document.getElementById('capm-compare-content');
+  if(!el)return;
+
+  // Cache 5 minuti
+  if(_capmCompareCache&&Date.now()-_capmCompareCache.ts<300000){
+    renderCAPMComparison(_capmCompareCache.data);
+    return;
+  }
+
+  el.innerHTML='<div class="capm-loading">'+_L({it:'Calcolo metriche aggiustate per il rischio…',en:'Computing risk-adjusted metrics…'})+'</div>';
+  try{
+    const activeBenchSyms=[..._activeBenches];
+    const data=await _fetchCAPM('ACWI',activeBenchSyms);
+    _capmCompareCache={data,ts:Date.now()};
+    renderCAPMComparison(data);
+  }catch(e){
+    el.innerHTML=`<div style="padding:10px;color:var(--r);font-family:var(--fm);font-size:12px">${_L({it:'Errore nel caricamento.',en:'Loading error.'})}</div>`;
+    console.warn('loadCAPMComparison error',e);
+  }
+}
+
+function renderCAPMComparison(data){
+  const el=document.getElementById('capm-compare-content');
+  if(!el||!data)return;
+
+  const sub=document.getElementById('capm-compare-sub');
+
+  if(data.error||!data.portfolio||data.portfolio.error){
+    const n=data?.portfolio?.n??data?.n??0;
+    if(data?.portfolio?.error==='insufficient_data'||data?.error==='insufficient_data'){
+      el.innerHTML=`<div style="font-family:var(--fm);font-size:12px;color:var(--t3);padding:8px">${_L({it:`Dati storici insufficienti (${n} settimane disponibili, minimo 52). La sezione sarà disponibile dopo alcune settimane di utilizzo.`,en:`Insufficient historical data (${n} weeks available, minimum 52). This section will be available after a few more weeks.`})}</div>`;
+    } else {
+      el.innerHTML=`<div style="font-family:var(--fm);font-size:12px;color:var(--r);padding:8px">${_L({it:'Dati non disponibili.',en:'Data unavailable.'})}</div>`;
+    }
+    return;
+  }
+
+  const m=data.meta;
+  if(sub)sub.textContent=`Beta · Alpha Jensen · Sharpe · Treynor · ${m.n} ${_L({it:'settimane',en:'weeks'})} · ${m.startWk} → ${m.endWk} · benchmark: ${m.bench}`;
+
+  const p=data.portfolio;
+  const benches=data.benchmarks||{};
+  const BENCH_LABELS={
+    'SPY':'S&P 500','BRK-B':'Buffett','QQQ':'Nasdaq 100','ARKK':'Cathie Wood',
+    'ACWI':'MSCI World','GLD':_L({it:'Oro',en:'Gold'}),'RPAR':'Ray Dalio',
+    'PSH.L':'Bill Ackman','^DJI':'Dow Jones'
+  };
+
+  const formatCell=(v,pct=false,inv=false)=>{
+    if(v==null||!isFinite(v))return`<td>—</td>`;
+    const pos=inv?v<0:v>=0;
+    const col=pos?'var(--g)':'var(--r)';
+    const txt=pct?(v>=0?'+':'')+( v*100).toFixed(1)+'%':(v>=0?'+':'')+v.toFixed(2);
+    return`<td style="color:${col}">${txt}</td>`;
+  };
+  const fmtNum=(v,dec=2)=>v==null||!isFinite(v)?'—':v.toFixed(dec);
+
+  // Riga portafoglio
+  let rows=`<tr class="port-row">
+    <td>${_L({it:'Il tuo portafoglio',en:'Your portfolio'})}</td>
+    ${formatCell(p.annRetArith,true)}
+    <td>${fmtNum(p.beta)}</td>
+    ${formatCell(p.alphaAnnual,true)}
+    ${formatCell(p.sharpe)}
+    ${formatCell(p.treynor)}
+  </tr>`;
+
+  // Righe benchmark attivi
+  for(const[sym,bd] of Object.entries(benches)){
+    if(bd.error)continue;
+    const lbl=BENCH_LABELS[sym]||sym;
+    rows+=`<tr>
+      <td>${lbl}</td>
+      ${formatCell(bd.annRetArith,true)}
+      <td>${fmtNum(bd.beta)}</td>
+      ${formatCell(bd.alphaAnnual,true)}
+      ${formatCell(bd.sharpe)}
+      ${formatCell(bd.treynor)}
+    </tr>`;
+  }
+
+  el.innerHTML=`
+  <div style="overflow-x:auto">
+    <table class="capm-compare-tbl">
+      <thead><tr>
+        <th style="text-align:left">${_L({it:'Investitore / Indice',en:'Investor / Index'})}</th>
+        <th>${_L({it:'Rend. ann.',en:'Ann. ret.'})}</th>
+        <th>Beta</th>
+        <th>Alpha Jensen</th>
+        <th>Sharpe</th>
+        <th>Treynor</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+  </div>
+  <div class="capm-disclaimer" style="margin-top:10px">
+    ${_L({it:`Metriche calcolate su rendimenti settimanali adjusted close (${m.n} osservazioni). Benchmark: ${m.bench}. Risk-free: ${(m.rfAnnual*100).toFixed(2)}% (${m.rfSource}). Rendimenti a pesi costanti — non TWR. Contenuto informativo, non consulenza finanziaria.`,
+           en:`Metrics based on weekly adjusted close returns (${m.n} observations). Benchmark: ${m.bench}. Risk-free: ${(m.rfAnnual*100).toFixed(2)}% (${m.rfSource}). Constant-weight returns — not TWR. Informational content, not financial advice.`})}
+  </div>`;
 }
 
 /* ══════════════════════════════════════════

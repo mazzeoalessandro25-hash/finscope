@@ -2,6 +2,10 @@
   "name": "finedge",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests/capm.test.mjs"
+  },
   "dependencies": {
     "@clerk/backend": "^1.0.0",
     "resend": "^6.12.2",
