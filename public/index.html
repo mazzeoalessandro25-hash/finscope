@@ -3394,11 +3394,6 @@ body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A3
               <button class="port-sort-btn" id="capm-bench-^FTSEMIB" onclick="setCAPMBench('^FTSEMIB',this)">🇮🇹 FTSE MIB</button>
             </div>
           </div>
-          <!-- Toggle Simple / Advanced -->
-          <div style="display:flex;gap:6px;margin-bottom:12px">
-            <button class="port-sort-btn active" id="capm-mode-simple" onclick="setCAPMMode('simple',this)">Simple</button>
-            <button class="port-sort-btn" id="capm-mode-advanced" onclick="setCAPMMode('advanced',this)">Advanced</button>
-          </div>
           <div id="capm-content"><div class="capm-loading">Caricamento analisi CAPM…</div></div>
         </div>
       </div>
@@ -11803,7 +11798,6 @@ async function loadPortPerf(range,btn){
 
 // Stato CAPM condiviso tra le due funzioni
 let _capmBench='ACWI';
-let _capmMode='simple';
 let _capmCache=null;          // { bench, data, ts } — cache risultato API
 let _capmCompareCache=null;   // { data, ts } — cache per tabella panoramica
 
@@ -11815,13 +11809,6 @@ function setCAPMBench(bench,btn){
   document.querySelectorAll('.capm-bench-sel .port-sort-btn').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
   loadCAPMMetrics();
-}
-
-function setCAPMMode(mode,btn){
-  _capmMode=mode;
-  document.querySelectorAll('#capm-card .port-sort-btn[id^="capm-mode-"]').forEach(b=>b.classList.remove('active'));
-  if(btn)btn.classList.add('active');
-  renderCAPMContent(_capmCache?.data);
 }
 
 function _capmFmt(v,dec=2,pct=false){
@@ -11893,29 +11880,6 @@ function renderCAPMContent(data){
   // Warning note dati
   const adjNote=`<div class="capm-disclaimer">${m.adjCloseNote?.[currentLang==='en'?'en':'it']||''}</div>`;
 
-  if(_capmMode==='simple'){
-    const sysPctDisp=Math.round(p.sysPct*100);
-    const idioPctDisp=100-sysPctDisp;
-    const simpleText=_L({
-      it:`Il <strong>${sysPctDisp}%</strong> delle oscillazioni del tuo portafoglio dipende dai movimenti generali del mercato (rischio sistematico), mentre il <strong>${idioPctDisp}%</strong> dipende dalle scelte specifiche dei titoli che hai selezionato (rischio idiosincratico).`,
-      en:`<strong>${sysPctDisp}%</strong> of your portfolio's fluctuations come from general market movements (systematic risk), while <strong>${idioPctDisp}%</strong> come from the specific stocks you chose (idiosyncratic risk).`
-    });
-    // Barra scomposizione
-    const barHtml=`<div class="capm-var-bar">
-      <div class="capm-var-sys" style="width:${sysPctDisp}%"></div>
-      <div class="capm-var-idio" style="flex:1"></div>
-    </div>
-    <div style="display:flex;gap:16px;font-family:var(--fm);font-size:10px;color:var(--t2);margin-bottom:12px">
-      <span><span style="display:inline-block;width:8px;height:8px;background:#1A56C4;border-radius:2px;margin-right:4px"></span>${_L({it:'Sistematico (mercato)',en:'Systematic (market)'})}: ${sysPctDisp}%</span>
-      <span><span style="display:inline-block;width:8px;height:8px;background:#94a3b8;border-radius:2px;margin-right:4px"></span>${_L({it:'Specifico (titoli)',en:'Idiosyncratic (stocks)'})}: ${idioPctDisp}%</span>
-    </div>`;
-
-    el.innerHTML=metaStrip+`<div class="capm-simple-box">${simpleText}</div>`+barHtml+adjNote+
-      `<div class="capm-disclaimer" style="margin-top:6px">⚠️ ${_L({it:'Contenuto informativo · non è consulenza finanziaria. Rendimenti a pesi costanti (non TWR). Dati adjusted close.',en:'Informational content · not financial advice. Constant-weight returns (not TWR). Adjusted close data.'})}</div>`;
-    return;
-  }
-
-  // Advanced mode: tutti i KPI
   el.innerHTML=metaStrip+`
   <div class="capm-kpi-grid">
     <div class="capm-kpi">
