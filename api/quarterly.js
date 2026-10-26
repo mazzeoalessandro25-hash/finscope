@@ -88,22 +88,30 @@ export default async function handler(req, res) {
 
   // ── 2. yahoo-finance2: gestisce cookie/crumb automaticamente ─────────────
   // earningsTrend fornisce previsioni future: 0q (trimestre corrente) e +1q (prossimo)
+  // fundamentalsTimeSeries sostituisce il deprecato incomeStatementHistoryQuarterly
   try {
-    const data = await Promise.race([
-      yf.quoteSummary(symbol, {
-        modules: ['earningsHistory', 'incomeStatementHistoryQuarterly', 'earningsTrend'],
-      }),
-      tout(9000),
+    const twoYearsAgo = new Date(Date.now() - 2 * 365 * 86400 * 1000).toISOString().slice(0, 10);
+    const [data, ftsRaw] = await Promise.all([
+      Promise.race([
+        yf.quoteSummary(symbol, { modules: ['earningsHistory', 'earningsTrend'] }, { validateResult: false }),
+        tout(9000),
+      ]),
+      Promise.race([
+        yf.fundamentalsTimeSeries(symbol, { module: 'financials', type: 'quarterly', period1: twoYearsAgo }, { validateResult: false }),
+        tout(9000),
+      ]).catch(() => []),
     ]);
 
     const epsHist = data?.earningsHistory?.history || [];
-    const incHist = data?.incomeStatementHistoryQuarterly?.incomeStatementHistory || [];
+    const incHist = Array.isArray(ftsRaw)
+      ? ftsRaw.filter(q => q.totalRevenue != null || q.netIncome != null)
+      : [];
 
     if (epsHist.length || incHist.length) {
       const incByDate = incHist.map(q => ({
-        date:      toDate(q.endDate),
-        revenue:   rv(q.totalRevenue),
-        netIncome: rv(q.netIncome),
+        date:      toDate(q.date),
+        revenue:   q.totalRevenue ?? null,
+        netIncome: q.netIncome ?? null,
       })).filter(q => q.date);
 
       const MS50D = 50 * 86400 * 1000;
@@ -125,18 +133,15 @@ export default async function handler(req, res) {
 
       // Fallback solo income statement (senza EPS)
       if (!quarters.length && incHist.length) {
-        quarters = [...incHist].reverse().map(q => {
-          const d = toDate(q.endDate);
-          return {
-            label:          d ? dateToLabel(d) : '',
-            revenue:        rv(q.totalRevenue),
-            revenuePrevYear: null,
-            netIncome:      rv(q.netIncome),
-            epsActual:      null,
-            epsEstimate:    null,
-            isForecast:     false,
-          };
-        }).filter(q => q.label);
+        quarters = [...incByDate].reverse().map(q => ({
+          label:          dateToLabel(q.date),
+          revenue:        q.revenue,
+          revenuePrevYear: null,
+          netIncome:      q.netIncome,
+          epsActual:      null,
+          epsEstimate:    null,
+          isForecast:     false,
+        })).filter(q => q.label);
       }
 
       // Previsioni future da earningsTrend (0q = trimestre corrente, +1q = prossimo)

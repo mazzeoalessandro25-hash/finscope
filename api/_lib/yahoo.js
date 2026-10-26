@@ -10,9 +10,11 @@ const timeout = (ms) => new Promise((_, rej) => setTimeout(() => rej(new Error('
 export async function fetchQuoteSummary(symbol) {
   try {
     return await Promise.race([
-      yf.quoteSummary(symbol, {
-        modules: ['defaultKeyStatistics', 'summaryDetail', 'financialData', 'assetProfile'],
-      }),
+      yf.quoteSummary(
+        symbol,
+        { modules: ['defaultKeyStatistics', 'summaryDetail', 'financialData', 'assetProfile'] },
+        { validateResult: false },
+      ),
       timeout(7000),
     ]);
   } catch (_) {
@@ -22,7 +24,7 @@ export async function fetchQuoteSummary(symbol) {
 
 export async function fetchYahooQuote(symbol) {
   try {
-    return await Promise.race([yf.quote(symbol), timeout(5000)]);
+    return await Promise.race([yf.quote(symbol, {}, { validateResult: false }), timeout(5000)]);
   } catch (_) {
     return null;
   }
@@ -31,7 +33,7 @@ export async function fetchYahooQuote(symbol) {
 export async function fetchETFData(symbol) {
   try {
     return await Promise.race([
-      yf.quoteSummary(symbol, { modules: ['topHoldings', 'fundProfile'] }),
+      yf.quoteSummary(symbol, { modules: ['topHoldings', 'fundProfile'] }, { validateResult: false }),
       timeout(7000),
     ]);
   } catch (_) {
@@ -42,7 +44,7 @@ export async function fetchETFData(symbol) {
 export async function fetchInsiderTransactions(symbol) {
   try {
     return await Promise.race([
-      yf.quoteSummary(symbol, { modules: ['insiderTransactions'] }),
+      yf.quoteSummary(symbol, { modules: ['insiderTransactions'] }, { validateResult: false }),
       timeout(7000),
     ]);
   } catch (_) {

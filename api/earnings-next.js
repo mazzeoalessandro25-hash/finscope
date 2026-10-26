@@ -35,7 +35,7 @@ async function kvSet(key, value, ttlSeconds) {
 async function fetchEarningsDate(symbol) {
   try {
     const data = await Promise.race([
-      yf.quoteSummary(symbol, { modules: ['calendarEvents'] }),
+      yf.quoteSummary(symbol, { modules: ['calendarEvents'] }, { validateResult: false }),
       tout(6000),
     ]);
     const dates = data?.calendarEvents?.earnings?.earningsDate;
