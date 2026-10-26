@@ -284,7 +284,7 @@ export default async function handler(req, res) {
       const syms = String(req.query.symbols || '').split(',').map(s => s.trim()).filter(Boolean).slice(0, 600);
       if (!syms.length) return res.json([]);
       const raw = await Promise.race([
-        yf.quote(syms),
+        yf.quote(syms, {}, { validateResult: false }),
         new Promise((_, rej) => setTimeout(() => rej(new Error('batch timeout')), 20000))
       ]);
       const arr = Array.isArray(raw) ? raw : (raw ? [raw] : []);

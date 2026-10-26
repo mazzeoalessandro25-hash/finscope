@@ -52,7 +52,7 @@ async function kvGet(key) {
 async function fetchQuote(symbol) {
   try {
     const q = await Promise.race([
-      yf.quote(symbol),
+      yf.quote(symbol, {}, { validateResult: false }),
       new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 8000))
     ]);
     return q;
