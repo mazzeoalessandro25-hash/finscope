@@ -2171,16 +2171,22 @@ body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A3
     <div id="sd-quarterly" style="margin-bottom:16px"></div>
     <!-- Sezioni fondamentali: 4 colonne -->
     <div class="sd-funds" id="sd-funds-section">
+      <div style="grid-column:1/-1;font-size:9px;color:var(--t3);font-family:var(--fm);letter-spacing:.3px;margin-bottom:4px;padding-bottom:8px;border-bottom:1px solid var(--sep)">
+        <span data-i18n="sd.ref.ttm">TTM = ultimi 12 mesi</span> &nbsp;·&nbsp;
+        <span data-i18n="sd.ref.mrq">MRQ = ultimo trimestre</span> &nbsp;·&nbsp;
+        <span data-i18n="sd.ref.yoy">YoY = variazione anno su anno</span> &nbsp;·&nbsp;
+        <span data-i18n="sd.ref.fwd">Forward = stima analisti</span>
+      </div>
       <div class="sd-section">
         <div class="sd-section-title" style="display:flex;align-items:center;justify-content:space-between">
           <span style="display:flex;align-items:center"><span data-i18n="sd.valuation">Valutazione</span><span class="sd-info-btn">i<div class="sd-tip" data-i18n-html="tip.sd.valuation"><b>P/E</b>: prezzo / utili. Più alto = mercato paga un premio di crescita. Confronta con il settore.<br><b>P/B</b>: prezzo / valore contabile. &lt;1 potenzialmente sottovalutato.<br><b>P/S</b>: prezzo / ricavi. Utile per aziende non ancora profittevoli.<br><b>EPS</b>: utile per azione. Forward = stima futura.</div></span></span>
           <span id="sd-val-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
-          <div class="sd-m"><div class="sd-m-lbl">P/E Trailing</div><div class="sd-m-val" id="sdm-pe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/E Trailing (TTM)</div><div class="sd-m-val" id="sdm-pe">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">P/E Forward</div><div class="sd-m-val" id="sdm-fpe">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">P/B</div><div class="sd-m-val" id="sdm-pb">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">P/S</div><div class="sd-m-val" id="sdm-ps">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/B (MRQ)</div><div class="sd-m-val" id="sdm-pb">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">P/S (TTM)</div><div class="sd-m-val" id="sdm-ps">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">EPS (TTM)</div><div class="sd-m-val" id="sdm-eps">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl">EPS Forward</div><div class="sd-m-val" id="sdm-feps">—</div></div>
         </div>
@@ -2191,12 +2197,12 @@ body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A3
           <span id="sd-fund-badge" style="font-size:9px;color:var(--t3);font-weight:400;text-transform:none;letter-spacing:0"></span>
         </div>
         <div class="sd-mg">
-          <div class="sd-m"><div class="sd-m-lbl">ROE</div><div class="sd-m-val" id="sdm-roe">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">ROA</div><div class="sd-m-val" id="sdm-roa">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">ROE (TTM)</div><div class="sd-m-val" id="sdm-roe">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">ROA (TTM)</div><div class="sd-m-val" id="sdm-roa">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.grossMargin">Margine Lordo</div><div class="sd-m-val" id="sdm-gm">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.operMargin">Margine Operativo</div><div class="sd-m-val" id="sdm-om">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.netMargin">Margine Netto</div><div class="sd-m-val" id="sdm-pm">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">EBITDA</div><div class="sd-m-val" id="sdm-ebitda">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">EBITDA (TTM)</div><div class="sd-m-val" id="sdm-ebitda">—</div></div>
         </div>
       </div>
       <div class="sd-section">
@@ -2205,7 +2211,7 @@ body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A3
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.revGrowth">Cresc. Ricavi</div><div class="sd-m-val" id="sdm-revg">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.earnGrowth">Cresc. Utili</div><div class="sd-m-val" id="sdm-earng">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalRev">Ricavi Totali</div><div class="sd-m-val" id="sdm-rev">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Free Cash Flow</div><div class="sd-m-val" id="sdm-fcf">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Free Cash Flow (TTM)</div><div class="sd-m-val" id="sdm-fcf">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.divPct">Dividendo %</div><div class="sd-m-val" id="sdm-div">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.shares">Azioni Circ.</div><div class="sd-m-val" id="sdm-shares">—</div></div>
         </div>
@@ -2215,9 +2221,9 @@ body.dark .fe-if-chip--good{background:#0D2E1E;color:#34D399;border-color:#1A4A3
         <div class="sd-mg">
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalCash">Cassa Totale</div><div class="sd-m-val" id="sdm-cash">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.totalDebt">Debito Totale</div><div class="sd-m-val" id="sdm-debt">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Debt/Equity</div><div class="sd-m-val" id="sdm-de">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Current Ratio</div><div class="sd-m-val" id="sdm-cr">—</div></div>
-          <div class="sd-m"><div class="sd-m-lbl">Quick Ratio</div><div class="sd-m-val" id="sdm-qr">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Debt/Equity (MRQ)</div><div class="sd-m-val" id="sdm-de">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Current Ratio (MRQ)</div><div class="sd-m-val" id="sdm-cr">—</div></div>
+          <div class="sd-m"><div class="sd-m-lbl">Quick Ratio (MRQ)</div><div class="sd-m-val" id="sdm-qr">—</div></div>
           <div class="sd-m"><div class="sd-m-lbl" data-i18n="sd.lbl.floatShares">Float Azioni</div><div class="sd-m-val" id="sdm-float">—</div></div>
         </div>
       </div>
